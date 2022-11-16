@@ -1,0 +1,218 @@
+image: node:16
+
+stages:
+  - Test
+  - Deploy
+  - Stop
+
+.only changes:
+  only:
+    changes: &changes
+      - pages/**/*
+      - src/**/*
+      - styles/**/*
+      - public/**/*
+      - "*.json"
+      - "*.js"
+      - "*.ts"
+      - "*.yaml"
+      - .gitlab-ci.yml
+      - .gitlab/**/*
+
+Test_Linter:
+  stage: Test
+
+  before_script:
+    - npm ci --include=dev
+  script:
+    - npm run lint
+
+  when: manual
+  only:
+    refs:
+      - main
+      - merge_requests
+    changes: *changes
+  except:
+    - tags
+
+Generate_Preview_APP:
+  stage: Deploy
+
+  variables:
+    PREVIEW_URL: $VERCEL_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
+    VERCEL_SCOPE: $VERCEL_SCOPE
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    VERCEL_TOKEN: $VERCEL_TOKEN
+
+  before_script:
+    - npm i -g vercel
+  script:
+    - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --yes --token $VERCEL_TOKEN --scope $VERCEL_SCOPE)
+    - vercel alias set $DEPLOYMENT_URL $PREVIEW_URL -t $VERCEL_TOKEN --scope $VERCEL_SCOPE
+    - echo "export PREVIEW_DEV_URL=$DEPLOYMENT_URL" > preview-dev-url.env
+  artifacts:
+    expire_in: 1 week
+    when: always
+    paths: 
+      - preview-dev-url.env
+
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$VERCEL_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
+    on_stop: Delete_Preview_APP
+
+  when: manual
+  only:
+    refs:
+      - merge_requests
+    changes: *changes
+  needs: ["Test_Linter"]
+
+Delete_Preview_APP:
+  stage: Stop
+
+  variables:
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    VERCEL_TOKEN: $VERCEL_TOKEN
+    VERCEL_SCOPE: $VERCEL_SCOPE
+
+  when: delayed
+  start_in: 6 days
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+
+  before_script:
+    - if [[ -f preview-dev-url.env ]]; then source preview-dev-url.env; fi;
+    - npm i -g vercel
+  script:
+    - if [[ $PREVIEW_DEV_URL ]]; then VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $PREVIEW_DEV_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes; fi;
+
+  only:
+    refs:
+      - merge_requests
+    changes: *changes
+  except:
+    - main
+    - tags
+  needs: ["Generate_Preview_APP"]
+
+Create_Release_APP:
+  image: "aplyca/semantic-release"
+  stage: Deploy
+  cache: {}
+
+  before_script:
+    - apk add --quiet curl
+  script:
+    - semantic-release
+  after_script:
+    - ./doc/slack/notificationStack.sh -v
+
+  when: manual
+  only:
+    refs:
+      - main
+    changes: *changes
+  except:
+    - merge_requests
+    - tags
+  needs: ["Test_Linter"]
+
+Deploy_Production_APP:
+  stage: Deploy
+
+  variables:
+    VERCEL_SCOPE: $VERCEL_SCOPE
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    VERCEL_TOKEN: $VERCEL_TOKEN
+
+  before_script:
+    - npm i -g vercel
+  script:
+    - VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --prod --token $VERCEL_TOKEN --scope $VERCEL_SCOPE
+  after_script:
+    - ./doc/slack/notificationStack.sh -v
+
+  environment:
+    name: Production
+    url: https://$VERCEL_PROJECT_NAME.vercel.app
+
+  when: manual
+  only:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_REF_NAME =~ /^[0-9]+\.[0-9]+\.[0-9]+$/            
+    changes: *changes
+  except:
+    - main
+    - merge_requests
+
+Delete_Preview_STORYBOOK:
+  stage: Stop
+
+  cache:
+    key: 'sp-storybook'
+    paths:
+      - public
+
+  script:
+    - rm -rf "public/main"
+
+  variables:
+    GIT_STRATEGY: none # needed to prevent "Couldn't find remote ref" error
+  environment:
+    name: Storybook
+    action: stop
+
+  when: manual
+  only:
+    refs:
+      - merge_requests
+    changes: *changes
+  except:
+    - main
+    - tags
+
+pages:
+  stage: Deploy
+
+  variables:
+    STORYBOOK_PREVIEW_URL: 'https://GrupoVanti.gitlab.io/VantiWeb/web-commerce/main'
+
+  cache:
+    key: 'sp-storybook'
+    paths:
+      - public
+  artifacts:
+    paths:
+      - public
+
+  before_script: 
+    - npm ci --include=dev
+    - npm run build-storybook
+  script:
+    - rm -rf "public/main"
+    - mkdir -p "public/main"
+    - echo "<!DOCTYPE html><script>window.location.href = '$STORYBOOK_PREVIEW_URL';</script>" > public/index.html
+    - mv storybook-static/* "public/main/"
+
+  environment:
+    name: Storybook
+    url: https://GrupoVanti.gitlab.io/VantiWeb/web-commerce/main/
+    on_stop: Delete_Preview_STORYBOOK
+
+  when: manual
+  only:
+    refs:
+      - main
+      - merge_requests
+    changes: *changes
+  except:
+    - tags
+  needs: ["Test_Linter"]
