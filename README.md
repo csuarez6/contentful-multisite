@@ -1,4 +1,4 @@
-# Aplyca Web
+# Vanti Webpage/Commerce
 
 [![License | PROPIEATARY](https://img.shields.io/badge/License-PROPIETARY-yellow)](https://www.aplyca.com/es/politica-de-privacidad) [![platform Linux | macOS | Windows](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](https://www.docker.com/products/docker-desktop) [![docker-compose](https://img.shields.io/badge/%F0%9F%90%B3-docker--compose-blue.svg)](https://medium.com/rate-engineering/using-docker-containers-to-run-a-distributed-application-locally-eeabd360bca3) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://semantic-release.gitbook.io/semantic-release/) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![pipeline status](https://gitlab.com/aplyca/Website/aplyca-web-nextjs/badges/master/pipeline.svg)](https://gitlab.com/aplyca/Website/aplyca-web-nextjs/commits/main)
 
@@ -12,6 +12,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - [Typescript](https://nextjs.org/learn/excel/typescript)
 - [GraphQL](https://www.contentful.com/developers/docs/references/graphql/)
 - [Contentful](https://www.contentful.com/developers/docs/)
+- [CommerceLayer](https://commercelayer.io/)
 - [Tailwindcss](https://tailwindcomponents.com/cheatsheet/)
 - [PNPM](https://pnpm.io/)
 
@@ -94,7 +95,7 @@ Create .env file with enviroment variables below:
 - `CONTENTFUL_SPACE_ID`: (optional) Contentful space id
 - `CONTENTFUL_DELIVERY_API_TOKEN`: (optional) Contentful token for delivery access api
 - `CONTENTFUL_PREVIEW_API_TOKEN`: (optional) Contentful token for preview access api
-- `CONTENTFUL_ENDPOINT`: (required) Contentful graphql endpont, tipically: __https://graphql.contentful.com/content/v1/spaces/$CONTENTFUL_SPACE_ID/environments/$CONTENTFUL_ENVIRONMENT__
+- `CONTENTFUL_ENDPOINT`: (required) Contentful graphql endpont, tipically: https://graphql.contentful.com/content/v1/spaces/$CONTENTFUL_SPACE_ID/environments/$CONTENTFUL_ENVIRONMENT
 - `INVALIDATE_SECRET_TOKEN`: (required) NextJS Token for invalidate contents
 
 ### TEST
