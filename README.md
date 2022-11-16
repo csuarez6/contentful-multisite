@@ -11,6 +11,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - [NextJs](https://nextjs.org/docs)
 - [Typescript](https://nextjs.org/learn/excel/typescript)
 - [GraphQL](https://www.contentful.com/developers/docs/references/graphql/)
+- [Storybook](https://storybook.js.org/docs/react/get-started/introduction)
 - [Contentful](https://www.contentful.com/developers/docs/)
 - [CommerceLayer](https://commercelayer.io/)
 - [Tailwindcss](https://tailwindcomponents.com/cheatsheet/)
@@ -57,6 +58,16 @@ Default task: init
 - Run make command for generate and up containers `make`
 - Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Remember, if you have `APP_PORT` var in your .env file, the port in URL must be the same.
 - Happy codding
+
+## Init Storybook
+
+This project is implemented with [Storybook](https://storybook.js.org/), if you want to start the storybook service follow command below:
+
+```bash
+$ make service=storybook
+```
+
+Open [http://localhost:6006](http://localhost:6006) with your browser to see the result. Remember, if you have `STORYBOOK_PORT` var in your .env file, the port in URL must be the same.
 
 ## Pushing the changes to the repo
 

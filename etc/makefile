@@ -45,7 +45,7 @@ logs l: ## [*] Show logs. Usage: make logs [service=app]
 	docker-compose logs $(follow) $(service)
 
 copy: service ?= $(if ${DEFAULT_SERVICE},${DEFAULT_SERVICE},app)
-copy: path ?= /app/pnpm-lock.json
+copy: path ?= /app/pnpm-lock.yaml
 copy: destination ?= .
 copy: | up ## [*] Copy app files/directories from service container to host
 	docker cp $(shell docker-compose ps -q $(service)):$(path) $(destination)

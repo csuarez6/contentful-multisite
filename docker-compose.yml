@@ -20,8 +20,7 @@ services:
     ports:
       - "${APP_PORT:-3000}:3000"
     volumes:
-      - ./components:/app/components:rw
-      - ./lib:/app/lib:rw
+      - ./src:/app/src:rw
       - ./pages:/app/pages:rw
       - ./public:/app/public:rw
       - ./styles:/app/styles:rw
@@ -52,8 +51,7 @@ services:
     ports:
       - "${STORYBOOK_PORT:-6006}:6006"
     volumes:
-      - ./components:/app/components:rw
-      - ./lib:/app/lib:rw
+      - ./src:/app/src:rw
       - ./pages:/app/pages:rw
       - ./public:/app/public:rw
       - ./styles:/app/styles:rw

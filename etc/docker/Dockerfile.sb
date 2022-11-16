@@ -1,11 +1,14 @@
 ##### Building Base image #####
 FROM node:16-alpine
 
+## Install pnpm
+RUN npm install -g pnpm
+
 RUN mkdir -p /app
 WORKDIR /app
 
 ## Cooy config files
-COPY tailwind.config.js postcss.config.js next* *.json /app/
+COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml /app/
 COPY .storybook /app/.storybook
 
 ## Install packages

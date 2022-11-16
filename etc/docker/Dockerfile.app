@@ -11,7 +11,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ## Copy config files
-COPY tailwind.config.js postcss.config.js next* *.json /app/
+COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml /app/
 
 ## Install packages
 RUN pnpm install
