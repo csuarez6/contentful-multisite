@@ -23,9 +23,10 @@ Test_Linter:
   stage: Test
 
   before_script:
-    - npm ci --include=dev
+    - npm i -g pnpm
+    - pnpm install
   script:
-    - npm run lint
+    - pnpm lint
 
   when: manual
   only:
@@ -109,8 +110,8 @@ Create_Release_APP:
     - apk add --quiet curl
   script:
     - semantic-release
-  after_script:
-    - ./doc/slack/notificationStack.sh -v
+  # after_script:
+  #   - ./etc/slack/notificationStack.sh -v
 
   when: manual
   only:
@@ -135,8 +136,8 @@ Deploy_Production_APP:
     - npm i -g vercel
   script:
     - VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --prod --token $VERCEL_TOKEN --scope $VERCEL_SCOPE
-  after_script:
-    - ./doc/slack/notificationStack.sh -v
+  # after_script:
+  #   - ./etc/slack/notificationStack.sh -v
 
   environment:
     name: Production
@@ -194,8 +195,9 @@ pages:
       - public
 
   before_script: 
-    - npm ci --include=dev
-    - npm run build-storybook
+    - npm i -g pnpm
+    - pnpm install
+    - pnpm build-storybook
   script:
     - rm -rf "public/main"
     - mkdir -p "public/main"
