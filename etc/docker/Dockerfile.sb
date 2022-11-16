@@ -1,0 +1,22 @@
+##### Building Base image #####
+FROM node:16-alpine
+
+RUN mkdir -p /app
+WORKDIR /app
+
+## Cooy config files
+COPY tailwind.config.js postcss.config.js next* *.json /app/
+COPY .storybook /app/.storybook
+
+## Install packages
+RUN pnpm install
+
+## Copy project files
+# COPY components /app/components
+COPY src /app/src
+COPY pages /app/pages
+COPY public /app/public
+COPY styles /app/styles
+
+EXPOSE 6006
+CMD [ "pnpm", "storybook" ]

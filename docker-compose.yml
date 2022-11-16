@@ -1,0 +1,72 @@
+services:
+  app:
+    container_name: ${APP_NAME:-VANTI-WEBCOMMERCE}-App
+    hostname: app
+    image: ${IMAGE_REPO:-aplyca/web/nextjs-app}${IMAGE_TAG:-}
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: etc/docker/Dockerfile.app
+      target: ${TARGET_IMAGE:-dev}
+      cache_from:
+        - ${IMAGE_REPO:-aplyca/web/nextjs-app}${IMAGE_TAG:-}
+        - ${IMAGE_REPO:-aplyca/web/nextjs-app}${IMAGE_CACHE_TAG:-:main}
+      args:
+        CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:?err}
+        CONTENTFUL_SPACE_ID: ${CONTENTFUL_SPACE_ID:?err}
+        CONTENTFUL_DELIVERY_API_TOKEN: ${CONTENTFUL_DELIVERY_API_TOKEN:?err}
+        CONTENTFUL_PREVIEW_API_TOKEN: ${CONTENTFUL_PREVIEW_API_TOKEN:?err}
+        CONTENTFUL_ENDPOINT: ${CONTENTFUL_ENDPOINT:?err}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - ./components:/app/components:rw
+      - ./lib:/app/lib:rw
+      - ./pages:/app/pages:rw
+      - ./public:/app/public:rw
+      - ./styles:/app/styles:rw
+      - ./tailwind.config.js:/app/tailwind.config.js:rw
+      - ./next.config.js:/app/next.config.js:rw
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:?err}
+      CONTENTFUL_SPACE_ID: ${CONTENTFUL_SPACE_ID:?err}
+      CONTENTFUL_DELIVERY_API_TOKEN: ${CONTENTFUL_DELIVERY_API_TOKEN:?err}
+      CONTENTFUL_PREVIEW_API_TOKEN: ${CONTENTFUL_PREVIEW_API_TOKEN:?err}
+      CONTENTFUL_ENDPOINT: ${CONTENTFUL_ENDPOINT:?err}
+      INVALIDATE_SECRET_TOKEN: ${INVALIDATE_SECRET_TOKEN:?err}
+    networks:
+      public: ~
+    restart: unless-stopped
+  storybook:
+    container_name: ${APP_NAME:-VANTI-WEBCOMMERCE}-Storybook
+    hostname: storybook
+    image: ${IMAGE_REPO:-aplyca/web/nextjs-sb}${IMAGE_TAG:-}
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: etc/docker/Dockerfile.sb
+      cache_from:
+        - ${IMAGE_REPO:-aplyca/web/nextjs-sb}${IMAGE_TAG:-}
+        - ${IMAGE_REPO:-aplyca/web/nextjs-sb}${IMAGE_CACHE_TAG:-:main}
+    ports:
+      - "${STORYBOOK_PORT:-6006}:6006"
+    volumes:
+      - ./components:/app/components:rw
+      - ./lib:/app/lib:rw
+      - ./pages:/app/pages:rw
+      - ./public:/app/public:rw
+      - ./styles:/app/styles:rw
+      - ./tailwind.config.js:/app/tailwind.config.js:rw
+      - ./.storybook:/app/.storybook:rw
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+    networks:
+      public: ~
+    restart: unless-stopped
+
+networks:
+  public:
+    name: ${APP_NAME:-VANTI-WEBCOMMERCE}-Public
+
+version: "3.7"
