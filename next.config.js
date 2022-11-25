@@ -14,6 +14,15 @@ const nextConfig = {
     // for more information.
     hideSourceMaps: true,
   },
+  eslint: {
+    dirs: ['pages', 'src'], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
+  },
+  extends: [
+    'plugin:@next/next/recommended',
+  ],
+  images: {
+    domains: ['images.ctfassets.net'],
+  },
 };
 
 const sentryWebpackPluginOptions = {
