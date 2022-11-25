@@ -108,6 +108,7 @@ Create .env file with enviroment variables below:
 - `CONTENTFUL_PREVIEW_API_TOKEN`: (optional) Contentful token for preview access api
 - `CONTENTFUL_ENDPOINT`: (required) Contentful graphql endpont, tipically: https://graphql.contentful.com/content/v1/spaces/$CONTENTFUL_SPACE_ID/environments/$CONTENTFUL_ENVIRONMENT
 - `INVALIDATE_SECRET_TOKEN`: (required) NextJS Token for invalidate contents
+- `SENTRY_AUTH_TOKEN`: (required) Sentry Token for production logs
 
 ### TEST
 

@@ -11,7 +11,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ## Copy config files
-COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml /app/
+COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml sentry* /app/
 
 ## Install packages
 RUN pnpm install
@@ -43,6 +43,9 @@ ENV CONTENTFUL_PREVIEW_API_TOKEN=$CONTENTFUL_PREVIEW_API_TOKEN
 
 ARG CONTENTFUL_ENDPOINT
 ENV CONTENTFUL_ENDPOINT=$CONTENTFUL_ENDPOINT
+
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
 
 RUN npm run build
 CMD [ "pnpm", "start" ]
