@@ -37,6 +37,7 @@ services:
       CONTENTFUL_PREVIEW_API_TOKEN: ${CONTENTFUL_PREVIEW_API_TOKEN:?err}
       CONTENTFUL_ENDPOINT: ${CONTENTFUL_ENDPOINT:?err}
       INVALIDATE_SECRET_TOKEN: ${INVALIDATE_SECRET_TOKEN:?err}
+      SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN:?err}
     networks:
       public: ~
     restart: unless-stopped

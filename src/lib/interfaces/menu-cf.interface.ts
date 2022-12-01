@@ -1,6 +1,7 @@
 export interface IListLinks {
   name: string,
-  href: string
+  href: string,
+  icon?: string | ((props?: any) => void),
 }
 
 export interface IListItems {
