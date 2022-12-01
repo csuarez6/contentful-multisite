@@ -10,11 +10,14 @@ RUN npm install -g contentful-cli pnpm
 RUN mkdir -p /app
 WORKDIR /app
 
-## Copy config files
-COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml sentry* /app/
+## Copy package files
+COPY pnpm-lock.yaml package.json /app/
 
 ## Install packages
 RUN pnpm install
+
+## Copy config files
+COPY tailwind.config.js postcss.config.js next* *.json sentry* /app/
 
 ## Copy project files
 # COPY components /app/components

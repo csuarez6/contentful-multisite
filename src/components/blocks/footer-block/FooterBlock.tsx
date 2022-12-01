@@ -1,60 +1,85 @@
+import Image from "next/image";
 import { IFooter } from "@/lib/interfaces/footer-cf.interface";
+import Icon from "@/components/atoms/icon/Icon";
 
 const FooterBlock: React.FC<IFooter> = ({
   title,
   menu,
   social,
-  footerText
+  footerText,
 }) => {
   return (
-    <footer id="footer" className="bg-white container mx-auto" aria-labelledby="footer-heading">
+    <footer
+      id="footer"
+      className="bg-gradient-footer overflow-x-hidden"
+      aria-labelledby="footer-heading"
+    >
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <div className="xl:flex xl:gap-32">
-          <div className="xl:max-w-xs">
-            <p className="font-bold text-2xl sm:text-3xl md:text-4xl xl:text-5xl xl:leading-tight text-gray-500">
-              {title}
-            </p>
-          </div>
-          <div className="mt-12 grid xl:grow xl:mt-0">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
-              {menu && menu.map((menuItem) => (
-                <div key={menuItem.name}>
-                  <h3 className="text-base font-medium text-gray-900">{menuItem.name}</h3>
-                  <ul role="list" className="mt-4 space-y-4">
-                    {menuItem.list.map((listItem) => (
-                      <li key={listItem.name}>
-                        <a href={listItem.href} className="text-base text-gray-500 hover:text-gray-900">
-                          {listItem.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+      <div className="xl:container mx-auto">
+        <div className="py-12 px-2 sm:px-4 lg:px-8 2xl:px-[46px] lg:pt-10 lg:pb-[62px]">
+          <div className="xl:flex xl:gap-32 pb-10">
+            <div className="xl:max-w-xs pt-0.5">
+              <p className="title is-1 text-white">{title}</p>
+            </div>
+            <div className="pt-12 grid xl:grow xl:pt-0">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
+                {menu &&
+                  menu.map((menuItem) => (
+                    <div key={menuItem.name}>
+                      <h3 className="text-white">{menuItem.name}</h3>
+                      <ul role="list" className="pt-[10px] space-y-3">
+                        {menuItem.list.map((listItem) => (
+                          <li key={listItem.name}>
+                            <a
+                              href={listItem.href}
+                              className="text-base text-white hover:underline"
+                            >
+                              {listItem.name}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
-        <ul className="flex flex-wrap justify-center mt-16 mb-4 gap-20">
-          {social && social.map((item) => (
-            <li key={item.name}>
-              <a href={item.href} className="text-gray-400 hover:text-gray-500">
-                <span className="sr-only">{item.name}</span>
-                <item.icon className="h-[30px] w-[30px]" aria-hidden="true" />
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="pt-12 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-16">
-          <div>
-            <p className="text-base text-gray-400">{footerText}</p>
-          </div>
-          <div className="w-64 shrink-0">
-            <figure className="my-2">
-              <img src="https://via.placeholder.com/256x55" alt="Logo Industria y Comercio" />
-            </figure>
+          <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-16">
+            {social &&
+              social.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    className="text-white hover:text-neutral-90"
+                  >
+                    <span className="sr-only">{item.name}</span>
+                    <Icon
+                      icon={item.name}
+                      className="h-[46px] w-[46px] p-[7px]"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+          </ul>
+          <hr className="min-w-[100vw] -mx-[50vw] border-t-[0.5px] border-neutral-70" />
+          <div className="pt-10 flex flex-col sm:flex-row justify-between gap-16">
+            <div>
+              <p className="text-size-p2 text-white">{footerText}</p>
+            </div>
+            <div className="w-[311px] mt-1 shrink-0">
+              <figure className="relative w-100">
+                <Image
+                  src="/images/industria-y-comercio-logo.png"
+                  alt="Industria y Comercio"
+                  layout="responsive"
+                  width={622}
+                  height={150}
+                />
+              </figure>
+            </div>
           </div>
         </div>
       </div>

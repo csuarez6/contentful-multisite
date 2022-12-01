@@ -8,14 +8,16 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ## Cooy config files
-COPY tailwind.config.js postcss.config.js next* *.json pnpm-lock.yaml /app/
-COPY .storybook /app/.storybook
+COPY package.json pnpm-lock.yaml /app/
 
 ## Install packages
 RUN pnpm install
 
+## Cooy config files
+COPY tailwind.config.js postcss.config.js next* *.json /app/
+
 ## Copy project files
-# COPY components /app/components
+COPY .storybook /app/.storybook
 COPY src /app/src
 COPY pages /app/pages
 COPY public /app/public

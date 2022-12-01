@@ -1,7 +1,11 @@
 import { IHeader } from "@/lib/interfaces/header-cf.interface";
 
 const data: IHeader = {
-  logo: 'https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600',
+  logo: {
+    title: 'Logo Vanti',
+    url: 'images/vanti-logo.png',
+    description: ''
+  },
   menu: [
     {
       name: 'Pagar factura',

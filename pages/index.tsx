@@ -1,3 +1,4 @@
+import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
 import Head from "next/head";
 import Image from "next/image";
 import ExampleComponent from "../src/components/blocks/example/ExampleComponent";
@@ -56,6 +57,7 @@ export default function Home() {
 
         <div className="clear-both w-full flex justify-center">
           <ExampleComponent name="Sherlock Holmes" />
+          <LeftFeatured title="Left Featured" />
         </div>
       </main>
 

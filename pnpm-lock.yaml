@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@sentry/nextjs': ^7.19.0
   '@headlessui/react': ^1.7.4
   '@heroicons/react': ^2.0.13
+  '@sentry/nextjs': ^7.19.0
   '@storybook/addon-actions': ^6.5.13
   '@storybook/addon-essentials': ^6.5.13
   '@storybook/addon-interactions': ^6.5.13
@@ -21,8 +21,10 @@ specifiers:
   eslint-config-next: 13.0.3
   eslint-config-prettier: ^8.5.0
   eslint-plugin-storybook: ^0.6.7
+  icomoon-react: ^3.0.0
   next: 13.0.3
   postcss: ^8.4.19
+  postcss-import: ^15.0.1
   prettier: ^2.7.1
   react: 18.2.0
   react-dom: 18.2.0
@@ -30,9 +32,10 @@ specifiers:
   typescript: 4.8.4
 
 dependencies:
-  '@sentry/nextjs': 7.19.0_next@13.0.3+react@18.2.0
   '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
   '@heroicons/react': 2.0.13_react@18.2.0
+  '@sentry/nextjs': 7.19.0_next@13.0.3+react@18.2.0
+  icomoon-react: 3.0.0
   next: 13.0.3_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -57,6 +60,7 @@ devDependencies:
   eslint-config-prettier: 8.5.0_eslint@8.27.0
   eslint-plugin-storybook: 0.6.7_rmayb2veg2btbq6mbmnyivgasy
   postcss: 8.4.19
+  postcss-import: 15.0.1_postcss@8.4.19
   prettier: 2.7.1
   tailwindcss: 3.2.4_postcss@8.4.19
 
@@ -8643,6 +8647,13 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
+  /icomoon-react/3.0.0:
+    resolution: {integrity: sha512-2zfOpjnFj83v7MoG2D2+g7bn+Ha4HnousvHyNUs7IZrjM/yjAsfBq6uxrFf7erTnEYscdXGieLv66ANgSnI1ag==}
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -10713,6 +10724,18 @@ packages:
   /postcss-import/14.1.0_postcss@8.4.19:
     resolution: {integrity: sha512-flwI+Vgm4SElObFVPpTIT7SU7R3qk2L7PyduMcokiaVKuWv9d/U+Gm/QAd8NDLuykTWTkcrjOeD2Pp1rMeBTGw==}
     engines: {node: '>=10.0.0'}
+    peerDependencies:
+      postcss: ^8.0.0
+    dependencies:
+      postcss: 8.4.19
+      postcss-value-parser: 4.2.0
+      read-cache: 1.0.0
+      resolve: 1.22.1
+    dev: true
+
+  /postcss-import/15.0.1_postcss@8.4.19:
+    resolution: {integrity: sha512-UGlvk8EgT7Gm/Ndf9xZHnzr8xm8P54N8CBWLtcY5alP+YxlEge/Rv78etQyevZs3qWTE9If13+Bo6zATBrPOpA==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       postcss: ^8.0.0
     dependencies:

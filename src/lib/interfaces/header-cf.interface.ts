@@ -1,7 +1,8 @@
-import { IListLinks } from "@/lib/interfaces/menu-cf.interface";
+import { IImageAsset } from './image-asset-cf.interface';
+import { IListLinks } from "./menu-cf.interface";
 
 export interface IHeader {
-  logo?: string,
-  menu?: IListLinks[],
-  utility?: IListLinks[]
+  logo?: IImageAsset;
+  menu: IListLinks[];
+  utility: IListLinks[];
 };

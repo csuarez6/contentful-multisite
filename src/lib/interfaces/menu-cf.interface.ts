@@ -1,7 +1,6 @@
 export interface IListLinks {
   name: string,
-  href: string,
-  icon?: any
+  href: string
 }
 
 export interface IListItems {

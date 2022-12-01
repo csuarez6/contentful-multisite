@@ -1,13 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&display=swap");
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "Mulish", sans-serif;
+  font-size: 16px;
 }
 
 a {
@@ -19,12 +20,36 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.title.is-1,
+h1 {
+  @apply font-bold text-4xl lg:text-[43px] leading-[1.3];
+}
+
+.title.is-2,
+h2 {
+  @apply text-3xl lg:text-4xl;
+}
+
+.title.is-3,
+h3 {
+  @apply text-xl lg:text-2xl lg:leading-[1.17];
+}
+
+.title.is-4,
+h4 {
+  @apply text-lg lg:text-xl lg:leading-[1.2];
+}
+
+.title.is-5,
+h5 {
+  @apply text-sm font-medium;
+}
+
+.title.is-6,
+h6 {
+  @apply text-xs font-semibold;
+}
+
+:is(h1, h2, h3, h4, .title.is-1, .title.is-2, .title.is-3, .title.is-4) {
+  @apply font-bold;
 }

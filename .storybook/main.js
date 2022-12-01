@@ -34,7 +34,11 @@ module.exports = {
      */
     config.resolve.alias = {
       ...config.resolve?.alias,
-      '@': [path.resolve(__dirname, '../')],
+      // '@': [path.resolve(__dirname, '../')],
+      '@/components': [path.resolve(__dirname, '../src/components')],
+      '@/lib': [path.resolve(__dirname, '../src/lib')],
+      '@/styles': [path.resolve(__dirname, '../styles')],
+      '@/pages': [path.resolve(__dirname, '../pages')],
     };
 
     /**

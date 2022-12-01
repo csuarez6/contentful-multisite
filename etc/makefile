@@ -50,10 +50,11 @@ copy: destination ?= .
 copy: | up ## [*] Copy app files/directories from service container to host
 	docker cp $(shell docker-compose ps -q $(service)):$(path) $(destination)
 
+sync: service ?= $(if ${DEFAULT_SERVICE},${DEFAULT_SERVICE},app)
 sync: ## [*] Copy packages files generated inside service container to host
-	make copy
-	make copy path=/app/package.json
-	make copy path=/app/node_modules
+	make copy service=$(service)
+	make copy path=/app/package.json service=$(service)
+	make copy path=/app/node_modules service=$(service)
 
 linter lint: ## [*] Lint code
 	make exec bash="" command="npm run lint"
