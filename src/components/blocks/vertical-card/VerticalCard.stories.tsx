@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import VerticalCard from './VerticalCard';
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockVerticalCardProps } from './VerticalCard.mocks';
 
 export default {
@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockVerticalCardProps.data,
-} as IPromoContent;
+} as IPromoBlock;

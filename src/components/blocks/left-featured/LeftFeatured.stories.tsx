@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import LeftFeatured from './LeftFeatured';
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockLeftFeaturedProps } from './LeftFeatured.mocks';
 
 export default {
@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockLeftFeaturedProps.data,
-} as IPromoContent;
+} as IPromoBlock

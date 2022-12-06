@@ -1,7 +1,7 @@
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
-const LeftFeaturedBlock: React.FC<IPromoContent> = ({ title, description, card }) => {
+const LeftFeaturedBlock: React.FC<IPromoBlock> = ({ title, description, content }) => {
   return (
     <section className="grid gap-9">
       {(title || description) &&
@@ -10,7 +10,7 @@ const LeftFeaturedBlock: React.FC<IPromoContent> = ({ title, description, card }
           <p className="text-blue-dark">{description}</p>
         </div>
       }
-      <LeftFeatured {...card} />
+      <LeftFeatured {...content} />
     </section>
   );
 };

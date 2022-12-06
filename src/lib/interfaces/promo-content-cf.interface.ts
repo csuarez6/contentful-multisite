@@ -1,6 +1,6 @@
 import { IImageAsset } from './image-asset-cf.interface';
 
-export interface IPromoCard {
+export interface IPromoContent {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -10,8 +10,8 @@ export interface IPromoCard {
     icon?: string;
 }
 
-export interface IPromoContent {
+export interface IPromoBlock {
     title?: string;
     description?: string;
-    card?: IPromoCard;
+    content?: IPromoContent;
 };

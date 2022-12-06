@@ -1,9 +1,9 @@
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
-const data: IPromoContent = {
+const data: IPromoBlock = {
   title: 'Título',
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  card: {
+  content: {
     title: 'Título',
     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
     url: '#',
