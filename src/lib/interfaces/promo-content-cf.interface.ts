@@ -8,10 +8,18 @@ export interface IPromoContent {
     image?: IImageAsset;
     alt?: string;
     icon?: string;
+    ctaLabel?: string;
+    blockFoot?: string;
 }
 
 export interface IPromoBlock {
     title?: string;
     description?: string;
     content?: IPromoContent;
+    backgroundColor?: string;
+    columnsNumber?: string;
+    alignImage?: string;
+    iconColor?: string;
+    buttonColor?: string;
+    views?: string;
 };

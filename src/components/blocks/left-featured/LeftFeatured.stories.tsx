@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockLeftFeaturedProps.data,
-} as IPromoBlock
+} as IPromoBlock;
