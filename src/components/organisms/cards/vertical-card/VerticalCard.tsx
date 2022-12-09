@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { IPromoCard } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
-const VerticalCard: React.FC<IPromoCard> = ({
+const VerticalCard: React.FC<IPromoContent> = ({
   title,
   description,
   image,
