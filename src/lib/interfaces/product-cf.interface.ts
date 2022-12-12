@@ -1,8 +1,28 @@
+import { IImageAsset } from './image-asset-cf.interface';
 
-export interface IProduct {
-    productName: string;
-    image: string;
-    feature: string;
-    Description: string;
-    title: string;
+interface IPaymentMethod {
+  name: string;
+  type: string;
+  helpText?: string;
+}
+
+interface IMainFeature {
+  name: string;
+  description: string;
+}
+
+interface IFeatures {
+  main?: IMainFeature[];
+  description?: string[];
+  warranty?: string[];
+}
+
+export interface IProductDetails {
+  productName?: string;
+  price?: string;
+  description?: string;
+  images?: IImageAsset[];
+  details?: string[];
+  paymentMethods?: IPaymentMethod[];
+  features: IFeatures;
 }

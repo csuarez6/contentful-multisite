@@ -1,5 +1,5 @@
 export interface IExampleComponent {
-  name: string,
+  name: string;
 };
 
 const ExampleComponent: React.FC<IExampleComponent> = ({ name }) => {
@@ -16,7 +16,6 @@ const ExampleComponent: React.FC<IExampleComponent> = ({ name }) => {
       <p className="text-size-p1 font-mono">Paragraph 1 with .font-mono</p>
       <p className="text-size-p2">Paragraph 2</p>
       <p className="text-size-p3">Paragraph 3</p>
-      
     </div>
   );
 };

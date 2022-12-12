@@ -2,9 +2,8 @@ import { IIcon } from './Icon';
 
 const dataIcon: IIcon = {
   icon: 'linkedin',
-  color: '#FF0000',
   size: 40,
-  className: 'text-red'
+  className: 'text-red-500'
 };
 
 export const mockIconProps = {
