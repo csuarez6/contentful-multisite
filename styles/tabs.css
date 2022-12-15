@@ -1,0 +1,32 @@
+.tabcontent {
+    @apply p-6;
+}
+
+.tablinks,
+.tablinks_sec {
+    @apply relative min-w-0 flex-1 overflow-hidden py-4 px-2 text-sm font-semibold text-center focus:z-10 cursor-pointer;
+}
+
+.tablinks {
+    @apply text-grey-60 hover:text-grey-30;
+}
+
+.tablinks span {
+    @apply bg-transparent absolute inset-x-0 bottom-0 h-0.5 bg-neutral-80;
+}
+
+.tablinks.active {
+    @apply text-blue-dark;
+}
+
+.tablinks.active span {
+    @apply bg-lucuma;
+}
+
+.tablinks_sec {
+    @apply bg-transparent text-blue-dark hover:text-white hover:bg-blue-dark;
+}
+
+.tablinks_sec.active {
+    @apply text-white bg-blue-dark;
+}
