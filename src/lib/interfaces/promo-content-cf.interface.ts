@@ -10,12 +10,16 @@ export interface IPromoContent {
     icon?: string;
     ctaLabel?: string;
     blockFoot?: string;
+    iconPosition?: string;
+    iconSize?: string;
+    bgIconRounded?: string
 }
 
 export interface IPromoBlock {
     title?: string;
     description?: string;
     content?: IPromoContent;
+    listedContent?: IPromoContent[];
     backgroundColor?: string;
     columnsNumber?: string;
     alignImage?: string;
