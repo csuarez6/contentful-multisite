@@ -20,6 +20,7 @@ export interface IPromoBlock {
     description?: string;
     content?: IPromoContent;
     listedContent?: IPromoContent[];
+    featuredContent?: IPromoContent[];
     backgroundColor?: string;
     columnsNumber?: string;
     alignImage?: string;
