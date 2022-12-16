@@ -1,4 +1,4 @@
-import { IPromoBlock } from "./promo-content-cf.interface"
+import { IPromoBlock } from "./promo-content-cf.interface";
 
 export interface ITab {
     name: string,

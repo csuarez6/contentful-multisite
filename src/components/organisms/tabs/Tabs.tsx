@@ -3,7 +3,7 @@ import { ITabBlock, ITab } from "@/lib/interfaces/tabs-cf-interface";
 import { useState } from "react";
 
 function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(' ');
 }
 
 const Tabs: React.FC<ITabBlock> = ({ tabs, isSecondary }) => {
