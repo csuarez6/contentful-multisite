@@ -4,7 +4,7 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 const InfoCardBlock: React.FC<IPromoBlock> = ({
   title,
   description,
-  featuredContent
+  listedContent
 }) => {
   return (
     <section className="grid gap-9">
@@ -14,9 +14,9 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
           {description && <p className="text-blue-dark">{description}</p>}
         </div>
       }
-      {featuredContent && (
+      {listedContent && (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {featuredContent.map((content) => <InfoCard key={content.title} {...content} />)}
+          {listedContent.map((content) => <InfoCard key={content.title} {...content} />)}
         </div>
       )}
     </section>

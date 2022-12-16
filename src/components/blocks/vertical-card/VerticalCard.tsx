@@ -1,7 +1,7 @@
 import VerticalCard from '@/components/organisms/cards/vertical-card/VerticalCard';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
-const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, content }) => {
+const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, listedContent }) => {
   return (
     <section className="grid gap-9">
       {(title || description) && 
@@ -10,7 +10,11 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, content 
           <p className="text-blue-dark">{description}</p>
         </div>
       }
-      {content && <VerticalCard {...content} />}
+      {listedContent && (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {listedContent.map((content) => <VerticalCard key={content.title} {...content} />)}
+        </div>
+      )}
     </section>
   );
 };
