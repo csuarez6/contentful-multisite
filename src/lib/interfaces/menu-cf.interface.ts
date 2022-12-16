@@ -1,10 +1,11 @@
-export interface IListLinks {
+export interface ILink {
   name: string,
   href: string,
-  icon?: string | ((props?: any) => void),
+  icon?: string,
+  buttonType?: string
 }
 
 export interface IListItems {
   name: string,
-  list: IListLinks[]
+  list: ILink[]
 };

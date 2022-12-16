@@ -1,9 +1,11 @@
 import { IImageAsset } from './image-asset-cf.interface';
+import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
 
 export interface IPromoContent {
     title?: string;
     subtitle?: string;
     description?: string;
+    cta?: ILink;
     url?: string;
     image?: IImageAsset;
     alt?: string;
@@ -12,7 +14,7 @@ export interface IPromoContent {
     blockFoot?: string;
     iconPosition?: string;
     iconSize?: string;
-    bgIconRounded?: string
+    bgIconRounded?: string;
 }
 
 export interface IPromoBlock {
@@ -27,4 +29,5 @@ export interface IPromoBlock {
     iconColor?: string;
     buttonColor?: string;
     views?: string;
+    cta?: IListItems;
 };
