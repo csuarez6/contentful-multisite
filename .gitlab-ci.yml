@@ -184,7 +184,7 @@ pages:
   stage: Deploy
 
   variables:
-    STORYBOOK_PREVIEW_URL: 'https://GrupoVanti.gitlab.io/VantiWeb/web-commerce/main'
+    STORYBOOK_PREVIEW_URL: 'https://grupovanti.gitlab.io/Marketplace/web-commerce/main'
 
   cache:
     key: 'sp-storybook'
@@ -206,7 +206,7 @@ pages:
 
   environment:
     name: Storybook
-    url: https://GrupoVanti.gitlab.io/VantiWeb/web-commerce/main/
+    url: https://grupovanti.gitlab.io/Marketplace/web-commerce/main/
     on_stop: Delete_Preview_STORYBOOK
 
   when: manual
