@@ -1,6 +1,8 @@
 import '../styles/globals.css';
 import * as NextImage from 'next/image';
 
+import '@/styles/button.css';
+
 const BREAKPOINTS_INT = {
   xs: 320,
   sm: 640,

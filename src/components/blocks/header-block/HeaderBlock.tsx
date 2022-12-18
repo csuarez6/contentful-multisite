@@ -21,8 +21,8 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
           <div className="px-2 sm:px-4 2xl:px-28">
             <div className="relative flex items-center min-h-[80px] justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
-                <Link href="/">
-                  <a className="flex flex-shrink-0 items-center">
+                <Link href="/" className="flex flex-shrink-0 items-center">
+                  {/* <a className="flex flex-shrink-0 items-center"> */}
                     <figure className="relative h-[46px] aspect-[348/100]">
                       <Image
                         className="block w-auto"
@@ -32,7 +32,7 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
                         objectFit="content"
                       />
                     </figure>
-                  </a>
+                  {/* </a> */}
                 </Link>
               </div>
               <nav aria-label="Utility">

@@ -6,8 +6,8 @@ function classNames(...classes: string[]) {
 }
 
 function classColumns(columns = '1') {
-  let classes = ["grid-cols-1"];
-  let cols = parseInt(columns);
+  const classes = ["grid-cols-1"];
+  const cols = parseInt(columns);
   if (cols > 1) classes.push("md:grid-cols-2");
   if (cols > 2) classes.push("lg:grid-cols-3");
   if (cols > 3) classes.push("xl:grid-cols-4");

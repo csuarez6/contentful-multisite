@@ -20,6 +20,9 @@ module.exports = {
       backgroundImage: {
         'gradient-footer': 'linear-gradient(121.27deg, #191580 0%, #035177 32.03%, #113455 68.96%, #000000 100%)',
       },
+      fontFamily: {
+        'mulish': ['Mulish', 'sans-serif'],
+      },
       colors: {
         blue: {
           dark: {

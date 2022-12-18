@@ -3,7 +3,7 @@ import { IHeader } from "@/lib/interfaces/header-cf.interface";
 const data: IHeader = {
   logo: {
     title: 'Logo Vanti',
-    url: 'images/vanti-logo.png',
+    url: '/images/vanti-logo.png',
     description: ''
   },
   menu: [

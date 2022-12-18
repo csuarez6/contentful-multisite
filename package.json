@@ -11,9 +11,11 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.2",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
     "@sentry/nextjs": "^7.19.0",
+    "graphql": "^16.6.0",
     "icomoon-react": "^3.0.0",
     "next": "13.0.3",
     "react": "18.2.0",
