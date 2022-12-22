@@ -1,5 +1,12 @@
-import { IImageAsset } from './image-asset-cf.interface';
+import { IImageAsset } from './assets-cf.interface';
 import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
+
+interface IBlockProps {
+    isFirst?: boolean;
+    isLast?: boolean;
+    key?: string;
+    asBlock?: boolean;
+}
 
 export interface IPromoContent {
     title?: string;
@@ -17,7 +24,7 @@ export interface IPromoContent {
     bgIconRounded?: string;
 }
 
-export interface IPromoBlock {
+export interface IPromoBlock extends IBlockProps {
     title?: string;
     description?: string;
     content?: IPromoContent;

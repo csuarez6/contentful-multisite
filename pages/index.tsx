@@ -1,25 +1,22 @@
-import type { ReactElement } from "react";
+// import type { ReactElement } from "react";
 import { GetStaticProps, GetStaticPropsResult } from "next";
 
 import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 
 import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import PageLayout, {
-  IPageLayout,
-} from "@/components/layouts/page-layout/PageLayout";
+// import PageLayout, {
+//   IPageLayout,
+// } from "@/components/layouts/page-layout/PageLayout";
 
 import InfoCard from "@/components/organisms/cards/info-card/InfoCard";
 import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 
-const Home: NextPageWithLayout = () => {
+const Home: NextPageWithLayout = ({ name }: IPage) => {
   return (
-    // <PageLayout
-    //   name={layout.name}
-    //   footerInfo={layout.footerInfo}
-    //   headerInfo={mockPageLayoutProps.data.headerInfo}
-    // >
     <div className="xl:container mx-auto my-20">
+      <h1 className="mb-6 block">{name}</h1>
+
       <InfoCard
         title="Biblioteca de componentes"
         description="Desde el siguiente enlace puedes acceder a la biblioteca de componentes del proyecto."
@@ -35,7 +32,6 @@ const Home: NextPageWithLayout = () => {
         classes="button-primary"
       />
     </div>
-    // </PageLayout>
   );
 };
 
@@ -48,6 +44,7 @@ export const getStaticProps: GetStaticProps =
   (): GetStaticPropsResult<IPage> => {
     return {
       props: {
+        name: 'Home',
         layout: {
           name: mockPageLayoutProps.data.name,
           footerInfo: mockPageLayoutProps.data.footerInfo,

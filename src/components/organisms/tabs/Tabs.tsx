@@ -1,5 +1,5 @@
 import "@/styles/tabs.css";
-import { ITabBlock, ITab } from "@/lib/interfaces/tabs-cf-interface";
+import { ITabBlock, ITab } from "@/lib/interfaces/tabs-cf.interface";
 import { useState } from "react";
 
 function classNames(...classes: string[]) {

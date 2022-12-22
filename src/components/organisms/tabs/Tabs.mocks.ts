@@ -1,4 +1,4 @@
-import { ITabBlock } from "@/lib/interfaces/tabs-cf-interface";
+import { ITabBlock } from "@/lib/interfaces/tabs-cf.interface";
 
 const dataTab: ITabBlock = {
   tabs: [

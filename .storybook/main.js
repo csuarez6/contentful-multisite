@@ -40,6 +40,7 @@ module.exports = {
       '@/styles': [path.resolve(__dirname, '../styles')],
       '@/pages': [path.resolve(__dirname, '../pages')],
       '@/styles': [path.resolve(__dirname, '../styles')],
+      '@/constants': [path.resolve(__dirname, '../src/constants')],
     };
 
     /**

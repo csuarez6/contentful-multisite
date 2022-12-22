@@ -8,18 +8,21 @@ import {
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-      console.log(graphQLErrors);
+    console.log(graphQLErrors);
   }
 
   if (networkError) {
-      console.log(networkError);
+    console.log(networkError);
   }
 });
 
 const httpLink = (preview = false) => {
+  const CONTENTFUL_ENDPOINT = process.env.CONTENTFUL_ENDPOINT ??
+    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`;
+
   return new HttpLink({
     fetch,
-    uri: process.env.CONTENTFUL_ENDPOINT,
+    uri: CONTENTFUL_ENDPOINT,
     headers: {
       authorization: `Bearer ${preview
         ? process.env.CONTENTFUL_PREVIEW_API_TOKEN

@@ -16,6 +16,7 @@
  *  - https://reactjs.org/docs/error-boundaries.html
  */
 
+import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import * as Sentry from "@sentry/nextjs";
 import NextErrorComponent from "next/error";
 
@@ -33,7 +34,15 @@ CustomErrorComponent.getInitialProps = async (contextData: any) => {
   await Sentry.captureUnderscoreErrorException(contextData);
 
   // This will contain the status code of the response
-  return NextErrorComponent.getInitialProps(contextData);
+  const errors = NextErrorComponent.getInitialProps(contextData);
+  return {
+    ...errors,
+    layout: {
+      name: mockPageLayoutProps.data.name,
+      footerInfo: mockPageLayoutProps.data.footerInfo,
+      headerInfo: mockPageLayoutProps.data.headerInfo,
+    },
+  };
 };
 
 export default CustomErrorComponent;

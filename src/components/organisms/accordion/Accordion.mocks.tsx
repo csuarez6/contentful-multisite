@@ -1,22 +1,24 @@
-import { IAccordionList } from '@/lib/interfaces/accordion-cf.interface';
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
-const listedContent: IAccordionList[] = [
+const featuredContents: any = {
+  items: [
     {
-        title: "Can I pay with a credit card?",
-        content: "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      promoTitle: "Can I pay with a credit card?",
+      promoDescription: RICHTEXT_SHORT_SIMPLE,
     },
     {
-        title: "Can I pay with a credit card?",
-        content: "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      promoTitle: "Can I pay with a credit card?",
+      promoDescription: RICHTEXT_SHORT_SIMPLE,
     },
     {
-        title: "Can I pay with a credit card?",
-        content: "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      promoTitle: "Can I pay with a credit card?",
+      promoDescription: RICHTEXT_SHORT_SIMPLE,
     },
     {
-        title: "Can I pay with a credit card?",
-        content: "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-    }
-];
+      promoTitle: "Can I pay with a credit card?",
+      promoDescription: RICHTEXT_SHORT_SIMPLE,
+    },
+  ],
+};
 
-export { listedContent };
+export { featuredContents };

@@ -9,12 +9,12 @@ import ViewProductFinancing from "../views/product-financing.gql";
 import ViewInformationGrid from "../views/information-grid.gql";
 import ViewListWithIcons from "../views/list-with-icons.gql";
 import ViewProductGrill from "../views/product-grill.gql";
-import ViewPlans from "../views/accordion.gql";
 import ViewServicesTabs from "../views/services-tabs.gql";
 import ViewFeaturedTabs from "../views/featured-tabs.gql";
 import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
 import AuxCustomContent from "../aux/custom-content.gql";
+import PageQuery from "../page.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -33,9 +33,9 @@ const BlockPromoContentQuery = `
   featuredContentsCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageQuery}
       }
-      ..on Product {
+      ...on Product {
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
@@ -48,7 +48,7 @@ const BlockPromoContentQuery = `
       ...on Page {
         ${DefaultQuery}
       }
-      ..on Product {
+      ...on Product {
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
@@ -72,7 +72,7 @@ const BlockPromoContentQuery = `
     ...on ViewFeatured {
       ${ViewFeatured}
     }
-    ...on ViewProductFinancing{ 
+    ...on ViewProductFinancing { 
       ${ViewProductFinancing}
     }
     ...on ViewInformationGrid {
@@ -83,9 +83,6 @@ const BlockPromoContentQuery = `
     }
     ...on ViewProductGrill {
       ${ViewProductGrill}
-    }
-    ...on ViewPlans{
-      ${ViewPlans}
     }
     ...on ViewServicesTabs {
       ${ViewServicesTabs}

@@ -1,4 +1,4 @@
-import { IImageAsset } from './image-asset-cf.interface';
+import { IImageAsset } from './assets-cf.interface';
 import { ILink } from "./menu-cf.interface";
 
 export interface IHeader {

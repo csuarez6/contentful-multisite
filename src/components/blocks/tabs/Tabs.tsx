@@ -1,5 +1,5 @@
 import Tabs from '@/components/organisms/tabs/Tabs';
-import { ITabBlock } from "@/lib/interfaces/tabs-cf-interface";
+import { ITabBlock } from "@/lib/interfaces/tabs-cf.interface";
 
 const TabsBlock: React.FC<ITabBlock> = ({ title, description, tabs, isSecondary }) => {
   return (

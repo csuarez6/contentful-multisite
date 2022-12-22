@@ -1,12 +1,19 @@
 import { IPageLayout } from "@/components/layouts/page-layout/PageLayout";
+import { IImageAsset } from "./assets-cf.interface";
 import { IPromoBlock } from "./promo-content-cf.interface";
-import { ISEOTags } from "./seo-tags-cf.interface";
+import { IRichText } from "./richtext-cf.interface";
 
 export interface IPage {
     name?: string;
-    content?: string;
-    block?: IPromoBlock;
+    slug?: string;
+    parent?: any; // @TODO: por definir
+    content?: IRichText;
+    blocksCollection?: {
+        items?: Array<IPromoBlock>
+    }
     promoTitle?: string;
-    seo?: ISEOTags;
+    promoImage?: IImageAsset;
+    promoDescription?: IRichText;
+    promoIcon?: string;
     layout?: IPageLayout;
 }

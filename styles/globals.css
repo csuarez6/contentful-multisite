@@ -57,3 +57,7 @@ h6 {
 [class^="text-size-subtitle"] {
   @apply font-bold;
 }
+
+.alert-block {
+  @apply text-red-500 bg-red-300 w-full p-3 border border-red-500 font-bold mt-10;
+}

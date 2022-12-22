@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { ITabBlock } from "@/lib/interfaces/tabs-cf-interface";
+import { ITabBlock } from "@/lib/interfaces/tabs-cf.interface";
 import Tabs from './Tabs';
 import { mockTabsProps } from './Tabs.mocks';
 

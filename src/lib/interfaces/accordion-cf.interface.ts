@@ -1,13 +1,15 @@
+import { IPromoBlock } from "./promo-content-cf.interface";
+
 export interface IAccordionList  {
     title?: string,
     content?: string
 }
 export interface IAccordion {
-    listedContent: IAccordionList[]
+    items: IAccordionList[]
 }
 
-export interface IAccordionBlock {
-    content?: IAccordionList[],
+export interface IAccordionBlock extends IPromoBlock {
     title?: string,
-    description?: string
+    description?: any;
+    featuredContentsCollection?: any;
 }
