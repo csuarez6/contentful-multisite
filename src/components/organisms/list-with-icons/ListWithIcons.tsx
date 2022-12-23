@@ -1,10 +1,7 @@
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Icon from '@/components/atoms/icon/Icon';
 import Link from "next/link";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from '../../../utils/functions';
 
 const ListWithIcons: React.FC<IPromoContent> = ({
   title,

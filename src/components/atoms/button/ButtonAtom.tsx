@@ -1,3 +1,5 @@
+import { classNames } from '../../../utils/functions';
+
 interface ITypeLink {
   href: string;
   target?: string;
@@ -9,10 +11,6 @@ export interface IButtonAtom {
   classes?: string;
   link?: ITypeLink;
   callbackAction?: (event) => void;
-}
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
 }
 
 const ButtonAtom: React.FC<IButtonAtom> = ({

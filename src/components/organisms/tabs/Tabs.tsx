@@ -1,10 +1,7 @@
 import "@/styles/tabs.css";
 import { ITabBlock, ITab } from "@/lib/interfaces/tabs-cf.interface";
 import { useState } from "react";
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '../../../utils/functions';
 
 const Tabs: React.FC<ITabBlock> = ({ tabs, isSecondary }) => {
     const [currentActive, setCurrentActive] = useState(0);

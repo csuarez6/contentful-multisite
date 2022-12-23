@@ -31,10 +31,11 @@ export interface IPromoBlock extends IBlockProps {
     listedContent?: IPromoContent[];
     featuredContent?: IPromoContent[];
     backgroundColor?: string;
-    columnsNumber?: string;
+    columnsNumber?: number;
     alignImage?: string;
     iconColor?: string;
     buttonColor?: string;
     views?: string;
+    isReverse?: boolean;
     cta?: IListItems;
 };

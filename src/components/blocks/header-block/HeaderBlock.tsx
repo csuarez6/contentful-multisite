@@ -1,13 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IHeader } from "@/lib/interfaces/header-cf.interface";
-
+import { classNames } from '../../../utils/functions';
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
   return (

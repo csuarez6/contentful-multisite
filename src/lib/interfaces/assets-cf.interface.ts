@@ -8,4 +8,5 @@ interface IAsset {
 export interface IImageAsset extends IAsset {
   width?: number;
   height?: number;
+  isPortrait?: boolean;
 };
