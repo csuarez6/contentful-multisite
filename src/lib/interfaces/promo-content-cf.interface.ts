@@ -18,10 +18,12 @@ export interface IPromoContent {
     alt?: string;
     icon?: string;
     ctaLabel?: string;
-    blockFoot?: string;
     iconPosition?: string;
     iconSize?: string;
     bgIconRounded?: string;
+    isReverse?: boolean;
+    urlImage?: string;
+    tags?: ITag[];
 }
 
 export interface IPromoBlock extends IBlockProps {
@@ -38,4 +40,9 @@ export interface IPromoBlock extends IBlockProps {
     views?: string;
     isReverse?: boolean;
     cta?: IListItems;
-};
+}
+
+export interface ITag {
+    label: string;
+    bacKgroundColor?: string;
+}
