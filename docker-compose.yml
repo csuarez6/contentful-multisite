@@ -10,7 +10,7 @@ services:
       target: ${TARGET_IMAGE:-dev}
       cache_from:
         - ${IMAGE_REPO:-aplyca/web/vanti-app}${IMAGE_TAG:-}
-        - ${IMAGE_REPO:-aplyca/web/vanti-app}${IMAGE_CACHE_TAG:-:main}
+        - ${IMAGE_REPO:-aplyca/web/vanti-app}${IMAGE_CACHE_TAG:-:latest}
       args:
         CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:?err}
         CONTENTFUL_SPACE_ID: ${CONTENTFUL_SPACE_ID:?err}
@@ -28,7 +28,9 @@ services:
       - ./styles:/app/styles:rw
       - ./tailwind.config.js:/app/tailwind.config.js:rw
       - ./next.config.js:/app/next.config.js:rw
-      - node_modules:/app/node_modules
+      - ./node_modules:/app/node_modules
+      - ./package.json:/app/package.json
+      - ./pnpm-lock.json:/app/pnpm-lock.json
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:?err}
@@ -51,7 +53,7 @@ services:
       dockerfile: etc/docker/Dockerfile.sb
       cache_from:
         - ${IMAGE_REPO:-aplyca/web/vanti-sb}${IMAGE_TAG:-}
-        - ${IMAGE_REPO:-aplyca/web/vanti-sb}${IMAGE_CACHE_TAG:-:main}
+        - ${IMAGE_REPO:-aplyca/web/vanti-sb}${IMAGE_CACHE_TAG:-:latest}
     ports:
       - "${STORYBOOK_PORT:-6006}:6006"
     volumes:
@@ -61,15 +63,19 @@ services:
       - ./styles:/app/styles:rw
       - ./tailwind.config.js:/app/tailwind.config.js:rw
       - ./.storybook:/app/.storybook:rw
-      - node_modules:/app/node_modules
+      - ./node_modules:/app/node_modules
+      - ./package.json:/app/package.json
+      - ./pnpm-lock.json:/app/pnpm-lock.json
     environment:
       NODE_ENV: ${NODE_ENV:-development}
     networks:
       public: ~
     restart: unless-stopped
 
-volumes:
-  node_modules:
+# volumes:
+#   node_modules:
+#   packages_file:
+#   packages_lock:
 
 networks:
   public:

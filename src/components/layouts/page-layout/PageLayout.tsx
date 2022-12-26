@@ -26,7 +26,7 @@ const PageLayout: React.FC<IPageLayout> = ({ children, name, headerInfo, footerI
 
       <HeaderBlock {...headerInfo} />
 
-      <main className="xl:container mx-auto">
+      <main>
         {children}
       </main>
 
