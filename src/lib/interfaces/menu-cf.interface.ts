@@ -8,5 +8,5 @@ export interface ILink {
 
 export interface IListItems {
   name?: string,
-  list: ILink[]
+  list?: ILink[]
 };

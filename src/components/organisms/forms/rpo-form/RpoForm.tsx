@@ -13,8 +13,8 @@ const RpoForm: React.FC<IRpoForm> = ({
     const [email, setEmail] = useState<string>("");
 
     const handleSubmit = () => {
-        console.log('send');
-    }
+        console.log('send', { account, phone, email });
+    };
 
     return (
         <div className="md:flex md:flex-row">
@@ -67,17 +67,16 @@ const RpoForm: React.FC<IRpoForm> = ({
                     </div>
                     {subTitle && <p className="text-5xl pt-4 pb-6 font-semibold"> {subTitle} </p>}
                     {dataForm && (
-                        dataForm.map((item) => {
-                            return (
-                                <div className="pt-4">
-                                    <p className="text-lg font-semibold">{item.name}</p>
-                                    <p className="text-lg">{item.value != ''? item.value : '-'}</p>
-                                </div>
-                            )
-                        })
+                        dataForm.map((item) => (
+                            <div className="pt-4" key={item.name}>
+                                <p className="text-lg font-semibold">{item.name}</p>
+                                <p className="text-lg">{item.value != '' ? item.value : '-'}</p>
+                            </div>
+                        )
+                        )
                     )}
                     <div className="p-5">
-                        <input type="submit" value="Consulta" className="button button-primary w-full"  />
+                        <input type="submit" value="Consulta" className="button button-primary w-full" />
                     </div>
                 </div>
             </div>

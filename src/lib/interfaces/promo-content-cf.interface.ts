@@ -21,6 +21,7 @@ export interface IPromoContent {
     ctaLabel?: string;
     iconPosition?: string;
     iconSize?: string;
+    iconColor?: string;
     bgIconRounded?: string;
     isReverse?: boolean;
     tags?: ITag[];
@@ -40,6 +41,7 @@ export interface IPromoBlock extends IBlockProps {
     views?: string;
     isReverse?: boolean;
     cta?: IListItems;
+    image?: IImageAsset;
     listedForm?: IRpoForm;
 }
 
