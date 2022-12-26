@@ -1,5 +1,6 @@
 import { IImageAsset } from './assets-cf.interface';
 import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
+import { IRpoForm } from "./IForm-cf";
 
 interface IBlockProps {
     isFirst?: boolean;
@@ -22,7 +23,6 @@ export interface IPromoContent {
     iconSize?: string;
     bgIconRounded?: string;
     isReverse?: boolean;
-    urlImage?: string;
     tags?: ITag[];
 }
 
@@ -40,6 +40,7 @@ export interface IPromoBlock extends IBlockProps {
     views?: string;
     isReverse?: boolean;
     cta?: IListItems;
+    listedForm?: IRpoForm;
 }
 
 export interface ITag {
