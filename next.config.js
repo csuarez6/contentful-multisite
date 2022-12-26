@@ -21,7 +21,7 @@ const nextConfig = {
     'plugin:@next/next/recommended',
   ],
   images: {
-    domains: ['images.ctfassets.net'],
+    domains: ['images.ctfassets.net', 'picsum.photos','placeholder'],
   },
 };
 
