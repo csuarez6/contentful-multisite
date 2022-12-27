@@ -17,7 +17,9 @@ const AuxCustomContent = `
     }
     externalLink
     ctaLabel
+    pretitle
     promoTitle
+    subtitle
     promoDescription {
       ${RichtextQuery}
     }

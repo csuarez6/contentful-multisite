@@ -12,7 +12,7 @@ interface IBlockProps {
 export interface IPromoContent {
     promoTitle?: string;
     subtitle?: string;
-    promoDescription?: string;
+    promoDescription?: any;
     cta?: ILink;
     promoImage?: IImageAsset;
     alt?: string;
@@ -23,14 +23,21 @@ export interface IPromoContent {
     bgIconRounded?: string;
     isReverse?: boolean;
     tags?: ITag[];
+    externalLink?: string;
+    internalLink?: any;
+    ctaLabel?: string
 }
 
 export interface IPromoBlock extends IBlockProps {
     title?: string;
-    description?: string;
+    description?: any;
     content?: IPromoContent;
-    listedContent?: IPromoContent[];
-    featuredContent?: IPromoContent[];
+    listedContentsCollection?: {
+        items?: IPromoContent[]
+    };
+    featuredContentsCollection?: {
+        items?: IPromoContent[]
+    };
     backgroundColor?: string;
     columnsNumber?: number;
     alignImage?: string;

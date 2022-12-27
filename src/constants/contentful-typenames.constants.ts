@@ -12,4 +12,5 @@ export enum CONTENTFUL_TYPENAMES {
 
   VIEW_ACCORDION = "ViewAccordion",
   VIEW_BANNER_IMAGE = "ViewBannerImage",
+  VIEW_LEFT_FEATURED = "ViewSecondaryBanner"
 };

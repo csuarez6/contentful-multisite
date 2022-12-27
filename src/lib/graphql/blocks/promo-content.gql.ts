@@ -38,7 +38,7 @@ const BlockPromoContentQuery = `
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContent}
       }
     }
   }
