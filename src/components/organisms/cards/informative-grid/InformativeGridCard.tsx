@@ -2,18 +2,18 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Link from "next/link";
 
 const InformativeGridCard: React.FC<IPromoContent> = ({
-  title,
-  description,
+  promoTitle,
+  promoDescription,
   cta,
 }) => {
   return (
     <article className="text-center w-full px-6 py-12">
-      {(title || description) && (
+      {(promoTitle || promoDescription) && (
         <div className="grid gap-8">
-          {title && <h3 className="text-blue-dark">{title}</h3>}
-          {description &&
+          {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
+          {promoDescription &&
             <div className="richtext">
-              <p className="text-lg text-grey-30">{description}</p>
+              <p className="text-lg text-grey-30">{promoDescription}</p>
               <br /><br />
               <p className="text-xl text-blue-dark font-semibold">Desde</p>
               <br /><br />

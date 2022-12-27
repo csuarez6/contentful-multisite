@@ -10,15 +10,13 @@ interface IBlockProps {
 }
 
 export interface IPromoContent {
-    title?: string;
+    promoTitle?: string;
     subtitle?: string;
-    description?: string;
+    promoDescription?: string;
     cta?: ILink;
-    url?: string;
-    image?: IImageAsset;
+    promoImage?: IImageAsset;
     alt?: string;
-    icon?: string;
-    ctaLabel?: string;
+    promoIcon?: string;
     iconPosition?: string;
     iconSize?: string;
     iconColor?: string;

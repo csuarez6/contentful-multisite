@@ -13,10 +13,10 @@ const data1Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -33,10 +33,10 @@ const data1Column: IPromoBlock = {
                     label: 'Vanti Listo',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             },
@@ -57,10 +57,10 @@ const data1Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -86,10 +86,10 @@ const data1Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             },
@@ -104,10 +104,10 @@ const data1Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -121,10 +121,10 @@ const data1Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -147,10 +147,10 @@ const data2Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             },
@@ -168,10 +168,10 @@ const data2Column: IPromoBlock = {
                     label: 'Vanti Listo',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -191,10 +191,10 @@ const data2Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -220,10 +220,10 @@ const data2Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             },
@@ -238,10 +238,10 @@ const data2Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }
@@ -255,10 +255,10 @@ const data2Column: IPromoBlock = {
                     label: 'Factura de gas',
                 }
             ],
-            description: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+            promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
             subtitle: 'Plan 40.000',
-            title: 'Lorem Ipsum',
-            image: {
+            promoTitle: 'Lorem Ipsum',
+            promoImage: {
                 url: 'https://via.placeholder.com/1024',
                 title: 'Plan card'
             }

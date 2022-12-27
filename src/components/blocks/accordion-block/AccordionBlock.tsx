@@ -7,7 +7,7 @@ import Accordion from "@/components/organisms/accordion/Accordion";
 const AccordionBlock: React.FC<IAccordionBlock> = ({
   title,
   description,
-  featuredContentsCollection,
+  featuredContentsCollection
 }) => {
   return (
     <section className="flex flex-col gap-8">

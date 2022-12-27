@@ -29,8 +29,8 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, liste
       {listedContent && (
         <div className={classNames("grid divide-x divide-neutral-80", classColumns(columnsNumber))}>
           {listedContent.map((content, idx) =>
-            <div className={classNames("flex justify-center bg-white px-3", classBorder(columnsNumber, idx))} key={content.title}>
-              <InformativeGridCard key={content.title} {...content} />
+            <div className={classNames("flex justify-center bg-white px-3", classBorder(columnsNumber, idx))} key={content.promoTitle}>
+              <InformativeGridCard key={content.promoTitle} {...content} />
             </div>
           )}
         </div>

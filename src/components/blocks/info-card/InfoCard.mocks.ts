@@ -5,19 +5,19 @@ const data: IPromoBlock = {
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
   listedContent: [
     {
-      title: 'Título',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'dialogs'
+      promoTitle: 'Título',
+      promoDescription: 'Lorem ipsum dolor sit amet.',
+      promoIcon: 'dialogs'
     },
     {
-      title: 'Título 1',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'experience'
+      promoTitle: 'Título 1',
+      promoDescription: 'Lorem ipsum dolor sit amet.',
+      promoIcon: 'experience'
     },
     {
-      title: 'Título 2',
-      description: 'Lorem ipsum dolor sit amet.',
-      icon: 'assists'
+      promoTitle: 'Título 2',
+      promoDescription: 'Lorem ipsum dolor sit amet.',
+      promoIcon: 'assists'
     },
   ]
 };

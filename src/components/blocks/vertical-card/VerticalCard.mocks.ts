@@ -43,7 +43,7 @@ const data: IPromoBlock = {
       }
     }
   ],
-  columnsNumber: '3'
+  columnsNumber: 3
 };
 
 export const mockVerticalCardProps = {

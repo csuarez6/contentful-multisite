@@ -23,7 +23,7 @@ const ProductGrid: React.FC<IPromoBlock> = ({ listedContent, columnsNumber, desc
                 <div className={classNames("`w-full grid gap-9", classColumns(columnsNumber))}>
                     {
                         listedContent.map((el) => {
-                            return <PlanCard {...el} key={`${title}-${el.title}`} />;
+                            return <PlanCard {...el} key={`${title}-${el.promoTitle}`} />;
                         })
                     }
                 </div>

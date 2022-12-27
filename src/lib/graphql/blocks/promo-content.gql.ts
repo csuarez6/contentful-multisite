@@ -29,7 +29,6 @@ const BlockPromoContentQuery = `
       ${AuxCustomContent}
     }
   }
-  ctaLabel
   featuredContentsCollection {
     items {
       ...on Page {

@@ -13,48 +13,48 @@ const data: IPromoBlock = {
   },
   listedContent: [
     {
-      title: 'Título 1',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 1',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
       }
     },
     {
-      title: 'Título 2',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 2',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
       }
     },
     {
-      title: 'Título 3',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 3',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
       }
     },
     {
-      title: 'Título 4',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 4',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
       }
     },
     {
-      title: 'Título 5',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 5',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
       }
     },
     {
-      title: 'Título 6',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 6',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"
@@ -69,12 +69,12 @@ const dataSecondary: IPromoBlock = {
   columnsNumber: 2,
   listedContent: [
     {
-      title: 'Título 1',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 1',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
     },
     {
-      title: 'Título 2',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título 2',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: '#',
         name: 'Conocelós'
@@ -96,8 +96,8 @@ const dataTetiary: IPromoBlock = {
   },
   listedContent: [
     {
-      title: 'Título',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Título',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       cta: {
         href: "#",
         name: "conocelós"

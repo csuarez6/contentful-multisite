@@ -4,14 +4,13 @@ import Link from "next/link";
 import { classNames } from '../../../utils/functions';
 
 const ListWithIcons: React.FC<IPromoContent> = ({
-  title,
-  icon,
-  description,
+  promoTitle,
+  promoIcon,
+  promoDescription,
   iconPosition,
   iconSize,
   bgIconRounded,
-  url,
-  ctaLabel
+  cta
 }) => {
   let iconSizeLocal = "w-[68px] h-[68px]";
   if (bgIconRounded) iconSizeLocal = `w-24 h-24 p-4 rounded-full ${bgIconRounded}`;
@@ -23,28 +22,28 @@ const ListWithIcons: React.FC<IPromoContent> = ({
   }
 
   return (
-    <div key={title}
+    <div key={promoTitle}
       className={classNames(
         "flex",
         (iconPosition && iconPosition === 'left') ? "flex-row gap-6" : "flex-col text-center gap-3 items-center"
       )}>
       <div className={`flow-root shrink-0 ${iconSizeLocal}`}>
         <Icon
-          icon={icon}
+          icon={promoIcon}
           className="mx-auto w-full h-full"
         />
       </div>
       <div className={`flex flex-col gap-2 ${iconPosition !== 'left' ? 'items-center' : 'items-start'}`}>
-        {(title) && (
-          <h3 className="title is-4 text-blue-dark">{title}</h3>
+        {(promoTitle) && (
+          <h3 className="title is-4 text-blue-dark">{promoTitle}</h3>
         )}
-        {(description) && (
-          <p className="text-lg text-grey-30">{description}</p>
+        {(promoDescription) && (
+          <p className="text-lg text-grey-30">{promoDescription}</p>
         )}
-        {(url && ctaLabel) && (
-          <Link href={url}>
+        {(cta) && (
+          <Link href={cta.href}>
             <a className="button button-primary w-fit">
-              {ctaLabel}
+              {cta.name}
             </a>
           </Link>
         )}

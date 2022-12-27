@@ -5,28 +5,34 @@ const data: IPromoBlock = {
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
   listedContent: [
     {
-      title: 'Title',
-      icon: 'invoice-filled',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Title',
+      promoIcon: 'invoice-filled',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       iconPosition: 'top',
-      url: '#',
-      ctaLabel: 'button'
+      cta: {
+        href: '#',
+        name: 'button'
+      }
     },
     {
-      title: 'Title',
-      icon: 'invoice-filled',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Title',
+      promoIcon: 'invoice-filled',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       iconPosition: 'top',
-      url: '#',
-      ctaLabel: 'button'
+      cta: {
+        href: '#',
+        name: 'button'
+      }
     },
     {
-      title: 'Title',
-      icon: 'invoice-filled',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+      promoTitle: 'Title',
+      promoIcon: 'invoice-filled',
+      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
       iconPosition: 'top',
-      url: '#',
-      ctaLabel: 'button'
+      cta: {
+        href: '#',
+        name: 'button'
+      }
     }
   ]
 };

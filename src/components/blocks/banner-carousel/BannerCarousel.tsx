@@ -29,12 +29,12 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({ listedContent }) => {
                 listedContent && (
                   <>
                     {listedContent.map((content) => (
-                      content.image?.url &&
-                      <SwiperSlide className="flex items-center" key={content.title}>
+                      content.promoImage?.url &&
+                      <SwiperSlide className="flex items-center" key={content.promoTitle}>
                         <figure className="absolute w-screen h-full">
                           <Image
-                            src={content.image.url}
-                            alt={content.image.title ?? 'SlideItem'}
+                            src={content.promoImage.url}
+                            alt={content.promoImage.title ?? 'SlideItem'}
                             className='w-full h-full object-cover'
                             width={1920}
                             height={568}
@@ -43,7 +43,7 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({ listedContent }) => {
                         </figure>
                         <div className="container px-28 mx-auto">
                           <div className='relative flex justify-center flex-col gap-6 py-[70px] px-2 w-3/5'>
-                            {content.title && <h1 className='text-blue-dark title is-1'>{content.title}</h1>}
+                            {content.promoTitle && <h1 className='text-blue-dark title is-1'>{content.promoTitle}</h1>}
                             {content.cta &&
                               <Link href={content.cta.href}>
                                 <a className="w-fit button button-primary">{content.cta.name}</a>

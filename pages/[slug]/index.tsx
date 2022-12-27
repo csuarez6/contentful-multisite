@@ -29,7 +29,7 @@ export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<IPage>> => {
   const pageContent = await getPageContent(
-    context.params.slug[context.params.slug.length - 1],
+    context.params.slug,
     context.preview ?? false
   );
 

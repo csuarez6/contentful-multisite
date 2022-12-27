@@ -18,8 +18,8 @@ const Home: NextPageWithLayout = ({ name }: IPage) => {
       <h1 className="mb-6 block">{name}</h1>
 
       <InfoCard
-        title="Biblioteca de componentes"
-        description="Desde el siguiente enlace puedes acceder a la biblioteca de componentes del proyecto."
+        promoTitle="Biblioteca de componentes"
+        promoDescription="Desde el siguiente enlace puedes acceder a la biblioteca de componentes del proyecto."
       />
       <span className="block my-6"></span>
       <ButtonAtom

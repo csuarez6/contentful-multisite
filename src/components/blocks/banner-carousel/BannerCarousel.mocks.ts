@@ -5,8 +5,8 @@ const data: IPromoBlock = {
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
   listedContent: [
     {
-      title: 'A1. vanzar es disfrutar el calor de hogar con nuevos gasodomésticos',
-      image: {
+      promoTitle: 'A1. vanzar es disfrutar el calor de hogar con nuevos gasodomésticos',
+      promoImage: {
         url: 'https://via.placeholder.com/1920x600',
       },
       cta: {
@@ -15,8 +15,8 @@ const data: IPromoBlock = {
       }
     },
     {
-      title: '2. Avanzar es aprovechar los precios que tendrás con Vanti Listo',
-      image: {
+      promoTitle: '2. Avanzar es aprovechar los precios que tendrás con Vanti Listo',
+      promoImage: {
         url: 'https://via.placeholder.com/1920x600',
       },
       cta: {
@@ -25,8 +25,8 @@ const data: IPromoBlock = {
       }
     },
     {
-      title: '3. Avanzar es instalar puntos de gas para tus gasodomésticos',
-      image: {
+      promoTitle: '3. Avanzar es instalar puntos de gas para tus gasodomésticos',
+      promoImage: {
         url: 'https://via.placeholder.com/1920x600',
       },
       cta: {
@@ -35,8 +35,8 @@ const data: IPromoBlock = {
       }
     },
     {
-      title: '4. Avanzar es aprovechar los precios que tendrás con Vanti Listo',
-      image: {
+      promoTitle: '4. Avanzar es aprovechar los precios que tendrás con Vanti Listo',
+      promoImage: {
         url: 'https://via.placeholder.com/1920x600',
       },
       cta: {

@@ -14,8 +14,8 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, listedCo
       {listedContent && (
         <div className={classNames("grid justify-center gap-9", classColumns(columnsNumber))}>
           {listedContent.map((content) => (
-            <div className='flex justify-center' key={content.title}>
-              <VerticalCard key={content.title} {...content} />
+            <div className='flex justify-center' key={content.promoTitle}>
+              <VerticalCard key={content.promoTitle} {...content} />
             </div>
           ))}
         </div>

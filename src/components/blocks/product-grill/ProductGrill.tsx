@@ -32,7 +32,7 @@ function listedClasses(listedContent: IPromoContent[], featuredContent: IPromoCo
 }
 
 const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsNumber = 1, listedContent = [], featuredContent = [], isReverse = false }) => {
-  featuredContent.forEach(item => item.image.isPortrait = true);
+  featuredContent.forEach(item => item.promoImage.isPortrait = true);
   const featuredContentSplice = JSON.parse(JSON.stringify(featuredContent));
 
   return (
@@ -54,7 +54,7 @@ const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsN
 
           {listedContent.length > 0 && <div className={classNames("grid grid-cols-1 gap-5", listedClasses(listedContent, featuredContent, columnsNumber, isReverse))}>
             {listedContent.map(item => (
-              <ProductSmallCard key={item.title} {...item} />
+              <ProductSmallCard key={item.promoTitle} {...item} />
             ))}
           </div>}
         </div>
