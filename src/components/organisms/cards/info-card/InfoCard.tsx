@@ -1,5 +1,6 @@
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 const InfoCard: React.FC<IPromoContent> = ({
   promoTitle,
@@ -20,9 +21,7 @@ const InfoCard: React.FC<IPromoContent> = ({
           <h3 className="text-black">{promoTitle}</h3>
         )}
         {promoDescription && (
-          <div className="text-size-p1 text-grey-30">
-            <p>{promoDescription}</p>
-          </div>
+          <div className="text-size-p1 text-grey-30">{documentToReactComponents(promoDescription.json)}</div>
         )}
       </div>
     </article>

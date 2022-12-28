@@ -1,51 +1,104 @@
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
 const data: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  listedContent: [
-    {
-      title: 'Título 1',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      image: {
-        url: 'https://via.placeholder.com/588x180.png',
-        title: 'Card image'
+  description: RICHTEXT_SHORT_SIMPLE,
+  listedContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1280x392.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button"
+        }
       },
-      cta: {
-        href: "#",
-        name: "Button"
-      }
-    },
-    {
-      title: 'Título 2',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      image: {
-        url: 'https://via.placeholder.com/588x180.png',
-        title: 'Card image'
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1280x392.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button",
+          buttonType: "button-primary"
+        }
       },
-      cta: {
-        href: "#",
-        name: "Button",
-        buttonType: "button-primary"
+      {
+        promoTitle: 'Título 3',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1280x392.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button",
+          buttonType: "button-secondary"
+        }
       }
-    },
-    {
-      title: 'Título 3',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      image: {
-        url: 'https://via.placeholder.com/588x180.png',
-        title: 'Card image'
+    ]
+  },
+  columnsSize: 3
+};
+const dataPortrait: IPromoBlock = {
+  title: 'Título',
+  description: RICHTEXT_SHORT_SIMPLE,
+  imageOrientation: 'Portrait',
+  listedContentsCollection:
+  {
+    items: [
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x2030.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button"
+        }
       },
-      cta: {
-        href: "#",
-        name: "Button",
-        buttonType: "button-secondary"
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x2030.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button",
+          buttonType: "button-primary"
+        }
+      },
+      {
+        promoTitle: 'Título 3',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x2030.png',
+          title: 'Card image'
+        },
+        cta: {
+          href: "#",
+          name: "Button",
+          buttonType: "button-secondary"
+        }
       }
-    }
-  ],
-  columnsNumber: 3
+    ]
+  },
+  columnsSize: 3
 };
 
 export const mockVerticalCardProps = {
   data,
+  dataPortrait
 };

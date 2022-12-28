@@ -29,14 +29,14 @@ const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, cta, promoImage }) 
           </figure>
         </div>
       )}
-      {(promoImage || cta) && (
+      {(promoTitle || cta?.href) && (
         <div className={classNames(
           isPortrait ? "max-w-full" : "max-w-[55%]",
           "relative flex items-center w-full"
         )}>
           <div className="grid space-y-[18px]">
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-            {cta && <div className="flex gap-3">
+            {cta?.href && <div className="flex gap-3">
               <Link href={cta.href}>
                 <a className="button button-primary">
                   {cta.name}

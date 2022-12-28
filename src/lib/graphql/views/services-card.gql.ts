@@ -4,6 +4,7 @@ const ViewServicesCard = `
   ${DefaultQuery}
   name
   columnsSize
+  imageOrientation
 `;
 
 export default ViewServicesCard;

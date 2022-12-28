@@ -1,25 +1,28 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Lorem ipsum dolor',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  listedContent: [
-    {
-      promoTitle: 'Título',
-      promoDescription: 'Lorem ipsum dolor sit amet.',
-      promoIcon: 'dialogs'
-    },
-    {
-      promoTitle: 'Título 1',
-      promoDescription: 'Lorem ipsum dolor sit amet.',
-      promoIcon: 'experience'
-    },
-    {
-      promoTitle: 'Título 2',
-      promoDescription: 'Lorem ipsum dolor sit amet.',
-      promoIcon: 'assists'
-    },
-  ]
+  description: RICHTEXT_SHORT_SIMPLE,
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'dialogs'
+      },
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'experience'
+      },
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'assists'
+      },
+    ]
+  }
 };
 
 export const mockInfoCardProps = {

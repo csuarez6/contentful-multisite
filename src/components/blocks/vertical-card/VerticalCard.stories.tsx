@@ -23,8 +23,13 @@ const Template: ComponentStory<typeof VerticalCard> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const Portrait = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
   ...mockVerticalCardProps.data,
+} as IPromoBlock;
+
+Portrait.args = {
+  ...mockVerticalCardProps.dataPortrait,
 } as IPromoBlock;

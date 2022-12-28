@@ -1,8 +1,9 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea .',
+  description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
     title: 'featuredView'
@@ -21,34 +22,37 @@ const data: IPromoBlock = {
       }
     ]
   },
-  listedContent: [
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    },
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    },
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    }
-  ]
+  featuredContentsCollection:
+  {
+    items: [
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      },
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      },
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      }
+    ]
+  }
 };
 
 const dataImageRight: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea .',
+  description: RICHTEXT_SHORT_SIMPLE,
   alignImage: 'right',
   image: {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
@@ -63,37 +67,39 @@ const dataImageRight: IPromoBlock = {
       }
     ]
   },
-  listedContent: [
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    },
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    },
-    {
-      icon: 'chat',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-      iconPosition: 'left',
-      bgIconRounded: 'bg-blue-dark',
-      iconColor: 'text-white',
-      iconSize: 'small',
-    }
-  ]
+  featuredContentsCollection: {
+    items: [
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      },
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      },
+      {
+        promoIcon: 'chat',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        bgIconRounded: 'bg-blue-dark',
+        iconColor: 'text-white',
+        iconSize: 'small',
+      }
+    ]
+  }
 };
 
 const dataListedColumns: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea .',
+  description: RICHTEXT_SHORT_SIMPLE,
   alignImage: 'right',
   image: {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
@@ -108,43 +114,45 @@ const dataListedColumns: IPromoBlock = {
       }
     ]
   },
-  columnsNumber: 3,
-  listedContent: [
-    {
-      title: 'Title',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      iconSize: 'small',
-    },
-    {
-      title: 'Title',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      iconSize: 'small',
-    },
-    {
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-      iconPosition: 'left',
-      iconSize: 'small',
-    },
-    {
-      title: 'Title',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      iconSize: 'small',
-    },
-    {
-      title: 'Title',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      iconPosition: 'left',
-      iconSize: 'small',
-    },
-    {
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-      iconPosition: 'left',
-      iconSize: 'small',
-    }
-  ]
+  columnsSize: 3,
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Title',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      },
+      {
+        promoTitle: 'Title',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      },
+      {
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      },
+      {
+        promoTitle: 'Title',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      },
+      {
+        promoTitle: 'Title',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      },
+      {
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        iconPosition: 'left',
+        iconSize: 'small',
+      }
+    ]
+  }
 };
 
 export const mockFeaturedBlockProps = {

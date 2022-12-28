@@ -1,13 +1,12 @@
-import {
-  IPromoContent
-} from "@/lib/interfaces/promo-content-cf.interface";
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoContent = {
   promoTitle: 'Title',
   promoIcon: 'invoice-filled',
-  promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   iconPosition: 'top',
-  cta:{
+  cta: {
     href: '#',
     name: 'button'
   }
@@ -17,14 +16,14 @@ const iconLeft: IPromoContent = {
   promoTitle: 'Title',
   promoIcon: 'invoice-filled',
   iconSize: 'medium',
-  promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   iconPosition: 'left'
 };
 
 const iconLeftRounded: IPromoContent = {
   promoTitle: 'Title',
   promoIcon: 'invoice-filled',
-  promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   iconPosition: 'left',
   iconSize: 'small',
   bgIconRounded: 'bg-neutral-90'
@@ -32,7 +31,7 @@ const iconLeftRounded: IPromoContent = {
 
 const iconLeftNoTitle: IPromoContent = {
   promoIcon: 'invoice-filled',
-  promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   iconPosition: 'left'
 };
 

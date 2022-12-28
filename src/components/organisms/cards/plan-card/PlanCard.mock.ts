@@ -1,3 +1,4 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const card: IPromoContent = {
@@ -9,7 +10,7 @@ const card: IPromoContent = {
             label: 'Factura de gas',
         }
     ],
-    promoDescription: 'Reparamos defectos menores: cierres de punto, fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+    promoDescription: RICHTEXT_SHORT_SIMPLE,
     subtitle: 'Plan 0',
     promoTitle: '$50.000',
     promoImage: {
@@ -27,7 +28,7 @@ const cardReverse: IPromoContent = {
             label: 'Factura de gas',
         }
     ],
-    promoDescription: 'Reparamos defectos menores: cierres de punto,dd fugas menores, ajuste de racores o conexiones de gasodomésticos, ajustes de ventilación) derivados de la visita técnica de RPO y/o emergencias.',
+    promoDescription: RICHTEXT_SHORT_SIMPLE,
     subtitle: 'Plan 0',
     promoTitle: '$50.000',
     promoImage: {

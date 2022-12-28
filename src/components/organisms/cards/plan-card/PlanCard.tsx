@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { IPromoContent } from '@/lib/interfaces/promo-content-cf.interface';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
 const PlanCard: React.FC<IPromoContent> = ({
   tags,
@@ -34,28 +35,26 @@ const PlanCard: React.FC<IPromoContent> = ({
                   {subtitle && <h4 className='text-blue-dark'>{subtitle}</h4>}
                 </div>
               }
-              {promoDescription &&
-                <div className='text-grey-30 font-medium'>
-                  {promoDescription}
-                </div>
-              }
+              {promoDescription && <div className='text-grey-30 font-medium'>{documentToReactComponents(promoDescription.json)}</div>}
             </div>
           }
           {tags &&
             <div className='flex gap-[15px] sm:items-center flex-col xs:flex-row'>
               <span>Puedes pagar con:</span>
-              {tags && <div className='flex gap-x-[18px] flex-wrap gap-y-2'>
-                {
-                  tags.map((el) => {
-                    if (!el.label) return;
-                    return (
-                      <div className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`} key={`${promoTitle}-${el.label}`}>
-                        <span>{el.label}</span>
-                      </div>
-                    );
-                  })
-                }
-              </div>}
+              {tags && (
+                <div className='flex gap-x-[18px] flex-wrap gap-y-2'>
+                  {
+                    tags.map((el) => {
+                      if (!el.label) return;
+                      return (
+                        <div className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`} key={`${promoTitle}-${el.label}`}>
+                          <span>{el.label}</span>
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              )}
             </div>
           }
         </div>

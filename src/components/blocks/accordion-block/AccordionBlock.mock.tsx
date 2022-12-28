@@ -3,8 +3,7 @@ import { IAccordionBlock } from "@/lib/interfaces/accordion-cf.interface";
 
 export const data: IAccordionBlock = {
   title: "Lorem ipsum dolor",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.",
+  description: RICHTEXT_SHORT_SIMPLE,
   featuredContentsCollection: {
     items: [
       {

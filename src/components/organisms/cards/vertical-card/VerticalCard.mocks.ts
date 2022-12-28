@@ -1,8 +1,9 @@
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
 const data: IPromoContent = {
   promoTitle: 'Título',
-  promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   promoImage: {
     url: 'https://via.placeholder.com/1280x392.png',
     title: ''

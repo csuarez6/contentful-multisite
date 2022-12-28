@@ -8,12 +8,12 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({title,description, featuredCo
     <section className="grid gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
-          <h2 className="text-blue-dark title is-1">{title} </h2>
-          <div className="text-blue-dark">{documentToReactComponents(description.json)}</div>
+          {title && <h2 className="text-blue-dark title is-1">{title} </h2>}
+          {description && <div className="text-blue-dark">{documentToReactComponents(description.json)}</div>}
         </div>
       }
-      {featuredContentsCollection?.items?.map((contentCollection, id) => (      
-        <LeftFeatured {...contentCollection} key={id}/>
+      {featuredContentsCollection?.items?.map((contentCollection) => (      
+        <LeftFeatured {...contentCollection} key={contentCollection.promoTitle}/>
       ))}
     </section>
   );

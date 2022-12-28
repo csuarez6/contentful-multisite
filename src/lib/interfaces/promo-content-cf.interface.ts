@@ -39,7 +39,7 @@ export interface IPromoBlock extends IBlockProps {
         items?: IPromoContent[]
     };
     backgroundColor?: string;
-    columnsNumber?: number;
+    columnsSize?: number;
     alignImage?: string;
     iconColor?: string;
     buttonColor?: string;
@@ -48,6 +48,7 @@ export interface IPromoBlock extends IBlockProps {
     cta?: IListItems;
     image?: IImageAsset;
     listedForm?: IRpoForm;
+    imageOrientation?: string;
 }
 
 export interface ITag {

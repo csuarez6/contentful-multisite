@@ -1,8 +1,9 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoContent = {
   promoTitle: 'Título',
-  promoDescription: 'Lorem ipsum dolor sit amet.',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   promoIcon: 'body'
 };
 

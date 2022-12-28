@@ -1,9 +1,10 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  columnsNumber: 3,
+  description: RICHTEXT_SHORT_SIMPLE,
+  columnsSize: 3,
   cta: {
     name: 'button',
     list: [{
@@ -11,82 +12,86 @@ const data: IPromoBlock = {
       name: 'Button'
     }]
   },
-  listedContent: [
-    {
-      promoTitle: 'Título 1',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
+      },
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
+      },
+      {
+        promoTitle: 'Título 3',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
+      },
+      {
+        promoTitle: 'Título 4',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
+      },
+      {
+        promoTitle: 'Título 5',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
+      },
+      {
+        promoTitle: 'Título 6',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
       }
-    },
-    {
-      promoTitle: 'Título 2',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
-      }
-    },
-    {
-      promoTitle: 'Título 3',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
-      }
-    },
-    {
-      promoTitle: 'Título 4',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
-      }
-    },
-    {
-      promoTitle: 'Título 5',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
-      }
-    },
-    {
-      promoTitle: 'Título 6',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
-      }
-    }
-  ]
+    ]
+  }
 };
 
 const dataSecondary: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  columnsNumber: 2,
-  listedContent: [
-    {
-      promoTitle: 'Título 1',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-    },
-    {
-      promoTitle: 'Título 2',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: '#',
-        name: 'Conocelós'
+  description: RICHTEXT_SHORT_SIMPLE,
+  columnsSize: 2,
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+      },
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: '#',
+          name: 'Conocelós'
+        }
       }
-    }
-  ]
+    ]
+  }
 };
 
 const dataTetiary: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-  columnsNumber: 1,
+  description: RICHTEXT_SHORT_SIMPLE,
+  columnsSize: 1,
   cta: {
     name: 'Button',
     list: [{
@@ -94,16 +99,18 @@ const dataTetiary: IPromoBlock = {
       name: 'Conocelós'
     }]
   },
-  listedContent: [
-    {
-      promoTitle: 'Título',
-      promoDescription: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
-      cta: {
-        href: "#",
-        name: "conocelós"
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        cta: {
+          href: "#",
+          name: "conocelós"
+        }
       }
-    }
-  ]
+    ]
+  }
 };
 
 export const mockInformativeGridProps = {

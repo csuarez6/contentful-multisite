@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { classNames } from "../../../../utils/functions";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 const VerticalCard: React.FC<IPromoContent> = ({
   promoTitle,
@@ -11,7 +13,7 @@ const VerticalCard: React.FC<IPromoContent> = ({
   return (
     <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px]">
       {promoImage && (
-        <figure className="w-full relative aspect-[1280/392]">
+        <figure className={classNames("w-full relative", promoImage.isPortrait ? 'aspect-[364/606]' : 'aspect-[588/180]')}>
           <Image
             src={promoImage.url}
             alt={promoImage.title}
@@ -24,8 +26,8 @@ const VerticalCard: React.FC<IPromoContent> = ({
         <div className="flex items-center w-full p-6">
           <div className="grid">
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-            {promoDescription && <p className="text-blue-dark-8 text-size-p1">{promoDescription}</p>}
-            {cta &&
+            {promoDescription?.json && <div className="text-blue-dark-8 text-size-p1">{documentToReactComponents(promoDescription.json)}</div>}
+            {cta?.href &&
               <div className="flex gap-3 mt-6">
                 <Link href={cta.href}>
                   <a className={`button ${cta.buttonType ?? 'button-outline'}`}>{cta.name}</a>
