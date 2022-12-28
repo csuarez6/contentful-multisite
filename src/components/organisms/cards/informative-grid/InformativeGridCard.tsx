@@ -6,6 +6,9 @@ const InformativeGridCard: React.FC<IPromoContent> = ({
   promoTitle,
   promoDescription,
   cta,
+  ctaLabel,
+  externalLink,
+  internalLink
 }) => {
   return (
     <article className="text-center w-full px-6 py-12">
@@ -30,6 +33,13 @@ const InformativeGridCard: React.FC<IPromoContent> = ({
               </Link>
             </div>
           )}
+          {ctaLabel &&
+            <div className="flex justify-center">
+              <Link href={externalLink ? externalLink : internalLink.slug} className='button text-button'>
+                {ctaLabel}
+              </Link>
+            </div>
+          }
         </div>
       )}
     </article>

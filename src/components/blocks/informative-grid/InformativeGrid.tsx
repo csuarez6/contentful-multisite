@@ -18,7 +18,7 @@ function classBorder(columns = 1, idx = 0) {
   return classes.join(" ");
 }
 
-const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, columnsSize, cta }) => {
+const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, cta }) => {
   return (
     <section className="grid gap-9">
       {(title || description) &&
@@ -28,9 +28,9 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featu
         </div>
       }
       {featuredContentsCollection?.items && (
-        <div className={classNames("grid divide-x divide-neutral-80", classColumns(columnsSize))}>
+        <div className={classNames("grid divide-x divide-neutral-80", classColumns(view.columnsSize))}>
           {featuredContentsCollection.items.map((content, idx) =>
-            <div className={classNames("flex justify-center bg-white px-3", classBorder(columnsSize, idx))} key={content.promoTitle}>
+            <div className={classNames("flex justify-center bg-white px-3", classBorder(view.columnsSize, idx))} key={content.promoTitle}>
               <InformativeGridCard key={content.promoTitle} {...content} />
             </div>
           )}

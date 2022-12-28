@@ -4,7 +4,9 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 const data: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  columnsSize: 3,
+  view: {
+    columnsSize: 3
+  },
   cta: {
     name: 'button',
     list: [{
@@ -69,7 +71,9 @@ const data: IPromoBlock = {
 const dataSecondary: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  columnsSize: 2,
+  view: {
+    columnsSize: 2
+  },
   featuredContentsCollection: {
     items: [
       {
@@ -91,7 +95,9 @@ const dataSecondary: IPromoBlock = {
 const dataTetiary: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  columnsSize: 1,
+  view: {
+    columnsSize: 1
+  },
   cta: {
     name: 'Button',
     list: [{
