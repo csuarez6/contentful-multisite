@@ -10,7 +10,7 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
   featuredContentsCollection
 }) => {
   return (
-    <section className="flex flex-col gap-8">
+    <section className="section flex flex-col gap-8">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark title is-1">{title}</h2>}

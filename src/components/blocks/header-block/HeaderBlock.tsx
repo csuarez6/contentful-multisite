@@ -14,10 +14,10 @@ const HeaderBlock: React.FC<INavigation> = ({ mainNavCollection, promoImage, uti
     <Disclosure
       as="header"
       id="header"
-      className="xl:container mx-auto bg-white"
+      className="sticky inset-x-0 top-0 z-20"
     >
       {({ open }) => (
-        <>
+        <div className="xl:container mx-auto">
           <div className="px-2 sm:px-4 2xl:px-28">
             <div className="relative flex items-center min-h-[80px] justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
@@ -233,7 +233,7 @@ const HeaderBlock: React.FC<INavigation> = ({ mainNavCollection, promoImage, uti
               ))} */}
             </ul>
           </Disclosure.Panel>
-        </>
+        </div>
       )}
     </Disclosure>
   );

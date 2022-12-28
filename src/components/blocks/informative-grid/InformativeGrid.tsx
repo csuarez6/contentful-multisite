@@ -20,7 +20,7 @@ function classBorder(columns = 1, idx = 0) {
 
 const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, cta }) => {
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}

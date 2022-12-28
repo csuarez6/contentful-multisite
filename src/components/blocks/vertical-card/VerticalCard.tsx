@@ -5,7 +5,7 @@ import { classNames, classColumns } from '../../../utils/functions';
 
 const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, imageOrientation, listedContentsCollection, columnsSize }) => {
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}

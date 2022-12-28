@@ -8,7 +8,7 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection
 }) => {
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}

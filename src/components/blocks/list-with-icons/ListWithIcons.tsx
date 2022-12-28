@@ -4,7 +4,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection }) => {
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) && (
         <div className="grid text-center gap-6">
           {title && <h2 className="text-blue-dark">{title}</h2>}

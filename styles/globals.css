@@ -65,3 +65,7 @@ h6 {
 .alert-block {
   @apply text-red-500 bg-red-300 w-full p-3 border border-red-500 font-bold mt-10;
 }
+
+section.section {
+  @apply py-8;
+}

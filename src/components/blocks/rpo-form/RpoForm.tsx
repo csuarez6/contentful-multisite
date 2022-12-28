@@ -3,7 +3,7 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const RpoFormBlock: React.FC<IPromoBlock> = ({ title, description, listedForm }) => {
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) && 
         <div className="grid gap-9 text-center">
           <h2 className="text-blue-dark">{title}</h2>

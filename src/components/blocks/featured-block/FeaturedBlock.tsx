@@ -9,7 +9,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, align
   const imageAlignLocal = (alignImage && alignImage === "right") ? "order-last" : "";
 
   return (
-    <section className="grid">
+    <section className="section grid">
       <div className="relative">
         <div className={classNames(
           "gap-x-16 gap-y-6 grid grid-cols-1 items-center",

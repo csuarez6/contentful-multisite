@@ -23,13 +23,17 @@ const PageLayout: React.FC<IPageLayout> = ({ children, name, headerInfo, footerI
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
 
-      <HeaderBlock {...headerInfo} />
+      <div className="min-h-screen flex flex-col">
+        <HeaderBlock {...headerInfo} />
 
-      <main>
-        {children}
-      </main>
+        <main className="flex-grow overflow-hidden">
+          <div className="xl:container mx-auto px-3 sm:px-5 lg:px-8 2xl:px-28">
+            {children}
+          </div>
+        </main>
 
-      <FooterBlock {...footerInfo} />
+        <FooterBlock {...footerInfo} />
+      </div>
     </>
   );
 };

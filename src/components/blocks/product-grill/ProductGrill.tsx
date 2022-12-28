@@ -59,7 +59,7 @@ const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsS
   const featuredContentSplice: IPromoContent[] = JSON.parse(JSON.stringify(featuredContentsCollection?.items));
 
   return (
-    <section className="grid gap-9">
+    <section className="section grid gap-9">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}
