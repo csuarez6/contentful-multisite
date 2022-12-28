@@ -3,30 +3,30 @@ import DefaultQuery from "../shared/default.gql";
 import RichtextQuery from "../shared/richtext.qql";
 
 const AuxCustomContent = `
-    ${DefaultQuery}
-    name
-    internalLink {
-      ...on Page{
-        ${DefaultQuery}
-        slug
-      }
-      ...on Product {
-        ${DefaultQuery}
-        slug
-      }
+  ${DefaultQuery}
+  name
+  internalLink {
+    ...on Page{
+      ${DefaultQuery}
+      slug
     }
-    externalLink
-    ctaLabel
-    pretitle
-    promoTitle
-    subtitle
-    promoDescription {
-      ${RichtextQuery}
+    ...on Product {
+      ${DefaultQuery}
+      slug
     }
-    promoImage {
-      ${AssetImageQuery}
-    }
-    promoIcon
+  }
+  externalLink
+  ctaLabel
+  pretitle
+  promoTitle
+  subtitle
+  promoDescription {
+    ${RichtextQuery}
+  }
+  promoImage {
+    ${AssetImageQuery}
+  }
+  promoIcon
 `;
 
 export default AuxCustomContent;

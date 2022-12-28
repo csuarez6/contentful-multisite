@@ -10,6 +10,10 @@ interface IBlockProps {
 }
 
 export interface IPromoContent {
+    sys?: {
+        id?: string;
+    };
+    name?: string;
     promoTitle?: string;
     subtitle?: string;
     promoDescription?: any;

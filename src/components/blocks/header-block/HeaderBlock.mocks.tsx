@@ -1,6 +1,6 @@
-import { IHeader } from "@/lib/interfaces/header-cf.interface";
+// import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 
-const data: IHeader = {
+const data: any = {
   logo: {
     title: "Logo Vanti",
     url: "/images/vanti-logo.png",

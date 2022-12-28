@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@apollo/client': ^3.7.2
   '@contentful/rich-text-react-renderer': ^15.16.2
+  '@contentful/rich-text-types': ^16.0.2
   '@headlessui/react': ^1.7.4
   '@heroicons/react': ^2.0.13
   '@sentry/nextjs': ^7.19.0
@@ -53,6 +54,7 @@ dependencies:
   typescript: 4.8.4
 
 devDependencies:
+  '@contentful/rich-text-types': 16.0.2
   '@storybook/addon-actions': 6.5.13_biqbaboplfbrettd7655fr4n2y
   '@storybook/addon-essentials': 6.5.13_5w27m7ulliyasiim7tlslq4rsa
   '@storybook/addon-interactions': 6.5.13_ne227bvjalmk4zf5jyanirqk64
@@ -2472,7 +2474,6 @@ packages:
   /@contentful/rich-text-types/16.0.2:
     resolution: {integrity: sha512-ovbmCKQjlyGek4NuABoqDesC3FBV3e5jPMMdtT2mpOy9ia31MKO0NSFMRGZu7Q+veZzmDMja8S1i/XeFCUT9Pw==}
     engines: {node: '>=6.0.0'}
-    dev: false
 
   /@design-systems/utils/2.12.0_2zx2umvpluuhvlq44va5bta2da:
     resolution: {integrity: sha512-Y/d2Zzr+JJfN6u1gbuBUb1ufBuLMJJRZQk+dRmw8GaTpqKx5uf7cGUYGTwN02dIb3I+Tf+cW8jcGBTRiFxdYFg==}
@@ -12424,7 +12425,7 @@ packages:
       dom7: 4.0.4
       ssr-window: 4.0.2
     dev: false
-    
+
   /symbol-observable/4.0.0:
     resolution: {integrity: sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==}
     engines: {node: '>=0.10'}

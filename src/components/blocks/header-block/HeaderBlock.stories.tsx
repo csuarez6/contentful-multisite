@@ -1,4 +1,4 @@
-import { IHeader } from '@/lib/interfaces/header-cf.interface';
+import { INavigation } from '@/lib/interfaces/menu-cf.interface';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import HeaderBlock from './HeaderBlock';
 import { mockHeaderBlockProps } from './HeaderBlock.mocks';
@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockHeaderBlockProps.data,
-} as IHeader;
+} as INavigation;

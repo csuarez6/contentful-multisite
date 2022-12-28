@@ -17,9 +17,9 @@ import { mockProductGrillProps } from "@/components/blocks/product-grill/Product
 const HomeTemplate: React.FC<IPage> = ({ layout }) => {
   const listWithIconsData = {
     ...mockListWithIconsProps.data,
-    listedContent: mockListWithIconsProps.data.listedContent.map((item) => {
+    listedContent: mockListWithIconsProps.data.listedContentsCollection.items.map((item) => {
       const cleanItem = {...item};
-      delete cleanItem.description;
+      delete cleanItem.promoDescription;
       return cleanItem;
     }),
   };
@@ -35,6 +35,9 @@ const HomeTemplate: React.FC<IPage> = ({ layout }) => {
       </div>
       <div className="xl:container xl:mx-auto my-6">
         <ProductGrillBlock {...mockProductGrillProps.data} />
+      </div>
+      <div className="xl:container xl:mx-auto my-6">
+        <LeftFeatured {...mockLeftFeaturedProps.data} />
       </div>
     </PageLayout>
   );

@@ -1,7 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { keys } from "lodash";
 
 const LeftFeaturedBlock: React.FC<IPromoBlock> = ({title,description, featuredContentsCollection}) => {
   return (

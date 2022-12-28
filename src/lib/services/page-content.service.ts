@@ -17,7 +17,7 @@ const getPageContent = async (slug, preview = false) => {
   let responseData = null;
   let responseError = null;
 
-  const { typeQuery: type, query } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
+  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({

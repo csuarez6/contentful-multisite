@@ -5,6 +5,7 @@ import RichtextQuery from "./shared/richtext.qql";
 const PageQuery = `
   ${DefaultQuery}
   name
+  slug
   content {
     ${RichtextQuery}
   }

@@ -1,5 +1,5 @@
 export interface IRichText {
-  json: Document;
+  json: any;
   // links?: {
   //   assets?: {
   //     block?: Array<IAssetBlock>

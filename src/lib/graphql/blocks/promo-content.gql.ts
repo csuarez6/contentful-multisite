@@ -14,7 +14,6 @@ import ViewFeaturedTabs from "../views/featured-tabs.gql";
 import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
 import AuxCustomContent from "../aux/custom-content.gql";
-import PageQuery from "../page.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -32,13 +31,13 @@ const BlockPromoContentQuery = `
   featuredContentsCollection {
     items {
       ...on Page {
-        ${PageQuery}
+        ${DefaultQuery}
       }
       ...on Product {
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
-        ${AuxCustomContent}
+        ${DefaultQuery}
       }
     }
   }

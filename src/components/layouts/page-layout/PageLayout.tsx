@@ -1,7 +1,6 @@
 import Head from "next/head";
 
-import { IHeader } from "@/lib/interfaces/header-cf.interface";
-import { IFooter } from "@/lib/interfaces/footer-cf.interface";
+import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 
 import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
 import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
@@ -9,8 +8,8 @@ import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 export interface IPageLayout {
   children?: React.ReactNode;
   name?: string;
-  headerInfo?: IHeader;
-  footerInfo?: IFooter;
+  headerInfo?: INavigation;
+  footerInfo?: INavigation;
 }
 
 const PageLayout: React.FC<IPageLayout> = ({ children, name, headerInfo, footerInfo }) => {

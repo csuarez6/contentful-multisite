@@ -1,11 +1,15 @@
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import { IHeader } from "@/lib/interfaces/header-cf.interface";
-import { classNames } from '../../../utils/functions';
+
+import { classNames } from "../../../utils/functions";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 
-const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
+const HeaderBlock: React.FC<INavigation> = ({ mainNavCollection, promoImage, utilityNavCollection }) => {
+  const { asPath } = useRouter();
+
   return (
     <Disclosure
       as="header"
@@ -19,33 +23,33 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
               <div className="relative z-10 flex px-2 lg:px-0">
                 <Link href="/" className="flex flex-shrink-0 items-center">
                   {/* <a className="flex flex-shrink-0 items-center"> */}
-                    <figure className="relative h-[46px] aspect-[348/100]">
-                      <Image
-                        className="block w-auto"
-                        src={logo?.url ?? "/images/vanti-logo.png"}
-                        alt={logo?.description}
-                        layout="fill"
-                        objectFit="content"
-                      />
-                    </figure>
+                  <figure className="relative h-[46px] aspect-[348/100]">
+                    <Image
+                      className="block w-auto"
+                      src={promoImage?.url ?? "/images/vanti-logo.png"}
+                      alt={promoImage?.description ?? 'Grupo Vanti'}
+                      layout="fill"
+                      objectFit="content"
+                    />
+                  </figure>
                   {/* </a> */}
                 </Link>
               </div>
               <nav aria-label="Utility">
                 <ul className="relative hidden lg:flex lg:flex-nowrap rounded-[10px] overflow-hidden">
-                  {utility.map((item, index) => (
-                    <li className="flex" key={item.name}>
+                  {mainNavCollection?.items.map((item, index) => (
+                    <li className="flex" key={item.sys.id}>
                       <a
                         className={classNames(
-                          index === 0
+                          item.slug === asPath
                             ? "bg-blue-dark text-white"
                             : "bg-neutral-90 text-blue-dark",
                           "hover:bg-blue-dark hover:text-white px-6 py-2 leading-none font-semibold"
                         )}
-                        href={item.href}
+                        href={item.slug ?? '/'}
                         aria-current={index === 0 ? "page" : undefined}
                       >
-                        {item.name}
+                        {item.promoTitle ?? item.name}
                       </a>
                     </li>
                   ))}
@@ -68,10 +72,10 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
               aria-label="Global"
             >
               <ul className="flex gap-6 flex-nowrap">
-                {menu.map((item, index) => (
-                  <li key={item.name}>
+                {utilityNavCollection?.items?.map((item, index) => (
+                  <li key={item.sys.id}>
                     <a
-                      href={item.href}
+                      href={item.externalLink ?? '/'}
                       className="p-2 flex gap-1 items-center text-center font-semibold leading-none"
                       aria-current={index === 0 ? "page" : undefined}
                     >
@@ -193,7 +197,7 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
             aria-label="Menu mobile"
           >
             <ul className="space-y-1 px-2 pt-2 pb-3">
-              {menu.map((item, index) => (
+              {mainNavCollection?.items?.map((item, index) => (
                 <li key={item.name}>
                   <Disclosure.Button
                     as="a"
@@ -211,7 +215,7 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
                 </li>
               ))}
               <hr />
-              {utility.map((item, index) => (
+              {/* {utility?.map((item, index) => (
                 <li key={item.name}>
                   <Disclosure.Button
                     as="a"
@@ -226,7 +230,7 @@ const HeaderBlock: React.FC<IHeader> = ({ logo, menu, utility }) => {
                     {item.name}
                   </Disclosure.Button>
                 </li>
-              ))}
+              ))} */}
             </ul>
           </Disclosure.Panel>
         </>

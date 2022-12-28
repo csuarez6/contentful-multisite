@@ -1,4 +1,4 @@
-import { IFooter } from '@/lib/interfaces/footer-cf.interface';
+import { INavigation } from '@/lib/interfaces/menu-cf.interface';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import FooterBlock from './FooterBlock';
 import { mockFooterBlockProps } from './FooterBlock.mocks';
@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockFooterBlockProps.data,
-} as IFooter;
+} as INavigation;

@@ -1,17 +1,41 @@
 import { gql } from '@apollo/client';
+import _ from 'lodash';
+
 import contentfulClient from './contentful-client.service';
+import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
+import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
-const getEntryContent = async (blockInfo, preview = false) => {
-  if (!blockInfo) {
-    throw new Error(`«blockInfo» are required`);
+const REFERENCES = {
+  [CONTENTFUL_TYPENAMES.PAGE]: ['blocksCollection'],
+  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
+    'mainNavCollection',
+    'secondaryNavCollection',
+    'utilityNavCollection'
+  ],
+  [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
+    'featuredContentsCollection',
+    'listedContentsCollection'
+  ]
+};
+
+type DefaultBlockInfo = {
+  __typename: string;
+  sys: {
+    id: string;
+  }
+};
+
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false) => {
+  if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
+    throw new Error(`«blockInfo» are required or it's not defined`);
   }
 
   let responseData = null;
   let responseError = null;
 
-  const { typeQuery: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
@@ -37,7 +61,27 @@ const getEntryContent = async (blockInfo, preview = false) => {
     console.error('Error on entry query => ', responseError.message);
   }
 
-  return responseData?.[type];
+  if (!responseData?.[type]) {
+    return null;
+  }
+
+  const entryContent = JSON.parse(
+    JSON.stringify(
+      responseData?.[type]
+    )
+  );
+
+  if (REFERENCES[entryContent.__typename] && REFERENCES[entryContent.__typename].length > 0) {
+    const referencesContent = await getReferencesContent(
+      entryContent,
+      REFERENCES[entryContent.__typename],
+      preview
+    );
+
+    _.merge(entryContent, referencesContent);
+  }
+
+  return entryContent;
 };
 
 export default getEntryContent;

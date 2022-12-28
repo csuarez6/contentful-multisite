@@ -1,5 +1,6 @@
+import { IPage } from '@/lib/interfaces/page-cf.interface';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import HomeTemplate, { IHomeTemplate } from './HomeTemplate';
+import HomeTemplate from './HomeTemplate';
 import { mockHomeTemplateProps } from './HomeTemplate.mocks';
 
 export default {
@@ -26,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockHomeTemplateProps.data,
-} as IHomeTemplate;
+} as IPage;
