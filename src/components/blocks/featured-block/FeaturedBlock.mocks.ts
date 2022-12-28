@@ -8,17 +8,15 @@ const data: IPromoBlock = {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
     title: 'featuredView'
   },
-  cta: {
-    name: 'buttons',
-    list: [
+  ctaCollection: {
+    items: [
       {
-        name: 'button',
-        href: '#'
+        ctaLabel: 'button',
+        internalLink: '#'
       },
       {
-        name: 'button external',
-        href: '#',
-        isExternal: true
+        ctaLabel: 'button external',
+        externalLink: '#'
       }
     ]
   },
@@ -53,17 +51,18 @@ const data: IPromoBlock = {
 const dataImageRight: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  alignImage: 'right',
+  view: {
+    imageAlign: 'Derecha'
+  },
   image: {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
     title: 'featuredView'
   },
-  cta: {
-    name: 'buttons',
-    list: [
+  ctaCollection: {
+    items: [
       {
-        name: 'button',
-        href: '#'
+        ctaLabel: 'button',
+        externalLink: '#'
       }
     ]
   },
@@ -100,17 +99,18 @@ const dataImageRight: IPromoBlock = {
 const dataListedColumns: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  alignImage: 'right',
+  view: {
+    imageAlign: 'Derecha'
+  },
   image: {
     url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
     title: 'featuredView'
   },
-  cta: {
-    name: 'buttons',
-    list: [
+  ctaCollection: {
+    items: [
       {
-        name: 'button',
-        href: '#'
+        ctaLabel: 'button',
+        externalLink: '#'
       }
     ]
   },

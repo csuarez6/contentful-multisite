@@ -5,22 +5,22 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from '../../../utils/functions';
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
-const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, alignImage, columnsSize, featuredContentsCollection, cta }) => {
-  const imageAlignLocal = (alignImage && alignImage === "right") ? "order-last" : "";
+const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view, featuredContentsCollection, ctaCollection }) => {
+  const imageAlignLocal = (view && view.imageAlign === "Derecha") ? "order-last" : "";
 
   return (
     <section className="section grid">
       <div className="relative">
         <div className={classNames(
           "gap-x-16 gap-y-6 grid grid-cols-1 items-center",
-          (columnsSize > 2) ? "lg:grid-cols-3" : "lg:grid-cols-2",
+          (view && view.columnsSize > 2) ? "lg:grid-cols-3" : "lg:grid-cols-2",
         )}>
           {image?.url &&
             <div aria-hidden="true" className={classNames("overflow-hidden rounded-lg", imageAlignLocal)}>
               <figure
                 className={classNames(
                   "relative",
-                  (columnsSize > 2) ? "aspect-[384/624]" : "aspect-[612/569]",
+                  (view && view.columnsSize > 2) ? "aspect-[384/624]" : "aspect-[612/569]",
                 )}>
                 <Image
                   className="block w-auto object-cover"
@@ -32,8 +32,8 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, align
             </div>
           }
           {
-            (title || description || featuredContentsCollection?.items || cta?.list) && (
-              <div className={classNames((columnsSize > 2) ? "col-span-2" : "")}>
+            (title || description || featuredContentsCollection?.items || ctaCollection?.items) && (
+              <div className={classNames((view && view.columnsSize > 2) ? "col-span-2" : "")}>
                 <div className="flex flex-col gap-y-6">
                   {(title) && <h2 className="text-blue-dark">{title}</h2>}
                   {(description) && <div className="text-lg text-grey-30">{documentToReactComponents(description.json)}</div>}
@@ -75,13 +75,13 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, align
                       ))}
                     </div>
                   )}
-                  {cta?.list && (
+                  {ctaCollection.items && (
                     <div className="flex my-6 gap-2">
-                      {cta.list.map((item) => (
-                        item.href && <Link href={item.href} key={item.href}>
+                      {ctaCollection?.items?.map((item) => (
+                        item.ctaLabel && <Link href={`${item.externalLink}`} key={item.ctaLabel} legacyBehavior >
                           <a className="button button-primary w-fit">
-                            {item.name}
-                            {(item.isExternal) && (
+                            {item.ctaLabel}
+                            {(item.externalLink) && (
                               <Icon
                                 icon='arrow-right'
                                 className="w-6 h-6 ml-1"

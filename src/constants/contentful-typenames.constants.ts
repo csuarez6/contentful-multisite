@@ -14,5 +14,6 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_BANNER_IMAGE = "ViewBannerImage",
   VIEW_LEFT_FEATURED = "ViewSecondaryBanner",
   VIEW_SERVICES_CARD = "ViewServicesCard",
-  VIEW_INFORMATION_GRID = "ViewInformationGrid"
+  VIEW_INFORMATION_GRID = "ViewInformationGrid",
+  VIEW_FEATURED = "ViewFeatured"
 };

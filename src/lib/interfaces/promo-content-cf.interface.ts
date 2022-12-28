@@ -53,6 +53,9 @@ export interface IPromoBlock extends IBlockProps {
     image?: IImageAsset;
     listedForm?: IRpoForm;
     imageOrientation?: string;
+    ctaCollection?: {
+        items?: IPromoContent[]
+    }
 }
 
 export interface ITag {
@@ -64,4 +67,5 @@ export interface IVew {
     name?: string;
     backgroundColor?: string;
     columnsSize?: number;
+    imageAlign?: string;
 }
