@@ -29,7 +29,8 @@ export interface IPromoContent {
     tags?: ITag[];
     externalLink?: string;
     internalLink?: any;
-    ctaLabel?: string
+    ctaLabel?: string;
+    slug?: string;
 }
 
 export interface IPromoBlock extends IBlockProps {

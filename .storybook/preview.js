@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import * as NextImage from 'next/image';
+import { RouterContext } from "next/dist/shared/lib/router-context";
 
 import '@/styles/button.css';
 
@@ -44,4 +45,11 @@ export const parameters = {
     },
   },
   viewport: { viewports: customViewports },
+  nextRouter: {
+    Provider: RouterContext.Provider,
+    path: '/', // defaults to `/`
+    asPath: '/', // defaults to `/`
+    query: {}, // defaults to `{}`
+    push() {}
+  },
 }
