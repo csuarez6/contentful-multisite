@@ -4,7 +4,7 @@ import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 const data: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  listedContentsCollection: {
+  featuredContentsCollection: {
     items: [
       {
         promoTitle: 'Título 1',
@@ -46,13 +46,14 @@ const data: IPromoBlock = {
       }
     ]
   },
-  columnsSize: 3
+  view: {
+    columnsSize: 3
+  }
 };
 const dataPortrait: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  imageOrientation: 'Portrait',
-  listedContentsCollection:
+  featuredContentsCollection:
   {
     items: [
       {
@@ -95,7 +96,10 @@ const dataPortrait: IPromoBlock = {
       }
     ]
   },
-  columnsSize: 3
+  view: {
+    imageOrientation: 'Portrait',
+    columnsSize: 3
+  }
 };
 
 export const mockVerticalCardProps = {

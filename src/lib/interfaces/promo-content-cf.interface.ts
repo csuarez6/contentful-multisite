@@ -48,7 +48,7 @@ export interface IPromoBlock extends IBlockProps {
     alignImage?: string;
     iconColor?: string;
     buttonColor?: string;
-    view?: IVew;
+    view?: IView;
     isReverse?: boolean;
     cta?: IListItems;
     image?: IImageAsset;
@@ -64,11 +64,12 @@ export interface ITag {
     bacKgroundColor?: string;
 }
 
-export interface IVew {
+export interface IView {
     name?: string;
     backgroundColor?: string;
     columnsSize?: number;
     imageAlign?: string;
     iconPosition?: string;
     buttonType?: string;
+    imageOrientation?: string;
 }

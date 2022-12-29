@@ -75,9 +75,9 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view,
                       ))}
                     </div>
                   )}
-                  {ctaCollection.items && (
+                  {ctaCollection?.items && (
                     <div className="flex my-6 gap-2">
-                      {ctaCollection?.items?.map((item) => (
+                      {ctaCollection.items.map((item) => (
                         item.ctaLabel && <Link href={`${item.externalLink}`} key={item.ctaLabel} legacyBehavior >
                           <a className="button button-primary w-fit">
                             {item.ctaLabel}
