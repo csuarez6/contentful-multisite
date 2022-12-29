@@ -42,12 +42,12 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({ featuredContentsCollection
                       </figure>
                       <div className="container px-28 mx-auto">
                         <div className='relative flex justify-center flex-col gap-6 py-[70px] px-2 w-3/5'>
-                          {content.promoTitle && <h1 className='text-blue-dark title is-1'>{content.promoTitle}</h1>}
-                          {content.cta &&
-                            <Link href={content.cta.href}>
-                              <a className="w-fit button button-primary">{content.cta.name}</a>
+                          <h1 className='text-blue-dark title is-1'>{content.promoTitle ?? content.name}</h1>
+                          {(content.externalLink || content.internalLink) && (
+                            <Link href={content.externalLink ?? content.internalLink} legacyBehavior>
+                              <a className="w-fit button button-primary">{content.ctaLabel}</a>
                             </Link>
-                          }
+                          )}
                         </div>
                       </div>
                     </SwiperSlide>
