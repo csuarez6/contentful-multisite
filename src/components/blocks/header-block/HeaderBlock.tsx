@@ -1,16 +1,17 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-
-import { classNames } from "../../../utils/functions";
+import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+
+import { classNames } from "../../../utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
   const { asPath } = useRouter();
 
-  console.log(props)
+  // console.log(props)
   // console.log(JSON.stringify(props))
   const { promoImage, mainNavCollection, secondaryNavCollection, utilityNavCollection } = props;
 
@@ -78,16 +79,18 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             {/* Middle */}
             <div className="relative flex items-center min-h-[92px] justify-between gap-6">
               <div className="relative z-10 flex px-2 lg:px-0 lg:mt-[10px]">
-                <a href="/" className="flex flex-shrink-0 items-center">
-                  <figure className="relative h-[52px] aspect-[180/52]">
-                    <Image
-                      className="block w-auto"
-                      src={promoImage?.url ?? "/images/vanti-logo.png"}
-                      alt={promoImage?.description ?? 'Grupo Vanti'}
-                      fill
-                    />
-                  </figure>
-                </a>
+                <Link href="/" legacyBehavior>
+                  <a className="flex flex-shrink-0 items-center">
+                    <figure className="relative h-[52px] aspect-[180/52]">
+                      <Image
+                        className="block w-auto"
+                        src={promoImage?.url ?? "/images/vanti-logo.png"}
+                        alt={promoImage?.description ?? 'Grupo Vanti'}
+                        fill
+                      />
+                    </figure>
+                  </a>
+                </Link>
               </div>
 
               <div className="flex items-center py-5 divide-x divide-neutral-70">
