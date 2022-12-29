@@ -5,7 +5,8 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 const InfoCardBlock: React.FC<IPromoBlock> = ({
   title,
   description,
-  featuredContentsCollection
+  featuredContentsCollection,
+  view
 }) => {
   return (
     <section className="section grid gap-9">

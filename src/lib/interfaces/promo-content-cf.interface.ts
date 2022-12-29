@@ -69,4 +69,6 @@ export interface IVew {
     backgroundColor?: string;
     columnsSize?: number;
     imageAlign?: string;
+    iconPosition?: string;
+    buttonType?: string;
 }
