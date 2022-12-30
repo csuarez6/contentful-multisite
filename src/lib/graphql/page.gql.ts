@@ -24,6 +24,19 @@ const PageQuery = `
     ${RichtextQuery}
   }
   promoIcon
+  mainNavCollection {
+    items {
+      ...on Page {
+        ${DefaultQuery}
+      }
+      ...on AuxNavigation {
+        ${DefaultQuery}
+      }
+      ...on AuxCustomContent {
+        ${DefaultQuery}
+      }
+    }
+  }
 `;
 
 export default PageQuery;

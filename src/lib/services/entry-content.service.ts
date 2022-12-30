@@ -8,7 +8,10 @@ import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
 const REFERENCES = {
-  [CONTENTFUL_TYPENAMES.PAGE]: ['blocksCollection'],
+  [CONTENTFUL_TYPENAMES.PAGE]: [
+    'blocksCollection', 
+    'mainNavCollection',
+  ],
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
     'mainNavCollection',
     'secondaryNavCollection',
@@ -16,8 +19,11 @@ const REFERENCES = {
   ],
   [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
     'featuredContentsCollection',
-    'listedContentsCollection'
-  ]
+    'listedContentsCollection',
+  ],
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
+    'mainNavCollection',
+  ],
 };
 
 type DefaultBlockInfo = {

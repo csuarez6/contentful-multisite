@@ -4,13 +4,15 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 const data: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
+  view:{
+    iconPosition: 'top'
+  },
   featuredContentsCollection: {
     items: [
       {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        iconPosition: 'top',
         cta: {
           href: '#',
           name: 'button'
@@ -20,7 +22,6 @@ const data: IPromoBlock = {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        iconPosition: 'top',
         cta: {
           href: '#',
           name: 'button'
@@ -30,7 +31,6 @@ const data: IPromoBlock = {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        iconPosition: 'top',
         cta: {
           href: '#',
           name: 'button'

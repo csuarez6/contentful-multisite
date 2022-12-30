@@ -11,7 +11,10 @@ const ListWithIcons: React.FC<IPromoContent> = ({
   iconPosition,
   iconSize,
   bgIconRounded,
-  cta
+  ctaLabel,
+  externalLink,
+  // internalLink,
+
 }) => {
   let iconSizeLocal = "w-[68px] h-[68px]";
   if (bgIconRounded) iconSizeLocal = `w-24 h-24 p-4 rounded-full ${bgIconRounded}`;
@@ -25,7 +28,7 @@ const ListWithIcons: React.FC<IPromoContent> = ({
   return (
     <div className={classNames(
       "flex",
-      (iconPosition && iconPosition === 'left') ? "flex-row gap-6" : "flex-col text-center gap-3 items-center"
+      (iconPosition && iconPosition === 'Izquierda') ? "flex-row gap-6" : "flex-col text-center gap-3 items-center"
     )}
     >
       {promoIcon && (
@@ -36,19 +39,17 @@ const ListWithIcons: React.FC<IPromoContent> = ({
           />
         </div>
       )}
-      {(promoTitle || promoDescription || cta?.href) && (
-        <div className={`flex flex-col gap-2 ${iconPosition !== 'left' ? 'items-center' : 'items-start'}`}>
+      {(promoTitle || promoDescription || ctaLabel) && (
+        <div className={`flex flex-col gap-2 ${iconPosition !== 'Izquierda' ? 'items-center' : 'items-start'}`}>
           {(promoTitle) && (
             <h3 className="title is-4 text-blue-dark">{promoTitle}</h3>
           )}
           {(promoDescription) && (
             <div className="text-lg text-grey-30">{documentToReactComponents(promoDescription.json)}</div>
           )}
-          {(cta?.href) && (
-            <Link href={cta.href}>
-              <a className="button button-primary w-fit">
-                {cta.name}
-              </a>
+          {(ctaLabel) && (
+            <Link href={externalLink ? externalLink : '#'} className="button button-primary w-fit">
+              {ctaLabel}
             </Link>
           )}
         </div>

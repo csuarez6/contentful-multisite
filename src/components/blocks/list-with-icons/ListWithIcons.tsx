@@ -2,7 +2,7 @@ import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
-const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection }) => {
+const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
   return (
     <section className="section grid gap-9">
       {(title || description) && (
@@ -15,7 +15,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       {featuredContentsCollection?.items && (
         <div className="grid max-w-sm grid-cols-1 mx-auto gap-y-10 gap-x-8 sm:max-w-none lg:grid-cols-3">
           {featuredContentsCollection.items.map((item) => (
-            <ListWithIcon key={item.promoTitle} {...item} />
+            <ListWithIcon key={item.promoTitle} {...item} iconPosition={view.iconPosition}/>
           ))}
         </div>
       )}

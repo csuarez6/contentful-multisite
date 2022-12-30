@@ -1,8 +1,7 @@
 // import type { ReactElement } from "react";
 import { GetStaticProps } from "next";
 
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
-
+import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 // import PageLayout, {
@@ -12,30 +11,14 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
-import InfoCard from "@/components/organisms/cards/info-card/InfoCard";
-import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 import getEntryContent from "@/lib/services/entry-content.service";
+import getPageContent from "@/lib/services/page-content.service";
 
-const Home: NextPageWithLayout = ({ name }: IPage) => {
+const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   return (
-    <div className="xl:container mx-auto my-20">
-      <h1 className="mb-6 block">{name}</h1>
-
-      <InfoCard
-        promoTitle="Biblioteca de componentes"
-        promoDescription="Desde el siguiente enlace puedes acceder a la biblioteca de componentes del proyecto."
-      />
-      <span className="block my-6"></span>
-      <ButtonAtom
-        type="link"
-        text="Ir a al biblioteca"
-        link={{
-          href: "https://grupovanti.gitlab.io/Marketplace/web-commerce/main/",
-          target: "_blank",
-        }}
-        classes="button-primary"
-      />
-    </div>
+    <>
+      {jsonToReactComponents(blocksCollection.items)}
+    </>
   );
 };
 
@@ -44,7 +27,12 @@ const Home: NextPageWithLayout = ({ name }: IPage) => {
 //   return <PageLayout {...layoutProps}>{page}</PageLayout>;
 // };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const pageContent = await getPageContent(
+    'home',
+    context.preview ?? false
+  );
+
   const footerInfo = await getEntryContent({
     __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
     sys: {
@@ -61,10 +49,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      name: "Home",
-      headerInfo,
+      ...pageContent,
       layout: {
-        name: mockPageLayoutProps.data.name,
+        name: pageContent.name,
         footerInfo: footerInfo,
         headerInfo: headerInfo,
       },
