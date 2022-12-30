@@ -35,6 +35,8 @@ export interface IPromoContent {
 
 export interface IPromoBlock extends IBlockProps {
     title?: string;
+    pretitle?: string;
+    subtitle?: string;
     description?: any;
     content?: IPromoContent;
     listedContentsCollection?: {

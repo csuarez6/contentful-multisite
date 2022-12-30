@@ -3,7 +3,7 @@ import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
-const LeftFeatured: React.FC<IPromoContent> = ({promoImage, promoTitle, promoDescription, internalLink, externalLink, ctaLabel, cta, subtitle}) => {
+const LeftFeatured: React.FC<IPromoContent> = ({ promoImage, promoTitle, promoDescription, internalLink, externalLink, ctaLabel, cta, subtitle }) => {
   return (
     <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
       {promoImage && (
@@ -34,7 +34,7 @@ const LeftFeatured: React.FC<IPromoContent> = ({promoImage, promoTitle, promoDes
             }
             {ctaLabel &&
               <div className="flex gap-3">
-                <Link href={externalLink? externalLink : internalLink.slug} className='button button-outline'>
+                <Link href={externalLink ? externalLink : internalLink.slug} className='button button-outline'>
                   {ctaLabel}
                 </Link>
               </div>

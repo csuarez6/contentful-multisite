@@ -19,6 +19,7 @@ const BlockPromoContentQuery = `
   ${DefaultQuery}
   name
   title
+  pretitle
   subtitle
   description {
     ${RichtextQuery}

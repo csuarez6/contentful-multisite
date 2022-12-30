@@ -3,20 +3,23 @@ import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
 const data: IPromoBlock = {
   title: 'Título',
+  pretitle: 'Pretítulo',
+  subtitle: 'Subtítulo',
   description: RICHTEXT_SHORT_SIMPLE,
-  featuredContentsCollection: {
-    items: [{
-      promoTitle: 'Título',
-      subtitle: 'Subtítulo',
-      promoDescription: RICHTEXT_SHORT_SIMPLE,
-      promoImage: {
-        url: 'https://via.placeholder.com/1280x1050.png'
+  image: {
+    url: 'https://via.placeholder.com/1280x1050.png'
+  },
+  ctaCollection: {
+    items: [
+      {
+        externalLink: '#',
+        ctaLabel: 'Button'
       },
-      cta: {
-        href: "#",
-        name: "Button"
+      {
+        externalLink: '#',
+        ctaLabel: 'Button'
       }
-    }]
+    ]
   }
 };
 
