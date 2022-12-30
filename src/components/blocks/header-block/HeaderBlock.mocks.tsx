@@ -1172,39 +1172,24 @@ const data: INavigation = {
     ]
   },
   secondaryNavCollection: {
-    __typename: "AuxNavigationSecondaryNavCollection",
     items: [
       {
-        __typename: "Page",
         sys: {
-          __typename: "Sys",
           id: "1HNgbKdZDy2PdXGmK6Ww2l"
         },
         name: "Conócenos",
         slug: "conocenos",
-        content: null,
-        blocksCollection: {
-          __typename: "PageBlocksCollection",
-          items: []
-        },
         promoTitle: "Conócenos",
         promoImage: null,
         promoDescription: null,
         promoIcon: null
       },
       {
-        __typename: "Page",
         sys: {
-          __typename: "Sys",
           id: "63qwDTW8TgMEV60EtpxnDj"
         },
         name: "Contáctanos",
         slug: "contactanos",
-        content: null,
-        blocksCollection: {
-          __typename: "PageBlocksCollection",
-          items: []
-        },
         promoTitle: "Contáctanos",
         promoImage: null,
         promoDescription: null,
@@ -1213,12 +1198,9 @@ const data: INavigation = {
     ]
   },
   utilityNavCollection: {
-    __typename: "AuxNavigationUtilityNavCollection",
     items: [
       {
-        __typename: "AuxCustomContent",
         sys: {
-          __typename: "Sys",
           id: "7bhN0DyzlmfzJRdvyXgvz"
         },
         name: "Paga tu factura",
@@ -1232,7 +1214,6 @@ const data: INavigation = {
         },
         externalLink: null,
         ctaLabel: "Paga tu factura",
-        pretitle: null,
         promoTitle: null,
         subtitle: null,
         promoDescription: null,
