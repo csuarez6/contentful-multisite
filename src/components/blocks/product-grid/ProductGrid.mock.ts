@@ -4,6 +4,10 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 const data1Column: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   title: 'Lorem Ipsum Dolor',
+  view:{
+    isReverse: true,
+    columnsSize: 1
+  },
   featuredContentsCollection: {
     items: [
       {
@@ -41,8 +45,7 @@ const data1Column: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1024',
           title: 'Plan card'
-        },
-        isReverse: true
+        }
       },
       {
         tags: [
@@ -94,8 +97,7 @@ const data1Column: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1024',
           title: 'Plan card'
-        },
-        isReverse: true
+        }
       },
       {
         tags: [
@@ -137,9 +139,12 @@ const data1Column: IPromoBlock = {
 
 
 const data2Column: IPromoBlock = {
-  columnsSize: 2,
   description: RICHTEXT_SHORT_SIMPLE,
   title: 'Lorem Ipsum Dolor',
+  view:{
+    isReverse: false,
+    columnsSize: 2
+  },
   featuredContentsCollection: {
     items: [
       {
@@ -157,8 +162,7 @@ const data2Column: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1024',
           title: 'Plan card'
-        },
-        isReverse: true
+        }
       },
       {
         tags: [
@@ -230,8 +234,7 @@ const data2Column: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1024',
           title: 'Plan card'
-        },
-        isReverse: true
+        }
       },
       {
         tags: [

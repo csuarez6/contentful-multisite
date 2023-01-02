@@ -9,6 +9,7 @@ import ViewProductFinancing from "../views/product-financing.gql";
 import ViewInformationGrid from "../views/information-grid.gql";
 import ViewListWithIcons from "../views/list-with-icons.gql";
 import ViewProductGrill from "../views/product-grill.gql";
+import ViewProductGrid from "../views/product-grid.gql";
 import ViewServicesTabs from "../views/services-tabs.gql";
 import ViewFeaturedTabs from "../views/featured-tabs.gql";
 import ViewListedTabs from "../views/listed-tabs.gql";
@@ -82,6 +83,9 @@ const BlockPromoContentQuery = `
     }
     ...on ViewProductGrill {
       ${ViewProductGrill}
+    }
+    ...on ViewProductGrid {
+      ${ViewProductGrid}
     }
     ...on ViewServicesTabs {
       ${ViewServicesTabs}

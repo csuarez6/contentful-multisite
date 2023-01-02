@@ -74,4 +74,5 @@ export interface IView {
     iconPosition?: string;
     buttonType?: string;
     imageOrientation?: string;
+    isReverse?: boolean;
 }

@@ -9,7 +9,7 @@ const classColumns = (columns = 1) => {
   return classes.join(" ");
 };
 
-const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, columnsSize, description, title }) => {
+const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, view }) => {
   return (
     <section className='grid gap-10'>
       {(title || description) &&
@@ -19,9 +19,9 @@ const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, column
         </div>
       }
       {featuredContentsCollection?.items &&
-        <div className={classNames("w-full grid gap-9", classColumns(columnsSize))}>
+        <div className={classNames("w-full grid gap-9", classColumns(view.columnsSize))}>
           {featuredContentsCollection.items.map((el) => (
-            <PlanCard {...el} key={`${title}-${el.promoTitle}`} />
+            <PlanCard {...el} key={`${title}-${el.promoTitle}`} isReverse={view.isReverse}/>
           ))}
         </div>
       }
