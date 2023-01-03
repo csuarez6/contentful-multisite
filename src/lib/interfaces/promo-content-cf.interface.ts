@@ -63,7 +63,7 @@ export interface IPromoBlock extends IBlockProps {
 
 export interface ITag {
     label: string;
-    bacKgroundColor?: string;
+    backgroundColor?: string;
 }
 
 export interface IView {
@@ -74,5 +74,7 @@ export interface IView {
     iconPosition?: string;
     buttonType?: string;
     imageOrientation?: string;
+    bannerHeight?: string;
+    bannerWidth?: string;
     isReverse?: boolean;
 }
