@@ -19,5 +19,6 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_LIST_WITH_ICONS = "ViewListWithIcons",
   VIEW_BANNER_CAROUSEL = "ViewBannerCarousel",
   VIEW_PRODUCT_GRID = "ViewProductGrid",
-  VIEW_INFORMATION_CARDS = "ViewInformationCards"
+  VIEW_INFORMATION_CARDS = "ViewInformationCards",
+  VIEW_PRODUCT_GRILL = "ViewProductGrill"
 };

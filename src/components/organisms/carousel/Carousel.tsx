@@ -9,7 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import Link from 'next/link';
 import { ILink } from '@/lib/interfaces/menu-cf.interface';
-import { IImageAsset } from '@/lib/interfaces/image-asset-cf.interface';
+import { IImageAsset } from '@/lib/interfaces/assets-cf.interface';
 
 const iconLeft: IIcon = {
     icon: 'arrow-left',

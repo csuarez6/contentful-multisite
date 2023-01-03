@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
-import { ISliderProps } from '@/lib/interfaces/slider-cf.interface';
+// import { ISliderProps } from '@/lib/interfaces/slider-cf.interface';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import Link from 'next/link';
 
-const Slider: React.FC<ISliderProps> = ({ data }) => {
+const Slider: React.FC<any> = ({ data }) => {
     const [stopSliderRotation, setstopSliderRotation] = useState(false);
     if (!data) return;
 

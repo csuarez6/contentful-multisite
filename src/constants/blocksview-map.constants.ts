@@ -8,6 +8,7 @@ import BannerCarouselBlock from "@/components/blocks/banner-carousel/BannerCarou
 import BannerImage from "@/components/blocks/banner-image/BannerImage";
 import ProductGrid from "@/components/blocks/product-grid/ProductGrid";
 import InfoCardBlock from "@/components/blocks/info-card/InfoCard";
+import ProductGrillBlock from "@/components/blocks/product-grill/ProductGrill";
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
 /**
@@ -29,7 +30,8 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL]: BannerCarouselBlock,
     [CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE]: BannerImage,
     [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRID]: ProductGrid,
-    [CONTENTFUL_TYPENAMES.VIEW_INFORMATION_CARDS]: InfoCardBlock
+    [CONTENTFUL_TYPENAMES.VIEW_INFORMATION_CARDS]: InfoCardBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRILL]: ProductGrillBlock
   },
 };
 

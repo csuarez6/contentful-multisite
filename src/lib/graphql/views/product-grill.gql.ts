@@ -5,6 +5,7 @@ const ViewProductGrill = `
   name
   columnsSize
   backgroundColor
+  isReverse
 `;
 
 export default ViewProductGrill;

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from '../../../../utils/functions';
 
-const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, cta, promoImage }) => {
+const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, promoImage, ctaLabel, externalLink, internalLink }) => {
   const isPortrait = promoImage?.isPortrait;
   return (    
     <article className={classNames(
@@ -29,18 +29,16 @@ const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, cta, promoImage }) 
           </figure>
         </div>
       )}
-      {(promoTitle || cta?.href) && (
+      {(promoTitle || ctaLabel) && (
         <div className={classNames(
           isPortrait ? "max-w-full" : "max-w-[55%]",
           "relative flex items-center w-full"
         )}>
           <div className="grid space-y-[18px]">
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-            {cta?.href && <div className="flex gap-3">
-              <Link href={cta.href}>
-                <a className="button button-primary">
-                  {cta.name}
-                </a>
+            {ctaLabel && <div className="flex gap-3">
+              <Link href={externalLink? externalLink: internalLink.slug} className="button button-primary">
+                  {ctaLabel}
               </Link>
             </div>}
           </div>

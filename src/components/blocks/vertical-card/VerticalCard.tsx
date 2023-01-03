@@ -15,7 +15,7 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featured
       {featuredContentsCollection?.items && (
         <div className={classNames("grid justify-center gap-9", classColumns(view?.columnsSize))}>
           {featuredContentsCollection.items.map((content) => {
-            {if (content.promoImage) content.promoImage.isPortrait = view?.imageOrientation?.toLowerCase() === 'portrait'}
+            {if (content.promoImage) content.promoImage.isPortrait = view?.imageOrientation?.toLowerCase() === 'portrait';}
             return <div className='flex justify-center' key={content.promoTitle}>
               <VerticalCard key={content.promoTitle} {...content} />
             </div>;

@@ -54,7 +54,7 @@ function listedClasses(listedContent: IPromoContent[], featuredContent: IPromoCo
   return classes.join(" ");
 }
 
-const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsSize = 1, listedContentsCollection, featuredContentsCollection, isReverse = false }) => {
+const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, listedContentsCollection, featuredContentsCollection, view }) => {
   featuredContentsCollection?.items?.forEach(item => item.promoImage.isPortrait = true);
   const featuredContentSplice: IPromoContent[] = JSON.parse(JSON.stringify(featuredContentsCollection?.items));
 
@@ -68,9 +68,9 @@ const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsS
       )}
 
       {(listedContentsCollection?.items?.length > 0 || featuredContentsCollection?.items?.length > 0) &&
-        <div className={classNames('grid gap-5', gridClasses(listedContentsCollection.items, featuredContentsCollection.items, isReverse))}>
+        <div className={classNames('grid gap-5', gridClasses(listedContentsCollection.items, featuredContentsCollection.items, view.isReverse))}>
           {featuredContentsCollection?.items?.length > 0 && (
-            <div className={classNames("grid grid-cols-1 gap-5", featuredClasses(listedContentsCollection.items, featuredContentsCollection.items, isReverse))}>
+            <div className={classNames("grid grid-cols-1 gap-5", featuredClasses(listedContentsCollection.items, featuredContentsCollection.items, view.isReverse))}>
               {featuredContentSplice.splice(0, 2).map(item => (
                 <ProductSmallCard key={item.promoTitle} {...item} />
               ))}
@@ -78,7 +78,7 @@ const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, columnsS
           )}
 
           {listedContentsCollection?.items?.length > 0 && (
-            <div className={classNames("grid grid-cols-1 gap-5", listedClasses(listedContentsCollection.items, featuredContentsCollection.items, columnsSize, isReverse))}>
+            <div className={classNames("grid grid-cols-1 gap-5", listedClasses(listedContentsCollection.items, featuredContentsCollection.items, view.columnsSize, view.isReverse))}>
               {listedContentsCollection.items.map(item => (
                 <ProductSmallCard key={item.promoTitle} {...item} />
               ))}

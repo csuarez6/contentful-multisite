@@ -101,7 +101,7 @@ const FeaturedProduct: React.FC<IProductDetails> = ({
                             <p>Puedes pagar con:</p>
                         </div>
                         <div className='flex gap-1'>
-                            {paymentMethods?.map((el, i) => (
+                            {paymentMethods?.map((el) => (
                                 <p className='title is-5 text-grey-10 bg-neutral-90 rounded-lg px-2 py-1' key={`${el.name}-${productName}`}>
                                     {el.name}
                                 </p>
