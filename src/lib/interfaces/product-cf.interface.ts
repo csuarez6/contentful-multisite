@@ -1,4 +1,7 @@
+import { ISelect } from '@/components/atoms/select/select.mocks';
+import { ICarousel } from '@/components/organisms/carousel/Carousel';
 import { IImageAsset } from './assets-cf.interface';
+import { ILink } from './menu-cf.interface';
 
 interface IPaymentMethod {
   name: string;
@@ -24,5 +27,14 @@ export interface IProductDetails {
   images?: IImageAsset[];
   details?: string[];
   paymentMethods?: IPaymentMethod[];
-  features: IFeatures;
+  features?: IFeatures;
+  cta?: ILink;
+  state?: string;
+  promotion?: string;
+  priceBefore?: string;
+  productsQuantity?: string;
+  referenceCode?: number;
+  carouselData?: ICarousel;
+  dataSelect?: ISelect[];
+  rating?: number;
 }

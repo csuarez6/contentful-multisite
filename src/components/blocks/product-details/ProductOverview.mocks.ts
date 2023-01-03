@@ -1,35 +1,63 @@
 import { IProductDetails } from "@/lib/interfaces/product-cf.interface";
 
 const data: IProductDetails = {
-  productName: 'Zip Tote Basket',
-  price: '$140',
-  images: [
-    {
-      title: 'Angled view 1',
-      url: 'https://via.placeholder.com/1216x916/f2f2f2/000',
-      description: 'Angled front view with bag zipped and handles upright.',
-    },
-    {
-      title: 'Angled view 2 ',
-      url: 'https://via.placeholder.com/1216x916/b00/fff',
-      description: 'Angled front view with bag zipped and handles upright.',
-    },
-    {
-      title: 'Angled view 3',
-      url: 'https://via.placeholder.com/1216x916/0b0/fff',
-      description: 'Angled front view with bag zipped and handles upright.',
-    },
-    {
-      title: 'Angled view 4',
-      url: 'https://via.placeholder.com/1216x916/00b/fff',
-      description: 'Angled front view with bag zipped and handles upright.',
+  productName: 'Calefactor de Torre',
+  price: '420.000',
+  priceBefore: '450.000',
+  productsQuantity: '1.000',
+  state: 'Nuevo',
+  promotion: '30%',
+  referenceCode: 1010101010,
+  rating: 3.6,
+  cta: {
+    href: '',
+    name:'Comprar con PSE'
+  },
+  carouselData: {
+    content: [
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      },
+      {
+        url: 'https://via.placeholder.com/600x550'
+      }
+    ],
+    footerText: {
+      href: '#',
+      name: 'Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto'
     }
-  ],
+  },
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut',
   details: [
-    "Instalación:  No incluida",
-    "Fabricante:  Tecnocalor SAS",
-    "Referencia:   H-GHHXYHJ"
+    "Material: Policarbonato y PVC",
+    "Capacidad: 200 w",
+    "Altura: 120 cm",
+    "Ancho: 80 cm",
+    "Profundidad: 40 cm"
   ],
   paymentMethods: [
     {
@@ -80,7 +108,129 @@ const data: IProductDetails = {
       '<strong>Compra protegida con Vanti</strong><br>Recibe el producto que esperabas o te devolvemos tu dinero',
       '<strong>Garantía del vendedor</strong><br>Garantía de fábrica: 12 meses'
     ]
-  }
+  },
+  dataSelect: [
+    {
+      icon: {
+        icon: 'expert',
+        size: 24,
+        className: 'absolute'
+      },
+      listContened: [
+        {
+          label: 'Value 1',
+          value: 'value1'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        }
+      ],
+      labelSelect: 'Instala tu gasodoméstico',
+      classes: 'w-full',
+      optionDefault: 'Contrata el servicio'
+    },
+    {
+      icon: {
+        icon: 'expert',
+        size: 24,
+        className: 'absolute'
+      },
+      listContened: [
+        {
+          label: 'Value 1',
+          value: 'value1'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        }
+      ],
+      labelSelect: 'Tipo de envío',
+      classes: 'w-full',
+      optionDefault: 'Estándar (5 a 10 dias hábiles)'
+    },
+    {
+      icon: {
+        icon: 'expert',
+        size: 24,
+        className: 'absolute'
+      },
+      listContened: [
+        {
+          label: 'Value 1',
+          value: 'value1'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        },
+        {
+          label: 'Value 2',
+          value: 'value2'
+        },
+        {
+          label: 'Value 3',
+          value: 'value3'
+        }
+      ],
+      labelSelect: 'Garantía',
+      classes: 'w-full',
+      optionDefault: '1 año con el fabricante'
+    }
+  ],
 };
 
 export const mockProductOverviewProps = {

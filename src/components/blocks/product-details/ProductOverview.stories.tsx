@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ProductOverview from './ProductOverview';
-import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockProductOverviewProps } from './ProductOverview.mocks';
+import { IProductDetails } from '@/lib/interfaces/product-cf.interface';
 
 export default {
   title: 'blocks/ProductOverview',
@@ -27,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockProductOverviewProps.data,
-} as IPromoBlock;
+} as IProductDetails;
