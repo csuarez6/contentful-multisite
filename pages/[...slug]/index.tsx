@@ -11,15 +11,14 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+} from "@/constants/contentful-ids.constants";
 import getEntryContent from "@/lib/services/entry-content.service";
 
 const CustomPage: NextPageWithLayout = ({ blocksCollection }: IPage) => {
-  return (
-    <>
-      {jsonToReactComponents(blocksCollection.items)}
-    </>
-  );
+  return <>{jsonToReactComponents(blocksCollection.items)}</>;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -30,8 +29,13 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<IPage>> => {
+  const slugArray =
+    typeof context.params.slug === "string"
+      ? ["", context.params.slug]
+      : ["", ...context.params.slug];
+
   const pageContent = await getPageContent(
-    context.params.slug,
+    slugArray.join("/"),
     context.preview ?? false
   );
   const footerInfo = await getEntryContent({

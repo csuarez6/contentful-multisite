@@ -4,13 +4,13 @@ export interface IExampleComponent {
 };
 
 const ExampleComponent: React.FC<IExampleComponent> = ({ name, view }) => {
-  const { bannerWidth } = view;
+  const { name: viewName } = view;
 
   return (
     <div>
       <h1>Hola {name}</h1>
 
-      <h2 className="text-violet-500">View bannerWidth: {bannerWidth}</h2>
+      <h2 className="text-violet-500">View name: {viewName}</h2>
       <h3 className="text-cyan-500">This is a h3 cyan</h3>
       <h4 className="text-lime-500">This is a h4 lime</h4>
       <h5 className="text-teal-500">This is a h5 teal</h5>

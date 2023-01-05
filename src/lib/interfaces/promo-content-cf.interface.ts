@@ -1,6 +1,7 @@
 import { IImageAsset } from './assets-cf.interface';
 import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
 import { IRpoForm } from "./IForm-cf";
+import { IRichText } from './richtext-cf.interface';
 
 interface IBlockProps {
     isFirst?: boolean;
@@ -16,7 +17,7 @@ export interface IPromoContent {
     name?: string;
     promoTitle?: string;
     subtitle?: string;
-    promoDescription?: any;
+    promoDescription?: IRichText;
     cta?: ILink;
     promoImage?: IImageAsset;
     alt?: string;
@@ -37,7 +38,7 @@ export interface IPromoBlock extends IBlockProps {
     title?: string;
     pretitle?: string;
     subtitle?: string;
-    description?: any;
+    description?: IRichText;
     content?: IPromoContent;
     listedContentsCollection?: {
         items?: IPromoContent[]

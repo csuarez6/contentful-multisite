@@ -64,7 +64,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false) => 
   }
 
   if (responseError) {
-    console.error('Error on entry query => ', responseError.message);
+    console.error(`Error on entry query (${type}) => `, responseError.message);
   }
 
   if (!responseData?.[type]) {

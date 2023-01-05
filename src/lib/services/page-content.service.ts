@@ -9,9 +9,9 @@ import getReferencesContent from './references-content.service';
 
 const REFERENCES = ['blocksCollection'];
 
-const getPageContent = async (slug, preview = false) => {
-  if (!slug || slug === '') {
-    throw new Error(`«slug» is required`);
+const getPageContent = async (urlPath, preview = false) => {
+  if (!urlPath || urlPath === '') {
+    throw new Error(`«urlPath» is required`);
   }
 
   let responseData = null;
@@ -22,8 +22,8 @@ const getPageContent = async (slug, preview = false) => {
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
-        query getPage($slug: String!, $preview: Boolean!) {
-          ${type}Collection(where: { OR: [{ slug: $slug }] }, limit: 1, preview: $preview) {
+        query getPage($urlPath: String!, $preview: Boolean!) {
+          ${type}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
             items {
               ${query}
             }
@@ -31,7 +31,7 @@ const getPageContent = async (slug, preview = false) => {
         }
       `,
       variables: {
-        slug,
+        urlPath,
         preview
       },
       errorPolicy: 'all'

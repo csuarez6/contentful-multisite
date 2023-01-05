@@ -1,8 +1,9 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  description: RICHTEXT_SHORT_SIMPLE,
   listedForm: {
     title: 'qui dolorem ipsum, quia dolor sit amet consectetur',
     subTitle: '$ 3.000.000',

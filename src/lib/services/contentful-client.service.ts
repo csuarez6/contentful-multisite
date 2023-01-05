@@ -17,7 +17,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = (preview = false) => {
-  const CONTENTFUL_ENDPOINT = process.env.CONTENTFUL_ENDPOINT ??
+  const CONTENTFUL_ENDPOINT = 
     `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`;
 
   return new HttpLink({

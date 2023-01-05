@@ -103,6 +103,7 @@ const BlockPromoContentQuery = `
     }
     ...on ViewLineOfSteps{
       ${ViewLineOfSteps}
+    }
     ...on ViewInformationCards{
       ${ViewInformationCards}
     }

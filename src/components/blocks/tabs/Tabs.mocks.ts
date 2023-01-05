@@ -1,8 +1,9 @@
+import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { ITabBlock } from "@/lib/interfaces/tabs-cf.interface";
 
 const dataTab: ITabBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  description: RICHTEXT_SHORT_SIMPLE,
   tabs: [
     {
       name: 'Tab 0',
@@ -25,7 +26,7 @@ const dataTab: ITabBlock = {
 
 const dataTabSecondary: ITabBlock = {
   title: 'Título',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do tempor incididunt ut labore et dolore magna aliqua.',
+  description: RICHTEXT_SHORT_SIMPLE,
   isSecondary: true,
   tabs: [
     {
