@@ -5,7 +5,7 @@ import { classNames } from '../../../../utils/functions';
 
 const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, promoImage, ctaLabel, externalLink, internalLink }) => {
   const isPortrait = promoImage?.isPortrait;
-  return (    
+  return (
     <article className={classNames(
       isPortrait
         ? "flex-col-reverse gap-6 pt-[70px] min-h-[492px]"
@@ -36,11 +36,13 @@ const VerticalCard: React.FC<IPromoContent> = ({ promoTitle, promoImage, ctaLabe
         )}>
           <div className="grid space-y-[18px]">
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-            {ctaLabel && <div className="flex gap-3">
-              <Link href={externalLink? externalLink: internalLink.slug} className="button button-primary">
-                  {ctaLabel}
-              </Link>
-            </div>}
+            {ctaLabel &&
+              <div className="flex gap-3">
+                <Link href={externalLink ? externalLink : '#'} legacyBehavior>
+                 <a className='button button-primary'>{ctaLabel}</a>
+                </Link>
+              </div>
+            }
           </div>
         </div>
       )}

@@ -5,14 +5,15 @@ const data: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
   columnsSize: 2,
+  view: {
+    isReverse: false
+  },
   listedContentsCollection: {
     items: [
       {
         promoTitle: 'Lámparas de gas 1',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -20,10 +21,8 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 2',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -31,10 +30,8 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 3',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -42,10 +39,8 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 4',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -53,10 +48,8 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 5',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -64,10 +57,8 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 6',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -79,10 +70,8 @@ const data: IPromoBlock = {
     items: [
       {
         promoTitle: 'Lámparas de gas 1 ft',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
@@ -90,18 +79,15 @@ const data: IPromoBlock = {
       },
       {
         promoTitle: 'Lámparas de gas 2 ft',
-        cta: {
-          href: '#',
-          name: 'Ver más'
-        },
+        externalLink: '#',
+        ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
           title: ''
         },
       }
     ]
-  },
-  isReverse: false
+  }
 };
 
 export const mockProductGrillProps = {

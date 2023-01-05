@@ -2,10 +2,8 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoContent = {
   promoTitle: 'Lámparas de gas',
-  cta: {
-    href: '#',
-    name: 'Ver más',
-  },
+  externalLink: '#',
+  ctaLabel: 'Ver más',
   promoImage: {
     url: 'https://via.placeholder.com/1220x972.png',
     title: ''
@@ -14,10 +12,8 @@ const data: IPromoContent = {
 
 const dataPortrait: IPromoContent = {
   promoTitle: 'Lámparas de gas',
-  cta: {
-    href: '#',
-    name: 'Ver más',
-  },
+  externalLink: '#',
+  ctaLabel: 'Ver más',
   promoImage: {
     url: 'https://via.placeholder.com/1220x972.png',
     title: '',
