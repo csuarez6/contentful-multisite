@@ -7,8 +7,9 @@ const LeftFeatured: React.FC<IPromoContent> = ({ promoImage, promoTitle, promoDe
   return (
     <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
       {promoImage && (
-        <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative object-cover">
+        <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative">
           <Image
+            className="object-cover"
             src={promoImage.url}
             alt={promoImage.title}
             fill
@@ -34,7 +35,7 @@ const LeftFeatured: React.FC<IPromoContent> = ({ promoImage, promoTitle, promoDe
             }
             {ctaLabel &&
               <div className="flex gap-3">
-                <Link href={externalLink ? externalLink : internalLink.slug} className='button button-outline'>
+                <Link href={externalLink ?? internalLink.slug} target={externalLink ? '_blank' : '_self'} className='button button-outline'>
                   {ctaLabel}
                 </Link>
               </div>
