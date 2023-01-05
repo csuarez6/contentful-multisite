@@ -14,6 +14,7 @@ import ViewServicesTabs from "../views/services-tabs.gql";
 import ViewFeaturedTabs from "../views/featured-tabs.gql";
 import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
+import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import AuxCustomContent from "../aux/custom-content.gql";
 
@@ -100,6 +101,8 @@ const BlockPromoContentQuery = `
     ...on ViewServicesCard {
       ${ViewServicesCard}
     }
+    ...on ViewLineOfSteps{
+      ${ViewLineOfSteps}
     ...on ViewInformationCards{
       ${ViewInformationCards}
     }
