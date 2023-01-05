@@ -91,9 +91,9 @@ const FooterBlock: React.FC<INavigation> = ({
                   <Image
                     src={promoImage.url}
                     alt={promoImage.description}
-                    layout="responsive"
                     width={promoImage.width}
                     height={promoImage.height}
+                    className="w-full h-auto"
                   />
                 </figure>
               </div>
