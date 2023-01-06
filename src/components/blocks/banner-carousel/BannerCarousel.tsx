@@ -6,6 +6,7 @@ import { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import "swiper/css";
 import "swiper/css/effect-fade";
+import { getUrlPath } from '@/utils/link.utils';
 
 const BannerCarouselBlock: React.FC<IPromoBlock> = ({ featuredContentsCollection }) => {
   const [stopSliderRotation, setStopSliderRotation] = useState(false);
@@ -44,7 +45,7 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({ featuredContentsCollection
                         <div className='relative flex justify-center flex-col gap-6 py-[70px] px-2 w-3/5'>
                           <h1 className='text-blue-dark title is-1'>{content.promoTitle ?? content.name}</h1>
                           {(content.externalLink || content.internalLink) && (
-                            <Link href={content.externalLink ?? content.internalLink} legacyBehavior>
+                            <Link href={getUrlPath(content)} legacyBehavior>
                               <a className="w-fit button button-primary">{content.ctaLabel}</a>
                             </Link>
                           )}

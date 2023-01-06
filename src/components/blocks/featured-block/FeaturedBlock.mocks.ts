@@ -12,11 +12,11 @@ const data: IPromoBlock = {
     items: [
       {
         ctaLabel: 'button',
-        internalLink: '#'
+        internalLink: null
       },
       {
         ctaLabel: 'button external',
-        externalLink: '#'
+        externalLink: 'http://www.grupovanti.com'
       }
     ]
   },

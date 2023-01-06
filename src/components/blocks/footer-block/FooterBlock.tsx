@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { getUrlPath } from "@/utils/link.utils";
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
@@ -38,14 +40,12 @@ const FooterBlock: React.FC<INavigation> = ({
                         <ul role="list" className="pt-[10px] space-y-3">
                           {menuItem.mainNavCollection.items.map((listItem) => (
                             <li key={listItem.sys.id}>
-                              <a
-                                href={
-                                  listItem?.slug ? `/${listItem?.slug}` : "#"
-                                }
+                              <Link
+                                href={getUrlPath(listItem)}
                                 className="text-base text-white hover:underline"
                               >
                                 {listItem.promoTitle ?? listItem.name}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -59,8 +59,8 @@ const FooterBlock: React.FC<INavigation> = ({
             {secondaryNavCollection?.items &&
               secondaryNavCollection?.items.map((item) => (
                 <li key={item.sys.id}>
-                  <a
-                    href={item?.externalLink ? item.externalLink : "#"}
+                  <Link
+                    href={getUrlPath(item)}
                     className="text-white hover:text-neutral-90"
                     {...(item?.externalLink
                       ? { target: "_blank", rel: "noreferrer" }
@@ -76,7 +76,7 @@ const FooterBlock: React.FC<INavigation> = ({
                         aria-hidden="true"
                       />
                     )}
-                  </a>
+                  </Link>
                 </li>
               ))}
           </ul>

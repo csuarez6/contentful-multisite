@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { getUrlPath } from "@/utils/link.utils";
 
 const LeftFeaturedBlock: React.FC<IPromoBlock> = ({ title, pretitle, subtitle, description, image, ctaCollection }) => {
   return (
@@ -37,7 +38,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({ title, pretitle, subtitle, d
                 <div className="flex gap-3">
                   {ctaCollection.items.map(cta => (
                     (cta.externalLink || cta.internalLink) && (
-                      <Link href={cta.externalLink ?? cta.internalLink} key={cta.name} >
+                      <Link href={getUrlPath(cta)} key={cta.name} >
                         <a className="button button-primary">{cta.ctaLabel ?? cta.name}</a>
                       </Link>
                     )

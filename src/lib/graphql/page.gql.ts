@@ -24,6 +24,7 @@ const PageQuery = `
     ${RichtextQuery}
   }
   promoIcon
+  urlPath
   mainNavCollection {
     items {
       ...on Page {

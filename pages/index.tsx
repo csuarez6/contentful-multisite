@@ -6,6 +6,7 @@ import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 // import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
+import { HOME_URL_PATH } from "@/constants/url-paths.constants";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
@@ -27,7 +28,7 @@ const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const pageContent = await getPageContent(
-    '/home',
+    HOME_URL_PATH,
     context.preview ?? false
   );
 

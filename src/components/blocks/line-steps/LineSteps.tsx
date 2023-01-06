@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { getUrlPath } from "@/utils/link.utils";
 
 const LineSteps: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
@@ -27,7 +28,7 @@ const LineSteps: React.FC<IPromoBlock> = ({
               (cta) =>
                 (cta.externalLink || cta.internalLink) && (
                   <Link
-                    href={cta.externalLink ?? cta.internalLink}
+                    href={getUrlPath(cta)}
                     key={cta.name}
                     legacyBehavior
                   >

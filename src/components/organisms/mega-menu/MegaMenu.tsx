@@ -1,10 +1,11 @@
 import Icon from '@/components/atoms/icon/Icon';
-// import Link from "next/link";
+import Link from 'next/link';
 import { classNames } from '../../../utils/functions';
 
 import { Fragment } from 'react';
 import { Popover, Transition } from "@headlessui/react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
+import { getUrlPath } from '@/utils/link.utils';
 
 const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
   if (mainNavCollection.items?.length <= 0) return;
@@ -65,12 +66,12 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
                                       <ul role="list" className="flex flex-col gap-5 mt-5">
                                         {item.mainNavCollection.items.map((item) => (
                                           <li key={item.name} className="flow-root">
-                                            <a
-                                              href="#"
+                                            <Link
+                                              href={getUrlPath(item)}
                                               className="flex items-center text-base text-blue-dark hover:text-lucuma-60"
                                             >
                                               <span>{item.promoTitle ?? item.name}</span>
-                                            </a>
+                                            </Link>
                                           </li>
                                         ))}
                                       </ul>

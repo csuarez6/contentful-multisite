@@ -2,6 +2,7 @@ import { IImageAsset } from './assets-cf.interface';
 import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
 import { IRpoForm } from "./IForm-cf";
 import { IRichText } from './richtext-cf.interface';
+import { IPage } from './page-cf.interface';
 
 interface IBlockProps {
     isFirst?: boolean;
@@ -11,6 +12,7 @@ interface IBlockProps {
 }
 
 export interface IPromoContent {
+    __typename?: string;
     sys?: {
         id?: string;
     };
@@ -31,7 +33,7 @@ export interface IPromoContent {
     isReverse?: boolean;
     tags?: ITag[];
     externalLink?: string;
-    internalLink?: any;
+    internalLink?: IPage;
     ctaLabel?: string;
     slug?: string;
 }
