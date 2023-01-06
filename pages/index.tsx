@@ -28,7 +28,7 @@ const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const pageContent = await getPageContent(
-    HOME_URL_PATH,
+    '/',
     context.preview ?? false
   );
 

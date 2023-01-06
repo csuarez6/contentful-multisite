@@ -38,6 +38,9 @@ export const getStaticProps: GetStaticProps = async (
     slugArray.join("/"),
     context.preview ?? false
   );
+
+  if (!pageContent) return { notFound: true };
+
   const footerInfo = await getEntryContent({
     __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
     sys: {
@@ -51,8 +54,6 @@ export const getStaticProps: GetStaticProps = async (
       id: DEFAULT_HEADER_ID,
     },
   });
-
-  if (!pageContent) return { notFound: true };
 
   return {
     props: {

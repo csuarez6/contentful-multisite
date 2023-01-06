@@ -16,6 +16,20 @@ const nextConfig = {
   images: {
     domains: ['images.ctfassets.net', 'picsum.photos', 'placeholder'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true
+      },
+      {
+        source: '/home/:slug*',
+        destination: '/:slug*',
+        permanent: true
+      }
+    ];
+  }
 };
 
 if (isProduction) {

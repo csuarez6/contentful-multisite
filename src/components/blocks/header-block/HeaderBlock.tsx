@@ -13,17 +13,12 @@ import { getUrlPath } from "@/utils/link.utils";
 const HeaderBlock: React.FC<INavigation> = (props) => {
   const { asPath } = useRouter();
 
-  // console.log(props)
-  // console.log(JSON.stringify(props))
   const {
     promoImage,
     mainNavCollection,
     secondaryNavCollection,
     utilityNavCollection,
   } = props;
-  const mainNavCollectionMenu = mainNavCollection.items.filter(
-    (el) => el.slug === "home"
-  )[0].mainNavCollection;
 
   return (
     <Disclosure as="header" id="header" className="sticky inset-x-0 top-0 z-20">
@@ -169,8 +164,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               </div>
             </div>
             {/* Bottom */}
-            {mainNavCollectionMenu.items?.length > 0 && (
-              <MegaMenu mainNavCollection={mainNavCollectionMenu} />
+            {mainNavCollection.items?.length > 0 && (
+              <MegaMenu mainNavCollection={mainNavCollection} />
             )}
           </div>
           <hr className="min-w-[100vw] -mx-[50vw] border-neutral-80 hidden lg:block" />
