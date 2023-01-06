@@ -11,7 +11,7 @@ const viewNoSupported = (blockTypeName, viewTypename = undefined) => {
       `Bloque de contenido no definido: ${blockTypeName}${viewTypename ? ' vista(' + viewTypename + ')' : ''}`
     );
   }
-  
+
   return null;
 };
 
@@ -23,7 +23,10 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
       view = view[item.view.__typename];
     }
 
-    if (!view) return viewNoSupported(item.__typename, item?.view?.__typename);
+    console.info(`Rendering view ${view} for ${item.__typename}`, item);
+    if (!view || typeof view === 'object') {
+      return viewNoSupported(item.__typename, item?.view?.__typename);
+    }
 
     const cleanItem = {
       ...item,
@@ -34,14 +37,19 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
       asBlock: true,
     };
 
-    return createElement(
-      view,
-      { ...cleanItem },
-      item[CHILDREN_KEYS_MAP[item.__typename]] &&
+    try {
+      return createElement(
+        view,
+        { ...cleanItem },
+        item[CHILDREN_KEYS_MAP[item.__typename]] &&
         jsonToReactComponents(
           item[CHILDREN_KEYS_MAP[item.__typename]].items,
         )
-    );
+      );
+    } catch (e) {
+      console.error(`Error rendering view "${view}", message => ${e.message}`);
+      return viewNoSupported(item.__typename, item?.view?.__typename);
+    }
   });
 };
 

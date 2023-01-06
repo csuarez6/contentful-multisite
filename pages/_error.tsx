@@ -19,8 +19,8 @@ CustomErrorComponent.getInitialProps = async (context: any) => {
     ...errors,
     layout: {
       name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.footerInfo,
-      headerInfo: mockPageLayoutProps.data.headerInfo,
+      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
+      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
     },
   };
 };

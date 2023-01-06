@@ -3,9 +3,7 @@ import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import PageLayout, {
-  IPageLayout,
-} from "@/components/layouts/page-layout/PageLayout";
+import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
 import "../styles/globals.css";
 import "../styles/button.css";
@@ -14,16 +12,16 @@ import "../public/fonts/mulish/mulish.css";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement, layoutProps?: IPageLayout) => ReactNode;
+  getLayout?: (page: ReactElement, pageProps?: IPage) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps<IPage> & {
   Component: NextPageWithLayout<IPage>;
 };
 
-export const defaultLayout = (page: ReactNode, pageProps: any) => (
+export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
   // <CheckoutProvider>
-  <PageLayout {...(pageProps.layout ? pageProps.layout : null)}>
+  <PageLayout {...(pageProps ? pageProps : null)}>
     {page}
   </PageLayout>
   // </CheckoutProvider>

@@ -4,9 +4,7 @@ import { GetStaticProps } from "next";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-// import PageLayout, {
-//   IPageLayout,
-// } from "@/components/layouts/page-layout/PageLayout";
+// import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
@@ -23,8 +21,8 @@ const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
 };
 
 /// Explicit pageLayout assign example
-// Home.getLayout = (page: ReactElement, layoutProps: IPageLayout = null) => {
-//   return <PageLayout {...layoutProps}>{page}</PageLayout>;
+// Home.getLayout = (page: ReactElement, pageProps: IPage = null) => {
+//   return <PageLayout {...pageProps}>{page}</PageLayout>;
 // };
 
 export const getStaticProps: GetStaticProps = async (context) => {

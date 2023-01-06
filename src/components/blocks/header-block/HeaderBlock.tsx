@@ -16,7 +16,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   // console.log(props)
   // console.log(JSON.stringify(props))
   const { promoImage, mainNavCollection, secondaryNavCollection, utilityNavCollection } = props;
-  const mainNavCollectionMenu = mainNavCollection.items.filter(el => el.slug === 'home')[0].mainNavCollection
+  const mainNavCollectionMenu = mainNavCollection.items.filter(el => el.slug === 'home')[0].mainNavCollection;
 
   return (
     <Disclosure

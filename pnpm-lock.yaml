@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@apollo/client': ^3.7.2
+  '@contentful/rich-text-plain-text-renderer': ^16.0.2
   '@contentful/rich-text-react-renderer': ^15.16.2
   '@contentful/rich-text-types': ^16.0.2
   '@headlessui/react': ^1.7.4
@@ -41,6 +42,7 @@ specifiers:
 
 dependencies:
   '@apollo/client': 3.7.3_gdcq4dv6opitr3wbfwyjmanyra
+  '@contentful/rich-text-plain-text-renderer': 16.0.2
   '@contentful/rich-text-react-renderer': 15.16.2_biqbaboplfbrettd7655fr4n2y
   '@headlessui/react': 1.7.7_biqbaboplfbrettd7655fr4n2y
   '@heroicons/react': 2.0.13_react@18.2.0
@@ -2464,6 +2466,13 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@contentful/rich-text-plain-text-renderer/16.0.2:
+    resolution: {integrity: sha512-8GDARwU0X8XZU8Vor7N0NRqyHeYp1/RHOhS2qhm0kDJGRaPocs1tL6nzHXjSnmGuTgH0NCk4QreAZltakIgbzQ==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      '@contentful/rich-text-types': 16.0.2
+    dev: false
 
   /@contentful/rich-text-react-renderer/15.16.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-5UJxF+6DhcwkEsgJsHczJrCxveaQ95Oqj3NaJYmM9VDVKlvPK8cNXmSiWArHCEN0uw3yU/IS2sw16uIam3LsjQ==}

@@ -1,12 +1,18 @@
-import { IPageLayout } from './PageLayout';
+import { IPage } from '@/lib/interfaces/page-cf.interface';
 
 import { mockHeaderBlockProps } from '@/components/blocks/header-block/HeaderBlock.mocks';
 import { mockFooterBlockProps } from '@/components/blocks/footer-block/FooterBlock.mocks';
+import { RICHTEXT_SHORT_SIMPLE } from '@/constants/mocks.constants';
 
-const data: IPageLayout = {
+const data: IPage = {
   name: 'Home',
-  headerInfo: mockHeaderBlockProps.data,
-  footerInfo: mockFooterBlockProps.data,
+  promoTitle: 'Page Layout',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
+  layout: {
+    name: 'Home',
+    headerInfo: mockHeaderBlockProps.data,
+    footerInfo: mockFooterBlockProps.data,
+  }
 };
 
 export const mockPageLayoutProps = {

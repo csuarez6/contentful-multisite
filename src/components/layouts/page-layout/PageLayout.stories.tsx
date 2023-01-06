@@ -1,5 +1,6 @@
+import { IPage } from '@/lib/interfaces/page-cf.interface';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import PageLayout, { IPageLayout } from './PageLayout';
+import PageLayout from './PageLayout';
 import { mockPageLayoutProps } from './PageLayout.mocks';
 
 export default {
@@ -26,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockPageLayoutProps.data,
-} as IPageLayout;
+} as IPage;

@@ -5,8 +5,8 @@ const data: IPage = {
   name: 'Home Template',
   layout: {
     name: 'Home Template',
-    headerInfo: mockPageLayoutProps.data.headerInfo,
-    footerInfo: mockPageLayoutProps.data.footerInfo,
+    headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+    footerInfo: mockPageLayoutProps.data.layout.footerInfo,
   }
 };
 
