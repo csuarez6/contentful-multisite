@@ -15,7 +15,7 @@ const data: INavigation = {
           __typename: "Sys",
           id: "2yqz4zitbMGpDF5k9ftzV"
         },
-        name: "Hogares",
+        name: "Servicios gas",
         slug: "home",
         content: null,
         blocksCollection: {
@@ -1070,7 +1070,7 @@ const data: INavigation = {
             }
           ]
         },
-        promoTitle: "Hogares",
+        promoTitle: "Servicios gas",
         promoImage: null,
         promoDescription: null,
         promoIcon: null

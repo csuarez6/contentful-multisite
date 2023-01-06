@@ -7,6 +7,8 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../../../utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
+import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
+
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
   const { asPath } = useRouter();
@@ -14,6 +16,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   // console.log(props)
   // console.log(JSON.stringify(props))
   const { promoImage, mainNavCollection, secondaryNavCollection, utilityNavCollection } = props;
+  const mainNavCollectionMenu = mainNavCollection.items.filter(el => el.slug === 'home')[0].mainNavCollection
 
   return (
     <Disclosure
@@ -22,13 +25,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       className="sticky inset-x-0 top-0 z-20"
     >
       {({ open }) => (
-        <div className="xl:container mx-auto">
+        <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             {/* Top */}
             <div className="relative hidden lg:block">
               <div className="bg-neutral-90 min-w-[100vw] -mx-[50vw] absolute h-full inset-x-0"></div>
               <nav aria-label="Menú principal" className="relative flex justify-between gap-14 xl:gap-[76px] min-h-[42px] h-full">
-                <ul className="relative flex flex-nowrap grow gap-6">
+                <ul className="relative flex gap-6 flex-nowrap grow">
                   {mainNavCollection.items.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
                       <a
@@ -47,7 +50,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   ))}
                 </ul>
 
-                <ul className="relative flex flex-nowrap gap-6">
+                <ul className="relative flex gap-6 flex-nowrap">
                   {secondaryNavCollection.items.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
                       <a
@@ -67,9 +70,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 </ul>
 
                 <div className="bg-[#FF8E67] bg-opacity-30 justify-self-end flex items-center px-[10px] py-[5px]">
-                  <p className="title is-5 text-blue-dark flex flex-nowrap items-center gap-1">
-                    <span className="shrink-0 w-8 h-8">
-                      <Icon icon="emergency" className="mx-auto w-full h-full" />
+                  <p className="flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
+                    <span className="w-8 h-8 shrink-0">
+                      <Icon icon="emergency" className="w-full h-full mx-auto" />
                     </span>
                     Emergencias: 164
                   </p>
@@ -80,7 +83,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             <div className="relative flex items-center min-h-[92px] justify-between gap-6">
               <div className="relative z-10 flex px-2 lg:px-0 lg:mt-[10px]">
                 <Link href="/" legacyBehavior>
-                  <a className="flex flex-shrink-0 items-center">
+                  <a className="flex items-center flex-shrink-0">
                     <figure className="relative h-[52px] aspect-[180/52]">
                       <Image
                         className="block w-auto"
@@ -97,12 +100,12 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 <form
                   action="#"
                   method="post"
-                  className="max-w-xs h-10 pr-6"
+                  className="h-10 max-w-xs pr-6"
                 >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
                     <label htmlFor="search" className="flex items-center">
-                      <span className="flex items-center shrink-0 w-6 h-6">
-                        <Icon icon="search" className="mx-auto w-full h-full" />
+                      <span className="flex items-center w-6 h-6 shrink-0">
+                        <Icon icon="search" className="w-full h-full mx-auto" />
                       </span>
                     </label>
                     <input
@@ -115,8 +118,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   </div>
                 </form>
                 {utilityNavCollection?.items && (
-                  <nav aria-label="Utility" className="relative hidden lg:block px-6">
-                    <ul className="flex flex-nowrap gap-1">
+                  <nav aria-label="Utility" className="relative hidden px-6 lg:block">
+                    <ul className="flex gap-1 flex-nowrap">
                       {utilityNavCollection.items.map((item) => (
                         <li className="flex max-w-[75px]" key={item.sys.id}>
                           <a
@@ -124,8 +127,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             href={item.slug ?? '/'}
                           >
                             {item.promoIcon && (
-                              <span className="flex items-center shrink-0 w-6 h-6 text-neutral-30">
-                                <Icon icon={item.promoIcon} className="mx-auto w-full h-full" />
+                              <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                <Icon icon={item.promoIcon} className="w-full h-full mx-auto" />
                               </span>
                             )}
                             {item.promoTitle ?? item.name}
@@ -135,51 +138,25 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden lg:flex gap-6 px-6">
+                <div className="hidden gap-6 px-6 lg:flex">
                   <a href="#" className="button button-primary">Regístrate</a>
                   <a href="#" className="button button-outline">Inicia sesión</a>
                 </div>
               </div>
 
               <div className="relative z-10 flex items-center lg:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                   <span className="sr-only">Open menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon className="block w-6 h-6" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <Bars3Icon className="block w-6 h-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
               </div>
             </div>
             {/* Bottom */}
-            <div className="relative hidden lg:block">
-              <nav
-                className="flex items-center justify-between py-2 min-h-[60px]"
-                aria-label="Global"
-              >
-                <ul className="flex gap-6 flex-nowrap">
-                  {mainNavCollection?.items?.map((item) => (
-                    <li key={item.sys.id} className="p-2">
-                      <a
-                        href={item.externalLink ?? '/'}
-                        className="flex gap-1 items-center text-center font-semibold leading-none text-blue-dark border-b border-transparent hover:border-blue-dark"
-                      >
-                        {item.promoIcon && (
-                          <span className="flex items-center shrink-0 w-6 h-6">
-                            <Icon icon={item.promoIcon} className="w-full h-full" />
-                          </span>
-                        )}
-                        {item.promoTitle ?? item.name}
-                        <span className="flex items-center w-6 h-6 shrink-0">
-                          <Icon icon="arrow-down" className="w-full h-full" />
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
+            {mainNavCollectionMenu.items?.length > 0 && <MegaMenu mainNavCollection={mainNavCollectionMenu} />}
           </div>
           <hr className="min-w-[100vw] -mx-[50vw] border-neutral-80 hidden lg:block" />
 
@@ -189,7 +166,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             className="lg:hidden"
             aria-label="Menu mobile"
           >
-            <ul className="space-y-1 px-2 pt-2 pb-3">
+            <ul className="px-2 pt-2 pb-3 space-y-1">
               {mainNavCollection?.items?.map((item, index) => (
                 <li key={item.name}>
                   <Disclosure.Button
