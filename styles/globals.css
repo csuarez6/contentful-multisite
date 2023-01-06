@@ -59,7 +59,7 @@ h6 {
 }
 
 section.section {
-  @apply py-8;
+  @apply relative py-8;
 }
 
 .inputSelect:focus .listSelect {

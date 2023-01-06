@@ -14,7 +14,7 @@ const FooterBlock: React.FC<INavigation> = ({
   return (
     <footer
       id="footer"
-      className="bg-gradient-footer overflow-x-hidden"
+      className="bg-gradient-blue-dark overflow-x-hidden"
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" className="sr-only">

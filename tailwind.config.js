@@ -18,7 +18,8 @@ module.exports = {
         '2xl': '1440px'
       },
       backgroundImage: {
-        'gradient-footer': 'linear-gradient(121.27deg, #191580 0%, #035177 32.03%, #113455 68.96%, #000000 100%)',
+        'gradient-blue': 'linear-gradient(121.27deg, #69D1F6 0%, #65BADF 21.35%, #2E7097 47.4%, #035177 69.79%, #52A9C5 98.96%)',
+        'gradient-blue-dark': 'linear-gradient(121.27deg, #191580 0%, #035177 32.03%, #113455 68.96%, #000000 100%)',
       },
       fontFamily: {
         'mulish': ['Mulish', 'sans-serif'],
@@ -36,7 +37,9 @@ module.exports = {
           30: "#594F40",
           60: "#ADABA5",
           80: "#DBDAD8",
-          90: "#F2F2F2"
+          90: "#F2F2F2",
+          100: "#F7F7F7",
+          120: "#EDEDED"
         },
         neutral: {
           10: "#001924",

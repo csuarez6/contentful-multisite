@@ -26,7 +26,7 @@ const iconLeftRounded: IPromoContent = {
   promoDescription: RICHTEXT_SHORT_SIMPLE,
   iconPosition: 'left',
   iconSize: 'small',
-  bgIconRounded: 'bg-neutral-90'
+  iconBackgroundColor: 'Azul Claro'
 };
 
 const iconLeftNoTitle: IPromoContent = {

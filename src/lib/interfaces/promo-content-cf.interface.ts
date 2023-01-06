@@ -25,6 +25,8 @@ export interface IPromoContent {
     iconPosition?: string;
     iconSize?: string;
     iconColor?: string;
+    buttonType?: string;
+    iconBackgroundColor?: string;
     bgIconRounded?: string;
     isReverse?: boolean;
     tags?: ITag[];
@@ -70,12 +72,14 @@ export interface ITag {
 export interface IView {
     name?: string;
     backgroundColor?: string;
-    columnsSize?: number;
-    imageAlign?: string;
-    iconPosition?: string;
-    buttonType?: string;
-    imageOrientation?: string;
     bannerHeight?: string;
     bannerWidth?: string;
+    buttonType?: string;
+    columnsSize?: number;
+    imageAlign?: string;
+    iconBackgroundColor?: string;
+    iconPosition?: string;
+    iconSize?: string;
+    imageOrientation?: string;
     isReverse?: boolean;
 }

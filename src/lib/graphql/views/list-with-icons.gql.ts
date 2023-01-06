@@ -7,6 +7,8 @@ const ViewListWithIcons = `
   columnsSize
   buttonType
   iconPosition
+  iconSize
+  iconBackgroundColor
 `;
 
 export default ViewListWithIcons;
