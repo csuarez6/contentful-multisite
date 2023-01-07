@@ -7,6 +7,27 @@ import { Popover, Transition } from "@headlessui/react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import { getUrlPath } from '@/utils/link.utils';
 
+const LinkElement = ({ item, isOpen }) => {
+  return (
+    <>
+      {item.promoIcon && (
+        <span className="flex items-center shrink-0 w-6 h-6">
+          <Icon icon={item.promoIcon} className="w-full h-full" aria-hidden="true" />
+        </span>
+      )}
+      {item.promoTitle ?? item.name}
+      {item.mainNavCollection?.items?.length > 0 && (
+        <span className={classNames(
+          isOpen ? 'transform rotate-180' : '',
+          'flex items-center w-6 h-6 shrink-0 text-blue-dark'
+        )}>
+          <Icon icon="arrow-down" className="w-full h-full" aria-hidden="true" />
+        </span>
+      )}
+    </>
+  );
+};
+
 const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
   if (mainNavCollection.items?.length <= 0) return;
 
@@ -22,27 +43,25 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
                   <Popover key={item.sys.id}>
                     {({ open }) => (
                       <>
-                        <Popover.Button
-                          className={classNames(
-                            open ? 'border-blue-dark' : 'border-transparent',
-                            'flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark hover:border-blue-dark focus:outline-none'
-                          )}
-                        >
-                          {item.promoIcon && (
-                            <span className="flex items-center shrink-0 w-6 h-6">
-                              <Icon icon={item.promoIcon} className="w-full h-full" aria-hidden="true" />
-                            </span>
-                          )}
-                          {item.promoTitle ?? item.name}
-                          {item.mainNavCollection?.items?.length > 0 && (
-                            <span className={classNames(
-                              open ? 'transform rotate-180' : '',
-                              'flex items-center w-6 h-6 shrink-0 text-blue-dark'
-                            )}>
-                              <Icon icon="arrow-down" className="w-full h-full" aria-hidden="true" />
-                            </span>
-                          )}
-                        </Popover.Button>
+                        {(!item.internalLink?.slug && !item.externalLink && getUrlPath(item) === "/") && (
+                          <Popover.Button
+                            className={classNames(
+                              open ? 'border-blue-dark' : 'border-transparent',
+                              'flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark hover:border-blue-dark focus:outline-none'
+                            )}
+                          >
+                            <LinkElement item={item} isOpen={open} />
+                          </Popover.Button>
+                        )}
+                        {(item.internalLink?.slug || item.externalLink || getUrlPath(item) !== "/") && (
+                          <Link
+                            href={getUrlPath(item)}
+                            target={item.externalLink ? '_blank' : '_self'}
+                            className={'flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark hover:border-blue-dark focus:outline-none'}
+                          >
+                            <LinkElement item={item} isOpen={false} />
+                          </Link>
+                        )}
 
                         {item.mainNavCollection?.items?.length > 0 && (
                           <Transition

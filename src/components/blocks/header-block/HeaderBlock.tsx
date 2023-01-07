@@ -10,15 +10,16 @@ import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
 import { getUrlPath } from "@/utils/link.utils";
 
-const HeaderBlock: React.FC<INavigation> = (props) => {
+const HeaderBlock: React.FC<INavigation> = ({
+  promoImage,
+  mainNavCollection,
+  secondaryNavCollection,
+  utilityNavCollection,
+}) => {
   const { asPath } = useRouter();
-
-  const {
-    promoImage,
-    mainNavCollection,
-    secondaryNavCollection,
-    utilityNavCollection,
-  } = props;
+  const mainNavCollectionMenu = mainNavCollection.items.filter(
+    (el) => el.slug === "home"
+  )[0].mainNavCollection;
 
   return (
     <Disclosure as="header" id="header" className="sticky inset-x-0 top-0 z-20">
@@ -164,8 +165,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               </div>
             </div>
             {/* Bottom */}
-            {mainNavCollection.items?.length > 0 && (
-              <MegaMenu mainNavCollection={mainNavCollection} />
+            {mainNavCollectionMenu.items?.length > 0 && (
+              <MegaMenu mainNavCollection={mainNavCollectionMenu} />
             )}
           </div>
           <hr className="min-w-[100vw] -mx-[50vw] border-neutral-80 hidden lg:block" />
