@@ -1,7 +1,7 @@
 import ProductSmallCard from '@/components/organisms/cards/product-small-card/ProductSmallCard';
 import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 
 function gridClasses(
   listedContent: IPromoContent[],

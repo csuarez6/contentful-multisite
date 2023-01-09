@@ -1,7 +1,7 @@
 import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { classColumns, classNames, getBackgroundColorClass } from '../../../utils/functions';
+import { classColumns, classNames, getBackgroundColorClass } from '@/utils/functions';
 
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);

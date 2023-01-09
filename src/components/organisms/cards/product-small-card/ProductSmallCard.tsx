@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from "../../../../utils/functions";
+import { classNames } from "@/utils/functions";
 
 const VerticalCard: React.FC<IPromoContent> = ({
   promoTitle,

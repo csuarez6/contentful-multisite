@@ -1,4 +1,4 @@
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 
 interface ITypeLink {
   href: string;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Icon from '@/components/atoms/icon/Icon';
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames, getButtonType } from '../../../utils/functions';
+import { classNames, getButtonType } from '@/utils/functions';
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 const ListWithIcons: React.FC<IPromoContent> = ({

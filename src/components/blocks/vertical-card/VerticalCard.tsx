@@ -1,7 +1,7 @@
 import VerticalCard from '@/components/organisms/cards/vertical-card/VerticalCard';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { classNames, classColumns } from '../../../utils/functions';
+import { classNames, classColumns } from '@/utils/functions';
 
 const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
   return (

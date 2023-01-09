@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 
 const BannerImage: React.FC<IPromoBlock> = ({ image, view }) => {
     if (!image) return;

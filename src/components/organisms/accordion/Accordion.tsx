@@ -2,7 +2,7 @@ import React from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 
 const Accordion: React.FC<any> = ({ featuredContents }) => {
   return (

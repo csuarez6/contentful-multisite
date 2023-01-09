@@ -1,6 +1,6 @@
 import Icon from '@/components/atoms/icon/Icon';
 import Link from 'next/link';
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 
 import { Fragment } from 'react';
 import { Popover, Transition } from "@headlessui/react";

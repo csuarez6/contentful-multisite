@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import InformativeGridCard from '@/components/organisms/cards/informative-grid/InformativeGridCard';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from '../../../utils/functions';
+import { classNames } from '@/utils/functions';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
 function classColumns(columns = 1) {

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { classNames } from "../../../utils/functions";
+import { classNames } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
