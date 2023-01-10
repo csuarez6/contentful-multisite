@@ -69,7 +69,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
             <div className="text-lg text-grey-30">{documentToReactComponents(promoDescription.json)}</div>
           )}
           {(internalLink?.urlPath || externalLink) && (
-            <Link href={getUrlPath(props)}>
+            <Link href={getUrlPath(props)} legacyBehavior>
               <a
                 className={classNames("button w-fit", getButtonType(buttonType))}
                 target={externalLink ? "_blank" : "_self"}

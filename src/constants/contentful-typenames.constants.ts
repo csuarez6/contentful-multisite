@@ -22,5 +22,6 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_LINE_OF_STEPS = "ViewLineOfSteps",
   VIEW_INFORMATION_CARDS = "ViewInformationCards",
   VIEW_PRODUCT_GRILL = "ViewProductGrill",
-  VIEW_SERVICES_TABS = "ViewServicesTabs"
+  VIEW_SERVICES_TABS = "ViewServicesTabs",
+  VIEW_PRODUCT_FINANCING = "ViewProductFinancing"
 };

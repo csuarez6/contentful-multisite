@@ -11,6 +11,7 @@ import LineSteps from "@/components/blocks/line-steps/LineSteps";
 import InfoCardBlock from "@/components/blocks/info-card/InfoCard";
 import ProductGrillBlock from "@/components/blocks/product-grill/ProductGrill";
 import ServicesTabsBlock from "@/components/blocks/services-tabs/ServicesTabs";
+import ProductFinancingBlock from "@/components/blocks/product-financing/ProductFinancing";
 
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
@@ -37,7 +38,8 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRID]: ProductGrid,
     [CONTENTFUL_TYPENAMES.VIEW_INFORMATION_CARDS]: InfoCardBlock,
     [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRILL]: ProductGrillBlock,
-    [CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS]: ServicesTabsBlock
+    [CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS]: ServicesTabsBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_FINANCING]: ProductFinancingBlock
   },
 };
 
