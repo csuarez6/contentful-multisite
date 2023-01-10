@@ -4,6 +4,7 @@ import Icon from '@/components/atoms/icon/Icon';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from '@/utils/functions';
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { getUrlPath } from "@/utils/link.utils";
 
 const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view, featuredContentsCollection, ctaCollection }) => {
   const imageAlignLocal = (view && view.imageAlign === "Derecha") ? "order-last" : "";
@@ -12,16 +13,17 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view,
     <section className="section grid">
       <div className="relative">
         <div className={classNames(
-          "gap-x-16 gap-y-6 grid grid-cols-1 items-center",
-          (view && view.columnsSize > 2) ? "lg:grid-cols-3" : "lg:grid-cols-2",
+          "gap-x-16 gap-y-6 grid grid-cols-1",
+          (view && view.columnsSize > 2) ? "lg:grid-cols-3" : "md:grid-cols-2",
         )}>
           {image?.url &&
-            <div aria-hidden="true" className={classNames("overflow-hidden rounded-lg", imageAlignLocal)}>
+            <div aria-hidden="true" className={imageAlignLocal}>
               <figure
                 className={classNames(
-                  "relative",
+                  "relative overflow-hidden rounded-lg",
                   (view && view.columnsSize > 2) ? "aspect-[384/624]" : "aspect-[612/569]",
-                )}>
+                )}
+              >
                 <Image
                   className="block w-auto object-cover"
                   src={image.url}
@@ -78,18 +80,25 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view,
                   {ctaCollection?.items && (
                     <div className="flex my-6 gap-2">
                       {ctaCollection.items.map((item) => (
-                        item.ctaLabel && <Link href={`${item.externalLink}`} key={item.ctaLabel} legacyBehavior >
-                          <a className="button button-primary w-fit">
-                            {item.ctaLabel}
-                            {(item.externalLink) && (
-                              <Icon
-                                icon='arrow-right'
-                                className="w-6 h-6 ml-1"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </a>
-                        </Link>
+                        ((item.externalLink || item.internalLink) &&
+                          <Link href={getUrlPath(item)} key={item.ctaLabel}>
+                            <a className="button button-primary w-fit" target={item.externalLink ? "_blank" : "_self"}>
+                              {item.ctaLabel
+                                ? item.ctaLabel
+                                : item.promoTitle
+                                  ? item.promoTitle
+                                  : item.name
+                              }
+                              {(item.externalLink) && (
+                                <Icon
+                                  icon='arrow-right'
+                                  className="w-6 h-6 ml-1"
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </a>
+                          </Link>
+                        )
                       ))}
                     </div>
                   )}

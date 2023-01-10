@@ -3,6 +3,7 @@ import InformativeGridCard from '@/components/organisms/cards/informative-grid/I
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from '@/utils/functions';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { getUrlPath } from '@/utils/link.utils';
 
 function classColumns(columns = 1) {
   const classes = ["grid-cols-1"];
@@ -14,11 +15,11 @@ function classColumns(columns = 1) {
 function classBorder(columns = 1, idx = 0) {
   const classes = [];
   if (columns === 2) classes.push("odd:!border-transparent");
-  if (columns > 2 && (idx % 3 === 0)) classes.push("!border-transparent");
+  if (columns === 3 && (idx % 3 === 0)) classes.push("!border-transparent");
   return classes.join(" ");
 }
 
-const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, cta }) => {
+const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection }) => {
   return (
     <section className="section grid gap-9">
       {(title || description) &&
@@ -36,16 +37,18 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({ title, description, featu
           )}
         </div>
       )}
-      {cta?.list?.map((item) =>
-        <div className="flex justify-center" key={item.name}>
-          <Link href={item.href}>
-            <a className="button button-primary">
-              {item.name}
-            </a>
-          </Link>
-        </div>
-      )}
-    </section >
+      {ctaCollection?.items?.map((item) => (
+        (item.externalLink || item.internalLink?.urlPath) && (
+          <div className="flex justify-center" key={item.name}>
+            <Link href={getUrlPath(item)}>
+              <a className="button button-primary w-fit" target={item.externalLink ? "_blank" : "_self"}>
+                {item.promoTitle ?? item.name}
+              </a>
+            </Link>
+          </div>
+        )
+      ))}
+    </section>
   );
 };
 

@@ -3,19 +3,23 @@ import Icon from '@/components/atoms/icon/Icon';
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames, getButtonType } from '@/utils/functions';
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { getUrlPath } from "@/utils/link.utils";
 
-const ListWithIcons: React.FC<IPromoContent> = ({
-  promoTitle,
-  promoIcon,
-  promoDescription,
-  iconPosition,
-  iconSize,
-  iconBackgroundColor,
-  buttonType,
-  ctaLabel,
-  externalLink,
-  internalLink
-}) => {
+const ListWithIcons: React.FC<IPromoContent> = (props) => {
+  const {
+    name,
+    promoTitle,
+    promoIcon,
+    promoDescription,
+    iconPosition,
+    iconSize,
+    iconBackgroundColor,
+    buttonType,
+    ctaLabel,
+    externalLink,
+    internalLink
+  } = props;
+
   const iconBackgroundClasses = () => {
     switch (iconBackgroundColor) {
       case "Azul Claro":
@@ -64,9 +68,14 @@ const ListWithIcons: React.FC<IPromoContent> = ({
           {(promoDescription) && (
             <div className="text-lg text-grey-30">{documentToReactComponents(promoDescription.json)}</div>
           )}
-          {(internalLink?.slug || externalLink) && (
-            <Link href={externalLink ?? internalLink.slug} className={classNames("button w-fit", getButtonType(buttonType))}>
-              {ctaLabel}
+          {(internalLink?.urlPath || externalLink) && (
+            <Link href={getUrlPath(props)}>
+              <a
+                className={classNames("button w-fit", getButtonType(buttonType))}
+                target={externalLink ? "_blank" : "_self"}
+              >
+                {ctaLabel ?? name}
+              </a>
             </Link>
           )}
         </div>

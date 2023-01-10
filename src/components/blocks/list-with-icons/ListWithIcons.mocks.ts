@@ -13,27 +13,27 @@ const data: IPromoBlock = {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: '#',
-          name: 'button'
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: '#',
-          name: 'button'
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: '#',
-          name: 'button'
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       }
     ]

@@ -2,13 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from "@/utils/functions";
+import { getUrlPath } from "@/utils/link.utils";
 
-const VerticalCard: React.FC<IPromoContent> = ({
-  promoTitle,
-  promoImage,
-  ctaLabel,
-  externalLink,
-}) => {
+const VerticalCard: React.FC<IPromoContent> = (props) => {
+  const {
+    name,
+    promoTitle,
+    promoImage,
+    ctaLabel,
+    internalLink,
+    externalLink,
+  } = props;
+
   const isPortrait = promoImage?.isPortrait;
   return (
     <article
@@ -47,10 +52,15 @@ const VerticalCard: React.FC<IPromoContent> = ({
         >
           <div className="grid space-y-[18px]">
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-            {ctaLabel && (
+            {(externalLink || internalLink?.urlPath) && (
               <div className="flex gap-3">
-                <Link href={externalLink ? externalLink : "#"} legacyBehavior>
-                  <a className="button button-primary">{ctaLabel}</a>
+                <Link href={getUrlPath(props)} legacyBehavior>
+                  <a
+                    className="button button-primary"
+                    target={externalLink ? "_blank" : "_self"}
+                  >
+                    {ctaLabel ?? name}
+                  </a>
                 </Link>
               </div>
             )}

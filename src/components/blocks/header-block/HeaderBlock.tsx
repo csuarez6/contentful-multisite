@@ -124,19 +124,23 @@ const HeaderBlock: React.FC<INavigation> = ({
                     <ul className="flex gap-1 flex-nowrap">
                       {utilityNavCollection.items.map((item) => (
                         <li className="flex max-w-[75px]" key={item.sys.id}>
-                          <Link
-                            className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1"
-                            href={getUrlPath(item)}
-                          >
-                            {item.promoIcon && (
-                              <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
-                                <Icon
-                                  icon={item.promoIcon}
-                                  className="w-full h-full mx-auto"
-                                />
-                              </span>
-                            )}
-                            {item.promoTitle ?? item.name}
+                          <Link href={getUrlPath(item)} legacyBehavior>
+                            <a
+                              className={classNames(
+                                "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
+                                item.promoIcon ? 'justify-start' : 'justify-center'
+                              )}
+                            >
+                              {item.promoIcon && (
+                                <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                  <Icon
+                                    icon={item.promoIcon}
+                                    className="w-full h-full mx-auto"
+                                  />
+                                </span>
+                              )}
+                              {item.promoTitle ?? item.name}
+                            </a>
                           </Link>
                         </li>
                       ))}
@@ -144,10 +148,10 @@ const HeaderBlock: React.FC<INavigation> = ({
                   </nav>
                 )}
                 <div className="hidden gap-6 px-6 lg:flex">
-                  <a href="#" className="button button-primary">
+                  <a href="#" className="flex items-center text-center button button-primary">
                     Regístrate
                   </a>
-                  <a href="#" className="button button-outline">
+                  <a href="#" className="flex items-center text-center button button-outline">
                     Inicia sesión
                   </a>
                 </div>

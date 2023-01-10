@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Tab } from "@headlessui/react";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from "../../../utils/functions";
+import { classNames } from "@/utils/functions";
+import { getUrlPath } from "@/utils/link.utils";
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
 
 const TabElement = (tab) => {
@@ -41,12 +42,12 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                 {featuredContentsCollection.items.map((tab) =>
                   tab.internalLink?.slug || tab.externalLink ? (
                     <Link
-                      href={tab.externalLink ?? tab.internalLink.slug}
+                      href={getUrlPath(tab)}
+                      target={tab.externalLink ? "_blank" : "_self"}
                       className="flex"
                       key={tab.name}
                     >
                       <a
-                        target={tab.externalLink ? "_blank" : "_self"}
                         className={classNames(
                           tab.promoImage ? "justify-start" : "justify-center",
                           "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 px-2 py-6"

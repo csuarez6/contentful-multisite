@@ -9,7 +9,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({ title, pretitle, subtitle, d
     <section className="section grid gap-9">
       {title && (
         <div className="grid gap-9 text-center">
-          {title && <h2 className="text-blue-dark">{title} </h2>}
+          {title && <h2 className="text-blue-dark">{title}</h2>}
         </div>
       )}
 
@@ -34,7 +34,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({ title, pretitle, subtitle, d
               )}
               {description && <div className="text-grey-30 pb-3">{documentToReactComponents(description.json)}</div>}
 
-              {ctaCollection?.items && (
+              {ctaCollection?.items?.length > 0 && (
                 <div className="flex gap-3">
                   {ctaCollection.items.map(cta => (
                     (cta.externalLink || cta.internalLink) && (

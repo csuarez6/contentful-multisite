@@ -7,61 +7,60 @@ const data: IPromoBlock = {
   view: {
     columnsSize: 3
   },
-  cta: {
-    name: 'button',
-    list: [{
-      href: '#',
-      name: 'Button'
-    }]
+  ctaCollection: {
+    items: [
+      {
+        promoTitle: "internalLink",
+        internalLink: {
+          urlPath: "#"
+        }
+      }
+    ]
   },
   featuredContentsCollection: {
     items: [
       {
         promoTitle: 'Título 1',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
+        ctaLabel: "Conocelós",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
         promoTitle: 'Título 2',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
-        }
+        ctaLabel: "Conocelós",
+        externalLink: "#"
       },
       {
         promoTitle: 'Título 3',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
+        ctaLabel: "Conocelós",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
         promoTitle: 'Título 4',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
+        ctaLabel: "Conocelós",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
         promoTitle: 'Título 5',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
-        }
+        ctaLabel: "Conocelós",
+        externalLink: "#"
       },
       {
         promoTitle: 'Título 6',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
+        ctaLabel: "Conocelós",
+        internalLink: {
+          urlPath: "#"
         }
       }
     ]
@@ -83,10 +82,8 @@ const dataSecondary: IPromoBlock = {
       {
         promoTitle: 'Título 2',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: '#',
-          name: 'Conocelós'
-        }
+        ctaLabel: "Conocelós",
+        externalLink: "#"
       }
     ]
   }
@@ -98,22 +95,21 @@ const dataTetiary: IPromoBlock = {
   view: {
     columnsSize: 1
   },
-  cta: {
-    name: 'Button',
-    list: [{
-      href: '#',
-      name: 'Conocelós'
-    }]
+  ctaCollection: {
+    items: [
+      {
+        promoTitle: "Conocelós",
+        externalLink: "#"
+      }
+    ]
   },
   featuredContentsCollection: {
     items: [
       {
         promoTitle: 'Título',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        cta: {
-          href: "#",
-          name: "conocelós"
-        }
+        ctaLabel: "Conocelós",
+        externalLink: "#"
       }
     ]
   }

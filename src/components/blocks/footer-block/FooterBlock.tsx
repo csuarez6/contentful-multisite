@@ -30,42 +30,40 @@ const FooterBlock: React.FC<INavigation> = ({
             </div>
             <div className="pt-12 grid xl:grow xl:pt-0">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
-                {mainNavCollection?.items &&
-                  mainNavCollection?.items.map((menuItem) => (
-                    <div key={menuItem.sys.id}>
-                      <h3 className="text-white">
-                        {menuItem.promoTitle ?? menuItem.name}
-                      </h3>
-                      {menuItem?.mainNavCollection?.items && (
-                        <ul role="list" className="pt-[10px] space-y-3">
-                          {menuItem.mainNavCollection.items.map((listItem) => (
-                            <li key={listItem.sys.id}>
-                              <Link
-                                href={getUrlPath(listItem)}
-                                className="text-base text-white hover:underline"
-                              >
+                {mainNavCollection?.items?.map((menuItem) => (
+                  <div key={menuItem.sys.id}>
+                    <h3 className="text-white">
+                      {menuItem.promoTitle ?? menuItem.name}
+                    </h3>
+                    {menuItem?.mainNavCollection?.items && (
+                      <ul role="list" className="pt-[10px] space-y-3">
+                        {menuItem.mainNavCollection.items.map((listItem) => (
+                          <li key={listItem.sys.id}>
+                            <Link href={getUrlPath(listItem)} legacyBehavior>
+                              <a className="text-base text-white hover:underline">
                                 {listItem.promoTitle ?? listItem.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
+                              </a>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-16">
-            {secondaryNavCollection?.items &&
-              secondaryNavCollection?.items.map((item) => (
-                <li key={item.sys.id}>
-                  <Link
-                    href={getUrlPath(item)}
-                    className="text-white hover:text-neutral-90"
-                    {...(item?.externalLink
-                      ? { target: "_blank", rel: "noreferrer" }
-                      : null)}
-                  >
+            {secondaryNavCollection?.items?.map((item) => (
+              <li key={item.sys.id}>
+                <Link
+                  href={getUrlPath(item)}
+                  legacyBehavior
+                  {...(item?.externalLink
+                    ? { target: "_blank", rel: "noreferrer" }
+                    : null)}
+                >
+                  <a className="text-white hover:text-neutral-90">
                     <span className="sr-only">
                       {item.promoTitle ?? item.name}
                     </span>
@@ -76,9 +74,10 @@ const FooterBlock: React.FC<INavigation> = ({
                         aria-hidden="true"
                       />
                     )}
-                  </Link>
-                </li>
-              ))}
+                  </a>
+                </Link>
+              </li>
+            ))}
           </ul>
           <hr className="min-w-[100vw] -mx-[50vw] border-t-[0.5px] border-neutral-70" />
           <div className="pt-10 flex flex-col sm:flex-row justify-between gap-16">

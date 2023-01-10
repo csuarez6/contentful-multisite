@@ -18,10 +18,10 @@ const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, descri
           {description && <div className='title is-4 text-center text-blue-dark'>{documentToReactComponents(description.json)}</div>}
         </div>
       }
-      {featuredContentsCollection?.items &&
+      {featuredContentsCollection?.items?.length > 0 &&
         <div className={classNames("w-full grid gap-9", classColumns(view.columnsSize))}>
           {featuredContentsCollection.items.map((el) => (
-            <PlanCard {...el} key={`${title}-${el.promoTitle}`} isReverse={view.isReverse}/>
+            <PlanCard {...el} key={`${title}-${el.promoTitle}`} isReverse={view.isReverse} />
           ))}
         </div>
       }

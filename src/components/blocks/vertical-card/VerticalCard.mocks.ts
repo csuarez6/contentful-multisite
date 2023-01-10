@@ -13,9 +13,9 @@ const data: IPromoBlock = {
           url: 'https://via.placeholder.com/1280x392.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
@@ -25,10 +25,9 @@ const data: IPromoBlock = {
           url: 'https://via.placeholder.com/1280x392.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button",
-          buttonType: "button-primary"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
@@ -38,23 +37,22 @@ const data: IPromoBlock = {
           url: 'https://via.placeholder.com/1280x392.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button",
-          buttonType: "button-secondary"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       }
     ]
   },
   view: {
-    columnsSize: 3
+    columnsSize: 3,
+    buttonType: "Contorno"
   }
 };
 const dataPortrait: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
-  featuredContentsCollection:
-  {
+  featuredContentsCollection: {
     items: [
       {
         promoTitle: 'Título 1',
@@ -63,9 +61,9 @@ const dataPortrait: IPromoBlock = {
           url: 'https://via.placeholder.com/1220x2030.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
@@ -75,10 +73,9 @@ const dataPortrait: IPromoBlock = {
           url: 'https://via.placeholder.com/1220x2030.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button",
-          buttonType: "button-primary"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       },
       {
@@ -88,17 +85,17 @@ const dataPortrait: IPromoBlock = {
           url: 'https://via.placeholder.com/1220x2030.png',
           title: 'Card image'
         },
-        cta: {
-          href: "#",
-          name: "Button",
-          buttonType: "button-secondary"
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
         }
       }
     ]
   },
   view: {
     imageOrientation: 'Portrait',
-    columnsSize: 3
+    columnsSize: 3,
+    buttonType: "Secundario"
   }
 };
 

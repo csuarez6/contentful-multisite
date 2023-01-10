@@ -4,9 +4,9 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 const data: IPromoContent = {
   promoTitle: 'Título',
   promoDescription: RICHTEXT_SHORT_SIMPLE,
-  cta: {
-    href: '#',
-    name: 'conocelós'
+  ctaLabel: "Conocelós",
+  internalLink: {
+    urlPath: "#"
   }
 };
 

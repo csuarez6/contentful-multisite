@@ -14,7 +14,7 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
   if (content?.externalLink) {
     return content?.externalLink;
   }
-
+  
   if (content?.urlPath) {
     const urlPath = content.urlPath.replace(re, '');
     return urlPath.match('^/') ? urlPath : `/${urlPath}`;

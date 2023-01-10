@@ -5,18 +5,20 @@ const data: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
-    url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
+    url: 'https://via.placeholder.com/1120x1042.png',
     title: 'featuredView'
   },
   ctaCollection: {
     items: [
       {
-        ctaLabel: 'button',
-        internalLink: null
+        ctaLabel: 'internalLink',
+        internalLink: {
+          urlPath: '/mantenimiento'
+        }
       },
       {
-        ctaLabel: 'button external',
-        externalLink: 'http://www.grupovanti.com'
+        ctaLabel: 'externalLink',
+        externalLink: 'https://www.grupovanti.com'
       }
     ]
   },
@@ -55,7 +57,7 @@ const dataImageRight: IPromoBlock = {
     imageAlign: 'Derecha'
   },
   image: {
-    url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
+    url: 'https://via.placeholder.com/1120x1042.png',
     title: 'featuredView'
   },
   ctaCollection: {
@@ -103,7 +105,7 @@ const dataListedColumns: IPromoBlock = {
     imageAlign: 'Derecha'
   },
   image: {
-    url: 'https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg',
+    url: 'https://via.placeholder.com/1120x1820.png',
     title: 'featuredView'
   },
   ctaCollection: {
