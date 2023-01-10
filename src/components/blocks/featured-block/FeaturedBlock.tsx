@@ -34,13 +34,13 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view,
             </div>
           }
           {
-            (title || description || featuredContentsCollection?.items || ctaCollection?.items) && (
+            (title || description || featuredContentsCollection?.items?.length > 0 || ctaCollection?.items?.length > 0) && (
               <div className={classNames((view && view.columnsSize > 2) ? "col-span-2" : "")}>
                 <div className="flex flex-col gap-y-6">
                   {(title) && <h2 className="text-blue-dark">{title}</h2>}
                   {(description) && <div className="text-lg text-grey-30">{documentToReactComponents(description.json)}</div>}
 
-                  {(featuredContentsCollection?.items) && (
+                  {(featuredContentsCollection?.items?.length > 0) && (
                     <div className={classNames(
                       "gap-y-6 grid grid-cols-1",
                       (featuredContentsCollection.items.length > 3) ? "md:grid-cols-2" : "md:grid-cols-1"
@@ -77,7 +77,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({ title, description, image, view,
                       ))}
                     </div>
                   )}
-                  {ctaCollection?.items && (
+                  {ctaCollection?.items?.length > 0 && (
                     <div className="flex my-6 gap-2">
                       {ctaCollection.items.map((item) => (
                         ((item.externalLink || item.internalLink) &&

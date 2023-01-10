@@ -35,7 +35,7 @@ const FooterBlock: React.FC<INavigation> = ({
                     <h3 className="text-white">
                       {menuItem.promoTitle ?? menuItem.name}
                     </h3>
-                    {menuItem?.mainNavCollection?.items && (
+                    {menuItem?.mainNavCollection?.items?.length > 0 && (
                       <ul role="list" className="pt-[10px] space-y-3">
                         {menuItem.mainNavCollection.items.map((listItem) => (
                           <li key={listItem.sys.id}>

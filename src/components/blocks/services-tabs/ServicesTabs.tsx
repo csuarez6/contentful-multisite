@@ -34,7 +34,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   return (
     <section className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
-      {featuredContentsCollection?.items && (
+      {featuredContentsCollection?.items?.length > 0 && (
         <Tab.Group as="div" className="mt-4">
           <div className="flex justify-center overflow-x-auto">
             <div className="flex border-b border-transparent">

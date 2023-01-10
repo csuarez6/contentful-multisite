@@ -34,7 +34,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                 className="relative flex justify-between gap-14 xl:gap-[76px] min-h-[42px] h-full"
               >
                 <ul className="relative flex gap-6 flex-nowrap grow">
-                  {mainNavCollection.items.map((item, index) => (
+                  {mainNavCollection?.items?.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
                       <Link
                         className={classNames(
@@ -53,7 +53,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                 </ul>
 
                 <ul className="relative flex gap-6 flex-nowrap">
-                  {secondaryNavCollection.items.map((item, index) => (
+                  {secondaryNavCollection?.items?.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
                       <Link
                         className={classNames(
@@ -116,7 +116,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                     />
                   </div>
                 </form>
-                {utilityNavCollection?.items && (
+                {utilityNavCollection?.items?.length > 0 && (
                   <nav
                     aria-label="Utility"
                     className="relative hidden px-6 lg:block"
@@ -169,7 +169,7 @@ const HeaderBlock: React.FC<INavigation> = ({
               </div>
             </div>
             {/* Bottom */}
-            {mainNavCollectionMenu.items?.length > 0 && (
+            {mainNavCollectionMenu?.items?.length > 0 && (
               <MegaMenu mainNavCollection={mainNavCollectionMenu} />
             )}
           </div>

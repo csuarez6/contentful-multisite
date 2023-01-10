@@ -21,7 +21,7 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
           )}
         </div>
       )}
-      {featuredContentsCollection && <Accordion featuredContents={featuredContentsCollection} />}
+      {featuredContentsCollection?.items?.length > 0 && <Accordion featuredContents={featuredContentsCollection} />}
     </section>
   );
 };

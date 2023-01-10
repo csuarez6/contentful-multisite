@@ -14,7 +14,7 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({ featuredContentsCollection
   return (
     <section className="grid">
       {
-        featuredContentsCollection?.items && (
+        featuredContentsCollection?.items?.length > 0 && (
           <div className="container px-28 mx-auto">
             <div className="-mx-[50vw]">
               <div className="w-screen mx-auto">

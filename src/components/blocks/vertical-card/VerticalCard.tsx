@@ -12,7 +12,7 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featured
           {description && <div className="text-blue-dark text-size-p1">{documentToReactComponents(description.json)}</div>}
         </div>
       }
-      {featuredContentsCollection?.items && (
+      {featuredContentsCollection?.items?.length > 0 && (
         <div className={classNames("grid justify-center gap-9", classColumns(view?.columnsSize))}>
           {featuredContentsCollection.items.map((content) => {
             {if (content.promoImage) content.promoImage.isPortrait = view?.imageOrientation?.toLowerCase() === 'portrait';}
