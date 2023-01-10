@@ -63,7 +63,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                       <div key={item.name} className={idx === 0 ? "row-span-3" : "row-span-1"}>
                         <ProductSmallCard {...item} />
                       </div>
-                    )
+                    );
                   })
                 )}
                 {(tab.id === "VantiListo") && (
@@ -73,7 +73,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                       <div key={item.name} className={idx === 0 ? "row-span-3" : "row-span-1"}>
                         <ProductSmallCard {...item} />
                       </div>
-                    )
+                    );
                   })
                 )}
               </div>
