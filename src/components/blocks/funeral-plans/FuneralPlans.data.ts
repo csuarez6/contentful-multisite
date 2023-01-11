@@ -180,4 +180,4 @@ export const dataPlans: FuneralPlans = {
       }
     }
   ]
-}
+};
