@@ -3,6 +3,8 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
+  pretitle: 'Pretítulo',
+  subtitle: 'Subtítulo',
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://via.placeholder.com/1120x1042.png',
@@ -22,8 +24,7 @@ const data: IPromoBlock = {
       }
     ]
   },
-  featuredContentsCollection:
-  {
+  featuredContentsCollection: {
     items: [
       {
         promoIcon: 'chat',

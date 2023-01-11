@@ -14,10 +14,10 @@ import { mockListWithIconsProps } from "@/components/blocks/list-with-icons/List
 import ProductGrillBlock from "@/components/blocks/product-grill/ProductGrill";
 import { mockProductGrillProps } from "@/components/blocks/product-grill/ProductGrill.mocks";
 
-const HomeTemplate: React.FC<IPage> = ({ layout }) => {
+const HomeTemplate: React.FC<IPage> = (layout) => {
   const listWithIconsData = {
     ...mockListWithIconsProps.data,
-    listedContent: mockListWithIconsProps.data.listedContentsCollection.items.map((item) => {
+    listedContent: mockListWithIconsProps.data.featuredContentsCollection.items.map((item) => {
       const cleanItem = {...item};
       delete cleanItem.promoDescription;
       return cleanItem;
