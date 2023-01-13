@@ -25,6 +25,7 @@ specifiers:
   '@types/react-dom': 18.0.9
   '@typescript-eslint/eslint-plugin': ^5.43.0
   autoprefixer: ^10.4.13
+  emailjs: ^4.0.1
   eslint: 8.27.0
   eslint-config-next: 13.0.3
   eslint-config-prettier: ^8.5.0
@@ -55,6 +56,7 @@ dependencies:
   '@heroicons/react': 2.0.13_react@18.2.0
   '@hookform/resolvers': 2.9.10_react-hook-form@7.41.5
   '@sentry/nextjs': 7.30.0_next@13.0.3+react@18.2.0
+  emailjs: 4.0.1_typescript@4.8.4
   graphql: 16.6.0
   icomoon-react: 3.0.0
   lodash: 4.17.21
@@ -7228,6 +7230,18 @@ packages:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
     dev: true
+
+  /emailjs/4.0.1_typescript@4.8.4:
+    resolution: {integrity: sha512-rTN/LDvlqwU79E367ovB7FIziImzimhQcZiGmC20VcDPbf0mv3l9c3aavtMcEFaFBsycjGB5aMIhz4ZbKNeLWw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      typescript: '>=4.3.5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.8.4
+    dev: false
 
   /emoji-regex/8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}

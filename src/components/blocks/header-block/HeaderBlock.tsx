@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -8,6 +7,7 @@ import { classNames } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { getUrlPath } from "@/utils/link.utils";
 
 const HeaderBlock: React.FC<INavigation> = ({
@@ -36,18 +36,18 @@ const HeaderBlock: React.FC<INavigation> = ({
                 <ul className="relative flex gap-6 flex-nowrap grow">
                   {mainNavCollection?.items?.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
-                      <Link
+                      <CustomLink
                         className={classNames(
                           item.slug === asPath
                             ? "text-blue-dark border-lucuma"
                             : "text-neutral-30 border-transparent",
                           "hover:text-blue-dark pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
                         )}
-                        href={getUrlPath(item)}
+                        content={item}
                         aria-current={index === 0 ? "page" : undefined}
                       >
                         {item.promoTitle ?? item.name}
-                      </Link>
+                      </CustomLink>
                     </li>
                   ))}
                 </ul>
@@ -55,18 +55,18 @@ const HeaderBlock: React.FC<INavigation> = ({
                 <ul className="relative flex gap-6 flex-nowrap">
                   {secondaryNavCollection?.items?.map((item, index) => (
                     <li className="flex items-center" key={item.sys.id}>
-                      <Link
+                      <CustomLink
                         className={classNames(
                           item.slug === asPath
                             ? "text-blue-dark border-lucuma"
                             : "text-neutral-30 border-transparent",
                           "hover:text-blue-dark pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
                         )}
-                        href={getUrlPath(item)}
+                        content={item}
                         aria-current={index === 0 ? "page" : undefined}
                       >
                         {item.promoTitle ?? item.name}
-                      </Link>
+                      </CustomLink>
                     </li>
                   ))}
                 </ul>
@@ -87,7 +87,10 @@ const HeaderBlock: React.FC<INavigation> = ({
             {/* Middle */}
             <div className="relative flex items-center min-h-[92px] justify-between gap-6">
               <div className="relative z-10 flex px-2 lg:px-0 lg:mt-[10px]">
-                <Link href="/" className="flex items-center flex-shrink-0">
+                <CustomLink
+                  content={{ urlPath: "/" }}
+                  className="flex items-center flex-shrink-0"
+                >
                   <figure className="relative h-[52px] aspect-[180/52]">
                     <Image
                       className="block w-auto"
@@ -96,7 +99,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                       fill
                     />
                   </figure>
-                </Link>
+                </CustomLink>
               </div>
 
               <div className="flex items-center py-5 divide-x divide-neutral-70">
@@ -124,36 +127,43 @@ const HeaderBlock: React.FC<INavigation> = ({
                     <ul className="flex gap-1 flex-nowrap">
                       {utilityNavCollection.items.map((item) => (
                         <li className="flex max-w-[75px]" key={item.sys.id}>
-                          <Link href={getUrlPath(item)} legacyBehavior>
-                            <a
-                              className={classNames(
-                                "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
-                                item.promoIcon ? 'justify-start' : 'justify-center'
-                              )}
-                            >
-                              {item.promoIcon && (
-                                <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
-                                  <Icon
-                                    icon={item.promoIcon}
-                                    className="w-full h-full mx-auto"
-                                  />
-                                </span>
-                              )}
-                              {item.promoTitle ?? item.name}
-                            </a>
-                          </Link>
+                          <CustomLink
+                            content={item}
+                            className={classNames(
+                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
+                              item.promoIcon
+                                ? "justify-start"
+                                : "justify-center"
+                            )}
+                          >
+                            {item.promoIcon && (
+                              <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                <Icon
+                                  icon={item.promoIcon}
+                                  className="w-full h-full mx-auto"
+                                />
+                              </span>
+                            )}
+                            {item.promoTitle ?? item.name}
+                          </CustomLink>
                         </li>
                       ))}
                     </ul>
                   </nav>
                 )}
                 <div className="hidden gap-6 px-6 lg:flex">
-                  <a href="#" className="flex items-center text-center button button-primary">
+                  <CustomLink
+                    content={{ externalLink: "#" }}
+                    className="flex items-center text-center button button-primary"
+                  >
                     Regístrate
-                  </a>
-                  <a href="#" className="flex items-center text-center button button-outline">
+                  </CustomLink>
+                  <CustomLink
+                    content={{ externalLink: "#" }}
+                    className="flex items-center text-center button button-outline"
+                  >
                     Inicia sesión
-                  </a>
+                  </CustomLink>
                 </div>
               </div>
 
@@ -186,7 +196,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                 <li key={item.name}>
                   <Disclosure.Button
                     as="a"
-                    href={item.href}
+                    href={getUrlPath(item)}
                     className={classNames(
                       index === 0
                         ? "bg-gray-100 text-gray-900"
@@ -195,7 +205,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                     )}
                     aria-current={index === 0 ? "page" : undefined}
                   >
-                    {item.name}
+                    {item.promoTitle ?? item.name}
                   </Disclosure.Button>
                 </li>
               ))}

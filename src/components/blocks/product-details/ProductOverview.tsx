@@ -1,15 +1,18 @@
 import Image from "next/image";
-import Link from "next/link";
-import { IProductDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
+import {
+  IProductDetails,
+  PaymentMethodType,
+} from "@/lib/interfaces/product-cf.interface";
 import Select from "@/components/atoms/select/Select";
 import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const iconSelect: IIcon = {
-  icon: 'invoice',
+  icon: "invoice",
   size: 28,
-  className: ''
+  className: "",
 };
 
 const ProductOverview: React.FC<IProductDetails> = ({
@@ -52,9 +55,12 @@ const ProductOverview: React.FC<IProductDetails> = ({
                 <div className="flex flex-col sm:flex-row gap-[34px] md:items-center mt-[-1px] ml-1">
                   <div className="flex gap-[11px]">
                     {rating && <Rating numberStar={rating} />}
-                    <Link className="text-sm underline text-blue-dark" href="#">
+                    <CustomLink
+                      className="text-sm underline text-blue-dark"
+                      content={{ externalLink: "#" }}
+                    >
                       Lée mas opiniones
-                    </Link>
+                    </CustomLink>
                   </div>
                   <div className="flex gap-3">
                     {state && (
@@ -90,12 +96,12 @@ const ProductOverview: React.FC<IProductDetails> = ({
                         })}
                       </div>
                     )}
-                    <Link
+                    <CustomLink
                       className="underline text-[#035177] text-sm mt-[7px]"
-                      href=""
+                      content={{ externalLink: "#" }}
                     >
                       Revisa todas las carateristicas
-                    </Link>
+                    </CustomLink>
                   </div>
                   <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl -m-3 w-fit xl:w-full 2xl:w-fit">
                     <h4>
@@ -116,12 +122,12 @@ const ProductOverview: React.FC<IProductDetails> = ({
                       <div>
                         <p>¿Tienes dudas?</p>
                       </div>
-                      <Link
-                        href="#"
+                      <CustomLink
+                        content={{ externalLink: "#" }}
                         className="text-sm text-blue-dark underline"
                       >
                         Revisa las dudas frecuentes
-                      </Link>
+                      </CustomLink>
                     </div>
                     <div className="text-sm text-[#424242] font-medium mt-[37px] ml-[-11px]">
                       <p>*Aclaracion</p>
@@ -152,9 +158,9 @@ const ProductOverview: React.FC<IProductDetails> = ({
                   >
                     <div className="flex flex-col gap-[22px] pt-[5px] my-5">
                       {cta && (
-                        <Link
+                        <a
                           className="button button-primary 2xl:min-w-[348px] text-center"
-                          href={cta?.href}
+                          href={cta.href}
                           onClick={(e) => {
                             e.preventDefault();
                             if (onBuy)
@@ -165,14 +171,14 @@ const ProductOverview: React.FC<IProductDetails> = ({
                           }}
                         >
                           {cta.name}
-                        </Link>
+                        </a>
                       )}
-                      <Link
+                      <CustomLink
                         className="button button-outline 2xl:min-w-[348px] text-center"
-                        href="/"
+                        content={{ urlPath: "/" }}
                       >
                         Te llamamos
-                      </Link>
+                      </CustomLink>
                     </div>
                     <div className="flex flex-col gap-[22px]">
                       {dataSelect?.map((el, i) => {

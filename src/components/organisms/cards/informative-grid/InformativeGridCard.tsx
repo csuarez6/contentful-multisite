@@ -1,7 +1,7 @@
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { getUrlPath } from "@/utils/link.utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Link from "next/link";
+
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const InformativeGridCard: React.FC<IPromoContent> = (props) => {
   const {
@@ -10,7 +10,7 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
     ctaLabel,
     promoDescription,
     externalLink,
-    internalLink
+    internalLink,
   } = props;
 
   return (
@@ -18,24 +18,26 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
       {(promoTitle || promoDescription) && (
         <div className="grid gap-8">
           {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
-          {promoDescription &&
+          {promoDescription && (
             <div className="richtext">
-              <div className="text-lg text-grey-30">{documentToReactComponents(promoDescription.json)}</div>
-              <br /><br />
+              <div className="text-lg text-grey-30">
+                {documentToReactComponents(promoDescription.json)}
+              </div>
+              <br />
+              <br />
               <p className="text-xl text-blue-dark font-semibold">Desde</p>
-              <br /><br />
+              <br />
+              <br />
               <p className="text-5xl text-blue-dark font-semibold">$ 10.000</p>
             </div>
-          }
-          {(externalLink || internalLink?.urlPath) &&
+          )}
+          {(externalLink || internalLink?.urlPath) && (
             <div className="flex justify-center">
-              <Link href={getUrlPath(props)}>
-                <a className="button text-button" target={externalLink ? "_blank" : "_self"}>
-                  {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
-                </a>
-              </Link>
+              <CustomLink className="button text-button" content={props}>
+                {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
+              </CustomLink>
             </div>
-          }
+          )}
         </div>
       )}
     </article>

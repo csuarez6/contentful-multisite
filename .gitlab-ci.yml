@@ -141,7 +141,7 @@ Deploy_Production_APP:
 
   environment:
     name: Production
-    url: https://$VERCEL_PROJECT_NAME.vercel.app
+    url: https://vanti.aplyca.com
 
   when: manual
   only:

@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { getUrlPath } from "@/utils/link.utils";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const LineSteps: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
@@ -27,15 +27,13 @@ const LineSteps: React.FC<IPromoBlock> = ({
             {ctaCollection.items.map(
               (cta) =>
                 (cta.externalLink || cta.internalLink) && (
-                  <Link
-                    href={getUrlPath(cta)}
+                  <CustomLink
+                    content={cta}
                     key={cta.name}
-                    legacyBehavior
+                    className="button button-primary"
                   >
-                    <a className="button button-primary">
-                      {cta.ctaLabel ?? cta.name}
-                    </a>
-                  </Link>
+                    {cta.ctaLabel ?? cta.name}
+                  </CustomLink>
                 )
             )}
           </div>

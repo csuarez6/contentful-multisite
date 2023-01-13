@@ -1,18 +1,13 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames } from "@/utils/functions";
-import { getUrlPath } from "@/utils/link.utils";
 
 const VerticalCard: React.FC<IPromoContent> = (props) => {
-  const {
-    name,
-    promoTitle,
-    promoImage,
-    ctaLabel,
-    internalLink,
-    externalLink,
-  } = props;
+  const { name, promoTitle, promoImage, ctaLabel, internalLink, externalLink } =
+    props;
 
   const isPortrait = promoImage?.isPortrait;
   return (
@@ -54,14 +49,9 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
             {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
             {(externalLink || internalLink?.urlPath) && (
               <div className="flex gap-3">
-                <Link href={getUrlPath(props)} legacyBehavior>
-                  <a
-                    className="button button-primary"
-                    target={externalLink ? "_blank" : "_self"}
-                  >
-                    {ctaLabel ?? name}
-                  </a>
-                </Link>
+                <CustomLink content={props} className="button button-primary">
+                  {ctaLabel ?? name}
+                </CustomLink>
               </div>
             )}
           </div>

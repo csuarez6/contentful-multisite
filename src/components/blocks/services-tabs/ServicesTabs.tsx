@@ -1,11 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Fragment } from "react";
 import { Tab } from "@headlessui/react";
+
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+
 import { classNames } from "@/utils/functions";
-import { getUrlPath } from "@/utils/link.utils";
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const TabElement = (tab) => {
   return (
@@ -41,21 +42,17 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
               <Tab.List className="flex gap-[10px]">
                 {featuredContentsCollection.items.map((tab) =>
                   tab.internalLink?.slug || tab.externalLink ? (
-                    <Link
-                      href={getUrlPath(tab)}
-                      target={tab.externalLink ? "_blank" : "_self"}
-                      className="flex"
+                    <CustomLink
+                      content={tab}
+                      linkClassName="flex"
+                      className={classNames(
+                        tab.promoImage ? "justify-start" : "justify-center",
+                        "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 px-2 py-6"
+                      )}
                       key={tab.name}
                     >
-                      <a
-                        className={classNames(
-                          tab.promoImage ? "justify-start" : "justify-center",
-                          "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 px-2 py-6"
-                        )}
-                      >
-                        {<TabElement {...tab} />}
-                      </a>
-                    </Link>
+                      {<TabElement {...tab} />}
+                    </CustomLink>
                   ) : (
                     <Tab
                       key={tab.name}

@@ -1,9 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
-import { INavigation } from "@/lib/interfaces/menu-cf.interface";
-import Icon from "@/components/atoms/icon/Icon";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { getUrlPath } from "@/utils/link.utils";
+
+import { INavigation } from "@/lib/interfaces/menu-cf.interface";
+
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import Icon from "@/components/atoms/icon/Icon";
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
@@ -39,11 +40,12 @@ const FooterBlock: React.FC<INavigation> = ({
                       <ul role="list" className="pt-[10px] space-y-3">
                         {menuItem.mainNavCollection.items.map((listItem) => (
                           <li key={listItem.sys.id}>
-                            <Link href={getUrlPath(listItem)} legacyBehavior>
-                              <a className="text-base text-white hover:underline">
-                                {listItem.promoTitle ?? listItem.name}
-                              </a>
-                            </Link>
+                            <CustomLink
+                              content={listItem}
+                              className="text-base text-white hover:underline"
+                            >
+                              {listItem.promoTitle ?? listItem.name}
+                            </CustomLink>
                           </li>
                         ))}
                       </ul>
@@ -56,26 +58,21 @@ const FooterBlock: React.FC<INavigation> = ({
           <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-16">
             {secondaryNavCollection?.items?.map((item) => (
               <li key={item.sys.id}>
-                <Link
-                  href={getUrlPath(item)}
-                  legacyBehavior
-                  {...(item?.externalLink
-                    ? { target: "_blank", rel: "noreferrer" }
-                    : null)}
+                <CustomLink
+                  className="text-white hover:text-neutral-90"
+                  content={item}
                 >
-                  <a className="text-white hover:text-neutral-90">
-                    <span className="sr-only">
-                      {item.promoTitle ?? item.name}
-                    </span>
-                    {item.promoIcon && (
-                      <Icon
-                        icon={item.promoIcon}
-                        className="h-[46px] w-[46px] p-[7px]"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </a>
-                </Link>
+                  <span className="sr-only">
+                    {item.promoTitle ?? item.name}
+                  </span>
+                  {item.promoIcon && (
+                    <Icon
+                      icon={item.promoIcon}
+                      className="h-[46px] w-[46px] p-[7px]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </CustomLink>
               </li>
             ))}
           </ul>

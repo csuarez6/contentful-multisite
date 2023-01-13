@@ -1,9 +1,21 @@
 import Image from "next/image";
-import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
-const LeftFeatured: React.FC<IPromoContent> = ({ promoImage, promoTitle, promoDescription, internalLink, externalLink, ctaLabel, cta, subtitle }) => {
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
+
+const LeftFeatured: React.FC<IPromoContent> = (props) => {
+  const {
+    name,
+    promoImage,
+    promoTitle,
+    promoDescription,
+    internalLink,
+    externalLink,
+    subtitle,
+  } = props;
+
   return (
     <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
       {promoImage && (
@@ -25,21 +37,25 @@ const LeftFeatured: React.FC<IPromoContent> = ({ promoImage, promoTitle, promoDe
             {promoTitle && (
               <h3 className="title is-2 text-blue-dark pb-6">{promoTitle}</h3>
             )}
-            {promoDescription && <div className="text-grey-60 pb-3">{documentToReactComponents(promoDescription.json)}</div>}
-            {cta &&
+            {promoDescription && (
+              <div className="text-grey-60 pb-3">
+                {documentToReactComponents(promoDescription.json)}
+              </div>
+            )}
+            {/* {cta &&
               <div className="flex gap-3">
                 <Link href={cta.href}>
                   <a className={`button ${cta.buttonType ?? 'button-outline'}`}>{cta.name}</a>
                 </Link>
               </div>
-            }
-            {ctaLabel &&
+            } */}
+            {(internalLink || externalLink) && (
               <div className="flex gap-3">
-                <Link href={externalLink ?? internalLink.slug} target={externalLink ? '_blank' : '_self'} className='button button-outline'>
-                  {ctaLabel}
-                </Link>
+                <CustomLink content={props} className="button button-outline">
+                  {promoTitle ?? name}
+                </CustomLink>
               </div>
-            }
+            )}
           </div>
         </div>
       )}

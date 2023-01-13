@@ -20,6 +20,9 @@ export interface IPromoContent {
     promoTitle?: string;
     subtitle?: string;
     promoDescription?: IRichText;
+    /**
+     * @deprecated
+     */
     cta?: ILink;
     promoImage?: IImageAsset;
     alt?: string;
@@ -34,6 +37,9 @@ export interface IPromoContent {
     tags?: ITag[];
     externalLink?: string;
     internalLink?: IPage;
+    /**
+     * @deprecated
+     */
     ctaLabel?: string;
     slug?: string;
 }

@@ -1,4 +1,5 @@
 import { IImageAsset } from "./assets-cf.interface";
+import { IPage } from "./page-cf.interface";
 import { IPromoContent } from "./promo-content-cf.interface";
 import { IRichText } from "./richtext-cf.interface";
 
@@ -21,10 +22,10 @@ export interface INavigation {
   secondaryText?: IRichText;
   promoImage?: IImageAsset;
   mainNavCollection?: {
-    items?: Array<any>;
+    items?: Array<IPage & IPromoContent & INavigation>;
   };
   secondaryNavCollection?: {
-    items?: IPromoContent[];
+    items?: Array<IPage & IPromoContent>;
   };
   utilityNavCollection?: {
     items?: IPromoContent[];

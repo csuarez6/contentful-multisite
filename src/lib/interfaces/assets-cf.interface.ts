@@ -3,6 +3,7 @@ interface IAsset {
   description?: string;
   url: string;
   contentType?: string;
+  fileName?: string;
 }
 
 export interface IImageAsset extends IAsset {

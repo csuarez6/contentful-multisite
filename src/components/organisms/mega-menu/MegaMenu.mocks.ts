@@ -1,4 +1,5 @@
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
+import { BLOCKS } from "@contentful/rich-text-types";
 
 const data: INavigation = {
   "mainNavCollection": {
@@ -54,7 +55,7 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 },
                                 {
                                   "data": {},
@@ -66,10 +67,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "promoImage": {
@@ -132,10 +133,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "blocksCollection": {
@@ -156,10 +157,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "mainNavCollection": {
@@ -186,10 +187,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "blocksCollection": {
@@ -210,10 +211,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "mainNavCollection": {
@@ -296,11 +297,11 @@ const data: INavigation = {
                           },
                           "promoDescription": {
                             "json": {
-                              "nodeType": "document",
+                              nodeType: BLOCKS.DOCUMENT,
                               "data": {},
                               "content": [
                                 {
-                                  "nodeType": "paragraph",
+                                  nodeType: BLOCKS.PARAGRAPH,
                                   "data": {},
                                   "content": [
                                     {
@@ -368,10 +369,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "mainNavCollection": {
@@ -406,10 +407,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "promoImage": {
@@ -465,11 +466,11 @@ const data: INavigation = {
                           },
                           "promoDescription": {
                             "json": {
-                              "nodeType": "document",
+                              nodeType: BLOCKS.DOCUMENT,
                               "data": {},
                               "content": [
                                 {
-                                  "nodeType": "paragraph",
+                                  nodeType: BLOCKS.PARAGRAPH,
                                   "data": {},
                                   "content": [
                                     {
@@ -537,10 +538,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "mainNavCollection": {
@@ -575,10 +576,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "promoImage": {
@@ -643,10 +644,10 @@ const data: INavigation = {
                                 "nodeType": "text"
                               }
                             ],
-                            "nodeType": "paragraph"
+                            nodeType: BLOCKS.PARAGRAPH
                           }
                         ],
-                        "nodeType": "document"
+                        nodeType: BLOCKS.DOCUMENT
                       }
                     },
                     "blocksCollection": {
@@ -729,10 +730,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "blocksCollection": {
@@ -753,10 +754,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "mainNavCollection": {
@@ -783,10 +784,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "blocksCollection": {
@@ -807,10 +808,10 @@ const data: INavigation = {
                                       "nodeType": "text"
                                     }
                                   ],
-                                  "nodeType": "paragraph"
+                                  nodeType: BLOCKS.PARAGRAPH
                                 }
                               ],
-                              "nodeType": "document"
+                              nodeType: BLOCKS.DOCUMENT
                             }
                           },
                           "mainNavCollection": {
@@ -887,10 +888,10 @@ const data: INavigation = {
                     "nodeType": "text"
                   }
                 ],
-                "nodeType": "paragraph"
+                nodeType: BLOCKS.PARAGRAPH
               }
             ],
-            "nodeType": "document"
+            nodeType: BLOCKS.DOCUMENT
           }
         },
         "promoTitle": "Gas Natural Vehicular",
@@ -932,10 +933,10 @@ const data: INavigation = {
                     "nodeType": "text"
                   }
                 ],
-                "nodeType": "paragraph"
+                nodeType: BLOCKS.PARAGRAPH
               }
             ],
-            "nodeType": "document"
+            nodeType: BLOCKS.DOCUMENT
           }
         },
         "blocksCollection": {

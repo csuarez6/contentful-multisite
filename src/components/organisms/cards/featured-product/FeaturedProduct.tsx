@@ -48,7 +48,7 @@ const FeaturedProduct: React.FC<IProductDetails> = ({
                                 </figure>
                             }
                             {cta &&
-                                <Link href={cta?.href}>
+                                <Link href={cta.href}>
                                     <a className='absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10'>{cta?.name}</a>
                                 </Link>
                             }
