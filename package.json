@@ -7,15 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "storybook": "start-storybook -p 6006 --no-open",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
+    "@commercelayer/js-auth": "^2.3.0",
+    "@commercelayer/sdk": "^4.21.0",
     "@contentful/rich-text-plain-text-renderer": "^16.0.2",
     "@contentful/rich-text-react-renderer": "^15.16.2",
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
+    "@hookform/resolvers": "^2.9.10",
     "@sentry/nextjs": "^7.19.0",
     "graphql": "^16.6.0",
     "icomoon-react": "^3.0.0",
@@ -23,9 +27,11 @@
     "next": "13.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.41.0",
     "storybook-addon-next-router": "^4.0.2",
     "swiper": "^8.4.5",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@contentful/rich-text-types": "^16.0.2",

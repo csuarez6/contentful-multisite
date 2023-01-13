@@ -1,4 +1,4 @@
-import { IProductDetails } from "@/lib/interfaces/product-cf.interface";
+import { IProductDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 
 export const data: IProductDetails = {
     productName: 'Calefactor de torre',
@@ -21,11 +21,11 @@ export const data: IProductDetails = {
     paymentMethods: [
         {
             name: 'VantiListo',
-            type: 'vantilisto'
+            type: PaymentMethodType.vantilisto
         },
         {
             name: 'PSE',
-            type: 'pse'
+            type: PaymentMethodType.pse
         }
     ]
 };

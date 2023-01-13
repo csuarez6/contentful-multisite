@@ -17,7 +17,7 @@ const HeaderBlock: React.FC<INavigation> = ({
   utilityNavCollection,
 }) => {
   const { asPath } = useRouter();
-  const mainNavCollectionMenu = mainNavCollection.items.filter(
+  const mainNavCollectionMenu = mainNavCollection?.items.filter(
     (el) => el.slug === "home"
   )[0].mainNavCollection;
 

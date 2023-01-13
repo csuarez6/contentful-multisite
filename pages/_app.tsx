@@ -8,7 +8,7 @@ import PageLayout from "@/components/layouts/page-layout/PageLayout";
 import "../styles/globals.css";
 import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
-// import CheckoutProvider from "src/context/Checkout/Provider";
+import CheckoutProvider from "src/context/Checkout/Provider";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -20,15 +20,15 @@ type AppPropsWithLayout = AppProps<IPage> & {
 };
 
 export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
-  // <CheckoutProvider>
-  <PageLayout {...(pageProps ? pageProps : null)}>
-    {page}
-  </PageLayout>
-  // </CheckoutProvider>
+  <CheckoutProvider>
+    <PageLayout {...(pageProps ? pageProps : null)}>
+      {page}
+    </PageLayout>
+  </CheckoutProvider>
 );
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? defaultLayout;
+  const getLayout = Component.getLayout ?? (defaultLayout);
 
   return getLayout(<Component {...pageProps} />, pageProps);
 }

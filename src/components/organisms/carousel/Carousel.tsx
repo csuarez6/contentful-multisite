@@ -113,8 +113,8 @@ const Carousel: React.FC<ICarousel> = ({ content, description, title, imagesPerV
             </div>
             {footerText &&
                 <div className='mt-9 max-w-[310px] lg:ml-[72px] relative leading-4'>
-                    <Link href={footerText?.href}>
-                        <a className='text-grey-60 font-normal underline'>{footerText?.name}</a>
+                    <Link className='text-grey-60 font-normal underline' href={footerText?.href}>
+                        {footerText?.name}
                     </Link>
                 </div>
             }

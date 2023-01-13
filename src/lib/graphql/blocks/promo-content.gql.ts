@@ -16,7 +16,6 @@ import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
 import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
-import AuxCustomContent from "../aux/custom-content.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -29,7 +28,15 @@ const BlockPromoContentQuery = `
   }
   ctaCollection {
     items {
-      ${AuxCustomContent}
+      ...on Page {
+        ${DefaultQuery}
+      }
+      ...on Product {
+        ${DefaultQuery}
+      }
+      ...on AuxCustomContent {
+        ${DefaultQuery}
+      }
     }
   }
   featuredContentsCollection {

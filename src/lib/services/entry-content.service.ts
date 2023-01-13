@@ -18,6 +18,7 @@ const REFERENCES = {
     'utilityNavCollection'
   ],
   [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
+    'ctaCollection',
     'featuredContentsCollection',
     'listedContentsCollection',
   ],

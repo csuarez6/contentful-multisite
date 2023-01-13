@@ -1,3 +1,4 @@
+import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import { IFeaturedProductBlock } from "./FeaturedProductBlock";
 
 export const data: IFeaturedProductBlock = {
@@ -24,11 +25,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         },
@@ -53,11 +54,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         }, 
@@ -81,11 +82,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         },
@@ -110,11 +111,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         },
@@ -139,11 +140,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         }, 
@@ -168,11 +169,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         },
@@ -197,11 +198,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         },
@@ -226,11 +227,11 @@ export const data: IFeaturedProductBlock = {
             paymentMethods: [
                 {
                     name: 'VantiListo',
-                    type: ''
+                    type: PaymentMethodType.vantilisto
                 },
                 {
                     name: 'PSE',
-                    type: ''
+                    type: PaymentMethodType.pse
                 }
             ]
         }

@@ -82,7 +82,7 @@ const FooterBlock: React.FC<INavigation> = ({
           <hr className="min-w-[100vw] -mx-[50vw] border-t-[0.5px] border-neutral-70" />
           <div className="pt-10 flex flex-col sm:flex-row justify-between gap-16">
             <div className="text-size-p2 text-white">
-              {documentToReactComponents(secondaryText.json)}
+              {documentToReactComponents(secondaryText?.json)}
             </div>
             {promoImage && (
               <div className="w-[311px] mt-1 shrink-0">

@@ -11,13 +11,13 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ## Copy package files
-COPY pnpm-lock.yaml package.json /app/
+COPY pnpm-lock.yam[l] package.json /app/
 
 ## Install packages
 RUN pnpm install
 
 ## Copy config files
-COPY tailwind.config.js postcss.config.js next* *.json sentry* /app/
+COPY tailwind.config.js postcss.config.js next* *.json sentry* tsconfig.json /app/
 
 ## Copy project files
 # COPY components /app/components

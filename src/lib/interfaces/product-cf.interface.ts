@@ -3,9 +3,16 @@ import { ICarousel } from '@/components/organisms/carousel/Carousel';
 import { IImageAsset } from './assets-cf.interface';
 import { ILink } from './menu-cf.interface';
 
-interface IPaymentMethod {
+
+export enum PaymentMethodType {
+  pse = 'pse',
+  vantilisto = 'vantilisto',
+  factura = 'factura'
+}
+
+export interface IPaymentMethod {
   name: string;
-  type: string;
+  type: PaymentMethodType;
   helpText?: string;
 }
 
@@ -27,6 +34,7 @@ export interface IProductDetails {
   images?: IImageAsset[];
   details?: string[];
   paymentMethods?: IPaymentMethod[];
+  onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: IFeatures;
   cta?: ILink;
   state?: string;
