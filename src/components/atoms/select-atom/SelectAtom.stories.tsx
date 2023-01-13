@@ -1,10 +1,10 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import  Select from './Select';
-import { dataSelect, ISelect } from './select.mocks';
+import SelectAtom, { ISelect } from './SelectAtom';
+import { dataSelect } from './SelectAtom.mocks';
 
 export default {
     title: 'atoms/Select',
-    component: Select,
+    component: SelectAtom,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},
     parameters: {
@@ -14,11 +14,11 @@ export default {
             },
         },
     },
-} as ComponentMeta<typeof Select>;
+} as ComponentMeta<typeof SelectAtom>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Select> = (args) => (
-    <Select {...args} />
+const Template: ComponentStory<typeof SelectAtom> = (args) => (
+    <SelectAtom {...args} />
 );
 
 export const Base = Template.bind({});

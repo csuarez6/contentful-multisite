@@ -1,4 +1,4 @@
-import { ISelect } from '@/components/atoms/select/select.mocks';
+import { ISelect } from '@/components/atoms/select-atom/SelectAtom';
 import { ICarousel } from '@/components/organisms/carousel/Carousel';
 import { IImageAsset } from './assets-cf.interface';
 import { ILink } from './menu-cf.interface';
