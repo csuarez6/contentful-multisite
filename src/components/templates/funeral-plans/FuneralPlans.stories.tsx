@@ -11,7 +11,7 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'This is an funeral-plans template component to guide for create new components, remember update **this** description (_markdown_ is supported)',
+        component: 'This is an FuneralPlans template component to guide for create new components, remember update **this** description (_markdown_ is supported)',
       },
     },
   },

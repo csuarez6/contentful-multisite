@@ -274,7 +274,7 @@ const data2Column: IPromoBlock = {
   }
 };
 
-export {
+export const mockProductGridProps = {
   data1Column,
   data2Column
 };

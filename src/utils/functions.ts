@@ -14,21 +14,53 @@ export const classColumns = (columns = 1) => {
 export const getBackgroundColorClass = (name) => {
   switch (name) {
     case "Blanco":
-      return "bg-white";
+      return {
+        background: "bg-white",
+        title: "text-blue-dark",
+        text: "text-neutral-30"
+      };
     case "Negro":
-      return "bg-black";
+      return {
+        background: "bg-black",
+        title: "text-white",
+        text: "text-white"
+      };
     case "Gris":
-      return "bg-grey-120";
+      return {
+        background: "bg-grey-120",
+        title: "text-blue-dark",
+        text: "text-neutral-30"
+      };
     case "Gris Claro":
-      return "bg-grey-100";
+      return {
+        background: "bg-grey-100",
+        title: "text-blue-dark",
+        text: "text-neutral-30"
+      };
     case "Azul":
-      return "bg-neutral-80";
+      return {
+        background: "bg-neutral-80",
+        title: "text-blue-dark",
+        text: "text-neutral-30"
+      };
     case "Azul Degradado":
-      return "bg-gradient-blue";
+      return {
+        background: "bg-gradient-blue",
+        title: "text-white",
+        text: "text-white"
+      };
     case "Azul Degradado Oscuro":
-      return "bg-gradient-blue-dark";
+      return {
+        background: "bg-gradient-blue-dark",
+        title: "text-white",
+        text: "text-white"
+      };
     default:
-      return "bg-transparent";
+      return {
+        background: "bg-transparent",
+        title: "text-blue-dark",
+        text: "text-neutral-30"
+      };
   }
 };
 

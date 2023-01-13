@@ -1,8 +1,8 @@
+/* TODO: Validar Interface/Tipo de contenido */
 import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 import { IProductDetails } from '@/lib/interfaces/product-cf.interface';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import FeaturedProduct from '@/components/organisms/cards/featured-product/FeaturedProduct';
-import React from 'react';
 
 export interface IFeaturedProductBlock extends IPromoBlock {
     listedContent?: IProductDetails[];

@@ -30,7 +30,7 @@ const ProductOverview: React.FC<IProductDetails> = ({
   rating,
 }) => {
   return (
-    <section className="bg-white">
+    <section className="section bg-white">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col lg:flex-row 2xl:gap-9 gap-4">
           {carouselData && (

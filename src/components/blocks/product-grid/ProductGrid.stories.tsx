@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ProductGrid from './ProductGrid';
-import { data1Column, data2Column } from './ProductGrid.mock';
+import { mockProductGridProps } from './ProductGrid.mock';
 import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 
 export default {
@@ -27,9 +27,9 @@ export const Column2 = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-    ...data1Column,
+    ...mockProductGridProps.data1Column,
 } as IPromoBlock;
 
 Column2.args = {
-    ...data2Column,
+    ...mockProductGridProps.data2Column,
 } as IPromoBlock;

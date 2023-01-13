@@ -24,7 +24,7 @@ const bannerSmall: IPromoBlock = {
         url: 'https://via.placeholder.com/1920x195.png?text=Small+1920x195'
     },
     view: {
-        bannerWidth: 'Medium',
+        bannerWidth: 'Small',
         bannerHeight: 'Small'
     }
 };

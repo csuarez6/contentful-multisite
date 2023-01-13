@@ -23,8 +23,13 @@ const Template: ComponentStory<typeof ProductGrill> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const ListedContents = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
   ...mockProductGrillProps.data,
+} as IPromoBlock;
+
+ListedContents.args = {
+  ...mockProductGrillProps.dataListedContents,
 } as IPromoBlock;

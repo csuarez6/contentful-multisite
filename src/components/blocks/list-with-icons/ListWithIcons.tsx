@@ -9,14 +9,14 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
     <section className="section grid gap-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
-          <div className={classNames("w-screen h-full mx-auto", backgroundColor)}></div>
+          <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
         </div>
       )}
 
       {(title || description) && (
         <div className="grid text-center gap-6">
-          {title && <h2 className="text-blue-dark">{title}</h2>}
-          {description && <div className="text-neutral-30">{documentToReactComponents(description.json)}</div>}
+          {title && <h2 className={backgroundColor.title}>{title}</h2>}
+          {description && <div className={backgroundColor.text}>{documentToReactComponents(description.json)}</div>}
         </div>
       )}
 
