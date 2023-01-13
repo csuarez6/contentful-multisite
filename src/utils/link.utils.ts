@@ -13,7 +13,7 @@ const generateFullUrl = (link: string) => {
     return `mailto:${link}`;
   };
 
-  return `//${link}`;
+  return `https://${link}`;
 };
 
 export const getUrlPath = (content: GetUrlPathProps): string => {
