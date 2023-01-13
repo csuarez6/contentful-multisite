@@ -32,6 +32,7 @@ specifiers:
   eslint-plugin-storybook: ^0.6.7
   graphql: ^16.6.0
   icomoon-react: ^3.0.0
+  js-cookie: ^3.0.1
   lodash: ^4.17.21
   next: 13.0.3
   postcss: ^8.4.19
@@ -59,6 +60,7 @@ dependencies:
   emailjs: 4.0.1_typescript@4.8.4
   graphql: 16.6.0
   icomoon-react: 3.0.0
+  js-cookie: 3.0.1
   lodash: 4.17.21
   next: 13.0.3_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
@@ -9579,6 +9581,11 @@ packages:
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
+
+  /js-cookie/3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /js-sdsl/4.2.0:
     resolution: {integrity: sha512-dyBIzQBDkCqCu+0upx25Y2jGdbTGxE9fshMsCdK0ViOongpV+n5tXRcZY9v7CaVQ79AGS9KA1KHtojxiM7aXSQ==}
