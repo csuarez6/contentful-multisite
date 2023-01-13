@@ -84,4 +84,5 @@ export interface IView {
     iconSize?: string;
     imageOrientation?: string;
     isReverse?: boolean;
+    titleAlign?: string;
 }
