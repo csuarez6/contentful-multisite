@@ -1,5 +1,5 @@
 export interface ICheckBox {
-    id?: string | number,
+    id?: string,
     name?: string,
     label?: string,
     checked?: boolean,

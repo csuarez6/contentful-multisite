@@ -1,12 +1,10 @@
-import { IIcon } from "../icon/Icon";
-
 export interface IRadioBox {
-    id?: string | number,
+    id?: string,
     name?: string,
     label?: string,
     checked?: boolean,
-    icon?: IIcon
-}
+    icon?: string
+};
 
 export const dataRadioBox: IRadioBox = {
     label: 'PSE (Cuenta de ahorros)',
