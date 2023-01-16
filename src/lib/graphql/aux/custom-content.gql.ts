@@ -9,10 +9,12 @@ const AuxCustomContent = `
     ...on Page{
       ${DefaultQuery}
       slug
+      urlPath
     }
     ...on Product {
       ${DefaultQuery}
       slug
+      urlPath
     }
   }
   externalLink
