@@ -51,8 +51,8 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({
                             priority
                           />
                         </figure>
-                        <div className="container px-28 mx-auto">
-                          <div className="relative flex justify-center flex-col gap-6 py-[70px] px-2 w-3/5">
+                        <div className="container md:px-28 px-14 mx-auto">
+                          <div className="relative flex justify-center flex-col gap-6 py-[70px] px-2 md:w-3/5">
                             <h1 className="text-blue-dark title is-1">
                               {content.promoTitle ?? content.name}
                             </h1>

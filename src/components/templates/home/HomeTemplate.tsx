@@ -2,8 +2,8 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 
 import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
-import BannerCarouselBlock from "@/components/blocks/banner-carousel/BannerCarousel";
-import { mockBannerCarouselProps } from "@/components/blocks/banner-carousel/BannerCarousel.mocks";
+import BannerCarouselBlock from "@/components/blocks/banner-slider/BannerSlider";
+import { mockBannerSliderProps } from "@/components/blocks/banner-slider/BannerSlider.mocks";
 
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
 import { mockLeftFeaturedProps } from "@/components/organisms/cards/left-featured/LeftFeatured.mocks";
@@ -26,7 +26,7 @@ const HomeTemplate: React.FC<IPage> = (layout) => {
 
   return (
     <PageLayout {...layout}>
-      <BannerCarouselBlock {...mockBannerCarouselProps.data} />
+      <BannerCarouselBlock {...mockBannerSliderProps.data} />
       <div className="xl:container xl:mx-auto my-6">
         <LeftFeatured {...mockLeftFeaturedProps.data} />
       </div>

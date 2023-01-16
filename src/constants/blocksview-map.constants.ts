@@ -4,7 +4,7 @@ import VerticalCardBlock from "@/components/blocks/vertical-card/VerticalCard";
 import InformativeGridBlock from "@/components/blocks/informative-grid/InformativeGrid";
 import FeaturedBlock from "@/components/blocks/featured-block/FeaturedBlock";
 import ListWithIconBlock from "@/components/blocks/list-with-icons/ListWithIcons";
-import BannerCarouselBlock from "@/components/blocks/banner-carousel/BannerCarousel";
+import BannerCarouselBlock from "@/components/blocks/banner-slider/BannerCarousel";
 import BannerImage from "@/components/blocks/banner-image/BannerImage";
 import ProductGrid from "@/components/blocks/product-grid/ProductGrid";
 import LineSteps from "@/components/blocks/line-steps/LineSteps";

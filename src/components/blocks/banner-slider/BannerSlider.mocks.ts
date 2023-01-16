@@ -8,9 +8,9 @@ const data: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1920x600',
         },
-        cta: {
-          href: '#',
-          name: 'Ir a la tienda',
+        ctaLabel: 'Ir a la tienda',
+        internalLink: {
+          urlPath:'#'
         }
       },
       {
@@ -18,9 +18,9 @@ const data: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1920x600',
         },
-        cta: {
-          href: '#',
-          name: 'Conocer Vanti Listo',
+        ctaLabel:'Conocer Vanti Listo',
+        internalLink: {
+          urlPath:'#'
         }
       },
       {
@@ -28,9 +28,9 @@ const data: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1920x600',
         },
-        cta: {
-          href: '#',
-          name: 'Solicitar punto de gas',
+        ctaLabel:'Solicitar punto de gas',
+        internalLink:{
+          urlPath:'#'
         }
       },
       {
@@ -38,15 +38,15 @@ const data: IPromoBlock = {
         promoImage: {
           url: 'https://via.placeholder.com/1920x600',
         },
-        cta: {
-          href: '#',
-          name: 'Conocer Vanti Listo',
+        ctaLabel:'Conocer Vanti Listo',
+        internalLink:{
+          urlPath: '#'
         }
       }
     ]
   }
 };
 
-export const mockBannerCarouselProps = {
+export const mockBannerSliderProps = {
   data,
 };

@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import BannerCarousel from './BannerCarousel';
+import BannerCarousel from './BannerSlider';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { mockBannerCarouselProps } from './BannerCarousel.mocks';
+import { mockBannerSliderProps } from './BannerSlider.mocks';
 
 export default {
   title: 'blocks/BannerCarousel',
@@ -26,5 +26,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockBannerCarouselProps.data,
+  ...mockBannerSliderProps.data,
 } as IPromoBlock;
