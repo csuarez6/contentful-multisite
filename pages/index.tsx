@@ -6,12 +6,12 @@ import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 // import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
-// import { HOME_URL_PATH } from "@/constants/url-paths.constants";
-import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+// import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+// import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
-import getEntryContent from "@/lib/services/entry-content.service";
+// import getEntryContent from "@/lib/services/entry-content.service";
 import getPageContent from "@/lib/services/page-content.service";
+import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 
 const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   return (
@@ -32,27 +32,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
     context.preview ?? false
   );
 
-  const footerInfo = await getEntryContent({
-    __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
-    sys: {
-      id: DEFAULT_FOOTER_ID,
-    },
-  });
+  // const footerInfo = await getEntryContent({
+  //   __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
+  //   sys: {
+  //     id: DEFAULT_FOOTER_ID,
+  //   },
+  // });
 
-  const headerInfo = await getEntryContent({
-    __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
-    sys: {
-      id: DEFAULT_HEADER_ID,
-    },
-  });
+  // const headerInfo = await getEntryContent({
+  //   __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
+  //   sys: {
+  //     id: DEFAULT_HEADER_ID,
+  //   },
+  // });
 
   return {
     props: {
       ...pageContent,
       layout: {
         name: pageContent.name,
-        footerInfo: footerInfo,
-        headerInfo: headerInfo,
+        footerInfo: mockPageLayoutProps.data.layout.footerInfo,
+        headerInfo: mockPageLayoutProps.data.layout.headerInfo,
       },
     },
     revalidate: 10,
