@@ -4,7 +4,7 @@ import VerticalCardBlock from "@/components/blocks/vertical-card/VerticalCard";
 import InformativeGridBlock from "@/components/blocks/informative-grid/InformativeGrid";
 import FeaturedBlock from "@/components/blocks/featured-block/FeaturedBlock";
 import ListWithIconBlock from "@/components/blocks/list-with-icons/ListWithIcons";
-import BannerCarouselBlock from "@/components/blocks/banner-slider/BannerCarousel";
+import BannerSliderBlock from "@/components/blocks/banner-slider/BannerSlider";
 import BannerImage from "@/components/blocks/banner-image/BannerImage";
 import ProductGrid from "@/components/blocks/product-grid/ProductGrid";
 import LineSteps from "@/components/blocks/line-steps/LineSteps";
@@ -32,7 +32,7 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_INFORMATION_GRID]: InformativeGridBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED]: FeaturedBlock,
     [CONTENTFUL_TYPENAMES.VIEW_LIST_WITH_ICONS]: ListWithIconBlock,
-    [CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL]: BannerCarouselBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL]: BannerSliderBlock,
     [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRID]: ProductGrid,
     [CONTENTFUL_TYPENAMES.VIEW_LINE_OF_STEPS]: LineSteps,
     [CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE]: BannerImage,

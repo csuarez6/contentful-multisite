@@ -10,7 +10,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-const BannerCarouselBlock: React.FC<IPromoBlock> = ({
+const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
 }) => {
   const [stopSliderRotation, setStopSliderRotation] = useState(false);
@@ -93,4 +93,4 @@ const BannerCarouselBlock: React.FC<IPromoBlock> = ({
   );
 };
 
-export default BannerCarouselBlock;
+export default BannerSliderBlock;

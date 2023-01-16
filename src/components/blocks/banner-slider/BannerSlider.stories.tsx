@@ -1,11 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import BannerCarousel from './BannerSlider';
+import BannerSlider from './BannerSlider';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockBannerSliderProps } from './BannerSlider.mocks';
 
 export default {
-  title: 'blocks/BannerCarousel',
-  component: BannerCarousel,
+  title: 'blocks/BannerSlider',
+  component: BannerSlider,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
@@ -15,11 +15,11 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof BannerCarousel>;
+} as ComponentMeta<typeof BannerSlider>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof BannerCarousel> = (args) => (
-    <BannerCarousel {...args} />
+const Template: ComponentStory<typeof BannerSlider> = (args) => (
+    <BannerSlider {...args} />
 );
 
 export const Base = Template.bind({});
