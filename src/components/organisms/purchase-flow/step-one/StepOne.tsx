@@ -11,10 +11,9 @@ const products = [
         price: '$ 450.000',
         image: 'https://via.placeholder.com/64x64.png'
     },
-]
+];
 
-const StepOne: React.FC<IPromoContent> = ({ }) => {
-
+const StepOne: React.FC<IPromoContent> = () => {
     return (
         <div className="grid grid-cols-3 gap-6 place-items-baseline">
             <HeadingCard

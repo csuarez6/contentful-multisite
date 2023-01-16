@@ -6,10 +6,9 @@ const cta = {
     href: "#",
     name: "Comprar",
     buttonType: "button-primary"
-}
+};
 
-const StepFive: React.FC<IPromoContent> = ({ }) => {
-
+const StepFive: React.FC<IPromoContent> = () => {
     return (
         <div className="grid grid-cols-3 gap-6 place-items-baseline">
             <HeadingCard

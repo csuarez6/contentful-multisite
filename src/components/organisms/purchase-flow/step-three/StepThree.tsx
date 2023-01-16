@@ -3,8 +3,7 @@ import OrderCard from "@/components/organisms/cards/order-card/OrderCard";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
-const StepThree: React.FC<IPromoContent> = ({ }) => {
-
+const StepThree: React.FC<IPromoContent> = () => {
     return (
         <div className="grid grid-cols-3 gap-6 place-items-baseline">
             <HeadingCard

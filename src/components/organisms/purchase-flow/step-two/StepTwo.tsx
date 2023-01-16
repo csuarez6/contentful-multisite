@@ -5,8 +5,7 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 
-const StepTwo: React.FC<IPromoContent> = ({ }) => {
-
+const StepTwo: React.FC<IPromoContent> = () => {
     const handleEvent = (data) => {
         console.log("object", data.target.value);
     };

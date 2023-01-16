@@ -5,6 +5,7 @@ export interface IHeadingCard {
   children?: React.ReactNode;
   title?: string;
   icon?: string;
+  classes?: string;
 }
 
 const HeadingCard: React.FC<IHeadingCard> = ({
