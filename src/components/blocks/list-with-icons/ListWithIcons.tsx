@@ -1,9 +1,10 @@
 import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { classColumns, classNames, getBackgroundColorClass } from '@/utils/functions';
+import { classColumns, classNames, getBackgroundColorClass, getButtonType } from '@/utils/functions';
 
-const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
+const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   return (
     <section className="section grid gap-9">
@@ -25,6 +26,22 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
           {featuredContentsCollection.items.map((item) => (
             <ListWithIcon key={item.promoTitle} {...{ ...item, ...view }} />
           ))}
+        </div>
+      )}
+      {ctaCollection?.items?.length > 0 && (
+        <div className="flex justify-center gap-3">
+          {ctaCollection.items.map(
+            (cta) =>
+              (cta.externalLink || cta.internalLink) && (
+                <CustomLink
+                  content={cta}
+                  key={cta.name}
+                  className={classNames("button w-fit", getButtonType(view.buttonType))}
+                >
+                  {cta.promoTitle ?? cta.name}
+                </CustomLink>
+              )
+          )}
         </div>
       )}
     </section>

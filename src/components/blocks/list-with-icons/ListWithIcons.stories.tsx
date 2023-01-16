@@ -23,8 +23,13 @@ const Template: ComponentStory<typeof ListWithIcons> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const Left = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
   ...mockListWithIconsProps.data,
+} as IPromoBlock;
+
+Left.args = {
+  ...mockListWithIconsProps.dataLeft,
 } as IPromoBlock;
