@@ -30,4 +30,5 @@ export interface INavigation {
   utilityNavCollection?: {
     items?: IPromoContent[];
   };
+  menuNavkey?: string;
 };

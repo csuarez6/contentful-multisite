@@ -41,6 +41,9 @@ export const getLinkProps = (content: GetUrlPathProps) => {
   const href = getUrlPath(content);
   const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
   let textLink = content.name;
+  if(content?.internalLink?.name){
+    textLink = content.internalLink.name; 
+  }
   if(content?.internalLink?.promoTitle){
     textLink = content.internalLink.promoTitle; 
   }

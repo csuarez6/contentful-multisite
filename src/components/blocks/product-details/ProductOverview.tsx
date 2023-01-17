@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {
   IProductOverviewDetails,
-  PaymentMethodType,
+  // PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
 import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
@@ -18,10 +18,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
   price,
   details,
-  onBuy,
+  // onBuy,
   features,
   imagesCollection,
-  cta,
   priceBefore,
   productsQuantity,
   promotion,
@@ -33,9 +32,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     <section className="section bg-white">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col lg:flex-row 2xl:gap-9 gap-4">
-          {imagesCollection && (
+          {imagesCollection?.items?.length && (
             <div className="w-full lg:w-1/2 xl:max-w-[595px]">
-              <Carousel {...imagesCollection} />
+              <Carousel content={imagesCollection.items} />
             </div>
           )}
           <div className="flex xl:flex-grow">
@@ -162,11 +161,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            if (onBuy)
-                              onBuy(
-                                PaymentMethodType.pse,
-                                sku
-                              );
+                            // if (onBuy)
+                            //   onBuy(
+                            //     PaymentMethodType.pse,
+                            //     sku
+                            //   );
                           }}
                         >
                           Comprar con PSE

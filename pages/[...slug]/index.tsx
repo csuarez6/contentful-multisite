@@ -77,6 +77,7 @@ export const getStaticProps: GetStaticProps = async (
         name: pageContent.name,
         footerInfo,
         headerInfo,
+        menuNavkey:context.params.slug[0]
       },
     },
     revalidate: 10,

@@ -62,7 +62,10 @@ export interface IProductOverviewDetails {
   priceBefore?: string;
   productsQuantity?: string;
   sku?: string;
-  imagesCollection?: ICarousel;
+  imagesCollection?: {
+    items?: IImageAsset[];
+  };
   dataSelect?: ISelect[];
   rating?: number;
+  footerText?: any;
 }

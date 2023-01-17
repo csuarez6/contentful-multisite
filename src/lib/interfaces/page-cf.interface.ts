@@ -7,6 +7,7 @@ export interface ILayout {
     name?: string;
     headerInfo?: INavigation;
     footerInfo?: INavigation;
+    menuNavkey?: string;
 }
 
 export interface IPage {

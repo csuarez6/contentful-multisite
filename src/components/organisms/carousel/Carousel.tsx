@@ -76,7 +76,8 @@ const Carousel: React.FC<ICarousel> = ({
           </figure>
         </div>
         <Swiper
-          onSwiper={setThumbsSwiper}
+          // onSwiper={setThumbsSwiper}
+          onSwiper={() => { console.log('ERROR por revisar'); }}
           loop={true}
           spaceBetween={12}
           slidesPerView={imagesPerView ?? 4}

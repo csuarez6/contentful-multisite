@@ -14,7 +14,7 @@ const data: IProductOverviewDetails = {
     name: 'Comprar con PSE'
   },
   imagesCollection: {
-    content: [
+    items: [
       {
         url: 'https://via.placeholder.com/600x550'
       },
@@ -46,10 +46,10 @@ const data: IProductOverviewDetails = {
         url: 'https://via.placeholder.com/600x550'
       }
     ],
-    footerText: {
-      href: '#',
-      name: 'Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto'
-    }
+  },
+  footerText: {
+    href: '#',
+    name: 'Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto'
   },
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut',
   details: [

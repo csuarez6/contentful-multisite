@@ -9,17 +9,31 @@ import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { getUrlPath } from "@/utils/link.utils";
+import { HOME_SLUG } from "@/constants/url-paths.constants";
 
 const HeaderBlock: React.FC<INavigation> = ({
   promoImage,
   mainNavCollection,
   secondaryNavCollection,
   utilityNavCollection,
+  menuNavkey= null
 }) => {
+  
   const { asPath } = useRouter();
-  const mainNavCollectionMenu = mainNavCollection?.items.filter(
-    (el) => el.slug === "home"
-  )[0].mainNavCollection;
+  if( menuNavkey === null ){
+    menuNavkey = HOME_SLUG;
+  }
+
+  let mainNavCollectionMenu = mainNavCollection?.items.find(
+    (el) => el.slug === menuNavkey 
+  )?.mainNavCollection;
+
+  if(!mainNavCollectionMenu?.items?.length ){
+    mainNavCollectionMenu = mainNavCollection?.items.find(
+      (el) => el.slug === HOME_SLUG 
+    ).mainNavCollection;
+  }
+
 
   return (
     <Disclosure as="header" id="header" className="sticky inset-x-0 top-0 z-20">
