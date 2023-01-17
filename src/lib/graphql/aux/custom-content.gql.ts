@@ -10,11 +10,13 @@ const AuxCustomContent = `
       ${DefaultQuery}
       slug
       urlPath
+      promoTitle
     }
     ...on Product {
       ${DefaultQuery}
       slug
       urlPath
+      promoTitle
     }
   }
   externalLink

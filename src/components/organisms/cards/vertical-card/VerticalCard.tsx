@@ -5,6 +5,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames, getButtonType } from "@/utils/functions";
+import { getLinkProps } from "@/utils/link.utils";
 
 const VerticalCard: React.FC<IPromoContent> = (props) => {
   const {
@@ -37,7 +38,7 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
       {(promoTitle || promoDescription) && (
         <div className="flex items-center w-full p-6">
           <div className="grid">
-            {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
+            {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle ?? name}</h3>}
             {promoDescription?.json && (
               <div className="text-blue-dark-8 text-size-p1">
                 {documentToReactComponents(promoDescription.json)}
@@ -52,7 +53,7 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
                     getButtonType(buttonType ?? "Contorno")
                   )}
                 >
-                  {promoTitle ?? name}
+                  {getLinkProps(props).textLink}
                 </CustomLink>
               </div>
             )}

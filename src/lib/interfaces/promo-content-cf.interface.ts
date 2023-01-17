@@ -37,9 +37,6 @@ export interface IPromoContent {
     tags?: ITag[];
     externalLink?: string;
     internalLink?: IPage;
-    /**
-     * @deprecated
-     */
     ctaLabel?: string;
     slug?: string;
 }
@@ -49,6 +46,9 @@ export interface IPromoBlock extends IBlockProps {
     pretitle?: string;
     subtitle?: string;
     description?: IRichText;
+    /**
+     * @deprecated
+     */
     content?: IPromoContent;
     listedContentsCollection?: {
         items?: IPromoContent[]
@@ -56,16 +56,40 @@ export interface IPromoBlock extends IBlockProps {
     featuredContentsCollection?: {
         items?: IPromoContent[]
     };
+    /**
+     * @deprecated
+     */
     backgroundColor?: string;
+    /**
+     * @deprecated
+     */
     columnsSize?: number;
+    /**
+     * @deprecated
+     */
     alignImage?: string;
+    /**
+     * @deprecated
+     */
     iconColor?: string;
+    /**
+     * @deprecated
+     */
     buttonColor?: string;
     view?: IView;
+    /**
+     * @deprecated
+     */
     isReverse?: boolean;
+    /**
+     * @deprecated
+     */
     cta?: IListItems;
     image?: IImageAsset;
     listedForm?: IRpoForm;
+    /**
+     * @deprecated
+     */
     imageOrientation?: string;
     ctaCollection?: {
         items?: IPromoContent[]

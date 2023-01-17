@@ -40,10 +40,20 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
 export const getLinkProps = (content: GetUrlPathProps) => {
   const href = getUrlPath(content);
   const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
-
+  let textLink = content.name;
+  if(content?.internalLink?.promoTitle){
+    textLink = content.internalLink.promoTitle; 
+  }
+  if(content?.promoTitle){
+    textLink = content.promoTitle;
+  }
+  if(content?.ctaLabel){
+    textLink = content.ctaLabel;
+  }
   return {
     href,
     target: isExternalLink ? '_blank' : '_self',
-    isExternalLink
+    isExternalLink,
+    textLink
   };
 };
