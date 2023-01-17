@@ -1,19 +1,19 @@
-import { IProductDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 
-const data: IProductDetails = {
-  productName: 'Calefactor de Torre',
+const data: IProductOverviewDetails = {
+  promoTitle: 'Calefactor de Torre',
   price: '420.000',
   priceBefore: '450.000',
   productsQuantity: '1.000',
   state: 'Nuevo',
   promotion: '30%',
-  referenceCode: 1010101010,
+  sku: "1010101010",
   rating: 3.6,
   cta: {
     href: '',
-    name:'Comprar con PSE'
+    name: 'Comprar con PSE'
   },
-  carouselData: {
+  imagesCollection: {
     content: [
       {
         url: 'https://via.placeholder.com/600x550'

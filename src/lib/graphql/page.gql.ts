@@ -36,6 +36,9 @@ const PageQuery = `
       ...on AuxCustomContent {
         ${DefaultQuery}
       }
+      ...on Product {
+        ${DefaultQuery}
+      }
     }
   }
 `;

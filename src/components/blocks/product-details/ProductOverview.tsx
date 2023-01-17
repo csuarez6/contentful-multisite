@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  IProductDetails,
+  IProductOverviewDetails,
   PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
 import Carousel from "@/components/organisms/carousel/Carousel";
@@ -14,18 +14,18 @@ const iconSelect: IIcon = {
   className: "",
 };
 
-const ProductOverview: React.FC<IProductDetails> = ({
-  productName,
+const ProductOverview: React.FC<IProductOverviewDetails> = ({
+  promoTitle,
   price,
   details,
   onBuy,
   features,
-  carouselData,
+  imagesCollection,
   cta,
   priceBefore,
   productsQuantity,
   promotion,
-  referenceCode,
+  sku,
   state,
   rating,
 }) => {
@@ -33,21 +33,21 @@ const ProductOverview: React.FC<IProductDetails> = ({
     <section className="section bg-white">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col lg:flex-row 2xl:gap-9 gap-4">
-          {carouselData && (
+          {imagesCollection && (
             <div className="w-full lg:w-1/2 xl:max-w-[595px]">
-              <Carousel {...carouselData} />
+              <Carousel {...imagesCollection} />
             </div>
           )}
           <div className="flex xl:flex-grow">
             <div className="flex flex-col gap-10 w-full">
               <div className="flex flex-col gap-[11px]">
-                {referenceCode && (
+                {sku && (
                   <div className="text-sm text-grey-30">
-                    <p>CÓDIGO SKU: {referenceCode}</p>
+                    <p>CÓDIGO SKU: {sku}</p>
                   </div>
                 )}
-                {productName && (
-                  <h2 className="text-blue-dark">{productName}</h2>
+                {promoTitle && (
+                  <h2 className="text-blue-dark">{promoTitle}</h2>
                 )}
                 <h4 className="text-blue-dark">Marca y detalles generales</h4>
                 <div className="flex flex-col sm:flex-row gap-[34px] md:items-center mt-[-1px] ml-1">
@@ -74,6 +74,7 @@ const ProductOverview: React.FC<IProductDetails> = ({
                   </div>
                 </div>
               </div>
+              {/* Caracteristicas */}
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-[14px]">
                 <div className="py-[10px] sm:pl-[11px] flex flex-col gap-[57px] min-w-[285px]">
                   <div className="flex flex-col gap-[18px]">
@@ -155,20 +156,20 @@ const ProductOverview: React.FC<IProductDetails> = ({
                     className="flex flex-col gap-[15px]"
                   >
                     <div className="flex flex-col gap-[22px] pt-[5px] my-5">
-                      {cta && (
+                      {sku && (
                         <a
                           className="button button-primary 2xl:min-w-[348px] text-center"
-                          href={cta.href}
+                          href="#"
                           onClick={(e) => {
                             e.preventDefault();
                             if (onBuy)
                               onBuy(
                                 PaymentMethodType.pse,
-                                "TSHIRTMS000000FFFFFFLXXX"
+                                sku
                               );
                           }}
                         >
-                          {cta.name}
+                          Comprar con PSE
                         </a>
                       )}
                       <CustomLink

@@ -15,9 +15,31 @@ import {
   DEFAULT_HEADER_ID,
 } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import ProductOverview from "@/components/blocks/product-details/ProductOverview";
+import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
+import CheckoutContext from 'src/context/Checkout';
+import { useContext } from "react";
+import { useRouter } from 'next/router';
 
-const CustomPage: NextPageWithLayout = ({ blocksCollection }: IPage) => {
-  return <>{jsonToReactComponents(blocksCollection.items)}</>;
+const CustomPage: NextPageWithLayout = (props: IPage) => {
+  const router = useRouter();
+  const { blocksCollection, __typename } = props;
+  const { addToCart } = useContext(CheckoutContext);
+  const buyHandlerMap = {
+    [PaymentMethodType.pse]: () => {
+      router.push('/checkout/pse/verify');
+    }
+  };
+  const onBuyHandler = (type: PaymentMethodType, skuCode: string) => {
+    console.log("skuCode", skuCode);
+    addToCart(skuCode);
+    if (buyHandlerMap[type]) buyHandlerMap[type]();
+  };
+  console.log(props);
+  return __typename == CONTENTFUL_TYPENAMES.PRODUCT
+    ? <ProductOverview {...props} onBuy={onBuyHandler} />
+    : <>{jsonToReactComponents(blocksCollection.items)}</>;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {

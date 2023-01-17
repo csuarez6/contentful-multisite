@@ -17,15 +17,21 @@ const getPageContent = async (urlPath, preview = false) => {
   let responseData = null;
   let responseError = null;
 
-  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
+  const { queryName: typePage, query: queryPage } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
+  const { queryName: typeProduct, query: queryProduct } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PRODUCT];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getPage($urlPath: String!, $preview: Boolean!) {
-          ${type}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
+          ${typePage}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
             items {
-              ${query}
+              ${queryPage}
+            }
+          }
+          ${typeProduct}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
+            items {
+              ${queryProduct}
             }
           }
         }
@@ -45,13 +51,13 @@ const getPageContent = async (urlPath, preview = false) => {
     console.error('Error on page content service, query => ', responseError.message);
   }
 
-  if (!responseData[`${type}Collection`]?.items?.[0]) {
+  if (!responseData[`${typePage}Collection`]?.items?.[0] && !responseData[`${typeProduct}Collection`]?.items?.[0]) {
     return null;
   }
 
   const pageContent = JSON.parse(
     JSON.stringify(
-      responseData[`${type}Collection`]?.items?.[0]
+      responseData[`${typeProduct}Collection`]?.items?.[0] ?? responseData[`${typePage}Collection`]?.items?.[0]
     )
   );
 

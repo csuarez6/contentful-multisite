@@ -46,3 +46,23 @@ export interface IProductDetails {
   dataSelect?: ISelect[];
   rating?: number;
 }
+
+export interface IProductOverviewDetails {
+  promoTitle?: string;
+  price?: string;
+  description?: string;
+  images?: IImageAsset[];
+  details?: string[];
+  paymentMethods?: IPaymentMethod[];
+  onBuy?: (type: PaymentMethodType, skuCode: string) => void
+  features?: IFeatures;
+  cta?: ILink;
+  state?: string;
+  promotion?: string;
+  priceBefore?: string;
+  productsQuantity?: string;
+  sku?: string;
+  imagesCollection?: ICarousel;
+  dataSelect?: ISelect[];
+  rating?: number;
+}
