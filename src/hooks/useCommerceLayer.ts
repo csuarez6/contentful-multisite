@@ -49,16 +49,16 @@ export const useCommerceLayer = () => {
     (async () => {
       try {
         const { accessToken } = await getSalesChannelToken({
-          endpoint: "https://rcermeno.commercelayer.io",
-          clientId: "aV537cij2RqSzS_d5FkVHLR_Qx3WjTQYCdnAsAhUB2A",
-          scope: "market:12005",
+          endpoint: process.env.COMMERCELAYER_ENDPOINT,
+          clientId: process.env.COMMERCELAYER_CLIENT_ID,
+          scope: process.env.COMMERCELAYER_MARKET_SCOPE, 
         });
         if (!accessToken) {
           setError(new Error("CREDENTIALS_ERROR"));
           return;
         }
 
-        setClient(CommerceLayer({ accessToken, organization: "rcermeno" }));
+        setClient(CommerceLayer({ accessToken, organization: "vanti-poc" }));
       } catch (error) {
         setError(error);
         console.error(error);

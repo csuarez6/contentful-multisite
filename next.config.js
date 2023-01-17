@@ -29,7 +29,7 @@ const nextConfig = {
         permanent: true
       }
     ];
-  }
+  },
 };
 
 if (isProduction) {

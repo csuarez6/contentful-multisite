@@ -10,13 +10,11 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
-// import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
-// import {
-//   DEFAULT_FOOTER_ID,
-//   DEFAULT_HEADER_ID,
-// } from "@/constants/contentful-ids.constants";
-// import getEntryContent from "@/lib/services/entry-content.service";
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+} from "@/constants/contentful-ids.constants";
+import { getMenu } from "@/lib/services/menu-content.service";
 
 const CustomPage: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   return <>{jsonToReactComponents(blocksCollection.items)}</>;
@@ -43,29 +41,20 @@ export const getStaticProps: GetStaticProps = async (
   // console.log('Página cargada');
   if (!pageContent) return { notFound: true };
 
-  // const footerInfo = await getEntryContent({
-  //   __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
-  //   sys: {
-  //     id: DEFAULT_FOOTER_ID,
-  //   },
-  // });
-  // console.log('Footer cargado');
-
-  // const headerInfo = await getEntryContent({
-  //   __typename: CONTENTFUL_TYPENAMES.AUX_NAVIGATION,
-  //   sys: {
-  //     id: DEFAULT_HEADER_ID,
-  //   },
-  // });
-  // console.log('Header cargado');
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    2
+  );
 
   return {
     props: {
       ...pageContent,
       layout: {
         name: pageContent.name,
-        footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-        headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+        footerInfo,
+        headerInfo,
       },
     },
     revalidate: 10,

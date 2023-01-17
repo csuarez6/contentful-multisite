@@ -9,7 +9,7 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 
 const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
-    'blocksCollection', 
+    'blocksCollection',
     'mainNavCollection',
   ],
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
@@ -34,7 +34,7 @@ type DefaultBlockInfo = {
   }
 };
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     throw new Error(`«blockInfo» are required or it's not defined`);
   }
@@ -78,7 +78,11 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false) => 
     )
   );
 
-  if (REFERENCES[entryContent.__typename] && REFERENCES[entryContent.__typename].length > 0) {
+  if (
+    REFERENCES[entryContent.__typename] &&
+    REFERENCES[entryContent.__typename].length > 0 &&
+    recursive
+  ) {
     const referencesContent = await getReferencesContent(
       entryContent,
       REFERENCES[entryContent.__typename],

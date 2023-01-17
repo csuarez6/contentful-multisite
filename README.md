@@ -109,6 +109,10 @@ Create .env file with enviroment variables below:
 - `CONTENTFUL_ENDPOINT`: (deprecated) Contentful graphql endpont, tipically: https://graphql.contentful.com/content/v1/spaces/$CONTENTFUL_SPACE_ID/environments/$CONTENTFUL_ENVIRONMENT
 - `INVALIDATE_SECRET_TOKEN`: (required) NextJS Token for invalidate contents
 - `SENTRY_AUTH_TOKEN`: (required) Sentry Token for production logs
+- `COMMERCELAYER_CLIENT_ID`: (required) CommerceLayer client id for connect store and checkout process
+- `COMMERCELAYER_MARKET_SCOPE`: (required) CommerceLayer scope for connect store and checkout process
+- `COMMERCELAYER_CLIENT_SECRET`: (required) CommerceLayer secret token to create resources
+- `COMMERCELAYER_ENDPOINT`: (default: https://vanti-poc.commercelayer.io)
 
 ### TEST
 

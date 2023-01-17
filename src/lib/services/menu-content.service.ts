@@ -1,32 +1,32 @@
 import { gql } from '@apollo/client';
 
 import contentfulClient from './contentful-client.service';
+import _ from 'lodash';
 
 import { DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
-// import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
+import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 // import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 
-import DefaultQuery from '../graphql/shared/default.gql';
-import { AssetImageQuery } from '../graphql/shared/asset.gql';
+import AuxNavigationQuery from '../graphql/aux/navigation.gql';
+import getReferencesContent from './references-content.service';
 
-// const REFERENCES = {
-//   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
-//     'mainNavCollection',
-//     'secondaryNavCollection',
-//     'utilityNavCollection'
-//   ],
-//   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-//     'mainNavCollection',
-//   ],
-// };
+const REFERENCES = {
+  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
+    'mainNavCollection',
+    'secondaryNavCollection',
+    'utilityNavCollection'
+  ],
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
+    'mainNavCollection',
+  ],
+  [CONTENTFUL_TYPENAMES.PAGE]: [
+    'mainNavCollection',
+  ],
+};
 
-// const getMenuItems = () => {
-//   return {};
-// };
-
-export const getMenu = async (navigationId: string = null, preview = false) => {
+const getInitialMenu = async (navigationId: string = null, preview = false) => {
   if (!navigationId) {
-    navigationId = DEFAULT_HEADER_ID;
+    return null;
   }
 
   let responseData = null;
@@ -36,45 +36,8 @@ export const getMenu = async (navigationId: string = null, preview = false) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntry($id: String!, $preview: Boolean!) {
-          auxCustomContent(id: $id, preview: $preview) {
-            ${DefaultQuery}
-            promoTitle
-            promoImage {
-              ${AssetImageQuery}
-            }
-            mainNavCollection {
-              items {
-                ...on Page {
-                  ${DefaultQuery}
-                }
-                ...on AuxNavigation {
-                  ${DefaultQuery}
-                }
-                ...on AuxCustomContent {
-                  ${DefaultQuery}
-                }
-              }
-            }
-            secondaryNavCollection {
-              items {
-                ...on Page {
-                  ${DefaultQuery}
-                }
-                ...on AuxCustomContent {
-                  ${DefaultQuery}
-                }
-              }
-            }
-            utilityNavCollection {
-              items {
-                ...on Page {
-                  ${DefaultQuery}
-                }
-                ...on AuxCustomContent {
-                  ${DefaultQuery}
-                }
-              }
-            }
+          auxNavigation(id: $id, preview: $preview) {
+            ${AuxNavigationQuery}
           }
         }
       `,
@@ -90,18 +53,90 @@ export const getMenu = async (navigationId: string = null, preview = false) => {
   }
 
   if (responseError) {
-    console.error(`Error on entry query (getMenu) => `, responseError.message);
+    console.error(`Error on entry query (getInitialMenu) => `, responseError.message);
   }
 
-  if (!responseData?.auxCustomContent) {
+  if (!responseData?.auxNavigation) {
     return null;
   }
 
   const entryContent = JSON.parse(
     JSON.stringify(
-      responseData?.auxCustomContent
+      responseData?.auxNavigation
     )
   );
 
   return entryContent;
+};
+
+export const getMenu = async (navigationId: string = null, preview = false, deepth = 4) => {
+  if (!navigationId) {
+    navigationId = DEFAULT_HEADER_ID;
+  }
+
+  // First Level
+  const menu = await getInitialMenu(navigationId, preview);
+  if (!menu) {
+    return null;
+  }
+
+  if (
+    REFERENCES[menu.__typename] &&
+    REFERENCES[menu.__typename].length > 0
+  ) {
+    const referencesContent = await getReferencesContent(
+      menu,
+      REFERENCES[menu.__typename],
+      preview,
+      false
+    );
+
+    _.merge(menu, referencesContent);
+  }
+
+
+  if (deepth >= 2) {
+    // Second level
+    for (const itemMenuKey in menu.mainNavCollection.items) {
+      const contentSubMenu = { ...menu.mainNavCollection.items[itemMenuKey] };
+      const referencesContent = await getReferencesContent(
+        contentSubMenu,
+        REFERENCES[contentSubMenu.__typename],
+        preview,
+        false
+      );
+
+      _.merge(menu.mainNavCollection.items[itemMenuKey], referencesContent);
+
+      if (deepth >= 3 && contentSubMenu.mainNavCollection?.items?.length > 0) {
+        for (const thirdMenuKey in contentSubMenu.mainNavCollection.items) {
+          const thirdMenuContent = { ...contentSubMenu.mainNavCollection.items[thirdMenuKey] };
+          const referencesThirdContent = await getReferencesContent(
+            thirdMenuContent,
+            REFERENCES[thirdMenuContent.__typename],
+            preview,
+            false
+          );
+
+          _.merge(menu.mainNavCollection.items[itemMenuKey].mainNavCollection.items[thirdMenuKey], referencesThirdContent);
+
+          if (deepth >= 4 && thirdMenuContent.mainNavCollection?.items?.length > 0) {
+            for (const fourthMenuKey in thirdMenuContent.mainNavCollection.items) {
+              const fourthMenuContent = { ...thirdMenuContent.mainNavCollection.items[fourthMenuKey] };
+              const referencesFourthContent = await getReferencesContent(
+                fourthMenuContent,
+                REFERENCES[fourthMenuContent.__typename],
+                preview,
+                false
+              );
+
+              _.merge(menu.mainNavCollection.items[itemMenuKey].mainNavCollection.items[thirdMenuKey].mainNavCollection.items[fourthMenuKey], referencesFourthContent);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return menu;
 };

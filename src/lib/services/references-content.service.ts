@@ -1,6 +1,6 @@
 import getEntryContent from "./entry-content.service";
 
-const getReferencesContent = async (content, references, preview = false) => {
+const getReferencesContent = async (content, references, preview = false, recursive = true) => {
   const referencesContent = {};
 
   for (const ref of references) {
@@ -22,14 +22,14 @@ const getReferencesContent = async (content, references, preview = false) => {
 
       for (const idx in content[ref].items) {
         const blockInfo = content[ref].items[idx];
-        const entryInfo = await getEntryContent(blockInfo, preview);
+        const entryInfo = await getEntryContent(blockInfo, preview, recursive);
 
         referencesContent[ref].items.push(entryInfo);
       }
     }
 
     if (content[ref]?.sys?.id) {
-      referencesContent[ref] = await getEntryContent(content[ref], preview);
+      referencesContent[ref] = await getEntryContent(content[ref], preview, recursive);
     }
   }
 
