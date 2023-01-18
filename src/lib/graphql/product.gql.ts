@@ -35,7 +35,9 @@ const ProductQuery = `
   productFeatures {
     ${RichtextQuery}
   }
-  trademark
+  trademark {
+    ${DefaultQuery}
+  }
   size
   capacity
   warranty

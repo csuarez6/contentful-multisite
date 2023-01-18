@@ -7,9 +7,22 @@ import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
-const iconSelect: IIcon = {
+const iconInvoice: IIcon = {
   icon: "invoice",
+  size: 28,
+  className: "",
+};
+
+const iconPSE: IIcon = {
+  icon: "pse",
+  size: 28,
+  className: "",
+};
+
+const iconCallback: IIcon = {
+  icon: "callback",
   size: 28,
   className: "",
 };
@@ -17,7 +30,7 @@ const iconSelect: IIcon = {
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
   price,
-  details,
+  productFeatures,
   onBuy,
   features,
   imagesCollection,
@@ -36,10 +49,18 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           {imagesCollection?.items?.length && (
             <div className="w-full lg:w-1/2 xl:max-w-[595px]">
               <Carousel content={imagesCollection.items} />
+              <div className="mt-9 w-1/2">
+                <CustomLink
+                  className="text-sm underline text-grey-60"
+                  content={{ externalLink: "#" }}
+                >
+                  Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto
+                </CustomLink>
+              </div>
             </div>
           )}
           <div className="flex xl:flex-grow">
-            <div className="flex flex-col gap-10 w-full">
+            <div className="flex flex-col gap-9 w-full">
               <div className="flex flex-col gap-[11px]">
                 {sku && (
                   <div className="text-sm text-grey-30">
@@ -76,23 +97,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </div>
               {/* Caracteristicas */}
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-[14px]">
-                <div className="py-[10px] sm:pl-[11px] flex flex-col gap-[57px] min-w-[285px]">
-                  <div className="flex flex-col gap-[18px]">
+                <div className="py-[10px] flex flex-col gap-6 min-w-[285px]">
+                  <div className="flex flex-col gap-[18px] bg-slate-50 p-3 rounded-xl">
                     <h4 className="text-blue-dark">
-                      Caracteristicas del <br /> producto
+                      Características del <br /> producto
                     </h4>
-                    {details && (
-                      <div className="flex flex-col gap-[5px]">
-                        {details.map((el, i) => {
-                          if (!el) return;
-                          const detail = el.split(":");
-                          return (
-                            <div key={i} className="flex text-blue-dark gap-2">
-                              <strong>{detail[0]}:</strong>
-                              <p>{detail[1]}</p>
-                            </div>
-                          );
-                        })}
+                    {productFeatures && (
+                      <div className="flex flex-col gap-[5px] text-blue-dark">
+                        {documentToReactComponents(productFeatures.json)}
                       </div>
                     )}
                     <CustomLink
@@ -102,7 +114,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       Revisa todas las carateristicas
                     </CustomLink>
                   </div>
-                  <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl -m-3 w-fit xl:w-full 2xl:w-fit">
+                  <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl w-fit xl:w-full 2xl:w-full">
                     <h4>
                       ¿Aún no tienes crédito <br /> con Vanti?
                     </h4>
@@ -116,7 +128,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       />
                     </div>
                   </div>
-                  <div className="mt-[-8px]">
+                  <div className="">
                     <div className="font-medium text-blue-dark leading-4">
                       <div>
                         <p>¿Tienes dudas?</p>
@@ -141,8 +153,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </h4>
                     )}
                     <div className="flex gap-1">
-                      <Icon {...iconSelect} />
-                      <Icon {...iconSelect} />
+                      <Icon {...iconPSE} />
+                      <Icon {...iconInvoice} />
                     </div>
                   </div>
                   {price && <h1 className="text-[#035177]">${price} Hoy</h1>}
@@ -165,7 +177,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                             if (onBuy)
                               onBuy(
                                 PaymentMethodType.pse,
-                                "CAL CPG-7TN GN DISP BL"
+                                sku
                               );
                           }}
                         >
@@ -173,10 +185,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         </a>
                       )}
                       <CustomLink
-                        className="button button-outline 2xl:min-w-[348px] text-center"
+                        className="button button-outline 2xl:min-w-[348px] text-center block"
                         content={{ urlPath: "/" }}
                       >
                         Te llamamos
+                        <span className="p-1">
+                          <Icon {...iconCallback} />
+                        </span>
                       </CustomLink>
                     </div>
                     <ul className='flex flex-col gap-[22px]'>
@@ -231,10 +246,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         </section>
 
         <div className="grid grid-cols-2 gap-6">
-          {features?.main && (
+          {features && (
             <div className="grid gap-9 col-span-2">
               <h2 className="text-blue-dark">Características principales</h2>
-              <table className="table-auto">
+              <ul className="pl-4">
+                {documentToReactComponents(features.json)}
+              </ul>
+              {/* <table className="table-auto">
                 <tbody>
                   {features.main.map((item) => (
                     <tr className="odd:bg-neutral-90" key={item.name}>
@@ -247,7 +265,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table> */}
               <div className="flex">
                 <button className="button button-outline">
                   Ver más características
@@ -256,23 +274,23 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
           )}
 
-          {features?.description && (
+          {features && (
             <div className="grid gap-9 mt-6">
               <h2 className="text-blue-dark">Descripción</h2>
-              <ul className="pl-4">
+              {/* <ul className="pl-4">
                 {features.description.map((item) => (
                   <li className="list-disc" key={item}>
                     {item}
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </div>
           )}
 
-          {features?.warranty && (
+          {features && (
             <div className="grid gap-9 mt-6">
               <h2 className="text-blue-dark">Garantía</h2>
-              <ul className="pl-4">
+              {/* <ul className="pl-4">
                 {features.warranty.map((item) => (
                   <li
                     className="list-disc"
@@ -280,7 +298,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     dangerouslySetInnerHTML={{ __html: item }}
                   />
                 ))}
-              </ul>
+              </ul> */}
             </div>
           )}
         </div>
