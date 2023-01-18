@@ -106,7 +106,7 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
                                         role="list"
                                         className="flex flex-col gap-5 mt-5"
                                       >
-                                        {item.mainNavCollection.items.map(
+                                        {item.mainNavCollection?.items?.map(
                                           (item) => (
                                             <li
                                               key={item.name}

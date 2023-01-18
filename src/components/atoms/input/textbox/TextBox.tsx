@@ -1,29 +1,32 @@
+import React from 'react';
 import { ITextBox } from './TextBox.mocks';
 
-const Textbox: React.FC<ITextBox> = ({
-    id,
-    name,
-    label,
-    value,
-    placeholder,
-    onChange,
-}) => {
+const Textbox = ({
+  id,
+  name,
+  label,
+  value,
+  placeholder,
+  onChange,
+  type
+}: ITextBox, ref) => {
     return (
-        <div className="w-full grid gap-6">
-            <label className="block text-grey-30 text-lg">
-                {label}
-            </label>
-            <input
-                className="border w-full py-2 px-3 text-gray-700 leading-tight"
-                id={`${id}`}
-                name={name}
-                type="text"
-                value={value}
-                placeholder={placeholder}
-                onChange={onChange}
-            />
-        </div>
+      <div className="w-full grid">
+        <label className="block mb-6 text-grey-30 text-lg leading-none" htmlFor={id}>
+          {label}
+        </label>
+        <input
+          ref={ref}
+          className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+          id={id}
+          name={name}
+          type={type ?? "text"}
+          value={value}
+          placeholder={placeholder}
+          onChange={onChange}
+        />
+      </div>
     );
-};
+  };
 
-export default Textbox;
+export default React.forwardRef(Textbox);

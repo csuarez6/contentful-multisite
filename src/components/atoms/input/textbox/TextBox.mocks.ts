@@ -1,8 +1,9 @@
 export interface ITextBox {
-    id?: string | number,
+    id?: string,
     name?: string,
+    type?: string,
     label?: string,
-    value?: string | number
+    value?: string | number,
     placeholder?: string,
     onChange?: (e: any) => void,
 }

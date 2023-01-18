@@ -1,30 +1,36 @@
-import { Fragment, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import Icon from '../icon/Icon';
 import { classNames } from '@/utils/functions';
 
-interface IListContent {
-  value: string,
-  text: string
+export interface IListContent {
+  value: string | null;
+  text: string;
 }
 
 export interface ISelect {
+  name?: string,
   listedContents: IListContent[],
   labelSelect?: string,
-  placeholder: string
+  placeholder?: string
 }
 
-const SelectAtom: React.FC<ISelect> = ({ listedContents, labelSelect, placeholder = "Seleccionar" }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+const SelectAtom = (
+  { name, listedContents, labelSelect, placeholder = "Seleccionar" }: ISelect,
+  ref
+) => {
+  const [selectedOption, setSelectedOption] = useState({ value: '', text: placeholder });
+  if (listedContents.length === 0) return;
 
   return (
     <Listbox value={selectedOption} onChange={setSelectedOption}>
       {({ open }) => (
         <div className='flex flex-col gap-1'>
           {labelSelect && (
-            <Listbox.Label className="text-size-p2 text-grey-30 font-medium">{labelSelect}</Listbox.Label>
+            <Listbox.Label className="text-lg leading-none text-grey-30 font-medium">{labelSelect}</Listbox.Label>
           )}
           <div className="grid gap-2 mt-1 relative">
+            {name && <input type="hidden" name={name} ref={ref} value={'selectedOption?.value'} />}
             <Listbox.Button className={
               classNames(
                 "flex gap-[10px] flex-nowrap p-3 bg-white border border-grey-60 rounded hover:border-grey-30 group",
@@ -76,4 +82,4 @@ const SelectAtom: React.FC<ISelect> = ({ listedContents, labelSelect, placeholde
   );
 };
 
-export default SelectAtom;
+export default React.forwardRef(SelectAtom);

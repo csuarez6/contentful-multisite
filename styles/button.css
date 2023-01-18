@@ -1,5 +1,5 @@
 .button {
-  @apply px-4 py-2 leading-[1.6] font-semibold;
+  @apply px-4 py-2 leading-[1.6] font-semibold focus:outline-none;
 }
 
 .button.button-primary {

@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { ICheckBox } from './CheckBox.mocks';
 
+export interface ICheckBox {
+    id?: string,
+    name: string,
+    label?: string,
+    type?: string,
+    checked?: boolean,
+    value?: any
+}
 
-const CheckBox: React.FC<ICheckBox> = ({ id, name, label, checked }) => {
-    const [isChecked, setChecked] = useState(checked ?? false);
-    const handleChange = () => {
-        setChecked(!isChecked);
-    };
+const CheckBox = ({ id, name, label, value, checked = false, type = "checkbox" }: ICheckBox, ref) => {
+    const [isChecked, setChecked] = useState(checked);
+    const handleChange = () => setChecked(!isChecked);
 
     return (
         <div className="mt-6 flex space-x-2">
@@ -14,13 +19,15 @@ const CheckBox: React.FC<ICheckBox> = ({ id, name, label, checked }) => {
                 <input
                     id={id}
                     name={name}
-                    type="checkbox"
+                    ref={ref}
+                    type={type}
+                    value={value}
                     className="h-5 w-5 accent-neutral-30 rounded-lg border-blue-dark"
                     checked={isChecked}
                     onChange={handleChange}
                 />
             </div>
-            <label htmlFor="chekbox" className="text-base font-medium text-grey-30">
+            <label htmlFor={name} className="text-base font-medium text-grey-30">
                 {label}
             </label>
         </div>
@@ -28,4 +35,4 @@ const CheckBox: React.FC<ICheckBox> = ({ id, name, label, checked }) => {
 
 };
 
-export default CheckBox;
+export default React.forwardRef(CheckBox);
