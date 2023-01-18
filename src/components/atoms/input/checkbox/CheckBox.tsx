@@ -1,5 +1,5 @@
-import { FC, forwardRef } from 'react';
-import { ICheckBox } from './CheckBox.mocks';
+import { FC, ForwardedRef, forwardRef } from 'react';
+// import { ICheckBox } from './CheckBox.mocks';
 
 export interface ICheckBox {
     id?: string,
@@ -10,7 +10,7 @@ export interface ICheckBox {
     value?: any
 }
 
-const CheckBox: FC<ICheckBox> = forwardRef(({ id, label, ...rest }, ref) => {
+const CheckBox: FC<ICheckBox> = forwardRef(({ id, label, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
     return (
         <div className="mt-6 flex space-x-2">
             <div className="flex h-5 items-center">
