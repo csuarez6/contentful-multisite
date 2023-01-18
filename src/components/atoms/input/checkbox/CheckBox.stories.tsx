@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import CheckBox from './CheckBox';
-import { dataCheckBox, ICheckBox } from './CheckBox.mocks';
+import CheckBox, { ICheckBox } from './CheckBox';
+import { dataCheckBox } from './CheckBox.mocks';
 
 export default {
     title: 'atoms/input/CheckBox',
