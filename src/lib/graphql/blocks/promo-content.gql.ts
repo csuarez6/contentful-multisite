@@ -16,6 +16,7 @@ import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
 import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
+import ViewCarouselCategories from "../views/carousel-categories.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -113,6 +114,9 @@ const BlockPromoContentQuery = `
     }
     ...on ViewInformationCards{
       ${ViewInformationCards}
+    }
+    ...on ViewCarousel{ 
+      ${ViewCarouselCategories}
     }
   }
 `;

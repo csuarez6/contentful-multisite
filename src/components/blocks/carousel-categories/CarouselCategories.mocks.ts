@@ -70,7 +70,7 @@ const data: IPromoBlock = {
   },
   view: {
     columnsSize: 3,
-    titleAlign: 'Left',
+    alignTitle: 'Left',
   }
 };
 const dataTop: IPromoBlock = {

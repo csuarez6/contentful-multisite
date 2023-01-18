@@ -21,16 +21,18 @@ const iconRight: IIcon = {
 };
 
 const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
+  console.log(view);
+  
   return (
-    <section className={classNames("section gap-9 flex flex-col", view.titleAlign === 'Left' && "md:flex-row md:gap-0")}>
+    <section className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
       {(title || description) && (
-        <div className={classNames("text-center", view.titleAlign === 'Left' ? 'md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0' : "mb-3")}>
+        <div className={classNames("text-center", view.alignTitle === 'Left' ? 'md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0' : "mb-3")}>
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}
           {description && <div className="text-blue-dark">{documentToReactComponents(description.json)}</div>}
         </div>
       )}
       {featuredContentsCollection?.items?.length > 0 && (
-        <div className={classNames("flex flex-nowrap relative grow w-full", view.titleAlign === 'Left' && 'md:max-w-[75%] md:pl-9')}>
+        <div className={classNames("flex flex-nowrap relative grow w-full", view.alignTitle === 'Left' && 'md:max-w-[75%] md:pl-9')}>
           <div className='flex justify-center items-center'>
             <div className='prevSlide bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center'>
               <Icon {...iconLeft} />
