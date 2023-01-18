@@ -7,6 +7,7 @@ import { useLastPath } from "src/hooks/utils/useLastPath";
 import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import { Address } from "@commercelayer/sdk";
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
+import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -38,32 +39,48 @@ const CheckoutSummary = () => {
 
   return (
     <>
-      <h2>
-        <span>Ingresar datos personales</span>
-        <input type="checkbox" checked={isCompleted} readOnly />
-      </h2>
-      <ul>
-        <li>
-          <h5># {order?.number}</h5>
-        </li>
-        <li>
-          <h5>Nombre del adquiriente:</h5>
-          {order?.metadata?.firstName} {order?.metadata?.lastName}
-        </li>
-        <li>
-          <h5>Método de pago:</h5>
-          {router.query.paymentType?.toString().toUpperCase()}
-        </li>
-        <li>
-          <h5>Dirección de facturación:</h5>
-          {billingAddress?.full_address}
-        </li>
-        <li>
-          <button type="button" className="mr-4" onClick={handlePrev}>
-            Volver
-          </button>
-        </li>
-      </ul>
+      <HeadingCard
+        classes="col-span-2"
+        title="5. Datos de compra"
+        icon="quotation"
+        isCheck={isCompleted}
+      >
+        <div className="bg-white rounded-lg">
+          <dl className="space-y-5 text-sm">
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
+              <dd className="flex-1 text-grey-30 font-bold">{order?.number}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
+              <dd className="flex-1 text-grey-30 font-bold">{order?.metadata?.firstName} {order?.metadata?.lastName}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Método de pago:</dt>
+              <dd className="flex-1 text-grey-30 font-bold">{router.query.paymentType?.toString().toUpperCase()}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
+              <dd className="flex-1 text-grey-30 font-bold">Banco Davivienda</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
+              <dd className="flex-1 text-grey-30 font-bold">{billingAddress?.full_address}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-blue-dark">Sabemos que eres un humano, pero debemos confirmarlo.</dt>
+            </div>
+            <div className="flex justify-between">
+              <dt className="">NOTA: Al hacer click en “Enviar datos” serás contactado por un agente de Vanti</dt>
+            </div>
+          </dl>
+          <div className="flex mt-5 w-full justify-end">
+            <button className="button button-outline" type="button" onClick={handlePrev}>
+              Volver
+            </button>
+          </div>
+        </div>
+      </HeadingCard>
     </>
   );
 };

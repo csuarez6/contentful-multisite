@@ -37,7 +37,7 @@ const Carousel: React.FC<ICarousel> = ({
   imagesPerView,
   footerText,
 }) => {
-  const [thumbsSwiper, setThumbsSwiper] = React.useState<ISwiper>();
+  const [thumbsSwiper] = React.useState<ISwiper>();
   if (!content) return;
   return (
     <section>

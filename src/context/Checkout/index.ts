@@ -1,4 +1,5 @@
-import { Address, AddressCreate, Order } from "@commercelayer/sdk";
+import { Address, AddressCreate, Order, PaymentMethod } from "@commercelayer/sdk";
+import { ListResponse } from "@commercelayer/sdk/lib/cjs/resource";
 import { createContext } from "react";
 
 export enum VantiCheckoutFlowType {
@@ -41,6 +42,8 @@ export interface IContextCheckout {
     shippingAddress?: Address,
     billingAddress?: Address
   }>,
+  placeOrder: () => Promise<void>,
+  getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>,
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -54,6 +57,8 @@ const CheckoutContext = createContext<IContextCheckout>({
     updateItemQuantity: () => undefined,
     addAddresses: () => undefined,
     getAddresses: () => undefined,
+    placeOrder: () => undefined,
+    getPaymentMethods: () => undefined,
 });
 
 export default CheckoutContext;

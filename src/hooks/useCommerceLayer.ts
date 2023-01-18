@@ -6,6 +6,7 @@ import CommerceLayer, {
 } from "@commercelayer/sdk";
 import { getSalesChannelToken } from "@commercelayer/js-auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { VantiOrderMetadata } from "@/constants/checkout.constants";
 
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   include: ["line_items", "shipping_address", "billing_address"],
@@ -22,7 +23,6 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "line_items",
       "metadata",
       "customer_email",
-      "_billing_address_same_as_shipping",
     ],
     addresses: ["state_code", "city", "line_1", "phone"],
     line_items: [
@@ -69,6 +69,8 @@ export const useCommerceLayer = () => {
   }, []);
 
   const getOrderId = useCallback(async () => {
+    if (!client.orders) return;
+    
     const orderId = localStorage.getItem("orderId");
     if (!orderId) {
       const draftOrder = await client.orders.create({});
@@ -139,6 +141,7 @@ export const useCommerceLayer = () => {
       });
     } else {
       await client.line_items.delete(lineItem.id);
+      await updateMetadata(VantiOrderMetadata.IsVerified, false);
     }
     await reloadOrder();
   };
@@ -184,9 +187,10 @@ export const useCommerceLayer = () => {
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
       const orderId = await getOrderId();
+
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
-        billingAddress ? client.addresses.create(shippingAddress) : undefined,
+        ... billingAddress ? [client.addresses.create(billingAddress)] : [],
       ]);
 
       const orderUpdate = await client.orders.update(
@@ -202,7 +206,7 @@ export const useCommerceLayer = () => {
               type: "addresses",
             },
           }),
-          ...(!billingAddrResult && {
+          ...(!billingAddrResult?.id && {
             _billing_address_same_as_shipping: true,
           }),
           metadata: {
@@ -214,6 +218,7 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
+      console.log('billingAddrResult?.id',billingAddrResult?.id, order.billing_address);      
 
       setOrder(orderUpdate);
     },
@@ -242,6 +247,25 @@ export const useCommerceLayer = () => {
     [order, client, getOrderId]
   );
 
+  const placeOrder = useCallback(
+    async () => {
+      const id = await getOrderId();
+      const result = await client.orders.update({
+        id,
+        _place: true
+      }, DEFAULT_ORDER_PARAMS);
+
+      setOrder(result);
+    },
+    [client, getOrderId]
+  );
+
+  const getPaymentMethods = useCallback(async () => {
+    const orderId = await getOrderId();
+
+    return client.orders.available_payment_methods(orderId);
+  }, [client, getOrderId]);
+
   return {
     isError,
     isLoading,
@@ -256,6 +280,8 @@ export const useCommerceLayer = () => {
     addAddresses,
     getAddresses,
     updateMetadata,
+    placeOrder,
+    getPaymentMethods
   };
 };
 

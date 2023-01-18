@@ -1,11 +1,8 @@
-export interface ITextBox {
-    id?: string,
-    name?: string,
-    type?: string,
+import { DetailedHTMLProps, InputHTMLAttributes } from "react";
+
+export interface ITextBox extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     label?: string,
-    value?: string | number,
-    placeholder?: string,
-    onChange?: (e: any) => void,
+    htmlForLabel?:string,
 }
 
 export const dataTextBox: ITextBox = {

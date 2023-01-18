@@ -6,13 +6,15 @@ export interface IHeadingCard {
   title?: string;
   icon?: string;
   classes?: string;
+  isCheck?: boolean
 }
 
 const HeadingCard: React.FC<IHeadingCard> = ({
   children,
   title,
   icon,
-  classes
+  classes,
+  isCheck
 }) => {
   return (
     <div className={classNames("w-full rounded-xl shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)]", classes)}>
@@ -24,7 +26,7 @@ const HeadingCard: React.FC<IHeadingCard> = ({
           <span>{title}</span>
         </div>
         <span className="flex text-neutral-30 items-center shrink-0 w-[34px] h-[34px]">
-          <Icon icon="check" className="w-full h-full" aria-hidden="true" />
+          <Icon icon={isCheck ? 'check' : 'loader'}className="w-full h-full" aria-hidden="true" />
         </span>
       </div>
       <div id="Content" className="p-6">

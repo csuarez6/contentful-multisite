@@ -1,4 +1,5 @@
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import { classNames } from "@/utils/functions";
 import Image from "next/image";
 import { useContext, useMemo } from "react";
 import CheckoutContext from "../../../context/Checkout";
@@ -9,7 +10,7 @@ interface IChekoutLayoutProps {
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { order } = useContext(CheckoutContext);
-  
+
   const products = useMemo(() => {
     if (!order?.line_items) return [];
     return order.line_items;
@@ -22,24 +23,66 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     [order]
   );
 
+  const onPlaceOrder = async () => {
+    try {
+      // await placeOrder()
+      window.location.href="https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
+    } catch (error) {
+      console.error(error);
+      alert('Error al Realizar el pedido');
+    }
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <div>{children}</div>
-      <div>
-        <h2>Total</h2>
-        {order?.formatted_total_amount_with_taxes}
-        <br />
-        Productos
-        {products?.map((product, i) => (
-          <figure key={i} className="max-w-max">
-            <Image alt={product.name} src={product.image_url} width="200" height="200" />
-          </figure>
-        ))}
-        <br />
-        Cantidad: {order?.skus_count}
-        {isComplete && <button className="p-4 bg-yellow-400">Comprar</button>}
+    <>
+      <div className="grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
+        <div className="col-span-2">{children}</div>
+        <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
+          <div className="flex flex-col gap-[17px] w-full h-full text-justify">
+            <h4 className="text-blue-dark">Detalle de tu pedido</h4>
+            {products?.map((product, i) => (
+              <div className="flex justify-center" key={i}>
+                <figure className={classNames("w-full relative aspect-[214/214]")}>
+                  <Image
+                    src={product?.image_url}
+                    alt={product?.name}
+                    className="h-full w-full object-cover"
+                    fill
+                  />
+                </figure>
+              </div>
+            ))}
+            <div className="p-5 flex flex-col gap-3">
+              <p className="text-neutral-20">Productos</p>
+              {products?.map((product, i) => (
+                <div key={i}>
+                  <div className="relative">
+                    <div className="grid grid-cols-2">
+                      <p className="">{product.name}</p>
+                      <span className="text-center text-blue-dark">{product?.formatted_total_amount}</span>
+                    </div>
+                    <div className="grid grid-cols-2">
+                      <p>Cantidad</p>
+                      <span className="text-center text-blue-dark">{product.quantity}</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 bg-neutral-90 rounded justify-items-center p-1 mt-[17px]">
+                    <p className="font-bold">TOTAL</p>
+                    <span className="font-bold">{product?.formatted_total_amount}</span>
+                  </div>
+                  {isComplete && (
+                    <button onClick={onPlaceOrder} className="button button-primary w-full mt-[17px]">
+                      Comprar
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
       </div>
-    </div>
+    </>
+
   );
 };
 

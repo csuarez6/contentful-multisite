@@ -8,6 +8,8 @@ import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "src/context/Checkout";
 import { useLastPath } from "src/hooks/utils/useLastPath";
 import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
+import TextBox from "@/components/atoms/input/textbox/TextBox";
+import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 
 interface ICustomer {
   firstName: string;
@@ -66,7 +68,7 @@ const CheckoutPersonalInfo = () => {
     try {
       await addCustomer(data);
       await handleNext();
-      
+
     } catch (error) {
       alert(error.message);
     }
@@ -86,36 +88,78 @@ const CheckoutPersonalInfo = () => {
 
   return (
     <>
-      <h2>
-        <span>Ingresar datos personales</span>
-        <input type="checkbox" checked={isCompleted} readOnly />
-      </h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="firstName">Nombre</label>
-        <input className="bg-sky-200" {...register("firstName")} id="firstName" />
-        <p className="text-red-600">{errors.firstName?.message}</p>
-        
-        <label htmlFor="lastName">Apellido</label>
-        <input className="bg-sky-200" {...register("lastName")} id="lastName" />
-        <p className="text-red-600">{errors.lastName?.message}</p>
-
-        <label htmlFor="cellPhone">Escríbe tu número de celular</label>
-        <input
-          className="bg-sky-200"
-          {...register("cellPhone")}
-          id="cellPhone"
-        />
-        <p className="text-red-600">{errors.cellPhone?.message}</p>
-
-        <label htmlFor="email">Correo electronico</label>
-        <input className="bg-sky-200" {...register("email")} id="email" />
-        <p className="text-red-600">{errors.email?.message}</p>
-
-        <button type="button" className="mr-4" onClick={handlePrev}>
-          Volver
-        </button>
-        <button type="submit">Continuar</button>
-      </form>
+      <HeadingCard
+        classes="col-span-2"
+        title="2. Ingresar datos personales"
+        icon="location"
+        isCheck={isCompleted}
+      >
+        <div className="bg-white rounded-lg">
+          <form className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="w-full">
+              <TextBox
+                id="firstName"
+                name="firstName"
+                className="algo"
+                label="Escribe tu apellido"
+                placeholder="Nombre"
+                htmlForLabel="firstName"
+                {...register("firstName")}
+              />
+              {
+                errors.firstName?.message && <p className="text-red-600 mt-1">{errors.firstName?.message}</p>
+              }
+            </div>
+            <div className="w-full">
+              <TextBox
+                id="lastName"
+                name="lastName"
+                htmlForLabel="lastName"
+                label="Escribe tu apellido"
+                placeholder="Apellido"
+                {...register("lastName")}
+              />
+              {
+                errors.lastName?.message && <p className="text-red-600 mt-1">{errors.lastName?.message}</p>
+              }
+            </div>
+            <div className="w-full">
+              <TextBox
+                id="cellPhone"
+                type="number"
+                name="cellPhone"
+                label="Escribe tu numero de celular"
+                placeholder="000 000 0000"
+                htmlForLabel="cellPhone"
+                {...register("cellPhone")}
+              />
+              {
+                errors.cellPhone?.message && <p className="text-red-600 mt-1">{errors.cellPhone?.message}</p>
+              }
+            </div>
+            <div className="w-full">
+              <TextBox
+                id="email"
+                type="email"
+                name="email"
+                label="Escribe tu email"
+                placeholder="Email"
+                htmlForLabel="email"
+                {...register("email")}
+              />
+              {
+                errors.email?.message && <p className="text-red-600 mt-1">{errors.email?.message}</p>
+              }
+            </div>
+            <div className="flex justify-end gap-3 w-full">
+              <button className="button button-outline" type="button" onClick={handlePrev}>
+                Volver
+              </button>
+              <button className="button button-primary" type="submit">Continuar</button>
+            </div>
+          </form>
+        </div>
+      </HeadingCard>
     </>
   );
 };

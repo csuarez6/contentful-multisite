@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {
   IProductOverviewDetails,
-  // PaymentMethodType,
+  PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
 import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
@@ -18,7 +18,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
   price,
   details,
-  // onBuy,
+  onBuy,
   features,
   imagesCollection,
   priceBefore,
@@ -29,6 +29,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   rating,
 }) => {
   return (
+
     <section className="section bg-white">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col lg:flex-row 2xl:gap-9 gap-4">
@@ -161,11 +162,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            // if (onBuy)
-                            //   onBuy(
-                            //     PaymentMethodType.pse,
-                            //     sku
-                            //   );
+                            if (onBuy)
+                              onBuy(
+                                PaymentMethodType.pse,
+                                "CAL CPG-7TN GN DISP BL"
+                              );
                           }}
                         >
                           Comprar con PSE
