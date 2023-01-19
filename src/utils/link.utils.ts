@@ -19,7 +19,7 @@ const generateFullUrl = (link: string) => {
 export const getUrlPath = (content: GetUrlPathProps): string => {
   const re = new RegExp(`^${HOME_URL_PATH}`);
 
-  let urlPath = null
+  let urlPath = null;
 
   if (content?.internalLink?.urlPath) {
     urlPath = content.internalLink.urlPath.replace(re, '');
