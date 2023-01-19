@@ -51,7 +51,6 @@ export const useCommerceLayer = () => {
   useEffect(() => {
     (async () => {
       try {
-        console.log('NEXT_PUBLIC_COMMERCELAYER_ENDPOINT', publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE);
         const { accessToken } = await getSalesChannelToken({
           endpoint: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
           clientId: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
@@ -66,7 +65,7 @@ export const useCommerceLayer = () => {
         setClient(CommerceLayer({ accessToken, organization: "vanti-poc" }));
       } catch (error) {
         setError(error);
-        console.error(error);
+        console.error('Error at: useCommerceLayer getSalesChannelToken', error);
       } finally {
         setIsLoading(false);
       }
@@ -102,7 +101,7 @@ export const useCommerceLayer = () => {
         const order = await getOrder();
         setOrder(order);
       } catch (error) {
-        console.error(error);
+        console.error('Error at: useCommerceLayer getOrder, setOrder', error);
       }
     })();
   }, [client, getOrder, isLoading, isError]);
@@ -223,7 +222,6 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      console.log('billingAddrResult?.id',billingAddrResult?.id, order.billing_address);      
 
       setOrder(orderUpdate);
     },

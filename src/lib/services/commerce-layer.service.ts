@@ -56,7 +56,6 @@ export const createCustomer = async ({ email, password, name, lastname, document
         notifications: notifications,
       }
     });
-    console.log(`Customer: ${createCustomer.id} created succefully`);
     return createCustomer; // this will return the created resource object
 
   } catch (error) {

@@ -4,9 +4,12 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from "next";
+import { useContext } from "react";
+import { useRouter } from 'next/router';
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
+import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
@@ -17,26 +20,25 @@ import {
 import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
-import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import CheckoutContext from 'src/context/Checkout';
-import { useContext } from "react";
-import { useRouter } from 'next/router';
 
 const CustomPage: NextPageWithLayout = (props: IPage) => {
   const router = useRouter();
-  const { blocksCollection, __typename } = props;
   const { addToCart } = useContext(CheckoutContext);
+  
+  const { blocksCollection, __typename } = props;
+
   const buyHandlerMap = {
     [PaymentMethodType.pse]: () => {
       router.push('/checkout/pse/verify');
     }
   };
-  const onBuyHandler = (type: PaymentMethodType, skuCode: string) => {
-    console.log("skuCode", skuCode);
-    addToCart(skuCode);
+
+  const onBuyHandler = async (type: PaymentMethodType, skuCode: string) => {
+    await addToCart(skuCode);
     if (buyHandlerMap[type]) buyHandlerMap[type]();
   };
-  console.log(props);
+
   return __typename == CONTENTFUL_TYPENAMES.PRODUCT
     ? <ProductOverview {...props} onBuy={onBuyHandler} />
     : <>{jsonToReactComponents(blocksCollection.items)}</>;
@@ -60,7 +62,6 @@ export const getStaticProps: GetStaticProps = async (
     context.preview ?? false
   );
 
-  // console.log('Página cargada');
   if (!pageContent) return { notFound: true };
 
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
@@ -77,7 +78,7 @@ export const getStaticProps: GetStaticProps = async (
         name: pageContent.name,
         footerInfo,
         headerInfo,
-        menuNavkey:context.params.slug[0]
+        menuNavkey: context.params.slug[0]
       },
     },
     revalidate: 10,

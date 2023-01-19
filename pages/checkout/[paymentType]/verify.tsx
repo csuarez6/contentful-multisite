@@ -66,15 +66,15 @@ const CheckoutVerify = () => {
                 <tr key={product.id} className="border-b border-grey-60">
                   <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                     <div className="flex gap-3 flex-col xs:flex-row">
-                        <figure className="relative shrink-0">
-                          <Image
-                            src={product?.image_url}
-                            alt={product?.name}
-                            width={64}
-                            height={64}
-                            priority
-                          />
-                        </figure>
+                      <figure className="relative shrink-0">
+                        <Image
+                          src={product?.image_url}
+                          alt={product?.name}
+                          width={64}
+                          height={64}
+                          priority
+                        />
+                      </figure>
                       <div className="text-grey-30">{product?.name}</div>
                     </div>
                     <div className="mt-2 text-blue-dark sm:hidden">

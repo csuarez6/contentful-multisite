@@ -8,6 +8,7 @@ import PageLayout from "@/components/layouts/page-layout/PageLayout";
 import "../styles/globals.css";
 import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
+import "../styles/richtext.css";
 import CheckoutProvider from "src/context/Checkout/Provider";
 
 // eslint-disable-next-line @typescript-eslint/ban-types

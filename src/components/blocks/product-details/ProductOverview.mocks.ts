@@ -52,7 +52,7 @@ const data: IProductOverviewDetails = {
     href: '#',
     name: 'Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto'
   },
-  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
   productFeatures: RICHTEXT_SHORT_SIMPLE,
   paymentMethods: [
     {
@@ -68,7 +68,11 @@ const data: IProductOverviewDetails = {
       type: PaymentMethodType.factura
     }
   ],
-  features: RICHTEXT_SHORT_SIMPLE
+  features: RICHTEXT_SHORT_SIMPLE,
+  warranty: {
+    name: "name",
+    description: RICHTEXT_SHORT_SIMPLE
+  }
   // features: {
   //   main: [
   //     {

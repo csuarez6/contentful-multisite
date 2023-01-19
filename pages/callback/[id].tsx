@@ -157,11 +157,11 @@ const CallbackPage = () => {
         })
         .catch(err => {
           setIsSuccess(false);
-          console.log(err);
+          console.error(err);
         })
         .finally(() => openModal());
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 

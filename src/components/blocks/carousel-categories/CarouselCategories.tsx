@@ -20,9 +20,7 @@ const iconRight: IIcon = {
   className: 'z-10'
 };
 
-const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
-  console.log(view);
-  
+const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {  
   return (
     <section className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
       {(title || description) && (

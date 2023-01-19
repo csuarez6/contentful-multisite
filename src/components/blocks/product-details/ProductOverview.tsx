@@ -29,6 +29,7 @@ const iconCallback: IIcon = {
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
+  promoDescription,
   price,
   productFeatures,
   onBuy,
@@ -40,6 +41,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   sku,
   state,
   rating,
+  warranty
 }) => {
   return (
 
@@ -157,12 +159,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <Icon {...iconInvoice} />
                     </div>
                   </div>
-                  {price && <h1 className="text-[#035177]">${price} Hoy</h1>}
-                  {productsQuantity && (
-                    <div className="text-grey-30 text-sm">
-                      <p>{productsQuantity} unidades disponibles</p>
-                    </div>
-                  )}
+                  {/* {price && */}
+                  <h1 className="text-[#035177]">${price ?? 0} Hoy</h1>
+                  {/* } */}
+                  {/* {productsQuantity && ( */}
+                  <div className="text-grey-30 text-sm">
+                    <p>{productsQuantity ?? 0} unidades disponibles</p>
+                  </div>
+                  {/* )} */}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="flex flex-col gap-[15px]"
@@ -223,20 +227,22 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           </p>
                         </div>
                       </li>
-                      <li className="flex flex-col gap-2">
-                        <p className="text-size-subtitle1 text-blue-dark">Garantía</p>
-                        <div className="px-3 py-2">
-                          <p className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon icon="expert" className="w-full h-full flex items-center text-neutral-30" />
-                            </span>
-                            <span className="text-size-p2 leading-[1.2] text-grey-30 grow">1 año con el fabricante</span>
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon icon="arrow-right" className="w-full h-full flex items-center text-neutral-30" />
-                            </span>
-                          </p>
-                        </div>
-                      </li>
+                      {warranty && (
+                        <li className="flex flex-col gap-2">
+                          <p className="text-size-subtitle1 text-blue-dark">Garantía</p>
+                          <div className="px-3 py-2">
+                            <p className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
+                              <span className="flex items-center w-6 h-6 shrink-0">
+                                <Icon icon="expert" className="w-full h-full flex items-center text-neutral-30" />
+                              </span>
+                              <span className="text-size-p2 leading-[1.2] text-grey-30 grow">{warranty.name}</span>
+                              <span className="flex items-center w-6 h-6 shrink-0">
+                                <Icon icon="arrow-right" className="w-full h-full flex items-center text-neutral-30" />
+                              </span>
+                            </p>
+                          </div>
+                        </li>
+                      )}
                     </ul>
                   </form>
                 </div>
@@ -245,27 +251,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           </div>
         </section>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="flex flex-col gap-y-12 w-3/5">
           {features && (
             <div className="grid gap-9 col-span-2">
               <h2 className="text-blue-dark">Características principales</h2>
-              <ul className="pl-4">
+              <div className="features-productOverview">
                 {documentToReactComponents(features.json)}
-              </ul>
-              {/* <table className="table-auto">
-                <tbody>
-                  {features.main.map((item) => (
-                    <tr className="odd:bg-neutral-90" key={item.name}>
-                      <td className="px-3 py-4 text-grey-30 text-size-subtitle1">
-                        {item.name}
-                      </td>
-                      <td className="px-3 py-4 text-grey-30 text-size-p1">
-                        {item.description}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table> */}
+              </div>
               <div className="flex">
                 <button className="button button-outline">
                   Ver más características
@@ -274,33 +266,26 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
           )}
 
-          {features && (
-            <div className="grid gap-9 mt-6">
-              <h2 className="text-blue-dark">Descripción</h2>
-              {/* <ul className="pl-4">
-                {features.description.map((item) => (
-                  <li className="list-disc" key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul> */}
-            </div>
-          )}
+          {(promoDescription || warranty) &&
+            <div className="grid grid-cols-2 gap-6">
+              {promoDescription && (
+                <div className="grid gap-8">
+                  <h2 className="text-blue-dark">Descripción</h2>
+                  <div className="promoDescription-productOverview">
+                    {documentToReactComponents(promoDescription.json)}
+                  </div>
+                </div>
+              )}
 
-          {features && (
-            <div className="grid gap-9 mt-6">
-              <h2 className="text-blue-dark">Garantía</h2>
-              {/* <ul className="pl-4">
-                {features.warranty.map((item) => (
-                  <li
-                    className="list-disc"
-                    key={item}
-                    dangerouslySetInnerHTML={{ __html: item }}
-                  />
-                ))}
-              </ul> */}
+              {warranty && (
+                <div className="grid gap-8">
+                  <h2 className="text-blue-dark">Garantía</h2>
+                  {documentToReactComponents(warranty.description.json)}
+                </div>
+              )}
             </div>
-          )}
+          }
+
         </div>
       </div>
     </section>

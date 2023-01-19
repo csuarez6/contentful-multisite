@@ -1,0 +1,20 @@
+/* productOverview */
+.features-productOverview table {
+    @apply table-auto w-full;
+}
+
+.features-productOverview table tbody tr:nth-child(odd) {
+    @apply bg-neutral-90;
+}
+
+.features-productOverview table tbody tr td {
+    @apply px-3 py-4 text-grey-30 text-size-subtitle1;
+}
+
+.promoDescription-productOverview ul {
+    @apply pl-4;
+}
+
+.promoDescription-productOverview ul li {
+    @apply list-disc;
+}

@@ -2,6 +2,7 @@ import { ISelect } from '@/components/atoms/select-atom/SelectAtom';
 import { ICarousel } from '@/components/organisms/carousel/Carousel';
 import { IImageAsset } from './assets-cf.interface';
 import { ILink } from './menu-cf.interface';
+import { IRichText } from './richtext-cf.interface';
 
 
 export enum PaymentMethodType {
@@ -50,12 +51,16 @@ export interface IProductDetails {
 export interface IProductOverviewDetails {
   promoTitle?: string;
   price?: string;
-  description?: string;
+  promoDescription?: any;
   images?: IImageAsset[];
   productFeatures?: any;
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: any;
+  warranty?: {
+    name?: string;
+    description?: IRichText;
+  };
   cta?: ILink;
   state?: string;
   promotion?: string;
