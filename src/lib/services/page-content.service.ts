@@ -6,6 +6,7 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 
 import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
+import { getCommercelayerProduct } from './commerce-layer.service';
 
 const REFERENCES = ['blocksCollection', 'mainNavCollection'];
 
@@ -64,6 +65,11 @@ const getPageContent = async (urlPath, preview = false) => {
   if (REFERENCES.length > 0) {
     const referencesContent = await getReferencesContent(pageContent, REFERENCES, preview);
     _.merge(pageContent, referencesContent);
+  }
+
+  if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
+    const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
+    _.merge(pageContent, commercelayerProduct);
   }
 
   return pageContent;

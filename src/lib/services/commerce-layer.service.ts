@@ -1,6 +1,6 @@
 import CommerceLayer from '@commercelayer/sdk';
 import Cookies from "js-cookie";
-import { getIntegrationToken } from "@commercelayer/js-auth";
+import { getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
 export interface ICustomer {
   email: string;
@@ -15,7 +15,7 @@ export interface ICustomer {
   notifications: boolean,
 }
 
-export const getToken = async () => {
+export const getAppToken = async () => {
   let token = "";
   const getCookieToken = Cookies.get("clIntegrationToken");
   if (!getCookieToken && process.env.COMMERCELAYER_CLIENT_ID && process.env.COMMERCELAYER_CLIENT_SECRET && process.env.COMMERCELAYER_ENDPOINT) {
@@ -34,14 +34,32 @@ export const getToken = async () => {
   return token;
 };
 
-const getCommerlayerClient = async () => CommerceLayer({
+export const getMerchantToken = async () => {
+  let token = '';
+
+  const { accessToken } = await getSalesChannelToken({
+    endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+    clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+    scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
+  });
+
+  if (accessToken) {
+    token = accessToken;
+  }
+
+  return token;
+};
+
+const getCommerlayerClient = async (token) => CommerceLayer({
   organization: 'vanti-poc',
-  accessToken: await getToken(),
+  accessToken: token,
 });
 
 export const createCustomer = async ({ email, password, name, lastname, documentType, document, phone, accountNumber, privacyPolicy, notifications }: ICustomer) => {
   try {
-    const cl = await getCommerlayerClient();
+    const token = await getAppToken();
+    const cl = await getCommerlayerClient(token);
+
     const createCustomer = await cl.customers.create({
       email: email,
       password: password,
@@ -61,5 +79,34 @@ export const createCustomer = async ({ email, password, name, lastname, document
   } catch (error) {
     console.error('error!! ', error);
   }
+};
 
+export const getCommercelayerProduct = async (skuCode: string) => {
+  let product = null;
+  try {
+    const token = await getMerchantToken();
+    const client = await getCommerlayerClient(token);
+
+    const sku = (
+      await client.skus.list({
+        filters: { code_eq: skuCode },
+        include: ['prices', 'stock_items'],
+        fields: ['id', 'prices', 'stock_items'],
+      })
+    ).first();
+
+    if (sku) {
+      product = {
+        price: sku?.prices[0]?.formatted_amount,
+        priceBefore: sku?.prices[0]?.formatted_compare_at_amount,
+        productsQuantity: sku?.stock_items[0]?.quantity
+      };
+    }
+
+
+  } catch (error) {
+    console.error('Error retrieving SKU: ', error);
+  }
+
+  return product;
 };

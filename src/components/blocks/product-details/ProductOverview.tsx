@@ -151,7 +151,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   <div className="flex gap-2 justify-between">
                     {priceBefore && (
                       <h4 className="line-through text-[#035177]">
-                        ${priceBefore} Antes
+                        {priceBefore} Antes
                       </h4>
                     )}
                     <div className="flex gap-1">
@@ -159,14 +159,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <Icon {...iconInvoice} />
                     </div>
                   </div>
-                  {/* {price && */}
-                  <h1 className="text-[#035177]">${price ?? 0} Hoy</h1>
-                  {/* } */}
-                  {/* {productsQuantity && ( */}
+                  <h1 className="text-[#035177]">{price ?? 0} Hoy</h1>
+
                   <div className="text-grey-30 text-sm">
                     <p>{productsQuantity ?? 0} unidades disponibles</p>
                   </div>
-                  {/* )} */}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="flex flex-col gap-[15px]"

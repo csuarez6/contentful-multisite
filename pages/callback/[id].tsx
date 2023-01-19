@@ -11,7 +11,7 @@ import { mockPageLayoutProps } from '@/components/layouts/page-layout/PageLayout
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import Icon from "@/components/atoms/icon/Icon";
-import { useLastPath } from "src/hooks/utils/useLastPath";
+import { useLastPath } from "@/hooks/utils/useLastPath";
 
 const FinishModal = ({ isOpen, closeModal, isSuccess }) => (
   <>

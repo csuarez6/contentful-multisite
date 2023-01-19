@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
 import { mockProductOverviewProps } from "@/components/blocks/product-details/ProductOverview.mocks";
 import { IProductDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
-import CheckoutContext from 'src/context/Checkout';
+import CheckoutContext from '@/context/Checkout';
 import { mockPageLayoutProps } from '@/components/layouts/page-layout/PageLayout.mocks';
 
 const ProductDetail = () => {

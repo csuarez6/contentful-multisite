@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useRouter } from 'next/router';
-import useCommerceLayer from 'src/hooks/useCommerceLayer';
+import useCommerceLayer from '@/hooks/useCommerceLayer';
 import CheckoutContext, { IContextCheckout } from ".";
 import flows from './flows';
 

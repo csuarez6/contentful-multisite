@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
@@ -20,9 +20,9 @@ import {
 import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
-import CheckoutContext from 'src/context/Checkout';
+import CheckoutContext from "@/context/Checkout";
 
-const CustomPage: NextPageWithLayout = (props: IPage) => {
+const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
   const router = useRouter();
   const { addToCart } = useContext(CheckoutContext);
   

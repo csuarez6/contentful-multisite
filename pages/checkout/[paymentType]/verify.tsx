@@ -1,10 +1,10 @@
 import { ReactElement, useContext, useMemo } from "react";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
-import CheckoutContext from "src/context/Checkout";
+import CheckoutContext from "@/context/Checkout";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useLastPath } from "src/hooks/utils/useLastPath";
+import { useLastPath } from "@/hooks/utils/useLastPath";
 import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 

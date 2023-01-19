@@ -9,7 +9,7 @@ import "../styles/globals.css";
 import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
 import "../styles/richtext.css";
-import CheckoutProvider from "src/context/Checkout/Provider";
+import CheckoutProvider from "@/context/Checkout/Provider";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
