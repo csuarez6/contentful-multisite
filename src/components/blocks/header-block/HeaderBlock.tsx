@@ -16,22 +16,28 @@ const HeaderBlock: React.FC<INavigation> = ({
   mainNavCollection,
   secondaryNavCollection,
   utilityNavCollection,
-  menuNavkey= null
+  menuNavkey = null,
+  overrideNavCollection = null,
 }) => {
-  
+
   const { asPath } = useRouter();
-  if( menuNavkey === null ){
+  if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
   }
 
   let mainNavCollectionMenu = mainNavCollection?.items.find(
-    (el) => el.slug === menuNavkey 
+    (el) => el.slug === menuNavkey
   )?.mainNavCollection;
 
-  if(!mainNavCollectionMenu?.items?.length ){
+
+  if (!mainNavCollectionMenu?.items?.length) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
-      (el) => el.slug === HOME_SLUG 
+      (el) => el.slug === HOME_SLUG
     ).mainNavCollection;
+  }
+
+  if (overrideNavCollection?.items?.length) {
+    mainNavCollectionMenu = overrideNavCollection;
   }
 
 

@@ -20,6 +20,7 @@ const AuxCustomContent = `
     }
   }
   externalLink
+  linkParameters
   ctaLabel
   pretitle
   promoTitle

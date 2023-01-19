@@ -19,22 +19,24 @@ const generateFullUrl = (link: string) => {
 export const getUrlPath = (content: GetUrlPathProps): string => {
   const re = new RegExp(`^${HOME_URL_PATH}`);
 
+  let urlPath = null
+
   if (content?.internalLink?.urlPath) {
-    const urlPath = content.internalLink.urlPath.replace(re, '');
-    return /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
+    urlPath = content.internalLink.urlPath.replace(re, '');
+    urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
-  if (content?.externalLink) {
-    const urlPath = content?.externalLink;
-    return /^[http|mailto|tel|#]/.test(urlPath) ? urlPath : generateFullUrl(urlPath);
+  if (!urlPath && content?.externalLink) {
+    urlPath = content?.externalLink;
+    urlPath = /^[http|mailto|tel|#]/.test(urlPath) ? urlPath : generateFullUrl(urlPath);
   }
 
-  if (content?.urlPath) {
-    const urlPath = content.urlPath.replace(re, '');
-    return /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
+  if (!urlPath && content?.urlPath) {
+    urlPath = content.urlPath.replace(re, '');
+    urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
-  return '/';
+  return urlPath ? urlPath + (content.linkParameters ?? ''): '/';
 };
 
 export const getLinkProps = (content: GetUrlPathProps) => {

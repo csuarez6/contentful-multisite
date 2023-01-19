@@ -20,7 +20,7 @@ const LinkElement = ({ item, isOpen }) => {
         </span>
       )}
       {item.promoTitle ?? item.name}
-      {item.mainNavCollection?.items?.length > 0 && (
+      {(item.mainNavCollection?.items?.length > 0 && item.__typename !== 'AuxCustomContent') && (
         <span
           className={classNames(
             isOpen ? "transform rotate-180" : "",

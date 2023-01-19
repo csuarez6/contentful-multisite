@@ -7,7 +7,7 @@ import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
 import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 
-const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children }) => {
+const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection }) => {
   const { asPath } = useRouter() ?? { asPath: "/" };
   const title = `${layout.name} - Grupo Vanti`;
   
@@ -48,7 +48,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
       </Head>
 
       <div className="min-h-screen flex flex-col">
-        <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} />
+        <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} />
 
         <main className="flex-grow overflow-hidden">
           <div className="xl:container mx-auto px-3 sm:px-5 lg:px-8 2xl:px-28">

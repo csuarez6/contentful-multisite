@@ -7,7 +7,7 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
 
-const REFERENCES = ['blocksCollection'];
+const REFERENCES = ['blocksCollection', 'mainNavCollection'];
 
 const getPageContent = async (urlPath, preview = false) => {
   if (!urlPath || urlPath === '') {

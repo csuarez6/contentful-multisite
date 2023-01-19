@@ -31,4 +31,7 @@ export interface INavigation {
     items?: IPromoContent[];
   };
   menuNavkey?: string;
+  overrideNavCollection?: {
+    items?: Array<IPage & IPromoContent & INavigation>;
+  };
 };

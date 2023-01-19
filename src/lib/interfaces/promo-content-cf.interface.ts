@@ -37,6 +37,7 @@ export interface IPromoContent {
     tags?: ITag[];
     externalLink?: string;
     internalLink?: IPage;
+    linkParameters?: string;
     ctaLabel?: string;
     slug?: string;
 }
