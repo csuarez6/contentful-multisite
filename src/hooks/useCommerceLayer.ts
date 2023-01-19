@@ -1,3 +1,4 @@
+import getConfig from 'next/config';
 import CommerceLayer, {
   AddressCreate,
   CommerceLayerClient,
@@ -37,6 +38,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   },
 };
 
+const { publicRuntimeConfig } = getConfig();
+
 export const useCommerceLayer = () => {
   const [client, setClient] = useState<CommerceLayerClient>();
   const [error, setError] = useState<unknown>();
@@ -48,15 +51,17 @@ export const useCommerceLayer = () => {
   useEffect(() => {
     (async () => {
       try {
+        console.log('NEXT_PUBLIC_COMMERCELAYER_ENDPOINT', publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE);
         const { accessToken } = await getSalesChannelToken({
-          endpoint: process.env.COMMERCELAYER_ENDPOINT,
-          clientId: process.env.COMMERCELAYER_CLIENT_ID,
-          scope: process.env.COMMERCELAYER_MARKET_SCOPE, 
+          endpoint: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+          clientId: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+          scope: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE, 
         });
         if (!accessToken) {
           setError(new Error("CREDENTIALS_ERROR"));
           return;
         }
+
 
         setClient(CommerceLayer({ accessToken, organization: "vanti-poc" }));
       } catch (error) {
@@ -69,7 +74,7 @@ export const useCommerceLayer = () => {
   }, []);
 
   const getOrderId = useCallback(async () => {
-    if (!client.orders) return;
+    if (!client?.orders) return;
     
     const orderId = localStorage.getItem("orderId");
     if (!orderId) {

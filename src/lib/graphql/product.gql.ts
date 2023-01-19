@@ -40,7 +40,12 @@ const ProductQuery = `
   }
   size
   capacity
-  warranty
+  warranty {
+    name
+    description {
+      ${RichtextQuery}
+    }
+  }
 `;
 
 export default ProductQuery;
