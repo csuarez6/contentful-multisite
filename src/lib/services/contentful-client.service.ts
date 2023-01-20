@@ -42,7 +42,17 @@ const contentfulClient = (preview = false) => {
     link: appLink,
     cache: new InMemoryCache({
       resultCaching: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production'
-    })
+    }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'ignore'
+      },
+      query: {
+        fetchPolicy: 'no-cache',
+        errorPolicy: 'all'
+      }
+    }
   });
 };
 

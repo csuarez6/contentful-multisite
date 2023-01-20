@@ -24,6 +24,8 @@ const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
 //   return <PageLayout {...pageProps}>{page}</PageLayout>;
 // };
 
+export const revalidate = 60;
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const pageContent = await getPageContent(
     '/',
@@ -42,7 +44,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         headerInfo,
       },
     },
-    revalidate: 10,
+    revalidate,
   };
 };
 

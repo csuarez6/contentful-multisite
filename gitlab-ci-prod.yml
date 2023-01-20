@@ -28,6 +28,7 @@ Test_Linter:
   script:
     - pnpm lint
 
+  when: manual
   only:
     refs:
       - main
@@ -100,6 +101,28 @@ Delete_Preview_APP:
     - tags
   needs: ["Generate_Preview_APP"]
 
+Create_Release_APP:
+  image: "aplyca/semantic-release"
+  stage: Deploy
+  cache: {}
+
+  before_script:
+    - apk add --quiet curl
+  script:
+    - semantic-release
+  after_script:
+    - ./etc/slack/notificationStack.sh -v
+
+  when: manual
+  only:
+    refs:
+      - main
+    changes: *changes
+  except:
+    - merge_requests
+    - tags
+  needs: ["Test_Linter"]
+
 Deploy_Production_APP:
   stage: Deploy
 
@@ -120,15 +143,16 @@ Deploy_Production_APP:
     name: Production
     url: https://vanti.aplyca.com
 
-  when: on_success
+  when: manual
   only:
     refs:
-      - main
+      - tags
+    variables:
+      - $CI_COMMIT_REF_NAME =~ /^[0-9]+\.[0-9]+\.[0-9]+$/            
     changes: *changes
   except:
+    - main
     - merge_requests
-    - tags
-  needs: ["Test_Linter"]
 
 Delete_Preview_STORYBOOK:
   stage: Stop

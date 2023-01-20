@@ -49,6 +49,8 @@ export const getStaticPaths: GetStaticPaths = () => {
   return { paths, fallback: "blocking" };
 };
 
+export const revalidate = 60;
+
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ): Promise<GetStaticPropsResult<IPage>> => {
@@ -81,7 +83,7 @@ export const getStaticProps: GetStaticProps = async (
         menuNavkey: context.params.slug[0]
       },
     },
-    revalidate: 10,
+    revalidate,
   };
 };
 
