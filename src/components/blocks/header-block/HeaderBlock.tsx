@@ -21,8 +21,10 @@ const HeaderBlock: React.FC<INavigation> = ({
 }) => {
 
   const { asPath } = useRouter();
+  let firstPath = asPath.split('/')[1];
   if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
+    firstPath = 'home';
   }
 
   let mainNavCollectionMenu = mainNavCollection?.items.find(
@@ -39,6 +41,13 @@ const HeaderBlock: React.FC<INavigation> = ({
   if (overrideNavCollection?.items?.length) {
     mainNavCollectionMenu = overrideNavCollection;
   }
+  
+  if(!mainNavCollection?.items?.some((el) => el.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.slug === firstPath)){
+    firstPath = 'home';
+    mainNavCollectionMenu = mainNavCollection?.items.find(
+      (el) => el.slug === HOME_SLUG
+    ).mainNavCollection;
+  }
 
 
   return (
@@ -54,11 +63,11 @@ const HeaderBlock: React.FC<INavigation> = ({
                 className="relative flex justify-between gap-14 xl:gap-[76px] min-h-[42px] h-full"
               >
                 <ul className="relative flex gap-6 flex-nowrap grow">
-                  {mainNavCollection?.items?.map((item, index) => (
+                  {mainNavCollection?.items?.map((item, index) =>
                     <li className="flex items-center" key={item.sys.id}>
                       <CustomLink
                         className={classNames(
-                          item.slug === asPath
+                          item.slug === firstPath
                             ? "text-blue-dark border-lucuma"
                             : "text-neutral-30 border-transparent",
                           "hover:text-blue-dark pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -69,7 +78,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                         {item.promoTitle ?? item.name}
                       </CustomLink>
                     </li>
-                  ))}
+                  )}
                 </ul>
 
                 <ul className="relative flex gap-6 flex-nowrap">
@@ -77,7 +86,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                     <li className="flex items-center" key={item.sys.id}>
                       <CustomLink
                         className={classNames(
-                          item.slug === asPath
+                          item.slug === firstPath
                             ? "text-blue-dark border-lucuma"
                             : "text-neutral-30 border-transparent",
                           "hover:text-blue-dark pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
