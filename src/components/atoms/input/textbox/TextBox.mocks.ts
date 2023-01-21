@@ -3,6 +3,8 @@ import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 export interface ITextBox extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     label?: string,
     htmlForLabel?:string,
+    isError?: boolean,
+    errorMessage?: string,
 }
 
 export const dataTextBox: ITextBox = {

@@ -33,8 +33,8 @@ const SelectAtom = (
             {name && <input type="hidden" name={name} ref={ref} value={'selectedOption?.value'} />}
             <Listbox.Button className={
               classNames(
-                "flex gap-[10px] flex-nowrap p-3 bg-white border border-grey-60 rounded hover:border-grey-30 group",
-                open && "border-lucuma-60"
+                'flex gap-[10px] flex-nowrap p-3 bg-white border border-grey-60 rounded hover:border-grey-30 group',
+                open && 'border-lucuma-60'
               )}
             >
               <span className={classNames("grow text-left font-medium", selectedOption?.text ? "text-grey-30" : "text-grey-60")}>

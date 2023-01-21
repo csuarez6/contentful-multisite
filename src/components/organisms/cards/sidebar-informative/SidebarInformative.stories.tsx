@@ -1,10 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import CheckBox, { ICheckBox} from './CheckBox';
-import { dataCheckBox } from './CheckBox.mocks';
+import SidebarInformative from './SidebarInformative';
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { mockSidebarInformativeProps } from './SidebarInformative.mock';
 
 export default {
-    title: 'atoms/input/CheckBox',
-    component: CheckBox,
+    title: 'organisms/cards/SidebarInformative',
+    component: SidebarInformative,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},
     parameters: {
@@ -14,19 +15,16 @@ export default {
             },
         },
     },
-} as ComponentMeta<typeof CheckBox>;
+} as ComponentMeta<typeof SidebarInformative>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof CheckBox> = (args) => (
-    <CheckBox {...args} />
+const Template: ComponentStory<typeof SidebarInformative> = (args) => (
+    <SidebarInformative {...args} />
 );
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-    ...dataCheckBox,
-} as ICheckBox;
-
-
-
+    ...mockSidebarInformativeProps.data,
+} as IPromoBlock;

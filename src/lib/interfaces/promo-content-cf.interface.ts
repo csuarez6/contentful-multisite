@@ -40,6 +40,7 @@ export interface IPromoContent {
     linkParameters?: string;
     ctaLabel?: string;
     slug?: string;
+    isActive?: boolean;
 }
 
 export interface IPromoBlock extends IBlockProps {
