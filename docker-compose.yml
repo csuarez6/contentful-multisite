@@ -38,8 +38,12 @@ services:
       NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID: ${NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID:-}
       COMMERCELAYER_CLIENT_SECRET: ${COMMERCELAYER_CLIENT_SECRET:-}
       NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE: ${NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE:-}
+      SMTP_HOST: ${SMTP_HOST:-mailer}
+      SMTP_PORT: ${SMTP_HOST:-1025}
+      SMTP_USER: ${SMTP_HOST:-null}
+      SMTP_PASSWORD: ${SMTP_HOST:-null}
     networks:
-      public: ~
+      - public
     restart: unless-stopped
   storybook:
     container_name: ${APP_NAME:-VANTI-WEBCOMMERCE}-Storybook
@@ -64,7 +68,19 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-development}
     networks:
-      public: ~
+      - public
+    restart: unless-stopped
+  mailer:
+    container_name: ${APP_NAME:-VANTI-WEBCOMMERCE}-Mailer
+    hostname: mailer
+    image: mailhog/mailhog
+    tty: true
+    expose:
+      - 1025
+    ports:
+      - "${MAILER_PORT:-8025}:8025"
+    networks:
+      - public
     restart: unless-stopped
 
 # volumes:

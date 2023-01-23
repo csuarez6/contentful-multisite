@@ -1,11 +1,10 @@
 import { IProductDetails } from '@/lib/interfaces/product-cf.interface';
 import SelectAtom from "@/components/atoms/select-atom/SelectAtom";
 import FeaturedProductBlock from '../product-featured/FeaturedProductBlock';
-import { data } from "../product-featured/FeaturedProductBlock.mock";
 
-const ProductFilterBlock: React.FC<IProductDetails> = ({ dataSelect }) => {
+const ProductFilterBlock: React.FC<IProductDetails> = ({ products, dataSelect }) => {
     return (
-        <section className="container mx-auto">
+        <section className="w-full">
             <div className="flex md:justify-between">
                 <div className="flex gap-6">
                     {
@@ -17,7 +16,7 @@ const ProductFilterBlock: React.FC<IProductDetails> = ({ dataSelect }) => {
                     }
                 </div>
             </div>
-            <FeaturedProductBlock {...data} />
+            <FeaturedProductBlock {...products} />
         </section>
     );
 };

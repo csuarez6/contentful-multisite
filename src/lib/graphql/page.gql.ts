@@ -14,6 +14,9 @@ const PageQuery = `
       ...on BlockPromoContent {
         ${DefaultQuery}
       }
+      ...on BlockContentFilter {
+        ${DefaultQuery}
+      }
     }
   }
   promoTitle

@@ -1,3 +1,5 @@
+import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
+
 import AccordionBlock from "@/components/blocks/accordion-block/AccordionBlock";
 import LeftFeaturedBlock from "@/components/blocks/left-featured/LeftFeatured";
 import VerticalCardBlock from "@/components/blocks/vertical-card/VerticalCard";
@@ -15,8 +17,7 @@ import ProductFinancingBlock from "@/components/blocks/product-financing/Product
 import FuneralPlansBlock from "@/components/blocks/funeral-plans/FuneralPlans";
 import CarouselCategoriesBlock from "@/components/blocks/carousel-categories/CarouselCategories";
 import FeaturedTabsBlock from "@/components/blocks/featured-tabs/FeaturedTabs";
-
-import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
+import ContentFilter from "@/components/blocks/content-filter/ContentFilter";
 
 /**
  * Supports:
@@ -47,6 +48,7 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_CAROUSEL]: CarouselCategoriesBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS]: FeaturedTabsBlock
   },
+  [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: ContentFilter,
 };
 
 export const CHILDREN_KEYS_MAP = {};

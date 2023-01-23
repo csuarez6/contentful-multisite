@@ -1,6 +1,8 @@
 import { IProductDetails } from '@/lib/interfaces/product-cf.interface';
+import { data as productsData } from "../product-featured/FeaturedProductBlock.mock";
 
 const data: IProductDetails = {
+    products: productsData,
     dataSelect: [
         {
             listedContents: [

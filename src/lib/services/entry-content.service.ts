@@ -38,7 +38,8 @@ export const MAX_DEEPTH_RECURSION = 10;
 
 const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, actualDeepth = 1) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
-    throw new Error(`«blockInfo» are required or it's not defined`);
+    console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
+    return null;
   }
 
   let responseData = null;

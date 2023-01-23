@@ -39,8 +39,6 @@ const LinkElement = ({ item, isOpen }) => {
 };
 
 const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
-  console.log('menu =', mainNavCollection);
-  
   if (mainNavCollection.items?.length <= 0) return;
 
   return (

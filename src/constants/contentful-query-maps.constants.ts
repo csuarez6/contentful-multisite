@@ -5,6 +5,7 @@ import BlockPromoContentQuery from "@/lib/graphql/blocks/promo-content.gql";
 import AuxNavigationQuery from "@/lib/graphql/aux/navigation.gql";
 import AuxCustomContent from "@/lib/graphql/aux/custom-content.gql";
 import ProductQuery from '../lib/graphql/product.gql';
+import BlockContentFilterQuery from "@/lib/graphql/blocks/content-filter.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -18,6 +19,10 @@ const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: {
     queryName: 'blockPromoContent',
     query: BlockPromoContentQuery,
+  },
+  [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: {
+    queryName: 'blockContentFilter',
+    query: BlockContentFilterQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: {
     queryName: 'auxNavigation',

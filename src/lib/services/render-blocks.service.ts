@@ -17,6 +17,10 @@ const viewNoSupported = (blockTypeName, viewTypename = undefined) => {
 
 const jsonToReactComponents = (jsonItems, attachProps = {}) => {
   return jsonItems.map((item, key) => {
+    if (!item?.__typename) {
+      return viewNoSupported(`NonMappedBlock_${key}`);
+    }
+
     let view = BLOCKSVIEW_MAP[item.__typename];
 
     if (view && item?.view?.__typename) {

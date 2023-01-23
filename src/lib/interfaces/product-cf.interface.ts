@@ -45,6 +45,7 @@ export interface IProductDetails {
   referenceCode?: number;
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
+  products?: any;
   rating?: number;
 }
 

@@ -7,6 +7,7 @@ export enum CONTENTFUL_TYPENAMES {
   PRODUCT = "Product",
   
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
+  BLOCK_CONTENT_FILTER = "BlockContentFilter",
   AUX_CUSTOM_CONTENT = "AuxCustomContent",
   AUX_NAVIGATION = "AuxNavigation",
 

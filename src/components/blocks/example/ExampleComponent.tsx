@@ -4,7 +4,7 @@ export interface IExampleComponent {
 };
 
 const ExampleComponent: React.FC<IExampleComponent> = ({ name, view }) => {
-  const { name: viewName } = view;
+  const { name: viewName } = view ?? { name: 'NO VIEW' };
 
   return (
     <div>
