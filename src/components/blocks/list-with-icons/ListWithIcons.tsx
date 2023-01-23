@@ -4,10 +4,10 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { classColumns, classNames, getBackgroundColorClass, getButtonType } from '@/utils/functions';
 
-const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection }) => {
+const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>

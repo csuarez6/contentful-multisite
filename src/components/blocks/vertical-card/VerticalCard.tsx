@@ -3,9 +3,9 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { classNames, classColumns } from '@/utils/functions';
 
-const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {
+const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, blockId, sysId }) => {
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}

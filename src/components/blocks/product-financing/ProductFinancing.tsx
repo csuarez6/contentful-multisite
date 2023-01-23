@@ -5,7 +5,7 @@ import { classNames } from "@/utils/functions";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductSmallCard from '@/components/organisms/cards/product-small-card/ProductSmallCard';
 
-const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, listedContentsCollection }) => {
+const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, listedContentsCollection, blockId, sysId }) => {
   const productTabs = [];
   if (featuredContentsCollection?.items?.length > 0) {
     productTabs.push({
@@ -21,7 +21,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
   }
 
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {(title || description) &&
         <div className="grid text-center gap-6">
           {title && <h2 className="text-blue-dark">{title}</h2>}

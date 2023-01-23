@@ -31,9 +31,11 @@ const TabElement = (tab) => {
 const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   title,
   featuredContentsCollection,
+  blockId,
+  sysId
 }) => {
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
       {featuredContentsCollection?.items?.length > 0 && (
         <Tab.Group as="div" className="mt-4">

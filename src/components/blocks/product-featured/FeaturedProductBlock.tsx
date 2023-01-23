@@ -8,8 +8,8 @@ export interface IFeaturedProductBlock extends IPromoBlock {
     listedContent?: IProductDetails[];
 }
 
-const FeaturedProductBlock: React.FC<IFeaturedProductBlock> = ({ title, description, listedContent }) => (
-    <section className='section grid gap-9'>
+const FeaturedProductBlock: React.FC<IFeaturedProductBlock> = ({ title, description, listedContent, blockId, sysId }) => (
+    <section id={blockId? blockId: sysId} className='section grid gap-9'>
         {(title || description) &&
             <div className="grid gap-9 text-center">
                 {title && <h2 className="text-blue-dark">{title}</h2>}

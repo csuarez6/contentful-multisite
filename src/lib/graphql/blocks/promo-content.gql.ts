@@ -119,6 +119,7 @@ const BlockPromoContentQuery = `
       ${ViewCarouselCategories}
     }
   }
+  blockId
 `;
 
 export default BlockPromoContentQuery;

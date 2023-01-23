@@ -7,10 +7,12 @@ import Accordion from "@/components/organisms/accordion/Accordion";
 const AccordionBlock: React.FC<IAccordionBlock> = ({
   title,
   description,
-  featuredContentsCollection
+  featuredContentsCollection,
+  blockId,
+  sysId,
 }) => {
   return (
-    <section className="section flex flex-col gap-8">
+    <section id={blockId? blockId: sysId} className="section flex flex-col gap-8">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark title is-1">{title}</h2>}

@@ -9,6 +9,7 @@ interface IBlockProps {
     isLast?: boolean;
     key?: string;
     asBlock?: boolean;
+    sysId?: string;
 }
 
 export interface IPromoContent {
@@ -96,6 +97,7 @@ export interface IPromoBlock extends IBlockProps {
     ctaCollection?: {
         items?: IPromoContent[]
     }
+    blockId?: string;
 }
 
 export interface ITag {

@@ -9,9 +9,9 @@ const classColumns = (columns = 1) => {
   return classes.join(" ");
 };
 
-const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, view }) => {
+const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, view, blockId, sysId }) => {
   return (
-    <section className='grid gap-10'>
+    <section id={blockId? blockId: sysId} className='grid gap-10'>
       {(title || description) &&
         <div className='flex flex-col gap-10'>
           {title && <h2 className='text-center text-blue-dark'>{title}</h2>}

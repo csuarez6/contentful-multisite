@@ -24,9 +24,11 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
   view,
   ctaCollection,
+  blockId,
+  sysId
 }) => {
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}

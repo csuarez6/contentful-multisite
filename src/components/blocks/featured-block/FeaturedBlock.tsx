@@ -14,12 +14,14 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
   view,
   featuredContentsCollection,
   ctaCollection,
+  blockId,
+  sysId
 }) => {
   const imageAlignLocal =
     view && view.imageAlign === "Derecha" ? "order-last" : "";
 
   return (
-    <section className="section grid">
+    <section id={blockId? blockId: sysId} className="section grid">
       <div className="relative">
         <div
           className={classNames(

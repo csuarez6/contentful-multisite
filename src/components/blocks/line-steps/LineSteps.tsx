@@ -9,9 +9,11 @@ const LineSteps: React.FC<IPromoBlock> = ({
   title,
   subtitle,
   ctaCollection,
+  blockId,
+  sysId
 }) => {
   return (
-    <section className="grid gap-10 md:flex">
+    <section id={blockId? blockId: sysId} className="grid gap-10 md:flex">
       <div className="flex flex-col gap-2">
         {title && (
           <p className="text-4xl text-blue-dark-8 font-bold">{title}</p>

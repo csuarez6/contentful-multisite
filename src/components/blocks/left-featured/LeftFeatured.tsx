@@ -11,9 +11,11 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   description,
   image,
   ctaCollection,
+  blockId,
+  sysId
 }) => {
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {title && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}

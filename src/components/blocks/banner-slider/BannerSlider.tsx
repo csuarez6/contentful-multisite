@@ -9,13 +9,14 @@ import "swiper/css/effect-fade";
 
 const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
+  blockId, sysId
 }) => {
 
   const [instanceSwiper, setInstanceSwiper] = useState<swiper>();
   const [stopSlider, setStopSlider] = useState(false);
 
   return (
-    <section className="grid">
+    <section id={blockId? blockId: sysId} className="grid">
       {featuredContentsCollection?.items?.length > 0 && (
         <div className="container px-28 mx-auto">
           <div className="-mx-[50vw]">

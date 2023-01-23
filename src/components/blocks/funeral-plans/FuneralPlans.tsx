@@ -6,9 +6,9 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { dataPlans } from "./FuneralPlans.data";
 import Icon from "@/components/atoms/icon/Icon";
 
-const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description }) => {
+const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description, blockId, sysId }) => {
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {(title || description) &&
         <div className="grid text-center gap-6">
           {title && <h2 className="text-blue-dark">{title}</h2>}

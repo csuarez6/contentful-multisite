@@ -58,13 +58,13 @@ function listedClasses(
   return classes.join(" ");
 }
 
-const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, listedContentsCollection, featuredContentsCollection, view }) => {
+const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, listedContentsCollection, featuredContentsCollection, view, blockId, sysId }) => {
   featuredContentsCollection?.items?.forEach(item => item.promoImage.isPortrait = true);
   const featuredContentSplice: IPromoContent[] = featuredContentsCollection?.items?.length > 0 ? JSON.parse(JSON.stringify(featuredContentsCollection?.items)) : [];
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
 
   return (
-    <section className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
