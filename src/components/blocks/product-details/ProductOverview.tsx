@@ -264,7 +264,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           <p className="text-size-subtitle1 text-blue-dark">Garantía</p>
                           <div className="px-3 py-2">
                             <p
-                              onClick={() => { scrollContent("content-warranty") }}
+                              onClick={() => { scrollContent("content-warranty"); }}
                               className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
                               <span className="flex items-center w-6 h-6 shrink-0">
                                 <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
