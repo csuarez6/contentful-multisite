@@ -1,19 +1,18 @@
 import Image from "next/image";
-import { useState } from "react";
-
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
-
+import swiper, { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-
 import "swiper/css";
 import "swiper/css/effect-fade";
 
 const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
 }) => {
-  const [stopSliderRotation, setStopSliderRotation] = useState(false);
+
+  const [instanceSwiper, setInstanceSwiper] = useState<swiper>();
+  const [stopSlider, setStopSlider] = useState(false);
 
   return (
     <section className="grid">
@@ -22,16 +21,14 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
           <div className="-mx-[50vw]">
             <div className="w-screen mx-auto">
               <Swiper
+                onSwiper={(swiper) => setInstanceSwiper(swiper)}
                 modules={[Pagination, Navigation, EffectFade, Autoplay]}
                 spaceBetween={5}
                 slidesPerView={1}
                 speed={1000}
                 loop={true}
                 effect="fade"
-                autoplay={{
-                  delay: 7000,
-                  disableOnInteraction: stopSliderRotation,
-                }}
+                autoplay={{ delay: 7000, disableOnInteraction: false }}
                 className="relative w-full h-[568px]"
               >
                 {featuredContentsCollection.items.map(
@@ -73,7 +70,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
               <div className="container mx-auto relative flex">
                 <button
                   className="cursor-pointer z-20 mx-28 absolute left-2 bottom-9"
-                  onClick={() => setStopSliderRotation(!stopSliderRotation)}
+                  onClick={() => { setStopSlider(!stopSlider); !stopSlider ? instanceSwiper.autoplay.stop() : instanceSwiper.autoplay.start(); }}
                 >
                   <figure className="relative">
                     <Image
