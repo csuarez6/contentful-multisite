@@ -5,6 +5,11 @@ const data: INavigation = {
   name: "Footer",
   promoTitle: "Somos Vanti, más formas de avanzar",
   secondaryText: RICHTEXT_SHORT_SIMPLE,
+  promoImage: {
+    url: "/images/industria-y-comercio.png",
+    height: 75,
+    width: 311
+  },
   mainNavCollection: {
     items: [
       {

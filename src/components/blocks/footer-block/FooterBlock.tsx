@@ -82,7 +82,7 @@ const FooterBlock: React.FC<INavigation> = ({
               {documentToReactComponents(secondaryText?.json)}
             </div>
             {promoImage && (
-              <div className="w-[311px] mt-1 shrink-0">
+              <div className="w-[311px] mt-1 shrink-0 -mr-[30px]">
                 <figure className="relative w-100">
                   <Image
                     src={promoImage.url}
