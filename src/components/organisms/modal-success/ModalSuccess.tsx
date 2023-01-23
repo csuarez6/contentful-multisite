@@ -52,18 +52,20 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                                             <XMarkIcon className="h-4 w-4" aria-hidden="true" />
                                         </button>
                                     </div>
-                                    <div className="mx-auto flex items-center justify-center rounded-full">
-                                        <Icon icon={promoIcon} size={76} className="text-category-sky-blue-50" />
-                                    </div>
+                                    {promoIcon &&
+                                        <div className="mx-auto flex items-center justify-center rounded-full">
+                                            <Icon icon={promoIcon} size={76} className="text-category-sky-blue-50" />
+                                        </div>}
                                     <div className="mt-3 text-center flex flex-col">
                                         <Dialog.Title as="h3" className="title is-3 text-blue-dark">
                                             {promoTitle}
                                         </Dialog.Title>
-                                        <div className='mt-[9px]'>
-                                            <p className="lg:text-lg text-base text-grey-30 !leading-[20px]">
-                                                {documentToReactComponents(promoDescription.json)}
-                                            </p>
-                                        </div>
+                                        {promoDescription &&
+                                            <div className='mt-[9px]'>
+                                                <p className="lg:text-lg text-base text-grey-30 !leading-[20px]">
+                                                    {documentToReactComponents(promoDescription.json)}
+                                                </p>
+                                            </div>}
                                         <div className='mt-[17px]  text-grey-30 lg:text-lg text-base'>
                                             <p className='!leading-[22px]'>
                                                 {subtitle}
