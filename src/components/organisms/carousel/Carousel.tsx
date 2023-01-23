@@ -37,12 +37,12 @@ const Carousel: React.FC<ICarousel> = ({
   imagesPerView,
   footerText,
 }) => {
-  const [thumbsSwiper] = React.useState<ISwiper>();
+  const [thumbsSwiper, setThumbsSwiper] = React.useState<ISwiper>();
   if (!content) return;
   return (
     <section>
       {(title || description) && (
-        <div className="grid gap-9 text-center mb-8">
+        <div className="grid mb-8 text-center gap-9">
           {title && <h2 className="text-blue-dark title is-1">{title}</h2>}
           {description && <p className="text-blue-dark">{description}</p>}
         </div>
@@ -50,7 +50,7 @@ const Carousel: React.FC<ICarousel> = ({
       <Swiper
         loop={true}
         spaceBetween={10}
-        thumbs={{ swiper: thumbsSwiper }}
+        thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
         modules={[FreeMode, Navigation, Thumbs]}
       >
         {content?.map((el, i) => (
@@ -59,7 +59,7 @@ const Carousel: React.FC<ICarousel> = ({
               <figure className="relative aspect-[595/548]">
                 <Image
                   fill
-                  className="rounded-xl cursor-pointer w-full h-full"
+                  className="w-full h-full cursor-pointer rounded-xl"
                   src={el.url}
                   alt={el.title ?? "carousel"}
                   priority
@@ -70,21 +70,20 @@ const Carousel: React.FC<ICarousel> = ({
         ))}
       </Swiper>
       <div className="sm:px-[72px] relative px-5 xs:px-10">
-        <div className="absolute z-10 sm:flex justify-center items-center top-0 bottom-0 left-0 ml-5 hidden">
-          <figure className="prevSlide bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center">
+        <div className="absolute top-0 bottom-0 left-0 z-10 items-center justify-center hidden ml-5 sm:flex">
+          <figure className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer prevSlide bg-blue-dark-90">
             <Icon {...iconLeft} />
           </figure>
         </div>
         <Swiper
-          // onSwiper={setThumbsSwiper}
-          onSwiper={() => { console.log('ERROR por revisar'); }}
+          onSwiper={setThumbsSwiper}
           loop={true}
           spaceBetween={12}
           slidesPerView={imagesPerView ?? 4}
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}
-          className="mt-6 flex relative items-center -z-10"
+          className="relative flex items-center mt-6 -z-10"
           navigation={{
             nextEl: ".nextSlide",
             prevEl: ".prevSlide",
@@ -98,7 +97,7 @@ const Carousel: React.FC<ICarousel> = ({
                     <figure className="relative aspect-[104/92]">
                       <Image
                         fill
-                        className="rounded-md xs:rounded-xl cursor-pointer w-full h-full"
+                        className="w-full h-full rounded-md cursor-pointer xs:rounded-xl"
                         src={el.url}
                         alt={el.title ?? "carousel"}
                         priority
@@ -110,8 +109,8 @@ const Carousel: React.FC<ICarousel> = ({
             })}
           </div>
         </Swiper>
-        <div className="absolute z-10 sm:flex justify-center items-center top-0 bottom-0 right-0 mr-5 hidden">
-          <figure className="nextSlide bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center">
+        <div className="absolute top-0 bottom-0 right-0 z-10 items-center justify-center hidden mr-5 sm:flex">
+          <figure className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer nextSlide bg-blue-dark-90">
             <Icon {...iconRight} />
           </figure>
         </div>
@@ -119,7 +118,7 @@ const Carousel: React.FC<ICarousel> = ({
       {footerText && (
         <div className="mt-9 max-w-[310px] lg:ml-[72px] relative leading-4">
           <Link
-            className="text-grey-60 font-normal underline"
+            className="font-normal underline text-grey-60"
             href={footerText?.href}
           >
             {footerText?.name}
