@@ -14,6 +14,7 @@ import ServicesTabsBlock from "@/components/blocks/services-tabs/ServicesTabs";
 import ProductFinancingBlock from "@/components/blocks/product-financing/ProductFinancing";
 import FuneralPlansBlock from "@/components/blocks/funeral-plans/FuneralPlans";
 import CarouselCategoriesBlock from "@/components/blocks/carousel-categories/CarouselCategories";
+import FeaturedTabsBlock from "@/components/blocks/featured-tabs/FeaturedTabs";
 
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
@@ -43,7 +44,8 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS]: ServicesTabsBlock,
     [CONTENTFUL_TYPENAMES.VIEW_PRODUCT_FINANCING]: ProductFinancingBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FUNERAL_PLANS]: FuneralPlansBlock,
-    [CONTENTFUL_TYPENAMES.VIEW_CAROUSEL]: CarouselCategoriesBlock
+    [CONTENTFUL_TYPENAMES.VIEW_CAROUSEL]: CarouselCategoriesBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS]: FeaturedTabsBlock
   },
 };
 
