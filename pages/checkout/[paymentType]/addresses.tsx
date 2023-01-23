@@ -221,12 +221,12 @@ const CheckoutAddresses = () => {
       >
         <div className="bg-white rounded-lg">
           <form
-            className="max-w-full flex flex-wrap gap-6"
+            className="flex flex-wrap max-w-full gap-6"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="w-full">
               <SelectInput
-                label="Escoge tu Departamento"
+                label="Escoge tu departamento"
                 id="shipping-state-code"
                 options={states.map((state) => ({
                   label: state.name,
@@ -295,11 +295,11 @@ const CheckoutAddresses = () => {
             {!isSameAsBillingAddress && (
               <>
                 <h4 className="!font-semibold text-blue-dark">
-                  Direccion de facturacion
+                  Direccion de facturación
                 </h4>
                 <div className="w-full">
                   <SelectInput
-                    label="Escoge tu Departamento"
+                    label="Escoge tu departamento"
                     id="billingAddress-state-code"
                     options={states.map((state) => ({
                       label: state.name,
@@ -360,7 +360,7 @@ const CheckoutAddresses = () => {
                 </div>
               </>
             )}
-            <div className="flex justify-end gap-3 w-full">
+            <div className="flex justify-end w-full gap-3">
               <button
                 className="button button-outline"
                 type="button"

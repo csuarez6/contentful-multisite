@@ -95,19 +95,19 @@ const CheckoutPersonalInfo = () => {
         isCheck={isCompleted}
       >
         <div className="bg-white rounded-lg">
-          <form className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="flex flex-wrap max-w-full gap-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full">
               <TextBox
                 id="firstName"
                 name="firstName"
                 className="algo"
-                label="Escribe tu apellido"
+                label="Escribe tu nombre"
                 placeholder="Nombre"
                 htmlForLabel="firstName"
                 {...register("firstName")}
               />
               {
-                errors.firstName?.message && <p className="text-red-600 mt-1">{errors.firstName?.message}</p>
+                errors.firstName?.message && <p className="mt-1 text-red-600">{errors.firstName?.message}</p>
               }
             </div>
             <div className="w-full">
@@ -120,7 +120,7 @@ const CheckoutPersonalInfo = () => {
                 {...register("lastName")}
               />
               {
-                errors.lastName?.message && <p className="text-red-600 mt-1">{errors.lastName?.message}</p>
+                errors.lastName?.message && <p className="mt-1 text-red-600">{errors.lastName?.message}</p>
               }
             </div>
             <div className="w-full">
@@ -134,7 +134,7 @@ const CheckoutPersonalInfo = () => {
                 {...register("cellPhone")}
               />
               {
-                errors.cellPhone?.message && <p className="text-red-600 mt-1">{errors.cellPhone?.message}</p>
+                errors.cellPhone?.message && <p className="mt-1 text-red-600">{errors.cellPhone?.message}</p>
               }
             </div>
             <div className="w-full">
@@ -148,10 +148,10 @@ const CheckoutPersonalInfo = () => {
                 {...register("email")}
               />
               {
-                errors.email?.message && <p className="text-red-600 mt-1">{errors.email?.message}</p>
+                errors.email?.message && <p className="mt-1 text-red-600">{errors.email?.message}</p>
               }
             </div>
-            <div className="flex justify-end gap-3 w-full">
+            <div className="flex justify-end w-full gap-3">
               <button className="button button-outline" type="button" onClick={handlePrev}>
                 Volver
               </button>
