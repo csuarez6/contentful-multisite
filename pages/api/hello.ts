@@ -45,7 +45,7 @@ export default function handler(
   client.send(
     {
       text: 'i hope this works',
-      from: 'Vanti <no-reply@grupovanti.com>',
+      from: 'Aplyca Dev <dev@aplyca.com>',
       to: `Brandon <${to}>`,
       subject: 'testing emailjs',
     },
