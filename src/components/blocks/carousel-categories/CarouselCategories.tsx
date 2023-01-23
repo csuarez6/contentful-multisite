@@ -1,3 +1,4 @@
+import uuid from 'react-uuid';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, } from "swiper";
@@ -21,6 +22,7 @@ const iconRight: IIcon = {
 };
 
 const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view }) => {  
+  const uui = uuid();
   return (
     <section className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
       {(title || description) && (
@@ -32,7 +34,7 @@ const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, fe
       {featuredContentsCollection?.items?.length > 0 && (
         <div className={classNames("flex flex-nowrap relative grow w-full", view.alignTitle === 'Left' && 'md:max-w-[75%] md:pl-9')}>
           <div className='flex justify-center items-center'>
-            <div className='prevSlide bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center'>
+            <div className={`prevSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
               <Icon {...iconLeft} />
             </div>
           </div>
@@ -44,19 +46,19 @@ const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, fe
             loopFillGroupWithBlank={true}
             modules={[Pagination, Navigation]}
             navigation={{
-              nextEl: '.nextSlide',
-              prevEl: '.prevSlide'
+              nextEl: `.nextSlide${uui}`,
+              prevEl: `.prevSlide${uui}`
             }}
             className="relative w-full"
           >
             {featuredContentsCollection && featuredContentsCollection?.items?.map((content) => (
-              <SwiperSlide key={content.promoTitle}>
+              <SwiperSlide key={content.promoTitle} >
                 <CarouselCategories {...content} />
               </SwiperSlide>
             ))}
           </Swiper>
           <div className='flex justify-center items-center'>
-            <div className='nextSlide bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center'>
+            <div className={`nextSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
               <Icon {...iconRight} />
             </div>
           </div>
