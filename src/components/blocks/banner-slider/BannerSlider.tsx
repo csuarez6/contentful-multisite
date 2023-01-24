@@ -76,7 +76,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                   <figure className="relative">
                     <Image
                       alt="stop/pause"
-                      src="/images/play-button.png"
+                      src={stopSlider ? "/images/play-button.png" : "/images/pause.png"}
                       width={33}
                       height={33}
                     />
