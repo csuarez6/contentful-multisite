@@ -2,12 +2,13 @@ import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPage } from "@/lib/interfaces/page-cf.interface";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames, getButtonType } from "@/utils/functions";
 import { getLinkProps } from "@/utils/link.utils";
 
-const VerticalCard: React.FC<IPromoContent> = (props) => {
+const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
   const {
     name,
     promoTitle,
@@ -16,6 +17,7 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
     internalLink,
     externalLink,
     buttonType,
+    urlPath
   } = props;
 
   return (
@@ -44,7 +46,7 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
                 {documentToReactComponents(promoDescription.json)}
               </div>
             )}
-            {(internalLink?.urlPath || externalLink) && (
+            {(internalLink?.urlPath || externalLink || urlPath) && (
               <div className="flex gap-3 mt-6">
                 <CustomLink
                   content={props}
