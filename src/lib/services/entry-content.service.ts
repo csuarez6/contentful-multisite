@@ -34,7 +34,7 @@ type DefaultBlockInfo = {
   }
 };
 
-export const MAX_DEEPTH_RECURSION = 12;
+export const MAX_DEEPTH_RECURSION = 14;
 
 const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, actualDeepth = 1) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
