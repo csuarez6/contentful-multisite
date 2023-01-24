@@ -52,12 +52,12 @@ export interface IProductDetails {
 export interface IProductOverviewDetails {
   promoTitle?: string;
   price?: string;
-  promoDescription?: any;
+  promoDescription?: IRichText;
   images?: IImageAsset[];
-  productFeatures?: any;
+  productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
-  features?: any;
+  features?: IRichText;
   warranty?: {
     name?: string;
     description?: IRichText;
@@ -68,6 +68,7 @@ export interface IProductOverviewDetails {
   priceBefore?: string;
   productsQuantity?: string;
   sku?: string;
+  promoImage?: IImageAsset;
   imagesCollection?: {
     items?: IImageAsset[];
   };

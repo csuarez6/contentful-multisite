@@ -28,6 +28,7 @@ export interface ICarousel {
   content: IImageAsset[];
   imagesPerView?: number;
   footerText?: ILink;
+  enableLoop?: boolean;
 }
 
 const Carousel: React.FC<ICarousel> = ({
@@ -36,6 +37,7 @@ const Carousel: React.FC<ICarousel> = ({
   title,
   imagesPerView,
   footerText,
+  enableLoop
 }) => {
   const [thumbsSwiper, setThumbsSwiper] = React.useState<ISwiper>();
   if (!content) return;
@@ -77,7 +79,7 @@ const Carousel: React.FC<ICarousel> = ({
         </div>
         <Swiper
           onSwiper={setThumbsSwiper}
-          loop={true}
+          loop={enableLoop ?? true}
           spaceBetween={12}
           slidesPerView={imagesPerView ?? 4}
           freeMode={true}
@@ -87,6 +89,7 @@ const Carousel: React.FC<ICarousel> = ({
           navigation={{
             nextEl: ".nextSlide",
             prevEl: ".prevSlide",
+            lockClass: 'block'
           }}
         >
           <div className="relative">

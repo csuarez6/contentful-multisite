@@ -42,6 +42,7 @@ export interface IPromoContent {
     ctaLabel?: string;
     slug?: string;
     isActive?: boolean;
+    children?: React.ReactNode;
 }
 
 export interface IPromoBlock extends IBlockProps {

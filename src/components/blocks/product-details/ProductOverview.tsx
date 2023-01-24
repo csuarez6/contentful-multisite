@@ -8,6 +8,10 @@ import Rating from "@/components/organisms/ratings/Rating";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { useState } from 'react';
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 
 const iconInvoice: IIcon = {
   icon: "invoice",
@@ -31,6 +35,64 @@ const scrollContent = (idContainer: string) => {
   document.querySelector("#" + idContainer).scrollIntoView({ behavior: 'smooth' });
 };
 
+const ModalIntall = () => {
+  return (
+    <div className="flex flex-col gap-12">
+      <p className="text-left">
+        Antes de empezar, queremos informarte que puedes adquirir la instalación de tu gasodoméstico en esta compra.<br />
+        Si aún no sabes qué incluye, puedes informarte en la landing de instalación.
+      </p>
+      <div className="flex gap-2 justify-end">
+        <CustomLink
+          className="button button-primary"
+          content={{ urlPath: "/" }}
+        >
+          Ir a comprar
+        </CustomLink>
+        <CustomLink
+          className="button border border-blue-dark rounded-3xl text-blue-dark"
+          content={{ urlPath: "/" }}
+        >
+          Conocer sobre instalación
+        </CustomLink>
+      </div>
+    </div>
+  )
+};
+
+const ModalShipping = () => {
+  return (
+    <div>
+      <p className="text-blue-dark">Para llevar su producto, elija un tipo de envío:</p>
+      <form>
+        <div className="w-full">
+          <RadioBox
+            name="servicio"
+            label="Estándar (5 a 10 días hábiles)"
+          />
+        </div>
+        <div className="w-full">
+          <RadioBox
+            name="servicio"
+            label="Express (1 día hábil)"
+          />
+        </div>
+      </form>
+      <div className="flex gap-2 justify-end">
+        <CustomLink
+          className="button button-primary"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+          content={{ externalLink: "#" }}
+        >
+          Aceptar
+        </CustomLink>
+      </div>
+    </div>
+  )
+};
+
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
   promoDescription,
@@ -38,6 +100,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   productFeatures,
   onBuy,
   features,
+  promoImage,
   imagesCollection,
   priceBefore,
   productsQuantity,
@@ -47,15 +110,37 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   rating,
   warranty
 }) => {
-  console.log(sku, productsQuantity, price);
-  return (
+  const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
+  const [isActivedModal, setIsActivedModal] = useState(false);
+  const [paramModal, setParamModal] = useState<IPromoContent>();
+  const [modalChild, setmodalChild] = useState<any>();
 
+  const openModal = (service: string) => {
+    if (service === "shipping") {
+      setParamModal({
+        promoTitle: 'Tipo de envío'
+      });
+      setmodalChild(<ModalShipping />);
+    } else {
+      setParamModal({
+        promoTitle: 'Instala tu gasodoméstico'
+      });
+      setmodalChild(<ModalIntall />);
+    }
+    setmodalChild(service === "shipping" ? <ModalShipping /> : <ModalIntall />);
+    setIsActivedModal(false);
+    setTimeout(() => {
+      setIsActivedModal(true);
+    }, 200);
+  };
+
+  return (
     <section className="bg-white section">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col gap-4 lg:flex-row 2xl:gap-9">
-          {imagesCollection?.items?.length && (
+          {imagesCollectionLocal?.length && (
             <div className="w-full lg:w-1/2 xl:max-w-[595px]">
-              <Carousel content={imagesCollection.items} />
+              <Carousel content={imagesCollectionLocal} enableLoop={false} />
               <div className="w-1/2 mt-9">
                 <CustomLink
                   className="text-sm underline text-grey-60"
@@ -185,13 +270,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <Icon {...iconInvoice} />
                     </div>
                   </div>
-                  {!price || (!productsQuantity || Number(productsQuantity) <= 0) && (
+                  {(price == undefined || productsQuantity == undefined || Number(productsQuantity) <= 0) && (
                     <div className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded" role="alert">
                       <strong className="font-bold">Info! </strong>
                       <span className="block sm:inline">Este producto no se encuentra disponible en este momento.</span>
                     </div>
                   )}
-                  {(price && (productsQuantity && Number(productsQuantity) > 0)) ?
+                  {(price && productsQuantity && Number(productsQuantity) > 0) ?
                     <>
                       <h1 className="text-[#035177]">{price} Hoy</h1>
                       <div className="text-sm text-grey-30">
@@ -234,7 +319,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <li className="flex flex-col gap-2">
                         <p className="text-size-subtitle1 text-blue-dark">Instala tu gasodoméstico</p>
                         <div className="px-3 py-2">
-                          <p className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
+                          <p onClick={() => openModal('install')} className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
                             <span className="flex items-center w-6 h-6 shrink-0">
                               <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
                             </span>
@@ -248,7 +333,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <li className="flex flex-col gap-2">
                         <p className="text-size-subtitle1 text-blue-dark">Tipo de envío</p>
                         <div className="px-3 py-2">
-                          <p className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
+                          <p onClick={() => openModal('shipping')} className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
                             <span className="flex items-center w-6 h-6 shrink-0">
                               <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
                             </span>
@@ -322,7 +407,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
         </div>
       </div>
+      {isActivedModal &&
+        <ModalSuccess {...paramModal} isActive={isActivedModal}>
+          {modalChild}
+        </ModalSuccess>
+      }
     </section>
+
   );
 };
 

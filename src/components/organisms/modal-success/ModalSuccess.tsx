@@ -9,8 +9,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 const ModalSuccess: React.FC<IPromoContent> = ({
     promoTitle,
     promoIcon,
-    promoDescription,
-    ctaLabel,
+    children,
     subtitle,
     isActive = true
 }) => {
@@ -40,7 +39,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="relative transform overflow-hidden rounded-[20px] bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[500px] lg:h-[437px] sm:p-6 flex flex-col justify-end">
+                            <Dialog.Panel className="relative transform overflow-hidden rounded-[20px] bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[500px] sm:p-6 flex flex-col justify-end">
                                 <div>
                                     <div className="absolute top-[-1px] right-0 hidden pt-4 pr-[22px] sm:block">
                                         <button
@@ -55,29 +54,29 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                                     {promoIcon &&
                                         <div className="mx-auto flex items-center justify-center rounded-full">
                                             <Icon icon={promoIcon} size={76} className="text-category-sky-blue-50" />
-                                        </div>}
+                                        </div>
+                                    }
                                     <div className="mt-3 text-center flex flex-col">
                                         <Dialog.Title as="h3" className="title is-3 text-blue-dark">
                                             {promoTitle}
                                         </Dialog.Title>
-                                        {promoDescription &&
-                                            <div className='mt-[9px]'>
-                                                <p className="lg:text-lg text-base text-grey-30 !leading-[20px]">
-                                                    {documentToReactComponents(promoDescription.json)}
-                                                </p>
-                                            </div>}
                                         <div className='mt-[17px]  text-grey-30 lg:text-lg text-base'>
                                             <p className='!leading-[22px]'>
                                                 {subtitle}
                                             </p>
                                         </div>
+                                        {children &&
+                                            <div className='mt-[17px] text-grey-30 text-lg'>
+                                                {children}
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                                <div className="mt-5 sm:mt-[47px] self-end">
+                                {/* <div className="mt-5 sm:mt-[47px] self-end">
                                     <button type="button" className="button button-primary !px-10" onClick={() => setOpen(false)}>
                                         {ctaLabel}
                                     </button>
-                                </div>
+                                </div> */}
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>

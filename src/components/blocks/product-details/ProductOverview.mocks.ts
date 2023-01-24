@@ -14,6 +14,9 @@ const data: IProductOverviewDetails = {
     href: '',
     name: 'Comprar con PSE'
   },
+  promoImage: {
+    url: 'https://via.placeholder.com/600x550'
+  },
   imagesCollection: {
     items: [
       {
