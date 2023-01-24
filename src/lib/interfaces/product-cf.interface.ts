@@ -22,11 +22,11 @@ interface IMainFeature {
   description: string;
 }
 
-interface IFeatures {
+/* interface IFeatures {
   main?: IMainFeature[];
   description?: string[];
   warranty?: string[];
-}
+} */
 
 export interface IProductDetails {
   productName?: string;
@@ -36,7 +36,7 @@ export interface IProductDetails {
   details?: string[];
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
-  features?: IFeatures;
+  features?: IRichText;
   cta?: ILink;
   state?: string;
   promotion?: string;
