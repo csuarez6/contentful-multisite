@@ -24,6 +24,7 @@ const Template: ComponentStory<typeof CarouselCategories> = (args) => (
 
 export const Left = Template.bind({});
 export const Top = Template.bind({});
+export const Static = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Left.args = {
@@ -32,4 +33,8 @@ Left.args = {
 
 Top.args = {
   ...mockCarouselCategoriesProps.dataTop,
+} as IPromoBlock;
+
+Static.args = {
+  ...mockCarouselCategoriesProps.dataStatic,
 } as IPromoBlock;

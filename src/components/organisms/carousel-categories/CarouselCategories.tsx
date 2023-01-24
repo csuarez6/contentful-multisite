@@ -7,7 +7,7 @@ const CarouselCategories: React.FC<IPromoContent> = ({ promoTitle, promoImage, i
   if (!promoImage && !promoTitle && internalLink?.urlPath) return ;
   return (
     <article className="flex justify-center">
-      <Link href={internalLink.urlPath} legacyBehavior>
+      <Link href={internalLink?.urlPath? internalLink.urlPath : '#'} legacyBehavior>
         <a className="flex flex-col gap-2 items-center h-full group">
           {promoImage && (
             <figure className="relative min-w-[98px] min-h-[98px]">

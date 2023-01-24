@@ -119,4 +119,5 @@ export interface IView {
     imageOrientation?: string;
     isReverse?: boolean;
     alignTitle?: string;
+    isSlider?: boolean;
 }

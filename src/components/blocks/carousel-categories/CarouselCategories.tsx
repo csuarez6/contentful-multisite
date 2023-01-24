@@ -21,10 +21,12 @@ const iconRight: IIcon = {
   className: 'z-10'
 };
 
-const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, blockId, sysId }) => {  
+const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, blockId, sysId }) => {
   const uui = uuid();
+  const allowTouchMove = view.isSlider ?? true;
+
   return (
-    <section id={blockId? blockId: sysId} className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
+    <section id={blockId ? blockId : sysId} className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
       {(title || description) && (
         <div className={classNames("text-center", view.alignTitle === 'Left' ? 'md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0' : "mb-3")}>
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}
@@ -33,12 +35,15 @@ const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, fe
       )}
       {featuredContentsCollection?.items?.length > 0 && (
         <div className={classNames("flex flex-nowrap relative grow w-full", view.alignTitle === 'Left' && 'md:max-w-[75%] md:pl-9')}>
-          <div className='flex justify-center items-center'>
-            <div className={`prevSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
-              <Icon {...iconLeft} />
+          {allowTouchMove &&
+            <div className='flex justify-center items-center'>
+              <div className={`prevSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
+                <Icon {...iconLeft} />
+              </div>
             </div>
-          </div>
+          }
           <Swiper
+            allowTouchMove={allowTouchMove}
             slidesPerView={view?.columnsSize ?? 5}
             spaceBetween={0}
             slidesPerGroup={1}
@@ -57,11 +62,13 @@ const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, fe
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className='flex justify-center items-center'>
-            <div className={`nextSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
-              <Icon {...iconRight} />
+          {allowTouchMove &&
+            <div className='flex justify-center items-center'>
+              <div className={`nextSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
+                <Icon {...iconRight} />
+              </div>
             </div>
-          </div>
+          }
         </div>
       )}
     </section>

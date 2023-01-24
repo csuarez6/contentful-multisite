@@ -73,6 +73,7 @@ const data: IPromoBlock = {
     alignTitle: 'Left',
   }
 };
+
 const dataTop: IPromoBlock = {
   title: 'Título',
   featuredContentsCollection: {
@@ -114,7 +115,50 @@ const dataTop: IPromoBlock = {
   }
 };
 
+const dataStatic: IPromoBlock = {
+  title: 'Título',
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título 1',
+        promoImage: {
+          url: 'https://via.placeholder.com/660x660.png',
+          title: 'Card image'
+        },
+        internalLink: {
+          urlPath: "#"
+        }
+      },
+      {
+        promoTitle: 'Título 2',
+        promoImage: {
+          url: 'https://via.placeholder.com/660x660.png',
+          title: 'Card image'
+        },
+        internalLink: {
+          urlPath: "#"
+        }
+      },
+      {
+        promoTitle: 'Título 3',
+        promoImage: {
+          url: 'https://via.placeholder.com/660x660.png',
+          title: 'Card image'
+        },
+        internalLink: {
+          urlPath: "#"
+        }
+      }
+    ]
+  },
+  view: {
+    columnsSize: 3,
+    isSlider: false
+  }
+};
+
 export const mockCarouselCategoriesProps = {
   data,
-  dataTop
+  dataTop,
+  dataStatic
 };
