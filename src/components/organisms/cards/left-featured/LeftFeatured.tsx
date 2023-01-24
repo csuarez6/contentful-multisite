@@ -20,7 +20,12 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     image,
     ctaCollection
   } = props;
-
+  const propsLink = {
+    name,
+    promoTitle,
+    internalLink,
+    externalLink
+  };
   return (
     <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
       {(promoImage || image) && (
@@ -47,9 +52,9 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
                 {documentToReactComponents(promoDescription?.json ?? description.json)}
               </div>
             )}
-            {(internalLink || externalLink) && __typename === 'AuxCustomContent' && (
+            {(internalLink || externalLink) && (
               <div className="flex gap-3">
-                <CustomLink content={props} className="button button-outline">
+                <CustomLink content={propsLink} className="button button-outline">
                   {promoTitle ?? name}
                 </CustomLink>
               </div>
