@@ -46,6 +46,7 @@ export interface IPromoContent {
 }
 
 export interface IPromoBlock extends IBlockProps {
+    __typename?: string;
     title?: string;
     pretitle?: string;
     subtitle?: string;

@@ -17,10 +17,10 @@ export interface IPaymentMethod {
   helpText?: string;
 }
 
-interface IMainFeature {
-  name: string;
-  description: string;
-}
+// interface IMainFeature {
+//   name: string;
+//   description: string;
+// }
 
 /* interface IFeatures {
   main?: IMainFeature[];

@@ -11,12 +11,12 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 const TabElement = (tab) => {
   return (
     <>
-      {tab.promoImage && (
+      {(tab.promoImage || tab.image) && (
         <figure className="w-[102px] rounded-full overflow-hidden aspect-square relative">
           <Image
             className="object-cover"
-            src={tab.promoImage.url}
-            alt={tab.promoImage.title}
+            src={tab?.promoImage?.url? tab.promoImage.url : tab.image.url }
+            alt={tab?.promoImage?.title? tab.promoImage.title: tab?.image?.title }
             fill
           />
         </figure>
@@ -28,14 +28,10 @@ const TabElement = (tab) => {
   );
 };
 
-const ServicesTabsBlock: React.FC<IPromoBlock> = ({
-  title,
-  featuredContentsCollection,
-  blockId,
-  sysId
-}) => {
+const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsCollection, blockId, sysId }) => {
+  
   return (
-    <section id={blockId? blockId: sysId} className="section grid gap-9">
+    <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
       {featuredContentsCollection?.items?.length > 0 && (
         <Tab.Group as="div" className="mt-4">
@@ -43,7 +39,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
             <div className="flex border-b border-transparent">
               <Tab.List className="flex gap-[10px]">
                 {featuredContentsCollection.items.map((tab) =>
-                  tab.internalLink?.slug || tab.externalLink ? (
+                  tab?.internalLink?.slug || tab?.externalLink ? (
                     <CustomLink
                       content={tab}
                       linkClassName="flex"
@@ -51,16 +47,16 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                         tab.promoImage ? "justify-start" : "justify-center",
                         "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 px-2 py-6"
                       )}
-                      key={tab.name}
+                      key={tab?.name}
                     >
                       {<TabElement {...tab} />}
                     </CustomLink>
                   ) : (
                     <Tab
-                      key={tab.name}
+                      key={tab?.name}
                       className={({ selected }) =>
                         classNames(
-                          tab.promoImage ? "justify-start" : "justify-center",
+                          tab?.promoImage ? "justify-start" : "justify-center",
                           selected
                             ? "border-lucuma"
                             : "border-transparent hover:border-lucuma",
@@ -79,9 +75,9 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
           <Tab.Panels as={Fragment}>
             {featuredContentsCollection.items.map(
               (tab) =>
-                !tab.internalLink &&
-                !tab.externalLink && (
-                  <Tab.Panel key={tab.name} className="pt-6 focus:outline-none">
+                !tab?.internalLink &&
+                !tab?.externalLink && (
+                  <Tab.Panel key={tab?.name} className="pt-6 focus:outline-none">
                     <LeftFeatured {...tab} />
                   </Tab.Panel>
                 )

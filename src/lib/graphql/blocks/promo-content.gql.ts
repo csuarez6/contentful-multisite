@@ -51,6 +51,9 @@ const BlockPromoContentQuery = `
       ...on AuxCustomContent {
         ${DefaultQuery}
       }
+      ...on BlockPromoContent{
+        ${DefaultQuery}
+      } 
     }
   }
   listedContentsCollection {

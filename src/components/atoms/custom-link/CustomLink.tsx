@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 import { getLinkProps } from "@/utils/link.utils";
 
 export interface ICustomLink {
-  content?: IPage & IPromoContent;
+  content?: IPage & IPromoContent & IPromoBlock;
   children?: React.ReactNode;
   className?: string;
   linkClassName?: string;
