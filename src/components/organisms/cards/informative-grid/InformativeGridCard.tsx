@@ -1,7 +1,19 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS } from "@contentful/rich-text-types";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+
+const options = {
+  renderNode: {
+    [BLOCKS.HEADING_3]: (_node, children) => {
+      return <h3 className="text-5xl text-blue-dark font-semibold"> {children} </h3>;
+    },
+    [BLOCKS.HEADING_4]:  (_node, children) => {
+      return <h4 className="text-xl text-blue-dark font-semibold"> {children} </h4>;
+    }
+  },
+};
 
 const InformativeGridCard: React.FC<IPromoContent> = (props) => {
   const {
@@ -21,14 +33,8 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
           {promoDescription && (
             <div className="richtext">
               <div className="text-lg text-grey-30">
-                {documentToReactComponents(promoDescription.json)}
+                {documentToReactComponents(promoDescription.json, options)}
               </div>
-              <br />
-              <br />
-              <p className="text-xl text-blue-dark font-semibold">Desde</p>
-              <br />
-              <br />
-              <p className="text-5xl text-blue-dark font-semibold">$ 10.000</p>
             </div>
           )}
           {(externalLink || internalLink?.urlPath) && (
