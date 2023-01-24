@@ -20,7 +20,6 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     image,
     ctaCollection
   } = props;
-  console.log('props = ', props);
 
   return (
     <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
