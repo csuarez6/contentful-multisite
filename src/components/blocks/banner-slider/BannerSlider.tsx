@@ -9,7 +9,8 @@ import "swiper/css/effect-fade";
 
 const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
-  blockId, sysId
+  blockId, 
+  sysId
 }) => {
 
   const [instanceSwiper, setInstanceSwiper] = useState<swiper>();

@@ -4,7 +4,7 @@ import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import Icon from '@/components/atoms/icon/Icon';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+
 
 const ModalSuccess: React.FC<IPromoContent> = ({
     promoTitle,

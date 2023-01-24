@@ -10,7 +10,7 @@ export interface IBlockFormSignIn {
 }
 const SignInFormBlock: React.FC<IBlockFormSignIn> = ({ form, sidebar }) => {
     return (
-        <section className='grid grid-cols-1 lg:grid-cols-3 gap-y-6 lg:gap-x-6'>
+        <section className='grid grid-cols-1 lg:grid-cols-3 gap-y-6 lg:gap-x-6 lg:my-[84px]'>
             <div className='col-span-2'>
                 <SignInForm {...form}/>
             </div>

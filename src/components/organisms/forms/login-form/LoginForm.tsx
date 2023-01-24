@@ -1,7 +1,5 @@
 import React from "react";
 import Textbox from "@/components/atoms/input/textbox/TextBox";
-import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
-import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import { IForm } from "./LoginForm.mocks";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

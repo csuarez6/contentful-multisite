@@ -57,7 +57,7 @@ const ModalIntall = () => {
         </CustomLink>
       </div>
     </div>
-  )
+  );
 };
 
 const ModalShipping = () => {
@@ -90,7 +90,7 @@ const ModalShipping = () => {
         </CustomLink>
       </div>
     </div>
-  )
+  );
 };
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({

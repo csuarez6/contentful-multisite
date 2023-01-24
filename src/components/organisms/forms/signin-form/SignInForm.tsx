@@ -49,7 +49,7 @@ const schema = yup.object({
         .required('Dato Requerido')
         .nullable()
         .transform((value) => (isNaN(value) ? undefined : value))
-        .positive(),
+        .positive('Solo numeros positivos'),
     email: yup.string()
         .email("Email no válido")
         .required("Dato Requerido"),
