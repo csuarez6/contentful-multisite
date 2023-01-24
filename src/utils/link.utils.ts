@@ -40,24 +40,31 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
 };
 
 export const getLinkProps = (content: GetUrlPathProps) => {  
+  let textLink = content.name;
+
   const href = getUrlPath(content);
   const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
-  let textLink = content.name;
+
   if(content?.internalLink?.name){
     textLink = content.internalLink.name; 
   }
+
   if(content?.internalLink?.promoTitle){
     textLink = content.internalLink.promoTitle; 
   }
+
   if(content?.promoTitle){
     textLink = content.promoTitle;
   }
+
   if(content?.ctaLabel){
     textLink = content.ctaLabel;
   }
+  
   if(content?.__typename && content?.__typename === 'Page'){
     textLink = 'Conoce más';
   }
+
   return {
     href,
     target: isExternalLink ? '_blank' : '_self',

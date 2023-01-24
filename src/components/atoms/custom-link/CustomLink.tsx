@@ -15,12 +15,12 @@ export interface ICustomLink {
 
 const CustomLink: React.FC<ICustomLink> = ({
   content,
-  children,
+  children = null,
   className = "",
   linkClassName = "",
   onClick = null,
 }) => {
-  const { href, target, isExternalLink } = getLinkProps(content);
+  const { href, target, isExternalLink, textLink } = getLinkProps(content);
 
   return (
     <Link
@@ -30,7 +30,7 @@ const CustomLink: React.FC<ICustomLink> = ({
       onClick={onClick}
       className={linkClassName}
     >
-      <span className={`${className} cursor-pointer`}>{children}</span>
+      <span className={`${className} cursor-pointer`}>{children ? children : textLink}</span>
     </Link>
   );
 };

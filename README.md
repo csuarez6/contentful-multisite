@@ -96,12 +96,16 @@ This project contain Gitlab CI/CD Jobs/Pipelines definitions for deploy in verce
 
 Create .env file with enviroment variables below:
 
-### RUNTIME
-
+### DOCKER ENV
 - `APP_NAME`: Prefix for docker services names (default: APLYCA-NEXTJS-WEB)
 - `APP_PORT`: Port for interact with the app throught browser (default: 3000)
 - `STORYBOOK_PORT`: Port for interact with storybook throught browser (default: 6006)
-- `DEFAULT_SERVICE`: Can use **storybook** or **app** for avoid service=... argument in make scripts (default: app)
+- `MAILER_PORT`: Port for interact with mailhog web mailer throught browser (default: 8025)
+- `DEFAULT_SERVICE`: Can use **storybook**, **app** or **mailer** for avoid service=... argument in make scripts (default: app)
+
+
+### RUNTIME
+
 - `CONTENTFUL_ENVIRONMENT`: (optional) Contentful environment in space
 - `CONTENTFUL_SPACE_ID`: (optional) Contentful space id
 - `CONTENTFUL_DELIVERY_API_TOKEN`: (optional) Contentful token for delivery access api
@@ -113,6 +117,10 @@ Create .env file with enviroment variables below:
 - `COMMERCELAYER_MARKET_SCOPE`: (required) CommerceLayer scope for connect store and checkout process
 - `COMMERCELAYER_CLIENT_SECRET`: (required) CommerceLayer secret token to create resources
 - `COMMERCELAYER_ENDPOINT`: (default: https://vanti-poc.commercelayer.io)
+- `SMTP_HOST`: (required) Host to connect SMTP server for sending emails
+- `SMTP_PORT`: (required) Port to connect SMTP server for sending emails
+- `SMTP_USER`: (required) User to connect SMTP server for sending emails
+- `SMTP_PASSWORD`: (required) Password to connect SMTP server for sending emails
 
 ### TEST
 

@@ -42,8 +42,10 @@ specifiers:
   react-dom: 18.2.0
   react-hook-form: ^7.41.0
   react-uuid: ^2.0.0
+  storybook-addon-mock: ^3.2.0
   storybook-addon-next-router: ^4.0.2
   swiper: ^8.4.5
+  swr: ^2.0.1
   tailwindcss: ^3.2.4
   typescript: 4.8.4
   yup: ^0.32.11
@@ -70,6 +72,7 @@ dependencies:
   react-uuid: 2.0.0
   storybook-addon-next-router: 4.0.2_py5di5oy3d3jzxxwc6pkqcjfwe
   swiper: 8.4.5
+  swr: 2.0.1_react@18.2.0
   typescript: 4.8.4
   yup: 0.32.11
 
@@ -96,6 +99,7 @@ devDependencies:
   postcss: 8.4.21
   postcss-import: 15.1.0_postcss@8.4.21
   prettier: 2.8.2
+  storybook-addon-mock: 3.2.0_biqbaboplfbrettd7655fr4n2y
   tailwindcss: 3.2.4_postcss@8.4.21
 
 packages:
@@ -10243,6 +10247,11 @@ packages:
     hasBin: true
     dev: true
 
+  /mock-xmlhttprequest/7.0.4:
+    resolution: {integrity: sha512-hA0fIHy/74p5DE0rdmrpU0sV1U+gnWTcgShWequGRLy0L1eT+zY0ozFukawpLaxMwIA+orRcqFRElYwT+5p81A==}
+    engines: {node: '>=10.0.0'}
+    dev: true
+
   /move-concurrently/1.0.1:
     resolution: {integrity: sha512-hdrFxZOycD/g6A6SoI2bB5NA/5NEqD0569+S47WZhPvm46sD50ZHdYaFmnua5lndde9rCHGjmfK7Z8BuCt/PcQ==}
     dependencies:
@@ -10932,6 +10941,10 @@ packages:
 
   /path-to-regexp/0.1.7:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
+    dev: true
+
+  /path-to-regexp/6.2.1:
+    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
     dev: true
 
   /path-type/1.1.0:
@@ -12465,6 +12478,28 @@ packages:
   /store2/2.14.2:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
 
+  /storybook-addon-mock/3.2.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-LaggsF/6Lt0AyHiotIEVQpwKfIiZ3KsNqtdXKVnIdOetjaD7GaOQeX0jIZiZUFX/i6QLmMuNoXFngqqkdVtfSg==}
+    peerDependencies:
+      '@storybook/addons': ^6.4.0
+      '@storybook/api': ^6.4.0
+      '@storybook/components': ^6.4.0
+      '@storybook/theming': ^6.4.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      mock-xmlhttprequest: 7.0.4
+      path-to-regexp: 6.2.1
+      polished: 4.2.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: true
+
   /storybook-addon-next-router/4.0.2_py5di5oy3d3jzxxwc6pkqcjfwe:
     resolution: {integrity: sha512-0rjGAl7HziW4ecDq+VU03H1dwkw5f6phqA+PMquPzdowNVl29ejVwVadLMGlovG6x2snaxMGxtySR2c5bwegSw==}
     engines: {node: '>=10'}
@@ -12742,6 +12777,16 @@ packages:
     dependencies:
       dom7: 4.0.4
       ssr-window: 4.0.2
+    dev: false
+
+  /swr/2.0.1_react@18.2.0:
+    resolution: {integrity: sha512-6z4FpS9dKAay7axedlStsPahEw25nuMlVh4GHkuPpGptbmEEP8v/+kr0GkAE/7ErUs25U2VFOnZQz3AWfkmXdw==}
+    engines: {pnpm: '7'}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /symbol-observable/4.0.0:

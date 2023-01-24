@@ -11,6 +11,7 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     'storybook-addon-next-router',
+    'storybook-addon-mock',
     {
       /**
        * Fix Storybook issue with PostCSS@8

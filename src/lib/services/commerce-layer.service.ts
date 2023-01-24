@@ -89,7 +89,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 
     const sku = (
       await client.skus.list({
-        filters: { code_eq: skuCode },
+        filters: { code_eq: decodeURI(skuCode) },
         include: ['prices', 'stock_items'],
         fields: ['id', 'prices', 'stock_items'],
       })
@@ -102,8 +102,6 @@ export const getCommercelayerProduct = async (skuCode: string) => {
         productsQuantity: sku?.stock_items[0]?.quantity
       };
     }
-
-
   } catch (error) {
     console.error('Error retrieving SKU: ', error);
   }

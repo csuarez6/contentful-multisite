@@ -28,6 +28,9 @@ interface IMainFeature {
   warranty?: string[];
 } */
 
+/**
+ * @deprecated Interfaz obsoleta
+ */
 export interface IProductDetails {
   productName?: string;
   price?: string;
@@ -51,9 +54,9 @@ export interface IProductDetails {
 
 export interface IProductOverviewDetails {
   promoTitle?: string;
+  urlPath?: string;
   price?: string;
   promoDescription?: IRichText;
-  images?: IImageAsset[];
   productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
