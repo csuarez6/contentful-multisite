@@ -1,6 +1,7 @@
 import { ISelect } from "./SelectAtom";
 
 export const dataSelect: ISelect = {
+  name: "SelectAtom",
   listedContents: [
     {
       text: 'Value 1',

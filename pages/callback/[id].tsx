@@ -99,9 +99,9 @@ const schema = yup.object({
     .nullable()
     .required("Dato requerido"),
   email: yup.string().email("Email no válido").required("Dato requerido"),
-  // servicioExequial: yup.string().required("Dato requerido"),
-  // agreeHD: yup.string().required("Dato requerido"),
-  // acceptHD: yup.string().required("Dato requerido"),
+  servicioExequial: yup.string().required("Dato requerido"),
+  agreeHD: yup.bool().oneOf([true], "Dato requerido"),
+  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
 });
 
 const serviciosExequiales: IListContent[] = [
@@ -120,7 +120,9 @@ const CallbackPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
+    setValue,
+    clearErrors,
     reset
   } = useForm<IForm>({
     resolver: yupResolver(schema),
@@ -128,22 +130,17 @@ const CallbackPage = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
 
   const onSubmit = async (data: IForm) => {
     try {
       console.log(data);
-      fetch('https://jsonplaceholder.typicode.com/posts2', {
+      fetch('/api/callback', {
         method: 'POST',
         body: JSON.stringify({
-          title: 'CallbackPage'
+          type: lastPath,
+          ...data,
         }),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -157,21 +154,17 @@ const CallbackPage = () => {
         })
         .catch(err => {
           setIsSuccess(false);
-          console.error(err);
+          console.log(err);
         })
         .finally(() => openModal());
     } catch (error) {
-      console.error(error.message);
+      console.log(error.message);
     }
   };
 
   return (
     <section className="section">
-      <HeadingCard
-        classes=""
-        title="1. ¡Comencemos!"
-        icon="personal-data"
-      >
+      <HeadingCard title="1. ¡Comencemos!" isCheck={isValid} icon="personal-data">
         <div className="bg-white rounded-lg">
           <div className='mb-6'>
             <p className='title is-4 !font-semibold text-grey-30'>Cuéntanos sobre ti</p>
@@ -220,9 +213,13 @@ const CallbackPage = () => {
                   listedContents={serviciosExequiales}
                   placeholder="Selecciona el servicio"
                   name="servicioExequial"
-                  {...register("servicioExequial")}
+                  handleChange={(value) => {
+                    setValue("servicioExequial", value);
+                    clearErrors('servicioExequial');
+                  }}
+                  {...register("servicioExequial", { required: true, validate: (value) => value !== "" })}
                 />
-                {errors.servicioExequial && <p className="text-red-600 mt-1">{errors.servicioExequial?.message}</p>}
+                {errors.servicioExequial?.message && <p className="text-red-600 mt-1">{errors.servicioExequial?.message}</p>}
               </div>
             )}
             <div className="w-full">
@@ -230,9 +227,7 @@ const CallbackPage = () => {
                 id="agreeHD"
                 name="agreeHD"
                 label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales"
-                type="checkbox"
-                value={true}
-                {...register("agreeHD", { required: "This is required" })}
+                {...register("agreeHD")}
               />
               {errors.agreeHD && <p className="text-red-600 mt-1">{errors.agreeHD?.message}</p>}
 

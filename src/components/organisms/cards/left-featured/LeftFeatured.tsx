@@ -7,7 +7,6 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
   const {
-    __typename,
     name,
     promoImage,
     promoTitle,
