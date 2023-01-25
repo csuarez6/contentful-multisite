@@ -1,8 +1,7 @@
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
 
-import { Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
+import React, { useState, useEffect } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import { getUrlPath } from "@/utils/link.utils";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
@@ -37,114 +36,137 @@ const LinkElement = ({ item, isOpen }) => {
     </>
   );
 };
+const MegaMenuItem = ({item}) => {
+  const [open, setOpen] = useState(false);
+  const [columns, setColumns] = useState(5);
+  const [screen, setScreen] = useState(0);
 
-const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
-  if (mainNavCollection.items?.length <= 0) return;
+  useEffect(() => {
+    setScreen(window.innerWidth);
+    responsive(screen);
+    window.addEventListener("resize", () => {
+      setScreen(window.innerWidth);
+      responsive(screen);
+    });
+  }, [screen]);
+
+  const rows = (value) => {
+    let rows = Math.ceil((value + 1) / columns);
+    rows = rows * 2;
+    return rows;
+  };
+
+  const responsive = (w) => {
+    if(w < 768)
+      setColumns(1);
+    else if(w < 1024)
+      setColumns(3);
+    else 
+      setColumns(5);
+  };
 
   return (
-    <div className="relative hidden lg:block">
-      <Popover className="relative bg-white">
-        <div
-          className="pointer-events-none absolute inset-0 z-30"
-          aria-hidden="true"
-        />
-        <div className="relative z-20">
-          <div className="mx-auto flex items-center">
-            <div className="flex flex-1 items-center py-2 min-h-[60px]">
-              <Popover.Group as="nav" className="flex gap-6">
-                {mainNavCollection.items.map((item) => (
-                  <Popover key={item.sys.id}>
-                    {({ open }) => (
-                      <>
-                        {!item.internalLink?.slug &&
-                          !item.externalLink &&
-                          getUrlPath(item) === "/" && (
-                            <Popover.Button
-                              className={classNames(
-                                open
-                                  ? "border-blue-dark"
-                                  : "border-transparent",
-                                "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark hover:border-blue-dark focus:outline-none"
-                              )}
-                            >
-                              <LinkElement item={item} isOpen={open} />
-                            </Popover.Button>
-                          )}
-                        {(item.internalLink?.slug ||
-                          item.externalLink ||
-                          getUrlPath(item) !== "/") && (
-                          <CustomLink
-                            content={item}
-                            className={
-                              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark hover:border-blue-dark focus:outline-none"
-                            }
-                          >
-                            <LinkElement item={item} isOpen={false} />
-                          </CustomLink>
-                        )}
+    <div 
+      onMouseOver={()=>{setOpen(true);}}
+      onMouseOut={()=>{setOpen(false);}}
+      className={`${open ? "isOpen" : ""} group/submenu min-h-[60px] -my-2 flex items-center`}
+     >
+      {!item.internalLink?.slug &&
+       !item.externalLink &&
+       getUrlPath(item) === "/" && (
+        <CustomLink
+          content={item}
+          linkClassName= {"relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"}
+          className={
+            `${open ? "border-blue-dark" : ""} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none`
+          }
+        >
+          <LinkElement item={item} isOpen={open} />
+        </CustomLink>
+      )}
+      {(item.internalLink?.slug ||
+        item.externalLink ||
+        getUrlPath(item) !== "/") && (
+        <CustomLink
+          content={item}
+          className={
+            `${open && "border-blue-dark"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none`
+          }
+        >
+          <LinkElement item={item} isOpen={false} />
+        </CustomLink>
 
-                        {item.mainNavCollection?.items?.length > 0 && (
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <Popover.Panel className="absolute inset-x-0 top-full mt-px z-10 transform">
-                              <div className="bg-white min-w-[100vw] -mx-[50vw] absolute h-full inset-x-0 shadow"></div>
-                              <div className="relative flex pt-6 my-6 gap-6">
-                                <nav className="grid gap-6 grid-cols-5">
-                                  {item.mainNavCollection.items.map((item) => (
-                                    <div key={item.name}>
-                                      <p className="text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4">
-                                        {item.promoTitle ?? item.name}
-                                      </p>
-                                      <ul
-                                        role="list"
-                                        className="flex flex-col gap-5 mt-5"
-                                      >
-                                        {item.mainNavCollection?.items?.map(
-                                          (item) => (
-                                            <li
-                                              key={item.name}
-                                              className="flow-root"
-                                            >
-                                              <CustomLink
-                                                content={item}
-                                                className="flex items-center text-base text-blue-dark hover:text-lucuma-60"
-                                              >
-                                                <span>
-                                                  {item.promoTitle ?? item.name}
-                                                </span>
-                                              </CustomLink>
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    </div>
-                                  ))}
-                                </nav>
-                                {/* <div className="py-8 sm:py-12 pl-6 border-l border-neutral-70">
-                                <div>
-                                  Cards
-                                </div>
-                              </div> */}
-                              </div>
-                            </Popover.Panel>
-                          </Transition>
-                        )}
-                      </>
+      )}
+      {item.mainNavCollection?.items?.length > 0 && (
+        <div 
+          className={
+            `${open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} absolute inset-x-0 top-full mt-px z-10 transform transition-all duration-200`
+          }
+         >
+          <div className="bg-white min-w-[100vw] absolute h-full left-1/2 translate-x-[-50%] shadow"></div>
+          <div className="relative flex pt-6 my-6 gap-6">
+            <nav className="grid gap-6 w-full" style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}}>
+              {item.mainNavCollection.items.map((item, index) => (
+                <>
+                  <p 
+                    key={`title_${item.name}`}
+                    style={{gridRowStart: rows(index) - 1}}
+                    className="text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4"
+                   >
+                    {item.promoTitle ?? item.name}
+                  </p>
+                  <ul
+                    key={`title_${item.name}`}
+                    role="list"
+                    style={{gridRowStart: rows(index)}}
+                    className="flex flex-col gap-5 mt-5"
+                  >
+                    {item.mainNavCollection?.items?.map(
+                      (item) => (
+                        <li key={item.name} className="flow-root">
+                          <CustomLink content={item} onClick={()=>{setOpen(false);}} className="flex items-center text-base text-blue-dark hover:text-lucuma-60">
+                            <span>
+                              {item.promoTitle ?? item.name}
+                            </span>
+                          </CustomLink>
+                        </li>
+                      )
                     )}
-                  </Popover>
-                ))}
-              </Popover.Group>
+                  </ul>
+                </>
+              ))}
+            </nav>
+            {/* <div className="py-8 sm:py-12 pl-6 border-l border-neutral-70">
+            <div>
+              Cards
             </div>
+          </div> */}
           </div>
         </div>
-      </Popover>
+      )}
+    </div>
+  );
+};
+
+const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
+  
+  if (mainNavCollection.items?.length <= 0) return;
+  return (
+    <div className="relative hidden lg:block">
+       <div className="relative bg-white">
+          <div className="pointer-events-none absolute inset-0 z-30"aria-hidden="true"/>
+          <div className="relative z-20">
+            <div className="mx-auto flex items-center">
+              <div className="flex flex-1 items-center py-2 min-h-[60px]">
+                <div className="flex gap-6">
+                  {mainNavCollection.items.map((item) => (
+                    <MegaMenuItem item={item} key={item.sys.id}/>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+       </div>
     </div>
   );
 };
