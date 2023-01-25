@@ -27,5 +27,6 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_PRODUCT_FINANCING = "ViewProductFinancing",
   VIEW_FUNERAL_PLANS = "ViewFuneralPlans",
   VIEW_CAROUSEL = "ViewCarousel",
-  VIEW_FEATURED_TABS = "ViewFeaturedTabs"
+  VIEW_FEATURED_TABS = "ViewFeaturedTabs",
+  VIEW_FEATURED_PRODUCTS = "ViewFeaturedProducts",
 };

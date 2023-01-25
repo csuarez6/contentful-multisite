@@ -30,6 +30,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   urlPath,
   sku,
 }) => {
+  
   const [productPrices, setProductPrices] = useState<any>({
     price,
     priceBefore,
