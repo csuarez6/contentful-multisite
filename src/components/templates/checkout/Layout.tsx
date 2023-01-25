@@ -8,8 +8,16 @@ interface IChekoutLayoutProps {
   children: React.ReactNode;
 }
 
+const DEFAULT_PAYMENT_METHOD = "pse";
+
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
-  const { order } = useContext(CheckoutContext);
+  const {
+    order,
+    setPaymentMethod,
+    addPaymentMethodSource,
+    placeOrder,
+    setDefaultShippingMethod,
+  } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -25,8 +33,24 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const onPlaceOrder = async () => {
     try {
-      // await placeOrder()
-      window.location.href="https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
+      /**
+       * Before of place a order we've had to:
+       * 1. Have Setted a shipping method
+       * 2. Have Setted a payment method
+       * 3. Have Added a payment method source
+       */
+      const paymentMethodId = order.available_payment_methods.find(
+        (i) => i.reference === DEFAULT_PAYMENT_METHOD
+      )?.id;
+      await Promise.all([
+        setDefaultShippingMethod(),
+        setPaymentMethod(paymentMethodId),
+        addPaymentMethodSource(),
+      ]);
+
+      await placeOrder();
+      window.location.href =
+        "https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
     } catch (error) {
       console.error(error);
       alert('Error al Realizar el pedido');
@@ -42,14 +66,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             <h4 className="text-blue-dark">Detalle de tu pedido</h4>
             {products?.map((product, i) => (
               <div className="flex justify-center" key={i}>
-                <figure className={classNames("w-full relative aspect-[214/214]")}>
-                  <Image
-                    src={product?.image_url}
-                    alt={product?.name}
-                    className="h-full w-full object-cover"
-                    fill
-                  />
-                </figure>
+                {product?.image_url && (
+                  <figure
+                    className={classNames("w-full relative aspect-[214/214]")}
+                  >
+                    <Image
+                      src={product?.image_url}
+                      alt={product?.name}
+                      className="h-full w-full object-cover"
+                      fill
+                    />
+                  </figure>
+                )}
               </div>
             ))}
             <div className="p-5 flex flex-col gap-3">
@@ -59,30 +87,38 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <div className="relative">
                     <div className="grid grid-cols-2">
                       <p className="">{product.name}</p>
-                      <span className="text-center text-blue-dark">{product?.formatted_total_amount}</span>
+                      <span className="text-center text-blue-dark">
+                        {product?.formatted_unit_amount}
+                      </span>
                     </div>
                     <div className="grid grid-cols-2">
                       <p>Cantidad</p>
-                      <span className="text-center text-blue-dark">{product.quantity}</span>
+                      <span className="text-center text-blue-dark">
+                        {product.quantity}
+                      </span>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 bg-neutral-90 rounded justify-items-center p-1 mt-[17px]">
-                    <p className="font-bold">TOTAL</p>
-                    <span className="font-bold">{product?.formatted_total_amount}</span>
-                  </div>
-                  {isComplete && (
-                    <button onClick={onPlaceOrder} className="button button-primary w-full mt-[17px]">
-                      Comprar
-                    </button>
-                  )}
                 </div>
               ))}
+              <div className="grid grid-cols-2 bg-neutral-90 rounded justify-items-center p-1 mt-[17px]">
+                <p className="font-bold">TOTAL</p>
+                <span className="font-bold">
+                  {order?.formatted_total_amount_with_taxes}
+                </span>
+              </div>
+              {isComplete && (
+                <button
+                  onClick={onPlaceOrder}
+                  className="button button-primary w-full mt-[17px]"
+                >
+                  Comprar
+                </button>
+              )}
             </div>
           </div>
         </article>
       </div>
     </>
-
   );
 };
 

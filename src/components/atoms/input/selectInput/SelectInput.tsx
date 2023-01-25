@@ -16,6 +16,7 @@ const SelectInput: React.FC<ISelectInput> = forwardRef(({
     id,
     className,
     options,
+    placeholder,
     ...rest
 }, ref ) => {
     return (
@@ -32,6 +33,7 @@ const SelectInput: React.FC<ISelectInput> = forwardRef(({
                 {...rest}
                 
             >
+                {placeholder && <option value="">{placeholder}</option>}
                 {options.map(({ label, value }) => (
                         <option key={value} value={value}>
                             {label}

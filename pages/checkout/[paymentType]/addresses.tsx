@@ -233,7 +233,7 @@ const CheckoutAddresses = () => {
                   value: state.name,
                 }))}
                 {...register("shippingAddress.stateCode")}
-                placeholder="Departamento"
+                placeholder="Seleccionar"
               />
               {errors.shippingAddress?.stateCode && (
                 <p className="text-red-600">
@@ -250,7 +250,7 @@ const CheckoutAddresses = () => {
                   value: city,
                 }))}
                 {...register("shippingAddress.cityCode")}
-                placeholder="Municipio"
+                placeholder="Seleccionar"
               />
               {errors?.shippingAddress?.cityCode && (
                 <p className="text-red-600">
@@ -306,7 +306,7 @@ const CheckoutAddresses = () => {
                       value: state.name,
                     }))}
                     {...register("billingAddress.stateCode")}
-                    placeholder="Departamento"
+                    placeholder="Seleccionar"
                   />
                   {errors.billingAddress?.stateCode && (
                     <p className="text-red-600">
@@ -323,7 +323,7 @@ const CheckoutAddresses = () => {
                       value: city,
                     }))}
                     {...register("billingAddress.cityCode")}
-                    placeholder="Municipio"
+                    placeholder="Seleccionar"
                   />
                   {errors?.billingAddress?.cityCode && (
                     <p className="text-red-600">

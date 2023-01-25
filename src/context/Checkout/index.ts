@@ -29,36 +29,45 @@ export type VantiCheckoutFlow = {
 }
 
 export interface IContextCheckout {
-  isLoading: boolean
-  isError: boolean
-  order: Order
-  flow: VantiCheckoutFlow
-  addToCart: (sku: string) => void
-  updateMetadata: <T = any>(metaField: string, value: T) => Promise<void>
-  addCustomer: (customer: VantiChekoutCustomer) => Promise<void>,
-  updateItemQuantity: (skuCode: string, quantity: number) => Promise<void>
-  addAddresses: (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => Promise<void>,
+  isLoading: boolean;
+  isError: boolean;
+  order: Order;
+  flow: VantiCheckoutFlow;
+  addToCart: (sku: string) => void;
+  updateMetadata: <T = any>(metaField: string, value: T) => Promise<void>;
+  addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
+  updateItemQuantity: (skuCode: string, quantity: number) => Promise<void>;
+  addAddresses: (
+    shippingAddress: AddressCreate,
+    billingAddress?: AddressCreate
+  ) => Promise<void>;
   getAddresses: () => Promise<{
-    shippingAddress?: Address,
-    billingAddress?: Address
-  }>,
-  placeOrder: () => Promise<void>,
-  getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>,
+    shippingAddress?: Address;
+    billingAddress?: Address;
+  }>;
+  placeOrder: () => Promise<void>;
+  getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
+  setPaymentMethod: (paymentMethodId: string) => Promise<void>;
+  addPaymentMethodSource: () => Promise<void>;
+  setDefaultShippingMethod: () => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
-    order: undefined,
-    isLoading: false,
-    isError: false,
-    flow: undefined,
-    addToCart: () => undefined,
-    updateMetadata: () => undefined,
-    addCustomer: () => undefined,
-    updateItemQuantity: () => undefined,
-    addAddresses: () => undefined,
-    getAddresses: () => undefined,
-    placeOrder: () => undefined,
-    getPaymentMethods: () => undefined,
+  order: undefined,
+  isLoading: false,
+  isError: false,
+  flow: undefined,
+  addToCart: () => undefined,
+  updateMetadata: () => undefined,
+  addCustomer: () => undefined,
+  updateItemQuantity: () => undefined,
+  addAddresses: () => undefined,
+  getAddresses: () => undefined,
+  placeOrder: () => undefined,
+  getPaymentMethods: () => undefined,
+  setPaymentMethod: () => undefined,
+  addPaymentMethodSource: () => undefined,
+  setDefaultShippingMethod: () => undefined,
 });
 
 export default CheckoutContext;

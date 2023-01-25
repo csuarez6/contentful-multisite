@@ -21,6 +21,9 @@ const CheckoutProvider = ({ children }) => {
     getAddresses,
     placeOrder,
     getPaymentMethods,
+    setPaymentMethod,
+    addPaymentMethodSource,
+    setDefaultShippingMethod,
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -38,6 +41,9 @@ const CheckoutProvider = ({ children }) => {
     getAddresses,
     placeOrder,
     getPaymentMethods,
+    setPaymentMethod,
+    addPaymentMethodSource,
+    setDefaultShippingMethod,
   };
 
   return (

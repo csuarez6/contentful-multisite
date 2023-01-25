@@ -9,11 +9,13 @@ import { getSalesChannelToken } from "@commercelayer/js-auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 
+const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "shipping_address", "billing_address"],
+  include: ["line_items", "available_payment_methods", "shipments"],
   fields: {
     orders: [
       "number",
+      "status",
       "skus_count",
       "formatted_subtotal_amount",
       "formatted_discount_amount",
@@ -24,8 +26,11 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "line_items",
       "metadata",
       "customer_email",
+      "available_payment_methods",
+      "shipments",
     ],
     addresses: ["state_code", "city", "line_1", "phone"],
+    shipments: ["available_shipping_methods"],
     line_items: [
       "item_type",
       "image_url",
@@ -61,7 +66,6 @@ export const useCommerceLayer = () => {
           return;
         }
 
-
         setClient(CommerceLayer({ accessToken, organization: "vanti-poc" }));
       } catch (error) {
         setError(error);
@@ -86,8 +90,14 @@ export const useCommerceLayer = () => {
   }, [client]);
 
   const getOrder = useCallback(async () => {
-    const orderId = await getOrderId();
-    const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
+    let orderId = await getOrderId();
+    let order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
+    if (!["draft", "pending"].includes(order.status)) {
+      localStorage.removeItem("orderId");
+
+      orderId = await getOrderId();
+      order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
+    }
 
     return order;
   }, [getOrderId, client]);
@@ -250,6 +260,59 @@ export const useCommerceLayer = () => {
     [order, client, getOrderId]
   );
 
+  const getPaymentMethods = useCallback(async () => {
+    const orderId = await getOrderId();
+
+    return client.orders.available_payment_methods(orderId);
+  }, [client, getOrderId]);
+
+  const setPaymentMethod = useCallback(
+    async (paymentMethodId: string) => {
+      const id = await getOrderId();
+      const result = await client.orders.update(
+        {
+          id,
+          payment_method: {
+            id: paymentMethodId,
+            type: 'payment_methods'
+          },
+        },
+        DEFAULT_ORDER_PARAMS
+      );
+
+      setOrder(result);
+    },
+    [client, getOrderId]
+  );
+
+  const addPaymentMethodSource = useCallback(async () => {
+    const orderId = await getOrderId();
+
+    await client.wire_transfers.create({
+      order: {
+        id: orderId,
+        type: "orders",
+      },
+    });
+  }, [client, getOrderId]);
+
+  const setDefaultShippingMethod = useCallback(
+    async () => {
+      const shipmentId = order.shipments.at(0)?.id;
+
+      await client.shipments
+        .update({
+          id: shipmentId,
+          shipping_method: {
+            id: DEFAULT_SHIPPING_METHOD_ID,
+            type: "shipping_methods",
+          },
+        });
+
+    },
+    [client, order]
+  );
+
   const placeOrder = useCallback(
     async () => {
       const id = await getOrderId();
@@ -262,12 +325,6 @@ export const useCommerceLayer = () => {
     },
     [client, getOrderId]
   );
-
-  const getPaymentMethods = useCallback(async () => {
-    const orderId = await getOrderId();
-
-    return client.orders.available_payment_methods(orderId);
-  }, [client, getOrderId]);
 
   return {
     isError,
@@ -284,7 +341,10 @@ export const useCommerceLayer = () => {
     getAddresses,
     updateMetadata,
     placeOrder,
-    getPaymentMethods
+    getPaymentMethods,
+    setPaymentMethod,
+    addPaymentMethodSource,
+    setDefaultShippingMethod,
   };
 };
 
