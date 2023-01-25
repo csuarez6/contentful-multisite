@@ -1,6 +1,6 @@
 import InformativeGridCard from "@/components/organisms/cards/informative-grid/InformativeGridCard";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from "@/utils/functions";
+import { classNames, getButtonType } from "@/utils/functions";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
@@ -54,7 +54,7 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
               )}
               key={content.promoTitle}
             >
-              <InformativeGridCard key={content.promoTitle} {...content} />
+              <InformativeGridCard key={content.promoTitle} {...content} buttonType={view.buttonType} />
             </div>
           ))}
         </div>
@@ -65,7 +65,7 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
             <div className="flex justify-center" key={item.name}>
               <CustomLink
                 content={item}
-                className="button button-primary w-fit"
+                className={classNames("w-fit button", getButtonType(view.buttonType ?? "Contorno"))}
               >
                 {item.promoTitle ?? item.name}
               </CustomLink>

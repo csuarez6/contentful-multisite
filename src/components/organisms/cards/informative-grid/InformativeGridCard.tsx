@@ -3,6 +3,7 @@ import { BLOCKS } from "@contentful/rich-text-types";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { classNames, getButtonType } from "@/utils/functions";
 
 const options = {
   renderNode: {
@@ -23,8 +24,8 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
     promoDescription,
     externalLink,
     internalLink,
+    buttonType
   } = props;
-
   return (
     <article className="text-center w-full px-6 py-12">
       {(promoTitle || promoDescription) && (
@@ -39,7 +40,7 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
           )}
           {(externalLink || internalLink?.urlPath) && (
             <div className="flex justify-center">
-              <CustomLink className="button text-button" content={props}>
+              <CustomLink  content={props} className={classNames("button", getButtonType(buttonType ?? 'Texto'))} >
                 {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
               </CustomLink>
             </div>

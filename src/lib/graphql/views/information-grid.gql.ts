@@ -5,6 +5,7 @@ const ViewInformationGrid = `
   name
   backgroundColor
   columnsSize
+  buttonType
 `;
 
 export default ViewInformationGrid;
