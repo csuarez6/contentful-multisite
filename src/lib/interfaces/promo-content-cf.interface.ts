@@ -3,6 +3,7 @@ import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
 import { IRpoForm } from "./IForm-cf";
 import { IRichText } from './richtext-cf.interface';
 import { IPage } from './page-cf.interface';
+import { IProductOverviewDetails } from './product-cf.interface';
 
 interface IBlockProps {
     isFirst?: boolean;
@@ -56,7 +57,7 @@ export interface IPromoBlock extends IBlockProps {
      */
     content?: IPromoContent;
     listedContentsCollection?: {
-        items?: IPromoContent[]
+        items?: IPromoContent[] | IProductOverviewDetails[]
     };
     featuredContentsCollection?: {
         items?: IPromoContent[]

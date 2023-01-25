@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import FeaturedProduct from "./FeaturedProduct";
 import { mockFeaturedProductProps } from "./FeaturedProduct.mock";
-import { IProductDetails } from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 
 export default {
   title: "organisms/cards/FeaturedProduct",
@@ -29,4 +29,4 @@ export const Base = Template.bind({});
 
 Base.args = {
   ...mockFeaturedProductProps.data,
-} as IProductDetails;
+} as IProductOverviewDetails;

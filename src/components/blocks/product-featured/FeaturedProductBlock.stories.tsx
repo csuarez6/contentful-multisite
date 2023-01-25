@@ -1,5 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import FeaturedProductBlock, { IFeaturedProductBlock } from './FeaturedProductBlock';
+import FeaturedProductBlock from './FeaturedProductBlock';
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { data } from './FeaturedProductBlock.mock';
 
 export default {
@@ -26,4 +27,4 @@ export const Base = Template.bind({});
 
 Base.args = {
     ...data,
-} as IFeaturedProductBlock;
+} as IPromoBlock;
