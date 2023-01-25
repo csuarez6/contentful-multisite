@@ -107,11 +107,11 @@ const schema = yup.object({
 const serviciosExequiales: IListContent[] = [
   {
     text: "Plan personas",
-    value: "plan-personas"
+    value: "Plan personas"
   },
   {
     text: "Plan mascotas",
-    value: "plan-mascotas"
+    value: "Plan Mascotas"
   }
 ];
 

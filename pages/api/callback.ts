@@ -16,6 +16,7 @@ const handler = async (
     data["subject"] = data.type;
     data["servicioExequial"] = req.body.servicioExequial;
     data["body"] = `
+      Solicitud de servicio ¡Te llamamos! para ${data.type}
       Nombre: ${data.fullName}\n
       Teléfono: ${data.cellPhone}\n
       Interés: ${data.type}\n
@@ -23,7 +24,7 @@ const handler = async (
     `;
   };
 
-  const isMailSended = await sendEmail("jperez@aplyca.com", data.type, data.body);
+  const isMailSended = await sendEmail("jperez@aplyca.com, evallejo@aplyca.com, msanchez@aplyca.com", "Servicio ¡Te llamamos! Vanti Marketplace", data.body);
   res.status(200).json({
     result: {
       message: isMailSended ? "Envío de correo exitoso" : "Envío de correo fallido",

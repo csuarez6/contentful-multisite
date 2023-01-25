@@ -38,7 +38,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef((
 
   return (
     <>
-      <select name={name} ref={ref} {...rest} defaultValue={""} onChange={onChangeInput}>
+      <select hidden name={name} ref={ref} {...rest} defaultValue={""} onChange={onChangeInput}>
         <option value="" disabled>{placeholder}</option>
         {listedContents?.map((content) => (<option key={content.value} value={content.value}>{content.text}</option>))}
       </select>
