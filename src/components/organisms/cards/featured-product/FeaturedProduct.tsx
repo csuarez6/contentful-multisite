@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import useSWR from "swr";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
@@ -11,7 +10,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const icon: IIcon = {
   size: 23,
-  icon: "pray",
+  icon: "energie",
   className: "z-10",
 };
 
@@ -23,7 +22,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   priceBefore,
   rating,
   promotion,
-  promoDescription,
   imagesCollection,
   paymentMethods,
   promoImage,
@@ -132,11 +130,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                 )}
               </div>
             </div>
-            {promoDescription && (
-              <div className="text-size-small text-blue-dark">
-                {documentToReactComponents(promoDescription.json)}
-              </div>
-            )}
           </div>
           {(productPrices.price || productPrices.priceBefore) && (
             <div className="flex flex-col gap-[6px]">
