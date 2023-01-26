@@ -2,7 +2,7 @@ import React from 'react';
 import Textbox from '@/components/atoms/input/textbox/TextBox';
 import CheckBox from '@/components/atoms/input/checkbox/CheckBox';
 import SelectInput from '@/components/atoms/selectInput/SelectInput';
-import { IForm } from './SignIn.mocks';
+import { IForm } from './SignUpForm.mocks';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import HeadingCard from '../../cards/heading-card/HeadingCard';
@@ -40,7 +40,7 @@ const defaultValues: ITemsForm = {
 
 const schema = customerSchema;
 
-const SignInForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
+const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
 
     const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
     } = useForm<ITemsForm>({
@@ -197,4 +197,4 @@ const SignInForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
     );
 };
 
-export default SignInForm;
+export default SignUpForm;

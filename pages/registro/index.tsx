@@ -1,6 +1,6 @@
 import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
-import SignInFormBlock from "@/components/blocks/sigin-form/SignInFormBlock";
-import { IForm } from "@/components/organisms/forms/signin-form/SignIn.mocks";
+import SignUpFormBlock from "@/components/blocks/sigup-form/SignUpFormBlock";
+import { IForm } from "@/components/organisms/forms/signup-form/SignUpForm.mocks";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockSidebarInformativeProps } from "@/components/organisms/cards/sidebar-informative/SidebarInformative.mock";
 import { useState } from "react";
@@ -15,7 +15,7 @@ const ModalContent = ({ modalMsg }) => {
   );
 };
 
-const SignIn = () => {
+const SignUp = () => {
 
   const [dataModal, setDataModal] = useState<IPromoContent>({
     children: <ModalContent modalMsg="..." />,
@@ -24,7 +24,7 @@ const SignIn = () => {
   });
 
   const onSubmit = async (data) => {
-    await fetch('api/signin', {
+    await fetch('api/signup', {
       method: "POST",
       body: JSON.stringify(data)
     }).then(async (response) => {
@@ -79,13 +79,13 @@ const SignIn = () => {
   };
 
   return (
-    <div>
-      <SignInFormBlock sidebar={mockSidebarInformativeProps.data} form={data} />
-    </div>
+    <>
+      <SignUpFormBlock sidebar={mockSidebarInformativeProps.data} form={data} />
+    </>
   );
 };
 
-SignIn.getInitialProps = () => {
+SignUp.getInitialProps = () => {
   return {
     layout: {
       name: mockPageLayoutProps.data.name,
@@ -95,4 +95,4 @@ SignIn.getInitialProps = () => {
   };
 };
 
-export default SignIn;
+export default SignUp;

@@ -190,13 +190,13 @@ const HeaderBlock: React.FC<INavigation> = ({
                   )}
                   <div className="hidden gap-6 px-6 lg:flex">
                     <CustomLink
-                      content={{ urlPath: "/signin" }}
+                      content={{ urlPath: "/registro" }}
                       className="flex items-center text-center button button-primary"
                     >
                       Regístrate
                     </CustomLink>
                     <CustomLink
-                      content={{ urlPath: "/login" }}
+                      content={{ urlPath: "/acceso" }}
                       className="flex items-center text-center button button-outline"
                     >
                       Inicia sesión

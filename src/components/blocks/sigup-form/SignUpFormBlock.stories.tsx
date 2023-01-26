@@ -1,11 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import SignInFormBlock from './SignInFormBlock';
+import SignUpFormBlock from './SignUpFormBlock';
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { mockSignInFormBlockProps } from './SignInFormBlock.mocks';
+import { mockSignUpFormBlockProps } from './SignUpFormBlock.mocks';
 
 export default {
-  title: 'blocks/SignInFormBlock',
-  component: SignInFormBlock,
+  title: 'blocks/SignUpFormBlock',
+  component: SignUpFormBlock,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
@@ -15,11 +15,11 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof SignInFormBlock>;
+} as ComponentMeta<typeof SignUpFormBlock>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof SignInFormBlock> = (args) => (
-    <SignInFormBlock {...args} />
+const Template: ComponentStory<typeof SignUpFormBlock> = (args) => (
+  <SignUpFormBlock {...args} />
 );
 
 export const Base = Template.bind({});
@@ -27,5 +27,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockSignInFormBlockProps.data,
+  ...mockSignUpFormBlockProps.data,
 } as IPromoBlock;

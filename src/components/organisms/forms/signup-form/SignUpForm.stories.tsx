@@ -1,9 +1,9 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import SignInForm from './SignInForm';
-import { IForm, mockSignInFormsProps } from './SignIn.mocks';
+import SignInForm from './SignUpForm';
+import { IForm, mockSignUpFormsProps } from './SignUpForm.mocks';
 
 export default {
-    title: 'organisms/forms/SignInForm',
+    title: 'organisms/forms/SignUpForm',
     component: SignInForm,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},
@@ -25,5 +25,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-    ...mockSignInFormsProps.data,
+    ...mockSignUpFormsProps.data,
 } as IForm;
