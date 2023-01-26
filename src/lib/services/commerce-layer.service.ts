@@ -3,16 +3,17 @@ import Cookies from "js-cookie";
 import { getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
 export interface ICustomer {
+  name: string;
+  lastName: string;
+  documentType: string;
+  documentNumber: string;
   email: string;
+  cellPhone: string;
   password: string;
-  name: string,
-  lastname: string,
-  documentType: string,
-  document: string,
-  phone: string,
-  accountNumber: string,
-  privacyPolicy: boolean,
-  notifications: boolean,
+  confirmPassword?: string;
+  contractNumber: string;
+  authorize: boolean;
+  notificate: boolean;
 }
 
 export const getAppToken = async () => {
@@ -55,29 +56,41 @@ const getCommerlayerClient = async (token) => CommerceLayer({
   accessToken: token,
 });
 
-export const createCustomer = async ({ email, password, name, lastname, documentType, document, phone, accountNumber, privacyPolicy, notifications }: ICustomer) => {
+export const createCustomer = async ({
+  email,
+  password,
+  name,
+  lastName,
+  documentType,
+  documentNumber,
+  cellPhone,
+  contractNumber,
+  authorize,
+  notificate
+}: ICustomer) => {
   try {
-    const token = await getAppToken();
-    const cl = await getCommerlayerClient(token);
+    const merchantToken = await getMerchantToken();
+    const cl = await getCommerlayerClient(merchantToken);
 
     const createCustomer = await cl.customers.create({
       email: email,
       password: password,
       metadata: {
         name: name,
-        lastname: lastname,
+        lastName: lastName,
         documentType: documentType,
-        document: document,
-        phone: phone,
-        accountNumber: accountNumber,
-        privacyPolicy: privacyPolicy,
-        notifications: notifications,
+        documentNumber: documentNumber,
+        cellPhone: cellPhone,
+        contractNumber: contractNumber,
+        privacyPolicy: authorize,
+        notifications: notificate,
       }
     });
-    return createCustomer; // this will return the created resource object
+    return { status: 201, ...createCustomer }; // this will return the created resource object
 
   } catch (error) {
-    console.error('error!! ', error);
+    console.error('Error - Customer Service: ', error.response);
+    return { status: error.response.status };
   }
 };
 

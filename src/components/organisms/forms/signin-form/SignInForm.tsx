@@ -5,11 +5,11 @@ import SelectInput from '@/components/atoms/selectInput/SelectInput';
 import { IForm } from './SignIn.mocks';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
-import "@/styles/forms.css";
+import { customerSchema } from '../../../../schemas/customer';
+// import "@/styles/forms.css";
 
 export interface ITemsForm {
     name: string;
@@ -38,40 +38,7 @@ const defaultValues: ITemsForm = {
     notificate: false
 };
 
-const schema = yup.object({
-    name: yup.string()
-        .required("Dato Requerido").min(3, "Minimo 3 caracteres"),
-    lastName: yup.string()
-        .required("Dato Requerido").min(3, "Minimo 3 caracteres"),
-    documentType: yup.string()
-        .required('Dato Requerido'),
-    documentNumber: yup.number()
-        .required('Dato Requerido')
-        .nullable()
-        .transform((value) => (isNaN(value) ? undefined : value))
-        .positive('Solo numeros positivos'),
-    email: yup.string()
-        .email("Email no válido")
-        .required("Dato Requerido"),
-    cellPhone: yup.number()
-        .transform((value) => (isNaN(value) ? undefined : value))
-        .nullable()
-        .required("Dato Requerido")
-        .min(8, "Faltan Numeros"),
-    password: yup.string()
-        .required('Dato Requerido')
-        .min(6, 'Minimo 6 caracteres'),
-    confirmPassword: yup.string()
-        .required('Dato Requerido')
-        .min(6, 'Minimo 6 caracteres')
-        .oneOf([yup.ref("password")], "Contraseñas no coinciden"),
-    contractNumber: yup.number()
-        .required('Dato Requerido')
-        .nullable()
-        .transform((value) => (isNaN(value) ? undefined : value)),
-    authorize: yup.bool(),
-    notificate: yup.bool()
-});
+const schema = customerSchema;
 
 const SignInForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
 
