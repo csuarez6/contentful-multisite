@@ -18,6 +18,7 @@ import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import ViewCarouselCategories from "../views/carousel-categories.gql";
 import ViewFeaturedProducts from "../views/featured-products.gql";
+import ViewQueryForm from "../views/QueryForm.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -124,6 +125,9 @@ const BlockPromoContentQuery = `
     }
     ...on ViewFeaturedProducts{
       ${ViewFeaturedProducts}
+    }
+    ...on ViewQueryForm{
+      ${ViewQueryForm}
     }
   }
   blockId

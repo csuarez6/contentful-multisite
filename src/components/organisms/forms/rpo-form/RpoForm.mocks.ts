@@ -3,7 +3,6 @@ import { IRpoForm } from "@/lib/interfaces/IForm-cf";
 const data: IRpoForm = {
   title: 'qui dolorem ipsum, quia dolor sit amet consectetur',
   subTitle: '$ 3.000.000',
-  titleForm: 'Consulta tu cupo con Vanti Listo',
   dataForm: [
     {
       name:'Nombre del titular',

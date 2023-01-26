@@ -3,11 +3,11 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
+  subtitle: 'Consulta tu cupo con Vanti Listo',
   description: RICHTEXT_SHORT_SIMPLE,
   listedForm: {
     title: 'qui dolorem ipsum, quia dolor sit amet consectetur',
     subTitle: '$ 3.000.000',
-    // titleForm: 'Consulta tu cupo con Vanti Listo',
     dataForm: [
       {
         name: 'Nombre del titular',

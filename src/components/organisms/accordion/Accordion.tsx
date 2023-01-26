@@ -40,7 +40,7 @@ const Accordion: React.FC<any> = ({ featuredContents }) => {
                 </dt>
                 <Disclosure.Panel as="dd" className="mt-2  pl-7 pr-12">
                   <div className="text-base text-gray-500">
-                    {documentToReactComponents(el.promoDescription.json)}
+                    {documentToReactComponents(el?.promoDescription?.json)}
                   </div>
                 </Disclosure.Panel>
               </div>
