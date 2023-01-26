@@ -16,6 +16,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     externalLink,
     subtitle,
     title,
+    pretitle,
     description,
     image,
     ctaCollection,
@@ -39,14 +40,17 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
           />
         </figure>
       )}
-      {(subtitle || promoTitle || promoDescription || title || description || ctaCollection) && (
+      {(subtitle || pretitle || promoTitle || promoDescription || title || description || ctaCollection) && (
         <div className="flex items-center w-full md:w-1/2 lg:w-full px-3 py-8 md:pl-[52px] md:pr-9 md:py-4 grow">
           <div className="grid space-y-3">
-            {subtitle && (
-              <p className=" text-blue-dark title is-4">{subtitle}</p>
+            {pretitle && (
+              <p className=" text-blue-dark title is-4">{pretitle}</p>
             )}
             {(promoTitle || title) && (
               <h3 className="title is-2 text-blue-dark pb-6">{promoTitle ?? title}</h3>
+            )}
+            {subtitle && (
+              <p className=" text-blue-dark title is-4">{subtitle}</p>
             )}
             {(promoDescription || description) && (
               <div className="text-grey-60 pb-3">
