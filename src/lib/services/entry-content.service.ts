@@ -45,6 +45,11 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   let responseData = null;
   let responseError = null;
 
+  if (!blockInfo?.sys?.id) {
+    console.error(`Error on entry query, sys.id not defined => `, blockInfo);
+    return null;
+  }
+
   const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
@@ -68,7 +73,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   }
 
   if (responseError) {
-    console.error(`Error on entry query (${type}) => `, responseError.message);
+    console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
   }
 
   if (!responseData?.[type]) {

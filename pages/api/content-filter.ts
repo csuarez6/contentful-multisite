@@ -8,7 +8,8 @@ const handler = async (
 ) => {
   const filteredContent = await getFilteredContent({
     contentTypesFilter: typeof req.query.type == 'string' ? [req.query.type] : req.query.type,
-    parentIds: typeof req.query.parent == 'string' ? [req.query.parent] : req.query.parent
+    parentIds: typeof req.query.parent == 'string' ? [req.query.parent] : req.query.parent,
+    availableFacets: typeof req.query.facets == 'string' ? [req.query.facets] : req.query.facets,
   });
 
   res.status(200).json(filteredContent);

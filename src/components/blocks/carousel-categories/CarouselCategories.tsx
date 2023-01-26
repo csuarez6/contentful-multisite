@@ -23,18 +23,18 @@ const iconRight: IIcon = {
 
 const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, blockId, sysId }) => {
   const uui = uuid();
-  const allowTouchMove = view.isSlider ?? true;
+  const allowTouchMove = view?.isSlider ?? true;
 
   return (
-    <section id={blockId ? blockId : sysId} className={classNames("section gap-9 flex flex-col", view.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
+    <section id={blockId ? blockId : sysId} className={classNames("section gap-9 flex flex-col", view?.alignTitle === 'Left' && "md:flex-row md:gap-0")}>
       {(title || description) && (
-        <div className={classNames("text-center", view.alignTitle === 'Left' ? 'md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0' : "mb-3")}>
+        <div className={classNames("text-center", view?.alignTitle === 'Left' ? 'md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0' : "mb-3")}>
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}
           {description && <div className="text-blue-dark">{documentToReactComponents(description.json)}</div>}
         </div>
       )}
       {featuredContentsCollection?.items?.length > 0 && (
-        <div className={classNames("flex flex-nowrap relative grow w-full", view.alignTitle === 'Left' && 'md:max-w-[75%] md:pl-9')}>
+        <div className={classNames("flex flex-nowrap relative grow w-full", view?.alignTitle === 'Left' && 'md:max-w-[75%] md:pl-9')}>
           {allowTouchMove &&
             <div className='flex justify-center items-center'>
               <div className={`prevSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}>
@@ -57,7 +57,7 @@ const CarouselCategoriesBlock: React.FC<IPromoBlock> = ({ title, description, fe
             className="relative w-full"
           >
             {featuredContentsCollection && featuredContentsCollection?.items?.map((content) => (
-              <SwiperSlide key={content.promoTitle} >
+              <SwiperSlide key={content.sys.id} >
                 <CarouselCategories {...content} />
               </SwiperSlide>
             ))}

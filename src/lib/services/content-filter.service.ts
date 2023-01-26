@@ -1,13 +1,135 @@
 import { gql } from '@apollo/client';
 import _ from 'lodash';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
 
 import contentfulClient from './contentful-client.service';
 // import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
+import { FACET_QUERY_MAP } from '@/constants/search.constants';
+import PageQuery from '../graphql/page.gql';
+import ProductQuery from '../graphql/product.gql';
+import ProductCategoryQuery from '../graphql/shared/product-category.gql';
+import TrademarkQuery from '../graphql/shared/trademark.gql';
 
+export const getAlgoliaSearchIndex = (): SearchIndex => {
+  const searchClient = algoliasearch('DU18JA7AT2', '27488222ca2747bbba7b33f50296d5b4');
+  const searchIndex = searchClient.initIndex('Production');
 
-const getFilteredContent = async ({ contentTypesFilter, parentIds }) => {
+  return searchIndex;
+};
+
+const getAlgoliaResults = async ({
+  contentTypesFilter,
+  parentIds = [],
+  availableFacets = [],
+  pageResults = 12,
+  page = 1
+}) => {
+  const resultObject = {
+    items: [],
+    totalItems: 0,
+    totalPages: 0,
+    actualPage: 0,
+    facets: {}
+  };
+
+  const types = [];
+  const algoliaFilter = [];
+  const algoliaFacets = Object.keys(FACET_QUERY_MAP).filter(
+    fk => availableFacets.indexOf(FACET_QUERY_MAP[fk].title) >= 0
+  );
+
+  for (const contentTypeFilter of contentTypesFilter) {
+    const { queryName: type } = CONTENTFUL_QUERY_MAPS[_.capitalize(contentTypeFilter)];
+    types.push(type);
+  }
+
+  const contentTypeFilterSearchQuery = types.map(ct => `sys.contentType.sys.id:${ct}`);
+  const parentIdsSearchQuery = parentIds.map(pid => `fields.parent.es.sys.id:${pid}`);
+  algoliaFilter.push(
+    `(${contentTypeFilterSearchQuery.join(' OR ')})`,
+    `(${parentIdsSearchQuery.join(' OR ')})`
+  );
+
+  const indexSearch = getAlgoliaSearchIndex();
+  const resultAlgolia = await indexSearch.search('', {
+    filters: algoliaFilter.join(' AND '),
+    facets: algoliaFacets,
+    hitsPerPage: pageResults,
+    attributesToRetrieve: ['fields.name'],
+    page
+  });
+
+  ({
+    hits: resultObject.items,
+    nbHits: resultObject.totalItems,
+    nbPages: resultObject.totalPages,
+    page: resultObject.actualPage,
+    facets: resultObject.facets
+  } = resultAlgolia);
+
+  return resultObject;
+};
+
+const getFacetsValues = async (facets: any) => {
+  const facetsWithValues = [];
+  const preview = false;
+
+  for (const facetId in facets) {
+    const facetContentIds = Object.keys(facets[facetId]);
+
+    try {
+      const { data: responseData } = await contentfulClient(preview).query({
+        query: gql`
+          query getEntriesCollection($preview: Boolean!, $limit: Int!) {
+            entryCollection(where: { sys: { id_in: ["${facetContentIds.join('", "')}"] } }, preview: $preview, limit: $limit) {
+              items {
+                ...on ProductCategory {
+                  ${ProductCategoryQuery}
+                }
+                ...on Trademark {
+                  ${TrademarkQuery}
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          preview,
+          limit: facetContentIds.length
+        },
+        errorPolicy: 'all'
+      });
+
+      if (responseData?.entryCollection?.items) {
+        const facetContents = {
+          title: FACET_QUERY_MAP[facetId].title,
+          items: responseData.entryCollection.items.map((facetContent: any) => {
+            return {
+              ...facetContent,
+              totalItems: facets[facetId][facetContent.sys.id]
+            };
+          }),
+        };
+
+        facetsWithValues.push(facetContents);
+      }
+    } catch (e) {
+      console.error(`Error on getFacetsValues => `, e.message);
+    }
+  };
+
+  return facetsWithValues;
+};
+
+const getFilteredContent = async ({
+  contentTypesFilter,
+  parentIds = [],
+  availableFacets = [],
+  pageResults = 12,
+  page = 1
+}) => {
   if (!contentTypesFilter) {
     console.error(`Error on getFilteredContent: «contentTypesFilter» are required or it's not defined`);
     return null;
@@ -17,32 +139,39 @@ const getFilteredContent = async ({ contentTypesFilter, parentIds }) => {
   let responseData = null;
   let responseError = null;
 
-  let filterQuery = '';
-  const types = [];
+  const filteredContentResults = await getAlgoliaResults({
+    contentTypesFilter,
+    parentIds,
+    availableFacets,
+    pageResults,
+    page
+  });
 
-  for (const contentTypeFilter of contentTypesFilter) {
-    const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[_.capitalize(contentTypeFilter)];
-    types.push(type);
-
-    filterQuery += `
-      ${type}Collection(where: { parent: { sys: { id_in: ["${parentIds.join('", "')}"] } } }, preview: $preview, limit: 12) {
-        items {
-          ${query}
-        }
-        total
-      }
-    `;
+  if (!filteredContentResults?.items?.length) {
+    return responseData;
   }
+
+  const contentfulIds = filteredContentResults.items.map(i => i.objectID);
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
-        query getEntry($preview: Boolean!) {
-          ${filterQuery}
+        query getEntriesCollection($preview: Boolean!, $limit: Int!) {
+          entryCollection(where: { sys: { id_in: ["${contentfulIds.join('", "')}"] } }, preview: $preview, limit: $limit) {
+            items {
+              ...on Page {
+                ${PageQuery}
+              }
+              ...on Product {
+                ${ProductQuery}
+              }
+            }
+          }
         }
       `,
       variables: {
-        preview
+        preview,
+        limit: pageResults
       },
       errorPolicy: 'all'
     }));
@@ -55,15 +184,15 @@ const getFilteredContent = async ({ contentTypesFilter, parentIds }) => {
     console.error(`Error on getFilteredContent => `, responseError.message);
   }
 
-  const filteredContent = { items: [], total: 0 };
-  for (const t of types) {
-    if (responseData?.[`${t}Collection`]?.items) {
-      filteredContent.total += parseInt(responseData[`${t}Collection`].total);
-      _.merge(filteredContent.items, responseData[`${t}Collection`].items);
-    }
+  if (responseData?.entryCollection?.items) {
+    filteredContentResults.items = responseData.entryCollection.items;
   }
 
-  return filteredContent;
+  if (filteredContentResults?.facets && Object.keys(filteredContentResults?.facets).length > 0) {
+    filteredContentResults.facets = await getFacetsValues(filteredContentResults.facets);
+  }
+
+  return filteredContentResults;
 };
 
 export default getFilteredContent;
