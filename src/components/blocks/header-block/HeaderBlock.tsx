@@ -41,8 +41,8 @@ const HeaderBlock: React.FC<INavigation> = ({
   if (overrideNavCollection?.items?.length) {
     mainNavCollectionMenu = overrideNavCollection;
   }
-  
-  if(!mainNavCollection?.items?.some((el) => el.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.slug === firstPath)){
+
+  if (!mainNavCollection?.items?.some((el) => el.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.slug === firstPath)) {
     firstPath = 'home';
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.slug === HOME_SLUG
@@ -114,13 +114,13 @@ const HeaderBlock: React.FC<INavigation> = ({
                 </nav>
               </div>
             </div>
-            
+
           </div>
-          
+
           <div className="mx-auto xl:container">
             <div className="px-2 sm:px-4 2xl:px-[70px]">
               {/* Top */}
-              
+
               {/* Middle */}
               <div className="relative flex items-center min-h-[92px] justify-between gap-6">
                 <div className="relative z-10 flex px-2 lg:px-0 lg:mt-[10px]">
@@ -190,13 +190,13 @@ const HeaderBlock: React.FC<INavigation> = ({
                   )}
                   <div className="hidden gap-6 px-6 lg:flex">
                     <CustomLink
-                      content={{ externalLink: "#" }}
+                      content={{ urlPath: "/signin" }}
                       className="flex items-center text-center button button-primary"
                     >
                       Regístrate
                     </CustomLink>
                     <CustomLink
-                      content={{ externalLink: "#" }}
+                      content={{ urlPath: "/login" }}
                       className="flex items-center text-center button button-outline"
                     >
                       Inicia sesión
