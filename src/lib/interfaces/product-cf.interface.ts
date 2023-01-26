@@ -78,4 +78,8 @@ export interface IProductOverviewDetails {
   dataSelect?: ISelect[];
   rating?: number;
   footerText?: any;
+  trademark?: {
+    name?:string;
+    image?: IImageAsset;
+  };
 }

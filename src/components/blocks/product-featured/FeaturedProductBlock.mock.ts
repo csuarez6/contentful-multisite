@@ -10,6 +10,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Calefactor de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage: {
                     url: 'https://via.placeholder.com/1120x970',
@@ -37,6 +40,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Enfriador de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '40%',
                 promoImage:
                 {
@@ -65,6 +71,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Congelador de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promoImage:
                 {
                     url: 'https://via.placeholder.com/1120x970',
@@ -92,6 +101,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Tibiador de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage:
                 {
@@ -120,6 +132,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Calentador de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage:
                 {
@@ -148,6 +163,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Lorem de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage:
                 {
@@ -176,6 +194,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Ipsum de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage:
                 {
@@ -204,6 +225,9 @@ export const data: IPromoBlock = {
             {
                 promoTitle: 'Amet de torre',
                 state: 'nuevo',
+                trademark: {
+                    name: 'mabbe',
+                },
                 promotion: '30%',
                 promoImage:
                 {

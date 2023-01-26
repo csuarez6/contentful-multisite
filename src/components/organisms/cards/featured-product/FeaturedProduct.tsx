@@ -27,6 +27,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   promoImage,
   urlPath,
   sku,
+  trademark
 }) => {
   
   const [productPrices, setProductPrices] = useState<any>({
@@ -130,6 +131,11 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                 )}
               </div>
             </div>
+            {trademark && (
+              <div className="text-size-small text-blue-dark">
+                {trademark.name}
+              </div>
+            )}
           </div>
           {(productPrices.price || productPrices.priceBefore) && (
             <div className="flex flex-col gap-[6px]">

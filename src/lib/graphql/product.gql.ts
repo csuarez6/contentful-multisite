@@ -36,7 +36,10 @@ const ProductQuery = `
     ${RichtextQuery}
   }
   trademark {
-    ${DefaultQuery}
+    name
+    image{
+      ${AssetImageQuery}
+    }
   }
   size
   capacity
