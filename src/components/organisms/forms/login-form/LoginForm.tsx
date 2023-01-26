@@ -7,7 +7,7 @@ import * as yup from "yup";
 import HeadingCard from "../../cards/heading-card/HeadingCard";
 import ModalSuccess from "../../modal-success/ModalSuccess";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import "@/styles/forms.css";
+// import "@/styles/forms.css";
 import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
 
