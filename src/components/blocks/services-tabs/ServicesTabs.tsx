@@ -28,7 +28,7 @@ const TabElement = (tab) => {
   );
 };
 
-const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsCollection, blockId, sysId }) => {
+const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsCollection, view ,blockId, sysId }) => {
   
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
@@ -78,7 +78,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                 !tab?.internalLink &&
                 !tab?.externalLink && (
                   <Tab.Panel key={tab?.name} className="pt-6 focus:outline-none">
-                    <LeftFeatured {...tab} />
+                    <LeftFeatured {...tab} buttonType={view.buttonType}/>
                   </Tab.Panel>
                 )
             )}

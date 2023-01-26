@@ -4,6 +4,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { classNames, getButtonType } from "@/utils/functions";
 
 const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
   const {
@@ -17,7 +18,8 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     title,
     description,
     image,
-    ctaCollection
+    ctaCollection,
+    buttonType
   } = props;
   const propsLink = {
     name,
@@ -53,7 +55,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             )}
             {(internalLink || externalLink) && (
               <div className="flex gap-3">
-                <CustomLink content={propsLink} className="button button-outline">
+                <CustomLink content={propsLink} className={classNames("button", getButtonType(buttonType ?? 'Contorno' ))}>
                   {promoTitle ?? name}
                 </CustomLink>
               </div>
@@ -61,7 +63,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             {ctaCollection?.items?.length > 0 && (
               <div className="flex gap-3">
                 {ctaCollection.items.map((cta) => (
-                  <CustomLink key={cta.name} content={cta} className="button button-outline">
+                  <CustomLink key={cta.name} content={cta} className={classNames("button", getButtonType(buttonType ?? 'Contorno' ))}>
                     {cta.promoTitle ?? cta.name}
                   </CustomLink>
                 ))}
