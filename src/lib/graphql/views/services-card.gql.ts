@@ -5,6 +5,8 @@ const ViewServicesCard = `
   name
   columnsSize
   imageOrientation
+  buttonType
+  alignButton
 `;
 
 export default ViewServicesCard;

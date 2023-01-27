@@ -5,7 +5,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import { classNames, getButtonType } from "@/utils/functions";
+import { classNames, getAlign, getButtonType } from "@/utils/functions";
 import { getLinkProps } from "@/utils/link.utils";
 
 const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
@@ -17,6 +17,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
     internalLink,
     externalLink,
     buttonType,
+    alignButton,
     urlPath
   } = props;
 
@@ -37,8 +38,9 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
           />
         </figure>
       )}
-      {(promoTitle || promoDescription) && (
-        <div className="flex items-center w-full p-6">
+
+      <div className="w-full p-6">
+        {(promoTitle || promoDescription) && (
           <div className="grid">
             {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle ?? name}</h3>}
             {promoDescription?.json && (
@@ -46,22 +48,23 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
                 {documentToReactComponents(promoDescription.json)}
               </div>
             )}
-            {(internalLink?.urlPath || externalLink || urlPath) && (
-              <div className="flex gap-3 mt-6">
-                <CustomLink
-                  content={props}
-                  className={classNames(
-                    "button",
-                    getButtonType(buttonType ?? "Contorno")
-                  )}
-                >
-                  {getLinkProps(props).textLink}
-                </CustomLink>
-              </div>
-            )}
           </div>
-        </div>
-      )}
+        )}
+        {(internalLink?.urlPath || externalLink || urlPath) && (
+          <div className={classNames("flex mt-6", getAlign(alignButton) === 'left' ? 'justify-start' : 'justify-center')}>
+            <CustomLink
+              content={props}
+              className={classNames(
+                "button",
+                getButtonType(buttonType ?? "Contorno")
+              )}
+            >
+              {getLinkProps(props).textLink}
+            </CustomLink>
+          </div>
+        )}
+      </div>
+
     </article>
   );
 };

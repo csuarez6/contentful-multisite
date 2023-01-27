@@ -34,6 +34,7 @@ export interface IPromoContent {
     iconSize?: string;
     iconColor?: string;
     buttonType?: string;
+    alignButton?: string;
     iconBackgroundColor?: string;
     bgIconRounded?: string;
     isReverse?: boolean;
@@ -124,4 +125,5 @@ export interface IView {
     isReverse?: boolean;
     alignTitle?: string;
     isSlider?: boolean;
+    alignButton?: string;
 }

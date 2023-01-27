@@ -17,7 +17,7 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featured
           {featuredContentsCollection.items.map((content) => {
             {if (content.promoImage) content.promoImage.isPortrait = view?.imageOrientation?.toLowerCase() === 'portrait';}
             return <div className='flex justify-center' key={content.promoTitle}>
-              <VerticalCard key={content.promoTitle} {...content} buttonType={view.buttonType} />
+              <VerticalCard key={content.promoTitle} {...content} buttonType={view.buttonType} alignButton={view.alignButton} />
             </div>;
           })}
         </div>

@@ -76,3 +76,16 @@ export const getButtonType = (type) => {
       return "text-button";
   }
 };
+
+export const getAlign = (name) => { 
+  switch (name) {
+    case "Centro":
+      return "center";
+    case "Izquierda":
+      return "left";
+    case "Derecha":
+      return "right";
+    default:
+      return "center";
+  }
+};
