@@ -22,7 +22,8 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   promoImage,
   urlPath,
   sku,
-  trademark
+  trademark,
+  className
 }) => {
   
   const [productPrices, setProductPrices] = useState<any>({
@@ -46,7 +47,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   }, [data, isLoading, error]);
 
   return (
-    <article className="bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
+    <article className={`${className} bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full`}>
       {(state || promotion || imagesCollection?.items) && (
         <div className="flex flex-col gap-2">
           {(state || promotion) && (
@@ -85,7 +86,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                 </figure>
               )}
               {cta ? (
-                <Link href={cta.href}>
+                <Link legacyBehavior href={cta.href}>
                   <a className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10">
                     {cta?.name}
                   </a>
@@ -109,22 +110,22 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               {promoTitle && (
                 <h3 className="text-blue-dark title is-4">{promoTitle}</h3>
               )}
-              <div className="flex items-center gap-[13px] mr-1">
-                <figure>
-                  <Image
-                    src="/images/star.png"
-                    width={15}
-                    height={15}
-                    alt="star"
-                    priority
-                  />
-                </figure>
-                {rating && (
+              {rating && (
+                <div className="flex items-center gap-[13px] mr-1">
+                  <figure>
+                    <Image
+                      src="/images/star.png"
+                      width={15}
+                      height={15}
+                      alt="star"
+                      priority
+                    />
+                  </figure>
                   <div className="text-blue-dark text-size-subtitle2 font-bold">
                     <p>{rating}/5</p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
             {trademark && (
               <div className="text-size-small text-blue-dark">

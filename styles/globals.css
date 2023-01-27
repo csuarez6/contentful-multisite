@@ -80,3 +80,10 @@ section.section {
 .shadow-card-overview {
   box-shadow: -2px -2px 0px rgba(0, 0, 0, 0.04), 2px 2px 4px rgba(0, 0, 0, 0.08);
 }
+
+.card-mega-menu{
+  @apply shadow-none bg-transparent p-0;
+}
+.card-mega-menu img{
+  @apply rounded-xl;
+}
