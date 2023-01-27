@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 import useSWR from "swr";
 
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-
-
 
 const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   promoTitle,
@@ -22,8 +19,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   promoImage,
   urlPath,
   sku,
-  trademark,
-  className
+  trademark
 }) => {
   
   const [productPrices, setProductPrices] = useState<any>({
@@ -47,7 +43,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   }, [data, isLoading, error]);
 
   return (
-    <article className={`${className} bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full`}>
+    <article className="bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items) && (
         <div className="flex flex-col gap-2">
           {(state || promotion) && (
