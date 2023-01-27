@@ -6,6 +6,7 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import "swiper/css";
 import "swiper/css/effect-fade";
+import Icon from "@/components/atoms/icon/Icon";
 
 const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
@@ -74,13 +75,8 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                   className="cursor-pointer z-20 mx-28 absolute left-2 bottom-9"
                   onClick={() => { setStopSlider(!stopSlider); !stopSlider ? instanceSwiper.autoplay.stop() : instanceSwiper.autoplay.start(); }}
                 >
-                  <figure className="relative">
-                    <Image
-                      alt="stop/pause"
-                      src={stopSlider ? "/images/play-button.png" : "/images/pause.png"}
-                      width={33}
-                      height={33}
-                    />
+                  <figure className="relative ">
+                    <Icon icon={stopSlider ? "play" : "pause"} size={33} className={`text-[#466072] z-10 ${!stopSlider && 'bg-white rounded-full' }`}/>
                   </figure>
                 </button>
               </div>
