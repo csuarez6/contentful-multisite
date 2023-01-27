@@ -20,6 +20,7 @@ import FeaturedTabsBlock from "@/components/blocks/featured-tabs/FeaturedTabs";
 import ContentFilter from "@/components/blocks/content-filter/ContentFilter";
 import FeaturedProductBlock from "@/components/blocks/product-featured/FeaturedProductBlock";
 import RpoFormBlock from "@/components/blocks/rpo-form/RpoForm";
+import VideoBlock from "@/components/blocks/videoSlider-block/VideoBlock";
 
 /**
  * Supports:
@@ -50,7 +51,8 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_CAROUSEL]: CarouselCategoriesBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS]: FeaturedTabsBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED_PRODUCTS]: FeaturedProductBlock,
-    [CONTENTFUL_TYPENAMES.VIEW_QUERY_FORM]: RpoFormBlock
+    [CONTENTFUL_TYPENAMES.VIEW_QUERY_FORM]: RpoFormBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_VIDEO_SLIDER]: VideoBlock
   },
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: ContentFilter,
 };

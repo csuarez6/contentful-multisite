@@ -19,8 +19,8 @@ const iconRight: IIcon = {
 };
 
 
-const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, links }) => {
-    if(!links) return;
+const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCollection }) => {
+    if(!featuredContentsCollection) return;
 
     const linkEmbebed = (str: string) => {
         if (!str.includes('www.youtube.com')) return new Error('add a video youtube link');
@@ -55,15 +55,15 @@ const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, links }) => {
                         nextEl: `.nextSlide`,
                         prevEl: `.prevSlide`
                     }}
-                    loop={links.length > 1 ? true : false}
+                    loop={featuredContentsCollection?.items?.length > 1 ? true : false}
                     className="relative w-full h-auto max-h-[492px]"
                 >
-                    {links?.map((link, i) => (
+                    {featuredContentsCollection?.items && featuredContentsCollection.items.map((link, i) => (
                         <SwiperSlide key={i} className="w-full h-auto">
                             <div className='relative pb-[53.5%] pt-[25px] h-0'>
                                 <iframe
                                     className='rounded-xl absolute left-0 top-0 h-full w-full max-h-[492px]'
-                                    src={`${linkEmbebed(link.href)}`}
+                                    src={`${linkEmbebed(link.externalLink)}`}
                                     title={link.name}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

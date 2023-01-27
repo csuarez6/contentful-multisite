@@ -4,15 +4,10 @@ import Link from "next/link";
 
 import useSWR from "swr";
 
-import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
-const icon: IIcon = {
-  size: 23,
-  icon: "energie",
-  className: "z-10",
-};
+
 
 const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   promoTitle,

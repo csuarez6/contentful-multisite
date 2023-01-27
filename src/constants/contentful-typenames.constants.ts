@@ -30,4 +30,5 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_FEATURED_TABS = "ViewFeaturedTabs",
   VIEW_FEATURED_PRODUCTS = "ViewFeaturedProducts",
   VIEW_QUERY_FORM = "ViewQueryForm",
+  VIEW_VIDEO_SLIDER = "ViewVideoSlider",
 };
