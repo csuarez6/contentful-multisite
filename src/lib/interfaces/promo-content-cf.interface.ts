@@ -103,6 +103,7 @@ export interface IPromoBlock extends IBlockProps {
         items?: IPromoContent[]
     }
     blockId?: string;
+    links?: ILink[]
 }
 
 export interface ITag {
