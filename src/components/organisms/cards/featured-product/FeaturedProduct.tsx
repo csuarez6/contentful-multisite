@@ -151,12 +151,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               )}
             </div>
           )}
-          <div className="flex bg-neutral-90 text-grey-10 items-center rounded-lg w-fit uppercase py-1 px-2 gap-[7px] text-sm -mt-0.5">
-            <span className="w-6 h-6 shrink-0 flex items-center">
-              <Icon {...icon} />
-            </span>
-            <p>Envio gratuito express</p>
-          </div>
           {paymentMethods && (
             <div className="flex flex-col gap-2">
               <div className="text-size-p2">
