@@ -5,8 +5,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import { getUrlPath } from "@/utils/link.utils";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import {mockFeaturedProductProps} from "@/components/organisms/cards/featured-product/FeaturedProduct.mock.ts";
-import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct.tsx";
+import { mockFeaturedProductProps } from "@/components/organisms/cards/featured-product/FeaturedProduct.mock";
+import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 
 const LinkElement = ({ item, isOpen }) => {
   return (
@@ -38,14 +38,14 @@ const LinkElement = ({ item, isOpen }) => {
     </>
   );
 };
-const MegaMenuItem = ({item}) => {
+const MegaMenuItem = ({ item }) => {
   const [open, setOpen] = useState(false);
   const [columns, setColumns] = useState(5);
   const [rows, setRows] = useState(1);
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
   const [submenuH, setSubmenuH] = useState(0);
-  let submenu = useRef(null);
+  const submenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setScreenW(window.innerWidth);
@@ -59,85 +59,85 @@ const MegaMenuItem = ({item}) => {
   }, [screenW]);
 
   const calcRows = (value) => {
-    let totalRows = Math.ceil((value + 1) / columns);
+    const totalRows = Math.ceil((value + 1) / columns);
     // setRows(totalRows);
     return totalRows * 2;
   };
 
   const responsive = (w) => {
-    if(w < 768)
+    if (w < 768)
       setColumns(1);
-    else if(w < 1024)
+    else if (w < 1024)
       setColumns(3);
-    else 
+    else
       setColumns(5);
   };
 
   const openSubmenu = () => {
-    let _submenu = submenu.current;
-    let coor = _submenu.getBoundingClientRect();
+    const _submenu = submenu.current;
+    const coor = _submenu.getBoundingClientRect();
     setSubmenuH(screenH - (coor.top + 30));
   };
 
   useEffect(() => {
-    if(open)
-      openSubmenu();
-  },[open]);
+    if (open) openSubmenu();
+  }, [open]);
 
   return (
-    <div 
-      onMouseOver={()=>{setOpen(true);}}
-      onMouseOut={()=>{setOpen(false);}}
+    <div
+      onMouseOver={() => { setOpen(true); }}
+      onMouseOut={() => { setOpen(false); }}
       className={`${open ? "isOpen" : ""} group/submenu min-h-[60px] -my-2 flex items-center`}
-     >
+      ref={submenu}
+    >
       {!item.internalLink?.slug &&
-       !item.externalLink &&
-       getUrlPath(item) === "/" && (
-        <CustomLink
-          content={item}
-          linkClassName= {"relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"}
-          className={
-            `${open ? "border-lucuma" : "border-transparent"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none`
-          }
-        >
-          <LinkElement item={item} isOpen={open} />
-        </CustomLink>
-      )}
+        !item.externalLink &&
+        getUrlPath(item) === "/" && (
+          <CustomLink
+            content={item}
+            linkClassName={"relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"}
+            className={
+              `${open ? "border-lucuma" : "border-transparent"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none`
+            }
+          >
+            <LinkElement item={item} isOpen={open} />
+          </CustomLink>
+        )}
       {(item.internalLink?.slug ||
         item.externalLink ||
         getUrlPath(item) !== "/") && (
-        <CustomLink
-          content={item}
-          className={
-            `${open && "border-blue-dark"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none`
-          }
-        >
-          <LinkElement item={item} isOpen={false} />
-        </CustomLink>
+          <CustomLink
+            content={item}
+            className={
+              `${open && "border-blue-dark"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none`
+            }
+          >
+            <LinkElement item={item} isOpen={false} />
+          </CustomLink>
 
-      )}
+        )}
       {item.mainNavCollection?.items?.length > 0 && (
-        <div 
+        <div
           ref={submenu}
-          style={{maxHeight: `${submenuH}px`}}
+          style={{ maxHeight: `${submenuH}px` }}
           className={
             `${open ? "pointer-events-auto opacity-100 transition-opacity" : "pointer-events-none opacity-0 transition-none"} absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto`
           }
-         >
+        >
           <div className="relative flex pt-6 my-6 gap-6">
             <div className="mx-auto xl:container">
               <div className="px-2 sm:px-4 2xl:px-[70px]">
-                <nav className="grid gap-10 w-full" 
+                <nav className="grid gap-10 w-full"
                   style={{
                     gridTemplateColumns: `repeat(${columns}, 1fr)`
                   }}
-                  >
-                  {item.mainNavCollection.items.map((item, index) => (
+                >
+                  {item.mainNavCollection.items.map((item) => (
                     <div key={item.name}>
-                      <p 
+                      <p
                         // style={{gridRowStart: calcRows(index) - 1}}
                         className="text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4"
-                       >
+                      >
                         {item.promoTitle ?? item.name}
                       </p>
                       <ul
@@ -148,7 +148,7 @@ const MegaMenuItem = ({item}) => {
                         {item.mainNavCollection?.items?.map(
                           (item) => (
                             <li key={item.name} className="flow-root">
-                              <CustomLink content={item} onClick={()=>{setOpen(false);}} className="flex items-center text-base text-blue-dark hover:text-lucuma-60">
+                              <CustomLink content={item} onClick={() => { setOpen(false); }} className="flex items-center text-base text-blue-dark hover:text-lucuma-60">
                                 <span>
                                   {item.promoTitle ?? item.name}
                                 </span>
@@ -160,8 +160,10 @@ const MegaMenuItem = ({item}) => {
                     </div>
                   ))}
                   {
-                    mockFeaturedProductProps.list.map( (item, index) => (
-                      <FeaturedProduct key={`card_${index}`} {...item} className="card-mega-menu"/>
+                    mockFeaturedProductProps.list.map((item) => (
+                      <div className="card-mega-menu" key={`card_${item.promoTitle}`}>
+                        <FeaturedProduct {...item} />
+                      </div>
                     ))
                   }
                 </nav>
@@ -180,17 +182,16 @@ const MegaMenuItem = ({item}) => {
 };
 
 const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
-  
   if (mainNavCollection.items?.length <= 0) return;
   return (
     <div className="hidden lg:block">
-      <div className="pointer-events-none absolute inset-0 z-30" aria-hidden="true"/>
+      <div className="pointer-events-none absolute inset-0 z-30" aria-hidden="true" />
       <div className="z-20">
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-6">
-              {mainNavCollection.items.map((item, index) => (
-                <MegaMenuItem item={item} key={index} />
+              {mainNavCollection.items.map((item) => (
+                <MegaMenuItem item={item} key={item.name} />
               ))}
             </div>
           </div>

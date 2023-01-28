@@ -1,7 +1,7 @@
+import useSWR from "swr";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import useSWR from "swr";
 
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
@@ -20,8 +20,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   urlPath,
   sku,
   trademark
-}) => {
-  
+}) => {  
   const [productPrices, setProductPrices] = useState<any>({
     price,
     priceBefore,
@@ -43,7 +42,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   }, [data, isLoading, error]);
 
   return (
-    <article className="bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
+    <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items) && (
         <div className="flex flex-col gap-2">
           {(state || promotion) && (

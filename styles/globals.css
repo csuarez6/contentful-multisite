@@ -11,7 +11,7 @@ body {
   margin: 0;
   font-family: "Mulish", sans-serif;
   font-size: 16px;
-   /* TODO: Verificar si es necesario o se ajustan a nivel de componentes */
+  /* TODO: Verificar si es necesario o se ajustan a nivel de componentes */
 }
 
 a {
@@ -81,9 +81,9 @@ section.section {
   box-shadow: -2px -2px 0px rgba(0, 0, 0, 0.04), 2px 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-.card-mega-menu{
+.card-mega-menu > .featured-product {
   @apply shadow-none bg-transparent p-0;
 }
-.card-mega-menu img{
+.card-mega-menu > .featured-product img {
   @apply rounded-xl;
 }
