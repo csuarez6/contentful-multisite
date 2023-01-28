@@ -1,6 +1,6 @@
 import CommerceLayer from '@commercelayer/sdk';
 import Cookies from "js-cookie";
-import { getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
+import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
 export interface ICustomer {
   name: string;
@@ -49,6 +49,37 @@ export const getMerchantToken = async () => {
   }
 
   return token;
+};
+
+export const getCustomerTokenCl = async (data) => {
+
+  try {
+    const token = await getCustomerToken(
+      {
+        endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+        clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+        scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
+      },
+      {
+        username: data.email,
+        password: data.password
+      }
+    );
+    console.log('My access token: ', token.accessToken);
+    console.log('Expiration date: ', token.expires);
+    localStorage.setItem("customerAcessToken", token.accessToken);
+    localStorage.setItem("customerRefreshToken", token.refreshToken);
+    // Cookies.set("customerAcessToken", token.accessToken, {
+    //   expires: token.expires
+    // });
+    // Cookies.set("customerRefreshToken", token.refreshToken, {
+    //   expires: token.expires
+    // });
+    return { status: 200, ...token };
+  } catch (error) {
+    console.log("Error - getCustomerTokenCl: ", error);
+    return { status: 400, error: error.message };
+  }
 };
 
 const getCommerlayerClient = async (token) => CommerceLayer({
