@@ -6,16 +6,12 @@ export interface IProductCategory {
   sys?: {
     id?: string;
   }
-  name: string;
+  name?: string;
   image?: IImageAsset;
 }
 
-export interface ITrademark {
-  sys?: {
-    id?: string;
-  }
-  name: string;
-  image?: IImageAsset;
+export interface ICarouselCategoryBlock {
+  queryParamName?: string;
 }
 
 export interface IContentFilter {
@@ -30,6 +26,7 @@ export interface IContentFilter {
   };
   contentTypesFilter?: string[];
   availableFacets?: string[];
+  mainFacet?: 'Categoría' | 'Marca' | null;
   orderingOptions?: string[];
   pageResults?: number;
   blockId?: string;

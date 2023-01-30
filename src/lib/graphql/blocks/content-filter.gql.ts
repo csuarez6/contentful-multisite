@@ -17,6 +17,7 @@ const BlockContentFilterQuery = `
   }
   contentTypesFilter
   availableFacets
+  mainFacet
   orderingOptions
   pageResults
   blockId

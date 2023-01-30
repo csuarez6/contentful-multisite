@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState, forwardRef, DetailedHTMLProps, Se
 import { Listbox, Transition } from '@headlessui/react';
 import Icon from '../icon/Icon';
 import { classNames } from '@/utils/functions';
+import { IProductCategory } from '@/lib/interfaces/content-filter-cf.interface';
+import { IImageAsset } from '@/lib/interfaces/assets-cf.interface';
 
 export interface IListContent {
   value: string;
@@ -10,10 +12,11 @@ export interface IListContent {
 
 export interface ISelect extends DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   name?: string,
-  listedContents: IListContent[],
+  listedContents: Array<IListContent & IProductCategory>,
   labelSelect?: string,
   placeholder?: string,
   handleChange?: (evt) => void,
+  image?: IImageAsset;
 }
 
 const SelectAtom: React.FC<ISelect> = forwardRef((
@@ -27,6 +30,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef((
   useEffect(() => {
     const input = getInput();
     input.addEventListener('change', onChangeInput, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChange = (evt) => {

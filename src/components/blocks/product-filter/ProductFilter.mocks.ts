@@ -1,9 +1,9 @@
-import { IProductDetails } from '@/lib/interfaces/product-cf.interface';
+import { IProductFilterBlock } from '@/lib/interfaces/product-cf.interface';
 import { data as productsData } from "../product-featured/FeaturedProductBlock.mock";
 
-const data: IProductDetails = {
+const data: IProductFilterBlock = {
     products: productsData,
-    dataSelect: [
+    facets: [
         {
             listedContents: [
                 {

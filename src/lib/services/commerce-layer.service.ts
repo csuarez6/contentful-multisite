@@ -143,7 +143,10 @@ export const getCommercelayerProduct = async (skuCode: string) => {
       product = {
         price: sku?.prices[0]?.formatted_amount,
         priceBefore: sku?.prices[0]?.formatted_compare_at_amount,
-        productsQuantity: sku?.stock_items[0]?.quantity
+        productsQuantity: sku?.stock_items[0]?.quantity,
+        
+        _price: sku?.prices[0]?.amount_float,
+        _priceBefore: sku?.prices[0]?.compare_at_amount_float,
       };
     }
   } catch (error) {

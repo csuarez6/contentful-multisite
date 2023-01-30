@@ -41,7 +41,7 @@ const LinkElement = ({ item, isOpen }) => {
 const MegaMenuItem = ({ item }) => {
   const [open, setOpen] = useState(false);
   const [columns, setColumns] = useState(5);
-  const [rows, setRows] = useState(1);
+  // const [rows, setRows] = useState(1);
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
   const [submenuH, setSubmenuH] = useState(0);
@@ -58,11 +58,11 @@ const MegaMenuItem = ({ item }) => {
     });
   }, [screenW]);
 
-  const calcRows = (value) => {
-    const totalRows = Math.ceil((value + 1) / columns);
-    // setRows(totalRows);
-    return totalRows * 2;
-  };
+  // const calcRows = (value) => {
+  //   const totalRows = Math.ceil((value + 1) / columns);
+  //   // setRows(totalRows);
+  //   return totalRows * 2;
+  // };
 
   const responsive = (w) => {
     if (w < 768)
@@ -81,6 +81,7 @@ const MegaMenuItem = ({ item }) => {
 
   useEffect(() => {
     if (open) openSubmenu();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

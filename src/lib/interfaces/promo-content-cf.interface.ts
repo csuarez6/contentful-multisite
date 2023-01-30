@@ -4,7 +4,7 @@ import { IRpoForm } from "./IForm-cf";
 import { IRichText } from './richtext-cf.interface';
 import { IPage } from './page-cf.interface';
 import { IProductOverviewDetails } from './product-cf.interface';
-import { IProductCategory, ITrademark } from './content-filter-cf.interface';
+import { IProductCategory } from './content-filter-cf.interface';
 
 interface IBlockProps {
     isFirst?: boolean;
@@ -62,7 +62,7 @@ export interface IPromoBlock extends IBlockProps {
         items?: IPromoContent[] | IProductOverviewDetails[]
     };
     featuredContentsCollection?: {
-        items?: IPromoContent[] | ITrademark[] | IProductCategory[]
+        items?: IPromoContent[] | IProductCategory[]
     };
     /**
      * @deprecated

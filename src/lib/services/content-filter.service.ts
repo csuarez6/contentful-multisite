@@ -12,8 +12,8 @@ import ProductQuery from '../graphql/product.gql';
 import ProductCategoryQuery from '../graphql/shared/product-category.gql';
 import TrademarkQuery from '../graphql/shared/trademark.gql';
 
-export const getAlgoliaSearchIndex = (): SearchIndex => {
-  const searchClient = algoliasearch('DU18JA7AT2', '27488222ca2747bbba7b33f50296d5b4');
+export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
+  const searchClient = algoliasearch(appId, appKey);
   const searchIndex = searchClient.initIndex('Production');
 
   return searchIndex;
@@ -52,7 +52,10 @@ const getAlgoliaResults = async ({
     `(${parentIdsSearchQuery.join(' OR ')})`
   );
 
-  const indexSearch = getAlgoliaSearchIndex();
+  const indexSearch = getAlgoliaSearchIndex(
+    process.env.ALGOLIASEARCH_APP_ID,
+    process.env.ALGOLIASEARCH_READ_API_KEY
+  );
   const resultAlgolia = await indexSearch.search('', {
     filters: algoliaFilter.join(' AND '),
     facets: algoliaFacets,
@@ -104,13 +107,17 @@ const getFacetsValues = async (facets: any) => {
 
       if (responseData?.entryCollection?.items) {
         const facetContents = {
-          title: FACET_QUERY_MAP[facetId].title,
-          items: responseData.entryCollection.items.map((facetContent: any) => {
+          name: FACET_QUERY_MAP[facetId].inputName,
+          labelSelect: FACET_QUERY_MAP[facetId].title,
+          placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
+          listedContents: responseData.entryCollection.items.map((facetContent: any) => {
             return {
               ...facetContent,
+              text: `${facetContent.promoTitle ?? facetContent.name} (${facets[facetId][facetContent.sys.id]})`,
+              value: facetContent.sys.id,
               totalItems: facets[facetId][facetContent.sys.id]
             };
-          }),
+          })
         };
 
         facetsWithValues.push(facetContents);
