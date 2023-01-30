@@ -57,8 +57,8 @@ const modalBody = (data, isSuccess, errorMessage, closeModal) => {
         </button>
       </div>
     </>
-  )
-}
+  );
+};
 
 interface IForm {
   cuenta_contrato: string;
@@ -205,8 +205,9 @@ const CallbackPage = () => {
               icon={isSuccess ? "alert" : "close"}
               title={isSuccess ? "¡Has agendado tu cita con éxito!" : "Intenta en otro momento"}
               subtitle={isSuccess && "Recuerda tener presente la visita del técnico a la hora y dia que agendaste"}
-              children={modalBody({ date: dateValue, hour: hourValue }, isSuccess, errorMessage, closeModal)}
-            />
+            >
+              {modalBody({ date: dateValue, hour: hourValue }, isSuccess, errorMessage, closeModal)}
+            </CustomModal>
           )}
         </div>
       </HeadingCard>

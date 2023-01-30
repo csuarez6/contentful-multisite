@@ -22,7 +22,7 @@ const CustomModal: React.FC<IModal> = ({
   title,
   subtitle,
   icon,
-  children,
+  children = null,
   ctaCollection,
   isCentered = true,
   close = () => null
