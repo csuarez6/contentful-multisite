@@ -1,3 +1,6 @@
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import { getMenu } from "@/lib/services/menu-content.service";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,10 +9,9 @@ import HeadingCard from '@/components/organisms/cards/heading-card/HeadingCard';
 import CheckBox from '@/components/atoms/input/checkbox/CheckBox';
 import SelectAtom, { IListContent } from '@/components/atoms/select-atom/SelectAtom';
 import TextBox from '@/components/atoms/input/textbox/TextBox';
-import { mockPageLayoutProps } from '@/components/layouts/page-layout/PageLayout.mocks';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import React, { Fragment, useState, createRef, LegacyRef } from 'react';
 import Icon from "@/components/atoms/icon/Icon";
 import { useLastPath } from "@/hooks/utils/useLastPath";
 
@@ -91,13 +93,12 @@ interface IForm {
   acceptHD: boolean;
 }
 
+const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 const schema = yup.object({
   fullName: yup.string().required("Dato requerido"),
-  cellPhone: yup
-    .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable()
-    .required("Dato requerido"),
+  cellPhone: yup.string().required("Dato requerido").matches(regexCellPhone, {
+    message: "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####"
+  }),
   email: yup.string().email("Email no válido").required("Dato requerido"),
   servicioExequial: yup.string().required("Dato requerido"),
   agreeHD: yup.bool().oneOf([true], "Dato requerido"),
@@ -116,6 +117,7 @@ const serviciosExequiales: IListContent[] = [
 ];
 
 const CallbackPage = () => {
+  const refForm: LegacyRef<HTMLFormElement> = createRef();
   const lastPath = useLastPath();
   const {
     register,
@@ -133,33 +135,36 @@ const CallbackPage = () => {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
+  const dispatchSelectChange = () => {
+    const event = new Event('change');
+    const allSelect = refForm.current.querySelectorAll('select');
+    allSelect.forEach(element => element.dispatchEvent(event));
+  };
+
   const onSubmit = async (data: IForm) => {
-    try {
-      console.log(data);
-      fetch('/api/callback', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: lastPath,
-          ...data,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
+    console.log(data);
+    fetch('/api/callback', {
+      method: 'POST',
+      body: JSON.stringify({
+        type: lastPath,
+        ...data,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        reset();
+        dispatchSelectChange();
+        setIsSuccess(true);
       })
-        .then((response) => response.json())
-        .then((json) => {
-          console.log(json);
-          reset();
-          setIsSuccess(true);
-        })
-        .catch(err => {
-          setIsSuccess(false);
-          console.log(err);
-        })
-        .finally(() => openModal());
-    } catch (error) {
-      console.log(error.message);
-    }
+      .catch(err => {
+        setIsSuccess(false);
+        console.log(err);
+      })
+      .finally(() => openModal());
   };
 
   return (
@@ -170,7 +175,7 @@ const CallbackPage = () => {
             <p className='title is-4 !font-semibold text-grey-30'>Cuéntanos sobre ti</p>
           </div>
 
-          <form className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
+          <form ref={refForm} className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
             {lastPath !== "mantenimiento-y-reparacion" && (
               <div className="w-full">
                 <TextBox
@@ -262,12 +267,15 @@ const CallbackPage = () => {
   );
 };
 
-CallbackPage.getInitialProps = () => {
+CallbackPage.getInitialProps = async (context: any) => {
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
+
   return {
     layout: {
-      name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+      name: "Callback Exequiales",
+      footerInfo,
+      headerInfo,
     },
   };
 };

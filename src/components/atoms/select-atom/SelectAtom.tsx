@@ -1,4 +1,4 @@
-import React, { Fragment, useState, forwardRef, DetailedHTMLProps, SelectHTMLAttributes } from 'react';
+import React, { Fragment, useEffect, useState, forwardRef, DetailedHTMLProps, SelectHTMLAttributes } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import Icon from '../icon/Icon';
 import { classNames } from '@/utils/functions';
@@ -20,10 +20,17 @@ const SelectAtom: React.FC<ISelect> = forwardRef((
   { name, listedContents, labelSelect, handleChange, placeholder = "Seleccionar", ...rest },
   ref
 ) => {
-  const [selectedOption, setSelectedOption] = useState({ value: '', text: placeholder });
-  if (listedContents.length === 0) return;
+  const defaultOption = { value: '', text: placeholder };
+  const [selectedOption, setSelectedOption] = useState(defaultOption);
+  const getInput = (): HTMLSelectElement => document.querySelector(`select[name=${name}]`);
+
+  useEffect(() => {
+    const input = getInput();
+    input.addEventListener('change', onChangeInput, false);
+  }, []);
+
   const onChange = (evt) => {
-    const input: HTMLSelectElement = document.querySelector(`select[name=${name}]`);
+    const input = getInput();
     input.value = evt.value;
     setSelectedOption(evt);
     handleChange(evt.value);
@@ -32,16 +39,20 @@ const SelectAtom: React.FC<ISelect> = forwardRef((
   const onChangeInput = (evt) => {
     const { value } = evt.target;
     const currentOption = listedContents.find(el => el.value === value);
-    setSelectedOption(currentOption);
+    setSelectedOption(currentOption ?? defaultOption);
     handleChange(value);
   };
 
+  if (listedContents.length === 0) return;
+
   return (
     <>
-      <select hidden name={name} ref={ref} {...rest} defaultValue={""} onChange={onChangeInput}>
-        <option value="" disabled>{placeholder}</option>
-        {listedContents?.map((content) => (<option key={content.value} value={content.value}>{content.text}</option>))}
-      </select>
+      {/* <div className="sr-only"> */}
+        <select name={name} ref={ref} {...rest} defaultValue={""} onChange={onChangeInput}>
+          <option value="" disabled>{placeholder}</option>
+          {listedContents?.map((content) => (<option key={content.value} value={content.value}>{content.text}</option>))}
+        </select>
+      {/* </div> */}
 
       <Listbox value={selectedOption} onChange={onChange}>
         {({ open }) => (
