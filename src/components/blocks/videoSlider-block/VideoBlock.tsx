@@ -65,7 +65,7 @@ const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCo
                     {featuredContentsCollection?.items && featuredContentsCollection.items.map((link, i) => (
                         <SwiperSlide key={i} className="w-full h-full rounded-xl overflow-hidden" >
                             {({ isActive }) => (
-                                < div className='relative pb-[53.5%] pt-[25px] h-0'>
+                                < div className='relative w-full h-full'>
                                     {isActive && link?.externalLink &&
                                         <iframe
                                             id={'swipper' + (i)}
