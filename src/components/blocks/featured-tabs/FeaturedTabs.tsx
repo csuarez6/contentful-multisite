@@ -5,23 +5,9 @@ import { classNames } from "@/utils/functions";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ListWithIcons from "@/components/organisms/list-with-icons/ListWithIcons";
 
-const FeaturedTabsBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, listedContentsCollection, blockId, sysId }) => {
-  const productTabs = [];
-  if (featuredContentsCollection?.items?.length > 0) {
-    productTabs.push({
-      id: "porqueLaRealizamos",
-      name: "¿Por qué la realizamos?"
-    });
-  }
-  if (listedContentsCollection?.items?.length > 0) {
-    productTabs.push({
-      id: "QueRevisamos",
-      name: "¿Qué revisamos?"
-    });
-  }
-
+const FeaturedTabsBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, blockId, sysId }) => {
   return (
-    <section id={blockId? blockId: sysId} className="section grid gap-9">
+    <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {(title || description) &&
         <div className="grid text-center gap-6">
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -33,9 +19,9 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({ title, description, featured
         <div className="flex justify-center overflow-x-auto">
           <div className="flex border-b border-transparent">
             <Tab.List className="flex gap-[10px]">
-              {productTabs?.map((tab) =>
+              {featuredContentsCollection?.items?.map((tab) =>
                 <Tab
-                  key={tab.id}
+                  key={tab.name}
                   className={({ selected }) =>
                     classNames(
                       selected
@@ -45,7 +31,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({ title, description, featured
                     )
                   }
                 >
-                  <p>{tab.name}</p>
+                  <p>{tab.title ?? tab.name}</p>
                 </Tab>
               )}
             </Tab.List>
@@ -53,19 +39,14 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({ title, description, featured
         </div>
 
         <Tab.Panels as={Fragment}>
-          {productTabs?.map((tab) => (
-            <Tab.Panel key={tab.name} className="focus:outline-none">
+          {featuredContentsCollection?.items?.map((collection) => (
+            <Tab.Panel key={collection.name} className="focus:outline-none">
               <div className="grid grid-cols-3 gap-5 mt-6">
-                {(tab.id === "porqueLaRealizamos") && (
-                  featuredContentsCollection?.items?.map((item) => {
-                    return <ListWithIcons {...item} key={item.name} />;
-                  })
-                )}
-                {(tab.id === "QueRevisamos") && (
-                  listedContentsCollection?.items?.map((item) => {
-                    return <ListWithIcons {...item} key={item.name} />;
-                  })
-                )}
+                {collection.featuredContentsCollection?.items?.map((item) => {
+                  return (
+                    <ListWithIcons {...item} key={item.name} />
+                  );
+                })}
               </div>
             </Tab.Panel>
           ))}

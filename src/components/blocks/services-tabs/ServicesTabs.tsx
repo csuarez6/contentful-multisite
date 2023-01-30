@@ -78,7 +78,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                 !tab?.internalLink &&
                 !tab?.externalLink && (
                   <Tab.Panel key={tab?.name} className="pt-6 focus:outline-none">
-                    <LeftFeatured {...tab} buttonType={view.buttonType}/>
+                    <LeftFeatured {...tab} buttonType={view?.buttonType}/>
                   </Tab.Panel>
                 )
             )}

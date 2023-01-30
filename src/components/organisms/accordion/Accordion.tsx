@@ -8,7 +8,6 @@ const Accordion: React.FC<any> = ({ featuredContents }) => {
   return (
     <dl className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {featuredContents.items.map((el, i) => {
-        console.log('featuredContents', el.name);
         if (!el.promoTitle && !el.name) return;
         return (
           <Disclosure
