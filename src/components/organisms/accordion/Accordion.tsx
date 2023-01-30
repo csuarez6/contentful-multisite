@@ -4,11 +4,12 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { classNames } from '@/utils/functions';
 
-const Accordion: React.FC<any> = ({ featuredContents }) => {
+const Accordion: React.FC<any> = ({ featuredContents }) => {  
   return (
     <dl className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {featuredContents.items.map((el, i) => {
-        if (!el.promoTitle) return;
+        console.log('featuredContents', el.name);
+        if (!el.promoTitle && !el.name) return;
         return (
           <Disclosure
             as="div"
@@ -23,7 +24,7 @@ const Accordion: React.FC<any> = ({ featuredContents }) => {
                       }`}
                   >
                     <h3 className="text-blue-dark text-size-subtitle1">
-                      {el.promoTitle}
+                      {el.promoTitle ?? el.name}
                     </h3>
                     <span className="flex w-8 justify-center items-center h-full mr-2">
                       <ChevronDownIcon
