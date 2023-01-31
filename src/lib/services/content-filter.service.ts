@@ -20,9 +20,16 @@ const getAlgoliaResults = async ({
   parentIds = [],
   availableFacets = [],
   pageResults = 12,
+  filters = {},
   page = 1
 }) => {
-  const resultObject = {
+  const resultObject: {
+    items: any[],
+    totalItems: number,
+    totalPages: number,
+    actualPage: number,
+    facets: any
+  } = {
     items: [],
     totalItems: 0,
     totalPages: 0,
@@ -45,8 +52,16 @@ const getAlgoliaResults = async ({
   const parentIdsSearchQuery = parentIds.map(pid => `fields.parent.sys.id:${pid}`);
   algoliaFilter.push(
     `(${contentTypeFilterSearchQuery.join(' OR ')})`,
-    `(${parentIdsSearchQuery.join(' OR ')})`
+    `(${parentIdsSearchQuery.join(' OR ')})`,
   );
+
+  for (const filterName in filters) {
+    const filterDef = Object.keys(FACET_QUERY_MAP).find(fk => filterName === FACET_QUERY_MAP[fk].inputName);
+
+    if (filterDef) {
+      algoliaFilter.push(`${filterDef}:${filters[filterName]}`);
+    }
+  }
 
   const indexSearch = getAlgoliaSearchIndex(
     process.env.ALGOLIASEARCH_APP_ID,
@@ -57,7 +72,7 @@ const getAlgoliaResults = async ({
     facets: algoliaFacets,
     hitsPerPage: pageResults,
     attributesToRetrieve: ['fields'],
-    page
+    page: (--page)
   });
 
   ({
@@ -71,7 +86,7 @@ const getAlgoliaResults = async ({
   return resultObject;
 };
 
-const getFacetsValues = async (facets: any) => {
+const getFacetsValues = async (facets: any): Promise<Array<any>> => {
   const facetsWithValues = [];
   const preview = false;
 
@@ -149,6 +164,7 @@ const getFilteredContent = async ({
   parentIds = [],
   availableFacets = [],
   pageResults = 12,
+  filters = {},
   page = 1
 }) => {
   if (!contentTypesFilter) {
@@ -161,6 +177,7 @@ const getFilteredContent = async ({
     parentIds,
     availableFacets,
     pageResults,
+    filters,
     page
   });
 

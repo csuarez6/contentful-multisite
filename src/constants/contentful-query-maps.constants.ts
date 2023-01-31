@@ -6,6 +6,8 @@ import AuxNavigationQuery from "@/lib/graphql/aux/navigation.gql";
 import AuxCustomContent from "@/lib/graphql/aux/custom-content.gql";
 import ProductQuery from '../lib/graphql/product.gql';
 import BlockContentFilterQuery from "@/lib/graphql/blocks/content-filter.gql";
+import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
+import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -31,6 +33,14 @@ const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: {
     queryName: 'auxCustomContent',
     query: AuxCustomContent,
+  },
+  [CONTENTFUL_TYPENAMES.PRODUCT_CATEGORY]: {
+    queryName: 'productCategory',
+    query: ProductCategoryQuery,
+  },
+  [CONTENTFUL_TYPENAMES.TRADEMARK]: {
+    queryName: 'trademark',
+    query: TrademarkQuery,
   },
 };
 

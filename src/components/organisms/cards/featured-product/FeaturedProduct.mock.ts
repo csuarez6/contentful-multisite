@@ -47,6 +47,9 @@ const data: IProductOverviewDetails = {
 
 const list = [
   {
+    sys: {
+      id: 'pid-0',
+    },
     promoTitle: 'Calefactor de torre',
     imagesCollection: {
       items: [
@@ -63,6 +66,9 @@ const list = [
     promoDescription: RICHTEXT_SHORT_SIMPLE,
     price: '$90.000',
   },{
+    sys: {
+      id: 'pid-1',
+    },
     promoTitle: 'Calefactor de torre',
     imagesCollection: {
       items: [

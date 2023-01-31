@@ -21,20 +21,21 @@ const LinkElement = ({ item, isOpen }) => {
         </span>
       )}
       {item.promoTitle ?? item.name}
-      {(item.mainNavCollection?.items?.length > 0 && item.__typename !== 'AuxCustomContent') && (
-        <span
-          className={classNames(
-            isOpen ? "transform rotate-180" : "",
-            "flex items-center w-6 h-6 shrink-0 text-blue-dark"
-          )}
-        >
-          <Icon
-            icon="arrow-down"
-            className="w-full h-full"
-            aria-hidden="true"
-          />
-        </span>
-      )}
+      {item.mainNavCollection?.items?.length > 0 &&
+        item.__typename !== "AuxCustomContent" && (
+          <span
+            className={classNames(
+              isOpen ? "transform rotate-180" : "",
+              "flex items-center w-6 h-6 shrink-0 text-blue-dark"
+            )}
+          >
+            <Icon
+              icon="arrow-down"
+              className="w-full h-full"
+              aria-hidden="true"
+            />
+          </span>
+        )}
     </>
   );
 };
@@ -65,12 +66,9 @@ const MegaMenuItem = ({ item }) => {
   // };
 
   const responsive = (w) => {
-    if (w < 768)
-      setColumns(1);
-    else if (w < 1024)
-      setColumns(3);
-    else
-      setColumns(5);
+    if (w < 768) setColumns(1);
+    else if (w < 1024) setColumns(3);
+    else setColumns(5);
   };
 
   const openSubmenu = () => {
@@ -86,9 +84,15 @@ const MegaMenuItem = ({ item }) => {
 
   return (
     <div
-      onMouseOver={() => { setOpen(true); }}
-      onMouseOut={() => { setOpen(false); }}
-      className={`${open ? "isOpen" : ""} group/submenu min-h-[60px] -my-2 flex items-center`}
+      onMouseOver={() => {
+        setOpen(true);
+      }}
+      onMouseOut={() => {
+        setOpen(false);
+      }}
+      className={`${
+        open ? "isOpen" : ""
+      } group/submenu min-h-[60px] -my-2 flex items-center`}
       ref={submenu}
     >
       {!item.internalLink?.slug &&
@@ -96,10 +100,12 @@ const MegaMenuItem = ({ item }) => {
         getUrlPath(item) === "/" && (
           <CustomLink
             content={item}
-            linkClassName={"relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"}
-            className={
-              `${open ? "border-lucuma" : "border-transparent"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none`
+            linkClassName={
+              "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
             }
+            className={`${
+              open ? "border-lucuma" : "border-transparent"
+            } flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none`}
           >
             <LinkElement item={item} isOpen={open} />
           </CustomLink>
@@ -107,30 +113,32 @@ const MegaMenuItem = ({ item }) => {
       {(item.internalLink?.slug ||
         item.externalLink ||
         getUrlPath(item) !== "/") && (
-          <CustomLink
-            content={item}
-            className={
-              `${open && "border-blue-dark"} flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none`
-            }
-          >
-            <LinkElement item={item} isOpen={false} />
-          </CustomLink>
-
-        )}
+        <CustomLink
+          content={item}
+          className={`${
+            open && "border-blue-dark"
+          } flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none`}
+        >
+          <LinkElement item={item} isOpen={false} />
+        </CustomLink>
+      )}
       {item.mainNavCollection?.items?.length > 0 && (
         <div
           ref={submenu}
           style={{ maxHeight: `${submenuH}px` }}
-          className={
-            `${open ? "pointer-events-auto opacity-100 transition-opacity" : "pointer-events-none opacity-0 transition-none"} absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto`
-          }
+          className={`${
+            open
+              ? "pointer-events-auto opacity-100 transition-opacity"
+              : "pointer-events-none opacity-0 transition-none"
+          } absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto`}
         >
           <div className="relative flex pt-6 my-6 gap-6">
             <div className="mx-auto xl:container">
               <div className="px-2 sm:px-4 2xl:px-[70px]">
-                <nav className="grid gap-10 w-full"
+                <nav
+                  className="grid gap-10 w-full"
                   style={{
-                    gridTemplateColumns: `repeat(${columns}, 1fr)`
+                    gridTemplateColumns: `repeat(${columns}, 1fr)`,
                   }}
                 >
                   {item.mainNavCollection.items.map((item) => (
@@ -146,27 +154,30 @@ const MegaMenuItem = ({ item }) => {
                         // style={{gridRowStart: calcRows(index)}}
                         className="flex flex-col gap-5 mt-6"
                       >
-                        {item.mainNavCollection?.items?.map(
-                          (item) => (
-                            <li key={item.name} className="flow-root">
-                              <CustomLink content={item} onClick={() => { setOpen(false); }} className="flex items-center text-base text-blue-dark hover:text-lucuma-60">
-                                <span>
-                                  {item.promoTitle ?? item.name}
-                                </span>
-                              </CustomLink>
-                            </li>
-                          )
-                        )}
+                        {item.mainNavCollection?.items?.map((item) => (
+                          <li key={item.name} className="flow-root">
+                            <CustomLink
+                              content={item}
+                              onClick={() => {
+                                setOpen(false);
+                              }}
+                              className="flex items-center text-base text-blue-dark hover:text-lucuma-60"
+                            >
+                              <span>{item.promoTitle ?? item.name}</span>
+                            </CustomLink>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   ))}
-                  {
-                    mockFeaturedProductProps.list.map((item) => (
-                      <div className="card-mega-menu" key={`card_${item.promoTitle}`}>
-                        <FeaturedProduct {...item} />
-                      </div>
-                    ))
-                  }
+                  {mockFeaturedProductProps.list.map((item, idx) => (
+                    <div
+                      className="card-mega-menu"
+                      key={`card_${item.sys.id}-${idx}`}
+                    >
+                      <FeaturedProduct {...item} />
+                    </div>
+                  ))}
                 </nav>
                 {/* <div className="py-8 sm:py-12 pl-6 border-l border-neutral-70">
                 <div>
@@ -186,7 +197,10 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
   if (mainNavCollection.items?.length <= 0) return;
   return (
     <div className="hidden lg:block">
-      <div className="pointer-events-none absolute inset-0 z-30" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 z-30"
+        aria-hidden="true"
+      />
       <div className="z-20">
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">

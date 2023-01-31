@@ -11,6 +11,9 @@ export enum CONTENTFUL_TYPENAMES {
   AUX_CUSTOM_CONTENT = "AuxCustomContent",
   AUX_NAVIGATION = "AuxNavigation",
 
+  PRODUCT_CATEGORY = 'ProductCategory',
+  TRADEMARK = 'Trademark',
+
   VIEW_ACCORDION = "ViewAccordion",
   VIEW_BANNER_IMAGE = "ViewBannerImage",
   VIEW_LEFT_FEATURED = "ViewSecondaryBanner",

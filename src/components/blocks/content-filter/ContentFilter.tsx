@@ -6,6 +6,7 @@ import { IContentFilter } from "@/lib/interfaces/content-filter-cf.interface";
 import ProductFilterBlock from "../product-filter/ProductFilter";
 import CarouselCategoriesBlock from "../carousel-categories/CarouselCategories";
 import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
+import { useRouter } from "next/router";
 
 const ContentFilter: React.FC<IContentFilter> = ({
   contentTypesFilter,
@@ -16,18 +17,23 @@ const ContentFilter: React.FC<IContentFilter> = ({
   blockId = null,
   mainFacet = null,
 }) => {
-  const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
-  const [mainFacetContent, setMainFacetContent] = useState<ISelect>(null);
-
-  const fetcher = (url) => fetch(url).then((r) => r.json());
-  const queryParams = new URLSearchParams([
+  const { query } = useRouter();
+  const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
     ...availableFacets.map((f) => ["facets", f]),
-  ]).toString();
+    (mainFacet ? ['mainFacet', mainFacet] : null)
+  ];
 
+  const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
+  const [mainFacetContent, setMainFacetContent] = useState<ISelect>(null);
+  const [queryString, setQueryString] = useState<string>(
+    new URLSearchParams(fixedFilters).toString()
+  );
+
+  const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data, error, isLoading } = useSWR(
-    `/api/content-filter?${queryParams}`,
+    `/api/content-filter?${queryString}`,
     fetcher
   );
 
@@ -61,20 +67,35 @@ const ContentFilter: React.FC<IContentFilter> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  useEffect(() => {
+    if (query) {
+      const queryParams = [];
+      for (const k in query) {
+        if (k === "slug") continue;
+
+        queryParams.push([k, query[k]]);
+        setQueryString(
+          new URLSearchParams([...fixedFilters, ...queryParams]).toString()
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   return (
     <div className="relative w-full">
-      {mainFacetContent?.listedContents && (
-        <CarouselCategoriesBlock
-          view={{
-            alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
-          }}
-          title={title}
-          description={description}
-          featuredContentsCollection={{ items: mainFacetContent.listedContents }}
-          blockId={blockId}
-          queryParamName={mainFacetContent.name}
-        />
-      )}
+      <CarouselCategoriesBlock
+        view={{
+          alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
+        }}
+        title={title}
+        description={description}
+        featuredContentsCollection={{
+          items: mainFacetContent?.listedContents ?? [],
+        }}
+        blockId={blockId}
+        queryParamName={mainFacetContent?.name ?? ''}
+      />
 
       {productGrill()}
     </div>
