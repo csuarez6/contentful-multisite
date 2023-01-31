@@ -7,10 +7,6 @@ import contentfulClient from './contentful-client.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { FACET_QUERY_MAP } from '@/constants/search.constants';
-import PageQuery from '../graphql/page.gql';
-import ProductQuery from '../graphql/product.gql';
-import ProductCategoryQuery from '../graphql/shared/product-category.gql';
-import TrademarkQuery from '../graphql/shared/trademark.gql';
 
 export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
   const searchClient = algoliasearch(appId, appKey);
@@ -60,7 +56,7 @@ const getAlgoliaResults = async ({
     filters: algoliaFilter.join(' AND '),
     facets: algoliaFacets,
     hitsPerPage: pageResults,
-    attributesToRetrieve: ['fields.name'],
+    attributesToRetrieve: ['fields'],
     page
   });
 
@@ -80,50 +76,68 @@ const getFacetsValues = async (facets: any) => {
   const preview = false;
 
   for (const facetId in facets) {
-    const facetContentIds = Object.keys(facets[facetId]);
+    const facetContentNames = Object.keys(facets[facetId]);
 
-    try {
-      const { data: responseData } = await contentfulClient(preview).query({
-        query: gql`
-          query getEntriesCollection($preview: Boolean!, $limit: Int!) {
-            entryCollection(where: { sys: { id_in: ["${facetContentIds.join('", "')}"] } }, preview: $preview, limit: $limit) {
-              items {
-                ...on ProductCategory {
-                  ${ProductCategoryQuery}
-                }
-                ...on Trademark {
-                  ${TrademarkQuery}
+    if (FACET_QUERY_MAP[facetId]) {
+      const { queryName, query } = FACET_QUERY_MAP[facetId];
+
+      if (query) {
+        try {
+          const { data: responseData } = await contentfulClient(preview).query({
+            query: gql`
+            query getEntriesCollection($preview: Boolean!, $limit: Int!) {
+              ${queryName}Collection(where: { name_in: ["${facetContentNames.join('", "')}"] }, preview: $preview, limit: $limit) {
+                items {
+                  ${query}
                 }
               }
             }
-          }
-        `,
-        variables: {
-          preview,
-          limit: facetContentIds.length
-        },
-        errorPolicy: 'all'
-      });
+          `,
+            variables: {
+              preview,
+              limit: facetContentNames.length
+            },
+            errorPolicy: 'all'
+          });
 
-      if (responseData?.entryCollection?.items) {
+          if (responseData?.[`${queryName}Collection`]?.items) {
+            const facetContents = {
+              name: FACET_QUERY_MAP[facetId].inputName,
+              labelSelect: FACET_QUERY_MAP[facetId].title,
+              placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
+              listedContents: responseData[`${queryName}Collection`].items.map((facetContent: any) => {
+                return {
+                  ...facetContent,
+                  text: `${facetContent.promoTitle ?? facetContent.name} (${facets[facetId][facetContent.name]})`,
+                  value: facetContent.name,
+                  totalItems: facets[facetId][facetContent.name]
+                };
+              })
+            };
+
+            facetsWithValues.push(facetContents);
+          }
+        } catch (e) {
+          console.error(`Error on getFacetsValues => `, e.message);
+        }
+      } else {
         const facetContents = {
           name: FACET_QUERY_MAP[facetId].inputName,
           labelSelect: FACET_QUERY_MAP[facetId].title,
           placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
-          listedContents: responseData.entryCollection.items.map((facetContent: any) => {
+          listedContents: facetContentNames.map((facetValue: any) => {
             return {
-              ...facetContent,
-              text: `${facetContent.promoTitle ?? facetContent.name} (${facets[facetId][facetContent.sys.id]})`,
-              value: facetContent.sys.id,
-              totalItems: facets[facetId][facetContent.sys.id]
+              name: '',
+              text: `${facetValue} (${facets[facetId][facetValue]})`,
+              value: facetValue,
+              image: null,
+              totalItems: facets[facetId][facetValue]
             };
           })
         };
 
         facetsWithValues.push(facetContents);
       }
-    } catch (e) {
-      console.error(`Error on getFacetsValues => `, e.message);
     }
   };
 
@@ -142,10 +156,6 @@ const getFilteredContent = async ({
     return null;
   }
 
-  const preview = false;
-  let responseData = null;
-  let responseError = null;
-
   const filteredContentResults = await getAlgoliaResults({
     contentTypesFilter,
     parentIds,
@@ -155,45 +165,10 @@ const getFilteredContent = async ({
   });
 
   if (!filteredContentResults?.items?.length) {
-    return responseData;
+    return null;
   }
 
-  const contentfulIds = filteredContentResults.items.map(i => i.objectID);
-
-  try {
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
-      query: gql`
-        query getEntriesCollection($preview: Boolean!, $limit: Int!) {
-          entryCollection(where: { sys: { id_in: ["${contentfulIds.join('", "')}"] } }, preview: $preview, limit: $limit) {
-            items {
-              ...on Page {
-                ${PageQuery}
-              }
-              ...on Product {
-                ${ProductQuery}
-              }
-            }
-          }
-        }
-      `,
-      variables: {
-        preview,
-        limit: pageResults
-      },
-      errorPolicy: 'all'
-    }));
-  } catch (e) {
-    responseError = e;
-    responseData = {};
-  }
-
-  if (responseError) {
-    console.error(`Error on getFilteredContent => `, responseError.message);
-  }
-
-  if (responseData?.entryCollection?.items) {
-    filteredContentResults.items = responseData.entryCollection.items;
-  }
+  filteredContentResults.items = filteredContentResults.items.map(item => item.fields);
 
   if (filteredContentResults?.facets && Object.keys(filteredContentResults?.facets).length > 0) {
     filteredContentResults.facets = await getFacetsValues(filteredContentResults.facets);

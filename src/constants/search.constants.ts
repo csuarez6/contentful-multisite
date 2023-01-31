@@ -2,7 +2,7 @@ import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
 import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 
 export const FACET_QUERY_MAP = {
-  "fields.trademark.es.sys.id": {
+  "fields.trademark.name": {
     title: 'Marca',
     inputName: 'marca',
     queryName: 'trademark',
@@ -13,5 +13,11 @@ export const FACET_QUERY_MAP = {
     inputName: 'categoria',
     queryName: 'productCategory',
     query: ProductCategoryQuery
+  },
+  "fields._price": {
+    title: 'Precio',
+    inputName: 'precio',
+    queryName: null,
+    query: null
   },
 };
