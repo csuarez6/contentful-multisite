@@ -14,7 +14,7 @@ export interface ICheckBox {
 const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
     return (
         <div className="relative">
-            <div className="mt-6 flex space-x-2">
+            <div className="mt-6 flex items-center space-x-2">
                 <div className="flex h-5 items-center">
                     <input
                         ref={ref}

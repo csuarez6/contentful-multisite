@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendEmail } from '@/lib/services/mailer.service';
 
-const types:object = {
-  "exequiales": "Planes exequiales",
+const types: object = {
   "mantenimiento-y-reparacion": "Mantenimiento y reparación",
   "servihogar": "Servihogar",
   "nuevo-punto": "Nuevo Punto",
   "rpo": "Revisión Periódica Obligatoria",
+  "producto": "Producto",
 };
 const getType = (type: string) => types[type.toLocaleLowerCase()] ?? type;
 
@@ -34,39 +34,31 @@ const handler = async (
     return;
   }
 
-  const data: any = {
-    type: req.body.type
-  };
+  const data: any = {};
+  const { type, cuentaContrato, email, fullName, hour, cellPhone } = req.body;
 
-  if (data.type === "rpo") {
+  if (type === "rpo") {
     const newDate = new Date(req.body.date);
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const date = newDate.toLocaleDateString('es-CO', options);
 
-    data["cuenta_contrato"] = req.body.cuenta_contrato;
-    data["date"] = newDate.toLocaleDateString('es-CO', options);
-    data["hour"] = req.body.hour;
-    data["cellPhone"] = req.body.cellPhone;
     data["body"] = [
-      `Solicitud de servicio ¡Te llamamos! para ${getType(data.type)}\n`,
+      `Solicitud de servicio ¡Te llamamos! para ${getType(type)}\n`,
       "Datos personales:",
-      `Cuenta contrato: ${data.cuenta_contrato ?? '----'}`,
-      `Fecha: ${data.date ?? '----'}`,
-      `Hora: ${data.hour ?? '----'}`,
-      `Teléfono: ${data.cellPhone}`,
+      `Cuenta contrato: ${cuentaContrato}`,
+      `Fecha: ${date}`,
+      `Hora: ${hour}`,
+      `Teléfono: ${cellPhone}`,
     ];
   } else {
-    data["email"] = req.body.email;
-    data["fullName"] = req.body.fullName;
-    data["cellPhone"] = req.body.cellPhone;
-    data["servicioExequial"] = req.body.servicioExequial;
     data["body"] = [
-      `Solicitud de servicio ¡Te llamamos! para ${getType(data.type)}\n`,
+      `Solicitud de servicio ¡Te llamamos! para ${getType(type)}\n`,
       "Datos personales:",
-      `Nombre: ${data.fullName ?? '----'}`,
-      `Teléfono: ${data.cellPhone}`,
-      `Correo electrónico: ${data.email ?? '----'}`,
     ];
-    if (data.type === "exequiales") data["body"].push(`Servicio Exequial: ${data.servicioExequial ?? '----'}`);
+    if (cuentaContrato) data["body"].push(`Cuenta contrato: ${cuentaContrato}`);
+    data["body"].push(`Nombre: ${fullName}`);
+    data["body"].push(`Teléfono: ${cellPhone}`);
+    data["body"].push(`Correo electrónico: ${email}`);
   }
 
   const isMailSended = await sendEmail("jperez@aplyca.com, evallejo@aplyca.com, msanchez@aplyca.com, dduarte@aplyca.com", "Servicio ¡Te llamamos! Vanti Marketplace", data.body.join('\n'));
