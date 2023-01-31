@@ -8,7 +8,7 @@ export const FACET_QUERY_MAP = {
     queryName: 'trademark',
     query: TrademarkQuery
   },
-  "fields.category.es.sys.id": {
+  "fields.category.name": {
     title: 'Categoría',
     inputName: 'categoria',
     queryName: 'productCategory',

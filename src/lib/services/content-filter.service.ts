@@ -46,7 +46,7 @@ const getAlgoliaResults = async ({
   }
 
   const contentTypeFilterSearchQuery = types.map(ct => `sys.contentType.sys.id:${ct}`);
-  const parentIdsSearchQuery = parentIds.map(pid => `fields.parent.es.sys.id:${pid}`);
+  const parentIdsSearchQuery = parentIds.map(pid => `fields.parent.sys.id:${pid}`);
   algoliaFilter.push(
     `(${contentTypeFilterSearchQuery.join(' OR ')})`,
     `(${parentIdsSearchQuery.join(' OR ')})`

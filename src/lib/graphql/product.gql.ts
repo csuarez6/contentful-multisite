@@ -8,6 +8,9 @@ const ProductQuery = `
   sku
   slug
   urlPath
+  parent {
+    ${DefaultQuery}
+  }
   promoTitle
   promoDescription {
     ${RichtextQuery}
