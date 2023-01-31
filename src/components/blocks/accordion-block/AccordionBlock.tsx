@@ -10,6 +10,7 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
   featuredContentsCollection,
   blockId,
   sysId,
+  view,
 }) => {
   return (
     <section id={blockId? blockId: sysId} className="section flex flex-col gap-8">
@@ -23,7 +24,7 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
           )}
         </div>
       )}
-      {featuredContentsCollection?.items?.length > 0 && <Accordion featuredContents={featuredContentsCollection} />}
+      {featuredContentsCollection?.items?.length > 0 && <Accordion featuredContents={featuredContentsCollection}  columnsSize={view?.columnsSize} displayIcon={view?.displayIcon}/>}
     </section>
   );
 };

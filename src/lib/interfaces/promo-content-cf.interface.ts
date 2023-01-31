@@ -122,6 +122,7 @@ export interface IView {
     iconBackgroundColor?: string;
     iconPosition?: string;
     iconSize?: string;
+    displayIcon?: boolean;
     imageOrientation?: string;
     isReverse?: boolean;
     alignTitle?: string;

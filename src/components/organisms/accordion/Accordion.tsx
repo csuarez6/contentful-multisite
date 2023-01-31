@@ -2,11 +2,12 @@ import React from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { classNames } from '@/utils/functions';
+import { classColumns, classNames } from '@/utils/functions';
+import Icon from "@/components/atoms/icon/Icon";
 
-const Accordion: React.FC<any> = ({ featuredContents }) => {  
+const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }) => {
   return (
-    <dl className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <dl className={classNames("grid gap-3", classColumns(columnsSize ?? '2'))}>
       {featuredContents.items.map((el, i) => {
         if (!el.promoTitle && !el.name) return;
         return (
@@ -22,9 +23,16 @@ const Accordion: React.FC<any> = ({ featuredContents }) => {
                     className={`flex w-full items-center justify-between pl-7 text-left text-gray-400 pt-[24px] ${!open ? "md:mb-[55px] mb-7" : ""
                       }`}
                   >
-                    <h3 className="text-blue-dark text-size-subtitle1">
-                      {el.promoTitle ?? el.name}
-                    </h3>
+                    <div className="flex">
+                      {(el.promoIcon && displayIcon) && (
+                        <span className={`flow-root shrink-0 w-7 h-7 mr-2`}>
+                          <Icon icon={el.promoIcon} className="mx-auto w-full h-full text-blue-dark" />
+                        </span>
+                      )}
+                      <h3 className="text-blue-dark text-size-subtitle1">
+                        {el.promoTitle ?? el.name}
+                      </h3>
+                    </div>
                     <span className="flex w-8 justify-center items-center h-full mr-2">
                       <ChevronDownIcon
                         className={classNames(

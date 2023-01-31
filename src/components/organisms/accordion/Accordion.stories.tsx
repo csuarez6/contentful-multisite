@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import Accordion from "./Accordion";
 // import { IAccordion } from "@/lib/interfaces/accordion-cf.interface";
-import { featuredContents } from "./Accordion.mocks";
+import { data } from "./Accordion.mocks";
 
 export default {
   title: "organisms/Accordion",
@@ -27,5 +27,5 @@ export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  featuredContents,
+  data,
 } as any;
