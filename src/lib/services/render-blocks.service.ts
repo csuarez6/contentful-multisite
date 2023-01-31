@@ -58,4 +58,33 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
   });
 };
 
+export const attachLinksToRichtextContent = (jsonDocument, links) => {
+  const resultDocument = JSON.parse(JSON.stringify(jsonDocument));
+
+  if (!links) return jsonDocument;
+
+  const { content } = jsonDocument;
+
+  for (const kCont in content) {
+      let blockInfo = null;
+
+      switch (content[kCont].nodeType) {
+          case 'embedded-asset-block':
+              blockInfo = links.assets.block.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+              break;
+          case 'embedded-entry-block':
+              blockInfo = links.entries.block.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+              break;
+          default:
+              continue;
+      }
+
+      if (blockInfo && blockInfo != null) {
+          resultDocument.content[kCont].data.target = blockInfo;
+      }
+  }
+
+  return resultDocument;
+};
+
 export default jsonToReactComponents;
