@@ -39,7 +39,7 @@ export interface IProductDetails {
   images?: IImageAsset[];
   details?: string[];
   paymentMethods?: IPaymentMethod[];
-  onBuy?: (type: PaymentMethodType, skuCode: string) => void
+  onBuy?: (type: PaymentMethodType, skuCode: string ) => void
   features?: IRichText;
   cta?: ILink;
   state?: string;
@@ -65,7 +65,7 @@ export interface IProductOverviewDetails {
   promoDescription?: IRichText;
   productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
-  onBuy?: (type: PaymentMethodType, skuCode: string) => void
+  onBuy?: (type: PaymentMethodType, skuCode: string, imageProduct: string, nameProduct: string) => void
   features?: IRichText;
   warranty?: {
     name?: string;

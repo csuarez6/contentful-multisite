@@ -121,9 +121,8 @@ export const useCommerceLayer = () => {
     setOrder(order);
   };
 
-  const addToCart = async (skuCode: string) => {
+  const addToCart = async (skuCode: string, productImage: string, productName: string) => {
     const orderId = await getOrderId();
-
     const product = (
       await client.skus.list({
         filters: { code_eq: skuCode },
@@ -133,8 +132,8 @@ export const useCommerceLayer = () => {
 
     await client.line_items.create({
       quantity: 1,
-      name: product.name,
-      image_url: product.image_url,
+      name: productName,
+      image_url: productImage,
       sku_code: product.code,
       _update_quantity: true,
       order: {

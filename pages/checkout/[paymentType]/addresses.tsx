@@ -7,13 +7,15 @@ import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import { Address } from "@commercelayer/sdk";
 import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import { getMenu } from "@/lib/services/menu-content.service";
 
 interface IAddress {
   id?: string;
@@ -379,13 +381,31 @@ const CheckoutAddresses = () => {
   );
 };
 
-CheckoutAddresses.getInitialProps = () => {
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths = [];
+  return { paths, fallback: "blocking" };
+};
+
+export const revalidate = 60;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    2
+  );
+
   return {
-    layout: {
-      name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+    props: {
+      layout: {
+        name: 'Orden - Direccion',
+        footerInfo,
+        headerInfo,
+      },
     },
+    revalidate,
   };
 };
 

@@ -33,7 +33,7 @@ export interface IContextCheckout {
   isError: boolean;
   order: Order;
   flow: VantiCheckoutFlow;
-  addToCart: (sku: string) => void;
+  addToCart: (sku: string, productImage?: string, productName?: string) => void;
   updateMetadata: <T = any>(metaField: string, value: T) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
   updateItemQuantity: (skuCode: string, quantity: number) => Promise<void>;

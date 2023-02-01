@@ -4,10 +4,12 @@ import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import { Address } from "@commercelayer/sdk";
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import { getMenu } from "@/lib/services/menu-content.service";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -85,13 +87,31 @@ const CheckoutSummary = () => {
   );
 };
 
-CheckoutSummary.getInitialProps = () => {
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths = [];
+  return { paths, fallback: "blocking" };
+};
+
+export const revalidate = 60;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    2
+  );
+
   return {
-    layout: {
-      name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+    props: {
+      layout: {
+        name: 'Orden - Resumen',
+        footerInfo,
+        headerInfo,
+      },
     },
+    revalidate,
   };
 };
 

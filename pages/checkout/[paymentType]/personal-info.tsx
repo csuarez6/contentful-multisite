@@ -7,9 +7,11 @@ import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { getMenu } from "@/lib/services/menu-content.service";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
 interface ICustomer {
   firstName: string;
@@ -99,11 +101,9 @@ const CheckoutPersonalInfo = () => {
             <div className="w-full">
               <TextBox
                 id="firstName"
-                name="firstName"
                 className="algo"
                 label="Escribe tu nombre"
                 placeholder="Nombre"
-                htmlForLabel="firstName"
                 {...register("firstName")}
               />
               {
@@ -164,13 +164,31 @@ const CheckoutPersonalInfo = () => {
   );
 };
 
-CheckoutPersonalInfo.getInitialProps = () => {
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths = [];
+  return { paths, fallback: "blocking" };
+};
+
+export const revalidate = 60;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    2
+  );
+
   return {
-    layout: {
-      name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+    props: {
+      layout: {
+        name: 'Orden - Informacion Personal',
+        footerInfo,
+        headerInfo,
+      },
     },
+    revalidate,
   };
 };
 

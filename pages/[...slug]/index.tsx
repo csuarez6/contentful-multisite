@@ -34,8 +34,8 @@ const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) 
     }
   };
 
-  const onBuyHandler = async (type: PaymentMethodType, skuCode: string) => {
-    await addToCart(skuCode);
+  const onBuyHandler = async (type: PaymentMethodType, skuCode: string, imageProduct: string, titleProduct: string ) => {
+    await addToCart(skuCode, imageProduct, titleProduct);
     if (buyHandlerMap[type]) buyHandlerMap[type]();
   };
 

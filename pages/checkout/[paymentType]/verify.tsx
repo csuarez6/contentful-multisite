@@ -5,8 +5,11 @@ import CheckoutContext from "@/context/Checkout";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { mockPageLayoutProps } from "@/components/layouts/page-layout/PageLayout.mocks";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import { getMenu } from "@/lib/services/menu-content.service";
+import { GetStaticPaths, GetStaticProps } from "next";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const STEP_META_FIELD = 'isVerified';
 
@@ -95,7 +98,6 @@ const CheckoutVerify = () => {
                               product?.quantity - 1
                             )
                           }
-                          disabled={order?.skus_count < 2}
                         >
                           <span className="m-auto">−</span>
                         </button>
@@ -128,23 +130,55 @@ const CheckoutVerify = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-end">
-          <button onClick={handleNext} className="mt-6 button button-primary">
-            Continuar
-          </button>
+        <div className="flex justify-end items-center">
+          {products.length < 1 && (
+            <div className="mr-5 mt-6">
+              <p>Su compra está vacía</p>
+            </div>
+          )}
+          {!products.length ? (
+            <CustomLink
+              content={{ urlPath: "/gasodomesticos" }}
+              linkClassName="button button-primary mt-6"
+            >
+              Ir a la tienda
+            </CustomLink>
+          ) : (
+            <button onClick={handleNext} className="mt-6 button button-primary">
+              Continuar
+            </button>
+          )}
         </div>
       </HeadingCard>
     </>
   );
 };
 
-CheckoutVerify.getInitialProps = () => {
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths = [];
+  return { paths, fallback: "blocking" };
+};
+
+export const revalidate = 60;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    2
+  );
+
   return {
-    layout: {
-      name: mockPageLayoutProps.data.name,
-      footerInfo: mockPageLayoutProps.data.layout.footerInfo,
-      headerInfo: mockPageLayoutProps.data.layout.headerInfo,
+    props: {
+      layout: {
+        name: 'Orden - Verificar',
+        footerInfo,
+        headerInfo,
+      },
     },
+    revalidate,
   };
 };
 

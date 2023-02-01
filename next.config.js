@@ -14,7 +14,7 @@ const nextConfig = {
     'plugin:@next/next/recommended',
   ],
   images: {
-    domains: ['images.ctfassets.net', 'picsum.photos','placeholder', 'via.placeholder.com', 'data.commercelayer.app'],
+    domains: ['images.ctfassets.net', 'picsum.photos','placeholder', 'via.placeholder.com', 'data.commercelayer.app','tienda.grupovanti.com'],
   },
   async redirects() {
     return [

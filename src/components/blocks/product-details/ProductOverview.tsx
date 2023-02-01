@@ -298,7 +298,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                             if (onBuy)
                               onBuy(
                                 PaymentMethodType.pse,
-                                sku
+                                sku,
+                                promoImage.url,
+                                promoTitle
                               );
                           }}
                         >
