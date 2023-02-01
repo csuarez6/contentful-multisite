@@ -29,7 +29,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     externalLink
   };
   return (
-    <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
+    <article className="bg-white drop-shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
       {(promoImage || image) && (
         <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative">
           <Image
