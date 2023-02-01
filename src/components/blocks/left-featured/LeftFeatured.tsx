@@ -24,8 +24,8 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
 
       <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
         {image && (
-          <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative object-cover">
-            <Image src={image.url} alt={image.title} fill />
+          <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative">
+            <Image src={image.url} alt={image.title} fill className="object-cover" />
           </figure>
         )}
         {(subtitle || pretitle || description) && (

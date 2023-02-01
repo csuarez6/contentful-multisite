@@ -7,6 +7,7 @@ const types: object = {
   "nuevo-punto": "Nuevo Punto",
   "rpo": "Revisión Periódica Obligatoria",
   "producto": "Producto",
+  "instalacion-gasodomésticos": "Instalación Gasodomésticos",
 };
 const getType = (type: string) => types[type.toLocaleLowerCase()] ?? type;
 

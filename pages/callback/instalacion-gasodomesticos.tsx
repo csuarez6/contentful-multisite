@@ -50,22 +50,16 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
 };
 
 interface IForm {
-  fullName: string;
   cellPhone: string;
-  email: string;
   agreeHD: boolean;
-  acceptHD: boolean;
 }
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 const schema = yup.object({
-  fullName: yup.string().required("Dato requerido"),
   cellPhone: yup.string().required("Dato requerido").matches(regexCellPhone, {
     message: "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####"
   }),
-  email: yup.string().email("Email no válido").required("Dato requerido"),
-  agreeHD: yup.bool().oneOf([true], "Dato requerido"),
-  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
+  agreeHD: yup.bool().oneOf([true], "Dato requerido")
 });
 
 const CallbackPage = () => {
@@ -118,63 +112,28 @@ const CallbackPage = () => {
 
   return (
     <section className="section">
-      <HeadingCard title="1. ¡Comencemos!" isCheck={isValid} icon="personal-data">
+      <HeadingCard title="1. Diligencia tus datos para llamarte" isCheck={isValid} icon="personal-data">
         <div className="bg-white rounded-lg">
-          <div className='mb-6'>
-            <p className='title is-4 !font-semibold text-grey-30'>Cuéntanos sobre ti</p>
-          </div>
-
           <form ref={refForm} className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full">
-              <TextBox
-                id="fullName"
-                name="fullName"
-                label="Escribe tu nombre"
-                placeholder="Nombre completo *"
-                {...register("fullName")}
-              />
-              {errors.fullName && <p className="text-red-600 mt-1">{errors.fullName?.message}</p>}
-            </div>
             <div className="w-full">
               <TextBox
                 id="cellPhone"
                 name="cellPhone"
-                label="Escribe tu número de celular para poder contactarte"
+                label="Escribe tu número de celular"
                 placeholder="300 0000000"
                 {...register("cellPhone")}
               />
               {errors.cellPhone && <p className="text-red-600 mt-1">{errors.cellPhone?.message}</p>}
             </div>
-            <div className="w-full">
-              <TextBox
-                id="email"
-                name="email"
-                type="email"
-                label="Escribe tu correo electrónico"
-                placeholder="Correo electrónico *"
-                {...register("email")}
-              />
-              {errors.email && <p className="text-red-600 mt-1">{errors.email?.message}</p>}
-            </div>
 
-            <div className="w-full">
+            <div className="w-full -mt-6">
               <CheckBox
                 id="agreeHD"
                 name="agreeHD"
-                label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales"
+                label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
                 {...register("agreeHD")}
               />
               {errors.agreeHD && <p className="text-red-600 mt-1">{errors.agreeHD?.message}</p>}
-
-              <CheckBox
-                id="acceptHD"
-                name="acceptHD"
-                label="Autorizo que me contacten para agendar tu servicio"
-                type="checkbox"
-                value={true}
-                {...register("acceptHD")}
-              />
-              {errors.acceptHD && <p className="text-red-600 mt-1">{errors.acceptHD?.message}</p>}
             </div>
 
             <div className="w-full">
@@ -208,7 +167,7 @@ CallbackPage.getInitialProps = async (context: any) => {
 
   return {
     layout: {
-      name: "Callback Nuevo Punto",
+      name: "Callback Instalación Gasodomésticos",
       footerInfo,
       headerInfo,
     },
