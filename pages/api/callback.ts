@@ -65,7 +65,7 @@ const handler = async (
     subject: `Callback Marketplace: ${typeName}`,
     message: data.body.join('\n'),
     from: "Vanti Marketplace <marketplace@grupovanti.com>"
-  }
+  };
 
   const isMailSended = await sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
 
