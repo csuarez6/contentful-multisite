@@ -89,3 +89,7 @@ section.section {
 .card-mega-menu > .featured-product img {
   @apply rounded-xl;
 }
+
+.bg-navegation{
+  background: rgba(255, 255, 255, 0.12);
+}

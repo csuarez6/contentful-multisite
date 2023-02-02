@@ -67,10 +67,10 @@ const FooterBlock: React.FC<INavigation> = ({
               {mainNavCollection?.items?.map((menuItem) => (
                 <Disclosure as="div" className='border-t-[0.5px] border-white' key={menuItem.sys.id}>
                   {({ open }) => (
-                    <div className="px-[10px]">
+                    <div>
                       <dt className="text-lg">
                         <Disclosure.Button
-                          className={`flex w-full items-center justify-between pl-2 text-left text-gray-400 pt-[8px] ${!open ? "mb-[8px]" : ""}`}>
+                          className={`flex w-full items-center justify-between pl-2 text-left text-gray-400 pt-[8px] mb-[8px]`}>
                           <div className="flex">
                             <h3 className="text-white text-sm">
                               {menuItem.promoTitle ?? menuItem.name}
@@ -81,11 +81,11 @@ const FooterBlock: React.FC<INavigation> = ({
                           </span>
                         </Disclosure.Button>
                       </dt>
-                      <Disclosure.Panel as="dd" className={`pl-2 pr-12 ${open ? "mb-[10px]" : ""}`}>
+                      <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
                         {menuItem?.mainNavCollection?.items?.length > 0 && (
-                          <ul role="list" className="">
+                          <ul role="list" className="border-t-[0.5px] border-white pl-[10px] pr-[30px]">
                             {menuItem.mainNavCollection.items.map((listItem) => (
-                              <li key={listItem.sys.id}>
+                              <li key={listItem.sys.id} className="py-2">
                                 <CustomLink
                                   content={listItem}
                                   className="text-sm text-white hover:underline"
