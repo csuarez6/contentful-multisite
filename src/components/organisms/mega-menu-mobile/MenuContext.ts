@@ -1,5 +1,5 @@
-import {createContext} from "react";
+import { createContext } from "react";
 
-const MenuContext = createContext();
+const MenuContext = createContext({ state: null, dispatch: null });
 
 export default MenuContext;

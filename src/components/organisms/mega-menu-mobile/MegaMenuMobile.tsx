@@ -5,8 +5,8 @@ import MenuState from "./MenuState";
 import { getUrlPath } from "@/utils/link.utils";
 import { classNames } from "@/utils/functions";
 
-const NavItem = ({item, children, level}) => {
-  const {state, dispatch} = useContext(MenuContext);
+const NavItem = ({ item, children, level }) => {
+  const { state, dispatch } = useContext(MenuContext);
   const [collapse, setCollapse] = useState(false);
   const [panel, setPanel] = useState(false);
 
@@ -15,18 +15,18 @@ const NavItem = ({item, children, level}) => {
   };
 
   const onPanel = () => {
-    dispatch({type: "open"});
+    dispatch({ type: "open" });
     setPanel(true);
   };
 
   useEffect(() => {
-    if(!state.panel)
+    if (!state.panel)
       setPanel(false);
   }, [state.panel]);
 
   return (
     <li className={classNames(level > 1 ? "bg-white" : collapse ? "bg-neutral-90" : "", "flex flex-col font-bold text-blue-dark empty:hidden relative border-b border-neutral-70")}>
-      { (!state.panel || level == 3 || panel) &&
+      {(!state.panel || level == 3 || panel) &&
         <span className={classNames(panel ? "mb-4 mt-6" : "", "hover:bg-neutral-90 py-2.5 px-3.5 flex items-center gap-2 relative")}>
           {item.promoIcon && (
             <span className="flex items-center shrink-0 w-6 h-6">
@@ -45,7 +45,7 @@ const NavItem = ({item, children, level}) => {
           </a>
           {(level == 1 && !!item?.mainNavCollection?.items.length) &&
 
-            <span 
+            <span
               className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
               onClick={onCollapse}
             >
@@ -54,11 +54,11 @@ const NavItem = ({item, children, level}) => {
                 className="w-7 h-7"
                 aria-hidden="true"
               />
-              
+
             </span>
           }
-          {level == 2 && !state.panel && 
-            <span 
+          {level == 2 && !state.panel &&
+            <span
               className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
               onClick={onPanel}
             >
@@ -77,14 +77,14 @@ const NavItem = ({item, children, level}) => {
 };
 const NavList = ({ items, level }) => {
 
-  const {dispatch} = useContext(MenuContext);
+  const { dispatch } = useContext(MenuContext);
   const lv = level + 1;
   return (
     <>
-      { level == 2 && 
-        <span 
+      {level == 2 &&
+        <span
           className="font-bold cursor-pointer order-first flex gap-2 items-center block h-[50px] aspect-[180/52] absolute bg-white bottom-full left-0 mb-3"
-          onClick={() => {dispatch({type: "close"});}}
+          onClick={() => { dispatch({ type: "close" }); }}
         >
           <Icon
             icon="back"
@@ -95,10 +95,10 @@ const NavList = ({ items, level }) => {
         </span>
       }
       <ul className={classNames("border-t border-neutral-70 my-[-1px]")}>
-        {items.map((item, index) => (
-          <NavItem key={`li_${index}`} item={item} level={lv}>
+        {items.map((item) => (
+          <NavItem key={item.name} item={item} level={lv}>
 
-            {!!item?.mainNavCollection?.items && 
+            {!!item?.mainNavCollection?.items &&
               <NavList items={item?.mainNavCollection?.items} level={lv}></NavList>
             }
           </NavItem>
@@ -107,7 +107,7 @@ const NavList = ({ items, level }) => {
     </>
   );
 };
-const MegaMenuMobile = ({items}) => {
+const MegaMenuMobile = ({ items }) => {
   return (
     <MenuState>
       <NavList items={items} level={0}></NavList>
