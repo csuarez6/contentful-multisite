@@ -1,6 +1,7 @@
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery from "../shared/default.gql";
 import RichtextQuery from "../shared/richtext.qql";
+import AuxCustomContent from "./custom-content.gql";
 
 const AuxNavigationQuery = `
   ${DefaultQuery}
@@ -19,7 +20,7 @@ const AuxNavigationQuery = `
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContent}
       }
     }
   }
@@ -29,6 +30,12 @@ const AuxNavigationQuery = `
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
+        ${AuxCustomContent}
+      }
+      ...on Product{
+        ${DefaultQuery}
+      }
+      ...on AuxNavigation {
         ${DefaultQuery}
       }
     }

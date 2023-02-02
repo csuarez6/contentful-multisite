@@ -324,7 +324,7 @@ const HeaderBlock: React.FC<INavigation> = ({
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             {mainNavCollectionMenu?.items?.length > 0 && (
-              <MegaMenu mainNavCollection={mainNavCollectionMenu} />
+              <MegaMenu mainNavCollection={mainNavCollectionMenu} secondaryNavCollection={secondaryNavCollection}/>
             )}
           </div>
         </div>

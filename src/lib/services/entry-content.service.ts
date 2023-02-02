@@ -34,9 +34,9 @@ type DefaultBlockInfo = {
   }
 };
 
-export const MAX_DEEPTH_RECURSION = 14;
+export const MAX_DEPTH_RECURSION = 14;
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, actualDeepth = 1) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, actualDepth = 1) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
@@ -89,14 +89,14 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   if (
     REFERENCES[entryContent.__typename] &&
     REFERENCES[entryContent.__typename].length > 0 &&
-    recursive && actualDeepth < MAX_DEEPTH_RECURSION
+    recursive && actualDepth < MAX_DEPTH_RECURSION
   ) {
     const referencesContent = await getReferencesContent(
       entryContent,
       REFERENCES[entryContent.__typename],
       preview,
       recursive,
-      actualDeepth
+      actualDepth
     );
 
     _.merge(entryContent, referencesContent);

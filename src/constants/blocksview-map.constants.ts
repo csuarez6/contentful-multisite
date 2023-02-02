@@ -21,6 +21,9 @@ import ContentFilter from "@/components/blocks/content-filter/ContentFilter";
 import FeaturedProductBlock from "@/components/blocks/product-featured/FeaturedProductBlock";
 import RpoFormBlock from "@/components/blocks/rpo-form/RpoForm";
 import VideoBlock from "@/components/blocks/videoSlider-block/VideoBlock";
+import VerticalCard from "@/components/organisms/cards/vertical-card/VerticalCard";
+import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
+import ServiceLineBlock from "@/components/blocks/service-line/ServiceLineBlock";
 
 /**
  * Supports:
@@ -55,6 +58,10 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_VIDEO_SLIDER]: VideoBlock
   },
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: ContentFilter,
+  [CONTENTFUL_TYPENAMES.PRODUCT]: FeaturedProduct,
+  [CONTENTFUL_TYPENAMES.PAGE]:  VerticalCard,
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]:  VerticalCard,
+  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: ServiceLineBlock
 };
 
 export const CHILDREN_KEYS_MAP = {};

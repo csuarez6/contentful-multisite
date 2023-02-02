@@ -1,6 +1,6 @@
 import getEntryContent from "./entry-content.service";
 
-const getReferencesContent = async (content, references, preview = false, recursive = true, actualDeepth = 1) => {
+const getReferencesContent = async (content, references, preview = false, recursive = true, actualDepth = 1) => {
   const referencesContent = {};
 
   for (const ref of references) {
@@ -22,16 +22,16 @@ const getReferencesContent = async (content, references, preview = false, recurs
 
       for (const idx in content[ref].items) {
         const blockInfo = content[ref].items[idx];
-        actualDeepth++;
-        const entryInfo = await getEntryContent(blockInfo, preview, recursive, actualDeepth);
+        actualDepth++;
+        const entryInfo = await getEntryContent(blockInfo, preview, recursive, actualDepth);
 
         referencesContent[ref].items.push(entryInfo);
       }
     }
 
     if (content[ref]?.sys?.id) {
-      actualDeepth++;
-      referencesContent[ref] = await getEntryContent(content[ref], preview, recursive, actualDeepth);
+      actualDepth++;
+      referencesContent[ref] = await getEntryContent(content[ref], preview, recursive, actualDepth);
     }
   }
 

@@ -1,4 +1,5 @@
 import { IImageAsset } from "./assets-cf.interface";
+import { IProductCategory } from "./content-filter-cf.interface";
 import { IPage } from "./page-cf.interface";
 import { IPromoContent } from "./promo-content-cf.interface";
 import { IRichText } from "./richtext-cf.interface";
@@ -25,7 +26,7 @@ export interface INavigation {
     items?: Array<IPage & IPromoContent & INavigation>;
   };
   secondaryNavCollection?: {
-    items?: Array<IPage & IPromoContent>;
+    items?: Array<IPage & IPromoContent & IProductCategory & INavigation>;
   };
   utilityNavCollection?: {
     items?: IPromoContent[];
