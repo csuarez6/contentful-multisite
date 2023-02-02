@@ -128,4 +128,5 @@ export interface IView {
     alignTitle?: string;
     isSlider?: boolean;
     alignButton?: string;
+    roundedImage?: boolean;
 }

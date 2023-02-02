@@ -3,6 +3,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { classNames, getBackgroundColorClass } from "@/utils/functions";
 
 const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   title,
@@ -12,8 +13,10 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   image,
   ctaCollection,
   blockId,
-  sysId
+  sysId,
+  view
 }) => {
+  const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   return (
     <section id={blockId? blockId: sysId} className="section grid gap-9">
       {title && (
@@ -22,10 +25,10 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
         </div>
       )}
 
-      <article className="bg-white shadow md:flex min-h-[400px] rounded-xl overflow-hidden">
+      <article className={classNames("shadow md:flex min-h-[400px] rounded-xl overflow-hidden", backgroundColor.background)}>
         {image && (
           <figure className="w-full md:w-1/2 xl:w-[488px] shrink-0 grow relative">
-            <Image src={image.url} alt={image.title} fill className="object-cover" />
+            <Image src={image.url} alt={image.title} fill className={classNames("object-cover", view?.roundedImage && 'rounded-2xl')} />
           </figure>
         )}
         {(subtitle || pretitle || description) && (

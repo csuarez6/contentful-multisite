@@ -20,6 +20,7 @@ import ViewCarouselCategories from "../views/carousel-categories.gql";
 import ViewFeaturedProducts from "../views/featured-products.gql";
 import ViewQueryForm from "../views/QueryForm.gql";
 import ViewVideoSlider from "../views/videoSlider.gql";
+import ViewSecondaryBanner from "../views/secondaryBanner.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -133,6 +134,9 @@ const BlockPromoContentQuery = `
     }
     ...on ViewVideoSlider{
       ${ViewVideoSlider}
+    }
+    ...on ViewSecondaryBanner{
+      ${ViewSecondaryBanner}
     }
   }
   blockId
