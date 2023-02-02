@@ -42,8 +42,8 @@ const LinkElement = ({ item, isOpen }) => {
 };
 const MegaMenuItem = ({ item }) => {
   const [open, setOpen] = useState(false);
-  const [columns, setColumns] = useState(5);
-  // const [rows, setRows] = useState(1);
+  const [columns, setColumns] = useState(7);
+
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
   const [submenuH, setSubmenuH] = useState(0);
@@ -52,28 +52,46 @@ const MegaMenuItem = ({ item }) => {
   useEffect(() => {
     setScreenW(window.innerWidth);
     setScreenH(window.innerHeight);
-    responsive(screenW);
+
     window.addEventListener("resize", () => {
+      setOpen(false);
       setScreenW(window.innerWidth);
       setScreenH(window.innerHeight);
-      responsive(screenW);
+
     });
   }, [screenW]);
 
-  // const calcRows = (value) => {
-  //   const totalRows = Math.ceil((value + 1) / columns);
-  //   // setRows(totalRows);
-  //   return totalRows * 2;
-  // };
-
-  const responsive = (w) => {
-    if (w < 768) setColumns(1);
-    else if (w < 1024) setColumns(3);
-    else setColumns(5);
+  const columnList = (items) => {
+    return {
+      gridTemplateColumns: `repeat(${items}, 1fr)`,
+      gridColumn: `span ${items} / span ${items}`
+    };
   };
+
+  const columnCard = (items) => {
+    let col = columns - items;
+    return {
+      gridTemplateColumns: `repeat(${col}, 1fr)`,
+      gridColumn: `span ${col} / span ${col}`
+    };
+  };
+
 
   const openSubmenu = () => {
     const _submenu = submenu.current;
+    let subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
+
+    let height: Array<number> = [];
+
+    subTitles.forEach(item => {
+      height.push(item.clientHeight);
+    });
+    height.sort().reverse();
+
+    subTitles.forEach(item => {
+      item.style.height = height[0] + "px";
+    });
+
     const coor = _submenu.getBoundingClientRect();
     setSubmenuH(screenH - (coor.top + 30));
   };
@@ -132,49 +150,38 @@ const MegaMenuItem = ({ item }) => {
           <div className="relative flex pt-6 my-6 gap-6">
             <div className="mx-auto xl:container">
               <div className="px-2 sm:px-4 2xl:px-[70px]">
-                <nav
-                  className="grid gap-10 w-full"
-                  style={{
-                    gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                  }}
-                >
-                  {item.mainNavCollection.items.map((item) => (
-                    <div key={item.name}>
-                      <p
-                        // style={{gridRowStart: calcRows(index) - 1}}
-                        className="text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4"
-                      >
-                        {item.promoTitle ?? item.name}
-                      </p>
-                      <ul
-                        role="list"
-                        // style={{gridRowStart: calcRows(index)}}
-                        className="flex flex-col gap-5 mt-6"
-                      >
-                        {item.mainNavCollection?.items?.map((item) => (
-                          <li key={item.name} className="flow-root">
-                            <CustomLink
-                              content={item}
-                              onClick={() => {
-                                setOpen(false);
-                              }}
-                              className="flex items-center text-base text-blue-dark hover:text-lucuma-60"
-                            >
-                              <span>{item.promoTitle ?? item.name}</span>
-                            </CustomLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                  {item?.secondaryNavCollection?.items.map((block, idx) => (
-                    <div
-                      className="card-mega-menu"
-                      key={`card_${block?.sys.id}-${idx}`}
-                    >
-                      {jsonToReactComponent(block)}
-                    </div>
-                  ))}
+                <nav className="grid gap-10 w-full" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+                  <div className="grid gap-10" style={columnList(item.mainNavCollection.items.length)}>
+                    {item.mainNavCollection.items.map((item) => (
+                      <div key={item.name}>
+                        <p className="subTitleList text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4">
+                          {item.promoTitle ?? item.name}
+                        </p>
+                        <ul role="list" className="flex flex-col gap-5 mt-6">
+                          {item.mainNavCollection?.items?.map((item) => (
+                            <li key={item.name} className="flow-root">
+                              <CustomLink
+                                content={item}
+                                onClick={() => {
+                                  setOpen(false);
+                                }}
+                                className="flex items-center text-base text-blue-dark hover:text-lucuma-60"
+                              >
+                                <span>{item.promoTitle ?? item.name}</span>
+                              </CustomLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid gap-10" style={columnCard(item.mainNavCollection.items.length)}>
+                    {item?.secondaryNavCollection?.items.map((block, idx) => (
+                      <div className="card-mega-menu" key={`card_${block?.sys.id}-${idx}`}>
+                        {jsonToReactComponent(block)}
+                      </div>
+                    ))}
+                  </div>
                 </nav>
               </div>
             </div>

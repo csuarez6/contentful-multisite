@@ -19,10 +19,6 @@ const HeaderBlock: React.FC<INavigation> = ({
   menuNavkey = null,
   overrideNavCollection = null,
 }) => {
-  console.log(mainNavCollection);
-
-
-
   const { asPath } = useRouter();
   let firstPath = asPath.split('/')[1];
   if (menuNavkey === null) {
@@ -127,24 +123,24 @@ const HeaderBlock: React.FC<INavigation> = ({
                   content={{ urlPath: "/" }}
                   className="flex items-center flex-shrink-0"
                 >
-                <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
-                  <Image
-                    className="w-auto block sm:hidden"
-                    src={"/images/vanti-icon.png"}
-                    alt={promoImage?.description ?? "Grupo Vanti"}
-                    fill
-                  />
-                  <Image
-                    className="w-auto hidden sm:block"
-                    src={promoImage?.url ?? "/images/vanti-logo.png"}
-                    alt={promoImage?.description ?? "Grupo Vanti"}
-                    fill
-                  />
-                </figure>
+                  <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
+                    <Image
+                      className="w-auto block sm:hidden"
+                      src={"/images/vanti-icon.png"}
+                      alt={promoImage?.description ?? "Grupo Vanti"}
+                      fill
+                    />
+                    <Image
+                      className="w-auto hidden sm:block"
+                      src={promoImage?.url ?? "/images/vanti-logo.png"}
+                      alt={promoImage?.description ?? "Grupo Vanti"}
+                      fill
+                    />
+                  </figure>
                 </CustomLink>
               </div>
 
-              <div className="flex items-center md:py-5 divide-x divide-neutral-70 flex-grow">
+              <div className="flex items-center justify-end md:py-5 divide-x divide-neutral-70 flex-grow">
                 <form action="#" method="post" className="h-10 w-full lg:max-w-xs lg:pr-6">
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
                     <label htmlFor="search" className="flex items-center">
@@ -324,7 +320,7 @@ const HeaderBlock: React.FC<INavigation> = ({
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             {mainNavCollectionMenu?.items?.length > 0 && (
-              <MegaMenu mainNavCollection={mainNavCollectionMenu} secondaryNavCollection={secondaryNavCollection}/>
+              <MegaMenu mainNavCollection={mainNavCollectionMenu} secondaryNavCollection={secondaryNavCollection} />
             )}
           </div>
         </div>
