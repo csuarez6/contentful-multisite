@@ -1,6 +1,6 @@
 import { SMTPClient } from 'emailjs';
 
-export const sendEmail = async (to: string, subject: string, message: string) => {
+export const sendEmail = async (to: string, subject: string, message: string, from: string = 'Aplyca Dev <dev@aplyca.com>') => {
   const client = new SMTPClient({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT),
@@ -13,7 +13,7 @@ export const sendEmail = async (to: string, subject: string, message: string) =>
     const sendedEmail = await client.sendAsync(
       {
         text: message,
-        from: 'Aplyca Dev <dev@aplyca.com>',
+        from,
         to,
         subject,
       },

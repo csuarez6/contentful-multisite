@@ -35,34 +35,40 @@ const handler = async (
     return;
   }
 
-  const data: any = {};
   const { type, cuentaContrato, email, fullName, hour, cellPhone } = req.body;
+  const typeName = getType(type);
+  const data: any = {};
+   data["body"] = [
+    `Nuevo callback desde Marketplace: ${typeName}\n`,
+    `${typeName}\n`
+  ];
+  if (cuentaContrato) data["body"].push(`Cuenta contrato: ${cuentaContrato}`);
 
   if (type === "rpo") {
     const newDate = new Date(req.body.date);
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const date = newDate.toLocaleDateString('es-CO', options);
 
-    data["body"] = [
-      `Solicitud de servicio ¡Te llamamos! para ${getType(type)}\n`,
-      "Datos personales:",
-      `Cuenta contrato: ${cuentaContrato}`,
+    [
       `Fecha: ${date}`,
       `Hora: ${hour}`,
       `Teléfono: ${cellPhone}`,
-    ];
+    ].forEach(element => data["body"].push(element));
   } else {
-    data["body"] = [
-      `Solicitud de servicio ¡Te llamamos! para ${getType(type)}\n`,
-      "Datos personales:",
-    ];
-    if (cuentaContrato) data["body"].push(`Cuenta contrato: ${cuentaContrato}`);
-    data["body"].push(`Nombre: ${fullName}`);
+    if (fullName) data["body"].push(`Nombre: ${fullName}`);
     data["body"].push(`Teléfono: ${cellPhone}`);
-    data["body"].push(`Correo electrónico: ${email}`);
+    if (email) data["body"].push(`Correo electrónico: ${email}`);
   }
 
-  const isMailSended = await sendEmail("jperez@aplyca.com, evallejo@aplyca.com, msanchez@aplyca.com, dduarte@aplyca.com", "Servicio ¡Te llamamos! Vanti Marketplace", data.body.join('\n'));
+  const clientEmail = {
+    to: "jperez@aplyca.com, evallejo@aplyca.com, msanchez@aplyca.com, dduarte@aplyca.com",
+    subject: `Callback Marketplace: ${typeName}`,
+    message: data.body.join('\n'),
+    from: "Vanti Marketplace <marketplace@grupovanti.com>"
+  }
+
+  const isMailSended = await sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
+
   res.status(200).json({
     result: {
       message: isMailSended ? "Envío de correo exitoso" : "Envío de correo fallido",
