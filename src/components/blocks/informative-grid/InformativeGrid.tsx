@@ -29,7 +29,7 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   return (
-    <section id={blockId? blockId: sysId} className="section grid gap-9">
+    <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
@@ -60,24 +60,28 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
               )}
               key={content.promoTitle}
             >
-              <InformativeGridCard key={content.promoTitle} {...content} buttonType={view.buttonType} backgroundColor={view.backgroundColor}/>
+              <InformativeGridCard key={content.promoTitle} {...content} buttonType={view.buttonType} backgroundColor={view.backgroundColor} />
             </div>
           ))}
         </div>
       )}
-      {ctaCollection?.items?.map(
-        (item) =>
-          (item.externalLink || item.internalLink?.urlPath) && (
-            <div className="flex justify-center" key={item.name}>
-              <CustomLink
-                content={item}
-                className={classNames("w-fit button", getButtonType(view.buttonType ?? "Contorno"))}
-              >
-                {item.promoTitle ?? item.name}
-              </CustomLink>
-            </div>
-          )
-      )}
+      {ctaCollection?.items?.length > 0 &&
+        <div className="flex justify-center">
+          {ctaCollection.items.map(
+            (item) =>
+              (item.externalLink || item.internalLink?.urlPath) && (
+                <div className="ml-2" key={item.name}>
+                  <CustomLink
+                    content={item}
+                    className={classNames("w-fit button", getButtonType(view.buttonType ?? "Contorno"))}
+                  >
+                    {item.promoTitle ?? item.name}
+                  </CustomLink>
+                </div>
+              )
+          )}
+        </div>
+      }
     </section>
   );
 };
