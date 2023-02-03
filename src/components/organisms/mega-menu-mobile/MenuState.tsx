@@ -3,7 +3,7 @@ import reducer from "./MenuReducer";
 import MenuContext from "./MenuContext";
 
 const initialState = {
-  panel: false
+  level: 0
 };
 
 const MenuState = ({ children }) => {

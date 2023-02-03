@@ -1,11 +1,7 @@
 const MenuReducer = (state, action) => {
   switch (action.type) {
-    case 'toggle':
-      return {panel: !state.panel};
-    case 'open':
-      return {panel: true};
-    case 'close':
-      return {panel: false};
+    case 'setLevel':
+      return {level: action.value};
     default:
       throw new Error();
   }

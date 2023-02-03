@@ -212,6 +212,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                   />
                 </span>
               </div>
+              {/* Mobile */}
               <div className="relative z-10 flex items-center lg:hidden">
                 <Popover className="relative lg:hidden">
                   <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -219,15 +220,15 @@ const HeaderBlock: React.FC<INavigation> = ({
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>
                   <Transition
-                    className="fixed inset-0 bg-white p-4"
-                    enter="transition duration-300 ease-out"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition duration-300 ease-out"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+                    className="fixed inset-0 bg-white p-4 overflow-auto"
+                    enter="transition duration-[400ms] ease-out"
+                    enterFrom="transform -translate-x-full"
+                    enterTo="transform translate-x-0"
+                    leave="transition duration-[400ms] ease-out"
+                    leaveFrom="transform translate-x-0"
+                    leaveTo="transform -translate-x-full"
                   >
-                    <Popover.Panel className="flex flex-col gap-4">
+                    <Popover.Panel className="grid grid-cols-1 grid-rows-[auto,_1fr] h-full gap-4">
                       <div className="flex justify-between items-center">
                         <CustomLink
                           content={{ urlPath: "/" }}
@@ -247,7 +248,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                           <XMarkIcon className="block w-4 h-4" aria-hidden="true" />
                         </Popover.Button>
                       </div>
-                      <MegaMenuMobile items={mainNavCollection?.items} />
+                      <MegaMenuMobile items={mainNavCollection?.items} secondaryNavCollection={secondaryNavCollection} utilityNavCollection={utilityNavCollection} />
                     </Popover.Panel>
                   </Transition>
                 </Popover>
@@ -275,7 +276,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                       leaveFrom="transform opacity-100 translate-y-0"
                       leaveTo="transform opacity-0 -translate-y-4"
                     >
-                      <Popover.Panel className="absolute w-full top-full left-0 bg-white">
+                      <Popover.Panel className="absolute w-full top-full left-0 bg-white shadow">
                         <nav
                           aria-label="Utility"
                           className="relative p-5"
