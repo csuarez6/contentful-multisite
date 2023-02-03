@@ -26,7 +26,7 @@ const schema = yup.object({
         .required("Dato Requerido"),
     password: yup.string()
         .required("Dato Requerido")
-        .min(6, "Minimo 6 caracteres")
+        .min(6, "Mínimo 6 caracteres")
 });
 
 const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
@@ -91,9 +91,9 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                 </div>
                 <div className='self-end w-full'>
                     <CustomLink
-                        className="button text-blue-dark text-center block"
+                        className="button text-blue-dark text-center block underline"
                         onClick={(e) => { e.preventDefault(); }}
-                        content={{ urlPath: "/" }}
+                        content={{ urlPath: "/registro" }}
                     >
                         Crear cuenta
                     </CustomLink>
@@ -109,19 +109,14 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                     onClick={(e) => { e.preventDefault(); }}
                     content={{ urlPath: "/" }}
                 >
-                    Recupera tu contraseña
+                    <div className="flex">
+                        <span className="flex text-neutral-30 items-center shrink-0 w-6 h-6">
+                            <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
+                        </span>
+                        Recupera tu contraseña
+                    </div>
                     <span className="flex text-neutral-30 items-center shrink-0 w-6 h-6">
-                        <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
-                    </span>
-                </CustomLink>
-                <CustomLink
-                    className="button text-grey-30 flex justify-between"
-                    onClick={(e) => { e.preventDefault(); }}
-                    content={{ urlPath: "/" }}
-                >
-                    Reporta el robo de tu cuenta
-                    <span className="flex text-neutral-30 items-center shrink-0 w-6 h-6">
-                        <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
+                        <Icon icon="arrow-right" className="w-full h-full" aria-hidden="true" />
                     </span>
                 </CustomLink>
             </div>

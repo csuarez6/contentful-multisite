@@ -3,9 +3,10 @@ import getPageContent from "@/lib/services/page-content.service";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 import LoginFormBlock, { IForm } from "@/components/blocks/login-form/LoginFormBlock";
-import { getCustomerTokenCl } from "@/lib/services/commerce-layer.service";
 import { useState } from "react";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/router';
 
 
 const ModalContent = ({ modalMsg }) => {
@@ -20,28 +21,31 @@ const ModalContent = ({ modalMsg }) => {
 
 const Login = () => {
 
-    const [dataModal, setDataModal] = useState<IPromoContent>({
+    const router = useRouter();
+    const modalDefault = {
         children: <ModalContent modalMsg="..." />,
         promoIcon: 'loader',
         promoTitle: 'Espere...',
-    });
+    };
+
+    const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
 
     const onSubmit = async (data) => {
-        console.log("formData: ", data);
         try {
-            const resp = await getCustomerTokenCl(data);
-            if (resp && resp.status === 200) {
-                setDataModal({
-                    children: <ModalContent modalMsg="Holaaaaaa!" />,
-                    promoIcon: 'check',
-                    promoTitle: '¡Acceso exitoso a Vanti!',
-                    subtitle: '¡Bienvenido al universo de Vanti!',
-                });
+            setDataModal(modalDefault);
+            const destination = router.query.p?.toString() || '/';
+            const resp = await signIn("credentials", {
+                username: data.email,
+                password: data.password,
+                redirect: false
+            });
+            if (resp && resp.ok) {
+                router.replace(destination);
             } else {
                 setDataModal({
                     children: <ModalContent modalMsg={resp.error ?? "Ha ocurrido un error, por favor intente nuevamente."} />,
                     promoIcon: 'cancel',
-                    promoTitle: 'Error durante el Login!',
+                    promoTitle: 'Error durante el acceso!',
                 });
             }
         } catch (error) {

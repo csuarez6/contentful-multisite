@@ -17,7 +17,7 @@ COPY pnpm-lock.yam[l] package.json /app/
 RUN pnpm install
 
 ## Copy config files
-COPY tailwind.config.js postcss.config.js next* *.json sentry* tsconfig.json /app/
+COPY tailwind.config.js postcss.config.js next* *.json sentry* tsconfig.json middleware.ts /app/
 
 ## Copy project files
 # COPY components /app/components

@@ -27,6 +27,7 @@ services:
       - ./styles:/app/styles:rw
       - ./tailwind.config.js:/app/tailwind.config.js:rw
       - ./next.config.js:/app/next.config.js:rw
+      - ./middleware.ts:/app/middleware.ts:rw
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:-master}
@@ -44,6 +45,8 @@ services:
       SMTP_PASSWORD: ${SMTP_HOST:-null}
       ALGOLIASEARCH_APP_ID: ${ALGOLIASEARCH_APP_ID:-DU18JA7AT2}
       ALGOLIASEARCH_READ_API_KEY: ${ALGOLIASEARCH_READ_API_KEY:-}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-secret}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
     networks:
       - public
     restart: unless-stopped

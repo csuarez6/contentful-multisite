@@ -10,6 +10,7 @@ import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
 import "../styles/richtext.css";
 import CheckoutProvider from "@/context/Checkout/Provider";
+import { SessionProvider } from "next-auth/react";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -21,11 +22,13 @@ type AppPropsWithLayout = AppProps<IPage> & {
 };
 
 export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
-  <CheckoutProvider>
-    <PageLayout {...(pageProps ? pageProps : null)}>
-      {page}
-    </PageLayout>
-  </CheckoutProvider>
+  <SessionProvider session={pageProps.session}>
+    <CheckoutProvider>
+      <PageLayout {...(pageProps ? pageProps : null)}>
+        {page}
+      </PageLayout>
+    </CheckoutProvider>
+  </SessionProvider>
 );
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {

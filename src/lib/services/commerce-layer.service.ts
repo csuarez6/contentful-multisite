@@ -1,6 +1,7 @@
 import CommerceLayer from '@commercelayer/sdk';
 import Cookies from "js-cookie";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
+import jwtDecode from "jwt-decode";
 
 export interface ICustomer {
   name: string;
@@ -14,6 +15,20 @@ export interface ICustomer {
   contractNumber: string;
   authorize: boolean;
   notificate: boolean;
+}
+
+interface JWTProps {
+  organization: {
+    slug: string
+    id: string
+  }
+  application: {
+    kind: string
+  }
+  owner?: {
+    id?: string
+  }
+  test: boolean
 }
 
 export const getAppToken = async () => {
@@ -67,15 +82,15 @@ export const getCustomerTokenCl = async (data) => {
     );
     console.log('My access token: ', token.accessToken);
     console.log('Expiration date: ', token.expires);
-    localStorage.setItem("customerAcessToken", token.accessToken);
-    localStorage.setItem("customerRefreshToken", token.refreshToken);
+    // localStorage.setItem("customerAcessToken", token.accessToken);
+    // localStorage.setItem("customerRefreshToken", token.refreshToken);
     // Cookies.set("customerAcessToken", token.accessToken, {
     //   expires: token.expires
     // });
     // Cookies.set("customerRefreshToken", token.refreshToken, {
     //   expires: token.expires
     // });
-    return { status: 200, ...token };
+    return { status: 200, ...token.data };
   } catch (error) {
     console.log("Error - getCustomerTokenCl: ", error);
     return { status: 400, error: error.message };
@@ -125,6 +140,19 @@ export const createCustomer = async ({
   }
 };
 
+export const getCustomerInfo = async (accessToken) => {
+  try {
+    const cl = await getCommerlayerClient(accessToken);
+    const { owner } = jwtDecode(accessToken) as JWTProps;
+    const customerID = owner?.id;
+    const customerInfo = await cl.customers.retrieve(customerID);
+    return { status: 200, data: customerInfo };
+  } catch (error) {
+    console.error('Error customerInfo: ', error);
+    return { status: 401, error: error };
+  }
+};
+
 export const getCommercelayerProduct = async (skuCode: string) => {
   let product = null;
   try {
@@ -144,7 +172,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
         price: sku?.prices[0]?.formatted_amount,
         priceBefore: sku?.prices[0]?.formatted_compare_at_amount,
         productsQuantity: sku?.stock_items[0]?.quantity,
-        
+
         _price: sku?.prices[0]?.amount_float,
         _priceBefore: sku?.prices[0]?.compare_at_amount_float,
       };

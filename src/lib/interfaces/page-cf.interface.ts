@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { IImageAsset } from "./assets-cf.interface";
 import { INavigation } from "./menu-cf.interface";
 import { IPromoBlock, IPromoContent } from "./promo-content-cf.interface";
@@ -11,6 +12,7 @@ export interface ILayout {
 }
 
 export interface IPage {
+    session?: Session;
     __typename?: string;
     sys?: {
         __typename?: string;

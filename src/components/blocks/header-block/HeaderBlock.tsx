@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Fragment } from 'react';
+import { Popover, Transition, Menu } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
 import { classNames } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
@@ -9,6 +10,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { HOME_SLUG } from "@/constants/url-paths.constants";
+import { signOut, useSession } from "next-auth/react";
 import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobile";
 
 const HeaderBlock: React.FC<INavigation> = ({
@@ -19,6 +21,10 @@ const HeaderBlock: React.FC<INavigation> = ({
   menuNavkey = null,
   overrideNavCollection = null,
 }) => {
+
+  const { status, data: session } = useSession();
+  console.log({ session });
+  console.log({ status });
   const { asPath } = useRouter();
   let firstPath = asPath.split('/')[1];
   if (menuNavkey === null) {
@@ -52,7 +58,7 @@ const HeaderBlock: React.FC<INavigation> = ({
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
       <div className="relative hidden lg:block">
-        <div className="bg-blue-dark absolute h-full inset-x-0"></div>
+        <div className="absolute inset-x-0 h-full bg-blue-dark"></div>
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             <nav
@@ -190,22 +196,76 @@ const HeaderBlock: React.FC<INavigation> = ({
                   </nav>
                 )}
                 <div className="hidden gap-6 px-6 lg:flex">
-                  <CustomLink
-                    content={{ urlPath: "/registro" }}
-                    className="flex items-center text-center button button-primary"
-                  >
-                    Regístrate
-                  </CustomLink>
-                  <CustomLink
-                    content={{ urlPath: "/acceso" }}
-                    className="flex items-center text-center button button-outline"
-                  >
-                    Inicia sesión
-                  </CustomLink>
+                  {session?.user ? (
+                    <>
+                      <Menu as="div" className="relative inline-block text-left min-w-[180px]">
+                        <div>
+                          <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 ">
+                            {session.user['name']}
+                            <ChevronDownIcon className="w-5 h-5 ml-2 -mr-1" aria-hidden="true" />
+                          </Menu.Button>
+                        </div>
+
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <CustomLink
+                                    content={{ urlPath: "/" }}
+                                    className={classNames(
+                                      active ? 'bg-gray-100 text-gray-900' : 'text-blue-dark',
+                                      'block px-4 py-2 text-sm hover:bg-grey-90'
+                                    )}
+                                  >
+                                    Mi cuenta
+                                  </CustomLink>
+                                )}
+                              </Menu.Item>
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button className={classNames(
+                                    active ? 'bg-gray-100 text-gray-900' : 'text-blue-dark',
+                                    'block px-4 py-2 text-sm w-full hover:bg-grey-90 text-left'
+                                  )} onClick={() => signOut()}>
+                                    Salir
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+
+                    </>
+                  ) : (
+                    <>
+                      <CustomLink
+                        content={{ urlPath: "/registro" }}
+                        className="flex items-center text-center button button-primary"
+                      >
+                        Regístrate
+                      </CustomLink>
+                      <CustomLink
+                        content={{ urlPath: "/acceso" }}
+                        className="flex items-center text-center button button-outline"
+                      >
+                        Inicia sesión
+                      </CustomLink>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="relative z-10 flex items-center lg:hidden">
-                <span className="block w-10 h-10 shrink-0 bg-category-orange-light text-blue-dark rounded-full">
+                <span className="block w-10 h-10 rounded-full shrink-0 bg-category-orange-light text-blue-dark">
                   <Icon
                     icon="emergency"
                     className="w-full h-full mx-auto"
@@ -255,10 +315,10 @@ const HeaderBlock: React.FC<INavigation> = ({
               </div>
             </div>
             {utilityNavCollection?.items?.length > 0 && (
-              <Popover className="relative lg:hidden -mx-2">
+              <Popover className="relative -mx-2 lg:hidden">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="text-center text-blue-dark underline block w-full p-4">
+                    <Popover.Button className="block w-full p-4 text-center underline text-blue-dark">
                       ¿Qué quieres hacer hoy?
                       <span>
                         <Icon
@@ -281,7 +341,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                           aria-label="Utility"
                           className="relative p-5"
                         >
-                          <ul className="flex gap-1 flex-nowrap justify-center ">
+                          <ul className="flex justify-center gap-1 flex-nowrap ">
                             {utilityNavCollection.items.map((item) => (
                               <li className="flex max-w-[75px]" key={item.sys.id}>
                                 <CustomLink
