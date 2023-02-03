@@ -6,6 +6,7 @@ import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
+import getFilteredContent from './content-filter.service';
 
 const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
@@ -100,6 +101,16 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     );
 
     _.merge(entryContent, referencesContent);
+  }
+
+  if (entryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
+    const preloadContent = await getFilteredContent({
+      contentTypesFilter: entryContent.contentTypesFilter ?? [],
+      parentIds: entryContent.parentsCollection?.items?.map((p) => p.sys.id) ?? [],
+      availableFacets: entryContent.availableFacets ?? [],
+    });
+
+    _.merge(entryContent, { preloadContent });
   }
 
   return entryContent;

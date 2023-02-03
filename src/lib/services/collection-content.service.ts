@@ -1,31 +1,8 @@
 import { gql } from '@apollo/client';
-import _ from 'lodash';
 
 import contentfulClient from './contentful-client.service';
-import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
-import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
-
-const REFERENCES = {
-  [CONTENTFUL_TYPENAMES.PAGE]: [
-    'blocksCollection',
-    'mainNavCollection',
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
-    'mainNavCollection',
-    'secondaryNavCollection',
-    'utilityNavCollection'
-  ],
-  [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
-    'ctaCollection',
-    'featuredContentsCollection',
-    'listedContentsCollection',
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    'mainNavCollection',
-  ],
-};
 
 type DefaultBlockInfo = {
   __typename: string;

@@ -39,7 +39,7 @@ export interface IProductDetails {
   images?: IImageAsset[];
   details?: string[];
   paymentMethods?: IPaymentMethod[];
-  onBuy?: (type: PaymentMethodType, skuCode: string ) => void
+  onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: IRichText;
   cta?: ILink;
   state?: string;
@@ -56,6 +56,7 @@ export interface IProductDetails {
 export interface IProductFilterBlock {
   products?: IPromoBlock;
   facets?: ISelect[];
+  onFacetsChange?: (newQueryString: string) => void;
 };
 
 export interface IProductOverviewDetails {

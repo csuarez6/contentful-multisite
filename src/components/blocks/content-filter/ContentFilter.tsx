@@ -11,18 +11,16 @@ import { useRouter } from "next/router";
 const ContentFilter: React.FC<IContentFilter> = ({
   contentTypesFilter,
   parentsCollection,
-  availableFacets = [],
   title = null,
   description = null,
   blockId = null,
   mainFacet = null,
+  preloadContent = null,
 }) => {
-  const { query } = useRouter();
+  const { push, pathname } = useRouter();
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
-    ...availableFacets.map((f) => ["facets", f]),
-    (mainFacet ? ['mainFacet', mainFacet] : null)
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
@@ -37,50 +35,55 @@ const ContentFilter: React.FC<IContentFilter> = ({
     fetcher
   );
 
-  const productGrill = () => {
-    if (error) return <div>failed to load</div>;
-    if (isLoading) return <div>loading...</div>;
-    return (
-      <ProductFilterBlock
-        products={{ listedContentsCollection: data }}
-        facets={facetsContent}
-      />
+  const facetsChangeHandle = (newQueryParams: string) => {
+    const { pathname: realPathname } = location;
+    push(pathname, realPathname + newQueryParams, { shallow: true });
+
+    const searchQuery =
+      newQueryParams.indexOf("?") >= 0
+        ? newQueryParams.substring(1)
+        : newQueryParams;
+
+    const newQueryParamsArr = JSON.parse(
+      '{"' + searchQuery.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+      function (key, value) {
+        return key === "" ? value : decodeURIComponent(value);
+      }
+    );
+
+    const queryParams = [];
+
+    if (newQueryParamsArr && Object.keys(newQueryParamsArr)) {
+      for (const k in newQueryParamsArr) {
+        if (k === "slug") continue;
+
+        queryParams.push([k, newQueryParamsArr[k]]);
+      }
+    }
+
+    setQueryString(
+      new URLSearchParams([...fixedFilters, ...queryParams]).toString()
     );
   };
 
   useEffect(() => {
-    if (mainFacet && data?.facets?.length) {
-      const tmpMainFacetContent = data.facets.find(
+    if (mainFacet && preloadContent?.facets?.length) {
+      const tmpMainFacetContent = preloadContent.facets.find(
         (f: ISelect) => f.labelSelect === mainFacet
       );
       setMainFacetContent(tmpMainFacetContent);
 
       if (tmpMainFacetContent) {
-        const tmpFacetsContent = data.facets.filter(
+        const tmpFacetsContent = preloadContent.facets.filter(
           (f: ISelect) => f.name !== tmpMainFacetContent.name
         );
         setFacetsContent(tmpFacetsContent);
       }
-    } else if (data?.facets?.length) {
-      setFacetsContent([...data.facets]);
+    } else if (preloadContent?.facets?.length) {
+      setFacetsContent([...preloadContent.facets]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
-  useEffect(() => {
-    if (query) {
-      const queryParams = [];
-      for (const k in query) {
-        if (k === "slug") continue;
-
-        queryParams.push([k, query[k]]);
-        setQueryString(
-          new URLSearchParams([...fixedFilters, ...queryParams]).toString()
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, []);
 
   return (
     <div className="relative w-full">
@@ -94,10 +97,16 @@ const ContentFilter: React.FC<IContentFilter> = ({
           items: mainFacetContent?.listedContents ?? [],
         }}
         blockId={blockId}
-        queryParamName={mainFacetContent?.name ?? ''}
+        queryParamName={mainFacetContent?.name ?? ""}
       />
 
-      {productGrill()}
+      <ProductFilterBlock
+        products={{ listedContentsCollection: data }}
+        facets={facetsContent}
+        onFacetsChange={facetsChangeHandle}
+        isLoading={isLoading}
+        error={error}
+      />
     </div>
   );
 };

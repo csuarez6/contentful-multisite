@@ -42,7 +42,8 @@ const LinkElement = ({ item, isOpen }) => {
 };
 const MegaMenuItem = ({ item }) => {
   const [open, setOpen] = useState(false);
-  const [columns, setColumns] = useState(7);
+  const columns = 7;
+  // const [columns, setColumns] = useState(7);
 
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
@@ -69,7 +70,7 @@ const MegaMenuItem = ({ item }) => {
   };
 
   const columnCard = (items) => {
-    let col = columns - items;
+    const col = columns - items;
     return {
       gridTemplateColumns: `repeat(${col}, 1fr)`,
       gridColumn: `span ${col} / span ${col}`
@@ -79,9 +80,9 @@ const MegaMenuItem = ({ item }) => {
 
   const openSubmenu = () => {
     const _submenu = submenu.current;
-    let subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
+    const subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
 
-    let height: Array<number> = [];
+    const height: Array<number> = [];
 
     subTitles.forEach(item => {
       height.push(item.clientHeight);
@@ -204,8 +205,8 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-6">
-              {mainNavCollection.items.map((item) => (
-                <MegaMenuItem item={item} key={item.name} />
+              {mainNavCollection.items.map((item, idx) => (
+                <MegaMenuItem item={item} key={`${item.name}-${idx}`} />
               ))}
             </div>
           </div>

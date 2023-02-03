@@ -1,16 +1,23 @@
 import { IProductFilterBlock } from "@/lib/interfaces/product-cf.interface";
 import SelectAtom, { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import FeaturedProductBlock from "../product-featured/FeaturedProductBlock";
-import { useRouter } from "next/router";
 
-const ProductFilterBlock: React.FC<IProductFilterBlock> = ({
+import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProductBlockSkeleton/FeaturedProductBlockSkeleton";
+
+interface IWithLoadingData {
+  isLoading?: boolean;
+  error?: boolean;
+}
+
+const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   products,
   facets,
+  onFacetsChange=null,
+  isLoading = false,
+  error = false
 }) => {
-  const router = useRouter();
-
-  const onFacetChange = (key, value) => {
-    const { pathname, search: uri } = location;
+  const onFacetsChangeHandle = (key, value) => {
+    const { search: uri } = location;
     let newUri = "";
 
     const re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
@@ -22,7 +29,15 @@ const ProductFilterBlock: React.FC<IProductFilterBlock> = ({
       newUri = uri + separator + key + "=" + value;
     }
 
-    router.push(pathname + newUri);
+    onFacetsChange(newUri);
+  };
+
+  const productGrill = () => {
+    if (error) return <div>failed to load</div>;
+    if (isLoading) return <FeaturedProductBlockSkeleton />;
+    return (
+      <FeaturedProductBlock {...products} />
+    );
   };
 
   return (
@@ -34,13 +49,14 @@ const ProductFilterBlock: React.FC<IProductFilterBlock> = ({
               <SelectAtom
                 {...el}
                 key={`${el.name}-${i}`}
-                handleChange={(value) => onFacetChange(el.name, value)}
+                handleChange={(value) => onFacetsChangeHandle(el.name, value)}
               />
             );
           })}
         </div>
       </div>
-      <FeaturedProductBlock {...products} />
+
+      {productGrill()}
     </section>
   );
 };

@@ -30,4 +30,5 @@ export interface IContentFilter {
   orderingOptions?: string[];
   pageResults?: number;
   blockId?: string;
+  preloadContent?: any;
 }
