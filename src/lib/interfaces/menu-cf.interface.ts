@@ -35,4 +35,5 @@ export interface INavigation {
   overrideNavCollection?: {
     items?: Array<IPage & IPromoContent & INavigation>;
   };
+  backgroundColor?: string;
 };

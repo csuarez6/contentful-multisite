@@ -36,6 +36,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
     if (!isLoading && !error && data) {
       setProductPrices({
         price: data.price,
+        priceBefore: data.priceBefore,
         data: data.priceBefore,
       });
     }
@@ -130,7 +131,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
           </div>
           {(productPrices.price || productPrices.priceBefore) && (
             <div className="flex flex-col gap-[6px]">
-              {priceBefore && (
+              {productPrices.priceBefore && (
                 <p className="title is-4 line-through text-blue-dark">
                   {productPrices.priceBefore}
                 </p>

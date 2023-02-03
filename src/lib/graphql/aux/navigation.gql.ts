@@ -56,6 +56,21 @@ const AuxNavigationQuery = `
   secondaryText {
     ${RichtextQuery}
   }
+  backgroundColor
+  internalLink {
+    ...on Page{
+      ${DefaultQuery}
+      slug
+      urlPath
+      promoTitle
+    }
+    ...on Product {
+      ${DefaultQuery}
+      slug
+      urlPath
+      promoTitle
+    }
+  }
 `;
 
 export default AuxNavigationQuery;
