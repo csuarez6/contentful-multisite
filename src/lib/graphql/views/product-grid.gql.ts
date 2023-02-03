@@ -5,6 +5,7 @@ const ViewProductGrid = `
   name
   columnsSize
   isReverse
+  buttonType
 `;
 
 export default ViewProductGrid;

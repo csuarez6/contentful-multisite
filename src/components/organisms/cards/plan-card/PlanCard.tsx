@@ -1,16 +1,32 @@
 import React from 'react';
 import Image from 'next/image';
-import { IPromoContent } from '@/lib/interfaces/promo-content-cf.interface';
+import { IPromoBlock, IPromoContent } from '@/lib/interfaces/promo-content-cf.interface';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { classNames, getButtonType } from '@/utils/functions';
+import CustomLink from '@/components/atoms/custom-link/CustomLink';
+import { getLinkProps } from '@/utils/link.utils';
 
-const PlanCard: React.FC<IPromoContent> = ({
+const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
   tags,
+  name,
   promoDescription,
   isReverse,
   subtitle,
   promoTitle,
-  promoImage
+  promoImage,
+  internalLink,
+  externalLink,
+  ctaLabel,
+  buttonType,
+  ctaCollection
 }) => {
+  const propsLink = {
+    name,
+    promoTitle,
+    internalLink,
+    externalLink,
+    ctaLabel
+  };
   return (
     <article className={`flex flex-col ${isReverse ? 'sm:flex-row-reverse' : 'sm:flex-row'} rounded-xl shadow-card gap-[9px] bg-white`}>
       {promoImage?.url &&
@@ -57,6 +73,22 @@ const PlanCard: React.FC<IPromoContent> = ({
               )}
             </div>
           }
+          {(internalLink || externalLink) && (
+            <div className="flex gap-3">
+              <CustomLink content={propsLink} className={classNames("button", getButtonType(buttonType ?? 'Contorno'))}>
+                {getLinkProps(propsLink).textLink}
+              </CustomLink>
+            </div>
+          )}
+          {ctaCollection?.items?.length > 0 && (
+            <div className="flex gap-3">
+              {ctaCollection.items.map((cta) => (
+                <CustomLink key={cta.name} content={cta} className={classNames("button", getButtonType(buttonType ?? 'Contorno'))}>
+                  {cta.promoTitle ?? cta.name}
+                </CustomLink>
+              ))}
+            </div>
+          )}
         </div>
       }
     </article>
