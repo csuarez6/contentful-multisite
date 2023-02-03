@@ -1,20 +1,19 @@
 import Icon from "@/components/atoms/icon/Icon";
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import MenuContext from "./MenuContext";
 import MenuState from "./MenuState";
 import { getUrlPath } from "@/utils/link.utils";
 import { classNames } from "@/utils/functions";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
-const NavItem = ({ 
+const NavItem = ({
   item,
   children,
   next,
   prev,
   parentPanel,
   setParentPanel,
-  resetCollapse,
-  noBorder
+  noBorder = false
 }) => {
   const [collapse, setCollapse] = useState(false);
   const [panel, setPanel] = useState(false);
@@ -26,18 +25,18 @@ const NavItem = ({
 
   const onPanel = () => {
     setPanel(!panel);
-    if(setParentPanel)
+    if (setParentPanel)
       setParentPanel(!parentPanel);
-    dispatch({type: "setLevel", value: !panel ? next : (prev - 1)});
+    dispatch({ type: "setLevel", value: !panel ? next : (prev - 1) });
   };
 
 
   return (
     <>
       <li className={classNames(
-        (parentPanel && panel) ? 
-         "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)]" : null ,
-         next % 2 != 0 && !noBorder ? "border-b border-neutral-70" : null,
+        (parentPanel && panel) ?
+          "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)]" : null,
+        next % 2 != 0 && !noBorder ? "border-b border-neutral-70" : null,
         "flex flex-col font-bold text-blue-dark empty:hidden"
       )}>
         {parentPanel && panel &&
@@ -103,21 +102,23 @@ const NavItem = ({
     </>
   );
 };
-const NavList = ({ items, level, currentPanel, setCurrentPanel, utilityNavCollection, noBorder, className }) => {
+
+const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasSetCurrentPanel = null, noBorder = false, className = "" }) => {
   const { state } = useContext(MenuContext);
   const [panel, setPanel] = useState(false);
-  const list = useRef<HTMLDivElement>(null);
+  const setCurrentPanel = hasSetCurrentPanel ?? setPanel;
+  const refList = useRef<HTMLUListElement>(null);
 
   const lv = level + 1;
-  let col = Math.floor(state.level / 2);
+  const col = Math.floor(state.level / 2);
   return (
     <>
-      <ul 
-        ref={list}
+      <ul
+        ref={refList}
         className={classNames(className, level % 2 == 0 && !noBorder ? "border-t border-neutral-70 my-[-1px]" : null)}
-        style={{transform: panel && level == 0 ? `translateX(calc(${col} * (-100% - 1rem)))` : null}}
-       >
-        {  level == 1 && 
+        style={{ transform: panel && level == 0 ? `translateX(calc(${col} * (-100% - 1rem)))` : null }}
+      >
+        {level == 1 &&
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
               content={{ urlPath: "/registro" }}
@@ -134,7 +135,7 @@ const NavList = ({ items, level, currentPanel, setCurrentPanel, utilityNavCollec
           </div>
         }
         {items.map((item) => (
-          <NavItem 
+          <NavItem
             key={item.name}
             item={item}
             next={lv}
@@ -142,20 +143,20 @@ const NavList = ({ items, level, currentPanel, setCurrentPanel, utilityNavCollec
             noBorder={noBorder}
             parentPanel={currentPanel}
             setParentPanel={setCurrentPanel}
-           >
+          >
 
             {!!item?.mainNavCollection?.items &&
-              <NavList 
+              <NavList
                 utilityNavCollection={utilityNavCollection}
-                level={lv} 
-                items={item?.mainNavCollection?.items} 
+                level={lv}
+                items={item?.mainNavCollection?.items}
                 currentPanel={panel}
-                setCurrentPanel={setPanel}
+                hasSetCurrentPanel={setPanel}
               />
             }
           </NavItem>
         ))}
-        {  level == 1 && !!utilityNavCollection?.items.length && 
+        {level == 1 && !!utilityNavCollection?.items.length &&
           <nav
             aria-label="Utility"
             className="relative p-5 border-t border-neutral-70 mt-2"
@@ -195,18 +196,18 @@ const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection })
   return (
     <MenuState>
       <div className="relative">
-        <NavList 
+        <NavList
           level={0}
           items={items}
           utilityNavCollection={utilityNavCollection}
-         />
-        <NavList 
+        />
+        <NavList
           level={0}
           noBorder={true}
           className="mt-3"
           items={secondaryNavCollection?.items}
           utilityNavCollection={utilityNavCollection}
-         />
+        />
       </div>
     </MenuState>
   );
