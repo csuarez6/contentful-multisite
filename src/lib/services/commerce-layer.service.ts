@@ -82,14 +82,6 @@ export const getCustomerTokenCl = async (data) => {
     );
     console.log('My access token: ', token.accessToken);
     console.log('Expiration date: ', token.expires);
-    // localStorage.setItem("customerAcessToken", token.accessToken);
-    // localStorage.setItem("customerRefreshToken", token.refreshToken);
-    // Cookies.set("customerAcessToken", token.accessToken, {
-    //   expires: token.expires
-    // });
-    // Cookies.set("customerRefreshToken", token.refreshToken, {
-    //   expires: token.expires
-    // });
     return { status: 200, ...token.data };
   } catch (error) {
     console.log("Error - getCustomerTokenCl: ", error);

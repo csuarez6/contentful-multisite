@@ -220,7 +220,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                               <Menu.Item>
                                 {({ active }) => (
                                   <CustomLink
-                                    content={{ urlPath: "/" }}
+                                    content={{ urlPath: "/dashboard" }}
                                     className={classNames(
                                       active ? 'bg-gray-100 text-gray-900' : 'text-blue-dark',
                                       'block px-4 py-2 text-sm hover:bg-grey-90'
