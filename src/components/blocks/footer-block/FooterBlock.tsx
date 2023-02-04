@@ -19,7 +19,7 @@ const FooterBlock: React.FC<INavigation> = ({
   return (
     <footer
       id="footer"
-      className="bg-gradient-blue-dark overflow-x-hidden"
+      className="md:bg-gradient-blue-dark bg-gradient-footer-mobile overflow-x-hidden"
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" className="sr-only">
@@ -70,25 +70,25 @@ const FooterBlock: React.FC<INavigation> = ({
                     <div>
                       <dt className="text-lg">
                         <Disclosure.Button
-                          className={`flex w-full items-center justify-between pl-2 text-left text-gray-400 pt-[8px] mb-[8px]`}>
+                          className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}>
                           <div className="flex">
                             <h3 className="text-white text-sm">
                               {menuItem.promoTitle ?? menuItem.name}
                             </h3>
                           </div>
-                          <span className={`flow-root shrink-0 w-7 h-7 mr-2`}>
-                            <Icon icon={open ? 'substract' : 'add'} className="mx-auto w-full h-full text-white" />
+                          <span className={`flow-root shrink-0 w-7 h-7 mr-[6px]`}>
+                            <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26}/>
                           </span>
                         </Disclosure.Button>
                       </dt>
-                      <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
+                      <Disclosure.Panel as="dd" className='w-[105%] bg-white bg-opacity-[.12]'>
                         {menuItem?.mainNavCollection?.items?.length > 0 && (
-                          <ul role="list" className="border-t-[0.5px] border-white pl-[10px] pr-[30px]">
+                          <ul role="list" className="border-t-[0.5px] border-white pl-2 pr-[30px]">
                             {menuItem.mainNavCollection.items.map((listItem) => (
-                              <li key={listItem.sys.id} className="py-2">
+                              <li key={listItem.sys.id} className="py-[7px] px-2">
                                 <CustomLink
                                   content={listItem}
-                                  className="text-sm text-white hover:underline"
+                                  className="text-sm text-white hover:underline font-semibold" 
                                 >
                                   {listItem.promoTitle ?? listItem.name}
                                 </CustomLink>
@@ -127,7 +127,7 @@ const FooterBlock: React.FC<INavigation> = ({
           </ul>
           <hr className="min-w-[100vw] -mx-[50vw] border-t-[0.5px] border-neutral-70 hidden md:block" />
           <div className="pt-[17px] md:pt-10 flex flex-col sm:flex-row justify-between gap-[30px] items-center">
-            <div className="text-size-p2 text-white text-center md:text-start leading-none">
+            <div className="text-sm md:text-size-p2 text-white text-center md:text-start leading-none">
               {documentToReactComponents(secondaryText?.json)}
             </div>
             {promoImage && (
