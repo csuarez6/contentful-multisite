@@ -13,7 +13,6 @@ body {
   margin: 0;
   font-family: "Mulish", sans-serif;
   font-size: 16px;
-  /* TODO: Verificar si es necesario o se ajustan a nivel de componentes */
 }
 
 a {
@@ -86,10 +85,20 @@ section.section {
 .card-mega-menu > .featured-product {
   @apply shadow-none bg-transparent p-0;
 }
+
 .card-mega-menu > .featured-product img {
   @apply rounded-xl;
 }
 
-.bg-navegation{
-  background: rgba(255, 255, 255, 0.12);
+.card-mega-menu figure,
+.card-mega-menu img {
+  @apply aspect-square;
+}
+
+.group\/submenu .subTitleList {
+  @apply text-size-subtitle1 font-bold text-blue-dark border-b border-neutral-70 pb-4;
+}
+
+.card-mega-menu .service-line-block {
+  @apply py-0;
 }
