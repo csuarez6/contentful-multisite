@@ -7,7 +7,7 @@ const data: IPromoBlock = {
   listedContentsCollection: {
     items: [
       {
-        promoTitle: 'Lámparas de gas 1',
+        promoTitle: 'Estos gasodomesticos son para ti',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -16,7 +16,7 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 2',
+        promoTitle: 'Lámparas ',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -25,7 +25,7 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 3',
+        promoTitle: 'Lámparas',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -34,7 +34,7 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 4',
+        promoTitle: 'Lámparas ',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -43,7 +43,7 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 5',
+        promoTitle: 'Lámparas ',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -52,7 +52,7 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 6',
+        promoTitle: 'Lámparas ',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -65,7 +65,7 @@ const data: IPromoBlock = {
   featuredContentsCollection: {
     items: [
       {
-        promoTitle: 'Lámparas de gas 1 ft',
+        promoTitle: 'Estos gasodomesticos son para ti',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {
@@ -74,7 +74,53 @@ const data: IPromoBlock = {
         },
       },
       {
-        promoTitle: 'Lámparas de gas 2 ft',
+        promoTitle: 'Lámparas ',
+        externalLink: '#',
+        ctaLabel:'Ver más',
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x972.png',
+          title: ''
+        },
+        
+      },
+      {
+        promoTitle: 'Lámparas',
+        externalLink: '#',
+        ctaLabel:'Ver más',
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x972.png',
+          title: ''
+        },
+      },
+      {
+        promoTitle: 'Lámparas ',
+        externalLink: '#',
+        ctaLabel:'Ver más',
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x972.png',
+          title: ''
+        },
+      },
+      {
+        promoTitle: 'Lámparas',
+        externalLink: '#',
+        ctaLabel:'Ver más',
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x972.png',
+          title: ''
+        },
+      },
+      {
+        promoTitle: 'Lámparas ',
+        externalLink: '#',
+        ctaLabel:'Ver más',
+        promoImage: {
+          url: 'https://via.placeholder.com/1220x972.png',
+          title: ''
+        },
+      },
+      {
+        promoTitle: 'Lámparas ',
         externalLink: '#',
         ctaLabel:'Ver más',
         promoImage: {

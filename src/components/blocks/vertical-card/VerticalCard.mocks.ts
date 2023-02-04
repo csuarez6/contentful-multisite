@@ -30,18 +30,18 @@ const data: IPromoBlock = {
           urlPath: "#"
         }
       },
-      {
-        promoTitle: 'Título 3',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoImage: {
-          url: 'https://via.placeholder.com/1280x392.png',
-          title: 'Card image'
-        },
-        ctaLabel: "Button",
-        internalLink: {
-          urlPath: "#"
-        }
-      }
+      // {
+      //   promoTitle: 'Título 3',
+      //   promoDescription: RICHTEXT_SHORT_SIMPLE,
+      //   promoImage: {
+      //     url: 'https://via.placeholder.com/1280x392.png',
+      //     title: 'Card image'
+      //   },
+      //   ctaLabel: "Button",
+      //   internalLink: {
+      //     urlPath: "#"
+      //   }
+      // }
     ]
   },
   view: {

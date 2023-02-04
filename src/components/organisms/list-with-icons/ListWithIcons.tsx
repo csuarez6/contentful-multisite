@@ -38,7 +38,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
 
   let iconSizeLocal = "w-[68px] h-[68px]";
   if (iconBackgroundColor)
-    iconSizeLocal = `w-24 h-24 p-4 rounded-full ${iconBackgroundClasses()}`;
+    iconSizeLocal = `w-20 h-20 p-4 rounded-full ${iconBackgroundClasses()}`;
   if (iconSize) {
     if (iconSize.toLowerCase() === "pequeño") iconSizeLocal = "w-7 h-7";
     if (iconSize.toLowerCase() === "pequeño" && iconBackgroundColor)
@@ -56,7 +56,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
         "flex",
         iconPosition && iconPosition === "Izquierda"
           ? "flex-row gap-5"
-          : "flex-col text-center gap-2 items-center"
+          : "flex-col text-center gap-3 items-center"
       )}
     >
       {promoIcon && (
@@ -66,7 +66,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
       )}
       {(promoTitle || promoDescription || ctaLabel) && (
         <div
-          className={`flex flex-col gap-4 ${
+          className={`flex flex-col gap-6 ${
             iconPosition !== "Izquierda" ? "items-center" : "items-start"
           }`}
         >

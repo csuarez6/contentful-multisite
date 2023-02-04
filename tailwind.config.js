@@ -15,7 +15,16 @@ module.exports = {
         'lg': '1024px',
         '2lg': '1120px',
         'xl': '1280px',
-        '2xl': '1440px'
+        '2xl': '1440px',
+        'max-xxs': {'max': '374px'},
+        'max-xs': {'max': '479px'},
+        'max-sm': {'max': '639px'},
+        'max-md': {'max': '767px'},
+        'max-2md': {'max': '959px'},
+        'max-lg': {'max': '1023px'},
+        'max-2lg': {'max': '1119px'},
+        'max-xl': {'max': '1279px'},
+        'max-2xl': {'max': '1439px'},
       },
       backgroundImage: {
         'gradient-blue': 'linear-gradient(121.27deg, #69D1F6 0%, #65BADF 21.35%, #2E7097 47.4%, #035177 69.79%, #52A9C5 98.96%)',

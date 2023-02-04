@@ -1,34 +1,32 @@
 import Image from "next/image";
-
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from "@/utils/functions";
 
 const VerticalCard: React.FC<IPromoContent> = (props) => {
-  const { name, promoTitle, promoImage, ctaLabel, internalLink, externalLink } =
-    props;
-
+  const { name, promoTitle, promoImage, ctaLabel, internalLink, externalLink } = props;
   const isPortrait = promoImage?.isPortrait;
+
   return (
     <article
       className={classNames(
-        isPortrait
-          ? "flex-col-reverse gap-6 pt-[70px] min-h-[492px]"
-          : "min-h-[152px] py-6 items-center",
-        "bg-neutral-90 shadow rounded-[18px] px-7 relative flex overflow-hidden"
+        "bg-neutral-90 shadow rounded-[18px] px-3 md:px-7 relative flex overflow-hidden min-h-[152px] h-full pb-6 pt-10 items-center",
+        isPortrait && "md:flex-col-reverse md:items-start gap-6 md:pt-[70px] md:pb-0 md:min-h-[492px]"
       )}
     >
       {promoImage && (
-        <div
-          className={classNames(
-            isPortrait
-              ? "aspect-[377/300] -mx-7 -mb-6"
-              : "absolute top-0 right-0 w-1/2",
-            "h-full"
+        <div className={
+          classNames(
+            "h-full absolute top-0 right-0 w-1/2",
+            isPortrait && "md:h-auto md:top-auto md:right-auto md:relative md:w-full"
           )}
         >
-          <figure className="w-full h-full relative">
+          <figure className={
+            classNames(
+              "w-full h-full relative",
+              isPortrait && "md:aspect-[377/300] md:-ml-8 md:-mr-14 md:-mb-6 md:w-auto"
+            )
+          }>
             <Image
               src={promoImage.url}
               alt={promoImage.title}
@@ -39,14 +37,14 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
         </div>
       )}
       {(promoTitle || ctaLabel) && (
-        <div
-          className={classNames(
-            isPortrait ? "max-w-full" : "max-w-[55%]",
-            "relative flex items-center w-full"
+        <div className={
+          classNames(
+            "relative flex items-center w-full max-w-[55%]",
+            isPortrait && "md:max-w-full"
           )}
         >
           <div className="grid space-y-[18px]">
-            {promoTitle && <h3 className="text-blue-dark">{promoTitle}</h3>}
+            {promoTitle && <h3 className="text-blue-dark max-md:text-size-subtitle3">{promoTitle}</h3>}
             {(externalLink || internalLink?.urlPath) && (
               <div className="flex gap-3">
                 <CustomLink content={props} className="button button-primary">

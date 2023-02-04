@@ -16,14 +16,22 @@ const data: IPromoBlock = {
           width: 1952,
           height: 1600
         },
-        promoIcon: "installation"
+        promoIcon: "installation",
       },
       {
         name: "Adquirir gasodomésticos",
         promoTitle: "Adquirir gasodoméstico",
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoImage: null,
+        promoImage: {
+          title: "Solicitar nuevo punto de gas",
+          description: "",
+          contentType: "image/png",
+          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          width: 1952,
+          height: 1600
+        },
         promoIcon: "expert",
+        buttonType: 'ninguno'
       },
       {
         name: "Reparar e instalar",
@@ -37,7 +45,8 @@ const data: IPromoBlock = {
           width: 1952,
           height: 1600
         },
-        promoIcon: "gas-services"
+        promoIcon: "gas-services",
+        buttonType: 'ninguno'
       },
       {
         name: "Financiar con Vanti Listo",
@@ -52,6 +61,7 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "vantilisto",
+        buttonType: 'ninguno'
       },
       {
         name: "Adquirir asistencias",
@@ -62,10 +72,38 @@ const data: IPromoBlock = {
         ctaLabel: "Adquirir",
         promoTitle: "Adquirir asistencias",
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoImage: null,
-        promoIcon: "hands"
+        promoImage: {
+          title: "Solicitar nuevo punto de gas",
+          description: "",
+          contentType: "image/png",
+          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          width: 1952,
+          height: 1600
+        },
+        promoIcon: "hands",
+        buttonType: 'ninguno'
+      },
+      {
+        name: "Adquirir asistencias",
+        internalLink: {
+          slug: "/ad-asistencias"
+        },
+        externalLink: "https://www.google.com",
+        ctaLabel: "Adquirir",
+        promoTitle: "Adquirir asistencias",
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          title: "Solicitar nuevo punto de gas",
+          description: "",
+          contentType: "image/png",
+          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          width: 1952,
+          height: 1600
+        },
+        promoIcon: "hands",
+        buttonType: 'ninguno'
       }
-    ]
+    ],
   }
 };
 

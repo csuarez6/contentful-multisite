@@ -21,7 +21,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
   }
 
   return (
-    <section id={blockId? blockId: sysId} className="section grid gap-9">
+    <section id={blockId? blockId: sysId} className="section grid gap-7 md:gap-9">
       {(title || description) &&
         <div className="grid text-center gap-6">
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -32,7 +32,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
       <Tab.Group as="div" className="grid gap-6">
         <div className="flex justify-center overflow-x-auto">
           <div className="flex border-b border-transparent">
-            <Tab.List className="flex gap-[10px]">
+            <Tab.List className="flex gap-[10px] pb-2 md:pb-0">
               {productTabs?.map((tab) =>
                 <Tab
                   key={tab.id}
@@ -41,7 +41,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                       selected
                         ? "border-lucuma text-blue-dark"
                         : "border-transparent hover:border-lucuma text-category-sky-blue-50",
-                      "flex flex-col items-center title is-3 gap-[10px] shrink-0 grow focus:outline-none border-b-2 p-5"
+                      "flex flex-col items-center text-size-subtitle3 md:text-[1.25rem] font-semibold md:font-bold gap-[10px] shrink-0 grow focus:outline-none border-b-2 p-5"
                     )
                   }
                 >
@@ -55,12 +55,12 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
         <Tab.Panels as={Fragment}>
           {productTabs?.map((tab) => (
             <Tab.Panel key={tab.name} className="focus:outline-none">
-              <div className="grid grid-cols-3 gap-5 grid-rows-3">
+              <div className="grid md:grid-cols-3 gap-6 md:grid-rows-3">
                 {(tab.id === "Gasodomesticos") && (
                   featuredContentsCollection?.items?.slice(0, 7).map((item, idx) => {
                     if (idx === 0) item.promoImage.isPortrait = true;
                     return (
-                      <div key={item.name} className={idx === 0 ? "row-span-3" : "row-span-1"}>
+                      <div key={item.name} className={idx === 0 ? "md:row-span-3" : "md:row-span-1"}>
                         <ProductSmallCard {...item} />
                       </div>
                     );
@@ -70,7 +70,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                   listedContentsCollection?.items?.slice(0, 7).map((item, idx) => {
                     if (idx === 0) item.promoImage.isPortrait = true;
                     return (
-                      <div key={item.name} className={idx === 0 ? "row-span-3" : "row-span-1"}>
+                      <div key={item.name} className={idx === 0 ? "md:row-span-3" : "row-span-1"}>
                         <ProductSmallCard {...item} />
                       </div>
                     );

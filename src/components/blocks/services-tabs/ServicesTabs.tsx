@@ -34,10 +34,10 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
       {featuredContentsCollection?.items?.length > 0 && (
-        <Tab.Group as="div" className="mt-4">
-          <div className="flex justify-center overflow-x-auto">
+        <Tab.Group as="div" className="grid mt-4">
+          <div className="flex justify-start md:justify-center overflow-x-auto  custom-scrollbar">
             <div className="flex border-b border-transparent">
-              <Tab.List className="flex gap-[10px]">
+              <Tab.List className="flex gap-[30px]">
                 {featuredContentsCollection.items.map((tab) =>
                   tab?.internalLink?.slug || tab?.externalLink ? (
                     <CustomLink
@@ -45,7 +45,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                       linkClassName="flex"
                       className={classNames(
                         tab.promoImage ? "justify-start" : "justify-center",
-                        "flex flex-col items-center text-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 px-2 py-6"
+                        "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 py-[10px] text-center"
                       )}
                       key={tab?.name}
                     >
@@ -60,7 +60,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                           selected
                             ? "border-lucuma"
                             : "border-transparent hover:border-lucuma",
-                          "flex flex-col items-center text-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-b-2 px-2 py-6"
+                          "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-b-2 px-2 py-[10px]"
                         )
                       }
                     >

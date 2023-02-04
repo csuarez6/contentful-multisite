@@ -2,54 +2,60 @@ import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
-  title: 'Título',
-  description: RICHTEXT_SHORT_SIMPLE,
+  title: '¿Nesecitas Ayuda?',
   view:{
     iconPosition: 'Arriba',
-    columnsSize: 3,
-    buttonType: 'Primario'
-  },
-  ctaCollection: {
-    items: [
-      {
-        externalLink: '#',
-        name: 'button'
-      },
-      {
-        externalLink: '#',
-        name: 'button'
-      }
-    ]
+    columnsSize: 5,
+    buttonType: '',
+    
   },
   featuredContentsCollection: {
     items: [
       {
-        promoTitle: 'Title',
-        promoIcon: 'invoice-filled',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        ctaLabel: "Button",
+        promoTitle: 'Whatsapp',
+        promoIcon: 'whatsapp',
+        ctaLabel: "Ver mas",
         internalLink: {
           urlPath: "#"
-        }
+        },
+        iconBackgroundColor: 'Azul Claro',
       },
       {
-        promoTitle: 'Title',
-        promoIcon: 'invoice-filled',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        ctaLabel: "Button",
+        promoTitle: 'Line de atencion',
+        promoIcon: 'phone',
+        ctaLabel: "Ver mas",
         internalLink: {
           urlPath: "#"
-        }
+        },
+        iconBackgroundColor: 'Azul Claro',
       },
       {
-        promoTitle: 'Title',
-        promoIcon: 'invoice-filled',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        ctaLabel: "Button",
+        promoTitle: 'Preguntas frecuentes',
+        promoIcon: 'linkedin',
+        ctaLabel: "Ver mas",
         internalLink: {
           urlPath: "#"
-        }
-      }
+        },
+        iconBackgroundColor: 'Azul Claro',
+      },
+      {
+        promoTitle: 'Centro de ayuda',
+        promoIcon: 'whatsapp',
+        ctaLabel: "Ver mas",
+        internalLink: {
+          urlPath: "#"
+        },
+        iconBackgroundColor: 'Azul Claro',
+      },
+      {
+        promoTitle: 'Puntos de atencion',
+        promoIcon: 'phone',
+        ctaLabel: "Ver mas",
+        internalLink: {
+          urlPath: "#"
+        },
+        iconBackgroundColor: 'Azul Claro',
+      },
     ]
   }
 };

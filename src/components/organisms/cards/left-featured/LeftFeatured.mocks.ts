@@ -11,7 +11,7 @@ const data: IPromoContent = {
   cta: {
     href: "#",
     name: "Button"
-  }
+  },
 };
 
 export const mockLeftFeaturedProps = {

@@ -21,12 +21,15 @@ const iconLeft: IPromoContent = {
 };
 
 const iconLeftRounded: IPromoContent = {
-  promoTitle: 'Title',
-  promoIcon: 'invoice-filled',
-  promoDescription: RICHTEXT_SHORT_SIMPLE,
+  promoTitle: 'Whatsapp',
+  promoIcon: 'whatsapp',
   iconPosition: 'left',
   iconSize: 'small',
-  iconBackgroundColor: 'Azul Claro'
+  iconBackgroundColor: 'Azul Claro',
+  internalLink:{
+    urlPath: '#',
+  },
+  ctaLabel: 'Consultar'
 };
 
 const iconLeftNoTitle: IPromoContent = {
