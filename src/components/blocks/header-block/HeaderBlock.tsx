@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import { Popover, Transition, Menu } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import { classNames } from "@/utils/functions";
+import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
@@ -23,8 +23,6 @@ const HeaderBlock: React.FC<INavigation> = ({
 }) => {
 
   const { status, data: session } = useSession();
-  console.log({ session });
-  console.log({ status });
   const { asPath } = useRouter();
   let firstPath = asPath.split('/')[1];
   if (menuNavkey === null) {
@@ -33,32 +31,37 @@ const HeaderBlock: React.FC<INavigation> = ({
   }
 
   let mainNavCollectionMenu = mainNavCollection?.items.find(
-    (el) => el.slug === menuNavkey
+    (el) => el.internalLink?.slug === menuNavkey
   )?.mainNavCollection;
 
+  const color = mainNavCollection?.items.find(
+    (el) => (el.internalLink?.slug === menuNavkey)
+  )?.backgroundColor;
 
+  const backgroundColor = getBackgroundColorClass(color ?? 'Azul Oscuro');
+    
   if (!mainNavCollectionMenu?.items?.length) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
-      (el) => el.slug === HOME_SLUG
-    ).mainNavCollection;
+      (el) => el.internalLink?.slug === HOME_SLUG
+    )?.mainNavCollection;
   }
 
   if (overrideNavCollection?.items?.length) {
     mainNavCollectionMenu = overrideNavCollection;
   }
 
-  if (!mainNavCollection?.items?.some((el) => el.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.slug === firstPath)) {
+  if (!mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
     firstPath = 'home';
     mainNavCollectionMenu = mainNavCollection?.items.find(
-      (el) => el.slug === HOME_SLUG
-    ).mainNavCollection;
+      (el) => el.internalLink?.slug === HOME_SLUG
+    )?.mainNavCollection;
   }
 
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
       <div className="relative hidden lg:block">
-        <div className="absolute inset-x-0 h-full bg-blue-dark"></div>
+        <div className={classNames("absolute inset-x-0 h-full", backgroundColor.background)}></div>
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             <nav
@@ -70,7 +73,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                   <li className="flex items-center" key={item.sys.id}>
                     <CustomLink
                       className={classNames(
-                        item.slug === firstPath
+                        item.internalLink?.slug === firstPath 
                           ? "text-lucuma border-lucuma"
                           : "text-white border-transparent",
                         "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -89,7 +92,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                   <li className="flex items-center" key={item.sys.id}>
                     <CustomLink
                       className={classNames(
-                        item.slug === firstPath
+                        item.internalLink?.slug === firstPath
                           ? "text-lucuma border-lucuma"
                           : "text-white border-transparent",
                         "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"

@@ -39,7 +39,6 @@ const LinkElement = ({ item, isOpen }) => {
   );
 };
 const MegaMenuItem = ({ item }) => {
-  console.log(item);
   const [open, setOpen] = useState(false);
   const columns = 6;
   // const [columns, setColumns] = useState(7);

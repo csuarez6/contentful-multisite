@@ -55,6 +55,24 @@ export const getBackgroundColorClass = (name) => {
         title: "text-white",
         text: "text-white"
       };
+    case "Azul Oscuro":
+      return {
+        background: "bg-blue-dark",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Verde":
+      return {
+        background: "bg-green-900",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Violeta":
+      return {
+        background: "bg-indigo-900",
+        title: "text-white",
+        text: "text-white"
+      };
     default:
       return {
         background: "bg-transparent",
@@ -77,7 +95,7 @@ export const getButtonType = (type) => {
   }
 };
 
-export const getAlign = (name) => { 
+export const getAlign = (name) => {
   switch (name) {
     case "Centro":
       return "center";
