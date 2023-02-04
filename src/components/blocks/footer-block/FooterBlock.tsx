@@ -1,12 +1,10 @@
 import Image from "next/image";
+import { Disclosure, Transition } from "@headlessui/react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
-
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
-import { Disclosure } from "@headlessui/react";
-
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
@@ -63,9 +61,9 @@ const FooterBlock: React.FC<INavigation> = ({
             <div className="xl:max-w-xs pt-0.5 max-w-[225px] md:max-w-none md:hidden">
               <p className="text-white  title is-1 !text-lg text-center !leading-5">{promoTitle}</p>
             </div>
-            <div className="md:hidden border-b-[0.5px] border-white mt-[33px] w-[105%]">
+            <div className="md:hidden border-b-[0.5px] border-white border-opacity-75 mt-[33px] w-[105%]">
               {mainNavCollection?.items?.map((menuItem) => (
-                <Disclosure as="div" className='border-t-[0.5px] border-white' key={menuItem.sys.id}>
+                <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id}>
                   {({ open }) => (
                     <div>
                       <dt className="text-lg">
@@ -81,22 +79,31 @@ const FooterBlock: React.FC<INavigation> = ({
                           </span>
                         </Disclosure.Button>
                       </dt>
-                      <Disclosure.Panel as="dd" className='w-[105%] bg-white bg-opacity-[.12]'>
-                        {menuItem?.mainNavCollection?.items?.length > 0 && (
-                          <ul role="list" className="border-t-[0.5px] border-white pl-2 pr-[30px]">
-                            {menuItem.mainNavCollection.items.map((listItem) => (
-                              <li key={listItem.sys.id} className="py-[7px] px-2">
-                                <CustomLink
-                                  content={listItem}
-                                  className="text-sm text-white hover:underline font-semibold" 
-                                >
-                                  {listItem.promoTitle ?? listItem.name}
-                                </CustomLink>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </Disclosure.Panel>
+                      <Transition
+                        enter='transition transition-[max-height] duration-200 ease-in'
+                        enterFrom='transform max-h-0'
+                        enterTo='transform max-h-screen'
+                        leave='transition transition-[max-height] duration-400 ease-out'
+                        leaveFrom='transform max-h-screen'
+                        leaveTo='transform max-h-0'
+                      >
+                        <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
+                          {menuItem?.mainNavCollection?.items?.length > 0 && (
+                            <ul role="list" className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
+                              {menuItem.mainNavCollection.items.map((listItem) => (
+                                <li key={listItem.sys.id} className="py-2">
+                                  <CustomLink
+                                    content={listItem}
+                                    className="text-sm text-white hover:underline"
+                                  >
+                                    {listItem.promoTitle ?? listItem.name}
+                                  </CustomLink>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </Disclosure.Panel>
+                      </Transition>
                     </div>
                   )}
                 </Disclosure>
