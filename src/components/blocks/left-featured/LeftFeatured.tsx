@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
@@ -17,6 +18,14 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   view
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
+  const [isMediumDevices, setIsMediumDevices] = useState(false);
+
+  useEffect(() => {
+    const checkMediaQuery = () => window.matchMedia("(min-width: 768px)").matches;
+    setIsMediumDevices(checkMediaQuery);
+    window.addEventListener('resize', () => setIsMediumDevices(checkMediaQuery));
+  }, []);
+
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-7 md:gap-9">
       {title && (
@@ -25,11 +34,44 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
         </div>
       )}
 
-      <article className={classNames("shadow flex flex-col md:flex-row min-h-[400px] rounded-xl overflow-hidden lg:h-[428px]", backgroundColor.background)}>
+      <article className={
+        classNames(
+          "shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_8px_rgba(0,0,0,0.08)] flex flex-col rounded-xl overflow-hidden",
+          view?.roundedImage ? "lg:min-h-[428px]" : "lg:min-h-[400px]",
+          view?.imageAlign === 'Derecha' ? "md:flex-row-reverse" : "md:flex-row",
+          backgroundColor.background
+        )
+      }>
         {image && (
-          <figure className="relative w-full md:w-1/2 xl:w-[630px] shrink-0 grow md:h-full aspect-[328/180] md:aspect-[630/428]">
-            <Image src={image.url} alt={image.title} fill className={classNames("object-cover w-full h-full", view?.roundedImage && 'rounded-2xl')} />
-          </figure>
+          <>
+            <svg className="sr-only" viewBox="0 0 620 429" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <clipPath id="path-img" clipPathUnits="objectBoundingBox">
+                <path d="M1,0.078 V0.002 H0.002 V1 H0.67 L0.701,0.994 L0.725,0.982 L0.74,0.973 L0.757,0.958 L0.767,0.948 L0.78,0.932 L0.797,0.907 L0.811,0.881 L0.823,0.85 L0.83,0.827 L0.842,0.775 L0.893,0.555 L1,0.093 V0.078" fill="black" stroke="black" />
+              </clipPath>
+              <clipPath id="path-img-reverse" clipPathUnits="objectBoundingBox">
+                <path d="M0.002,0.078 V0.002 H1 V1 H0.333 L0.302,0.994 L0.278,0.982 L0.264,0.973 L0.246,0.958 L0.236,0.948 L0.223,0.932 L0.206,0.907 L0.192,0.881 L0.18,0.85 L0.173,0.827 L0.161,0.775 L0.11,0.555 L0.002,0.093 V0.078" fill="black" stroke="black" />
+              </clipPath>
+            </svg>
+
+            <figure
+              className={
+                classNames(
+                  "relative w-full md:w-1/2 shrink-0 grow md:h-full aspect-[328/180] overflow-hidden",
+                  view?.roundedImage ? "md:aspect-[630/428] xl:w-[630px]" : "md:aspect-[488/400] xl:w-[488px]"
+                )
+              }
+              style={{
+                clipPath: isMediumDevices && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
+              }}
+            >
+              <Image
+                src={image.url}
+                alt={image.title}
+                fill
+                className="object-cover w-full h-full"
+              />
+            </figure>
+          </>
         )}
         {(subtitle || pretitle || description) && (
           <div className="flex items-center w-full md:w-1/2 lg:w-full px-3 py-6 md:pl-[45px] md:pr-10 md:py-4 grow">

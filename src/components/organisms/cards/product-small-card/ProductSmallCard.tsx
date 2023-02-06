@@ -3,14 +3,14 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from "@/utils/functions";
 
-const VerticalCard: React.FC<IPromoContent> = (props) => {
+const ProductSmallCard: React.FC<IPromoContent> = (props) => {
   const { name, promoTitle, promoImage, ctaLabel, internalLink, externalLink } = props;
   const isPortrait = promoImage?.isPortrait;
 
   return (
     <article
       className={classNames(
-        "bg-neutral-90 shadow rounded-[18px] px-3 md:px-7 relative flex overflow-hidden min-h-[152px] h-full pb-6 pt-10 items-center",
+        "bg-neutral-90 shadow rounded-[18px] px-3 2md:px-7 relative flex overflow-hidden min-h-[152px] h-full pb-6 pt-10 items-center",
         isPortrait && "md:flex-col-reverse md:items-start gap-6 md:pt-[70px] md:pb-0 md:min-h-[492px]"
       )}
     >
@@ -59,4 +59,4 @@ const VerticalCard: React.FC<IPromoContent> = (props) => {
   );
 };
 
-export default VerticalCard;
+export default ProductSmallCard;
