@@ -5,11 +5,14 @@ import {
   GetStaticPropsResult,
 } from "next";
 import { useContext } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
+import {
+  IProductOverviewDetails,
+  PaymentMethodType,
+} from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
@@ -21,31 +24,54 @@ import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
 import CheckoutContext from "@/context/Checkout";
+import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 
-const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
+const CustomPage: NextPageWithLayout = (
+  props: IPage & IProductOverviewDetails
+) => {
   const router = useRouter();
   const { addToCart } = useContext(CheckoutContext);
-  
+
   const { blocksCollection, __typename } = props;
 
   const buyHandlerMap = {
     [PaymentMethodType.pse]: () => {
-      router.push('/checkout/pse/verify');
-    }
+      router.push("/checkout/pse/verify");
+    },
   };
 
-  const onBuyHandler = async (type: PaymentMethodType, skuCode: string, imageProduct: string, titleProduct: string ) => {
+  const onBuyHandler = async (
+    type: PaymentMethodType,
+    skuCode: string,
+    imageProduct: string,
+    titleProduct: string
+  ) => {
     await addToCart(skuCode, imageProduct, titleProduct);
     if (buyHandlerMap[type]) buyHandlerMap[type]();
   };
 
-  return __typename == CONTENTFUL_TYPENAMES.PRODUCT
-    ? <ProductOverview {...props} onBuy={onBuyHandler} />
-    : <>{jsonToReactComponents(blocksCollection.items)}</>;
+  return __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
+    <ProductOverview {...props} onBuy={onBuyHandler} />
+  ) : (
+    <>{jsonToReactComponents(blocksCollection.items)}</>
+  );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = [];
+
+  const entries = await getEntriesSlugs({ limit: 100 }, false);
+
+  for (const entry of entries) {
+    if (entry.slug !== null) {
+      paths.push({
+        params: {
+          slug: entry.urlPath.toString(),
+        },
+      });
+    }
+  }
+
   return { paths, fallback: "blocking" };
 };
 
@@ -80,7 +106,7 @@ export const getStaticProps: GetStaticProps = async (
         name: pageContent.name,
         footerInfo,
         headerInfo,
-        menuNavkey: context.params.slug[0]
+        menuNavkey: context.params.slug[0],
       },
     },
     revalidate,

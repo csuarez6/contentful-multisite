@@ -18,30 +18,8 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   paymentMethods,
   promoImage,
   urlPath,
-  sku,
   trademark
-}) => {  
-  const [productPrices, setProductPrices] = useState<any>({
-    price,
-    priceBefore,
-  });
-
-  const fetcher = (url) => fetch(url).then((r) => r.json());
-  const { data, error, isLoading } = useSWR(
-    `/api/product/prices/${sku}`,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (!isLoading && !error && data) {
-      setProductPrices({
-        price: data.price,
-        priceBefore: data.priceBefore,
-        data: data.priceBefore,
-      });
-    }
-  }, [data, isLoading, error]);
-
+}) => {
   return (
     <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items) && (
@@ -118,7 +96,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                     />
                   </figure>
                   <div className="text-blue-dark text-size-subtitle2 font-bold">
-                    <p>{rating}/5</p>
+                    <p>{rating}/5</p>100
                   </div>
                 </div>
               )}
@@ -129,16 +107,16 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               </div>
             )}
           </div>
-          {(productPrices.price || productPrices.priceBefore) && (
+          {(price || priceBefore) && (
             <div className="flex flex-col gap-[6px]">
-              {productPrices.priceBefore && (
+              {priceBefore && (
                 <p className="title is-4 line-through text-blue-dark">
-                  {productPrices.priceBefore}
+                  {priceBefore}
                 </p>
               )}
-              {productPrices.price && (
+              {price && (
                 <p className="title is-2 text-blue-dark">
-                  {productPrices.price}
+                  {price}
                 </p>
               )}
             </div>
