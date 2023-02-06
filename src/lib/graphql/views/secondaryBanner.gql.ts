@@ -5,6 +5,8 @@ const ViewSecondaryBanner = `
     name
     roundedImage
     backgroundColor
+    bannerWidth
+    imageAlign
 `;
 
 export default ViewSecondaryBanner;

@@ -36,6 +36,7 @@ export interface IPromoContent {
     buttonType?: string;
     alignButton?: string;
     iconBackgroundColor?: string;
+    bannerWidth?: string
     bgIconRounded?: string;
     isReverse?: boolean;
     tags?: ITag[];
