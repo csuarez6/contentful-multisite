@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Popover, Transition, Menu } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
@@ -12,6 +12,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { HOME_SLUG } from "@/constants/url-paths.constants";
 import { signOut, useSession } from "next-auth/react";
 import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobile";
+import TopMenu from "@/components/organisms/top-menu/TopMenu";
 
 const HeaderBlock: React.FC<INavigation> = ({
   promoImage,
@@ -21,7 +22,7 @@ const HeaderBlock: React.FC<INavigation> = ({
   menuNavkey = null,
   overrideNavCollection = null,
 }) => {
-
+  const [open, setOpen] = useState<boolean>(false);
   const { status, data: session } = useSession();
   const { asPath } = useRouter();
   let firstPath = asPath.split('/')[1];
@@ -39,7 +40,7 @@ const HeaderBlock: React.FC<INavigation> = ({
   )?.backgroundColor;
 
   const backgroundColor = getBackgroundColorClass(color ?? 'Azul Oscuro');
-    
+
   if (!mainNavCollectionMenu?.items?.length) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
@@ -50,12 +51,16 @@ const HeaderBlock: React.FC<INavigation> = ({
     mainNavCollectionMenu = overrideNavCollection;
   }
 
-  if (!mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath) && !secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
+  if (!mainNavCollection?.items?.some((el) => el.internalLink?.slug === menuNavkey) && !secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === menuNavkey)) {
     firstPath = 'home';
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
   }
+
+  const secondaryNavCollectionMenu = mainNavCollection?.items.find(
+    (el) => el.secondaryNavCollection.items.length > 0
+  )?.secondaryNavCollection;
 
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
@@ -69,22 +74,42 @@ const HeaderBlock: React.FC<INavigation> = ({
               className="relative flex justify-between gap-14 xl:gap-[76px] min-h-[42px] h-full"
             >
               <ul className="relative flex gap-6 flex-nowrap grow">
-                {mainNavCollection?.items?.map((item, index) =>
-                  <li className="flex items-center" key={item.sys.id}>
-                    <CustomLink
-                      className={classNames(
-                        item.internalLink?.slug === firstPath 
-                          ? "text-lucuma border-lucuma"
-                          : "text-white border-transparent",
-                        "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
-                      )}
-                      content={item}
-                      aria-current={index === 0 ? "page" : undefined}
-                    >
-                      {item.promoTitle ?? item.name}
-                    </CustomLink>
-                  </li>
-                )}
+                {mainNavCollection?.items?.map((item, index) => {
+                  return (
+                    <li className="flex items-center" key={item.sys.id}>
+                      {item?.secondaryNavCollection?.items?.length > 0 ?
+                        <div
+                          onClick={() => setOpen(!open)}
+                          className={classNames(
+                            item.promoTitle === firstPath
+                              ? "text-lucuma border-lucuma"
+                              : "text-white border-transparent",
+                            "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
+                          )}>
+                          {item.promoTitle ?? item.name}
+                          <Icon
+                            icon="arrow-down"
+                            className="w-6 h-6"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        :
+                        <CustomLink
+                          className={classNames(
+                            item.internalLink?.slug === firstPath
+                              ? "text-lucuma border-lucuma"
+                              : "text-white border-transparent",
+                            "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
+                          )}
+                          content={item}
+                          aria-current={index === 0 ? "page" : undefined}
+                        >
+                          {item.promoTitle ?? item.name}
+                        </CustomLink>
+                      }
+                    </li>
+                  );
+                })}
               </ul>
 
               <ul className="relative flex gap-6 flex-nowrap">
@@ -121,7 +146,8 @@ const HeaderBlock: React.FC<INavigation> = ({
           </div>
         </div>
       </div>
-
+      {/* TopMenu */}
+      {open && <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} />}
       {/* Middle */}
       <div className="relative">
         <div className="mx-auto xl:container">

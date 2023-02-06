@@ -40,7 +40,7 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
 };
 
 export const getLinkProps = (content: GetUrlPathProps) => {  
-  let textLink = content.name;
+  let textLink = content?.name ?? '';
 
   const href = getUrlPath(content);
   const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
@@ -54,7 +54,7 @@ export const getLinkProps = (content: GetUrlPathProps) => {
   }
 
   if(content?.promoTitle){
-    textLink = content.promoTitle;
+    textLink = content?.promoTitle;
   }
 
   if(content?.ctaLabel){
