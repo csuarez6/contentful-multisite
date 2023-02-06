@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition, Menu } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
@@ -23,7 +23,17 @@ const HeaderBlock: React.FC<INavigation> = ({
   overrideNavCollection = null,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const { status, data: session } = useSession();
+  const { status: sessionStatus, data: session } = useSession();
+  console.log({ session });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (sessionStatus == 'unauthenticated') {
+      console.log('not authorized');
+      router.push('/acceso');
+    }
+  }, [session, sessionStatus]);
+
   const { asPath } = useRouter();
   let firstPath = asPath.split('/')[1];
   if (menuNavkey === null) {
@@ -160,13 +170,13 @@ const HeaderBlock: React.FC<INavigation> = ({
                 >
                   <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
                     <Image
-                      className="w-auto block sm:hidden"
+                      className="block w-auto sm:hidden"
                       src={"/images/vanti-icon.png"}
                       alt={promoImage?.description ?? "Grupo Vanti"}
                       fill
                     />
                     <Image
-                      className="w-auto hidden sm:block"
+                      className="hidden w-auto sm:block"
                       src={promoImage?.url ?? "/images/vanti-logo.png"}
                       alt={promoImage?.description ?? "Grupo Vanti"}
                       fill
@@ -175,8 +185,8 @@ const HeaderBlock: React.FC<INavigation> = ({
                 </CustomLink>
               </div>
 
-              <div className="flex items-center justify-end md:py-5 divide-x divide-neutral-70 flex-grow">
-                <form action="#" method="post" className="h-10 w-full lg:max-w-xs lg:pr-6">
+              <div className="flex items-center justify-end flex-grow divide-x md:py-5 divide-neutral-70">
+                <form action="#" method="post" className="w-full h-10 lg:max-w-xs lg:pr-6">
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
                     <label htmlFor="search" className="flex items-center">
                       <span className="flex items-center w-6 h-6 shrink-0">
@@ -230,8 +240,11 @@ const HeaderBlock: React.FC<INavigation> = ({
                       <Menu as="div" className="relative inline-block text-left min-w-[180px]">
                         <div>
                           <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 ">
-                            {session.user['name']}
-                            <ChevronDownIcon className="w-5 h-5 ml-2 -mr-1" aria-hidden="true" />
+                            <span className="flex w-5 h-5 mr-2 text-neutral-30 shrink-0">
+                              <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
+                            </span>
+                            {session.user['name'] ?? session.user['email']}
+                            <ChevronDownIcon className="w-5 h-5 ml-2 text-neutral-30" aria-hidden="true" />
                           </Menu.Button>
                         </div>
 
@@ -309,7 +322,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>
                   <Transition
-                    className="fixed inset-0 bg-white p-4 overflow-auto"
+                    className="fixed inset-0 p-4 overflow-auto bg-white"
                     enter="transition duration-[400ms] ease-out"
                     enterFrom="transform -translate-x-full"
                     enterTo="transform translate-x-0"
@@ -318,7 +331,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                     leaveTo="transform -translate-x-full"
                   >
                     <Popover.Panel className="grid grid-cols-1 grid-rows-[auto,_1fr] h-full gap-4">
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center justify-between">
                         <CustomLink
                           content={{ urlPath: "/" }}
                           className="flex items-center flex-shrink-0"
@@ -365,7 +378,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                       leaveFrom="transform opacity-100 translate-y-0"
                       leaveTo="transform opacity-0 -translate-y-4"
                     >
-                      <Popover.Panel className="absolute w-full top-full left-0 bg-white shadow">
+                      <Popover.Panel className="absolute left-0 w-full bg-white shadow top-full">
                         <nav
                           aria-label="Utility"
                           className="relative p-5"
