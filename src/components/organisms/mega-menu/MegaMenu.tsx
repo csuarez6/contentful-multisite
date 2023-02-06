@@ -160,37 +160,38 @@ const MegaMenuItem = ({ item }) => {
               <div className="px-2 sm:px-4 2xl:px-[70px]">
                 <nav className="grid gap-10 w-full" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
                   <div className="grid gap-10 -mr-5 pr-5" style={columnList(item.mainNavCollection.items.length)}>
-                    {item.mainNavCollection.items.map((item, idx) => (
-                      <div key={item.name+'-'+idx}>
+                    {item.mainNavCollection.items.map((subItem) => (
+                      <div key={subItem.name}>
                         <p className="subTitleList">
-                          {item.promoTitle ?? item.name}
+                          {subItem.promoTitle ?? subItem.name}
                         </p>
                         <ul role="list" className="flex flex-col gap-5 mt-6">
-                          {item.mainNavCollection?.items?.map((itemList, idx) => (
-                            <li key={itemList?.name+'-'+idx} className="flow-root">
-                              <CustomLink
-                                content={itemList}
-                                onClick={() => setOpen(false)}
-                                className="flex itemLists-center text-base text-blue-dark hover:text-lucuma-60"
-                              >
-                                <span>{itemList?.promoTitle ?? itemList?.name}</span>
-                              </CustomLink>
-                            </li>
+                          {subItem.mainNavCollection?.items?.map((itemList) => (
+                            itemList && (
+                              <li key={itemList?.name} className="flow-root">
+                                <CustomLink
+                                  content={itemList}
+                                  onClick={() => setOpen(false)}
+                                  className="flex itemLists-center text-base text-blue-dark hover:text-lucuma-60"
+                                >
+                                  <span>{itemList?.promoTitle ?? itemList?.name}</span>
+                                </CustomLink>
+                              </li>
+                            )
                           ))}
                         </ul>
                       </div>
                     ))}
                   </div>
-                  {
-                    item?.secondaryNavCollection?.items && item.secondaryNavCollection.items.length &&
+                  {item?.secondaryNavCollection?.items && item.secondaryNavCollection.items.length && (
                     <div className="grid gap-10 -ml-5 pl-5 border-l border-neutral-70" style={columnCard(item.mainNavCollection.items.length)}>
-                      {item.secondaryNavCollection.items.map((block, idx) => (
-                        <div className="card-mega-menu" key={`card_${block?.sys.id}-megamenu${idx}`} style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}>
+                      {item.secondaryNavCollection.items.map((block) => (
+                        <div className="card-mega-menu" key={`card_${block?.sys.id}-megamenu`} style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}>
                           {jsonToReactComponent(block)}
                         </div>
                       ))}
                     </div>
-                  }
+                  )}
                 </nav>
               </div>
             </div>
@@ -213,8 +214,8 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-6">
-              {mainNavCollection.items.map((item, idx) => (
-                <MegaMenuItem item={item} key={`${item.name}-${idx}`} />
+              {mainNavCollection.items.map((item) => (
+                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} />
               ))}
             </div>
           </div>
