@@ -31,13 +31,13 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
     externalLink
   };
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
-  const [isMediumDevices, setIsMediumDevices] = useState(false);
+  const [hasRoundedImage, setHasRoundedImage] = useState(false);
 
   useEffect(() => {
     const checkMediaQuery = () => window.matchMedia("(min-width: 768px)").matches;
-    setIsMediumDevices(checkMediaQuery);
-    window.addEventListener('resize', () => setIsMediumDevices(checkMediaQuery));
-  }, []);
+    setHasRoundedImage(checkMediaQuery() && view?.roundedImage);
+    window.addEventListener('resize', () => setHasRoundedImage(checkMediaQuery() && view?.roundedImage));
+  }, [view?.roundedImage]);
 
   return (
     <article className={
@@ -67,7 +67,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
               )
             }
             style={{
-              clipPath: isMediumDevices && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
+              clipPath: hasRoundedImage && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
             }}
           >
             <Image

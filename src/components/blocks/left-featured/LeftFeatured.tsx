@@ -18,13 +18,13 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   view
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
-  const [isMediumDevices, setIsMediumDevices] = useState(false);
+  const [hasRoundedImage, setHasRoundedImage] = useState(false);
 
   useEffect(() => {
     const checkMediaQuery = () => window.matchMedia("(min-width: 768px)").matches;
-    setIsMediumDevices(checkMediaQuery);
-    window.addEventListener('resize', () => setIsMediumDevices(checkMediaQuery));
-  }, []);
+    setHasRoundedImage(checkMediaQuery() && view?.roundedImage);
+    window.addEventListener('resize', () => setHasRoundedImage(checkMediaQuery() && view?.roundedImage));
+  }, [view?.roundedImage]);
 
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-7 md:gap-9">
@@ -61,7 +61,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                 )
               }
               style={{
-                clipPath: isMediumDevices && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
+                clipPath: hasRoundedImage && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
               }}
             >
               <Image
