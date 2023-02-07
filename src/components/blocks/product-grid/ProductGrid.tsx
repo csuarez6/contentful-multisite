@@ -11,7 +11,7 @@ const classColumns = (columns = 1) => {
 
 const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, view, blockId, sysId }) => {
   return (
-    <section id={blockId? blockId: sysId} className='grid gap-10'>
+    <section id={blockId? blockId: sysId} className='section grid gap-7 md:gap-9'>
       {(title || description) &&
         <div className='flex flex-col gap-10'>
           {title && <h2 className='text-center text-blue-dark'>{title}</h2>}

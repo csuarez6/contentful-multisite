@@ -7,15 +7,18 @@ const data: IPromoBlock = {
   subtitle: 'Subtítulo',
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
-    url: 'https://via.placeholder.com/1280x1050.png'
+    url: 'https://via.placeholder.com/1280x1050.png',
+    title: "PromoImage"
   },
   ctaCollection: {
     items: [
       {
+        name: "CtaButton1",
         externalLink: '#',
         ctaLabel: 'Button'
       },
       {
+        name: "CtaButton2",
         externalLink: '#',
         ctaLabel: 'Button'
       }
