@@ -132,3 +132,30 @@ section.section {
 .card-mega-menu .service-line-block {
   @apply py-0 w-full;
 }
+
+.card-mega-menu article > div {
+  @apply px-2 lg:px-3 pt-2 items-start justify-start;
+}
+
+.card-mega-menu article > figure + div {
+  @apply justify-start;
+}
+
+.card-mega-menu.not-image article::before {
+  content: "";
+  @apply w-full relative aspect-square;
+}
+
+.card-mega-menu h3 {
+  @apply md:text-size-subtitle2;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.card-mega-menu h3 + div {
+  @apply md:text-size-p3;
+}
+
+.card-mega-menu a {
+  @apply md:text-size-subtitle2 text-center;
+}

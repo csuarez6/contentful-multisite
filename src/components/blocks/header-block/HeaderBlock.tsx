@@ -28,7 +28,6 @@ const HeaderBlock: React.FC<INavigation> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { status: sessionStatus, data: session } = useSession();
-  console.log({ session });
   const router = useRouter();
 
   useEffect(() => {

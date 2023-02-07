@@ -39,7 +39,6 @@ const LinkElement = ({ item, isOpen }) => {
   );
 };
 const MegaMenuItem = ({ item }) => {
-  console.log(item);
   const [open, setOpen] = useState(false);
   const columns = 6;
   // const [columns, setColumns] = useState(7);
@@ -115,7 +114,7 @@ const MegaMenuItem = ({ item }) => {
       ref={submenu}
     >
       {item.mainNavCollection?.items?.length > 0 && (
-         <span
+        <span
           className={
             classNames(
               "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none cursor-pointer",
@@ -125,7 +124,7 @@ const MegaMenuItem = ({ item }) => {
         >
           <LinkElement item={item} isOpen={open} />
         </span>
-       )
+      )
       }
       {!item.mainNavCollection?.items && !item.internalLink?.slug &&
         !item.externalLink &&
@@ -143,20 +142,20 @@ const MegaMenuItem = ({ item }) => {
             <LinkElement item={item} isOpen={open} />
           </CustomLink>
         )}
-      {!item.mainNavCollection?.items && 
+      {!item.mainNavCollection?.items &&
         (item.internalLink?.slug || item.externalLink || getUrlPath(item) !== "/") &&
-          (<CustomLink
-              content={item}
-              className={
-                classNames(
-                  "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-                  open && "border-blue-dark"
-                )
-              }
-            >
-              <LinkElement item={item} isOpen={false} />
-            </CustomLink>
-          )
+        (<CustomLink
+          content={item}
+          className={
+            classNames(
+              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
+              open && "border-blue-dark"
+            )
+          }
+        >
+          <LinkElement item={item} isOpen={false} />
+        </CustomLink>
+        )
       }
       {item.mainNavCollection?.items?.length > 0 && (
         <div
@@ -173,7 +172,7 @@ const MegaMenuItem = ({ item }) => {
             <div className="mx-auto xl:container">
               <div className="px-2 sm:px-4 2xl:px-[70px]">
                 <nav className="grid gap-10 w-full" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
-                  <div className="grid gap-10 -mr-5 pr-5" style={columnList(item.mainNavCollection.items.length)}>
+                  <div className="grid gap-6 xl:gap-10 -mr-5 pr-5" style={columnList(item.mainNavCollection.items.length)}>
                     {item.mainNavCollection.items.map((subItem) => (
                       <div key={subItem.name}>
                         <p className="subTitleList">
@@ -198,9 +197,18 @@ const MegaMenuItem = ({ item }) => {
                     ))}
                   </div>
                   {item?.secondaryNavCollection?.items && item.secondaryNavCollection.items.length && (
-                    <div className="grid gap-10 -ml-5 pl-5 border-l border-neutral-70" style={columnCard(item.mainNavCollection.items.length)}>
+                    <div className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70" style={columnCard(item.mainNavCollection.items.length)}>
                       {item.secondaryNavCollection.items.map((block) => (
-                        <div className="card-mega-menu flex overflow-hidden" key={`card_${block?.sys.id}-megamenu`} style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}>
+                        <div
+                          className={
+                            classNames(
+                              "card-mega-menu flex overflow-hidden",
+                              !block.promoImage && 'not-image'
+                            )
+                          }
+                          key={`card_${block?.sys.id}-megamenu`}
+                          style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}
+                        >
                           {jsonToReactComponent(block)}
                         </div>
                       ))}
