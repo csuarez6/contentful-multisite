@@ -1,8 +1,12 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition, Menu } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 
 import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
@@ -28,17 +32,17 @@ const HeaderBlock: React.FC<INavigation> = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (sessionStatus == 'unauthenticated') {
-      console.log('not authorized');
+    if (sessionStatus == "unauthenticated") {
+      console.log("not authorized");
       // router.push('/acceso');
     }
   }, [session, sessionStatus]);
 
   const { asPath } = useRouter();
-  let firstPath = asPath.split('/')[1];
+  let firstPath = asPath.split("/")[1];
   if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
-    firstPath = 'home';
+    firstPath = "home";
   }
 
   let mainNavCollectionMenu = mainNavCollection?.items.find(
@@ -46,10 +50,10 @@ const HeaderBlock: React.FC<INavigation> = ({
   )?.mainNavCollection;
 
   const color = mainNavCollection?.items.find(
-    (el) => (el.internalLink?.slug === menuNavkey)
+    (el) => el.internalLink?.slug === menuNavkey
   )?.backgroundColor;
 
-  const backgroundColor = getBackgroundColorClass(color ?? 'Azul Oscuro');
+  const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
 
   if (!mainNavCollectionMenu?.items?.length) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
@@ -61,8 +65,15 @@ const HeaderBlock: React.FC<INavigation> = ({
     mainNavCollectionMenu = overrideNavCollection;
   }
 
-  if (!mainNavCollection?.items?.some((el) => el.internalLink?.slug === menuNavkey) && !secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === menuNavkey)) {
-    firstPath = 'home';
+  if (
+    !mainNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === menuNavkey
+    ) &&
+    !secondaryNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === menuNavkey
+    )
+  ) {
+    firstPath = "home";
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
@@ -72,11 +83,20 @@ const HeaderBlock: React.FC<INavigation> = ({
     (el) => el.secondaryNavCollection.items.length > 0
   )?.secondaryNavCollection;
 
+  const secondaryNavCollectionColor = mainNavCollection?.items.find(
+    (el) => el.secondaryNavCollection.items.length > 0
+  )?.backgroundColor;
+
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
       <div className="relative hidden lg:block">
-        <div className={classNames("absolute inset-x-0 h-full", backgroundColor.background)}></div>
+        <div
+          className={classNames(
+            "absolute inset-x-0 h-full",
+            open? getBackgroundColorClass(secondaryNavCollectionColor ?? "Azul Oscuro").background : backgroundColor.background
+          )}
+        ></div>
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             <nav
@@ -87,15 +107,18 @@ const HeaderBlock: React.FC<INavigation> = ({
                 {mainNavCollection?.items?.map((item, index) => {
                   return (
                     <li className="flex items-center" key={item.sys.id}>
-                      {item?.secondaryNavCollection?.items?.length > 0 ?
+                      {item?.secondaryNavCollection?.items?.length > 0 ? (
                         <div
                           onClick={() => setOpen(!open)}
+                          onMouseOver={() => setOpen(true)}
+                          onMouseOut={() => setOpen(false)}
                           className={classNames(
                             item.promoTitle === firstPath
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
                             "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
-                          )}>
+                          )}
+                        >
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-down"
@@ -103,7 +126,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                             aria-hidden="true"
                           />
                         </div>
-                        :
+                      ) : (
                         <CustomLink
                           className={classNames(
                             item.internalLink?.slug === firstPath
@@ -116,7 +139,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                         >
                           {item.promoTitle ?? item.name}
                         </CustomLink>
-                      }
+                      )}
                     </li>
                   );
                 })}
@@ -144,10 +167,7 @@ const HeaderBlock: React.FC<INavigation> = ({
               <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] -mr-4">
                 <p className="flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
                   <span className="w-8 h-8 shrink-0">
-                    <Icon
-                      icon="emergency"
-                      className="w-full h-full mx-auto"
-                    />
+                    <Icon icon="emergency" className="w-full h-full mx-auto" />
                   </span>
                   Emergencias: 164
                 </p>
@@ -157,7 +177,14 @@ const HeaderBlock: React.FC<INavigation> = ({
         </div>
       </div>
       {/* TopMenu */}
-      {open && <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} />}
+      {open && (
+        <div
+          onMouseOver={() => setOpen(true)}
+          onMouseOut={() => setOpen(false)}
+        >
+          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} />
+        </div>
+      )}
       {/* Middle */}
       <div className="relative">
         <div className="mx-auto xl:container">
@@ -186,7 +213,11 @@ const HeaderBlock: React.FC<INavigation> = ({
               </div>
 
               <div className="flex items-center justify-end flex-grow divide-x md:py-5 divide-neutral-70">
-                <form action="#" method="post" className="w-full h-10 lg:max-w-xs lg:pr-6">
+                <form
+                  action="#"
+                  method="post"
+                  className="w-full h-10 lg:max-w-xs lg:pr-6"
+                >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
                     <label htmlFor="search" className="flex items-center">
                       <span className="flex items-center w-6 h-6 shrink-0">
@@ -237,14 +268,24 @@ const HeaderBlock: React.FC<INavigation> = ({
                 <div className="hidden gap-6 px-6 lg:flex">
                   {session?.user ? (
                     <>
-                      <Menu as="div" className="relative inline-block text-left min-w-[180px]">
+                      <Menu
+                        as="div"
+                        className="relative inline-block text-left min-w-[180px]"
+                      >
                         <div>
                           <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 ">
                             <span className="flex w-5 h-5 mr-2 text-neutral-30 shrink-0">
-                              <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
+                              <Icon
+                                icon="personal-data"
+                                className="w-full h-full"
+                                aria-hidden="true"
+                              />
                             </span>
-                            {session.user['name'] ?? session.user['email']}
-                            <ChevronDownIcon className="w-5 h-5 ml-2 text-neutral-30" aria-hidden="true" />
+                            {session.user["name"] ?? session.user["email"]}
+                            <ChevronDownIcon
+                              className="w-5 h-5 ml-2 text-neutral-30"
+                              aria-hidden="true"
+                            />
                           </Menu.Button>
                         </div>
 
@@ -264,8 +305,10 @@ const HeaderBlock: React.FC<INavigation> = ({
                                   <CustomLink
                                     content={{ urlPath: "/dashboard" }}
                                     className={classNames(
-                                      active ? 'bg-gray-100 text-gray-900' : 'text-blue-dark',
-                                      'block px-4 py-2 text-sm hover:bg-grey-90'
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-blue-dark",
+                                      "block px-4 py-2 text-sm hover:bg-grey-90"
                                     )}
                                   >
                                     Mi cuenta
@@ -274,10 +317,15 @@ const HeaderBlock: React.FC<INavigation> = ({
                               </Menu.Item>
                               <Menu.Item>
                                 {({ active }) => (
-                                  <button className={classNames(
-                                    active ? 'bg-gray-100 text-gray-900' : 'text-blue-dark',
-                                    'block px-4 py-2 text-sm w-full hover:bg-grey-90 text-left'
-                                  )} onClick={() => signOut()}>
+                                  <button
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-blue-dark",
+                                      "block px-4 py-2 text-sm w-full hover:bg-grey-90 text-left"
+                                    )}
+                                    onClick={() => signOut()}
+                                  >
                                     Salir
                                   </button>
                                 )}
@@ -286,7 +334,6 @@ const HeaderBlock: React.FC<INavigation> = ({
                           </Menu.Items>
                         </Transition>
                       </Menu>
-
                     </>
                   ) : (
                     <>
@@ -308,10 +355,7 @@ const HeaderBlock: React.FC<INavigation> = ({
               </div>
               <div className="relative z-10 flex items-center lg:hidden">
                 <span className="block w-10 h-10 rounded-full shrink-0 bg-category-orange-light text-blue-dark">
-                  <Icon
-                    icon="emergency"
-                    className="w-full h-full mx-auto"
-                  />
+                  <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
               </div>
               {/* Mobile */}
@@ -347,10 +391,17 @@ const HeaderBlock: React.FC<INavigation> = ({
                         </CustomLink>
                         <Popover.Button className="inline-flex items-center text-gray-400">
                           <span className="sr-only">Open menu</span>
-                          <XMarkIcon className="block w-4 h-4" aria-hidden="true" />
+                          <XMarkIcon
+                            className="block w-4 h-4"
+                            aria-hidden="true"
+                          />
                         </Popover.Button>
                       </div>
-                      <MegaMenuMobile items={mainNavCollection?.items} secondaryNavCollection={secondaryNavCollection} utilityNavCollection={utilityNavCollection} />
+                      <MegaMenuMobile
+                        items={mainNavCollection?.items}
+                        secondaryNavCollection={secondaryNavCollection}
+                        utilityNavCollection={utilityNavCollection}
+                      />
                     </Popover.Panel>
                   </Transition>
                 </Popover>
@@ -365,7 +416,10 @@ const HeaderBlock: React.FC<INavigation> = ({
                       <span>
                         <Icon
                           icon="arrow-down"
-                          className={classNames(open ? "rotate-180" : "rotate-0", "w-7 h-7 transition-all")}
+                          className={classNames(
+                            open ? "rotate-180" : "rotate-0",
+                            "w-7 h-7 transition-all"
+                          )}
                           aria-hidden="true"
                         />
                       </span>
@@ -379,13 +433,13 @@ const HeaderBlock: React.FC<INavigation> = ({
                       leaveTo="transform opacity-0 -translate-y-4"
                     >
                       <Popover.Panel className="absolute left-0 w-full bg-white shadow top-full">
-                        <nav
-                          aria-label="Utility"
-                          className="relative p-5"
-                        >
+                        <nav aria-label="Utility" className="relative p-5">
                           <ul className="flex justify-center gap-1 flex-nowrap ">
                             {utilityNavCollection.items.map((item) => (
-                              <li className="flex max-w-[75px]" key={item.sys.id}>
+                              <li
+                                className="flex max-w-[75px]"
+                                key={item.sys.id}
+                              >
                                 <CustomLink
                                   content={item}
                                   className={classNames(
@@ -423,7 +477,10 @@ const HeaderBlock: React.FC<INavigation> = ({
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             {mainNavCollectionMenu?.items?.length > 0 && (
-              <MegaMenu mainNavCollection={mainNavCollectionMenu} secondaryNavCollection={secondaryNavCollection} />
+              <MegaMenu
+                mainNavCollection={mainNavCollectionMenu}
+                secondaryNavCollection={secondaryNavCollection}
+              />
             )}
           </div>
         </div>
