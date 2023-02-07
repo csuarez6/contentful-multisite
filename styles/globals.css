@@ -130,5 +130,5 @@ section.section {
 }
 
 .card-mega-menu .service-line-block {
-  @apply py-0;
+  @apply py-0 w-full;
 }

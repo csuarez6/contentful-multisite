@@ -22,7 +22,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
   } = props;
 
   return (
-    <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px]">
+    <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px] flex flex-wrap">
       {promoImage && (
         <figure
           className={classNames(
@@ -39,10 +39,10 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
         </figure>
       )}
 
-      <div className="w-full p-6">
-        {(promoTitle || promoDescription) && (
+      <div className="w-full p-6 flex flex-col justify-end">
+        {(promoTitle || promoDescription || name) && (
           <div className="grid">
-            {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle ?? name}</h3>}
+            {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle || name}</h3>}
             {promoDescription?.json && (
               <div className="text-blue-dark-8 text-size-p1">
                 {documentToReactComponents(promoDescription.json)}
@@ -55,7 +55,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
             <CustomLink
               content={props}
               className={classNames(
-                "button",
+                "button block",
                 getButtonType(buttonType ?? "Contorno")
               )}
             >

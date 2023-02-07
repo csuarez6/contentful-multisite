@@ -39,6 +39,7 @@ const LinkElement = ({ item, isOpen }) => {
   );
 };
 const MegaMenuItem = ({ item }) => {
+  console.log(item);
   const [open, setOpen] = useState(false);
   const columns = 6;
   // const [columns, setColumns] = useState(7);
@@ -113,7 +114,20 @@ const MegaMenuItem = ({ item }) => {
       }
       ref={submenu}
     >
-      {!item.internalLink?.slug &&
+      {item.mainNavCollection?.items?.length > 0 && (
+         <span
+          className={
+            classNames(
+              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none cursor-pointer",
+              open ? "border-lucuma" : "border-transparent"
+            )
+          }
+        >
+          <LinkElement item={item} isOpen={open} />
+        </span>
+       )
+      }
+      {!item.mainNavCollection?.items && !item.internalLink?.slug &&
         !item.externalLink &&
         getUrlPath(item) === "/" && (
           <CustomLink
@@ -129,21 +143,21 @@ const MegaMenuItem = ({ item }) => {
             <LinkElement item={item} isOpen={open} />
           </CustomLink>
         )}
-      {(item.internalLink?.slug ||
-        item.externalLink ||
-        getUrlPath(item) !== "/") && (
-          <CustomLink
-            content={item}
-            className={
-              classNames(
-                "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-                open && "border-blue-dark"
-              )
-            }
-          >
-            <LinkElement item={item} isOpen={false} />
-          </CustomLink>
-        )}
+      {!item.mainNavCollection?.items && 
+        (item.internalLink?.slug || item.externalLink || getUrlPath(item) !== "/") &&
+          (<CustomLink
+              content={item}
+              className={
+                classNames(
+                  "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
+                  open && "border-blue-dark"
+                )
+              }
+            >
+              <LinkElement item={item} isOpen={false} />
+            </CustomLink>
+          )
+      }
       {item.mainNavCollection?.items?.length > 0 && (
         <div
           ref={submenu}
@@ -186,7 +200,7 @@ const MegaMenuItem = ({ item }) => {
                   {item?.secondaryNavCollection?.items && item.secondaryNavCollection.items.length && (
                     <div className="grid gap-10 -ml-5 pl-5 border-l border-neutral-70" style={columnCard(item.mainNavCollection.items.length)}>
                       {item.secondaryNavCollection.items.map((block) => (
-                        <div className="card-mega-menu" key={`card_${block?.sys.id}-megamenu`} style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}>
+                        <div className="card-mega-menu flex overflow-hidden" key={`card_${block?.sys.id}-megamenu`} style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}>
                           {jsonToReactComponent(block)}
                         </div>
                       ))}
