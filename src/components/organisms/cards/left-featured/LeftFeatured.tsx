@@ -105,11 +105,19 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             )}
             {ctaCollection?.items?.length > 0 && (
               <div className="flex gap-3">
-                {ctaCollection.items.map((cta) => (
-                  <CustomLink key={cta.name} content={cta} className={classNames("button w-full sm:w-auto flex justify-center text-center", getButtonType(buttonType ?? 'Contorno'))}>
-                    {cta.promoTitle ?? cta.name}
-                  </CustomLink>
-                ))}
+                {ctaCollection.items.map((cta, idx) => 
+                    (cta.externalLink || cta.internalLink) && (
+                      <CustomLink
+                        content={cta}
+                        key={cta.name}
+                        className={classNames("button w-full sm:w-auto flex justify-center text-center", 
+                          view?.buttonType? getButtonType(view.buttonType) : idx === 0 ? "button-primary" : "button-outline"
+                        )}
+                      >
+                        {cta.promoTitle ?? cta.name}
+                      </CustomLink>
+                    )
+                )}
               </div>
             )}
           </div>

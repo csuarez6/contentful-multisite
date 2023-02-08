@@ -4,6 +4,7 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 import { getLinkProps } from "@/utils/link.utils";
+import Icon from "../icon/Icon";
 
 export interface ICustomLink {
   content?: IPage & IPromoContent;
@@ -20,8 +21,7 @@ const CustomLink: React.FC<ICustomLink> = ({
   linkClassName = "",
   onClick = null,
 }) => {
-  const { href, target, isExternalLink, textLink } = getLinkProps(content);
-
+  const { href, target, isExternalLink, textLink, icon } = getLinkProps(content);
   return (
     <Link
       href={href}
@@ -30,7 +30,10 @@ const CustomLink: React.FC<ICustomLink> = ({
       onClick={onClick}
       className={linkClassName}
     >
-      <span className={`${className} cursor-pointer`}>{children ? children : textLink}</span>
+      <span className={`${className} cursor-pointer inline-block align-middle`}>
+        {children ? children : textLink}
+        {icon && <Icon icon={icon} className="w-6 h-6" />}
+      </span>
     </Link>
   );
 };

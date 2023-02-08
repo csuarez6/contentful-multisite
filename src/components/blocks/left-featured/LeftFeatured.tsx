@@ -6,7 +6,8 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import {
   classNames,
-  getBackgroundColorClass
+  getBackgroundColorClass,
+  getButtonType
 } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 
@@ -147,7 +148,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                           className={
                             classNames(
                               "button w-full sm:w-auto flex justify-center text-center",
-                              idx === 0 ? "button-primary" : "button-outline"
+                              view.buttonType? getButtonType(view.buttonType) : idx === 0 ? "button-primary" : "button-outline"
                             )
                           }
                         >

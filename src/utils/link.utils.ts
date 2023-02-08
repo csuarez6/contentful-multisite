@@ -44,6 +44,7 @@ export const getLinkProps = (content: GetUrlPathProps) => {
 
   const href = getUrlPath(content);
   const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
+  const icon = getIconView(content?.linkView);
 
   if(content?.internalLink?.name){
     textLink = content.internalLink.name; 
@@ -69,6 +70,19 @@ export const getLinkProps = (content: GetUrlPathProps) => {
     href,
     target: isExternalLink ? '_blank' : '_self',
     isExternalLink,
-    textLink
+    textLink,
+    icon
   };
+};
+
+export const getIconView = (linkView) => {
+  if(!linkView) return;
+  switch(linkView){
+    case 'Link con icono':
+      return 'arrow-right';
+    case 'Botón llamada':
+      return 'callback';
+    default:
+      return '';
+  }
 };

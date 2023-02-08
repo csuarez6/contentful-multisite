@@ -45,6 +45,7 @@ const AuxCustomContent = `
       }
     }
   }
+  linkView
 `;
 
 export default AuxCustomContent;

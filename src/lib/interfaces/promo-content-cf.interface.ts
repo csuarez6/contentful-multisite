@@ -47,6 +47,7 @@ export interface IPromoContent {
     slug?: string;
     isActive?: boolean;
     children?: React.ReactNode;
+    linkView?: string;
 }
 
 export interface IPromoBlock extends IBlockProps {

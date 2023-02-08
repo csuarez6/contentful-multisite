@@ -7,6 +7,7 @@ const ViewSecondaryBanner = `
     backgroundColor
     bannerWidth
     imageAlign
+    buttonType
 `;
 
 export default ViewSecondaryBanner;
