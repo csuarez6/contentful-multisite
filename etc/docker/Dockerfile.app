@@ -28,6 +28,10 @@ COPY styles /app/styles
 
 EXPOSE 3000
 
+FROM base as dev
+
+CMD [ "pnpm", "dev" ]
+
 FROM base as prod
 
 ENV NODE_ENV=production
@@ -47,9 +51,5 @@ ENV CONTENTFUL_PREVIEW_API_TOKEN=$CONTENTFUL_PREVIEW_API_TOKEN
 ARG SENTRY_AUTH_TOKEN
 ENV SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
 
-RUN npm run build
+RUN pnpm build
 CMD [ "pnpm", "start" ]
-
-FROM base as dev
-
-CMD [ "pnpm", "dev" ]
