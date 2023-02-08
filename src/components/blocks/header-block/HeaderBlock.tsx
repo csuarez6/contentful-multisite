@@ -79,11 +79,11 @@ const HeaderBlock: React.FC<INavigation> = ({
   }
 
   const secondaryNavCollectionMenu = mainNavCollection?.items.find(
-    (el) => el.secondaryNavCollection.items.length > 0
+    (el) => el.secondaryNavCollection?.items.length > 0
   )?.secondaryNavCollection;
 
   const secondaryNavCollectionColor = mainNavCollection?.items.find(
-    (el) => el.secondaryNavCollection.items.length > 0
+    (el) => el.secondaryNavCollection?.items.length > 0
   )?.backgroundColor;
 
   return (
@@ -343,7 +343,9 @@ const HeaderBlock: React.FC<INavigation> = ({
                         Regístrate
                       </CustomLink>
                       <CustomLink
-                        content={{ urlPath: "/acceso" }}
+                        content={{
+                          urlPath: "/acceso" + (asPath !== '/' ? `?p=${asPath}` : ''),
+                        }}
                         className="flex items-center text-center button button-outline"
                       >
                         Inicia sesión

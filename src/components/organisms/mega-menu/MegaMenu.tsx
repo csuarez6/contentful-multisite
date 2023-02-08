@@ -105,12 +105,10 @@ const MegaMenuItem = ({ item }) => {
       onMouseOver={() => setOpen(true)}
       onMouseOut={() => setOpen(false)}
       onClick={() => setOpen(false)}
-      className={
-        classNames(
-          "group/submenu min-h-[60px] -my-2 flex items-center",
-          open && "isOpen"
-        )
-      }
+      className={classNames(
+        "group/submenu min-h-[60px] -my-2 flex items-center",
+        open && "isOpen"
+      )}
       ref={submenu}
     >
       {item.mainNavCollection?.items?.length > 0 && (
@@ -131,13 +129,13 @@ const MegaMenuItem = ({ item }) => {
         getUrlPath(item) === "/" && (
           <CustomLink
             content={item}
-            linkClassName={"relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"}
-            className={
-              classNames(
-                "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
-                open ? "border-lucuma" : "border-transparent"
-              )
+            linkClassName={
+              "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
             }
+            className={classNames(
+              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
+              open ? "border-lucuma" : "border-transparent"
+            )}
           >
             <LinkElement item={item} isOpen={open} />
           </CustomLink>
@@ -161,12 +159,12 @@ const MegaMenuItem = ({ item }) => {
         <div
           ref={submenu}
           style={{ maxHeight: `${submenuH}px` }}
-          className={
-            classNames(
-              "absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
-              open ? "pointer-events-auto opacity-100 transition-opacity" : "pointer-events-none opacity-0 transition-none"
-            )
-          }
+          className={classNames(
+            "absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
+            open
+              ? "pointer-events-auto opacity-100 transition-opacity"
+              : "pointer-events-none opacity-0 transition-none"
+          )}
         >
           <div className="relative flex py-6 my-6 gap-6">
             <div className="mx-auto xl:container">

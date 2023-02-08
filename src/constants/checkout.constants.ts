@@ -3,14 +3,14 @@ export enum VantiOrderMetadata {
      * Buy flow Meta
      */
     IsVerified = 'isVerified',
-    HasPesonalInfo = 'hasPesonalInfo',
+    HasPersonalInfo = 'hasPersonalInfo',
     HasAddresses = 'hasAddresses',
     
     /**
      * Client Meta
      */
-    FirstName = 'firstName',
-    LastName = 'firstName',
+    name = 'name',
+    LastName = 'lastName',
 }
 
-export const PSE_STEPS_TO_VERIFY = [VantiOrderMetadata.IsVerified, VantiOrderMetadata.HasPesonalInfo, VantiOrderMetadata.HasAddresses];
+export const PSE_STEPS_TO_VERIFY = [VantiOrderMetadata.IsVerified, VantiOrderMetadata.HasPersonalInfo, VantiOrderMetadata.HasAddresses];

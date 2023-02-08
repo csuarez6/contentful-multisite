@@ -8,7 +8,6 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/router';
 
-
 const ModalContent = ({ modalMsg }) => {
     return (
         <div className="flex flex-col gap-12">

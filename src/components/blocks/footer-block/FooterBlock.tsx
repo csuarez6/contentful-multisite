@@ -33,15 +33,15 @@ const FooterBlock: React.FC<INavigation> = ({
             </div>
             <div className="hidden pt-12 md:grid md:grow xl:pt-0 md:w-full">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
-                {mainNavCollection?.items?.map((menuItem) => (
-                  <div key={menuItem.sys.id}>
+                {mainNavCollection?.items?.map((menuItem, i) => (
+                  <div key={menuItem.sys.id + i}>
                     <h3 className="text-white">
                       {menuItem.promoTitle ?? menuItem.name}
                     </h3>
                     {menuItem?.mainNavCollection?.items?.length > 0 && (
                       <ul role="list" className="pt-[10px] space-y-3">
-                        {menuItem.mainNavCollection.items.map((listItem) => (
-                          <li key={listItem.sys.id}>
+                        {menuItem.mainNavCollection.items.map((listItem, j) => (
+                          <li key={listItem.sys.id + i + j}>
                             <CustomLink
                               content={listItem}
                               className="text-base text-white hover:underline"
@@ -62,8 +62,8 @@ const FooterBlock: React.FC<INavigation> = ({
               <p className="text-white  title is-1 !text-lg text-center !leading-5">{promoTitle}</p>
             </div>
             <div className="md:hidden border-b-[0.5px] border-white border-opacity-75 mt-[33px] w-[105%]">
-              {mainNavCollection?.items?.map((menuItem) => (
-                <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id}>
+              {mainNavCollection?.items?.map((menuItem, i) => (
+                <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id + i}>
                   {({ open }) => (
                     <div>
                       <dt className="text-lg">
@@ -90,8 +90,8 @@ const FooterBlock: React.FC<INavigation> = ({
                         <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
                           {menuItem?.mainNavCollection?.items?.length > 0 && (
                             <ul role="list" className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
-                              {menuItem.mainNavCollection.items.map((listItem) => (
-                                <li key={listItem.sys.id} className="py-2">
+                              {menuItem.mainNavCollection.items.map((listItem, j) => (
+                                <li key={listItem.sys.id + i + j} className="py-2">
                                   <CustomLink
                                     content={listItem}
                                     className="text-sm text-white hover:underline"
@@ -112,8 +112,8 @@ const FooterBlock: React.FC<INavigation> = ({
 
           </div>
           <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-2 md:gap-16">
-            {secondaryNavCollection?.items?.map((item) => (
-              <li key={item.sys.id}>
+            {secondaryNavCollection?.items?.map((item, i) => (
+              <li key={item.sys.id + i}>
                 <CustomLink
                   className="text-white hover:text-neutral-90"
                   content={item}

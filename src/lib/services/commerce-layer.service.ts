@@ -1,7 +1,7 @@
 import CommerceLayer from '@commercelayer/sdk';
+import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
-import jwtDecode from "jwt-decode";
 
 export interface ICustomer {
   name: string;
@@ -17,7 +17,7 @@ export interface ICustomer {
   notificate: boolean;
 }
 
-interface JWTProps {
+export interface JWTProps {
   organization: {
     slug: string
     id: string
@@ -51,22 +51,22 @@ export const getAppToken = async () => {
 };
 
 export const getMerchantToken = async () => {
-  let token = '';
+  try {
+    const { accessToken } = await getSalesChannelToken({
+      endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+      clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+      scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
+    });
+    
+    return accessToken;
+  } catch (error) {
+    console.error(error);
 
-  const { accessToken } = await getSalesChannelToken({
-    endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
-    clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-    scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
-  });
-
-  if (accessToken) {
-    token = accessToken;
-  }
-
-  return token;
+    return '';
+  };
 };
 
-export const getCustomerTokenCl = async (data) => {
+export const getCustomerTokenCl = async ({ email, password}) => {
 
   try {
     const token = await getCustomerToken(
@@ -76,12 +76,11 @@ export const getCustomerTokenCl = async (data) => {
         scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
       },
       {
-        username: data.email,
-        password: data.password
+        username: email,
+        password
       }
     );
-    console.log('My access token: ', token.accessToken);
-    console.log('Expiration date: ', token.expires);
+
     return { status: 200, ...token.data };
   } catch (error) {
     console.log("Error - getCustomerTokenCl: ", error);

@@ -1,17 +1,18 @@
-import getConfig from 'next/config';
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CommerceLayer, {
   AddressCreate,
   CommerceLayerClient,
   Order,
   QueryParamsRetrieve,
 } from "@commercelayer/sdk";
-import { getSalesChannelToken } from "@commercelayer/js-auth";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
+import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
+import { getMerchantToken } from '@/lib/services/commerce-layer.service';
+import AuthContext from "@/context/Auth";
 
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "available_payment_methods", "shipments"],
+  include: ["line_items", "available_payment_methods", "shipments", "customer"],
   fields: {
     orders: [
       "number",
@@ -24,6 +25,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_gift_card_amount",
       "formatted_total_amount_with_taxes",
       "line_items",
+      "customer",
       "metadata",
       "customer_email",
       "available_payment_methods",
@@ -40,14 +42,15 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "quantity",
       "formatted_total_amount",
     ],
+    customer: ["id"],
   },
 };
 
-const { publicRuntimeConfig } = getConfig();
 
 export const useCommerceLayer = () => {
   const [client, setClient] = useState<CommerceLayerClient>();
   const [error, setError] = useState<unknown>();
+  const { clientLogged, user } = useContext(AuthContext);
 
   const isError = useMemo(() => !!error, [error]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,17 +59,15 @@ export const useCommerceLayer = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { accessToken } = await getSalesChannelToken({
-          endpoint: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
-          clientId: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-          scope: publicRuntimeConfig.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE, 
-        });
+        const accessToken = await getMerchantToken();
         if (!accessToken) {
           setError(new Error("CREDENTIALS_ERROR"));
           return;
         }
 
-        setClient(CommerceLayer({ accessToken, organization: "vanti-poc" }));
+        setClient(
+          CommerceLayer({ accessToken, organization: CL_ORGANIZATION })
+        );
       } catch (error) {
         setError(error);
         console.error('Error at: useCommerceLayer getSalesChannelToken', error);
@@ -123,18 +124,12 @@ export const useCommerceLayer = () => {
 
   const addToCart = async (skuCode: string, productImage: string, productName: string) => {
     const orderId = await getOrderId();
-    const product = (
-      await client.skus.list({
-        filters: { code_eq: skuCode },
-        fields: ["id", "name", "image_url", "code"],
-      })
-    ).at(0);
 
     await client.line_items.create({
       quantity: 1,
       name: productName,
       image_url: productImage,
-      sku_code: product.code,
+      sku_code: skuCode,
       _update_quantity: true,
       order: {
         type: "orders",
@@ -154,13 +149,30 @@ export const useCommerceLayer = () => {
       });
     } else {
       await client.line_items.delete(lineItem.id);
-      await updateMetadata(VantiOrderMetadata.IsVerified, false);
+      await updateMetadata({[VantiOrderMetadata.IsVerified]: false});
     }
     await reloadOrder();
   };
 
+  const addLoggedCustomer = useCallback(async () => {
+    if (!clientLogged) throw new Error("unauthorized");
+
+    const result = await clientLogged.orders.update(
+      {
+        id: await getOrderId(),
+        customer: {
+          id: user.id,
+          type: "customers",
+        },
+      },
+      DEFAULT_ORDER_PARAMS
+    );
+
+    setOrder(result);
+  }, [user?.id, clientLogged, getOrderId]);
+
   const addCustomer = useCallback(
-    async ({ email, firstName, lastName, cellPhone }) => {
+    async ({ email, name, lastName, cellPhone }) => {
       const id = await getOrderId();
       const result = await client.orders.update(
         {
@@ -170,10 +182,10 @@ export const useCommerceLayer = () => {
             ...(order?.metadata && {
               ...order.metadata,
             }),
-            firstName,
+            name,
             lastName,
             cellPhone,
-            hasPesonalInfo: true,
+            hasPersonalInfo: true,
           },
         },
         DEFAULT_ORDER_PARAMS
@@ -196,6 +208,11 @@ export const useCommerceLayer = () => {
       billingAddress,
     };
   }, [client, getOrderId]);
+  
+  const getCustomerAddresses = useCallback(async () => {
+    if (!clientLogged) return [];
+    return clientLogged.customer_addresses.list();
+  }, [clientLogged]);
 
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
@@ -238,8 +255,9 @@ export const useCommerceLayer = () => {
   );
 
   const updateMetadata = useCallback(
-    async <T = any>(metaField: string, value: T) => {
+    async (metadata: Record<string, any>) => {
       const id = await getOrderId();
+
 
       const result = await client.orders.update(
         {
@@ -248,7 +266,7 @@ export const useCommerceLayer = () => {
             ...(order?.metadata && {
               ...order.metadata,
             }),
-            [metaField]: value,
+            ...metadata,
           },
         },
         DEFAULT_ORDER_PARAMS
@@ -336,8 +354,10 @@ export const useCommerceLayer = () => {
     addToCart,
     updateItemQuantity,
     addCustomer,
+    addLoggedCustomer,
     addAddresses,
     getAddresses,
+    getCustomerAddresses,
     updateMetadata,
     placeOrder,
     getPaymentMethods,

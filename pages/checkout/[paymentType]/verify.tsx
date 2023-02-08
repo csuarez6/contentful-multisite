@@ -1,35 +1,70 @@
 import { ReactElement, useContext, useMemo } from "react";
-import { defaultLayout } from "../../_app";
-import CheckoutLayout from "@/components/templates/checkout/Layout";
-import CheckoutContext from "@/context/Checkout";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+} from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
-import { GetStaticPaths, GetStaticProps } from "next";
+import CheckoutLayout from "@/components/templates/checkout/Layout";
+import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-
-const STEP_META_FIELD = 'isVerified';
+import { defaultLayout } from "../../_app";
+import { VantiOrderMetadata } from "@/constants/checkout.constants";
+import AuthContext from "@/context/Auth";
 
 const CheckoutVerify = () => {
   const router = useRouter();
   const lastPath = useLastPath();
-
-  const { order, flow, updateMetadata, updateItemQuantity } = useContext(CheckoutContext);
+  
+  const { isLogged } = useContext(AuthContext);
+  const {
+    order,
+    flow,
+    updateMetadata,
+    updateItemQuantity,
+    addLoggedCustomer
+  } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
     return order.line_items;
   }, [order]);
 
-  const isCompleted = useMemo(() => !!order?.metadata?.[STEP_META_FIELD], [order]);
+  const isCompleted = useMemo(
+    () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+    [order]
+  );
+
+  const PATH_BASE = useMemo(
+    () => `/checkout/${router.query.paymentType}`,
+    [router.query]
+  );
 
   const handleNext = async () => {
-    if (!products.length) return;
-    await updateMetadata(STEP_META_FIELD, true);
-    router.push(`/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`);
+    try {
+      if (!products.length) return;
+
+      const meta = {
+        [VantiOrderMetadata.IsVerified]: true
+      };
+
+      if (isLogged) {
+        await addLoggedCustomer();
+        
+        meta[VantiOrderMetadata.HasPersonalInfo] = true;
+      }
+
+      await updateMetadata(meta);
+
+      router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
   };
 
   return (
@@ -106,6 +141,7 @@ const CheckoutVerify = () => {
                           className="flex items-center w-full text-center outline-none border-y focus:outline-none text-md md:text-basecursor-default"
                           name="custom-input-number"
                           value={product?.quantity}
+                          readOnly
                         ></input>
                         <button
                           data-action="increment"
@@ -162,7 +198,6 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getMenu(
     DEFAULT_FOOTER_ID,
@@ -173,7 +208,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: 'Orden - Verificar',
+        name: "Orden - Verificar",
         footerInfo,
         headerInfo,
       },

@@ -14,14 +14,14 @@ import { getMenu } from "@/lib/services/menu-content.service";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
 interface ICustomer {
-  firstName: string;
+  name: string;
   lastName: string;
   cellPhone: number;
   email: string;
 }
 
 const schema = yup.object({
-  firstName: yup.string().required("Dato Requerido"),
+  name: yup.string().required("Dato Requerido"),
   lastName: yup.string().required("Dato Requerido"),
   cellPhone: yup
     .number()
@@ -31,7 +31,7 @@ const schema = yup.object({
   email: yup.string().email("Email no válido").required("Dato Requerido"),
 });
 
-const STEP_META_FIELD = "hasPesonalInfo";
+const STEP_META_FIELD = "hasPersonalInfo";
 
 const CheckoutPersonalInfo = () => {
   const router = useRouter();
@@ -56,11 +56,11 @@ const CheckoutPersonalInfo = () => {
   useEffect(() => {
     if (!isCompleted) return;
 
-    const { firstName, lastName, cellPhone } = order.metadata;
+    const { name, lastName, cellPhone } = order.metadata;
 
     reset({
       email: order.customer_email,
-      firstName,
+      name,
       lastName,
       cellPhone,
     });
@@ -100,14 +100,14 @@ const CheckoutPersonalInfo = () => {
           <form className="flex flex-wrap max-w-full gap-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full">
               <TextBox
-                id="firstName"
+                id="name"
                 className="algo"
                 label="Escribe tu nombre"
                 placeholder="Nombre"
-                {...register("firstName")}
+                {...register("name")}
               />
               {
-                errors.firstName?.message && <p className="mt-1 text-red-600">{errors.firstName?.message}</p>
+                errors.name?.message && <p className="mt-1 text-red-600">{errors.name?.message}</p>
               }
             </div>
             <div className="w-full">

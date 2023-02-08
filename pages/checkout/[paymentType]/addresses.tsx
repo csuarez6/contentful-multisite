@@ -6,8 +6,9 @@ import * as yup from "yup";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
+import AuthContext from "@/context/Auth";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { Address } from "@commercelayer/sdk";
+import { Address, AddressCreate } from "@commercelayer/sdk";
 import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
@@ -75,6 +76,7 @@ const CheckoutAddresses = () => {
   const [states, setStates] = useState<State[]>([]);
   const [shippingCities, setShippingCities] = useState([]);
   const [billingCities, setBillingCities] = useState([]);
+  const { isLogged, user } = useContext(AuthContext);
 
   const { order, flow, addAddresses, getAddresses } =
     useContext(CheckoutContext);
@@ -166,32 +168,35 @@ const CheckoutAddresses = () => {
     })();
   }, [isCompleted, getAddresses, order, reset]);
 
+  const toCLAddress = (addr: IAddress): Partial<AddressCreate> => ({
+    country_code: DEFAULT_COUNTRY,
+    state_code: addr.stateCode,
+    city: addr.cityCode,
+    line_1: addr.address,
+    phone: addr.phone,
+    zip_code: DEFAULT_ZIP_CODE,
+  });
+
   const onSubmit = async (data: IAddresses) => {
     try {
       const { shippingAddress, billingAddress } = data;
+
+      const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
+      let clBillingAddr = undefined;
+      
+      if (billingAddress) clBillingAddr = toCLAddress(billingAddress) as AddressCreate;
+
+      [clShippingAddr, clBillingAddr].forEach((add) => {
+        if (!add) return;
+          ((meta: any) => {
+            (add.first_name = meta?.name),
+              (add.last_name = meta?.lastName);
+          })(isLogged ?  user.metadata : order.metadata);
+        });
+
       await addAddresses(
-        {
-          country_code: DEFAULT_COUNTRY,
-          state_code: shippingAddress.stateCode,
-          city: shippingAddress.cityCode,
-          first_name: order.metadata.firstName,
-          last_name: order.metadata.lastName,
-          line_1: shippingAddress.address,
-          phone: shippingAddress.phone,
-          zip_code: DEFAULT_ZIP_CODE,
-        },
-        billingAddress
-          ? {
-            country_code: "CO",
-            state_code: billingAddress.stateCode,
-            city: billingAddress.cityCode,
-            first_name: order.metadata.firstName,
-            last_name: order.metadata.lastName,
-            line_1: billingAddress.address,
-            phone: billingAddress.phone,
-            zip_code: DEFAULT_ZIP_CODE,
-          }
-          : undefined
+        clShippingAddr,
+        clBillingAddr ?? undefined
       );
 
       await handleNext();
@@ -203,13 +208,19 @@ const CheckoutAddresses = () => {
 
   const handleNext = async () => {
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
+      `/checkout/${router.query.paymentType}/${flow.getNextStep(
+        lastPath,
+        isLogged
+      )}`
     );
   };
 
   const handlePrev = async () => {
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
+      `/checkout/${router.query.paymentType}/${flow.getPrevStep(
+        lastPath,
+        isLogged
+      )}`
     );
   };
 

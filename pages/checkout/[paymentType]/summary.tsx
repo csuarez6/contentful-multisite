@@ -10,14 +10,23 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
+import AuthContext from "@/context/Auth";
 
 const CheckoutSummary = () => {
   const router = useRouter();
   const lastPath = useLastPath();
+  const { isLogged, user } = useContext(AuthContext);
 
   const { order, flow, getAddresses } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
+
+  const fullName = useMemo(() => {
+    return (
+      (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
+    )(isLogged ? user : order);
+
+  }, [user, order, isLogged]);
 
 
   useEffect(() => {
@@ -29,7 +38,7 @@ const CheckoutSummary = () => {
   }, [getAddresses, order]);
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[VantiOrderMetadata.HasPesonalInfo],
+    () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
     [order]
   );
 
@@ -55,29 +64,44 @@ const CheckoutSummary = () => {
             </div>
             <div className="flex justify-between">
               <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
-              <dd className="flex-1 font-bold text-grey-30">{order?.metadata?.firstName} {order?.metadata?.lastName}</dd>
+              <dd className="flex-1 font-bold text-grey-30">{fullName}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="flex-1 text-grey-30">Método de pago:</dt>
-              <dd className="flex-1 font-bold text-grey-30">{router.query.paymentType?.toString().toUpperCase()}</dd>
+              <dd className="flex-1 font-bold text-grey-30">
+                {router.query.paymentType?.toString().toUpperCase()}
+              </dd>
             </div>
             <div className="flex justify-between">
               <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
-              <dd className="flex-1 font-bold text-grey-30">Banco Davivienda</dd>
+              <dd className="flex-1 font-bold text-grey-30">
+                Banco Davivienda
+              </dd>
             </div>
             <div className="flex justify-between">
               <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
-              <dd className="flex-1 font-bold text-grey-30">{billingAddress?.full_address}</dd>
+              <dd className="flex-1 font-bold text-grey-30">
+                {billingAddress?.full_address}
+              </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-blue-dark">Sabemos que eres un humano, pero debemos confirmarlo.</dt>
+              <dt className="text-blue-dark">
+                Sabemos que eres un humano, pero debemos confirmarlo.
+              </dt>
             </div>
             <div className="flex justify-between">
-              <dt className="">NOTA: Al hacer click en “Enviar datos” serás contactado por un agente de Vanti</dt>
+              <dt className="">
+                NOTA: Al hacer click en “Enviar datos” serás contactado por un
+                agente de Vanti
+              </dt>
             </div>
           </dl>
           <div className="flex justify-end w-full mt-5">
-            <button className="button button-outline" type="button" onClick={handlePrev}>
+            <button
+              className="button button-outline"
+              type="button"
+              onClick={handlePrev}
+            >
               Volver
             </button>
           </div>

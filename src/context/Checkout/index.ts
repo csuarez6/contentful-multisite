@@ -1,41 +1,17 @@
 import { Address, AddressCreate, Order, PaymentMethod } from "@commercelayer/sdk";
 import { ListResponse } from "@commercelayer/sdk/lib/cjs/resource";
 import { createContext } from "react";
-
-export enum VantiCheckoutFlowType {
-  pse = 'pse',
-  vantiListo = 'vantiListo',
-  factura = 'factura'
-}
-
-export type VantiCheckoutStep = {
-  path: string
-  onNext: () => void
-  onPrev: () => void
-}
-
-export interface VantiChekoutCustomer {
-  firstName: string
-  lastName: string
-  cellPhone: string | number
-  email: string
-}
-
-export type VantiCheckoutFlow = {
-  name: VantiCheckoutFlowType
-  steps: string[]
-  getNextStep: (step: string) => string | null
-  getPrevStep: (step: string) => string | null
-}
+import { Flow, VantiChekoutCustomer } from "./flows";
 
 export interface IContextCheckout {
   isLoading: boolean;
   isError: boolean;
   order: Order;
-  flow: VantiCheckoutFlow;
+  flow: Flow;
   addToCart: (sku: string, productImage?: string, productName?: string) => void;
-  updateMetadata: <T = any>(metaField: string, value: T) => Promise<void>;
+  updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
+  addLoggedCustomer: () => Promise<void>;
   updateItemQuantity: (skuCode: string, quantity: number) => Promise<void>;
   addAddresses: (
     shippingAddress: AddressCreate,
@@ -45,6 +21,7 @@ export interface IContextCheckout {
     shippingAddress?: Address;
     billingAddress?: Address;
   }>;
+  getCustomerAddresses: () => Promise<Address[]>;
   placeOrder: () => Promise<void>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
@@ -60,9 +37,11 @@ const CheckoutContext = createContext<IContextCheckout>({
   addToCart: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,
+  addLoggedCustomer: () => undefined,
   updateItemQuantity: () => undefined,
   addAddresses: () => undefined,
   getAddresses: () => undefined,
+  getCustomerAddresses: () => undefined,
   placeOrder: () => undefined,
   getPaymentMethods: () => undefined,
   setPaymentMethod: () => undefined,
