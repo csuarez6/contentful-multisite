@@ -89,10 +89,9 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                         </button>
                     }
                 </div>
-                <div className='self-end w-full'>
+                <div className='flex self-end justify-center w-full'>
                     <CustomLink
-                        className="button text-blue-dark text-center block underline"
-                        onClick={(e) => { e.preventDefault(); }}
+                        className="block text-center underline button text-blue-dark"
                         content={{ urlPath: "/registro" }}
                     >
                         Crear cuenta
@@ -101,21 +100,20 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
             </form>
             {isSubmitSuccessful && (<ModalSuccess {...modal} isActive={isSubmitSuccessful} />)}
 
-            <hr className="border-neutral-80 block mt-6" />
+            <hr className="block mt-6 border-neutral-80" />
 
-            <div className='w-full flex flex-col gap-2'>
+            <div className='flex flex-col w-full gap-2'>
                 <CustomLink
-                    className="button text-grey-30 flex justify-between"
-                    onClick={(e) => { e.preventDefault(); }}
-                    content={{ urlPath: "/" }}
+                    className="flex justify-between button text-grey-30"
+                    content={{ urlPath: "/forgotpassword" }}
                 >
                     <div className="flex">
-                        <span className="flex text-neutral-30 items-center shrink-0 w-6 h-6">
+                        <span className="flex items-center w-6 h-6 text-neutral-30 shrink-0">
                             <Icon icon="personal-data" className="w-full h-full" aria-hidden="true" />
                         </span>
                         Recupera tu contraseña
                     </div>
-                    <span className="flex text-neutral-30 items-center shrink-0 w-6 h-6">
+                    <span className="flex items-center w-6 h-6 text-neutral-30 shrink-0">
                         <Icon icon="arrow-right" className="w-full h-full" aria-hidden="true" />
                     </span>
                 </CustomLink>
