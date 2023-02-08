@@ -155,6 +155,21 @@ const MegaMenuItem = ({ item }) => {
         </CustomLink>
         )
       }
+      {item.mainNavCollection?.items && item.urlPath
+         &&
+        (<CustomLink
+          content={item}
+          className={
+            classNames(
+              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
+              open && "border-blue-dark"
+            )
+          }
+        >
+          <LinkElement item={item} isOpen={false} />
+        </CustomLink>
+        )
+      }
       {item.mainNavCollection?.items?.length > 0 && (
         <div
           ref={submenu}

@@ -26,7 +26,7 @@ const TopMenu: React.FC<INavigation> = ({ secondaryNavCollection }) => {
                         </h2>
                       </CustomLink>
                       <div className="text-sm text-white">
-                        {documentToReactComponents(item.promoDescription?.json)}
+                        {documentToReactComponents(item.mainText?.json)}
                       </div>
                     </div>
                   ))}

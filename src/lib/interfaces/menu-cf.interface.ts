@@ -20,6 +20,7 @@ export interface IListItems {
 export interface INavigation {
   name?: string;
   promoTitle?: string;
+  mainText?:IRichText;
   secondaryText?: IRichText;
   promoImage?: IImageAsset;
   mainNavCollection?: {

@@ -55,15 +55,12 @@ const HeaderBlock: React.FC<INavigation> = ({
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
 
   if (!mainNavCollectionMenu?.items?.length) {
+    firstPath = "home";
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
   }
-
-  if (overrideNavCollection?.items?.length) {
-    mainNavCollectionMenu = overrideNavCollection;
-  }
-
+  
   if (
     !mainNavCollection?.items?.some(
       (el) => el.internalLink?.slug === menuNavkey
@@ -77,6 +74,11 @@ const HeaderBlock: React.FC<INavigation> = ({
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
   }
+
+  if (overrideNavCollection?.items?.length) {
+    mainNavCollectionMenu = overrideNavCollection;
+  }
+  console.log('overrideNavCollection', overrideNavCollection);
 
   const secondaryNavCollectionMenu = mainNavCollection?.items.find(
     (el) => el.secondaryNavCollection?.items.length > 0
