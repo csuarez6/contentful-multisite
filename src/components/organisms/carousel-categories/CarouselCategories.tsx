@@ -14,6 +14,7 @@ const CarouselCategories: React.FC<
   name,
   promoImage,
   internalLink,
+  linkParameters,
   queryParamName = "categoria",
   value = null,
 }) => {
@@ -22,16 +23,18 @@ const CarouselCategories: React.FC<
 
   if (!promoImage && !promoTitle && internalLink?.urlPath) return;
 
+  let link = internalLink?.urlPath
+  ? internalLink.urlPath
+  : value !== "*"
+  ? `${fullPath}?${queryParamName}=${value}`
+  : fullPath;
+  
+  link = linkParameters ? link + linkParameters : link;
+  
   return (
     <article className="flex justify-center">
       <Link
-        href={
-          internalLink?.urlPath
-            ? internalLink.urlPath
-            : value !== "*"
-            ? `${fullPath}?${queryParamName}=${value}`
-            : fullPath
-        }
+        href={link}
       >
         <span className="flex flex-col gap-2 items-center h-full group">
           {(promoImage || image) && (
