@@ -9,7 +9,7 @@ const handler = async (
   const { sku } = req.query;
   const productPrices = await getCommercelayerProduct(typeof sku == 'string' ? sku : sku[0]);
 
-  res.status(200).json(productPrices);
+  return res.status(200).json(productPrices);
 };
 
 export default handler;

@@ -21,10 +21,10 @@ const handler = async (
   });
 
   if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields) {
-    res.status(200).json(resultAlgolia.hits[0].fields);
+    return res.status(200).json(resultAlgolia.hits[0].fields);
   }
 
-  res.status(404).json({
+  return res.status(404).json({
     code: 404,
     message: `Product with SKU "${skuString}" not found`
   });

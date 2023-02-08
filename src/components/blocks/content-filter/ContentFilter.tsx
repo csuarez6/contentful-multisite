@@ -69,14 +69,6 @@ const ContentFilter: React.FC<IContentFilter> = ({
   };
 
   useEffect(() => {
-    const { search } = document.location;
-    if (search) {
-      facetsChangeHandle(search);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath]);
-
-  useEffect(() => {
     if (mainFacet && preloadContent?.facets?.length) {
       const tmpMainFacetContent = preloadContent.facets.find(
         (f: ISelect) => f.labelSelect === mainFacet
@@ -96,9 +88,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
     const { search } = document.location;
     if (search) {
       facetsChangeHandle(search);
+    } else {
+      setQueryString(new URLSearchParams(fixedFilters).toString());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [asPath]);
 
   return (
     <div className="relative w-full">
@@ -125,6 +119,16 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
       <div className="block w-full mb-12 my-4">
         <ul className="flex flex-row justify-center items-center gap-1 w-full">
+          {(data?.actualPage !== undefined && data.actualPage > 0) && (
+            <li>
+              <button
+                onClick={() => setPage(data.actualPage)}
+                className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
+              >
+                &lt; Anterior
+              </button>
+            </li>
+          )}
           {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
             <li key={`page-${k}`}>
               <button
@@ -139,6 +143,18 @@ const ContentFilter: React.FC<IContentFilter> = ({
               </button>
             </li>
           ))}
+          {data?.actualPage !== undefined &&
+            data?.totalPages !== undefined &&
+            data.actualPage + 1 < data.totalPages && (
+              <li>
+                <button
+                  onClick={() => setPage(data.actualPage + 2)}
+                  className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
+                >
+                  Siguiente &gt;
+                </button>
+              </li>
+            )}
         </ul>
       </div>
     </div>
