@@ -28,7 +28,7 @@ const HeaderBlock: React.FC<INavigation> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { status: sessionStatus, data: session } = useSession();
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     if (sessionStatus == "unauthenticated") {

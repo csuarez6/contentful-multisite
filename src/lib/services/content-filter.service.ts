@@ -15,11 +15,30 @@ export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
   return searchIndex;
 };
 
+const applyFilterModifier = (filterKey, filterValue, modifier) => {
+  let filterValueModified = `${filterKey}:${filterValue}`;
+
+  if (modifier === 'stringify') {
+    filterValueModified = `${filterKey}:"${filterValue}"`;
+  }
+
+  if (modifier === 'range') {
+    const [min, max] = filterValue.split('-');
+    filterValueModified = max ? (
+      min ? `${filterKey}:${min} TO ${max}` : `${filterKey} <= ${max}`
+    ) : (
+      min ? `${filterKey} >= ${min}` : ''
+    );
+  }
+
+  return filterValueModified;
+};
+
 const getAlgoliaResults = async ({
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
-  pageResults = 12,
+  pageResults = 9,
   filters = {},
   page = 1
 }) => {
@@ -59,7 +78,14 @@ const getAlgoliaResults = async ({
     const filterDef = Object.keys(FACET_QUERY_MAP).find(fk => filterName === FACET_QUERY_MAP[fk].inputName);
 
     if (filterDef) {
-      algoliaFilter.push(`${filterDef}:${filters[filterName]}`);
+      let filterValue = `${filterDef}:${filters[filterName]}`;
+      const modifier = FACET_QUERY_MAP[filterDef].modifier;
+
+      if (modifier) {
+        filterValue = applyFilterModifier(filterDef, filters[filterName], modifier);
+      }
+
+      algoliaFilter.push(filterValue);
     }
   }
 
@@ -120,16 +146,28 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
               name: FACET_QUERY_MAP[facetId].inputName,
               labelSelect: FACET_QUERY_MAP[facetId].title,
               placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
-              listedContents: responseData[`${queryName}Collection`].items.map((facetContent: any) => {
+              listedContents: FACET_QUERY_MAP[facetId].rawOptions ?? responseData[`${queryName}Collection`].items.map((facetContent: any) => {
                 return {
                   ...facetContent,
-                  text: `${facetContent.promoTitle ?? facetContent.name} (${facets[facetId][facetContent.name]})`,
+                  text: facetContent.promoTitle ?? facetContent.name,
                   value: facetContent.name,
                   totalItems: facets[facetId][facetContent.name]
                 };
               })
             };
 
+            facetContents.listedContents.unshift({
+              sys: {
+                id: `${facetContents.name}_all-items`
+              },
+              name: `Todo`,
+              text: `Todo`,
+              value: '*',
+              totalItems: 0,
+              image: {
+                url: `/images/show-all-${facetContents.name}.png`
+              }
+            });
             facetsWithValues.push(facetContents);
           }
         } catch (e) {
@@ -140,10 +178,10 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           name: FACET_QUERY_MAP[facetId].inputName,
           labelSelect: FACET_QUERY_MAP[facetId].title,
           placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
-          listedContents: facetContentNames.map((facetValue: any) => {
+          listedContents: FACET_QUERY_MAP[facetId].rawOptions ?? facetContentNames.map((facetValue: any) => {
             return {
               name: '',
-              text: `${facetValue} (${facets[facetId][facetValue]})`,
+              text: facetValue,
               value: facetValue,
               image: null,
               totalItems: facets[facetId][facetValue]
@@ -151,6 +189,13 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           })
         };
 
+        facetContents.listedContents.unshift({
+          name: '',
+          text: `Todo`,
+          image: null,
+          value: '*',
+          totalItems: 0
+        });
         facetsWithValues.push(facetContents);
       }
     }
@@ -163,7 +208,7 @@ const getFilteredContent = async ({
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
-  pageResults = 12,
+  pageResults = 9,
   filters = {},
   page = 1
 }) => {

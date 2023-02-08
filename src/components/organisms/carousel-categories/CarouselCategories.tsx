@@ -28,7 +28,9 @@ const CarouselCategories: React.FC<
         href={
           internalLink?.urlPath
             ? internalLink.urlPath
-            : `${fullPath}?${queryParamName}=${value}`
+            : value !== "*"
+            ? `${fullPath}?${queryParamName}=${value}`
+            : fullPath
         }
       >
         <span className="flex flex-col gap-2 items-center h-full group">

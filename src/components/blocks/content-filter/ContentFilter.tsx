@@ -17,7 +17,9 @@ const ContentFilter: React.FC<IContentFilter> = ({
   mainFacet = null,
   preloadContent = null,
 }) => {
-  const { push, pathname } = useRouter();
+  const { push, pathname, asPath } = useRouter();
+  const [page, setPage] = useState<number>(1);
+
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
@@ -31,7 +33,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data, error, isLoading } = useSWR(
-    `/api/content-filter?${queryString}`,
+    `/api/content-filter?${queryString}&page=${page}`,
     fetcher
   );
 
@@ -67,6 +69,14 @@ const ContentFilter: React.FC<IContentFilter> = ({
   };
 
   useEffect(() => {
+    const { search } = document.location;
+    if (search) {
+      facetsChangeHandle(search);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asPath]);
+
+  useEffect(() => {
     if (mainFacet && preloadContent?.facets?.length) {
       const tmpMainFacetContent = preloadContent.facets.find(
         (f: ISelect) => f.labelSelect === mainFacet
@@ -81,6 +91,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
       }
     } else if (preloadContent?.facets?.length) {
       setFacetsContent([...preloadContent.facets]);
+    }
+
+    const { search } = document.location;
+    if (search) {
+      facetsChangeHandle(search);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -107,6 +122,25 @@ const ContentFilter: React.FC<IContentFilter> = ({
         isLoading={isLoading}
         error={error}
       />
+
+      <div className="block w-full mb-12 my-4">
+        <ul className="flex flex-row justify-center items-center gap-1 w-full">
+          {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
+            <li key={`page-${k}`}>
+              <button
+                onClick={() => setPage(k + 1)}
+                className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${
+                  k == data?.actualPage
+                    ? "border-blue-dark"
+                    : "border-transparent"
+                }`}
+              >
+                {k + 1}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require('@sentry/nextjs');
 
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+// const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+const isProduction = false;
 
 const nextConfig = {
   reactStrictMode: true,
@@ -35,7 +36,10 @@ const nextConfig = {
     NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
     NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
   },
-  staticPageGenerationTimeout: 300
+  staticPageGenerationTimeout: 300,
+  experimental: {
+    largePageDataBytes: 512 * 1024
+  }
 };
 
 if (isProduction) {

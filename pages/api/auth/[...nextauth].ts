@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
                     type: "password",
                 },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 try {
                     const { username, password } = credentials as any;
                     const resToken = await getCustomerTokenCl({ email: username, password: password });
@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             return { ...token, ...user };
         },
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             // Send properties to the client, like an access_token from a provider.
             session.user = token;
             return session;

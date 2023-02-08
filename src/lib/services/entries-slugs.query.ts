@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import _ from 'lodash';
 import contentfulClient from './contentful-client.service';
 
 const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
@@ -9,22 +10,22 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
-          entryCollection(where: { urlPath_exists: true }, limit: $limit, preview: $preview) {
+          pageCollection(where: { urlPath_exists: true }, limit: $limit, preview: $preview) {
             items {
-              ...on Product {
-                sys {
-                  id
-                  publishedAt
-                }
-                slug
+              sys {
+                id
+                publishedAt
               }
-              ...on Page {
-                sys {
-                  id
-                  publishedAt
-                }
-                slug
+              urlPath
+            }
+          }
+          productCollection(where: { urlPath_exists: true }, limit: $limit, preview: $preview) {
+            items {
+              sys {
+                id
+                publishedAt
               }
+              urlPath
             }
           }
         }
@@ -44,7 +45,12 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     console.error('Error on entry-slug query => ', responseError.message);
   }
 
-  return responseData?.entryCollection?.items ?? [];
+  const resultEntries = responseData?.pageCollection?.items ?? [];
+  if (responseData?.productCollection?.items) {
+    _.merge(resultEntries, responseData.productCollection.items);
+  }
+
+  return resultEntries;
 };
 
 export default getEntriesSlugs;

@@ -121,6 +121,10 @@ Create .env file with enviroment variables below:
 - `SMTP_PORT`: (required) Port to connect SMTP server for sending emails
 - `SMTP_USER`: (required) User to connect SMTP server for sending emails
 - `SMTP_PASSWORD`: (required) Password to connect SMTP server for sending emails
+- `ALGOLIASEARCH_APP_ID`: Algolia search Application ID for searchs stuffs
+- `ALGOLIASEARCH_READ_API_KEY`: Algolia search API KEY to perform content queries
+- `NEXTAUTH_URL`: Auth url return callback
+- `NEXTAUTH_SECRET`: Auth secret key to manage auth stuffs
 
 ### TEST
 

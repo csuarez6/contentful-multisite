@@ -15,15 +15,6 @@ import VerticalCardBlock from "@/components/blocks/vertical-card/VerticalCard";
 import ListWithIconBlock from "@/components/blocks/list-with-icons/ListWithIcons";
 
 const HomeTemplate: React.FC<IPage> = (layout) => {
-  const listWithIconsData = {
-    ...mockListWithIconsProps.data,
-    listedContent: mockListWithIconsProps.data.featuredContentsCollection.items.map((item) => {
-      const cleanItem = { ...item };
-      delete cleanItem.promoDescription;
-      return cleanItem;
-    }),
-  };
-
   return (
     <PageLayout {...layout}>
       <BannerSliderBlock {...mockBannerSliderProps.data} />

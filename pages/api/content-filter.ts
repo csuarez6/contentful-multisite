@@ -11,14 +11,15 @@ const handler = async (
   for (const fk in FACET_QUERY_MAP) {
     if (req?.query[FACET_QUERY_MAP[fk].inputName]) {
       filters[FACET_QUERY_MAP[fk].inputName] = typeof req.query[FACET_QUERY_MAP[fk].inputName] == 'string'
-        ? [req.query[FACET_QUERY_MAP[fk].inputName]]
-        : req.query[FACET_QUERY_MAP[fk].inputName];
+        ? req.query[FACET_QUERY_MAP[fk].inputName]
+        : req.query[FACET_QUERY_MAP[fk].inputName][0];
     }
   }
 
   const filteredContent = await getFilteredContent({
     contentTypesFilter: typeof req.query.type == 'string' ? [req.query.type] : req.query.type,
     parentIds: typeof req.query.parent == 'string' ? [req.query.parent] : req.query.parent,
+    page: typeof req.query.page == 'string' ? parseInt(req.query.page) : parseInt(req.query.page[0]),
     filters
   });
 

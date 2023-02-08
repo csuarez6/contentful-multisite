@@ -63,10 +63,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const entries = await getEntriesSlugs({ limit: 100 }, false);
 
   for (const entry of entries) {
-    if (entry.slug !== null) {
+    if (entry.urlPath !== null && entry.urlPath !== '/') {
       paths.push({
         params: {
-          slug: entry.urlPath.toString(),
+          slug: entry.urlPath.split("/").slice(1),
         },
       });
     }

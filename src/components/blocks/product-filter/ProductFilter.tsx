@@ -24,9 +24,10 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
     const separator = uri.indexOf("?") !== -1 ? "&" : "?";
 
     if (uri.match(re)) {
-      newUri = uri.replace(re, "$1" + key + "=" + value + "$2");
+      console.log(uri.match(re));
+      newUri = value !== '*' ? uri.replace(re, "$1" + key + "=" + value + "$2") : uri.replace(re, "$2");
     } else {
-      newUri = uri + separator + key + "=" + value;
+      newUri = value !== '*' ? uri + separator + key + "=" + value : uri;
     }
 
     onFacetsChange(newUri);
