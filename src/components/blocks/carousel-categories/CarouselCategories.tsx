@@ -35,6 +35,16 @@ const CarouselCategoriesBlock: React.FC<
 }) => {
   const uui = uuid();
   const allowTouchMove = view?.isSlider ?? true;
+  const carouselAlignTitleClass = () => {
+    switch (view.alignTitle) {
+      case "Left":
+        return "md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0";
+      case "Top":
+        return "text-center mb-3";
+      default:
+        return "mb-3";
+    }
+  };
 
   return (
     <section
@@ -47,10 +57,7 @@ const CarouselCategoriesBlock: React.FC<
       {(title || description) && (
         <div
           className={classNames(
-            "text-center",
-            view?.alignTitle === "Left"
-              ? "md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0"
-              : "mb-3"
+            carouselAlignTitleClass()
           )}
         >
           {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}
