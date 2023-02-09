@@ -2,8 +2,12 @@ import Icon from "@/components/atoms/icon/Icon";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { classNames } from "@/utils/functions";
+interface ITopMenu extends INavigation {
+  firstPath?: string,
+}
 
-const TopMenu: React.FC<INavigation> = ({ secondaryNavCollection }) => {
+const TopMenu: React.FC<ITopMenu> = ( {secondaryNavCollection, firstPath} ) => {
   if (secondaryNavCollection.items?.length <= 0) return;
   return (
     <div className="bg-category-blue-light py-7 rounded-b-xl w-full">
@@ -16,7 +20,8 @@ const TopMenu: React.FC<INavigation> = ({ secondaryNavCollection }) => {
                   {secondaryNavCollection.items.map((item, idx) => (
                     <div key={item?.promoTitle + "-" + idx}>
                       <CustomLink content={item}>
-                        <h2 className="text-base font-semibold text-blue-dark mb-5 flex flex-wrap gap-2">
+                        <h2 className={classNames("text-base font-semibold  mb-5 flex flex-wrap gap-2", item.internalLink?.slug === firstPath
+                          ? "text-lucuma border-lucuma": "text-blue-dark" )}>
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-right"

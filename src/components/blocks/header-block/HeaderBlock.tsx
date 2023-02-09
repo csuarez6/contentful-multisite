@@ -41,35 +41,14 @@ const HeaderBlock: React.FC<INavigation> = ({
   let firstPath = asPath.split("/")[1];
   if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
-    firstPath = "home";
+    firstPath = 'home';
   }
 
   let mainNavCollectionMenu = mainNavCollection?.items.find(
     (el) => el.internalLink?.slug === menuNavkey
   )?.mainNavCollection;
 
-  const color = mainNavCollection?.items.find(
-    (el) => el.internalLink?.slug === menuNavkey
-  )?.backgroundColor;
-
-  const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
-
-  if (!mainNavCollectionMenu?.items?.length) {
-    firstPath = "home";
-    mainNavCollectionMenu = mainNavCollection?.items.find(
-      (el) => el.internalLink?.slug === HOME_SLUG
-    )?.mainNavCollection;
-  }
-  
-  if (
-    !mainNavCollection?.items?.some(
-      (el) => el.internalLink?.slug === menuNavkey
-    ) &&
-    !secondaryNavCollection?.items?.some(
-      (el) => el.internalLink?.slug === menuNavkey
-    )
-  ) {
-    firstPath = "home";
+  if (!mainNavCollectionMenu?.items?.length ) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
@@ -78,7 +57,6 @@ const HeaderBlock: React.FC<INavigation> = ({
   if (overrideNavCollection?.items?.length) {
     mainNavCollectionMenu = overrideNavCollection;
   }
-  console.log('overrideNavCollection', overrideNavCollection);
 
   const secondaryNavCollectionMenu = mainNavCollection?.items.find(
     (el) => el.secondaryNavCollection?.items.length > 0
@@ -88,6 +66,22 @@ const HeaderBlock: React.FC<INavigation> = ({
     (el) => el.secondaryNavCollection?.items.length > 0
   )?.backgroundColor;
 
+  let color = mainNavCollection?.items.find(
+    (el) => el.internalLink?.slug === menuNavkey
+  )?.backgroundColor;
+
+  if (
+    !mainNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === menuNavkey
+    ) &&
+    !secondaryNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === menuNavkey
+    )
+  ) {
+    color = secondaryNavCollectionColor;
+  }
+  const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");  
+
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
@@ -95,7 +89,11 @@ const HeaderBlock: React.FC<INavigation> = ({
         <div
           className={classNames(
             "absolute inset-x-0 h-full",
-            open? getBackgroundColorClass(secondaryNavCollectionColor ?? "Azul Oscuro").background : backgroundColor.background
+            open
+              ? getBackgroundColorClass(
+                  secondaryNavCollectionColor ?? "Azul Oscuro"
+                ).background
+              : backgroundColor.background
           )}
         ></div>
         <div className="mx-auto xl:container">
@@ -114,7 +112,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                           onMouseOver={() => setOpen(true)}
                           onMouseOut={() => setOpen(false)}
                           className={classNames(
-                            item.promoTitle === firstPath
+                            (item.promoTitle === firstPath)
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
                             "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -151,7 +149,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                   <li className="flex items-center" key={item.sys.id}>
                     <CustomLink
                       className={classNames(
-                        item.internalLink?.slug === firstPath
+                        item.internalLink?.slug === firstPath 
                           ? "text-lucuma border-lucuma"
                           : "text-white border-transparent",
                         "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -183,7 +181,7 @@ const HeaderBlock: React.FC<INavigation> = ({
           onMouseOver={() => setOpen(true)}
           onMouseOut={() => setOpen(false)}
         >
-          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} />
+          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} firstPath={firstPath}/>
         </div>
       )}
       {/* Middle */}
@@ -346,7 +344,8 @@ const HeaderBlock: React.FC<INavigation> = ({
                       </CustomLink>
                       <CustomLink
                         content={{
-                          urlPath: "/acceso" + (asPath !== '/' ? `?p=${asPath}` : ''),
+                          urlPath:
+                            "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
                         }}
                         className="flex items-center text-center button button-outline"
                       >
@@ -438,8 +437,11 @@ const HeaderBlock: React.FC<INavigation> = ({
                       <Popover.Panel className="absolute left-0 w-full bg-white shadow top-full">
                         {({ close }) => (
                           <>
-                            <span onClick={() => close()} className="block absolute top-full left-0 w-full h-[calc(100vh_-_225px)] bg-black bg-opacity-75 cursor-pointer"></span>
-                            
+                            <span
+                              onClick={() => close()}
+                              className="block absolute top-full left-0 w-full h-[calc(100vh_-_225px)] bg-black bg-opacity-75 cursor-pointer"
+                            ></span>
+
                             <nav aria-label="Utility" className="relative p-5">
                               <ul className="flex justify-center gap-1 flex-nowrap ">
                                 {utilityNavCollection.items.map((item) => (
