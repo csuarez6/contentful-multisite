@@ -1,9 +1,9 @@
 import Icon from "@/components/atoms/icon/Icon";
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import MenuContext from "./MenuContext";
 import MenuState from "./MenuState";
 import { getUrlPath } from "@/utils/link.utils";
-import { classNames } from "@/utils/functions";
+import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const NavItem = ({
@@ -15,13 +15,9 @@ const NavItem = ({
   setParentPanel,
   noBorder = false
 }) => {
-  const [collapse, setCollapse] = useState(false);
   const [panel, setPanel] = useState(false);
   const { dispatch } = useContext(MenuContext);
-
-  const onCollapse = () => {
-    setCollapse(!collapse);
-  };
+  const refBtnCollapse = useRef(null);
 
   const onPanel = () => {
     setPanel(!panel);
@@ -31,13 +27,39 @@ const NavItem = ({
   };
 
 
+  useEffect(() => {
+    const btn = refBtnCollapse.current;
+    if(btn){
+      const current_li = btn.parentElement;
+      const ul_panel = current_li.childNodes[1];
+      const ul = current_li.parentElement;
+      const all_li = ul.childNodes;
+
+      btn.onclick = () => {
+        ul_panel.style.maxHeight = ul_panel.scrollHeight + "px";
+        if(current_li.classList.contains("open")){
+          current_li.classList.remove("open");
+        }else{
+          all_li.forEach(li => li.classList.remove("open"));
+          current_li.classList.add("open");
+        }
+      };
+    }
+
+  },[]);
+
+
   return (
     <>
       <li className={classNames(
+        (next % 2 != 0 && !!item?.mainNavCollection?.items.length) ? 
+          "collapse-list" : null,
         (parentPanel && panel) ?
-          "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)]" : null,
-        next % 2 != 0 && !noBorder ? "border-b border-neutral-70" : null,
-        "flex flex-col font-bold text-blue-dark empty:hidden"
+          "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open" : null,
+        next % 2 != 0 && !noBorder ?
+          "border-b border-neutral-70" : null,
+        next % 2 == 0 ? "item-panel" : null,
+        "flex flex-col font-bold text-blue-dark empty:hidden list-item"
       )}>
         {parentPanel && panel &&
           <span
@@ -53,7 +75,19 @@ const NavItem = ({
           </span>
         }
         {
-          <span className={classNames(panel ? "mb-4 mt-6" : collapse && next == 1 ? "bg-blue-dark text-white" : "hover:bg-neutral-90", " transition py-2.5 px-3.5 flex items-center gap-2 relative")}>
+          <span
+            ref={(next % 2 != 0 && !!item?.mainNavCollection?.items.length) ? refBtnCollapse : null}
+            className={classNames(
+              panel ? "mb-4" : null,
+              (next % 2 != 0 && !!item?.mainNavCollection?.items.length) ?
+                getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background : null,
+              "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
+            )}
+            onClick={() => {
+              next % 2 == 0 && !!item?.mainNavCollection?.items.length && !panel ?
+              onPanel() : null;
+            }}
+          >
             {item.promoIcon && (
               <span className="flex items-center shrink-0 w-6 h-6">
                 <Icon
@@ -63,20 +97,26 @@ const NavItem = ({
                 />
               </span>
             )}
-            <a
-              className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
-              href={getUrlPath(item)}
-            >
-              {item.promoTitle ?? item.name}
-            </a>
+            {item?.mainNavCollection?.items.length == 0 ?
+              <a
+                className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
+                href={getUrlPath(item)}
+              >
+                {item.promoTitle ?? item.name}
+              </a> :
+              <span
+                className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
+              >
+                {item.promoTitle ?? item.name}
+              </span>
+            }
             {(next % 2 != 0 && !!item?.mainNavCollection?.items.length) &&
 
               <span
-                className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
-                onClick={onCollapse}
+                className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
               >
                 <Icon
-                  icon={collapse ? "arrow-up" : "arrow-down"}
+                  icon={"arrow-down"}
                   className="w-7 h-7"
                   aria-hidden="true"
                 />
@@ -86,7 +126,6 @@ const NavItem = ({
             {next % 2 == 0 && !!item?.mainNavCollection?.items.length && !panel &&
               <span
                 className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
-                onClick={onPanel}
               >
                 <Icon
                   icon="arrow-right"
@@ -97,7 +136,8 @@ const NavItem = ({
             }
           </span>
         }
-        {(collapse || panel) && children}
+        {/*{(collapse || panel) && children}*/}
+        {(!!item?.mainNavCollection?.items.length) && children}
       </li>
     </>
   );
@@ -115,7 +155,13 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
     <>
       <ul
         ref={refList}
-        className={classNames(className, level % 2 == 0 && !noBorder ? "border-t border-neutral-70 my-[-1px]" : null)}
+        className={classNames(
+          className,
+          lv % 2 == 0 ?
+            "collapse-panel" : null,
+          level % 2 == 0 && !noBorder ?
+            "border-t border-neutral-70 my-[-1px]" : null
+        )}
         style={{ transform: panel && level == 0 ? `translateX(calc(${col} * (-100% - 1rem)))` : null }}
       >
         {level == 1 &&
@@ -193,22 +239,29 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
   );
 };
 const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection }) => {
+  console.log(items);
   return (
     <MenuState>
-      <div className="relative">
-        <NavList
-          level={0}
-          items={items}
-          utilityNavCollection={utilityNavCollection}
-        />
-        <NavList
-          level={0}
-          noBorder={true}
-          className="mt-3"
-          items={secondaryNavCollection?.items}
-          utilityNavCollection={utilityNavCollection}
-        />
-      </div>
+      <MenuContext.Consumer>
+        {({state}) => (
+          <div className="relative">
+            <NavList
+              level={0}
+              items={items}
+              utilityNavCollection={utilityNavCollection}
+            />
+            { state.level == 0 &&
+              <NavList
+                level={0}
+                noBorder={true}
+                className="mt-3"
+                items={secondaryNavCollection?.items}
+                utilityNavCollection={utilityNavCollection}
+              />
+            }
+          </div>
+        )}
+      </MenuContext.Consumer>
     </MenuState>
   );
 };

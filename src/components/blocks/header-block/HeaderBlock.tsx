@@ -364,7 +364,7 @@ const HeaderBlock: React.FC<INavigation> = ({
               {/* Mobile */}
               <div className="relative z-10 flex items-center lg:hidden">
                 <Popover className="relative lg:hidden">
-                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 outline-0">
                     <span className="sr-only">Open menu</span>
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>
@@ -414,7 +414,7 @@ const HeaderBlock: React.FC<INavigation> = ({
               <Popover className="relative -mx-2 lg:hidden">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="block w-full p-4 text-center underline text-blue-dark">
+                    <Popover.Button className="block w-full p-4 text-center underline text-blue-dark outline-0">
                       ¿Qué quieres hacer hoy?
                       <span>
                         <Icon
@@ -436,36 +436,42 @@ const HeaderBlock: React.FC<INavigation> = ({
                       leaveTo="transform opacity-0 -translate-y-4"
                     >
                       <Popover.Panel className="absolute left-0 w-full bg-white shadow top-full">
-                        <nav aria-label="Utility" className="relative p-5">
-                          <ul className="flex justify-center gap-1 flex-nowrap ">
-                            {utilityNavCollection.items.map((item) => (
-                              <li
-                                className="flex max-w-[75px]"
-                                key={item.sys.id}
-                              >
-                                <CustomLink
-                                  content={item}
-                                  className={classNames(
-                                    "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
-                                    item.promoIcon
-                                      ? "justify-start"
-                                      : "justify-center"
-                                  )}
-                                >
-                                  {item.promoIcon && (
-                                    <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
-                                      <Icon
-                                        icon={item.promoIcon}
-                                        className="w-full h-full mx-auto"
-                                      />
-                                    </span>
-                                  )}
-                                  {item.promoTitle ?? item.name}
-                                </CustomLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </nav>
+                        {({ close }) => (
+                          <>
+                            <span onClick={() => close()} className="block absolute top-full left-0 w-full h-[calc(100vh_-_225px)] bg-black bg-opacity-75 cursor-pointer"></span>
+                            
+                            <nav aria-label="Utility" className="relative p-5">
+                              <ul className="flex justify-center gap-1 flex-nowrap ">
+                                {utilityNavCollection.items.map((item) => (
+                                  <li
+                                    className="flex max-w-[75px]"
+                                    key={item.sys.id}
+                                  >
+                                    <CustomLink
+                                      content={item}
+                                      className={classNames(
+                                        "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
+                                        item.promoIcon
+                                          ? "justify-start"
+                                          : "justify-center"
+                                      )}
+                                    >
+                                      {item.promoIcon && (
+                                        <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                          <Icon
+                                            icon={item.promoIcon}
+                                            className="w-full h-full mx-auto"
+                                          />
+                                        </span>
+                                      )}
+                                      {item.promoTitle ?? item.name}
+                                    </CustomLink>
+                                  </li>
+                                ))}
+                              </ul>
+                            </nav>
+                          </>
+                        )}
                       </Popover.Panel>
                     </Transition>
                   </>
