@@ -118,7 +118,7 @@ const CallbackPage = () => {
               _price,
               promoImage,
               sku,
-              urlProduct: urlPath ?? null,
+              urlProduct: `${location.origin}${urlPath}` ?? null,
               productsQuantity
             });
           }
@@ -141,6 +141,7 @@ const CallbackPage = () => {
       method: 'POST',
       body: JSON.stringify({
         type: lastPath.split('?')[0],
+        ...productData,
         ...data,
       }),
       headers: {

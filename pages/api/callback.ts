@@ -49,10 +49,13 @@ const handler = async (
       `Producto: ${productName}`,
       `URL: ${urlProduct}`,
       `SKU: ${sku}`,
-      `Precio: ${price}`,
-      `Cantidad: ${quantity}`,
-      `Cuotas: ${amountOfFees}\n`,
+      `Precio: ${price}${type === "gasodomesticos" ? "\n" : ""}`,
     ].forEach(element => data["body"].push(element));
+
+    if (type === "vantilisto") {
+      data["body"].push(`Cantidad: ${quantity}`);
+      data["body"].push(`Cuotas: ${amountOfFees}\n`);
+    }
   }
   else {
     data["body"] = [`Nuevo callback desde Marketplace: ${typeName}\n`,];
@@ -79,7 +82,7 @@ const handler = async (
 
   const clientEmail = {
     to: "jperez@aplyca.com, evallejo@aplyca.com, msanchez@aplyca.com, dduarte@aplyca.com",
-    subject: `Callback Marketplace: ${typeName}`,
+    subject: `Callback Marketplace: ${typeName} ${["gasodomesticos", "vantilisto"].includes(type) ? "- " + productName : ""}`,
     message: data.body.join('\n'),
     from: "Vanti Marketplace <dev@aplyca.com>"
   };

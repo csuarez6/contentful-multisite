@@ -77,16 +77,17 @@ const CallbackPage = () => {
             console.log(`Producto con SKU ${sku} no encontrado.`);
           } else {
             const { name, promoTitle, promoImage, price, _price, productsQuantity, urlPath } = res;
-            setProductData({
+            const _product = {
               productName: promoTitle ?? name,
               price,
               _price,
               promoImage,
               sku,
-              urlProduct: urlPath ?? null,
+              urlProduct: `${location.origin}${urlPath}` ?? null,
               productsQuantity
-            });
-            updateFormData(productData);
+            };
+            setProductData(_product);
+            updateFormData(_product);
             updateAmount(_price);
           }
         })
@@ -119,7 +120,7 @@ const CallbackPage = () => {
       )}
       {sku && productData && !isLoading && (
         <>
-          <div className="relativee">
+          <div className="relative">
             {getStepContent(currentStep, handleNext, formData, setFormData, productData, quantity, setQuantity, setCurrentStep)}
           </div>
           <div className="relative">
