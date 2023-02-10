@@ -4,9 +4,9 @@ import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids
 import { getMenu } from "@/lib/services/menu-content.service";
 
 import React, { useEffect, useState } from 'react';
-import PersonalData from "./personal-data";
-import Verify from "./verify";
-import AcceptTerms from "./accept-terms";
+import PersonalData from "@/components/blocks/callback-vantilisto/personal-data";
+import Verify from "@/components/blocks/callback-vantilisto/verify";
+import AcceptTerms from "@/components/blocks/callback-vantilisto/accept-terms";
 
 const defaultValues = {
   contractAccount: "",
@@ -175,7 +175,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: "Callback Servihogar",
+        name: "Callback Catálogo VantiListo",
         footerInfo,
         headerInfo,
       }
