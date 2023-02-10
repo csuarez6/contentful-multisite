@@ -26,6 +26,8 @@ const NavItem = ({
     dispatch({ type: "setLevel", value: !panel ? next : (prev - 1) });
   };
 
+  const elements = !!item?.mainNavCollection?.items.length || !!item?.secondaryNavCollection?.items.length;
+
 
   useEffect(() => {
     const btn = refBtnCollapse.current;
@@ -52,7 +54,7 @@ const NavItem = ({
   return (
     <>
       <li className={classNames(
-        (next % 2 != 0 && !!item?.mainNavCollection?.items.length) ? 
+        (next % 2 != 0 && elements) ? 
           "collapse-list" : null,
         (parentPanel && panel) ?
           "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open" : null,
@@ -76,10 +78,10 @@ const NavItem = ({
         }
         {
           <span
-            ref={(next % 2 != 0 && !!item?.mainNavCollection?.items.length) ? refBtnCollapse : null}
+            ref={(next % 2 != 0 && elements) ? refBtnCollapse : null}
             className={classNames(
               panel ? "mb-4" : null,
-              (next % 2 != 0 && !!item?.mainNavCollection?.items.length) ?
+              (next % 2 != 0 && elements) ?
                 getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background : null,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
@@ -97,7 +99,7 @@ const NavItem = ({
                 />
               </span>
             )}
-            {item?.mainNavCollection?.items.length == 0 ?
+            {item?.mainNavCollection?.items.length == 0  && item?.secondaryNavCollection?.items.length == 0 ?
               <a
                 className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
                 href={getUrlPath(item)}
@@ -110,7 +112,7 @@ const NavItem = ({
                 {item.promoTitle ?? item.name}
               </span>
             }
-            {(next % 2 != 0 && !!item?.mainNavCollection?.items.length) &&
+            {(next % 2 != 0 && elements) &&
 
               <span
                 className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
@@ -137,7 +139,7 @@ const NavItem = ({
           </span>
         }
         {/*{(collapse || panel) && children}*/}
-        {(!!item?.mainNavCollection?.items.length) && children}
+        {elements && children}
       </li>
     </>
   );
@@ -168,13 +170,13 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
               content={{ urlPath: "/registro" }}
-              className="block text-center button button-primary"
+              className="!block text-center button button-primary"
             >
               Regístrate
             </CustomLink>
             <CustomLink
               content={{ urlPath: "/acceso" }}
-              className="block text-center button button-outline"
+              className="!block text-center button button-outline"
             >
               Inicia sesión
             </CustomLink>
@@ -191,11 +193,20 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
             setParentPanel={setCurrentPanel}
           >
 
-            {!!item?.mainNavCollection?.items &&
+            {!!item?.mainNavCollection?.items.length &&
               <NavList
                 utilityNavCollection={utilityNavCollection}
                 level={lv}
                 items={item?.mainNavCollection?.items}
+                currentPanel={panel}
+                hasSetCurrentPanel={setPanel}
+              />
+            }
+            {!!item?.secondaryNavCollection?.items.length &&
+              <NavList
+                utilityNavCollection={utilityNavCollection}
+                level={lv}
+                items={item?.secondaryNavCollection?.items}
                 currentPanel={panel}
                 hasSetCurrentPanel={setPanel}
               />
