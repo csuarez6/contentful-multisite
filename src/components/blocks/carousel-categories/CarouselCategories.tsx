@@ -3,9 +3,10 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from "@/utils/functions";
+import { classNames, getButtonType } from "@/utils/functions";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import CarouselCategories from "@/components/organisms/carousel-categories/CarouselCategories";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import { ICarouselCategoryBlock } from "@/lib/interfaces/content-filter-cf.interface";
@@ -29,6 +30,7 @@ const CarouselCategoriesBlock: React.FC<
   description,
   featuredContentsCollection,
   view,
+  ctaCollection,
   blockId,
   sysId,
   queryParamName = "categoria",
@@ -116,6 +118,22 @@ const CarouselCategoriesBlock: React.FC<
                 <Icon {...iconRight} />
               </div>
             </div>
+          )}
+        </div>
+      )}
+      {ctaCollection?.items?.length > 0 && (
+        <div className="flex mt-6 justify-center">
+          {ctaCollection.items.map(
+            (cta) =>
+              (cta.externalLink || cta.internalLink) && (
+                <CustomLink
+                  content={cta}
+                  key={cta.name}
+                  className={classNames("button w-fit", getButtonType(view.buttonType ?? "Primario"))}
+                >
+                  {cta.promoTitle ?? cta.name}
+                </CustomLink>
+              )
           )}
         </div>
       )}

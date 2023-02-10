@@ -154,7 +154,19 @@ const dataStatic: IPromoBlock = {
   view: {
     columnsSize: 3,
     isSlider: false
-  }
+  },
+    ctaCollection: {
+    items: [
+      {
+        externalLink: 'www.google.com',
+        name: 'button'
+      },
+      {
+        externalLink: '#',
+        name: 'button'
+      }
+    ]
+  },
 };
 
 export const mockCarouselCategoriesProps = {
