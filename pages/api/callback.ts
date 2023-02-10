@@ -8,6 +8,8 @@ const types: object = {
   "rpo": "Revisión Periódica Obligatoria",
   "producto": "Producto",
   "instalacion-gasodomésticos": "Instalación Gasodomésticos",
+  "gasodomesticos": "Productos Gasodomésticos",
+  "vantilisto": "Catálogo Vantilisto"
 };
 const getType = (type: string) => types[type.toLocaleLowerCase()] ?? type;
 
@@ -35,14 +37,28 @@ const handler = async (
     return;
   }
 
-  const { type, cuentaContrato, email, fullName, hour, cellPhone } = req.body;
+  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees } = req.body;
   const typeName = getType(type);
-  const data: any = {};
-   data["body"] = [
-    `Nuevo callback desde Marketplace: ${typeName}\n`,
-    `${typeName}\n`
-  ];
-  if (cuentaContrato) data["body"].push(`Cuenta contrato: ${cuentaContrato}`);
+  const data = {
+    body: []
+  };
+
+  if (["gasodomesticos", "vantilisto"].includes(type)) {
+    [
+      `Nuevo callback desde Marketplace: ${typeName} - ${productName}\n`,
+      `Producto: ${productName}`,
+      `URL: ${urlProduct}`,
+      `SKU: ${sku}`,
+      `Precio: ${price}`,
+      `Cantidad: ${quantity}`,
+      `Cuotas: ${amountOfFees}\n`,
+    ].forEach(element => data["body"].push(element));
+  }
+  else {
+    data["body"] = [`Nuevo callback desde Marketplace: ${typeName}\n`,];
+  }
+
+  if (contractAccount) data["body"].push(`Cuenta contrato: ${contractAccount}`);
 
   if (type === "rpo") {
     const newDate = new Date(req.body.date);
@@ -54,7 +70,8 @@ const handler = async (
       `Hora: ${hour}`,
       `Teléfono: ${cellPhone}`,
     ].forEach(element => data["body"].push(element));
-  } else {
+  }
+  else {
     if (fullName) data["body"].push(`Nombre: ${fullName}`);
     data["body"].push(`Teléfono: ${cellPhone}`);
     if (email) data["body"].push(`Correo electrónico: ${email}`);

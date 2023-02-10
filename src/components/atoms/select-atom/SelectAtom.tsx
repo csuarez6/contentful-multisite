@@ -28,6 +28,7 @@ export interface ISelect
   placeholder?: string;
   handleChange?: (evt) => void;
   image?: IImageAsset;
+  firstOptionSelected?: boolean;
 }
 
 const SelectAtom: React.FC<ISelect> = forwardRef(
@@ -38,14 +39,14 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       labelSelect,
       handleChange,
       placeholder = "Seleccionar",
+      firstOptionSelected,
       ...rest
     },
     ref
   ) => {
-    const defaultOption = { value: "", text: placeholder };
+    const defaultOption = firstOptionSelected ? JSON.parse(JSON.stringify(listedContents[0])) : { value: "", text: placeholder };
     const [selectedOption, setSelectedOption] = useState(defaultOption);
-    const getInput = (): HTMLSelectElement =>
-      document.querySelector(`select[name=${name}]`);
+    const getInput = (): HTMLSelectElement => document.querySelector(`select[name=${name}]`);
 
     useEffect(() => {
       const input = getInput();
@@ -76,7 +77,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
           name={name}
           ref={ref}
           {...rest}
-          defaultValue={""}
+          defaultValue={defaultOption.value}
           onChange={onChangeInput}
           hidden
         >

@@ -51,7 +51,7 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
 };
 
 interface IForm {
-  cuentaContrato?: number;
+  contractAccount?: number;
   fullName: string;
   cellPhone: string;
   email: string;
@@ -61,7 +61,7 @@ interface IForm {
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 const schema = yup.object({
-  cuentaContrato: yup
+  contractAccount: yup
     .number()
     .typeError("Dato Requerido: El valor debe ser numérico")
     .positive("Valor no valido, deben ser números positivos")
@@ -133,17 +133,17 @@ const CallbackPage = () => {
 
           <form ref={refForm} className="max-w-full flex flex-wrap gap-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full">
-              <label className="block text-lg text-grey-30" htmlFor="cuentaContrato">
+              <label className="block text-lg text-grey-30" htmlFor="contractAccount">
                 Escribe tu número de cuenta contrato
               </label>
               <TextBox
-                id="cuentaContrato"
-                name="cuentaContrato"
+                id="contractAccount"
+                name="contractAccount"
                 label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
                 placeholder="00000-000"
-                {...register("cuentaContrato")}
+                {...register("contractAccount")}
               />
-              {errors.cuentaContrato && <p className="text-red-600 mt-1">{errors.cuentaContrato?.message}</p>}
+              {errors.contractAccount && <p className="text-red-600 mt-1">{errors.contractAccount?.message}</p>}
             </div>
             <div className="w-full">
               <TextBox
