@@ -12,6 +12,7 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { useState } from 'react';
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
+import { BLOCKS } from "@contentful/rich-text-types";
 
 const iconInvoice: IIcon = {
   icon: "invoice",
@@ -27,12 +28,12 @@ const iconPSE: IIcon = {
 
 const iconCallback: IIcon = {
   icon: "callback",
-  size: 28,
+  size: 18,
   className: "",
 };
 
 const scrollContent = (idContainer: string) => {
-  document.querySelector("#" + idContainer).scrollIntoView({ behavior: 'smooth' });
+  document.querySelector("#" + idContainer).scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const ModalIntall = () => {
@@ -42,7 +43,7 @@ const ModalIntall = () => {
         Antes de empezar, queremos informarte que puedes adquirir la instalación de tu gasodoméstico en esta compra.<br />
         Si aún no sabes qué incluye, puedes informarte en la landing de instalación.
       </p>
-      <div className="flex gap-2 justify-end">
+      <div className="flex justify-end gap-2">
         <CustomLink
           className="button button-primary"
           content={{ urlPath: "/" }}
@@ -50,7 +51,7 @@ const ModalIntall = () => {
           Ir a comprar
         </CustomLink>
         <CustomLink
-          className="button border border-blue-dark rounded-3xl text-blue-dark"
+          className="border button border-blue-dark rounded-3xl text-blue-dark"
           content={{ urlPath: "/" }}
         >
           Conocer sobre instalación
@@ -78,7 +79,7 @@ const ModalShipping = () => {
           />
         </div>
       </form>
-      <div className="flex gap-2 justify-end">
+      <div className="flex justify-end gap-2">
         <CustomLink
           className="button button-primary"
           onClick={(e) => {
@@ -91,6 +92,33 @@ const ModalShipping = () => {
       </div>
     </div>
   );
+};
+
+const options = {
+  renderNode: {
+    [BLOCKS.UL_LIST]: (_node: any, children: any) => {
+      return <ul className="list-disc list-inside">{children}</ul>;
+    },
+    [BLOCKS.OL_LIST]: (_node: any, children: any) => {
+      return <ol className="list-decimal list-inside">{children}</ol>;
+    },
+    [BLOCKS.LIST_ITEM]: (_node: any, children: any) => {
+      return (
+        <li>
+          <div className="inline-block w-fit max-w-[calc(100%-50px)] align-top">
+            {children}
+          </div>
+        </li>
+      );
+    },
+    [BLOCKS.TABLE]: (_node: any, children: any) => (
+      <table className="w-full table-auto">
+        <tbody>{children}</tbody>
+      </table>
+    ),
+    [BLOCKS.TABLE_ROW]: (_node: any, children: any) => <tr className="odd:bg-neutral-90">{children}</tr>,
+    [BLOCKS.TABLE_CELL]: (_node: any, children: any) => <td className="px-3 py-4 text-grey-30 text-size-subtitle1">{children}</td>,
+  },
 };
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
@@ -200,7 +228,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     </h4>
                     {productFeatures && (
                       <div className="flex flex-col gap-[5px] text-blue-dark">
-                        {documentToReactComponents(productFeatures.json)}
+                        {documentToReactComponents(productFeatures.json, options)}
                       </div>
                     )}
                     {features && (
@@ -291,7 +319,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     <div className="flex flex-col gap-[22px] pt-[5px] my-5">
                       {(sku && price && (productsQuantity && Number(productsQuantity) > 0)) ?
                         <a
-                          className="button button-primary 2xl:min-w-[348px] text-center"
+                          className="button button-primary 2xl:min-w-[348px] text-center border border-solid border-lucuma"
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
@@ -312,9 +340,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         content={{ urlPath: "gasodomesticos" }}
                       >
                         Te llamamos
-                        <span className="p-1">
-                          <Icon {...iconCallback} />
-                        </span>
+                        <Icon {...iconCallback} />
                       </CustomLink>
                     </div>
                     <ul className='flex flex-col gap-[22px]'>
@@ -376,8 +402,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           {features && (
             <div id="content-features" className="grid col-span-2 gap-9">
               <h2 className="text-blue-dark">Características principales</h2>
-              <div className="features-productOverview">
-                {documentToReactComponents(features.json)}
+              <div className="">
+                {documentToReactComponents(features.json, options)}
               </div>
               <div className="flex">
                 <button className="button button-outline">
@@ -388,12 +414,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           )}
 
           {(promoDescription || warranty) &&
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid items-baseline grid-cols-2 gap-6">
               {promoDescription && (
                 <div className="grid gap-8">
                   <h2 className="text-blue-dark">Descripción</h2>
-                  <div className="promoDescription-productOverview">
-                    {documentToReactComponents(promoDescription.json)}
+                  <div className="">
+                    {documentToReactComponents(promoDescription.json, options)}
                   </div>
                 </div>
               )}
@@ -401,7 +427,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               {warranty && (
                 <div id="content-warranty" className="grid gap-8">
                   <h2 className="text-blue-dark">Garantía</h2>
-                  {documentToReactComponents(warranty.description.json)}
+                  {documentToReactComponents(warranty.description.json, options)}
                 </div>
               )}
             </div>

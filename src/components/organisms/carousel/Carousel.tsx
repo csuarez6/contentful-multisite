@@ -85,7 +85,7 @@ const Carousel: React.FC<ICarousel> = ({
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}
-          className="relative flex items-center mt-6 -z-10"
+          className="relative flex items-center mt-6"
           navigation={{
             nextEl: ".nextSlide",
             prevEl: ".prevSlide",
