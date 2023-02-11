@@ -14,11 +14,13 @@ const data: IPromoBlock = {
       {
         promoTitle: 'Whatsapp',
         promoIcon: 'whatsapp',
-        ctaLabel: "Ver mas",
-        internalLink: {
-          urlPath: "#"
-        },
+        iconPosition: 'left',
+        iconSize: 'small',
         iconBackgroundColor: 'Azul Claro',
+        internalLink:{
+          urlPath: '#',
+        },
+        ctaLabel: 'Consultar'
       },
       {
         promoTitle: 'Line de atencion',

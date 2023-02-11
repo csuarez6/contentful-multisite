@@ -1,5 +1,4 @@
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-
 import PageLayout from "@/components/layouts/page-layout/PageLayout";
 import { mockVerticalCardProps } from "@/components/blocks/vertical-card/VerticalCard.mocks";
 import BannerSliderBlock from "@/components/blocks/banner-slider/BannerSlider";

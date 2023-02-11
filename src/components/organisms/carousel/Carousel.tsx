@@ -71,7 +71,7 @@ const Carousel: React.FC<ICarousel> = ({
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="sm:px-[72px] relative px-5 xs:px-10">
+      <div className="sm:px-[72px] relative px-5 ">
         <div className="absolute top-0 bottom-0 left-0 z-10 items-center justify-center hidden ml-5 sm:flex">
           <figure className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer prevSlide bg-blue-dark-90">
             <Icon {...iconLeft} />
@@ -119,7 +119,7 @@ const Carousel: React.FC<ICarousel> = ({
         </div>
       </div>
       {footerText && (
-        <div className="mt-9 max-w-[310px] lg:ml-[72px] relative leading-4">
+        <div className="mt-5 max-w-[310px] lg:ml-6 relative leading-4">
           <Link
             className="font-normal underline text-grey-60"
             href={footerText?.href}

@@ -11,6 +11,26 @@ import {
 } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 
+const options = {
+  renderNode: {
+    [BLOCKS.UL_LIST]: (_node, children) => {
+      return <ul className="list-disc list-inside my-6">{children}</ul>;
+    },
+    [BLOCKS.OL_LIST]: (_node, children) => {
+      return <ol className="list-decimal list-inside my-6">{children}</ol>;
+    },
+    [BLOCKS.LIST_ITEM]: (_node, children) => {
+      return (
+        <li>
+          <div className="inline-block w-fit max-w-[calc(100%-50px)] align-top">
+            {children}
+          </div>
+        </li>
+      );
+    },
+  },
+};
+
 const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   title,
   pretitle,
@@ -24,26 +44,6 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const [hasRoundedImage, setHasRoundedImage] = useState(false);
-
-  const options = {
-    renderNode: {
-      [BLOCKS.UL_LIST]: (_node, children) => {
-        return <ul className="list-disc list-inside my-6">{children}</ul>;
-      },
-      [BLOCKS.OL_LIST]: (_node, children) => {
-        return <ol className="list-decimal list-inside my-6">{children}</ol>;
-      },
-      [BLOCKS.LIST_ITEM]: (_node, children) => {
-        return (
-          <li>
-            <div className="inline-block w-fit max-w-[calc(100%-50px)] align-top">
-              {children}
-            </div>
-          </li>
-        );
-      },
-    },
-  };
 
   useEffect(() => {
     const checkMediaQuery = () => window.matchMedia("(min-width: 768px)").matches;

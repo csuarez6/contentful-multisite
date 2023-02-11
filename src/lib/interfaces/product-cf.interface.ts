@@ -60,6 +60,7 @@ export interface IProductFilterBlock {
 };
 
 export interface IProductOverviewDetails {
+  name?: string;
   promoTitle?: string;
   urlPath?: string;
   price?: string;

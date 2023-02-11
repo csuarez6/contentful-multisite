@@ -2,9 +2,10 @@ import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/pro
 import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
 const data: IProductOverviewDetails = {
+  name: 'Calefactor de Torre',
   promoTitle: 'Calefactor de Torre',
-  price: '420.000',
-  priceBefore: '450.000',
+  price: '$420.000',
+  priceBefore: '$450.000',
   productsQuantity: '1.000',
   state: 'Nuevo',
   promotion: '30%',

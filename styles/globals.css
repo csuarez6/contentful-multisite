@@ -89,6 +89,11 @@ section.section {
 .swiper-pagination-bullet-active.swiper-pagination-custom-bullet {
   @apply bg-lucuma;
 }
+.swiper-pagination-custom-bullet--iconslist{
+  width: 14px !important;
+  height: 14px !important;
+  margin-bottom: -34px !important;
+}
 
 /* Firefox */
 .custom-scrollbar {
