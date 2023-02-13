@@ -1,3 +1,4 @@
+import { GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 
@@ -161,16 +162,21 @@ const CallbackPage = () => {
   );
 };
 
-CallbackPage.getInitialProps = async (context: any) => {
+export const revalidate = 60;
+
+export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
 
   return {
-    layout: {
-      name: "Callback Mantenimiento y Reparación",
-      footerInfo,
-      headerInfo,
+    props: {
+      layout: {
+        name: "Callback Mantenimiento y Reparación",
+        footerInfo,
+        headerInfo,
+      }
     },
+    revalidate,
   };
 };
 
