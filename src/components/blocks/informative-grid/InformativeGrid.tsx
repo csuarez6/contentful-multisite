@@ -3,6 +3,8 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames, getButtonType, getBackgroundColorClass } from "@/utils/functions";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 function classColumns(columns = 1) {
   const classes = ["grid-cols-1"];
@@ -40,7 +42,7 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
           {title && <h2 className={classNames("text-4xl", backgroundColor.title)}>{title}</h2>}
           {description && (
             <div className={classNames("text-lg", backgroundColor.text)}>
-              {documentToReactComponents(description.json)}
+              {documentToReactComponents(attachLinksToRichtextContent(description.json, description.links), defaultFormatOptions)}
             </div>
           )}
         </div>
