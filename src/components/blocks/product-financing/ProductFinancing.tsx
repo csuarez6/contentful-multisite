@@ -16,7 +16,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
   if (listedContentsCollection?.items?.length > 0) {
     productTabs.push({
       id: "VantiListo",
-      name: "Catálogo Vanti Listo"
+      name: "Tecnología y otros"
     });
   }
 
