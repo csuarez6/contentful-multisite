@@ -6,6 +6,7 @@ import { classNames, getButtonType } from "@/utils/functions";
 
 const InfoCard: React.FC<IPromoContent> = (props) => {
   const {
+    name,
     promoTitle,
     promoDescription,
     ctaLabel,
