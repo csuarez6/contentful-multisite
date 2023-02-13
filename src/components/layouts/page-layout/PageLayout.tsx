@@ -10,8 +10,8 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection }) => {
   const { asPath } = useRouter() ?? { asPath: "/" };
   const title = `${layout.name} - Grupo Vanti`;
-  
-  let canonicalUrl = (asPath === "/" ? "" : asPath).split("?")[0];
+
+  let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
   canonicalUrl = "https://www.grupovanti.com" + canonicalUrl;
 
   return (
