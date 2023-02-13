@@ -139,7 +139,7 @@ section.section {
 }
 
 .card-mega-menu article > div {
-  @apply px-2 lg:px-3 pt-2 items-start justify-start;
+  @apply px-2 lg:px-3 pt-2 justify-start;
 }
 
 .card-mega-menu article > figure + div {
