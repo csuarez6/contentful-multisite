@@ -5,6 +5,7 @@ import { documentToPlainTextString } from '@contentful/rich-text-plain-text-rend
 
 import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
 import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
+import HelpButton from "@/components/organisms/help-button/HelpButton";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection }) => {
@@ -49,7 +50,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
 
       <div className="min-h-screen flex flex-col">
         <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} />
-
+        <HelpButton {...layout.helpButton} />
         <main className="flex-grow overflow-hidden">
           <div className="xl:container mx-auto px-3 sm:px-5 lg:px-8 2xl:px-28">
             {children}

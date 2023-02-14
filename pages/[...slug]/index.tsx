@@ -19,6 +19,7 @@ import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
+  DEFAULT_HELP_BUTTON_ID,
 } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
@@ -98,6 +99,7 @@ export const getStaticProps: GetStaticProps = async (
     context.preview ?? false,
     2
   );
+  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   return {
     props: {
@@ -107,6 +109,7 @@ export const getStaticProps: GetStaticProps = async (
         footerInfo,
         headerInfo,
         menuNavkey: context.params.slug[0],
+        helpButton,
       },
     },
     revalidate,

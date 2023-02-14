@@ -9,6 +9,7 @@ export interface ILayout {
     headerInfo?: INavigation;
     footerInfo?: INavigation;
     menuNavkey?: string;
+    helpButton?: INavigation;
 }
 
 export interface IPage {
