@@ -11,9 +11,9 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
   view
 }) => {
   return (
-    <section id={blockId? blockId: sysId} className="section grid gap-9">
+    <section id={blockId ? blockId : sysId} className="grid section gap-9">
       {(title || description) &&
-        <div className="grid gap-9 text-center">
+        <div className="grid text-center gap-9">
           {title && <h2 className="text-blue-dark">{title}</h2>}
           {description && <div className="text-blue-dark">{documentToReactComponents(description.json)}</div>}
         </div>
@@ -21,7 +21,7 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
       {featuredContentsCollection?.items?.length > 0 && (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {featuredContentsCollection.items.map((content) => (
-            <InfoCard key={content.promoTitle} {...content} buttonType={view.buttonType} backgroundColor={view.backgroundColor} />
+            <InfoCard key={content.promoTitle} {...content} buttonType={view?.buttonType} backgroundColor={view?.backgroundColor} />
           ))}
         </div>
       )}

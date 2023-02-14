@@ -72,8 +72,8 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
           >
             <Image
               className="object-cover w-full h-full"
-              src={promoImage?.url ? promoImage.url : image.url}
-              alt={promoImage?.title ? promoImage.title : image.title}
+              src={promoImage?.url ? promoImage?.url : image?.url}
+              alt={promoImage?.title ? promoImage?.title : image?.title}
               fill
             />
           </figure>
@@ -86,13 +86,13 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
               <p className="text-blue-dark text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold">{pretitle}</p>
             )}
             {(promoTitle || title) && (
-              <h3 className="text-lg md:text-4x text-blue-dark pb-3 md:pb-6">{promoTitle ?? title}</h3>
+              <h3 className="pb-3 text-lg md:text-4x text-blue-dark md:pb-6">{promoTitle ?? title}</h3>
             )}
             {subtitle && (
               <p className=" text-blue-dark title is-4">{subtitle}</p>
             )}
             {(promoDescription || description) && (
-              <div className="text-grey-30 pb-3 text-sm lg:text-lg">
+              <div className="pb-3 text-sm text-grey-30 lg:text-lg">
                 {documentToReactComponents(promoDescription?.json ?? description.json)}
               </div>
             )}
@@ -105,18 +105,18 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             )}
             {ctaCollection?.items?.length > 0 && (
               <div className="flex gap-3">
-                {ctaCollection.items.map((cta, idx) => 
-                    (cta.externalLink || cta.internalLink) && (
-                      <CustomLink
-                        content={cta}
-                        key={cta.name}
-                        className={classNames("button w-full sm:w-auto flex justify-center text-center", 
-                          view?.buttonType? getButtonType(view.buttonType) : idx === 0 ? "button-primary" : "button-outline"
-                        )}
-                      >
-                        {cta.promoTitle ?? cta.name}
-                      </CustomLink>
-                    )
+                {ctaCollection.items.map((cta, idx) =>
+                  (cta.externalLink || cta.internalLink) && (
+                    <CustomLink
+                      content={cta}
+                      key={cta.name}
+                      className={classNames("button w-full sm:w-auto flex justify-center text-center",
+                        view?.buttonType ? getButtonType(view.buttonType) : idx === 0 ? "button-primary" : "button-outline"
+                      )}
+                    >
+                      {cta.promoTitle ?? cta.name}
+                    </CustomLink>
+                  )
                 )}
               </div>
             )}

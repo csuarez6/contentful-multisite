@@ -1,33 +1,30 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  stories: [
-    '../**/*.stories.mdx',
-    '../**/*.stories.@(js|jsx|ts|tsx)'
-  ],
-  staticDirs: ['../public'],
+  stories: ["../**/*.stories.mdx", "../**/*.stories.@(js|jsx|ts|tsx)"],
+  staticDirs: ["../public"],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    'storybook-addon-next-router',
-    'storybook-addon-mock',
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "storybook-addon-next-router",
+    "storybook-addon-mock",
     {
       /**
        * Fix Storybook issue with PostCSS@8
        * @see https://github.com/storybookjs/storybook/issues/12668#issuecomment-773958085
        */
-      name: '@storybook/addon-postcss',
+      name: "@storybook/addon-postcss",
       options: {
         postcssLoaderOptions: {
-          implementation: require('postcss'),
+          implementation: require("postcss"),
         },
       },
     },
   ],
-  framework: '@storybook/react',
+  framework: "@storybook/react",
   core: {
-    builder: '@storybook/builder-webpack5'
+    builder: "@storybook/builder-webpack5",
   },
   webpackFinal: (config) => {
     /**
@@ -37,15 +34,15 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve?.alias,
       // '@': [path.resolve(__dirname, '../')],
-      '@/components': [path.resolve(__dirname, '../src/components')],
-      '@/lib': [path.resolve(__dirname, '../src/lib')],
-      '@/styles': [path.resolve(__dirname, '../styles')],
-      '@/pages': [path.resolve(__dirname, '../pages')],
-      '@/constants': [path.resolve(__dirname, '../src/constants')],
-      "@/utils": [path.resolve(__dirname, '../src/utils')],
-      "@/context": [path.resolve(__dirname, '../src/context')],
-      "@/hooks": [path.resolve(__dirname, '../src/hooks')],
-      "@/schemas": [path.resolve(__dirname, '../src/schemas')]
+      "@/components": [path.resolve(__dirname, "../src/components")],
+      "@/lib": [path.resolve(__dirname, "../src/lib")],
+      "@/styles": [path.resolve(__dirname, "../styles")],
+      "@/pages": [path.resolve(__dirname, "../pages")],
+      "@/constants": [path.resolve(__dirname, "../src/constants")],
+      "@/utils": [path.resolve(__dirname, "../src/utils")],
+      "@/context": [path.resolve(__dirname, "../src/context")],
+      "@/hooks": [path.resolve(__dirname, "../src/hooks")],
+      "@/schemas": [path.resolve(__dirname, "../src/schemas")],
     };
 
     /**
@@ -53,10 +50,10 @@ module.exports = {
      * @see https://github.com/storybookjs/storybook/issues/12844#issuecomment-867544160
      */
     config.resolve.roots = [
-      path.resolve(__dirname, '../public'),
-      'node_modules',
+      path.resolve(__dirname, "../public"),
+      "node_modules",
     ];
 
     return config;
-  }
+  },
 };

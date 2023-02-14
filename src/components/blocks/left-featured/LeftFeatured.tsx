@@ -14,10 +14,10 @@ import { BLOCKS } from "@contentful/rich-text-types";
 const options = {
   renderNode: {
     [BLOCKS.UL_LIST]: (_node, children) => {
-      return <ul className="list-disc list-inside my-6">{children}</ul>;
+      return <ul className="my-6 list-disc list-inside">{children}</ul>;
     },
     [BLOCKS.OL_LIST]: (_node, children) => {
-      return <ol className="list-decimal list-inside my-6">{children}</ol>;
+      return <ol className="my-6 list-decimal list-inside">{children}</ol>;
     },
     [BLOCKS.LIST_ITEM]: (_node, children) => {
       return (
@@ -52,9 +52,9 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   }, [view?.roundedImage]);
 
   return (
-    <section id={blockId ? blockId : sysId} className="section grid gap-7 md:gap-9">
+    <section id={blockId ? blockId : sysId} className="grid section gap-7 md:gap-9">
       {title && (
-        <div className="grid gap-9 text-center">
+        <div className="grid text-center gap-9">
           {title && <h2 className="text-blue-dark">{title}</h2>}
         </div>
       )}
@@ -129,18 +129,18 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                     </p>
                   )}
                   {subtitle && (
-                    <h3 className="text-lg md:text-4xl text-blue-dark pb-1">
+                    <h3 className="pb-1 text-lg md:text-4xl text-blue-dark">
                       {subtitle}
                     </h3>
                   )}
                   {description && (
-                    <div className="text-grey-30 pb-3 text-sm lg:text-lg">
+                    <div className="pb-3 text-sm text-grey-30 lg:text-lg">
                       {documentToReactComponents(description.json, options)}
                     </div>
                   )}
 
                   {ctaCollection?.items?.length > 0 && (
-                    <div className="flex flex-col md:flex-row gap-3">
+                    <div className="flex flex-col gap-3 md:flex-row">
                       {ctaCollection.items.map((cta, idx) => (cta.externalLink || cta.internalLink) && (
                         <CustomLink
                           content={cta}
@@ -148,7 +148,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                           className={
                             classNames(
                               "button w-full sm:w-auto flex justify-center text-center",
-                              view.buttonType? getButtonType(view.buttonType) : idx === 0 ? "button-primary" : "button-outline"
+                              view?.buttonType ? getButtonType(view?.buttonType) : idx === 0 ? "button-primary" : "button-outline"
                             )
                           }
                         >

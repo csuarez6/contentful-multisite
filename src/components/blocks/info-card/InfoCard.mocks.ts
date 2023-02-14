@@ -22,6 +22,10 @@ const data: IPromoBlock = {
         promoIcon: 'assists'
       },
     ]
+  },
+  view: {
+    buttonType: "",
+    backgroundColor: ""
   }
 };
 

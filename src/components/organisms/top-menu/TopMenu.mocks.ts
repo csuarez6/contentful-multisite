@@ -953,5 +953,5 @@ const data: INavigation = {
 };
 
 export const mockTopMenuProps = {
-  data
+  data,
 };
