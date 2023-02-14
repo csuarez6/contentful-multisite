@@ -3,7 +3,7 @@ import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 import { classNames } from '@/utils/functions';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
 
-const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockId, sysId }) => {
+const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockId, sysId, isFirst }) => {
     if (!image) return;
 
     const bannerHeightClass = () => {
@@ -32,7 +32,7 @@ const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockI
     );
 
     return (
-        <section id={blockId? blockId: sysId} className='grid'>
+        <section id={blockId? blockId: sysId} className={classNames('grid', !isFirst && 'section')}>
             <div className="container mx-auto">
                 <div className={view.bannerWidth === "Large" ? "-mx-[50vw] flex" : "relative"}>
                     <div className={
