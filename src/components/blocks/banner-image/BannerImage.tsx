@@ -9,11 +9,11 @@ const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockI
     const bannerHeightClass = () => {
         switch (view.bannerHeight) {
             case "Small":
-                return "h-[146px]";
+                return "max-h-[200px]";
             case "Medium":
-                return "h-[163px]";
+                return "max-h-[300px]";
             default:
-                return "h-[466px]";
+                return "max-h-[500px]";
         }
     };
 
@@ -34,10 +34,10 @@ const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockI
     return (
         <section id={blockId? blockId: sysId} className='grid'>
             <div className="container mx-auto">
-                <div className={view.bannerWidth === "Large" ? "-mx-[50vw]" : "relative"}>
+                <div className={view.bannerWidth === "Large" ? "-mx-[50vw] flex" : "relative"}>
                     <div className={
                         classNames(
-                            "mx-auto relative",
+                            "mx-auto relative h-auto",
                             view.bannerWidth === "Large" ? "w-screen" : "w-full",
                             bannerHeightClass()
                         )}
