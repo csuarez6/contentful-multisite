@@ -49,12 +49,14 @@ const HeaderBlock: React.FC<INavigation> = ({
   )?.mainNavCollection;
 
   if (!mainNavCollectionMenu?.items?.length) {
+    firstPath = 'home';
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
   }
 
   if (overrideNavCollection?.items?.length) {
+    firstPath = asPath.split("/")[1];
     mainNavCollectionMenu = overrideNavCollection;
   }
 
@@ -75,6 +77,9 @@ const HeaderBlock: React.FC<INavigation> = ({
       (el) => el.internalLink?.slug === menuNavkey
     ) &&
     !secondaryNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === menuNavkey
+    ) &&
+    secondaryNavCollectionMenu?.items?.some(
       (el) => el.internalLink?.slug === menuNavkey
     )
   ) {
