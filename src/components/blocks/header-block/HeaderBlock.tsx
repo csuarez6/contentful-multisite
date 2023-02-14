@@ -57,6 +57,9 @@ const HeaderBlock: React.FC<INavigation> = ({
 
   if (overrideNavCollection?.items?.length) {
     firstPath = asPath.split("/")[1];
+    if(firstPath === ''){
+      firstPath = 'home';
+    }
     mainNavCollectionMenu = overrideNavCollection;
   }
 
