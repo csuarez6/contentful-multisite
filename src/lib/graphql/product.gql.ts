@@ -6,6 +6,7 @@ const ProductQuery = `
   ${DefaultQuery}
   name
   sku
+  marketId
   slug
   urlPath
   parent {

@@ -49,7 +49,7 @@ export interface IProductDetails {
   referenceCode?: number;
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
-  
+
   rating?: number;
 }
 
@@ -79,6 +79,7 @@ export interface IProductOverviewDetails {
   priceBefore?: string;
   productsQuantity?: string;
   sku?: string;
+  marketId?: string;
   promoImage?: IImageAsset;
   imagesCollection?: {
     items?: IImageAsset[];
@@ -87,7 +88,7 @@ export interface IProductOverviewDetails {
   rating?: number;
   footerText?: any;
   trademark?: {
-    name?:string;
+    name?: string;
     image?: IImageAsset;
   };
 }

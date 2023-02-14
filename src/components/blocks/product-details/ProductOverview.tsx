@@ -10,7 +10,7 @@ import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 import { BLOCKS } from "@contentful/rich-text-types";
@@ -136,10 +136,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   productsQuantity,
   promotion,
   sku,
+  marketId,
   state,
   rating,
   warranty
 }) => {
+  console.log("sssssssssssss: ", marketId);
   const router = useRouter();
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
@@ -149,6 +151,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [isActivedModal, setIsActivedModal] = useState(false);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
+  const [isVantiListo, setIsVantiListo] = useState<boolean>(false);
+  // Verificar si el producto pertenece a VantiListo
+  useEffect(() => {
+    if (marketId == "12561") setIsVantiListo(true);
+  }, []);
+  /** ******************************************** **/
 
   const openModal = (service: string) => {
     if (service === "shipping") {
@@ -372,14 +380,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </ul>
                 </div>
                 <div className="flex flex-col gap-[10px] sm:flex-grow">
-                  <div className="flex justify-between items-center gap-2">
+                  <div className="flex items-center justify-between gap-2">
                     {priceBefore && (
                       <p className="line-through text-[#035177] text-sm md:text-xl">
                         {priceBefore} Antes
                       </p>
                     )}
                     <div className="flex gap-1">
-                      {(price == undefined || productsQuantity == undefined || Number(productsQuantity) <= 0) && (
+                      {(!isVantiListo) && (
                         <Icon {...iconPSE} />
                       )}
                       <Icon {...iconInvoice} />
@@ -433,7 +441,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </div> */}
                   <form onSubmit={(e) => e.preventDefault()} className="hidden md:flex flex-col gap-[15px]">
                     <div className=" hidden sm:flex flex-col gap-[22px] pt-[5px] my-5">
-                      {(sku && price && (productsQuantity && Number(productsQuantity) > 0)) ?
+                      {(sku && price && (productsQuantity && Number(productsQuantity) > 0) && !isVantiListo) ?
                         <a
                           className="button button-primary 2xl:min-w-[348px] text-center border border-solid border-lucuma"
                           href="#"
@@ -460,20 +468,22 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </CustomLink>
                     </div>
                     <ul className='hidden sm:flex flex-col gap-y-[11px]'>
-                      <li className="flex flex-col gap-3">
-                        <p className="text-size-subtitle1 text-blue-dark">Instala tu gasodoméstico</p>
-                        <div className="px-3 py-2">
-                          <p onClick={() => openModal('install')} className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
-                            </span>
-                            <span className="text-size-p2 leading-[1.2] text-grey-30 grow">Contrata el servicio</span>
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon icon="arrow-right" className="flex items-center w-full h-full text-neutral-30" />
-                            </span>
-                          </p>
-                        </div>
-                      </li>
+                      {(!isVantiListo) &&
+                        <li className="flex flex-col gap-3">
+                          <p className="text-size-subtitle1 text-blue-dark">Instala tu gasodoméstico</p>
+                          <div className="px-3 py-2">
+                            <p onClick={() => openModal('install')} className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
+                              <span className="flex items-center w-6 h-6 shrink-0">
+                                <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
+                              </span>
+                              <span className="text-size-p2 leading-[1.2] text-grey-30 grow">Contrata el servicio</span>
+                              <span className="flex items-center w-6 h-6 shrink-0">
+                                <Icon icon="arrow-right" className="flex items-center w-full h-full text-neutral-30" />
+                              </span>
+                            </p>
+                          </div>
+                        </li>
+                      }
                       <li className="flex flex-col gap-3">
                         <p className="text-size-subtitle1 text-blue-dark">Tipo de envío</p>
                         <div className="px-3 py-2">
@@ -530,9 +540,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           )}
 
           {(promoDescription || warranty) &&
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {promoDescription && (
-                <div className="gap-8 w-full">
+                <div className="w-full gap-8">
                   <h2 className="text-blue-dark">Descripción</h2>
                   <div className="">
                     {documentToReactComponents(promoDescription.json, options)}
@@ -540,7 +550,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 </div>
               )}
               {warranty && (
-                <div id="content-warranty" className="gap-8 w-full">
+                <div id="content-warranty" className="w-full gap-8">
                   <h2 className="text-blue-dark">Garantía</h2>
                   {documentToReactComponents(warranty.description.json, options)}
                 </div>
