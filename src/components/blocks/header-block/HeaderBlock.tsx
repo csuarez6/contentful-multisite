@@ -48,7 +48,7 @@ const HeaderBlock: React.FC<INavigation> = ({
     (el) => el.internalLink?.slug === menuNavkey
   )?.mainNavCollection;
 
-  if (!mainNavCollectionMenu?.items?.length ) {
+  if (!mainNavCollectionMenu?.items?.length) {
     mainNavCollectionMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
@@ -80,7 +80,7 @@ const HeaderBlock: React.FC<INavigation> = ({
   ) {
     color = secondaryNavCollectionColor;
   }
-  const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");  
+  const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
 
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
@@ -91,8 +91,8 @@ const HeaderBlock: React.FC<INavigation> = ({
             "absolute inset-x-0 h-full",
             open
               ? getBackgroundColorClass(
-                  secondaryNavCollectionColor ?? "Azul Oscuro"
-                ).background
+                secondaryNavCollectionColor ?? "Azul Oscuro"
+              ).background
               : backgroundColor.background
           )}
         ></div>
@@ -149,7 +149,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                   <li className="flex items-center" key={item.sys.id}>
                     <CustomLink
                       className={classNames(
-                        item.internalLink?.slug === firstPath 
+                        item.internalLink?.slug === firstPath
                           ? "text-lucuma border-lucuma"
                           : "text-white border-transparent",
                         "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -181,7 +181,7 @@ const HeaderBlock: React.FC<INavigation> = ({
           onMouseOver={() => setOpen(true)}
           onMouseOut={() => setOpen(false)}
         >
-          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} firstPath={firstPath}/>
+          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} firstPath={firstPath} />
         </div>
       )}
       {/* Middle */}
@@ -297,8 +297,41 @@ const HeaderBlock: React.FC<INavigation> = ({
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
+                          <Menu.Items className="absolute flex justify-center right-0 z-10 w-[169px] mt-1 bg-white rounded-bl-[10px] rounded-br-[10px] shadow-[-2px_-2px_0_rgb(0,0,0,0.04),2px_2px_4px_rgb(0,0,0,0.08)] focus:outline-none">
+                            <div className="flex flex-col">
+                              <div className="flex flex-col pt-[19px]">
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <CustomLink
+                                      content={{ urlPath: "#" }}
+                                      className={classNames(
+                                        active
+                                          ? "bg-gray-100 text-gray-900"
+                                          : "text-blue-dark",
+                                        "block w-full underline py-2"
+                                      )}
+                                    >
+                                      Mis compras
+                                    </CustomLink>
+                                  )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <CustomLink
+                                      content={{ urlPath: "#" }}
+                                      className={classNames(
+                                        active
+                                          ? "bg-gray-100 text-gray-900"
+                                          : "text-blue-dark",
+                                        "block w-full underline py-2"
+                                      )}
+                                    >
+                                      Mis favoritos
+                                    </CustomLink>
+                                  )}
+                                </Menu.Item>
+                              </div>
+                              <hr className="w-full my-3" />
                               <Menu.Item>
                                 {({ active }) => (
                                   <CustomLink
@@ -307,21 +340,22 @@ const HeaderBlock: React.FC<INavigation> = ({
                                       active
                                         ? "bg-gray-100 text-gray-900"
                                         : "text-blue-dark",
-                                      "block px-4 py-2 text-sm hover:bg-grey-90"
+                                      "block w-full underline py-2"
                                     )}
                                   >
-                                    Mi cuenta
+                                    Mi Perfil
                                   </CustomLink>
                                 )}
                               </Menu.Item>
+                              <hr className="w-full my-3" />
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
                                     className={classNames(
                                       active
-                                        ? "bg-gray-100 text-gray-900"
+                                        ? "text-blue-dark"
                                         : "text-blue-dark",
-                                      "block px-4 py-2 text-sm w-full hover:bg-grey-90 text-left"
+                                      "block w-full underline py-2 mb-9 text-left"
                                     )}
                                     onClick={() => signOut()}
                                   >

@@ -7,15 +7,35 @@ import { IForm } from "@/components/organisms/forms/signup-form/SignUpForm.mocks
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockSidebarInformativeProps } from "@/components/organisms/cards/sidebar-informative/SidebarInformative.mock";
 import { useState } from "react";
+import CustomLink from '@/components/atoms/custom-link/CustomLink';
 
-const ModalContent = ({ modalMsg }) => {
-  return (
-    <div className="flex flex-col gap-12">
-      <p className="text-center">
-        {modalMsg}
-      </p>
-    </div>
-  );
+const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
+  if (statusSubmit) {
+    return (
+      <div className="flex flex-col gap-12">
+        <p className="text-center">
+          <strong>¡Te damos la bienvenida al universo de Vanti, <br /> más formas de avanzar!</strong>
+        </p>
+        <div className="flex justify-end">
+          <CustomLink
+            content={{ urlPath: "/acceso" }}
+            linkClassName="button button-primary w-[140px] h-[42px]"
+          >
+            Aceptar
+          </CustomLink>
+
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col gap-12">
+        <p className="text-center">
+          {modalMsg}
+        </p>
+      </div>
+    );
+  }
 };
 
 const SignUp = () => {
@@ -36,10 +56,10 @@ const SignUp = () => {
         const resp = await response.json();
         console.log("resp ", resp);
         setDataModal({
-          children: <ModalContent modalMsg="Registro Exitoso!" />,
+          children: <ModalContent statusSubmit={true} />,
           promoIcon: 'check',
           promoTitle: '¡Has creado tu cuenta Vanti!',
-          subtitle: '¡Bienvenido al universo de Vanti, más formas de avanzar!',
+          subtitle: 'Pronto recibirás en el correo electrónico registrado la confirmación de la creación de tu cuenta y los beneficios a los que tienes acceso.',
         });
       } else {
         setDataModal({

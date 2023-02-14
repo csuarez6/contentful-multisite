@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
-import { customerSchema } from '../../../../schemas/customer';
+import { customerSchema } from '@/schemas/customer';
 // import "@/styles/forms.css";
 
 export interface ITemsForm {
