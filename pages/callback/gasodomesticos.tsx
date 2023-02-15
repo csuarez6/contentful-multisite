@@ -132,6 +132,7 @@ const CallbackPage = () => {
     } else if (!sku && isFetchingSKU) {
       getSKU();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sku]);
 
   const onSubmit = async (data: IForm) => {

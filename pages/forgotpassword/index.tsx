@@ -9,8 +9,6 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { classNames } from "@/utils/functions";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
-import { useState } from "react";
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 export interface ITemsForm {
     email: string;
@@ -25,7 +23,7 @@ const schema = yup.object({
         .required("Dato Requerido")
 });
 
-const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
+const ModalContent = ({ modalMsg = "" }) => {
     return (
         <div className="flex flex-col gap-12">
             <p className="text-center">
@@ -35,13 +33,14 @@ const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
     );
 };
 
-const ForgotPassword = ({ onSubmitForm, modal }) => {
+const ForgotPassword = ({ onSubmitForm }) => {
 
-    const [dataModal, setDataModal] = useState<IPromoContent>({
+    // const [dataModal, setDataModal] = useState<IPromoContent>({
+    const dataModal = {
         children: <ModalContent modalMsg="..." />,
         promoIcon: 'cancel',
         promoTitle: 'Servicio no disponible temporalmente.',
-    });
+    };
 
     const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
     } = useForm<ITemsForm>({

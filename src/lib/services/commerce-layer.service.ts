@@ -52,10 +52,15 @@ export const getAppToken = async () => {
 
 export const getMerchantToken = async () => {
   try {
+    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
+    if (commercelayerScope.indexOf('[') === 0) {
+      commercelayerScope = JSON.parse(commercelayerScope);
+    }
+
     const { accessToken } = await getSalesChannelToken({
       endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-      scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
+      scope: commercelayerScope,
     });
     
     return accessToken;
@@ -69,11 +74,16 @@ export const getMerchantToken = async () => {
 export const getCustomerTokenCl = async ({ email, password}) => {
 
   try {
+    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
+    if (commercelayerScope.indexOf('[') === 0) {
+      commercelayerScope = JSON.parse(commercelayerScope);
+    }
+
     const token = await getCustomerToken(
       {
         endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
         clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-        scope: process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE,
+        scope: commercelayerScope,
       },
       {
         username: email,

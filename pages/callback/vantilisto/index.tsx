@@ -65,6 +65,7 @@ const CallbackPage = () => {
   useEffect(() => {
     updateAmount(productData?._price);
     updateFormData({ quantity });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quantity]);
 
   useEffect(() => {
@@ -100,6 +101,7 @@ const CallbackPage = () => {
     } else if (!sku && isFetchingSKU) {
       getSKU();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sku]);
 
   const handleNext = () => {

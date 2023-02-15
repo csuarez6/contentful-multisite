@@ -18,17 +18,6 @@ export interface IPaymentMethod {
   helpText?: string;
 }
 
-// interface IMainFeature {
-//   name: string;
-//   description: string;
-// }
-
-/* interface IFeatures {
-  main?: IMainFeature[];
-  description?: string[];
-  warranty?: string[];
-} */
-
 /**
  * @deprecated Interfaz obsoleta
  */
@@ -89,6 +78,10 @@ export interface IProductOverviewDetails {
   footerText?: any;
   trademark?: {
     name?: string;
+    image?: IImageAsset;
+  };
+  category?: {
+    name?:string;
     image?: IImageAsset;
   };
 }
