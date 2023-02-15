@@ -23,7 +23,6 @@ const Template: ComponentStory<typeof LineSteps> = (args) => (
 );
 
 export const Base = Template.bind({});
-export const Column2 = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {

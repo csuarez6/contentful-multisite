@@ -4,7 +4,7 @@ const data: any = {
   view:{
     columnsSize: 2
   },
-  featuredContentsCollection: {
+  featuredContents: {
     items: [
       {
         promoTitle: "Can I pay with a credit card?",

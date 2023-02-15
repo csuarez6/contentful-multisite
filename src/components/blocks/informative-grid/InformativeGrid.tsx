@@ -30,6 +30,10 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
   sysId
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
+  let descriptionJson = description?.json ;
+  if(attachLinksToRichtextContent && descriptionJson){
+    descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? []);
+  }
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {view?.backgroundColor && (
@@ -37,12 +41,12 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
         </div>
       )}
-      {(title || description) && (
+      {(title || descriptionJson) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className={classNames("text-4xl", backgroundColor.title)}>{title}</h2>}
-          {description && (
+          {descriptionJson && (
             <div className={classNames("text-lg", backgroundColor.text)}>
-              {documentToReactComponents(attachLinksToRichtextContent(description.json, description.links), defaultFormatOptions)}
+              {documentToReactComponents(descriptionJson, defaultFormatOptions)}
             </div>
           )}
         </div>

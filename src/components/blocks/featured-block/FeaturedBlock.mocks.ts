@@ -103,7 +103,8 @@ const dataListedColumns: IPromoBlock = {
   title: 'Título',
   description: RICHTEXT_SHORT_SIMPLE,
   view: {
-    imageAlign: 'Derecha'
+    imageAlign: 'Derecha',
+    columnsSize: 3,
   },
   image: {
     url: 'https://via.placeholder.com/1120x1820.png',
@@ -116,8 +117,7 @@ const dataListedColumns: IPromoBlock = {
         externalLink: '#'
       }
     ]
-  },
-  columnsSize: 3,
+  },  
   featuredContentsCollection: {
     items: [
       {

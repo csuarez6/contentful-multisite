@@ -56,51 +56,16 @@ export interface IPromoBlock extends IBlockProps {
     pretitle?: string;
     subtitle?: string;
     description?: IRichText;
-    /**
-     * @deprecated
-     */
-    content?: IPromoContent;
     listedContentsCollection?: {
         items?: IPromoContent[] | IProductOverviewDetails[]
     };
     featuredContentsCollection?: {
         items?: IPromoContent[] | IProductCategory[]
     };
-    /**
-     * @deprecated
-     */
-    backgroundColor?: string;
-    /**
-     * @deprecated
-     */
-    columnsSize?: number;
-    /**
-     * @deprecated
-     */
-    alignImage?: string;
-    /**
-     * @deprecated
-     */
-    iconColor?: string;
-    /**
-     * @deprecated
-     */
-    buttonColor?: string;
     view?: IView;
-    /**
-     * @deprecated
-     */
-    isReverse?: boolean;
-    /**
-     * @deprecated
-     */
     cta?: IListItems;
     image?: IImageAsset;
     listedForm?: IRpoForm;
-    /**
-     * @deprecated
-     */
-    imageOrientation?: string;
     ctaCollection?: {
         items?: IPromoContent[]
     }

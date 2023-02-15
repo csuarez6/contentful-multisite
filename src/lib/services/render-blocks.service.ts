@@ -59,6 +59,8 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
 };
 
 export const attachLinksToRichtextContent = (jsonDocument, links) => {
+  console.log('jsonDocument',jsonDocument);
+  
   const resultDocument = JSON.parse(JSON.stringify(jsonDocument));
 
   if (!links) return jsonDocument;

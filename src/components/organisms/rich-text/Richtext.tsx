@@ -5,7 +5,10 @@ import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
 const RichText: React.FC<IPromoBlock & IPromoContent> = (props) => {
   const { promoTitle, promoDescription, subtitle, sysId, blockId, description, title } = props;
-    console.log('description', description);
+  let descriptionJson = description?.json ?? promoDescription?.json;
+  if(attachLinksToRichtextContent){
+    descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? promoDescription?.links);
+  }
     
   return (
     <div id={blockId ?? sysId}>
@@ -15,7 +18,7 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = (props) => {
         {subtitle && <p className="text-center">{subtitle}</p>}
       {(promoDescription?.json || description?.json) && (
         <div className="text-lg text-grey-30">
-          {documentToReactComponents(attachLinksToRichtextContent(description?.json ?? promoDescription?.json, description?.links ?? promoDescription?.links), defaultFormatOptions)}
+          {documentToReactComponents(descriptionJson, defaultFormatOptions)}
         </div>
       )}
     </div>
