@@ -48,6 +48,8 @@ export interface IPromoContent {
     isActive?: boolean;
     children?: React.ReactNode;
     linkView?: string;
+    backgroundColor?: string;
+    showButton?: boolean;
 }
 
 export interface IPromoBlock extends IBlockProps {
@@ -96,4 +98,5 @@ export interface IView {
     isSlider?: boolean;
     alignButton?: string;
     roundedImage?: boolean;
+    showButton?: boolean;
 }

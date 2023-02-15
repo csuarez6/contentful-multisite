@@ -7,6 +7,16 @@ const data: IPromoContent = {
   promoIcon: 'body'
 };
 
+const dataWithButton: IPromoContent = {
+  promoTitle: 'Título',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
+  promoIcon: 'body',
+  showButton: true,
+  externalLink: "#",
+  ctaLabel: "ctaLabel"
+};
+
 export const mockInfoCardProps = {
   data,
+  dataWithButton
 };

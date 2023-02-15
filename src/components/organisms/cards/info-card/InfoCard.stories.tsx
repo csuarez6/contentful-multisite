@@ -23,8 +23,13 @@ const Template: ComponentStory<typeof InfoCard> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const WithButton = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
   ...mockInfoCardProps.data,
+} as IPromoContent;
+
+WithButton.args = {
+  ...mockInfoCardProps.dataWithButton,
 } as IPromoContent;
