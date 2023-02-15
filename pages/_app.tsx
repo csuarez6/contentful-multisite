@@ -9,6 +9,7 @@ import "../styles/globals.css";
 import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
 import "../styles/megamenu-mobile.css";
+import "../styles/richtext.css";
 import CheckoutProvider from "@/context/Checkout/Provider";
 import AuthProvider from "@/context/Auth/Provider";
 

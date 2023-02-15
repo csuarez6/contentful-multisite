@@ -134,7 +134,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                     </h3>
                   )}
                   {description && (
-                    <div className="pb-3 text-sm text-grey-30 lg:text-lg">
+                    <div className="richtext-container pb-3 text-sm text-grey-30 lg:text-lg">
                       {documentToReactComponents(description.json, options)}
                     </div>
                   )}

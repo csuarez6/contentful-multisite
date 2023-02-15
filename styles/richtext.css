@@ -1,0 +1,40 @@
+.richtext-container > p,
+.richtext-container :is(h1, h2, h3, h4, h5, h6) {
+  @apply mb-6;
+}
+
+.richtext-container table :is(th, td) p:nth-child(n+2) {
+  @apply mt-3;
+}
+
+.richtext-container table tr {
+  @apply text-center border-neutral-80;
+}
+
+.richtext-container table tr th {
+  @apply px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold;
+}
+
+.richtext-container table tr td {
+  @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none;
+}
+
+.richtext-container ul {
+  @apply list-disc list-inside mb-3;
+}
+
+.richtext-container ol {
+  @apply list-decimal list-inside mb-3;
+}
+
+.richtext-container :is(ol, ul) li div {
+  @apply inline-block w-fit max-w-[calc(100%-50px)] align-top;
+}
+
+.richtext-container table {
+  @apply table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6;
+}
+
+.richtext-container blockquote {
+  @apply ml-4 border-l-8 border-l-neutral-100 pl-4 mb-3;
+}
