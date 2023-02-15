@@ -8,19 +8,19 @@ const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
     return (
         <section>
             <nav>
-                <ul className='flex gap-2'>
+                <ul className='flex gap-2 flex-wrap'>
                     {
                         ctaCollection.items.map((el, i) => (
                             <li key={el.name} className="flex items-center gap-2">
                                 {
                                     i + 1 !== ctaCollection.items.length
                                         ? (
-                                            <CustomLink content={el} className="text-blue-dark font-medium text-lg" >
+                                            <CustomLink content={el} className="text-blue-dark font-medium lg:text-lg" >
                                                 {el.promoTitle ?? el.name}
                                             </CustomLink>
                                         )
                                         : (
-                                            <p className='text-blue-dark-8 font-medium text-lg'>
+                                            <p className='text-blue-dark-8 font-medium lg:text-lg'>
                                                 {el.promoTitle ?? el.name}
                                             </p>
                                         )
