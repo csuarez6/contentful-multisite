@@ -5,7 +5,7 @@
 export enum CONTENTFUL_TYPENAMES {
   PAGE = "Page",
   PRODUCT = "Product",
-  
+
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
   BLOCK_CONTENT_FILTER = "BlockContentFilter",
   AUX_CUSTOM_CONTENT = "AuxCustomContent",
@@ -35,4 +35,5 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_QUERY_FORM = "ViewQueryForm",
   VIEW_VIDEO_SLIDER = "ViewVideoSlider",
   VIEW_RICH_TEXT = "ViewRichText",
+  VIEW_TABS_WITH_FEATURED_IMAGE = "viewTabsWithFeaturedImage",
 };

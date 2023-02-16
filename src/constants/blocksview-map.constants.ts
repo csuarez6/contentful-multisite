@@ -25,6 +25,7 @@ import VerticalCard from "@/components/organisms/cards/vertical-card/VerticalCar
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 import ServiceLineBlock from "@/components/blocks/service-line/ServiceLineBlock";
 import RichText from "@/components/organisms/rich-text/Richtext";
+import TabsWithFeaturedImageBlock from "@/components/blocks/tabs-with-featured-image/TabsWithFeaturedImage";
 
 /**
  * Supports:
@@ -58,11 +59,12 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_QUERY_FORM]: RpoFormBlock,
     [CONTENTFUL_TYPENAMES.VIEW_VIDEO_SLIDER]: VideoBlock,
     [CONTENTFUL_TYPENAMES.VIEW_RICH_TEXT]: RichText,
+    [CONTENTFUL_TYPENAMES.VIEW_TABS_WITH_FEATURED_IMAGE]: TabsWithFeaturedImageBlock,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: ContentFilter,
   [CONTENTFUL_TYPENAMES.PRODUCT]: FeaturedProduct,
-  [CONTENTFUL_TYPENAMES.PAGE]:  VerticalCard,
-  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]:  VerticalCard,
+  [CONTENTFUL_TYPENAMES.PAGE]: VerticalCard,
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: VerticalCard,
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: ServiceLineBlock
 };
 
