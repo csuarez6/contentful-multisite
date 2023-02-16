@@ -1,12 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import PlanCard from './PlanCard';
-
-import { cardPropMocks } from './PlanCard.mock';
-import { IPromoContent } from '@/lib/interfaces/promo-content-cf.interface';
+import PlanCardGrid from './PlanCardGrid';
+import { mockPlanCardGridProps } from './PlanCardGrid.mock';
+import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 
 export default {
-    title: 'organisms/cards/PlanCard',
-    component: PlanCard,
+    title: 'blocks/PlanCardGrid',
+    component: PlanCardGrid,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},
     parameters: {
@@ -14,28 +13,23 @@ export default {
             description: {
                 component: 'This is an example component to guide for create new components, remember update **this** description (_markdown_ is supported)',
             },
-        },
-    },
-} as ComponentMeta<typeof PlanCard>;
+        }
+    }
+} as ComponentMeta<typeof PlanCardGrid>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof PlanCard> = (args) => (
-    <PlanCard {...args} />
+const Template: ComponentStory<typeof PlanCardGrid> = (args) => (
+    <PlanCardGrid {...args} />
 );
 
 export const Base = Template.bind({});
-export const Reverse = Template.bind({});
-export const Modal = Template.bind({});
+export const Column2 = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-    ...cardPropMocks.card
-} as IPromoContent;
+    ...mockPlanCardGridProps.data1Column,
+} as IPromoBlock;
 
-Reverse.args = {
-    ...cardPropMocks.cardReverse
-} as IPromoContent;
-
-Modal.args = {
-    ...cardPropMocks.cardModal
-} as IPromoContent;
+Column2.args = {
+    ...mockPlanCardGridProps.data2Column,
+} as IPromoBlock;

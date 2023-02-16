@@ -64,7 +64,7 @@ const CustomModal: React.FC<IModal> = ({
                     <button
                       type="button"
                       className="rounded-md bg-white text-neutral-30 hover:text-gray-500 focus:outline-none focus:ring-offset-2"
-                      onClick={() => close}
+                      onClick={close}
                     >
                       <span className="sr-only">Close</span>
                       <XMarkIcon className="h-4 w-4" aria-hidden="true" />

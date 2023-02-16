@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import CustomModal from '@/components/organisms/custom-modal/CustomModal';
 import { classNames } from '@/utils/functions';
 
 interface ITypeLink {
@@ -10,6 +12,7 @@ export interface IButtonAtom {
   type: string;
   classes?: string;
   link?: ITypeLink;
+  children?: React.ReactNode;
   callbackAction?: (event) => void;
 }
 
@@ -19,10 +22,22 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
   classes,
   link,
   callbackAction,
+  children
 }) => {
-  let loginButton;
+  let component = null;
+
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const handlerClicked = (event) => {
+    if (type === "Modal") {
+      setOpen(true);
+    } else if (callbackAction) {
+      callbackAction(event);
+    }
+  };
+
   if (type === "link") {
-    loginButton = (
+    component = (
       <a
         className={classNames("button", classes ?? "text-button")}
         href={link.href}
@@ -32,17 +47,24 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
       </a>
     );
   } else {
-    loginButton = (
-      <button
-        className={classNames("button", classes ?? "text-button")}
-        onClick={(event) => callbackAction(event)}
-      >
-        {text}
-      </button>
+    component = (
+      <>
+        <button
+          className={classNames("button", classes ?? "text-button")}
+          onClick={(event) => handlerClicked(event)}
+        >
+          {text ?? "Botón"}
+        </button>
+        {(type === "Modal") && open && (
+          <CustomModal close={closeModal}>
+            {children}
+          </CustomModal>
+        )}
+      </>
     );
   }
 
-  return <>{loginButton}</>;
+  return <>{component}</>;
 };
 
 export default ButtonAtom;

@@ -5,6 +5,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { classNames, getButtonType } from '@/utils/functions';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
 import { getLinkProps } from '@/utils/link.utils';
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 
 const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
   tags,
@@ -21,7 +22,9 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
   ctaCollection,
   title,
   description,
-  image
+  image,
+  view,
+  linkView
 }) => {
   const propsLink = {
     name,
@@ -30,8 +33,9 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
     externalLink,
     ctaLabel
   };
+
   return (
-    <article className={`flex flex-col ${isReverse ? 'sm:flex-row-reverse' : 'sm:flex-row'} rounded-xl shadow-card gap-[9px] bg-white`}>
+    <article className={`flex flex-col ${view?.isReverse || isReverse ? 'sm:flex-row-reverse' : 'sm:flex-row'} rounded-xl shadow-card gap-[9px] bg-white`}>
       {(promoImage?.url || image?.url) &&
         <figure className='relative'>
           <Image
@@ -39,7 +43,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
             height={230}
             src={promoImage?.url ?? image?.url}
             alt={promoImage?.title ?? image?.title}
-            className={`w-full h-full sm:w-auto rounded-t-xl ${isReverse ? 'sm:rounded-l-none sm:rounded-r-xl' : 'sm:rounded-r-none sm:rounded-l-xl'} sm:max-w-[230px] object-cover sm:min-h-[233px]`}
+            className={`w-full h-full sm:w-auto rounded-t-xl ${view?.isReverse || isReverse ? 'sm:rounded-l-none sm:rounded-r-xl' : 'sm:rounded-r-none sm:rounded-l-xl'} sm:max-w-[230px] object-cover sm:min-h-[233px]`}
             priority
           />
         </figure>
@@ -57,25 +61,23 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
               {(promoDescription || description) && <div className='text-grey-30 font-medium'>{documentToReactComponents(promoDescription?.json ?? description?.json)}</div>}
             </div>
           }
-          {tags &&
+          {tags?.length > 0 && (
             <div className='flex gap-[15px] sm:items-center flex-col xs:flex-row'>
               <span>Puedes pagar con:</span>
-              {tags && (
-                <div className='flex gap-x-[18px] flex-wrap gap-y-2'>
-                  {
-                    tags.map((el) => {
-                      if (!el.label) return;
-                      return (
-                        <div className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`} key={`${promoTitle}-${el.label}`}>
-                          <span>{el.label}</span>
-                        </div>
-                      );
-                    })
-                  }
-                </div>
-              )}
+              <div className='flex gap-x-[18px] flex-wrap gap-y-2'>
+                {
+                  tags.map((el) => {
+                    if (!el.label) return;
+                    return (
+                      <div className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`} key={`${promoTitle}-${el.label}`}>
+                        <span>{el.label}</span>
+                      </div>
+                    );
+                  })
+                }
+              </div>
             </div>
-          }
+          )}
           {(internalLink || externalLink) && (
             <div className="flex gap-3">
               <CustomLink content={propsLink} className={classNames("button", getButtonType(buttonType ?? 'Contorno'))}>
@@ -90,6 +92,17 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
                   {cta.promoTitle ?? cta.name}
                 </CustomLink>
               ))}
+            </div>
+          )}
+          {linkView === "Modal" && (
+            <div className="flex gap-2">
+              <ButtonAtom
+                type={linkView}
+                text={ctaLabel ?? name}
+                classes={getButtonType("Contorno")}
+              >
+                {documentToReactComponents(promoDescription?.json)}
+              </ButtonAtom>
             </div>
           )}
         </div>

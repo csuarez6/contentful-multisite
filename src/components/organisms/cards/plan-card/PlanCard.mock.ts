@@ -38,7 +38,20 @@ const cardReverse: IPromoContent = {
     isReverse: true
 };
 
+const cardModal: IPromoContent = {
+    promoDescription: RICHTEXT_SHORT_SIMPLE,
+    subtitle: 'Plan 0',
+    promoTitle: '$50.000',
+    promoImage: {
+        url: 'https://via.placeholder.com/1024',
+        title: 'Plan card'
+    },
+    linkView: "Modal",
+    ctaLabel: "Abrir modal"
+};
+
 export const cardPropMocks = {
     card,
-    cardReverse
+    cardReverse,
+    cardModal
 };
