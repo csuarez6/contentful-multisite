@@ -9,7 +9,6 @@ const ExampleComponent: React.FC<IExampleComponent> = ({ name, view }) => {
   return (
     <div>
       <h1>Hola {name}</h1>
-
       <h2 className="text-violet-500">View name: {viewName}</h2>
       <h3 className="text-cyan-500">This is a h3 cyan</h3>
       <h4 className="text-lime-500">This is a h4 lime</h4>

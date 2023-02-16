@@ -11,18 +11,17 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
   sysId,
   view
 }) => {
-
   return (
     <section id={blockId ? blockId : sysId}
       className={classNames(
-        view.alignTitle == "left" ? "lg:grid-cols-3" : null,
+        view.alignTitle !== "Centrado" ? "lg:grid-cols-3" : null,
         "grid grid-cols-1 section gap-9"
       )}
     >
       {(title || description) &&
         <div 
           className={classNames(
-            view.alignTitle == "left" ? "text-left" : "text-center",
+            view.alignTitle !== "Centrado" ? "text-left" : "text-center",
             "grid gap-9 auto-rows-min"
           )}
         >
@@ -33,7 +32,7 @@ const InfoCardBlock: React.FC<IPromoBlock> = ({
       {featuredContentsCollection?.items?.length > 0 && (
         <div 
           className={classNames(
-            view.alignTitle == "left" ? "lg:col-span-2 lg:grid-cols-2" : "lg:grid-cols-3",
+            view.alignTitle !== "Centrado" ? "lg:col-span-2 lg:grid-cols-2" : "lg:grid-cols-3",
             "grid grid-cols-1 gap-5 md:grid-cols-2"
           )}
         >
