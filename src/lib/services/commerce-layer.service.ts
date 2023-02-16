@@ -31,23 +31,28 @@ export interface JWTProps {
   test: boolean
 }
 
-export const getAppToken = async () => {
-  let token = "";
-  const getCookieToken = Cookies.get("clIntegrationToken");
-  if (!getCookieToken && process.env.COMMERCELAYER_CLIENT_ID && process.env.COMMERCELAYER_CLIENT_SECRET && process.env.COMMERCELAYER_ENDPOINT) {
-    const auth = await getIntegrationToken({
-      endpoint: process.env.COMMERCELAYER_ENDPOINT,
-      clientId: process.env.COMMERCELAYER_CLIENT_ID,
-      clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET
-    });
-    token = auth.accessToken;
-    Cookies.set("clIntegrationToken", token, {
-      expires: auth.expires
-    });
-  } else {
-    token = getCookieToken || "";
+export const getAppToken = async (): Promise<string> => {
+
+  try {
+    let token = Cookies.get("clIntegrationToken");
+  
+    if (!token) {
+      const auth = await getIntegrationToken({
+        endpoint: process.env.COMMERCELAYER_ENDPOINT,
+        clientId: process.env.COMMERCELAYER_CLIENT_ID,
+        clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
+      });
+      token = auth.accessToken;
+      Cookies.set("clIntegrationToken", token, {
+        expires: auth.expires,
+      });
+    }
+
+    return token;
+    
+  } catch (error) {
+    throw new Error("UNABLE_GETTING_CL_TOKEN", {cause: error});
   }
-  return token;
 };
 
 export const getMerchantToken = async () => {
@@ -62,7 +67,7 @@ export const getMerchantToken = async () => {
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
     });
-    
+
     return accessToken;
   } catch (error) {
     console.error(error);
@@ -98,10 +103,21 @@ export const getCustomerTokenCl = async ({ email, password}) => {
   }
 };
 
-const getCommerlayerClient = async (token) => CommerceLayer({
-  organization: 'vanti-poc',
-  accessToken: token,
-});
+const getCommerlayerClient = async (accessToken: string) =>
+  CommerceLayer({
+    organization: "vanti-poc",
+    accessToken,
+  });
+
+export const getCLAdminCLient = async () => {
+  try {
+    const accessToken = await getAppToken();
+
+    return getCommerlayerClient(accessToken);
+  } catch (error) {
+    throw new Error("UNABLE_GETTING_CL_CLIENT", { cause: error });
+  }
+}; 
 
 export const createCustomer = async ({
   email,

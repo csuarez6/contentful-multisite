@@ -2,13 +2,17 @@ import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import { classNames } from "@/utils/functions";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import CheckoutContext from "../../../context/Checkout";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
+import uuid from "react-uuid";
+
 interface IChekoutLayoutProps {
   children: React.ReactNode;
 }
 
-const DEFAULT_PAYMENT_METHOD = "pse";
+const DEFAULT_PAYMENT_METHOD = "dummy";
 
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
@@ -20,10 +24,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     placeOrder,
     setDefaultShippingMethod,
   } = useContext(CheckoutContext);
+  const [openModal, setOpenModal] = useState(false);
+  const [transactionToken, setTransactionToken] = useState('');
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    return order.line_items;
+    return order.line_items.filter(i => i.sku_code);
   }, [order]);
 
   const isComplete = useMemo(
@@ -38,38 +44,64 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
     if (!order) return;
-    if (asPath.startsWith("/checkout/pse") && !order?.line_items.length) {
+    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length) {
       push("/checkout/pse/verify");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
 
+  /**
+   * Before of place a order we've had to:
+   * 1. Have Setted a shipping method
+   * 2. Have Setted a payment method
+   * 3. Have Added a payment method source
+   */
   const onPlaceOrder = async () => {
     try {
-      /**
-       * Before of place a order we've had to:
-       * 1. Have Setted a shipping method
-       * 2. Have Setted a payment method
-       * 3. Have Added a payment method source
-       */
+      const token = uuid();
+      
       const paymentMethodId = order.available_payment_methods.find(
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
+      
       await Promise.all([
         setDefaultShippingMethod(),
         setPaymentMethod(paymentMethodId),
-        addPaymentMethodSource(),
       ]);
+      await addPaymentMethodSource(token),
 
       await placeOrder();
-      window.location.href =
-        "https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
+
+      setOpenModal(true);
+      setTransactionToken(token);
+      // window.location.href =
+      //   "https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
     } catch (error) {
       console.error(error);
-      alert("Error al Realizar el pedido");
     }
   };
 
+
+  const handlePayment = async (toCancel = false) => {
+    try {
+      const path = `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : '');
+      console.log(path);
+      await fetch(path, {
+        method: "POST",
+      });
+
+      alert(!toCancel ? "Pagado con éxito" : "Cancelado por usuario");
+
+      push('/');
+
+    } catch (error) {
+      console.error(error);
+      alert('Error en la pasarela de pago.');
+    } finally {
+      setOpenModal(false);
+    }
+  };
+  
   return (
     <>
       <div className="grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
@@ -133,6 +165,17 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           </article>
         )}
       </div>
+      {openModal && (
+      <ModalSuccess {...MocksModalSuccessProps.modalLayout} isActive={openModal}>
+        <div className="w-full flex justify-end gap-5">
+          <button className="button button-outline" onClick={() => { handlePayment(true); }}>
+            Cancelar pago
+          </button>
+          <button className="button button-primary" onClick={() => { handlePayment(); }}>
+            Pagar
+          </button>
+        </div>
+      </ModalSuccess>)}
     </>
   );
 };

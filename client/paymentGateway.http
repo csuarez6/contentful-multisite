@@ -1,0 +1,15 @@
+@endpoint = http://localhost:3000/api
+
+### TEST Authorize webhook
+GET {{endpoint}}/payment-gateway/authorize
+
+
+##############################
+### DUMMY PAYMENS ACTIONS
+##############################
+
+#### To Pay
+POST {{endpoint}}/payments/yoWeUqZrJA
+
+#### To Cancel
+POST {{endpoint}}/payments/yoWeUqZrJA/cancel

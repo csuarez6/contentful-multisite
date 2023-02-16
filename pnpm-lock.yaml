@@ -19,6 +19,7 @@ specifiers:
   '@storybook/builder-webpack5': ^6.5.13
   '@storybook/manager-webpack5': ^6.5.13
   '@storybook/react': ^6.5.13
+  '@types/crypto-js': ^4.1.1
   '@types/lodash': ^4.14.191
   '@types/node': 18.11.9
   '@types/react': 18.0.25
@@ -26,6 +27,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.43.0
   algoliasearch: ^4.14.3
   autoprefixer: ^10.4.13
+  crypto-js: ^4.1.1
   emailjs: ^4.0.1
   eslint: 8.27.0
   eslint-config-next: 13.0.3
@@ -64,6 +66,7 @@ dependencies:
   '@hookform/resolvers': 2.9.10_react-hook-form@7.41.5
   '@sentry/nextjs': 7.30.0_next@13.0.3+react@18.2.0
   algoliasearch: 4.14.3
+  crypto-js: 4.1.1
   emailjs: 4.0.1_typescript@4.8.4
   graphql: 16.6.0
   icomoon-react: 3.0.0
@@ -92,6 +95,7 @@ devDependencies:
   '@storybook/builder-webpack5': 6.5.15_5msx5wgifzd2n7nm3paor5omae
   '@storybook/manager-webpack5': 6.5.15_5msx5wgifzd2n7nm3paor5omae
   '@storybook/react': 6.5.15_rnbdien7lr3lkleic7mvtp75k4
+  '@types/crypto-js': 4.1.1
   '@types/lodash': 4.14.191
   '@types/node': 18.11.9
   '@types/react': 18.0.25
@@ -4763,6 +4767,10 @@ packages:
       tslib: 2.4.1
     dev: false
 
+  /@types/crypto-js/4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -6930,6 +6938,10 @@ packages:
       randombytes: 2.1.0
       randomfill: 1.0.4
     dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /css-loader/3.6.0:
     resolution: {integrity: sha512-M5lSukoWi1If8dhQAUCvj4H8vUt3vOnwbQBH9DdTm/s4Ym2B/3dPMtYZeJmq7Q3S3Pa+I94DcZ7pc9bP14cWIQ==}

@@ -192,9 +192,9 @@ const MegaMenuItem = ({ item }) => {
                           {subItem.promoTitle ?? subItem.name}
                         </p>
                         <ul role="list" className="flex flex-col gap-5 mt-6">
-                          {subItem.mainNavCollection?.items?.map((itemList) => (
+                          {subItem.mainNavCollection?.items?.map((itemList, idx) => (
                             itemList && (
-                              <li key={itemList?.name} className="flow-root">
+                              <li key={`${itemList?.sys?.id ?? itemList.name}_${idx}`} className="flow-root">
                                 <CustomLink
                                   content={itemList}
                                   onClick={() => setOpen(false)}

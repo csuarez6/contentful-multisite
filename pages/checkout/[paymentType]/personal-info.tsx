@@ -114,7 +114,6 @@ const CheckoutPersonalInfo = () => {
               <TextBox
                 id="lastName"
                 name="lastName"
-                htmlForLabel="lastName"
                 label="Escribe tu apellido"
                 placeholder="Apellido"
                 {...register("lastName")}
@@ -130,7 +129,6 @@ const CheckoutPersonalInfo = () => {
                 name="cellPhone"
                 label="Escribe tu numero de celular"
                 placeholder="000 000 0000"
-                htmlForLabel="cellPhone"
                 {...register("cellPhone")}
               />
               {
@@ -144,7 +142,6 @@ const CheckoutPersonalInfo = () => {
                 name="email"
                 label="Escribe tu email"
                 placeholder="Email"
-                htmlForLabel="email"
                 {...register("email")}
               />
               {

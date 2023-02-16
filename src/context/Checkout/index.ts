@@ -25,7 +25,7 @@ export interface IContextCheckout {
   placeOrder: () => Promise<void>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
-  addPaymentMethodSource: () => Promise<void>;
+  addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: () => Promise<void>;
 }
 
