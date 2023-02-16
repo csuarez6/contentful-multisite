@@ -144,6 +144,7 @@ const BlockPromoContentQuery = `
     }
   }
   blockId
+  promoIcon
 `;
 
 export default BlockPromoContentQuery;

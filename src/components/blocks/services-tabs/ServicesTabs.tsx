@@ -7,29 +7,43 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { classNames } from "@/utils/functions";
 import LeftFeatured from "@/components/organisms/cards/left-featured/LeftFeatured";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import jsonToReactComponent from "@/lib/services/render-cards.service";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import Icon from "@/components/atoms/icon/Icon";
 
 const TabElement = (tab) => {
+  const {promoIcon, promoImage, image, promoTitle, name, display } = tab;
   return (
     <>
-      {(tab.promoImage || tab.image) && (
-        <figure className="w-[102px] rounded-full overflow-hidden aspect-square relative">
-          <Image
-            className="object-cover"
-            src={tab?.promoImage?.url? tab.promoImage.url : tab.image.url }
-            alt={tab?.promoImage?.title? tab.promoImage.title: tab?.image?.title }
-            fill
-          />
-        </figure>
+      {display === "Icono" ? (
+        <Icon
+          icon={promoIcon ?? 'check-vanti-neutral'}
+          className="flex items-center w-1/2 h-1/2 text-neutral-30"
+        />
+      ) : (
+        (promoImage || image) && (
+          <figure className="w-[102px] rounded-full overflow-hidden aspect-square relative">
+            <Image
+              className="object-cover"
+              src={promoImage?.url ? promoImage.url : image.url}
+              alt={promoImage?.title ? promoImage.title : image?.title}
+              fill
+            />
+          </figure>
+        )
       )}
-      <p className="font-semibold leading-[1.6]">
-        {tab.promoTitle ?? tab.name}
-      </p>
+      <p className="font-semibold leading-[1.6]">{promoTitle ?? name}</p>
     </>
   );
 };
 
-const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsCollection, view ,blockId, sysId }) => {
-  
+const ServicesTabsBlock: React.FC<IPromoBlock> = ({
+  title,
+  featuredContentsCollection,
+  view,
+  blockId,
+  sysId,
+}) => {
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -49,7 +63,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                       )}
                       key={tab?.name}
                     >
-                      {<TabElement {...tab} />}
+                      {<TabElement {...tab} display={view.tabDisplay} />}
                     </CustomLink>
                   ) : (
                     <Tab
@@ -64,7 +78,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
                         )
                       }
                     >
-                      {<TabElement {...tab} />}
+                      {<TabElement {...tab}  display={view.tabDisplay}/>}
                     </Tab>
                   )
                 )}
@@ -77,8 +91,16 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({ title, featuredContentsColle
               (tab) =>
                 !tab?.internalLink &&
                 !tab?.externalLink && (
-                  <Tab.Panel key={tab?.name} className="pt-6 focus:outline-none">
-                    <LeftFeatured {...tab} buttonType={view?.buttonType}/>
+                  <Tab.Panel
+                    key={tab?.name}
+                    className="pt-6 focus:outline-none"
+                  >
+                    {tab.__typename ===
+                    CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
+                      <LeftFeatured {...tab} buttonType={view?.buttonType} />
+                    ) : (
+                      jsonToReactComponent(tab)
+                    )}
                   </Tab.Panel>
                 )
             )}

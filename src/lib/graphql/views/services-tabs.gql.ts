@@ -4,6 +4,7 @@ const ViewServicesTabs = `
   ${DefaultQuery}
   name
   buttonType
+  tabDisplay
 `;
 
 export default ViewServicesTabs;

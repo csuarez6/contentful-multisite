@@ -58,6 +58,7 @@ export interface IPromoBlock extends IBlockProps {
     pretitle?: string;
     subtitle?: string;
     description?: IRichText;
+    promoIcon?: string;
     listedContentsCollection?: {
         items?: IPromoContent[] | IProductOverviewDetails[]
     };
@@ -99,4 +100,5 @@ export interface IView {
     alignButton?: string;
     roundedImage?: boolean;
     showButton?: boolean;
+    tabDisplay?: string;
 }

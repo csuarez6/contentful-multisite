@@ -1,10 +1,19 @@
 import { createElement } from "react";
 import { BLOCKSVIEW_MAP, CHILDREN_KEYS_MAP } from "@/constants/blocksview-map.constants";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 
 const jsonToReactComponent = (jsonItem, attachProps = {}) => {
   if (!jsonItem?.__typename) return;
   
-  const view = BLOCKSVIEW_MAP[jsonItem.__typename];
+  let view = BLOCKSVIEW_MAP[jsonItem?.__typename];
+  
+  if (jsonItem?.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
+    view = BLOCKSVIEW_MAP[jsonItem.__typename];
+
+    if (view && jsonItem?.view?.__typename) {
+      view = view[jsonItem.view.__typename];
+    }
+  }
 
   if (!view) {
     return null;
