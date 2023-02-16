@@ -18,7 +18,7 @@ const TabElement = (tab) => {
       {display === "Icono" ? (
         <Icon
           icon={promoIcon ?? 'check-vanti-neutral'}
-          className="flex items-center w-1/2 h-1/2 text-neutral-30"
+          className="flex items-center w-10 h-10 text-neutral-30"
         />
       ) : (
         (promoImage || image) && (
