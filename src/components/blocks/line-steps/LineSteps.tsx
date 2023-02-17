@@ -42,7 +42,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   }, [featuredContentsCollection?.items]);
 
   return (
-    <section id={blockId ? blockId : sysId} className="grid gap-7 md:gap-9">
+    <section id={blockId ? blockId : sysId} className="section grid gap-7 md:gap-9">
       {(title || description) && (
         <div className="flex flex-col gap-2 text-center">
           {title && (<h2 className="text-blue-dark">{title}</h2>)}

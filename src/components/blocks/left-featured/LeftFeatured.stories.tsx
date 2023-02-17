@@ -23,8 +23,18 @@ const Template: ComponentStory<typeof LeftFeatured> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const RoundedImage = Template.bind({});
+export const RoundedImageReverse = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
   ...mockLeftFeaturedProps.data,
+} as IPromoBlock;
+
+RoundedImage.args = {
+  ...mockLeftFeaturedProps.dataRounded,
+} as IPromoBlock;
+
+RoundedImageReverse.args = {
+  ...mockLeftFeaturedProps.dataRoundedReverse,
 } as IPromoBlock;

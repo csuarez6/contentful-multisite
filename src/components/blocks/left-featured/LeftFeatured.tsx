@@ -74,22 +74,17 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
           >
             {image && (
               <>
-                <svg
-                  className="sr-only"
-                  viewBox="0 0 620 429"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg className="sr-only" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <clipPath id="path-img" clipPathUnits="objectBoundingBox">
                     <path
-                      d="M1,0.078 V0.002 H0.002 V1 H0.67 L0.701,0.994 L0.725,0.982 L0.74,0.973 L0.757,0.958 L0.767,0.948 L0.78,0.932 L0.797,0.907 L0.811,0.881 L0.823,0.85 L0.83,0.827 L0.842,0.775 L0.893,0.555 L1,0.093 V0.078"
+                      d="M1,0.006 V0.002 H0.002 V1 H0.024 H0.654 L0.662,1 L0.676,0.998 L0.69,0.993 L0.702,0.987 L0.716,0.979 L0.732,0.967 L0.746,0.954 L0.756,0.944 L0.765,0.932 L0.777,0.916 L0.789,0.895 L0.795,0.882 L0.8,0.871 L0.804,0.862 L0.807,0.853 L0.81,0.846 L0.813,0.836 L0.823,0.794 L0.837,0.731 L0.853,0.661 L0.864,0.612 L0.877,0.556 L0.89,0.5 L0.901,0.451 L0.91,0.409 L0.92,0.367 L0.934,0.304 L0.946,0.251 L0.968,0.153 L1,0.009 L1,0.006"
                       fill="black"
                       stroke="black"
                     />
                   </clipPath>
                   <clipPath id="path-img-reverse" clipPathUnits="objectBoundingBox">
                     <path
-                      d="M0.002,0.078 V0.002 H1 V1 H0.333 L0.302,0.994 L0.278,0.982 L0.264,0.973 L0.246,0.958 L0.236,0.948 L0.223,0.932 L0.206,0.907 L0.192,0.881 L0.18,0.85 L0.173,0.827 L0.161,0.775 L0.11,0.555 L0.002,0.093 V0.078"
+                      d="M0.002,0.999 V1 H1 V0.002 H0.979 H0.349 L0.341,0.004 L0.327,0.007 L0.313,0.012 L0.302,0.018 L0.287,0.026 L0.271,0.037 L0.257,0.05 L0.248,0.061 L0.238,0.072 L0.226,0.089 L0.214,0.11 L0.208,0.123 L0.203,0.133 L0.199,0.143 L0.196,0.152 L0.194,0.159 L0.19,0.168 L0.18,0.21 L0.166,0.273 L0.15,0.343 L0.139,0.393 L0.126,0.449 L0.113,0.505 L0.102,0.554 L0.093,0.596 L0.083,0.638 L0.069,0.701 L0.057,0.754 L0.035,0.852 L0.002,0.995 L0.002,0.999"
                       fill="black"
                       stroke="black"
                     />
@@ -98,10 +93,10 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
 
                 <figure
                   className={classNames(
-                    "relative w-full md:w-1/2 shrink-0 grow md:h-full aspect-[328/180] overflow-hidden",
-                    (view?.roundedImage || view?.bannerWidth === "Largo")
-                      ? "md:aspect-[630/428] xl:w-[630px]"
-                      : "md:aspect-[488/400] xl:w-[488px]"
+                    "relative w-full md:w-1/2 shrink-0 grow md:h-full max-md:aspect-[328/180] overflow-hidden",
+                    view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
+                    view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
+                    view?.roundedImage && "xl:w-[630px] !h-auto",
                   )}
                   style={{
                     clipPath:
