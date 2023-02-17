@@ -46,6 +46,9 @@ const AuxCustomContent = `
     }
   }
   linkView
+  content{
+    ${RichtextQuery}
+  }
 `;
 
 export default AuxCustomContent;

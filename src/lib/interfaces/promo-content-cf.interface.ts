@@ -50,6 +50,7 @@ export interface IPromoContent {
     linkView?: string;
     backgroundColor?: string;
     showButton?: boolean;
+    content?: IRichText;
 }
 
 export interface IPromoBlock extends IBlockProps {
