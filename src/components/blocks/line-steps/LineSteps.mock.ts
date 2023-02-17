@@ -17,19 +17,39 @@ const data: IPromoBlock = {
         items: [
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                promoTitle: 'Title1'
+                promoTitle: 'Title 1',
+                promoImage: { 
+                    url: "https://placehold.co/600x645?text=Title+1",
+                    width: 600,
+                    height: 645
+                }
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                promoTitle: 'Title2'
+                promoTitle: 'Title 2',
+                promoImage: { 
+                    url: "https://placehold.co/600x645?text=Title+2",
+                    width: 600,
+                    height: 645
+                }
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                promoTitle: 'Title3'
+                promoTitle: 'Title 3',
+                promoImage: { 
+                    url: "https://placehold.co/600x645?text=Title+3",
+                    width: 600,
+                    height: 645
+                }
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                promoTitle: 'Title4'
+                promoTitle: 'Title 4',
+                promoImage: { 
+                    url: "https://placehold.co/600x645?text=Title+4",
+                    width: 600,
+                    height: 645
+                }
             },
         ]
     }
