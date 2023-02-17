@@ -63,7 +63,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                       )}
                       key={tab?.name}
                     >
-                      {<TabElement {...tab} display={view.tabDisplay} />}
+                      {<TabElement {...tab} display={view?.tabDisplay} />}
                     </CustomLink>
                   ) : (
                     <Tab

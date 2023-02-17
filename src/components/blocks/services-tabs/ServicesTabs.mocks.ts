@@ -17,6 +17,7 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "installation",
+        __typename: 'AuxCustomContent'
       },
       {
         name: "Adquirir gasodomésticos",
@@ -31,7 +32,8 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "expert",
-        buttonType: 'ninguno'
+        buttonType: 'ninguno',
+        __typename: 'AuxCustomContent'
       },
       {
         name: "Reparar e instalar",
@@ -46,7 +48,8 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "gas-services",
-        buttonType: 'ninguno'
+        buttonType: 'ninguno',
+        __typename: 'AuxCustomContent'
       },
       {
         name: "Financiar con Vanti Listo",
@@ -61,7 +64,8 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "vantilisto",
-        buttonType: 'ninguno'
+        buttonType: 'ninguno',
+        __typename: 'AuxCustomContent'
       },
       {
         name: "Adquirir asistencias",
@@ -81,7 +85,8 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "hands",
-        buttonType: 'ninguno'
+        buttonType: 'ninguno',
+        __typename: 'AuxCustomContent'
       },
       {
         name: "Adquirir asistencias",
@@ -101,9 +106,13 @@ const data: IPromoBlock = {
           height: 1600
         },
         promoIcon: "hands",
-        buttonType: 'ninguno'
+        buttonType: 'ninguno',
+        __typename: 'AuxCustomContent'
       }
     ],
+  },
+  view:{
+    tabDisplay: 'Imagen'
   }
 };
 
