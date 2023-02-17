@@ -4,12 +4,17 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 const data: IPromoBlock = {
     description: RICHTEXT_SHORT_SIMPLE,
     title: 'How it works',
-    subtitle:'Its insanely easy to get started',
+    subtitle: 'Its insanely easy to get started',
+    image: {
+        url: "https://placehold.co/1220x1312?text=ImageBlock+-+Img+size+1220x1312",
+        width: 562,
+        height: 604
+    },
     ctaCollection: {
-        items:[
+        items: [
             {
-                externalLink:'#',
-                ctaLabel:'Button'
+                externalLink: '#',
+                ctaLabel: 'Button'
             }
         ]
     },
@@ -18,37 +23,32 @@ const data: IPromoBlock = {
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
                 promoTitle: 'Title 1',
-                promoImage: { 
-                    url: "https://placehold.co/600x645?text=Title+1",
-                    width: 600,
-                    height: 645
+                promoImage: {
+                    url: "https://placehold.co/1220x1312?text=Title+1+-+Img+size+1220x1312",
+                    width: 562,
+                    height: 604
                 }
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                promoTitle: 'Title 2',
-                promoImage: { 
-                    url: "https://placehold.co/600x645?text=Title+2",
-                    width: 600,
-                    height: 645
-                }
+                promoTitle: 'Title 2'
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
                 promoTitle: 'Title 3',
-                promoImage: { 
-                    url: "https://placehold.co/600x645?text=Title+3",
-                    width: 600,
-                    height: 645
+                promoImage: {
+                    url: "https://placehold.co/1220x1312?text=Title+3+-+Img+size+1220x1312",
+                    width: 562,
+                    height: 604
                 }
             },
             {
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
                 promoTitle: 'Title 4',
-                promoImage: { 
-                    url: "https://placehold.co/600x645?text=Title+4",
-                    width: 600,
-                    height: 645
+                promoImage: {
+                    url: "https://placehold.co/1220x1312?text=Title+4+-+Img+size+1220x1312",
+                    width: 562,
+                    height: 604
                 }
             },
         ]
