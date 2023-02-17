@@ -1,13 +1,13 @@
 import { useRef, useEffect, useState } from "react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
-import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Image from 'next/image';
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
 
-const LineSteps: React.FC<IPromoBlock> = ({
+const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   featuredContentsCollection,
   description,
   title,
@@ -21,7 +21,8 @@ const LineSteps: React.FC<IPromoBlock> = ({
   useEffect(() => {
     const stepGroup = lineStep.current.querySelectorAll(".step-group");
     stepGroup.forEach((item, index) => {
-      const img = featuredContentsCollection.items[index].promoImage.url;
+      const imgCollection:IPromoContent= featuredContentsCollection.items[index];
+      const img = imgCollection?.promoImage?.url;
       if(index == 0)
         setCurrentImage(img);
 
@@ -90,7 +91,7 @@ const LineSteps: React.FC<IPromoBlock> = ({
                         </div>
                       </div>
                       {item?.promoImage?.url &&
-                        <figure class="hidden group-[.open]:block md:!hidden">
+                        <figure className="hidden group-[.open]:block md:!hidden">
                           <Image width={item.promoImage.width} height={item.promoImage.height} className="block max-w-full h-auto rounded-xl aspect-[304/124] object-cover object-center" src={item.promoImage.url} alt="" />
                         </figure>
                       }
