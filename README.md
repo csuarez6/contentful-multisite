@@ -98,9 +98,7 @@ Create .env file with enviroment variables below:
 
 ### DOCKER ENV
 - `APP_NAME`: Prefix for docker services names (default: APLYCA-NEXTJS-WEB)
-- `APP_PORT`: Port for interact with the app throught browser (default: 3000)
-- `STORYBOOK_PORT`: Port for interact with storybook throught browser (default: 6006)
-- `MAILER_PORT`: Port for interact with mailhog web mailer throught browser (default: 8025)
+- `APP_PORT_PREFIX`: Prefix number to map ports on services (default: 39)
 - `DEFAULT_SERVICE`: Can use **storybook**, **app** or **mailer** for avoid service=... argument in make scripts (default: app)
 
 

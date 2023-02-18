@@ -19,7 +19,8 @@ services:
         SENTRY_LOG_LEVEL: debug
         SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN:-}
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${APP_PORT_PREFIX:-39}080:3000"
+      - "${APP_PORT_PREFIX:-39}229:9229"
     volumes:
       - ./src:/app/src:rw
       - ./pages:/app/pages:rw
@@ -65,7 +66,7 @@ services:
         - ${IMAGE_REPO:-aplyca/web/vanti-sb}${IMAGE_TAG:-}
         - ${IMAGE_REPO:-aplyca/web/vanti-sb}${IMAGE_CACHE_TAG:-:latest}
     ports:
-      - "${STORYBOOK_PORT:-6006}:6006"
+      - "${APP_PORT_PREFIX:-39}006:6006"
     volumes:
       - ./src:/app/src:rw
       - ./pages:/app/pages:rw
@@ -86,7 +87,7 @@ services:
     expose:
       - 1025
     ports:
-      - "${MAILER_PORT:-8025}:8025"
+      - "${APP_PORT_PREFIX:-39}025:8025"
     networks:
       - public
     restart: unless-stopped

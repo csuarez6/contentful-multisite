@@ -26,6 +26,7 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
 import CheckoutContext from "@/context/Checkout";
 import getEntriesSlugs from "@/lib/services/entries-slugs.query";
+import getBreadcrumbs from "@/utils/breadcrumbs";
 
 const CustomPage: NextPageWithLayout = (
   props: IPage & IProductOverviewDetails
@@ -52,7 +53,10 @@ const CustomPage: NextPageWithLayout = (
   };
 
   return __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
-    <ProductOverview {...props} onBuy={onBuyHandler} />
+    <>
+      {jsonToReactComponents(blocksCollection.items)}
+      <ProductOverview {...props} onBuy={onBuyHandler} />
+    </>
   ) : (
     <>{jsonToReactComponents(blocksCollection.items)}</>
   );
@@ -64,7 +68,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const entries = await getEntriesSlugs({ limit: 100 }, false);
 
   for (const entry of entries) {
-    if (entry.urlPath !== null && entry.urlPath !== '/') {
+    if (entry.urlPath !== null && entry.urlPath !== "/") {
       paths.push({
         params: {
           slug: entry.urlPath.split("/").slice(1),
@@ -99,7 +103,30 @@ export const getStaticProps: GetStaticProps = async (
     context.preview ?? false,
     2
   );
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
+
+  const breadCrumbContent = getBreadcrumbs(pageContent);
+  if (pageContent?.blocksCollection?.items?.length > 0) {
+    const firstBlockViewTypename =
+      pageContent.blocksCollection?.items[0].view?.__typename;
+    const firstItemsTypes: string[] = [
+      CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE,
+      CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL,
+    ];
+
+    if (firstItemsTypes.indexOf(firstBlockViewTypename) >= 0) {
+      pageContent.blocksCollection.items.splice(1, 0, breadCrumbContent);
+    } else {
+      pageContent.blocksCollection.items.unshift(breadCrumbContent);
+    }
+  } else if (!pageContent?.blocksCollection?.items?.length) {
+    pageContent["blocksCollection"] = {
+      items: [breadCrumbContent],
+    };
+  }
 
   return {
     props: {

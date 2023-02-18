@@ -9,6 +9,9 @@ const PageQuery = `
   content {
     ${RichtextQuery}
   }
+  parent {
+    ${DefaultQuery}
+  }
   blocksCollection {
     items {
       ...on BlockPromoContent {
@@ -43,6 +46,15 @@ const PageQuery = `
         ${DefaultQuery}
       }
     }
+  }
+`;
+
+export const PageMinimalQuery = `
+  name
+  promoTitle
+  urlPath
+  parent {
+    ${DefaultQuery}
   }
 `;
 

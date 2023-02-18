@@ -30,8 +30,8 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       <div className='hidden md:block'>
         {featuredContentsCollection?.items?.length > 0 && (
           <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize))}>
-            {featuredContentsCollection.items.map((item) => (
-              <ListWithIcon key={`${item.promoTitle}-desktop`} {...{ ...item, ...view }} />
+            {featuredContentsCollection.items.map((item, idx) => (
+              <ListWithIcon key={`${item.sys.id}-desktop-${idx}`} {...{ ...item, ...view }} />
             ))}
           </div>
         )}

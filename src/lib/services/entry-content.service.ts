@@ -12,6 +12,10 @@ const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
     'blocksCollection',
     'mainNavCollection',
+    'parent'
+  ],
+  [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: [
+    'parent'
   ],
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
     'mainNavCollection',
@@ -87,11 +91,19 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     )
   );
 
+  if (blockInfo.__typename == CONTENTFUL_TYPENAMES.PAGE_MINIMAL) {
+    entryContent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+  }
+
   if (
     REFERENCES[entryContent.__typename] &&
     REFERENCES[entryContent.__typename].length > 0 &&
     recursive && actualDepth < MAX_DEPTH_RECURSION
   ) {
+    if (entryContent?.parent?.__typename) {
+      entryContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+    }
+
     const referencesContent = await getReferencesContent(
       entryContent,
       REFERENCES[entryContent.__typename],

@@ -1,6 +1,6 @@
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
-import PageQuery from "@/lib/graphql/page.gql";
+import PageQuery, { PageMinimalQuery } from "@/lib/graphql/page.gql";
 import BlockPromoContentQuery from "@/lib/graphql/blocks/promo-content.gql";
 import AuxNavigationQuery from "@/lib/graphql/aux/navigation.gql";
 import AuxCustomContent from "@/lib/graphql/aux/custom-content.gql";
@@ -13,6 +13,10 @@ const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
     queryName: 'page',
     query: PageQuery,
+  },
+  [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: {
+    queryName: 'page',
+    query: PageMinimalQuery,
   },
   [CONTENTFUL_TYPENAMES.PRODUCT]: {
     queryName: 'product',

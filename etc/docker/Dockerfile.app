@@ -26,7 +26,7 @@ COPY pages /app/pages
 COPY public /app/public
 COPY styles /app/styles
 
-EXPOSE 3000
+EXPOSE 3000 9229
 
 FROM base as dev
 

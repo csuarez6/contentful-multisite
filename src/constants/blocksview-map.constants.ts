@@ -26,6 +26,7 @@ import FeaturedProduct from "@/components/organisms/cards/featured-product/Featu
 import ServiceLineBlock from "@/components/blocks/service-line/ServiceLineBlock";
 import RichText from "@/components/organisms/rich-text/Richtext";
 import TabsWithFeaturedImageBlock from "@/components/blocks/tabs-with-featured-image/TabsWithFeaturedImage";
+import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 
 /**
  * Supports:
@@ -65,7 +66,8 @@ export const BLOCKSVIEW_MAP = {
   [CONTENTFUL_TYPENAMES.PRODUCT]: FeaturedProduct,
   [CONTENTFUL_TYPENAMES.PAGE]: VerticalCard,
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: VerticalCard,
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: ServiceLineBlock
+  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: ServiceLineBlock,
+  [CONTENTFUL_TYPENAMES.BLOCK_BREADCRUMB]: Breadcrumbs,
 };
 
 export const CHILDREN_KEYS_MAP = {};

@@ -83,6 +83,7 @@ export interface ITag {
 }
 
 export interface IView {
+    __typename?: string;
     name?: string;
     backgroundColor?: string;
     bannerHeight?: string;

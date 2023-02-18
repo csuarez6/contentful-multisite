@@ -4,10 +4,12 @@
  */
 export enum CONTENTFUL_TYPENAMES {
   PAGE = "Page",
+  PAGE_MINIMAL = "PageMinimal",
   PRODUCT = "Product",
 
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
   BLOCK_CONTENT_FILTER = "BlockContentFilter",
+  BLOCK_BREADCRUMB = "BlockBreadcrumb",
   AUX_CUSTOM_CONTENT = "AuxCustomContent",
   AUX_NAVIGATION = "AuxNavigation",
 
