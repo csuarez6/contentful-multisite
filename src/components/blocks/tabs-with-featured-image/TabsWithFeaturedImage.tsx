@@ -6,15 +6,16 @@ import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.in
 import Image from "next/image";
 import Icon from "@/components/atoms/icon/Icon";
 
-const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description, image, featuredContentsCollection, blockId, sysId }) => {
+const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, description, image, featuredContentsCollection, blockId, sysId }) => {
   return (
     <section id={blockId ? blockId : sysId} className="grid section gap-7 md:gap-9">
-      <div className="flex flex-col md:flex-row items-start gap-[62px]">
-        {(title || description || featuredContentsCollection?.items?.length > 0) && (
+      {title && <h1 className="text-center text-blue-dark mb-[-30px]">{title}</h1>}
+      <div className="flex flex-col md:flex-row items-start gap-[62px] py-[72px] border-y-2 border-x-grey-80">
+        {(subtitle || description || featuredContentsCollection?.items?.length > 0) && (
           <div className="grid gap-6 grow">
-            {(title || description) && (
+            {(subtitle || description) && (
               <div className="grid gap-6">
-                {title && <h2 className="text-category-sky-blue-50">{title}</h2>}
+                {title && <h2 className="text-category-sky-blue-50">{subtitle}</h2>}
                 {description && <div className="text-neutral-30">{documentToReactComponents(description?.json)}</div>}
               </div>
             )}
@@ -31,7 +32,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                               selected
                                 ? "border-lucuma text-blue-dark"
                                 : "border-transparent border-neutral-80 text-category-sky-blue-50",
-                              "flex flex-col items-center gap-4 shrink-0 grow focus:outline-none border-b-2 p-4"
+                              "flex flex-col items-center gap-4 shrink-0 grow focus:outline-none border-b-2 p-4 max-w-[92px]"
                             )
                           }
                         >
@@ -40,7 +41,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                               <div className={
                                 classNames(
                                   selected ? "bg-lucuma" : "bg-blue-dark-90",
-                                  "flow-root m-auto shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30",
+                                  "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30",
                                 )}
                               >
                                 <Icon icon={tab.promoIcon} className="w-full h-full mx-auto" />
