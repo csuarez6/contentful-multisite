@@ -1,6 +1,6 @@
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery from "../shared/default.gql";
-import RichtextQuery from "../shared/richtext.qql";
+import RichtextQuery, { RichtextLinksQuery } from "../shared/richtext.qql";
 
 const AuxCustomContent = `
   ${DefaultQuery}

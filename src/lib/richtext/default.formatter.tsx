@@ -42,20 +42,20 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <table>
+      <table className="table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6">
         <tbody>{children}</tbody>
       </table>
     ),
     [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => {
       return (
-        <th>{children}</th>
+        <th className="px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
       );
     },
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr>{children}</tr>
+      <tr className="text-center border-neutral-80">{children}</tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
-      <td>{children}</td>
+      <td className="px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">{children}</td>
     ),
     [BLOCKS.QUOTE]: (_node, children) => {
       return (

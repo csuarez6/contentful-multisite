@@ -9,6 +9,8 @@ import { classNames, getButtonType } from "@/utils/functions";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { getLinkProps } from "@/utils/link.utils";
 import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
   tags,
@@ -130,28 +132,45 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
               )}
               {ctaCollection?.items?.length > 0 && (
                 <div className="flex gap-3">
-                  {ctaCollection.items.map((cta) => (
-                    <CustomLink
-                      key={cta.name}
-                      content={cta}
-                      className={classNames(
-                        "button",
-                        getButtonType(buttonType ?? "Contorno")
-                      )}
-                    >
-                      {cta.promoTitle ?? cta.name}
-                    </CustomLink>
-                  ))}
+                  {ctaCollection.items.map((cta) => {
+                    return (
+                      <div key={cta.name}>
+                        {!cta?.content && (
+                          <CustomLink
+                            content={cta}
+                            className={classNames(
+                              "button",
+                              getButtonType(buttonType ?? "Contorno")
+                            )}
+                          >
+                            {cta.promoTitle ?? cta.name}
+                          </CustomLink>
+                        )}
+
+                        {cta?.linkView === "Modal" && cta?.content?.json && (
+                          <div className="flex gap-2">
+                            <ButtonAtom
+                              type={cta?.linkView}
+                              text={cta?.ctaLabel ?? cta?.name}
+                              classes={getButtonType("Contorno")}
+                            >
+                              {documentToReactComponents(attachLinksToRichtextContent(cta?.content?.json, cta?.content?.links), defaultFormatOptions)}
+                            </ButtonAtom>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
-              {linkView === "Modal" && (
+              {linkView === "Modal" && content.json && (
                 <div className="flex gap-2">
                   <ButtonAtom
                     type={linkView}
                     text={ctaLabel ?? name}
                     classes={getButtonType("Contorno")}
                   >
-                    {documentToReactComponents(content?.json)}
+                    {documentToReactComponents(attachLinksToRichtextContent(content?.json, content?.links), defaultFormatOptions)}
                   </ButtonAtom>
                 </div>
               )}
