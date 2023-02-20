@@ -2,7 +2,7 @@ import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { classColumns, classNames, getBackgroundColorClass, getButtonType } from '@/utils/functions';
+import { classColumns, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper";
 import Icon from "@/components/atoms/icon/Icon";
@@ -13,6 +13,7 @@ import "swiper/css/thumbs";
 
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
+  const textAlignHeading = getTextAlignClass(view?.headerAlignment);
   return (
     <section id={blockId ? blockId : sysId} className="section md:grid gap-9">
       {view?.backgroundColor && (
@@ -22,15 +23,15 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       )}
 
       {(title || description) && (
-        <div className="text-center grid gap-6">
-          {title && <h2 className={backgroundColor.title}>{title}</h2>}
-          {description && <div className={backgroundColor.text}>{documentToReactComponents(description.json)}</div>}
+        <div className="text-center grid gap-6 px-3">
+          {title && <h2 className={classNames(backgroundColor.title, textAlignHeading)}>{title}</h2>}
+          {description && <div className={classNames(backgroundColor.text, textAlignHeading)}>{documentToReactComponents(description.json)}</div>}
         </div>
       )}
       <div className='hidden md:block'>
         {featuredContentsCollection?.items?.length > 0 && (
           <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize))}>
-            {featuredContentsCollection.items.map((item, idx) => (
+            {featuredContentsCollection.items.map((item: any, idx: number) => (
               <ListWithIcon key={`${item.sys.id}-desktop-${idx}`} {...{ ...item, ...view }} />
             ))}
           </div>

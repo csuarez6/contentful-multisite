@@ -82,6 +82,17 @@ export const getBackgroundColorClass = (name) => {
   }
 };
 
+export const getTextAlignClass = (align) => {
+  switch (align) {
+    case "Izquierda":
+      return "text-left";
+    case "Centrado":
+      return "text-center";
+    default:
+      return "text-center";
+  }
+};
+
 export const getButtonType = (type) => {
   switch (type) {
     case "Primario":

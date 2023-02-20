@@ -9,6 +9,7 @@ const ViewListWithIcons = `
   iconPosition
   iconSize
   iconBackgroundColor
+  headerAlignment
 `;
 
 export default ViewListWithIcons;

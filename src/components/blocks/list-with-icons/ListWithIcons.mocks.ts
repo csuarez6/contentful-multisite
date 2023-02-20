@@ -2,16 +2,19 @@ import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
-  title: '¿Nesecitas Ayuda?',
+  title: '¿Necesitas Ayuda?',
   view:{
     iconPosition: 'Arriba',
     columnsSize: 5,
     buttonType: '',
-    
+    headerAlignment: 'Centrado'
   },
   featuredContentsCollection: {
     items: [
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Whatsapp',
         promoIcon: 'whatsapp',
         iconPosition: 'left',
@@ -23,7 +26,10 @@ const data: IPromoBlock = {
         ctaLabel: 'Consultar'
       },
       {
-        promoTitle: 'Line de atencion',
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
+        promoTitle: 'Linea de atencion',
         promoIcon: 'phone',
         ctaLabel: "Ver mas",
         internalLink: {
@@ -32,6 +38,9 @@ const data: IPromoBlock = {
         iconBackgroundColor: 'Azul Claro',
       },
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Preguntas frecuentes',
         promoIcon: 'linkedin',
         ctaLabel: "Ver mas",
@@ -41,6 +50,9 @@ const data: IPromoBlock = {
         iconBackgroundColor: 'Azul Claro',
       },
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Centro de ayuda',
         promoIcon: 'whatsapp',
         ctaLabel: "Ver mas",
@@ -50,6 +62,9 @@ const data: IPromoBlock = {
         iconBackgroundColor: 'Azul Claro',
       },
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Puntos de atencion',
         promoIcon: 'phone',
         ctaLabel: "Ver mas",
@@ -68,7 +83,8 @@ const dataLeft: IPromoBlock = {
   view:{
     iconPosition: 'Izquierda',
     columnsSize: 3,
-    buttonType: 'Contorno'
+    buttonType: 'Contorno',
+    headerAlignment: 'Centrado'
   },
   ctaCollection: {
     items: [
@@ -85,6 +101,9 @@ const dataLeft: IPromoBlock = {
   featuredContentsCollection: {
     items: [
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
@@ -94,6 +113,9 @@ const dataLeft: IPromoBlock = {
         }
       },
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
@@ -103,6 +125,9 @@ const dataLeft: IPromoBlock = {
         }
       },
       {
+        sys: {
+          id: "4fcc63829ef04a7e8e1647"
+        },
         promoTitle: 'Title',
         promoIcon: 'invoice-filled',
         promoDescription: RICHTEXT_SHORT_SIMPLE,

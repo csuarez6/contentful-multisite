@@ -103,4 +103,5 @@ export interface IView {
     roundedImage?: boolean;
     showButton?: boolean;
     tabDisplay?: string;
+    headerAlignment?: string;
 }
