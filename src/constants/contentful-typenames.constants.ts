@@ -37,5 +37,5 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_QUERY_FORM = "ViewQueryForm",
   VIEW_VIDEO_SLIDER = "ViewVideoSlider",
   VIEW_RICH_TEXT = "ViewRichText",
-  VIEW_TABS_WITH_FEATURED_IMAGE = "viewTabsWithFeaturedImage",
+  VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
 };
