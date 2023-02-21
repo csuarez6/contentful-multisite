@@ -9,6 +9,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { classNames } from "@/utils/functions";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { useEffect, useState } from "react";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 export interface ITemsForm {
     email: string;
@@ -33,16 +35,19 @@ const ModalContent = ({ modalMsg = "" }) => {
     );
 };
 
-const ForgotPassword = ({ onSubmitForm }) => {
+const ForgotPassword = () => {
 
-    // const [dataModal, setDataModal] = useState<IPromoContent>({
-    const dataModal = {
+    const modalDefault = {
         children: <ModalContent modalMsg="..." />,
-        promoIcon: 'cancel',
-        promoTitle: 'Servicio no disponible temporalmente.',
+        promoIcon: 'loader',
+        promoTitle: 'Espere...',
     };
+    const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
+    const [btnSubmitReset, setBtnSubmitReset] = useState<string>("Recuperar contraseña");
+    const [activeModal, setActiveModal] = useState<boolean>(false);
 
-    const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
+
+    const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful, isSubmitting, submitCount }, reset,
     } = useForm<ITemsForm>({
         mode: "onChange",
         resolver: yupResolver(schema),
@@ -50,9 +55,45 @@ const ForgotPassword = ({ onSubmitForm }) => {
         defaultValues
     });
 
-    const onSubmit = (data: ITemsForm) => {
-        if (onSubmitForm) onSubmitForm(data);
+    useEffect(() => {
         reset();
+    }, [isSubmitSuccessful]);
+
+    const onSubmit = async (data: ITemsForm) => {
+        setBtnSubmitReset("Por favor espere...");
+        try {
+            setDataModal(modalDefault);
+            await fetch('api/customer-password/forgot-password', {
+                method: "POST",
+                body: JSON.stringify(data)
+            }).then(async (response) => {
+                console.log("response ", response);
+                if (response.status === 201) {
+                    const resp = await response.json();
+                    console.log("resp ", resp);
+                    setDataModal({
+                        children: <ModalContent />,
+                        promoIcon: 'check',
+                        promoTitle: 'Recuperar contraseña',
+                        subtitle: 'Estimado usuario, se han enviado las instrucciones a su correo electrónico para recuperar la contraseña.',
+                    });
+                } else {
+                    setDataModal({
+                        children: <ModalContent modalMsg="Ha ocurrido un error, por favor intente nuevamente." />,
+                        promoIcon: 'cancel',
+                        promoTitle: 'Error durante el proceso!',
+                    });
+                }
+            });
+        } catch (error) {
+            setDataModal({
+                children: <ModalContent modalMsg="Ha ocurrido un error, por favor intente nuevamente." />,
+                promoIcon: 'cancel',
+                promoTitle: 'Error durante el proceso - Reset!',
+            });
+        }
+        setActiveModal(true);
+        setBtnSubmitReset("Recuperar contraseña");
     };
 
     return (
@@ -81,16 +122,17 @@ const ForgotPassword = ({ onSubmitForm }) => {
                     <div className='self-end w-full'>
                         <button
                             type="submit"
-                            disabled={!isValid}
+                            disabled={!isValid || isSubmitting}
                             className={classNames(
-                                "w-full button button-primary"
+                                "w-full button button-primary",
+                                isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
                             )}
                         >
-                            Recuperar contraseña
+                            {btnSubmitReset}
                         </button>
                     </div>
                 </form>
-                {isSubmitSuccessful && (<ModalSuccess {...dataModal} isActive={isSubmitSuccessful} />)}
+                {activeModal && (<ModalSuccess key={submitCount} {...dataModal} isActive={activeModal} />)}
             </HeadingCard>
         </section>
     );

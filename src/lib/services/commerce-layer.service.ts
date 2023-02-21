@@ -35,7 +35,7 @@ export const getAppToken = async (): Promise<string> => {
 
   try {
     let token = Cookies.get("clIntegrationToken");
-  
+
     if (!token) {
       const auth = await getIntegrationToken({
         endpoint: process.env.COMMERCELAYER_ENDPOINT,
@@ -49,9 +49,9 @@ export const getAppToken = async (): Promise<string> => {
     }
 
     return token;
-    
+
   } catch (error) {
-    throw new Error("UNABLE_GETTING_CL_TOKEN", {cause: error});
+    throw new Error("UNABLE_GETTING_CL_TOKEN", { cause: error });
   }
 };
 
@@ -76,7 +76,7 @@ export const getMerchantToken = async () => {
   };
 };
 
-export const getCustomerTokenCl = async ({ email, password}) => {
+export const getCustomerTokenCl = async ({ email, password }) => {
 
   try {
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
@@ -117,7 +117,7 @@ export const getCLAdminCLient = async () => {
   } catch (error) {
     throw new Error("UNABLE_GETTING_CL_CLIENT", { cause: error });
   }
-}; 
+};
 
 export const createCustomer = async ({
   email,
@@ -157,7 +157,7 @@ export const createCustomer = async ({
   }
 };
 
-export const getCustomerInfo = async (accessToken) => {
+export const getCustomerInfo = async (accessToken: string) => {
   try {
     const cl = await getCommerlayerClient(accessToken);
     const { owner } = jwtDecode(accessToken) as JWTProps;
@@ -166,6 +166,58 @@ export const getCustomerInfo = async (accessToken) => {
     return { status: 200, data: customerInfo };
   } catch (error) {
     console.error('Error customerInfo: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Create a customer password reset */
+export const createCustomerResetPwd = async (customerEmail: string) => {
+  try {
+    console.log("************** createCustomerResetPwd");
+    const cl = await getCLAdminCLient();
+    const createCustomerRPwd = await cl.customer_password_resets.create({
+      customer_email: customerEmail
+    });
+    console.log({ createCustomerRPwd });
+    return { status: 200, data: createCustomerRPwd };
+  } catch (error) {
+    console.error('Error Create Customer Reset: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Update a customer password reset */
+export const updateCustomerResetPwd = async (tokenID: string, customerPWD: string, resetToken: string) => {
+  try {
+    console.log("************** UpdateCustomerResetPwd");
+    const cl = await getCLAdminCLient();
+    const updateCustomerRPwd = await cl.customer_password_resets.update({
+      id: tokenID,
+      customer_password: customerPWD,
+      _reset_password_token: resetToken
+    });
+    console.log({ updateCustomerRPwd });
+    return { status: 200, data: updateCustomerRPwd };
+  } catch (error) {
+    console.error('Error Update Customer Reset: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Retrieve a customer password reset */
+export const retrieveCustomerResetPwd = async (tokenID: string) => {
+  try {
+    let isTokenValid = false;
+    console.log("************** RetrieveCustomerResetPwd");
+    const cl = await getCLAdminCLient();
+    const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(tokenID);
+    console.log({ retrieveCustomerRPwd });
+    if (retrieveCustomerRPwd.reset_password_at == null) { //tambien se debe validar el tiempo del token
+      isTokenValid = true;
+    }
+    return { status: 200, isTokenValid, resetToken: retrieveCustomerRPwd.reset_password_token, tokenID };
+  } catch (error) {
+    console.error('Error Check Customer Token: ', error);
     return { status: 401, error: error };
   }
 };
