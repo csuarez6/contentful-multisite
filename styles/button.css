@@ -3,7 +3,7 @@
 }
 
 .button.button-primary {
-  @apply rounded-[20px] bg-lucuma text-black hover:bg-lucuma-60 disabled:bg-lucuma-80 disabled:text-grey-60;
+  @apply rounded-[20px] bg-lucuma text-black hover:bg-lucuma-60 disabled:bg-lucuma-80 disabled:text-grey-60 border border-lucuma;
 }
 
 .button.button-primary.disabled {
