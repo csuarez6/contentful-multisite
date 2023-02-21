@@ -3,6 +3,7 @@ import DefaultQuery from "../shared/default.gql";
 const ViewFeaturedTabs = `
   ${DefaultQuery}
   name
+  isBlock
 `;
 
 export default ViewFeaturedTabs;

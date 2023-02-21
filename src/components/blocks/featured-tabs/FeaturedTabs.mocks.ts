@@ -25,7 +25,8 @@ const data: any = {
               promoIcon: 'invoice-filled',
             }
           ]
-        }
+        },
+        __typename: 'AuxCustomContent'
       },
       {
         title: 'Tab2',
@@ -47,7 +48,8 @@ const data: any = {
               promoIcon: 'invoice-filled',
             }
           ]
-        }
+        },
+        __typename: 'AuxCustomContent'
       }
     ]
   }
