@@ -8,6 +8,7 @@ export enum CONTENTFUL_TYPENAMES {
   PRODUCT = "Product",
 
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
+  BLOCK_FORM = "BlockForm",
   BLOCK_CONTENT_FILTER = "BlockContentFilter",
   BLOCK_BREADCRUMB = "BlockBreadcrumb",
   AUX_CUSTOM_CONTENT = "AuxCustomContent",
@@ -38,4 +39,8 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_VIDEO_SLIDER = "ViewVideoSlider",
   VIEW_RICH_TEXT = "ViewRichText",
   VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
+
+  FORM_RPO = "RPO",
+  FORM_VANTILISTO = "Vantilisto",
+  FORM_IDENTIDAD = "Identidad",
 };

@@ -77,6 +77,15 @@ export interface IPromoBlock extends IBlockProps {
     links?: ILink[]
 }
 
+export interface IFormBlock extends IBlockProps{
+    __typename?: string;
+    title?: string;
+    subtitle?: string;
+    description?: IRichText;
+    simpleView?: string;
+    view?: IView;
+}
+
 export interface ITag {
     label: string;
     backgroundColor?: string;

@@ -23,6 +23,10 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
 
     let view = BLOCKSVIEW_MAP[item.__typename];
 
+    if(view && item?.simpleView){
+      view = view[item.simpleView];
+    }
+
     if (view && item?.view?.__typename) {
       view = view[item.view.__typename];
     }

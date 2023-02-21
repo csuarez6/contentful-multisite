@@ -20,6 +20,9 @@ const PageQuery = `
       ...on BlockContentFilter {
         ${DefaultQuery}
       }
+      ...on BlockForm{
+        ${DefaultQuery}
+      }
     }
   }
   promoTitle
