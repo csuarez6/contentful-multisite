@@ -21,12 +21,12 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   const checkWidth = () => {
     const container = document.getElementById(`container_${_uuid}`);
     const tabs = document.getElementById(`tabs_${_uuid}`);
-    setIsCentered(container.offsetWidth >= tabs.offsetWidth);
+    if (container && tabs) setIsCentered(container.offsetWidth >= tabs.offsetWidth);
   };
 
   useEffect(() => {
     checkWidth();
-  }, []);
+  });
 
   useEffect(() => {
     window.addEventListener('resize', checkWidth);
