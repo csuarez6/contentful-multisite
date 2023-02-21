@@ -61,7 +61,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
                       <div className="flex flex-col gap-3">
                         <h3 className="text-blue-dark">{content.subtitle ?? (content.promoTitle ?? content.name)}</h3>
                         <div className="text-grey-30">
-                          {documentToReactComponents(content.promoDescription.json)}
+                          {documentToReactComponents(content.promoDescription?.json)}
                         </div>
                       </div>
                     </Tab.Panel>

@@ -3,7 +3,6 @@ import { classNames } from "@/utils/functions";
 
 import React, { useState, useEffect, useRef } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
-import { getUrlPath } from "@/utils/link.utils";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import jsonToReactComponent from "@/lib/services/render-cards.service";
 
@@ -56,14 +55,13 @@ const MegaMenuItem = ({ item }) => {
       setOpen(false);
       setScreenW(window.innerWidth);
       setScreenH(window.innerHeight);
-
     });
   }, [screenW]);
 
   const columnList = (items) => {
     return {
       gridTemplateColumns: `repeat(${items}, 1fr)`,
-      gridColumn: `span ${items} / span ${items}`
+      gridColumn: `span ${items} / span ${items}`,
     };
   };
 
@@ -71,23 +69,23 @@ const MegaMenuItem = ({ item }) => {
     const col = columns - items;
     return {
       gridTemplateColumns: `repeat(${col}, 1fr)`,
-      gridColumn: `span ${col} / span ${col}`
+      gridColumn: `span ${col} / span ${col}`,
     };
   };
 
-
   const openSubmenu = () => {
     const _submenu = submenu.current;
-    const subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
+    const subTitles: NodeListOf<HTMLParagraphElement> =
+      _submenu.querySelectorAll(".subTitleList");
 
     const height: Array<number> = [];
 
-    subTitles.forEach(item => {
+    subTitles.forEach((item) => {
       height.push(item.clientHeight);
     });
     height.sort().reverse();
 
-    subTitles.forEach(item => {
+    subTitles.forEach((item) => {
       item.style.height = height[0] + "px";
     });
 
@@ -111,65 +109,34 @@ const MegaMenuItem = ({ item }) => {
       )}
       ref={submenu}
     >
-      {item.mainNavCollection?.items?.length > 0 && (
-        <span
-          className={
-            classNames(
-              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none cursor-pointer",
-              open ? "border-lucuma" : "border-transparent"
-            )
+      {/* contenido personalizado, Navegacion */}
+      {(!item.mainNavCollection?.items && (item.internalLink?.slug || item.externalLink)) && (
+        <CustomLink
+          content={item}
+          linkClassName={
+            "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
           }
+          className={classNames(
+            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
+            open ? "border-lucuma" : "border-transparent"
+          )}
         >
           <LinkElement item={item} isOpen={open} />
-        </span>
-      )
-      }
-      {!item.mainNavCollection?.items && !item.internalLink?.slug &&
-        !item.externalLink &&
-        getUrlPath(item) === "/" && (
-          <CustomLink
-            content={item}
-            linkClassName={
-              "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
-            }
-            className={classNames(
-              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
-              open ? "border-lucuma" : "border-transparent"
-            )}
-          >
-            <LinkElement item={item} isOpen={open} />
-          </CustomLink>
-        )}
-      {!item.mainNavCollection?.items &&
-        (item.internalLink?.slug || item.externalLink || getUrlPath(item) !== "/") &&
-        (<CustomLink
+        </CustomLink>
+      )}
+
+      {/* Pagina, producto */}
+      {(item.mainNavCollection?.items || item.urlPath) && (
+        <CustomLink
           content={item}
-          className={
-            classNames(
-              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-              open && "border-blue-dark"
-            )
-          }
+          className={classNames(
+            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
+            open && "border-blue-dark"
+          )}
         >
           <LinkElement item={item} isOpen={false} />
         </CustomLink>
-        )
-      }
-      {item.mainNavCollection?.items && item.urlPath
-         &&
-        (<CustomLink
-          content={item}
-          className={
-            classNames(
-              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-              open && "border-blue-dark"
-            )
-          }
-        >
-          <LinkElement item={item} isOpen={false} />
-        </CustomLink>
-        )
-      }
+      )}
       {item.mainNavCollection?.items?.length > 0 && (
         <div
           ref={submenu}
@@ -184,49 +151,70 @@ const MegaMenuItem = ({ item }) => {
           <div className="relative flex py-6 my-6 gap-6">
             <div className="mx-auto xl:container">
               <div className="px-2 sm:px-4 2xl:px-[70px]">
-                <nav className="grid gap-10 w-full" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
-                  <div className="grid gap-6 xl:gap-10 -mr-5 pr-5" style={columnList(item.mainNavCollection.items.length)}>
+                <nav
+                  className="grid gap-10 w-full"
+                  style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+                >
+                  <div
+                    className="grid gap-6 xl:gap-10 -mr-5 pr-5"
+                    style={columnList(item.mainNavCollection.items.length)}
+                  >
                     {item.mainNavCollection.items.map((subItem) => (
                       <div key={subItem.name}>
                         <p className="subTitleList">
                           {subItem.promoTitle ?? subItem.name}
                         </p>
                         <ul role="list" className="flex flex-col gap-5 mt-6">
-                          {subItem.mainNavCollection?.items?.map((itemList, idx) => (
-                            itemList && (
-                              <li key={`${itemList?.sys?.id ?? itemList.name}_${idx}`} className="flow-root">
-                                <CustomLink
-                                  content={itemList}
-                                  onClick={() => setOpen(false)}
-                                  className="flex itemLists-center text-base text-blue-dark hover:text-lucuma-60"
+                          {subItem.mainNavCollection?.items?.map(
+                            (itemList, idx) =>
+                              itemList && (
+                                <li
+                                  key={`${
+                                    itemList?.sys?.id ?? itemList.name
+                                  }_${idx}`}
+                                  className="flow-root"
                                 >
-                                  <span>{itemList?.promoTitle ?? itemList?.name}</span>
-                                </CustomLink>
-                              </li>
-                            )
-                          ))}
+                                  <CustomLink
+                                    content={itemList}
+                                    onClick={() => setOpen(false)}
+                                    className="flex itemLists-center text-base text-blue-dark hover:text-lucuma-60"
+                                  >
+                                    <span>
+                                      {itemList?.promoTitle ?? itemList?.name}
+                                    </span>
+                                  </CustomLink>
+                                </li>
+                              )
+                          )}
                         </ul>
                       </div>
                     ))}
                   </div>
-                  {item?.secondaryNavCollection?.items && item.secondaryNavCollection.items.length && (
-                    <div className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70" style={columnCard(item.mainNavCollection.items.length)}>
-                      {item.secondaryNavCollection.items.map((block) => (
-                        <div
-                          className={
-                            classNames(
+                  {item?.secondaryNavCollection?.items &&
+                    item.secondaryNavCollection.items.length && (
+                      <div
+                        className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
+                        style={columnCard(item.mainNavCollection.items.length)}
+                      >
+                        {item.secondaryNavCollection.items.map((block) => (
+                          <div
+                            className={classNames(
                               "card-mega-menu flex overflow-hidden",
-                              !block.promoImage && 'not-image'
-                            )
-                          }
-                          key={`card_${block?.sys.id}-megamenu`}
-                          style={{ gridColumn: block.__typename == "AuxNavigation" ? `span 2 / span 2` : null }}
-                        >
-                          {jsonToReactComponent(block)}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                              !block.promoImage && "not-image"
+                            )}
+                            key={`card_${block?.sys.id}-megamenu`}
+                            style={{
+                              gridColumn:
+                                block.__typename == "AuxNavigation"
+                                  ? `span 2 / span 2`
+                                  : null,
+                            }}
+                          >
+                            {jsonToReactComponent(block)}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                 </nav>
               </div>
             </div>
