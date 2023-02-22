@@ -19,7 +19,7 @@ import CarouselCategoriesBlock from "@/components/blocks/carousel-categories/Car
 import FeaturedTabsBlock from "@/components/blocks/featured-tabs/FeaturedTabs";
 import ContentFilter from "@/components/blocks/content-filter/ContentFilter";
 import FeaturedProductBlock from "@/components/blocks/product-featured/FeaturedProductBlock";
-import RpoFormBlock from "@/components/blocks/rpo-form/RpoForm";
+import InquiryFormBlock from "@/components/blocks/inquiry-form/InquiryForm";
 import VideoBlock from "@/components/blocks/videoSlider-block/VideoBlock";
 import VerticalCard from "@/components/organisms/cards/vertical-card/VerticalCard";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
@@ -57,15 +57,15 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_CAROUSEL]: CarouselCategoriesBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS]: FeaturedTabsBlock,
     [CONTENTFUL_TYPENAMES.VIEW_FEATURED_PRODUCTS]: FeaturedProductBlock,
-    [CONTENTFUL_TYPENAMES.VIEW_QUERY_FORM]: RpoFormBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_QUERY_FORM]: InquiryFormBlock,
     [CONTENTFUL_TYPENAMES.VIEW_VIDEO_SLIDER]: VideoBlock,
     [CONTENTFUL_TYPENAMES.VIEW_RICH_TEXT]: RichText,
     [CONTENTFUL_TYPENAMES.VIEW_TABS_WITH_FEATURED_IMAGE]: TabsWithFeaturedImageBlock,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_FORM]: {
-    [CONTENTFUL_TYPENAMES.FORM_RPO]: RpoFormBlock,
-    [CONTENTFUL_TYPENAMES.FORM_VANTILISTO]: RpoFormBlock,
-    [CONTENTFUL_TYPENAMES.FORM_IDENTIDAD]: RpoFormBlock,
+    [CONTENTFUL_TYPENAMES.FORM_RPO]: InquiryFormBlock,
+    [CONTENTFUL_TYPENAMES.FORM_VANTILISTO]: InquiryFormBlock,
+    [CONTENTFUL_TYPENAMES.FORM_IDENTIDAD]: InquiryFormBlock,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: ContentFilter,
   [CONTENTFUL_TYPENAMES.PRODUCT]: FeaturedProduct,

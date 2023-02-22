@@ -15,7 +15,7 @@ const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
                 {
                   i + 1 !== ctaCollection.items.length
                     ? (
-                      <CustomLink content={el} linkClassName="flex items-center text[#466072] font-semibold hover:underline leading-none">
+                      <CustomLink content={el} linkClassName="flex items-center text-[#466072] font-semibold hover:underline leading-none">
                         {el.promoTitle ?? el.name}
                       </CustomLink>
                     )

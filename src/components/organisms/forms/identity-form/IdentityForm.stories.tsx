@@ -1,11 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import RpoForm from './RpoForm';
-import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
-import { mockRpoFormProps } from './RpoForm.mocks';
+import IdentityForm from './IdentityForm'; 
+import { IFormBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { mockIdentityFormProps } from './IdentityForm.mocks';
 
 export default {
-  title: 'blocks/RpoForm',
-  component: RpoForm,
+  title: 'organisms/forms/IdentityForm',
+  component: IdentityForm,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
@@ -15,16 +15,16 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof RpoForm>;
+} as ComponentMeta<typeof IdentityForm>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof RpoForm> = (args) => (
-    <RpoForm {...args} />
+const Template: ComponentStory<typeof IdentityForm> = (args) => (
+    <IdentityForm {...args} />
 );
 
 export const Base = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockRpoFormProps.data,
-} as IPromoBlock;
+  ...mockIdentityFormProps.data,
+} as IFormBlock;

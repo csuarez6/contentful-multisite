@@ -1,4 +1,4 @@
-export interface IRpoForm {
+export interface IInquiryForm {
     title?: string,
     subTitle?: string,
     titleForm?: string,
