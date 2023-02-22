@@ -31,7 +31,7 @@ const validate = (
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const resp = await updateCustomerResetPwd(req.body.tID, req.body.password, req.body.resetT);
-        let templateEmail = `\nHola ${resp.data.customer_email} Gracias por utilizar los servicios Vanti.\n\nSu contraseña ha sido recuperada.\n\n`;
+        const templateEmail = `\nHola ${resp.data.customer_email} Gracias por utilizar los servicios Vanti.\n\nSu contraseña ha sido recuperada.\n\n`;
         const clientEmail = {
             to: resp.data.customer_email,
             subject: "Recuperar Contraseña - Vanti",

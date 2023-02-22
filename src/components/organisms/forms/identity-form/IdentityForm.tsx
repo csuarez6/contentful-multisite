@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import Icon from '@/components/atoms/icon/Icon';
 import TextBox from '@/components/atoms/input/textbox/TextBox';
+import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import { IFormBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import Image from 'next/image';
-import Icon from '@/components/atoms/icon/Icon';
 import { classNames } from '@/utils/functions';
 
 interface IForm {
@@ -31,6 +32,11 @@ const IdentityForm: React.FC<IFormBlock> = () => {
   const [isSending, setIsSending] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
 
   const refForm: LegacyRef<HTMLFormElement> = createRef();
   const {
@@ -43,13 +49,16 @@ const IdentityForm: React.FC<IFormBlock> = () => {
   });
 
   const resetAll = () => {
+    setErrorMessage('');
     setShowInfo(false);
     setIsAuthorized(false);
     setIsSending(false);
     reset();
+    closeModal();
   };
 
   const onSubmit = (data: IForm) => {
+    setErrorMessage('');
     setIsAuthorized(false);
     setIsSending(true);
     setShowInfo(false);
@@ -67,12 +76,19 @@ const IdentityForm: React.FC<IFormBlock> = () => {
       .then((response) => response.json())
       .then((json) => {
         const { result } = json;
-        setIsAuthorized(result.isAuthorized);
-        setShowInfo(true);
+        if (result.success) {
+          setIsAuthorized(result.isAuthorized);
+          setShowInfo(true);
+        } else {
+          setErrorMessage(result.message);
+          openModal();
+        }
       })
       .catch(err => {
-        // if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
-        // TODO: Show Modal
+        if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
+        else setErrorMessage("Ocurrió un error inesperado, intenta de nuevo por favor.");
+
+        openModal();
         console.log(err);
       })
       .finally(() => setIsSending(false));
@@ -105,13 +121,19 @@ const IdentityForm: React.FC<IFormBlock> = () => {
 
           <div className="w-full flex gap-6">
             {!showInfo && (
-              <button type="submit" disabled={isSending} className='w-fit button button-primary'>
-                Verificar identidad &gt;
+              <button type="submit" disabled={isSending} className='w-fit button button-primary flex items-center gap-1'>
+                Verificar identidad
+                <span className='flex items-center w-6 h-6'>
+                  <Icon icon='arrow-right' className='w-full h-full text text-neutral-30' />
+                </span>
               </button>
             )}
             {showInfo && (
-              <button type="button" className='w-fit button button-outline' onClick={resetAll}>
-                Verificar otra identidad &gt;
+              <button type="button" className='w-fit button button-outline flex items-center gap-1' onClick={resetAll}>
+                Verificar otra identidad
+                <span className='flex items-center w-6 h-6'>
+                  <Icon icon='arrow-right' className='w-full h-full text text-neutral-30' />
+                </span>
               </button>
             )}
           </div>
@@ -181,6 +203,26 @@ const IdentityForm: React.FC<IFormBlock> = () => {
             </div>)}
           </div>
         </div>
+      )}
+
+      {isOpen && errorMessage && (
+        <CustomModal
+          close={resetAll}
+          icon="close"
+          title="¡Error!"
+        >
+          <>
+            <div className="mt-2">
+              <p>{errorMessage}</p>
+            </div>
+
+            <div className="mt-4 text-right">
+              <button type="button" className="button button-primary" onClick={resetAll}>
+                Aceptar
+              </button>
+            </div>
+          </>
+        </CustomModal>
       )}
     </div>
   );

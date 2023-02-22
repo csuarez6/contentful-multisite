@@ -16,10 +16,10 @@ const handler = async (
       });
     }
     else if (identity !== 12345) {
-      res.status(400).json({
+      res.status(200).json({
         result: {
           message: "El documento de identidad ingresado no está autorizado.",
-          success: false,
+          success: true,
           isAuthorized: false
         }
       });
@@ -38,7 +38,7 @@ const handler = async (
     if (contractAccount != "12345") {
       res.status(400).json({
         result: {
-          error: "La cuenta contrato ingresada es erronea.",
+          message: "La cuenta contrato ingresada es erronea.",
           success: false
         }
       });
@@ -59,7 +59,7 @@ const handler = async (
     if (contractAccount != 12345) {
       res.status(400).json({
         result: {
-          error: "La cuenta contrato ingresada es erronea.",
+          message: "La cuenta contrato ingresada es erronea.",
           success: false
         }
       });

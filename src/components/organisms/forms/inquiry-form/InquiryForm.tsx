@@ -7,6 +7,7 @@ import TextBox from '@/components/atoms/input/textbox/TextBox';
 import Icon from "@/components/atoms/icon/Icon";
 import { IFormBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import RadioBox from '@/components/atoms/input/radiobox/RadioBox';
+import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 
 interface IForm {
   contractAccount: string;
@@ -33,6 +34,12 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
   const [isSending, setIsSending] = useState(false);
   const [response, setResponse] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
+
   const refForm: LegacyRef<HTMLFormElement> = createRef();
   const {
     register,
@@ -44,13 +51,16 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
   });
 
   const resetAll = () => {
+    setErrorMessage('');
     setShowInfo(false);
     setResponse(null);
     setIsSending(false);
     reset();
+    closeModal();
   };
 
   const onSubmit = (data: IForm) => {
+    setErrorMessage('');
     setResponse(null);
     setIsSending(true);
     setShowInfo(false);
@@ -72,12 +82,15 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
           setResponse(result);
           setShowInfo(true);
         } else {
-          console.log('Error');
+          setErrorMessage(result.message);
+          openModal();
         }
       })
       .catch(err => {
-        // if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
-        // TODO: Show Modal
+        if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
+        else setErrorMessage("Ocurrió un error inesperado, intenta de nuevo por favor.");
+
+        openModal();
         console.log(err);
       })
       .finally(() => setIsSending(false));
@@ -130,8 +143,11 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
         )}
 
         <div className="w-full flex gap-6">
-          <button type="submit" className='w-fit button button-primary' disabled={isSending}>
-            {isRPO ? "Consulta la fecha" : "Consulta tu cupo"} &gt;
+          <button type="submit" className='w-fit button button-primary flex items-center gap-1' disabled={isSending}>
+            {isRPO ? "Consulta la fecha" : "Consulta tu cupo"}
+            <span className='flex items-center w-6 h-6'>
+              <Icon icon='arrow-right' className='w-full h-full text text-neutral-30' />
+            </span>
           </button>
           <button type="button" className='w-fit button button-outline' disabled={isSending} onClick={resetAll}>
             Vuelve atrás
@@ -179,6 +195,26 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
           <div className='ml-[14px] mt-5'>
             <p className='text-size-p3 text-neutral-20'>*Puedes agrandar tu cupo consultando los términos y condiciones <a href="#" className='underline'>aquí</a></p>
           </div>
+        )}
+
+        {isOpen && errorMessage && (
+          <CustomModal
+            close={resetAll}
+            icon="close"
+            title="¡Error!"
+          >
+            <>
+              <div className="mt-2">
+                <p>{errorMessage}</p>
+              </div>
+
+              <div className="mt-4 text-right">
+                <button type="button" className="button button-primary" onClick={resetAll}>
+                  Aceptar
+                </button>
+              </div>
+            </>
+          </CustomModal>
         )}
       </div>
     </div>
