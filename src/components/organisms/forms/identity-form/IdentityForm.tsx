@@ -86,6 +86,7 @@ const IdentityForm: React.FC<IFormBlock> = () => {
       })
       .catch(err => {
         if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
+        else if (err?.message) setErrorMessage(err.message);
         else setErrorMessage("Ocurrió un error inesperado, intenta de nuevo por favor.");
 
         openModal();
@@ -124,7 +125,7 @@ const IdentityForm: React.FC<IFormBlock> = () => {
               <button type="submit" disabled={isSending} className='w-fit button button-primary flex items-center gap-1'>
                 Verificar identidad
                 <span className='flex items-center w-6 h-6'>
-                  <Icon icon='arrow-right' className='w-full h-full text text-neutral-30' />
+                  <Icon icon='arrow-right' className={classNames('w-full h-full text-neutral-30', isSending && "text-opacity-50")} />
                 </span>
               </button>
             )}
