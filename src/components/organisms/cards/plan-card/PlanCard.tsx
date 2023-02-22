@@ -38,6 +38,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
     internalLink,
     externalLink,
     ctaLabel,
+    linkView
   };
 
   return (
@@ -123,7 +124,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
                     content={propsLink}
                     className={classNames(
                       "button",
-                      getButtonType(buttonType ?? "Contorno")
+                      getButtonType(linkView === "Botón llamada" ? "Primario" : (buttonType ?? "Primario"))
                     )}
                   >
                     {getLinkProps(propsLink).textLink}
