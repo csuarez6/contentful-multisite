@@ -9,6 +9,7 @@ import Image from "next/image";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
+import { getLinkProps } from "@/utils/link.utils";
 
 const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   title,
@@ -136,7 +137,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                             key={item.name}
                             className="button button-primary"
                           >
-                            {item.promoTitle ?? item.name}
+                            {getLinkProps(item).textLink}
                           </CustomLink>
                         </div>
                       )}
