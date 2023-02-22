@@ -72,7 +72,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
           </div>
         )}
 
-        {image.url && (
+        {image?.url && (
           <div className="flex w-full lg:w-[494px] shrink-0 grow">
             <figure className="relative rounded-xl w-full aspect-[494/500] overflow-hidden">
               <Image
