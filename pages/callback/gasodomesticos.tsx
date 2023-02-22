@@ -98,6 +98,7 @@ const CallbackPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
   const [sku, setSku] = useState(null);
   const [isFetchingSKU, setIsFetchingSKU] = useState(true);
   const [productData, setProductData] = useState(null);
@@ -163,6 +164,7 @@ const CallbackPage = () => {
 
   const onSubmit = async (data: IForm) => {
     setErrorMessage("");
+    setIsSending(true);
 
     fetch("/api/callback", {
       method: "POST",
@@ -191,7 +193,10 @@ const CallbackPage = () => {
           );
         console.log(err);
       })
-      .finally(() => openModal());
+      .finally(() => {
+        openModal();
+        setIsSending(false);
+      });
   };
 
   const breadcrumbs = {
@@ -220,7 +225,7 @@ const CallbackPage = () => {
   return (
     <>
       <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="section flex gap-6">
+      <section className="section flex flex-col md:flex-row gap-6">
         {isLoading && (
           <div
             role="status"
@@ -251,6 +256,7 @@ const CallbackPage = () => {
               title="1. Diligencia tus datos para llamarte"
               isCheck={isValid}
               icon="personal-data"
+              classes="grow"
             >
               <div className="bg-white rounded-lg">
                 <form
@@ -264,6 +270,7 @@ const CallbackPage = () => {
                       name="cellPhone"
                       label="Escribe tu número de celular"
                       placeholder="300 0000000"
+                      disabled={isSending}
                       {...register("cellPhone")}
                     />
                     {errors.cellPhone && (
@@ -278,6 +285,7 @@ const CallbackPage = () => {
                       id="agreeHD"
                       name="agreeHD"
                       label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
+                      disabled={isSending}
                       {...register("agreeHD")}
                     />
                     {errors.agreeHD && (
@@ -297,6 +305,7 @@ const CallbackPage = () => {
                     <button
                       type="submit"
                       className="w-fit button button-primary"
+                      disabled={isSending}
                     >
                       Enviar datos
                     </button>
@@ -323,41 +332,39 @@ const CallbackPage = () => {
                 )}
               </div>
             </HeadingCard>
-            <div className="relative">
-              <div className="grid gap-3 shrink-0 w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
-                <p className="title is-4 text-blue-dark !font-semibold">
-                  Detalle de tu pedido
-                </p>
-                <div className="flex gap-3 flex-col items-start min-w-full">
-                  <figure className="aspect-square w-[214px] self-center">
-                    <Image
-                      src={productData.promoImage.url}
-                      alt={productData.promoImage.title}
-                      width={214}
-                      height={214}
-                    />
-                  </figure>
-                  <div className="grid grid-cols-2 gap-3 w-full">
-                    <p className="text-size-subtitle1 text-neutral-20 col-span-2">
-                      Productos
-                    </p>
-                    <p className="text-size-p2 text-grey-30 leading-[1.2]">
-                      {productData.productName}
-                    </p>
-                    <p className="text-size-subtitle2 text-blue-dark">
-                      {productData.price}
-                    </p>
-                    <p className="text-size-p2 text-grey-30">Cantidad</p>
-                    <p className="text-size-subtitle2 text-blue-dark">1</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 w-full items-center bg-neutral-90 p-1 rounded">
-                    <p className="text-size-subtitle2 text-black text-right">
-                      TOTAL
-                    </p>
-                    <p className="text-size-subtitle1 text-black">
-                      {productData.price}
-                    </p>
-                  </div>
+            <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
+              <p className="title is-4 text-blue-dark !font-semibold">
+                Detalle de tu pedido
+              </p>
+              <div className="flex gap-3 flex-col items-start min-w-full">
+                <figure className="aspect-square w-[214px] self-center">
+                  <Image
+                    src={productData.promoImage.url}
+                    alt={productData.promoImage.title}
+                    width={214}
+                    height={214}
+                  />
+                </figure>
+                <div className="grid grid-cols-2 gap-3 w-full">
+                  <p className="text-size-subtitle1 text-neutral-20 col-span-2">
+                    Productos
+                  </p>
+                  <p className="text-size-p2 text-grey-30 leading-[1.2]">
+                    {productData.productName}
+                  </p>
+                  <p className="text-size-subtitle2 text-blue-dark">
+                    {productData.price}
+                  </p>
+                  <p className="text-size-p2 text-grey-30">Cantidad</p>
+                  <p className="text-size-subtitle2 text-blue-dark">1</p>
+                </div>
+                <div className="grid grid-cols-2 xxs:gap-3 w-full items-center bg-neutral-90 p-1 rounded">
+                  <p className="font-semibold md:text-size-subtitle2 text-black text-right pr-3 xxs:p-0">
+                    TOTAL
+                  </p>
+                  <p className="font-semibold md:text-size-subtitle1 text-black">
+                    {productData.price}
+                  </p>
                 </div>
               </div>
             </div>

@@ -183,7 +183,7 @@ const CallbackPage = () => {
   return (
     <>
       <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="section flex gap-6">
+      <section className="section flex flex-col md:flex-row gap-6">
         {isLoading && (
           <div
             role="status"
@@ -223,7 +223,7 @@ const CallbackPage = () => {
               )}
             </div>
             <div className="relative">
-              <div className="grid gap-3 shrink-0 w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
+              <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
                 <p className="title is-4 text-blue-dark !font-semibold">
                   Detalle de tu pedido
                 </p>
@@ -251,11 +251,13 @@ const CallbackPage = () => {
                       {quantity}
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 w-full items-center bg-neutral-90 p-1 rounded">
-                    <p className="text-size-subtitle2 text-black text-right">
+                  <div className="grid grid-cols-2 xxs:gap-3 w-full items-center bg-neutral-90 p-1 rounded">
+                    <p className="font-semibold md:text-size-subtitle2 text-black text-right pr-3 xxs:p-0">
                       TOTAL
                     </p>
-                    <p className="text-size-subtitle1 text-black">{amount}</p>
+                    <p className="font-semibold md:text-size-subtitle1 text-black">
+                      {amount}
+                    </p>
                   </div>
                 </div>
               </div>

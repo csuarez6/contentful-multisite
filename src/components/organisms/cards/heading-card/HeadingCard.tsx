@@ -38,7 +38,7 @@ const HeadingCard: React.FC<IHeadingCard> = ({
   return (
     <div className={classNames("w-full rounded-xl shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)]", classes)}>
       <div className={classNames(
-        "flex flex-wrap justify-between p-[18px] border-b border-gray-200 rounded-t-lg bg-neutral-90 items-center",
+        "flex justify-between p-[18px] border-b border-gray-200 rounded-t-lg bg-neutral-90 items-center",
         headClasses
       )}
       >
