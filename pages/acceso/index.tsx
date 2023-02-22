@@ -1,5 +1,4 @@
 import { GetStaticProps } from "next";
-import getPageContent from "@/lib/services/page-content.service";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 import LoginFormBlock, { IForm } from "@/components/blocks/login-form/LoginFormBlock";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/router';
+import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 
 const ModalContent = ({ modalMsg }) => {
     return (
@@ -67,8 +67,26 @@ const Login = () => {
         }
     };
 
+    const breadcrumbs = {
+        items: [
+            {
+                promoTitle: 'Hogares',
+                internalLink: {
+                    urlPath: '/'
+                }
+            },
+            {
+                promoTitle: 'Iniciar sesión',
+                internalLink: {
+                    urlPath: '#'
+                }
+            },
+        ],
+    };
+
     return (
         <>
+            <Breadcrumbs ctaCollection={breadcrumbs} />
             <LoginFormBlock {...formData} />
         </>
     );
@@ -77,19 +95,13 @@ const Login = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const pageContent = await getPageContent(
-        '/',
-        context.preview ?? false
-    );
-
     const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
     const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
 
     return {
         props: {
-            ...pageContent,
             layout: {
-                name: pageContent.name,
+                name: 'Iniciar sesión',
                 footerInfo,
                 headerInfo,
             },

@@ -57,6 +57,7 @@ const ForgotPassword = () => {
 
     useEffect(() => {
         reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSubmitSuccessful]);
 
     const onSubmit = async (data: ITemsForm) => {

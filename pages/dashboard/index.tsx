@@ -1,5 +1,4 @@
 import { GetStaticProps } from "next";
-import getPageContent from "@/lib/services/page-content.service";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from "@/constants/contentful-ids.constants";
 
@@ -209,19 +208,13 @@ const Dashboard = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const pageContent = await getPageContent(
-        '/',
-        context.preview ?? false
-    );
-
     const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
     const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
 
     return {
         props: {
-            ...pageContent,
             layout: {
-                name: pageContent.name,
+                name: 'Mi cuenta',
                 footerInfo,
                 headerInfo,
             },
