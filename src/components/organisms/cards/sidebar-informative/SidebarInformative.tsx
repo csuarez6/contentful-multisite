@@ -2,7 +2,6 @@ import Icon from '@/components/atoms/icon/Icon';
 import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 import React from 'react';
 
-
 const item = (str: string) => (
     <div className="pl-3 py-2">
         <p className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70">

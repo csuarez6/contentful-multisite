@@ -4,12 +4,7 @@ import OrderCard from "@/components/organisms/cards/order-card/OrderCard";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
-
 const StepTwo: React.FC<IPromoContent> = () => {
-    const handleEvent = (data) => {
-        console.log("object", data.target.value);
-    };
-
     return (
         <div className="grid grid-cols-3 gap-6 place-items-baseline">
             <HeadingCard
@@ -25,7 +20,6 @@ const StepTwo: React.FC<IPromoContent> = () => {
                                 name=""
                                 label="Diligencia la siguiente información para poder realizar el envío"
                                 placeholder="Ciudad"
-                                onChange={handleEvent}
                             />
                         </div>
                         <div className="w-full">

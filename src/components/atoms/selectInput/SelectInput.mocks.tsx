@@ -1,6 +1,5 @@
 import { ISelectInput } from "./SelectInput";
 
-
 const data: ISelectInput = {
   selectOptions: [
     {

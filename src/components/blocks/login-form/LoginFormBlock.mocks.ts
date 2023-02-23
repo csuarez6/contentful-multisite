@@ -6,7 +6,7 @@ const data: IForm = {
             className: 'button-primary',
             text: 'Iniciar sesión'
         },
-        onSubmitForm: (data) => console.log(data),
+        onSubmitForm: (data) => console.info(data),
         modal: {
             promoTitle: '¡Login!',
             subtitle: '¡Bienvenido Login!',

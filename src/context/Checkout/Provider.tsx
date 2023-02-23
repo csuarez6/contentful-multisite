@@ -4,7 +4,6 @@ import useCommerceLayer from '@/hooks/useCommerceLayer';
 import CheckoutContext, { IContextCheckout } from ".";
 import flows from './flows';
 
-
 const CheckoutProvider = ({ children }) => {
   const router = useRouter();
   const { paymentType } = router.query;

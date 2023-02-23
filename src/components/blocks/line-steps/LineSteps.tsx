@@ -42,6 +42,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
         item.classList.add("open");
       };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featuredContentsCollection?.items]);
 
   return (

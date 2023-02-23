@@ -62,7 +62,6 @@ const schema = yup.object({
   })
 });
 
-
 const STEP_META_FIELD = "hasAddresses";
 const DEFAULT_COUNTRY = 'CO';
 const DEFAULT_ZIP_CODE = '000000';
@@ -400,7 +399,6 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getMenu(
     DEFAULT_FOOTER_ID,

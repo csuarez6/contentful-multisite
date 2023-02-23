@@ -19,7 +19,6 @@ const iconRight: IIcon = {
     className: 'z-10'
 };
 
-
 const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCollection, view, blockId, sysId }) => {
     if (!featuredContentsCollection) return;
     const uui = uuid();

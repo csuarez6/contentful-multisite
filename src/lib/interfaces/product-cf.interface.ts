@@ -5,7 +5,6 @@ import { ILink } from './menu-cf.interface';
 import { IPromoBlock } from './promo-content-cf.interface';
 import { IRichText } from './richtext-cf.interface';
 
-
 export enum PaymentMethodType {
   pse = 'pse',
   vantilisto = 'vantilisto',

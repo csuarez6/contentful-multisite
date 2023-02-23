@@ -13,13 +13,18 @@
   },
   "rules": {
     "prefer-const": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "semi": "error",
     "no-tabs": ["error", { "allowIndentationTabs": false }],
     "no-unused-vars": [
       "warn",
       { "args": "after-used", "argsIgnorePattern": "^_" }
-    ]
+    ],
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }]
   }
 }

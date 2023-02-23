@@ -28,4 +28,3 @@ export const Base = Template.bind({});
 Base.args = {
   ...mockProductFilterProps.data,
 } as IProductDetails;
-

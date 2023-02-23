@@ -33,5 +33,3 @@ Base.args = {
 MoreVideos.args = {
     ...mockVideoBlockProps.twoVideos,
 } as IPromoBlock;
-
-

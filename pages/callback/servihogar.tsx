@@ -131,7 +131,7 @@ const CallbackPage = () => {
           setErrorMessage(
             "Comprueba tu conexión a internet e intenta de nuevo por favor."
           );
-        console.log(err);
+        console.warn(err);
       })
       .finally(() => openModal());
   };

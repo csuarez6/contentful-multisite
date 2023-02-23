@@ -19,7 +19,7 @@ const data: IForm = {
         className: 'button-primary',
         text: 'Crear cuenta'
     },
-    onSubmitForm: (data) => console.log(data),
+    onSubmitForm: (data) => console.info(data),
     modal: MocksModalSuccessProps.data,
     selectOptions: [
         {

@@ -32,7 +32,7 @@ const HeaderBlock: React.FC<INavigation> = ({
 
   useEffect(() => {
     if (sessionStatus == "unauthenticated") {
-      console.log("not authorized");
+      console.warn("not authorized");
       // router.push('/acceso');
     }
   }, [session, sessionStatus]);

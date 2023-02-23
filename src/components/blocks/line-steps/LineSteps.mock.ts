@@ -55,7 +55,6 @@ const data: IPromoBlock = {
     }
 };
 
-
 export {
     data
 };

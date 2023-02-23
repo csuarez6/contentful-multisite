@@ -7,7 +7,6 @@ const data: IPromoContent = {
   promoDescription: RICHTEXT_WITH_IMAGE,
 };
 
-
 export const mockRichTextProps = {
   data
 };

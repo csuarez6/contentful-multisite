@@ -58,4 +58,3 @@ const data: any = {
 export const mockFeaturedTabsProps = {
   data,
 };
-

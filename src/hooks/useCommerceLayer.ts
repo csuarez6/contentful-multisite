@@ -47,7 +47,6 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   },
 };
 
-
 export const useCommerceLayer = () => {
   const [client, setClient] = useState<CommerceLayerClient>();
   const [error, setError] = useState<unknown>();

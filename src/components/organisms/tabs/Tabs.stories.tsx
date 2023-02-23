@@ -33,4 +33,3 @@ Base.args = {
 TabSecondary.args = {
   ...mockTabsProps.dataTabSecondary,
 } as ITabBlock;
-

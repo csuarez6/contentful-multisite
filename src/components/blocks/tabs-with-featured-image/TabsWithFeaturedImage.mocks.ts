@@ -48,4 +48,3 @@ const data: IPromoBlock = {
 export const mockTabsWithFeaturedImageProps = {
   data,
 };
-

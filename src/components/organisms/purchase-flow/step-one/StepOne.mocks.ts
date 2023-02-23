@@ -4,7 +4,6 @@ const data: IPromoContent = {
     promoTitle: 'Título'
 };
 
-
 export const mockStepOneProps = {
     data,
 };

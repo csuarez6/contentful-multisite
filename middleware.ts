@@ -8,14 +8,14 @@ export async function middleware(request: NextRequest) {
     req: request,
     secret: 'secret',
   });
-  console.log("********** middleware: ", token);
+  console.info("********** middleware: ", token);
   if (token) {
     // validate your session here
-    console.log("********** Middleware Response: User Session Actived");
+    console.info("********** Middleware Response: User Session Actived");
     return NextResponse.next();
   } else {
     // the user is not logged in, redirect to the sign-in page
-    console.log("********** Middleware Response: No User Session");
+    console.info("********** Middleware Response: No User Session");
     const requestedPage = request.nextUrl.pathname;
     const url = request.nextUrl.clone();
     url.pathname = `/acceso`;

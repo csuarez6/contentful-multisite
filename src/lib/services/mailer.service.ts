@@ -10,7 +10,7 @@ export const sendEmail = async (to: string, subject: string, message: string, fr
   });
 
   try {
-    const sendedEmail = await client.sendAsync(
+    await client.sendAsync(
       {
         text: message,
         from,
@@ -18,8 +18,6 @@ export const sendEmail = async (to: string, subject: string, message: string, fr
         subject,
       },
     );
-
-    console.log('Email sended successfully', sendedEmail);
   } catch (err) {
     console.error('Error sending email', err);
     return false;

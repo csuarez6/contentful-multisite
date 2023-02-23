@@ -32,7 +32,6 @@ const Dashboard = () => {
     const { status, data: session } = useSession();
     if (status === "authenticated" && customerDataForm.email === "") {
         getCustomerInfo(session.user["accessToken"]).then((data) => {
-            console.log("data:  ", data);
             const info = data.data;
             setCustomerDataForm({
                 name: info?.metadata["name"],

@@ -109,7 +109,7 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
       .catch(err => {
         setIsSuccess(false);
         if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
-        console.log(err);
+        console.error(err);
       })
       .finally(() => {
         setIsLoading(false);

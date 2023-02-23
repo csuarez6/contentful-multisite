@@ -76,7 +76,6 @@ const RICHTEXT_WITH_IMAGE_JSON: RichTextDocument = {
   ]
 };
 
-
 export const RICHTEXT_SHORT_SIMPLE: IRichText = {
   json: RICHTEXT_SHORT_SIMPLE_JSON
 };

@@ -2,13 +2,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import cities from '@/utils/static/cities-co.json';
 
-
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<string[]>
 ) {
-
-
   /**
    * More info: https://simplemaps.com/data/co-cities
    */

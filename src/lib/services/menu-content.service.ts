@@ -94,7 +94,6 @@ export const getMenu = async (navigationId: string = null, preview = false, deep
     _.merge(menu, referencesContent);
   }
 
-
   if (deepth >= 2) {
     // Second level
     for (const itemMenuKey in menu.mainNavCollection.items) {

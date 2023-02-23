@@ -32,4 +32,3 @@ Base.args = {
 WithError.args = {
     ...mocksSelectInputProps.dataError,
 } as ISelectInput;
-

@@ -40,13 +40,11 @@ const handler = async (
       },
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({
       error: error.message,
     });
   }
 };
-
-
 
 export default handler;

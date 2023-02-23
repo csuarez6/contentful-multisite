@@ -27,4 +27,3 @@ export const Base = Template.bind({});
 Base.args = {
     ...dataRadioBox,
 } as IRadioBox;
-

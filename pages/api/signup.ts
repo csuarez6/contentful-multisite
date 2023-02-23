@@ -4,7 +4,6 @@ import { ObjectShape, OptionalObjectSchema } from 'yup/lib/object';
 import { customerSchema } from '../../src/schemas/customer';
 import { createCustomer } from '@/lib/services/commerce-layer.service';
 
-
 const validate = (
     schema: OptionalObjectSchema<ObjectShape>,
     handler: NextApiHandler

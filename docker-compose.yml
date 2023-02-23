@@ -29,6 +29,7 @@ services:
       - ./tailwind.config.js:/app/tailwind.config.js:rw
       - ./next.config.js:/app/next.config.js:rw
       - ./middleware.ts:/app/middleware.ts:rw
+      - ./.eslintrc.json:/app/.eslintrc.json:rw
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       CONTENTFUL_ENVIRONMENT: ${CONTENTFUL_ENVIRONMENT:-master}
@@ -42,7 +43,6 @@ services:
       COMMERCELAYER_ENDPOINT: ${COMMERCELAYER_ENDPOINT:-}
       COMMERCELAYER_CLIENT_ID: ${COMMERCELAYER_CLIENT_ID:-}
       COMMERCELAYER_CLIENT_SECRET: ${COMMERCELAYER_CLIENT_SECRET:-}
-      COMMERCELAYER_SHARED_SECRET: ${COMMERCELAYER_SHARED_SECRET:-}
       SMTP_HOST: ${SMTP_HOST:-mailer}
       SMTP_PORT: ${SMTP_HOST:-1025}
       SMTP_USER: ${SMTP_HOST:-null}

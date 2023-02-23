@@ -92,7 +92,6 @@ const data1Column: IPromoBlock = {
   }
 };
 
-
 const data2Column: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   title: 'Lorem Ipsum Dolor',

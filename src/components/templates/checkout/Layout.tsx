@@ -14,7 +14,6 @@ interface IChekoutLayoutProps {
 
 const DEFAULT_PAYMENT_METHOD = "dummy";
 
-
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push } = useRouter();
   const {
@@ -81,11 +80,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     }
   };
 
-
   const handlePayment = async (toCancel = false) => {
     try {
       const path = `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : '');
-      console.log(path);
       await fetch(path, {
         method: "POST",
       });

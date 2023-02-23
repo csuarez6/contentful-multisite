@@ -2,7 +2,6 @@ import { PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
-
 export const data: IPromoBlock = {
     title: 'Te puede interesar',
     listedContentsCollection: {
@@ -255,5 +254,4 @@ export const data: IPromoBlock = {
             }
         ]
     }
-
 };

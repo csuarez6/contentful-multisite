@@ -28,7 +28,6 @@ const NavItem = ({
 
   const elements = !!item?.mainNavCollection?.items.length || !!item?.secondaryNavCollection?.items.length;
 
-
   useEffect(() => {
     const btn = refBtnCollapse.current;
     if(btn){
@@ -49,7 +48,6 @@ const NavItem = ({
     }
 
   },[]);
-
 
   return (
     <>
@@ -250,7 +248,6 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
   );
 };
 const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection }) => {
-  console.log(items);
   return (
     <MenuState>
       <MenuContext.Consumer>

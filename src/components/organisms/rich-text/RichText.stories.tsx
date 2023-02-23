@@ -28,4 +28,3 @@ export const Base = Template.bind({});
 Base.args = {
   ...mockRichTextProps.data,
 } as IPromoContent;
-

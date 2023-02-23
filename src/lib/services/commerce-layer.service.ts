@@ -98,7 +98,7 @@ export const getCustomerTokenCl = async ({ email, password }) => {
 
     return { status: 200, ...token.data };
   } catch (error) {
-    console.log("Error - getCustomerTokenCl: ", error);
+    console.error("Error - getCustomerTokenCl: ", error);
     return { status: 400, error: error.message };
   }
 };
@@ -173,12 +173,10 @@ export const getCustomerInfo = async (accessToken: string) => {
 /** Create a customer password reset */
 export const createCustomerResetPwd = async (customerEmail: string) => {
   try {
-    console.log("************** createCustomerResetPwd");
     const cl = await getCLAdminCLient();
     const createCustomerRPwd = await cl.customer_password_resets.create({
       customer_email: customerEmail
     });
-    console.log({ createCustomerRPwd });
     return { status: 200, data: createCustomerRPwd };
   } catch (error) {
     console.error('Error Create Customer Reset: ', error);
@@ -189,14 +187,12 @@ export const createCustomerResetPwd = async (customerEmail: string) => {
 /** Update a customer password reset */
 export const updateCustomerResetPwd = async (tokenID: string, customerPWD: string, resetToken: string) => {
   try {
-    console.log("************** UpdateCustomerResetPwd");
     const cl = await getCLAdminCLient();
     const updateCustomerRPwd = await cl.customer_password_resets.update({
       id: tokenID,
       customer_password: customerPWD,
       _reset_password_token: resetToken
     });
-    console.log({ updateCustomerRPwd });
     return { status: 200, data: updateCustomerRPwd };
   } catch (error) {
     console.error('Error Update Customer Reset: ', error);
@@ -208,10 +204,8 @@ export const updateCustomerResetPwd = async (tokenID: string, customerPWD: strin
 export const retrieveCustomerResetPwd = async (tokenID: string) => {
   try {
     let isTokenValid = false;
-    console.log("************** RetrieveCustomerResetPwd");
     const cl = await getCLAdminCLient();
     const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(tokenID);
-    console.log({ retrieveCustomerRPwd });
     if (retrieveCustomerRPwd.reset_password_at == null) { //tambien se debe validar el tiempo del token
       isTokenValid = true;
     }

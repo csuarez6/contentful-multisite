@@ -90,7 +90,7 @@ const IdentityForm: React.FC<IFormBlock> = () => {
         else setErrorMessage("Ocurrió un error inesperado, intenta de nuevo por favor.");
 
         openModal();
-        console.log(err);
+        console.error(err);
       })
       .finally(() => setIsSending(false));
   };

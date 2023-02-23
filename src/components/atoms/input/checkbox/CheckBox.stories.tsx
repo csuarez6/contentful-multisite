@@ -27,6 +27,3 @@ export const Base = Template.bind({});
 Base.args = {
     ...dataCheckBox,
 } as ICheckBox;
-
-
-

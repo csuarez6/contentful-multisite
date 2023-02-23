@@ -1,6 +1,5 @@
 import { ICarousel } from "./Carousel";
 
-
 const data: ICarousel = {
     content:[
         {

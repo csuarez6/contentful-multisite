@@ -8,11 +8,11 @@ import {
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    console.log(graphQLErrors);
+    console.error(graphQLErrors);
   }
 
   if (networkError) {
-    console.log(networkError);
+    console.warn(networkError);
   }
 });
 

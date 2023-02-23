@@ -26,7 +26,6 @@ const data: INavigation = {
   },
 };
 
-
 export const mockServiceLineProps = {
   data
 };

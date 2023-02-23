@@ -28,7 +28,6 @@ const CheckoutSummary = () => {
 
   }, [user, order, isLogged]);
 
-
   useEffect(() => {
     if (!order) return;
     (async () => {

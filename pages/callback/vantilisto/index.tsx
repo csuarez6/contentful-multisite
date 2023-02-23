@@ -109,7 +109,6 @@ const CallbackPage = () => {
         .then((res) => {
           if (res.code === 404) {
             setErrorMessage(`Producto con SKU ${sku} no encontrado.`);
-            console.log(`Producto con SKU ${sku} no encontrado.`);
           } else {
             const {
               name,
@@ -135,7 +134,7 @@ const CallbackPage = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.warn(err);
           if (!navigator.onLine)
             setErrorMessage(
               "Comprueba tu conexión a internet e intenta de nuevo por favor."

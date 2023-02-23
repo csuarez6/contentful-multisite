@@ -5,7 +5,6 @@ import CommerceLayer, { CommerceLayerClient, Customer } from '@commercelayer/sdk
 import { CL_ORGANIZATION } from '@/constants/commerceLayer.constants';
 import jwtDecode from 'jwt-decode';
 
-
 interface IAuthProviderProps {
   children: ReactNode;
 }

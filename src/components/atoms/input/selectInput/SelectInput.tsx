@@ -1,6 +1,5 @@
 import { DetailedHTMLProps, forwardRef, SelectHTMLAttributes } from 'react';
 
-
 interface ISelectInputOption {
     label: string,
     value: string
