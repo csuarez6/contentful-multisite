@@ -25,7 +25,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
     overrideNavCollection,
   } = props;
   let menuKey = firstPath;
-  let firstLevelMenu;
+  let firstLevelMenu, isFolder;
   
   let secondLevelMenu = mainNavCollection?.items.find(
     (el) => el.internalLink?.slug === HOME_SLUG
@@ -62,12 +62,13 @@ const findMenu = (props: INavigation, firstPath: string) => {
     // secondLevelMenu = firstLevelMenu?.items?.find(
     //   (el) => el.internalLink?.slug === firstPath
     // )?.mainNavCollection;
-    
+    isFolder = "Empresas";
     secondLevelMenu = overrideNavCollection;
   }
 
   if(!secondLevelMenu?.items?.length){
     menuKey = HOME_SLUG;
+    isFolder = "";
     secondLevelMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
     )?.mainNavCollection;
@@ -84,7 +85,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
   ) {
     menuKey = HOME_SLUG;
   }
-  return { firstLevelMenu, secondLevelMenu, menuKey };
+  return { firstLevelMenu, secondLevelMenu, menuKey, isFolder };
 };
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
@@ -117,6 +118,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const menu = findMenu(props, firstPath);
   const mainNavCollectionMenu = menu.secondLevelMenu;
   const secondaryNavCollectionMenu = menu.firstLevelMenu;
+  const isFolder = menu.isFolder;
   firstPath = menu.menuKey;
 
   const secondaryNavCollectionColor = mainNavCollection?.items.find(
@@ -172,7 +174,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           onMouseOver={() => setOpen(true)}
                           onMouseOut={() => setOpen(false)}
                           className={classNames(
-                            item.promoTitle === firstPath
+                            item.promoTitle === isFolder
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
                             "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -181,7 +183,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-down"
-                            className="w-6 h-6"
+                            className="w-6 h-6 -my-3"
                             aria-hidden="true"
                           />
                         </div>
