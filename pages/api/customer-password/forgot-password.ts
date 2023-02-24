@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (resp?.data?.id) {
             templateEmail += `Para continuar, ingresa al siguiente link:\n\n`;
             templateEmail += req.headers.origin + '/resetpassword/' + resp.data.id;
-            templateEmail += "\n\nTen en cuenta que si no completas éste proceso dentro de las próximas 24 horas, el link anterior no será valido. \n\n Si no solicitaste el cambio, omite este correo.";
+            templateEmail += "\n\nTen en cuenta que si no completas éste proceso en el rango de 1 hora, el link anterior no será valido. \n\n Si no solicitaste el cambio, omite este correo.";
         } else {
             templateEmail += `Para continuar, comuniquese con el administrador. \n\nSi no realizó esta acción, omita este correo.`;
         }
