@@ -56,7 +56,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                         id="email"
                         placeholder="correo@correo.com"
                         type="email"
-                        label="Escribe tu correo electrónico"
+                        label="Escribe tu correo electrónico *"
                         className="form-input"
                         isError={!!errors.email}
                         errorMessage={errors?.email?.message}
@@ -65,7 +65,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                     />
                     <Textbox
                         id="password"
-                        label="Escribe tu contraseña"
+                        label="Escribe tu contraseña *"
                         type="password"
                         placeholder="********"
                         className="form-input"
