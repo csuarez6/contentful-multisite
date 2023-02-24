@@ -8,6 +8,7 @@ const convertParentsToBreadcrumb = (parentItem): any => {
   }
 
   breadcumbItems.push({
+    sys: { id: parentItem.sys.id }, 
     promoTitle: parentItem.title ?? parentItem.name,
     internalLink: {
       urlPath: parentItem.urlPath,

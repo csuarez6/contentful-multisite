@@ -18,14 +18,83 @@ import { signOut, useSession } from "next-auth/react";
 import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobile";
 import TopMenu from "@/components/organisms/top-menu/TopMenu";
 
-const HeaderBlock: React.FC<INavigation> = ({
-  promoImage,
-  mainNavCollection,
-  secondaryNavCollection,
-  utilityNavCollection,
-  menuNavkey = null,
-  overrideNavCollection = null,
-}) => {
+const findMenu = (props: INavigation, firstPath: string) => {
+  const {
+    mainNavCollection,
+    secondaryNavCollection,
+    overrideNavCollection,
+  } = props;
+  let menuKey = firstPath;
+  let firstLevelMenu;
+  
+  let secondLevelMenu = mainNavCollection?.items.find(
+    (el) => el.internalLink?.slug === HOME_SLUG
+  )?.mainNavCollection;
+
+  if (mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
+    secondLevelMenu = mainNavCollection?.items.find(
+      (el) => el.internalLink?.slug === firstPath
+    )?.mainNavCollection;
+  }
+
+  if (
+    secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)
+  ) {
+    secondLevelMenu = secondaryNavCollection?.items.find(
+      (el) => el.internalLink?.slug === firstPath
+    )?.mainNavCollection;
+  }
+  
+  if (
+    mainNavCollection?.items.some(
+      (el) => el.secondaryNavCollection?.items.length > 0
+    )
+  ) {
+    menuKey = firstPath;
+    firstLevelMenu = mainNavCollection?.items.find(
+      (el) => el.secondaryNavCollection?.items.length > 0
+    )?.secondaryNavCollection;
+  }
+
+  if (
+    firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)
+  ) {
+    // secondLevelMenu = firstLevelMenu?.items?.find(
+    //   (el) => el.internalLink?.slug === firstPath
+    // )?.mainNavCollection;
+    
+    secondLevelMenu = overrideNavCollection;
+  }
+
+  if(!secondLevelMenu?.items?.length){
+    menuKey = HOME_SLUG;
+    secondLevelMenu = mainNavCollection?.items.find(
+      (el) => el.internalLink?.slug === HOME_SLUG
+    )?.mainNavCollection;
+  }
+
+  if (
+    !mainNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === firstPath
+    ) &&
+    !secondaryNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === firstPath
+    ) &&
+    !firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)
+  ) {
+    menuKey = HOME_SLUG;
+  }
+  return { firstLevelMenu, secondLevelMenu, menuKey };
+};
+
+const HeaderBlock: React.FC<INavigation> = (props) => {
+  const {
+    promoImage,
+    mainNavCollection,
+    secondaryNavCollection,
+    utilityNavCollection,
+  } = props;
+  let {menuNavkey = null} = props;
   const [open, setOpen] = useState<boolean>(false);
   const { status: sessionStatus, data: session } = useSession();
   // const router = useRouter();
@@ -41,31 +110,14 @@ const HeaderBlock: React.FC<INavigation> = ({
   let firstPath = asPath.split("/")[1];
   if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
-    firstPath = 'home';
+    firstPath = "home";
   }
 
-  let mainNavCollectionMenu = mainNavCollection?.items.find(
-    (el) => el.internalLink?.slug === menuNavkey
-  )?.mainNavCollection;
-
-  if (!mainNavCollectionMenu?.items?.length) {
-    firstPath = 'home';
-    mainNavCollectionMenu = mainNavCollection?.items.find(
-      (el) => el.internalLink?.slug === HOME_SLUG
-    )?.mainNavCollection;
-  }
-
-  if (overrideNavCollection?.items?.length) {
-    firstPath = asPath.split("/")[1];
-    if(firstPath === ''){
-      firstPath = 'home';
-    }
-    mainNavCollectionMenu = overrideNavCollection;
-  }
-
-  const secondaryNavCollectionMenu = mainNavCollection?.items.find(
-    (el) => el.secondaryNavCollection?.items.length > 0
-  )?.secondaryNavCollection;
+  // Assign menu
+  const menu = findMenu(props, firstPath);
+  const mainNavCollectionMenu = menu.secondLevelMenu;
+  const secondaryNavCollectionMenu = menu.firstLevelMenu;
+  firstPath = menu.menuKey;
 
   const secondaryNavCollectionColor = mainNavCollection?.items.find(
     (el) => el.secondaryNavCollection?.items.length > 0
@@ -99,8 +151,8 @@ const HeaderBlock: React.FC<INavigation> = ({
             "absolute inset-x-0 h-full",
             open
               ? getBackgroundColorClass(
-                secondaryNavCollectionColor ?? "Azul Oscuro"
-              ).background
+                  secondaryNavCollectionColor ?? "Azul Oscuro"
+                ).background
               : backgroundColor.background
           )}
         ></div>
@@ -120,7 +172,7 @@ const HeaderBlock: React.FC<INavigation> = ({
                           onMouseOver={() => setOpen(true)}
                           onMouseOut={() => setOpen(false)}
                           className={classNames(
-                            (item.promoTitle === firstPath)
+                            item.promoTitle === firstPath
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
                             "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
@@ -189,7 +241,10 @@ const HeaderBlock: React.FC<INavigation> = ({
           onMouseOver={() => setOpen(true)}
           onMouseOut={() => setOpen(false)}
         >
-          <TopMenu secondaryNavCollection={secondaryNavCollectionMenu} firstPath={firstPath} />
+          <TopMenu
+            secondaryNavCollection={secondaryNavCollectionMenu}
+            firstPath={firstPath}
+          />
         </div>
       )}
       {/* Middle */}

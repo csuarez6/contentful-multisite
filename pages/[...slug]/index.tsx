@@ -96,7 +96,8 @@ export const getStaticProps: GetStaticProps = async (
   );
 
   if (!pageContent) return { notFound: true };
-
+  const breadCrumbContent = getBreadcrumbs(pageContent);
+  //let headerID = breadCrumbContent?.ctaCollection?.items[0]?.sys?.id ?? DEFAULT_HEADER_ID;
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getMenu(
     DEFAULT_FOOTER_ID,
@@ -108,7 +109,6 @@ export const getStaticProps: GetStaticProps = async (
     context.preview ?? false
   );
 
-  const breadCrumbContent = getBreadcrumbs(pageContent);
   if (pageContent?.blocksCollection?.items?.length > 0) {
     const firstBlockViewTypename =
       pageContent.blocksCollection?.items[0].view?.__typename;

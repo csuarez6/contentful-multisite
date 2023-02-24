@@ -55,6 +55,12 @@ export const getBackgroundColorClass = (name) => {
         title: "text-white",
         text: "text-white"
       };
+    case "Azul profundo":
+      return {
+        background: "bg-sky-900",
+        title: "text-white",
+        text: "text-white"
+      };
     case "Azul Oscuro":
       return {
         background: "bg-blue-dark",
