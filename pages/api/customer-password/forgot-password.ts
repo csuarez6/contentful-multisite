@@ -29,9 +29,14 @@ const validate = (
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const resp = await createCustomerResetPwd(req.body.email);
-        let templateEmail = `\nHola ${req.body.email} Gracias por utilizar los servicios Vanti.\n\nRecibimos tu solicitud de recuperación de contraseña. Para continuar, ingresa al siguiente link:\n\n`;
-        templateEmail += req.headers.origin + '/resetpassword/' + resp.data.id;
-        templateEmail += "\n\nTen en cuenta que si no completas éste proceso dentro de las próximas 24 horas, el link anterior no será valido. \n\n Si no solicitaste el cambio, omite este correo.";
+        let templateEmail = `\nHola ${req.body.email} Gracias por utilizar los servicios Vanti.\n\nRecibimos tu solicitud de recuperación de contraseña. `;
+        if (resp?.data?.id) {
+            templateEmail += `Para continuar, ingresa al siguiente link:\n\n`;
+            templateEmail += req.headers.origin + '/resetpassword/' + resp.data.id;
+            templateEmail += "\n\nTen en cuenta que si no completas éste proceso dentro de las próximas 24 horas, el link anterior no será valido. \n\n Si no solicitaste el cambio, omite este correo.";
+        } else {
+            templateEmail += `Para continuar, comuniquese con el administrador. \n\nSi no realizó esta acción, omita este correo.`;
+        }
         const clientEmail = {
             to: req.body.email,
             subject: "Recuperar Contraseña - Vanti",
@@ -43,10 +48,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (isMailSended) {
             res.status(201).json({ ...resp, method: req.method });
         } else {
-            res.status(402).json({ error: "Error al enviar correo de restauración." });
+            res.status(401).json({ error: "Error al enviar correo de restauración." });
         }
     } catch (error) {
-        res.status(402).json(error);
+        res.status(401).json(error);
     }
 };
 

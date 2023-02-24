@@ -203,15 +203,46 @@ export const updateCustomerResetPwd = async (tokenID: string, customerPWD: strin
 /** Retrieve a customer password reset */
 export const retrieveCustomerResetPwd = async (tokenID: string) => {
   try {
+    console.log("************** RetrieveCustomerResetPwd");
     let isTokenValid = false;
+    const dateCurrent = new Date();
+    const miliSecCurrent = dateCurrent.getTime();
+    let difHoursDates = null;
+
     const cl = await getCLAdminCLient();
     const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(tokenID);
-    if (retrieveCustomerRPwd.reset_password_at == null) { //tambien se debe validar el tiempo del token
+    console.log({ retrieveCustomerRPwd });
+
+    const dateCreate = new Date(retrieveCustomerRPwd.created_at);
+    const miliSecCreate = dateCreate.getTime();
+    difHoursDates = miliSecCurrent - miliSecCreate;
+    const hours = difHoursDates / 3600000;
+    console.log("HORAS DIFF ", hours);
+
+    if (retrieveCustomerRPwd.reset_password_at == null && hours <= 1) { //Token válido por 1 Hora
       isTokenValid = true;
+    } else {
+      const deleteRecord = await deleteCustomerResetPwd(tokenID);
+      console.log("Delete customer Toke: ", deleteRecord);
     }
     return { status: 200, isTokenValid, resetToken: retrieveCustomerRPwd.reset_password_token, tokenID };
   } catch (error) {
     console.error('Error Check Customer Token: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Delete a customer password reset */
+export const deleteCustomerResetPwd = async (tokenID: string) => {
+  try {
+    console.log("************** DeleteCustomerResetPwd");
+    const cl = await getCLAdminCLient();
+    const deleteCustomerRPwd = await cl.customer_password_resets.delete(tokenID);
+    console.log({ deleteCustomerRPwd });
+
+    return deleteCustomerRPwd;
+  } catch (error) {
+    console.error('Error Delete Customer Token: ', error);
     return { status: 401, error: error };
   }
 };
