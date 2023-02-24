@@ -74,7 +74,7 @@ const HelpButton: React.FC<INavigation> = (props) => {
 
       <div
         onClick={() => setOpen(!open)}
-        className="flex rounded-full w-16 aspect-square bg-lucuma p-2.5 cursor-pointer"
+        className="flex rounded-full w-16 h-16 shrink-0 aspect-square bg-lucuma p-2.5 cursor-pointer"
       >
         <Icon
           icon={!open ? "customer-service" : "close"}

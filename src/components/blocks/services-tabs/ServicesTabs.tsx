@@ -58,7 +58,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                       content={tab}
                       linkClassName="flex"
                       className={classNames(
-                        tab.promoImage ? "justify-start" : "justify-center",
+                        (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
                         "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 py-[10px] text-center"
                       )}
                       key={tab?.name}
@@ -70,7 +70,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                       key={tab?.name}
                       className={({ selected }) =>
                         classNames(
-                          tab?.promoImage ? "justify-start" : "justify-center",
+                          (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
                           selected
                             ? "border-lucuma"
                             : "border-transparent hover:border-lucuma",
