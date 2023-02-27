@@ -68,6 +68,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         errorMessage={errors?.name?.message}
                         autoComplete="on"
                         {...register('name')}
+                        isRequired={true}
                     />
                     <Textbox
                         id='lastName'
@@ -78,6 +79,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         errorMessage={errors?.lastName?.message}
                         autoComplete="on"
                         {...register("lastName")}
+                        isRequired={true}
                     />
                     <SelectInput
                         selectOptions={selectOptions}
@@ -86,6 +88,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.documentType}
                         errorMessage={errors?.documentType?.message}
                         {...register('documentType')}
+                        isRequired={true}
                     />
                     <Textbox
                         id='documentNumber'
@@ -97,6 +100,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         autoComplete="on"
                         {...register('documentNumber')}
                         type="number"
+                        isRequired={true}
                     />
                     <Textbox
                         id='email'
@@ -108,6 +112,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         errorMessage={errors?.email?.message}
                         autoComplete="on"
                         {...register('email')}
+                        isRequired={true}
                     />
                     <Textbox
                         id='cellPhone'
@@ -119,6 +124,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         autoComplete="on"
                         {...register("cellPhone")}
                         type="number"
+                        isRequired={true}
                     />
                     <Textbox
                         id='password'
@@ -130,6 +136,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.password}
                         errorMessage={errors?.password?.message}
                         {...register("password")}
+                        isRequired={true}
                     />
                     <Textbox
                         id='confirmPassword'
@@ -141,6 +148,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.confirmPassword}
                         errorMessage={errors?.confirmPassword?.message}
                         {...register("confirmPassword")}
+                        isRequired={true}
                     />
                 </div>
                 <div className="flex flex-col">
@@ -153,6 +161,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         errorMessage={errors?.contractNumber?.message}
                         autoComplete="on"
                         {...register("contractNumber")}
+                        isRequired={true}
                     />
                     <div className='-mt-[6px]'>
                         <CheckBox
@@ -168,6 +177,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                                     content={{ internalLink: { urlPath: '#' } }}>
                                     los terminos y condiciones</CustomLink> y la autorizacion
                                 de <CustomLink className='underline text-[#7DBFD3]' content={{ internalLink: { urlPath: '#' } }}>tratamiento de datos</CustomLink>
+                                <span className='text-red-700'>*</span>
                             </p>)}
                             isError={!!errors.authorize}
                             errorMessage={errors?.authorize?.message}

@@ -10,6 +10,7 @@ export interface ISelectInput extends DetailedHTMLProps<SelectHTMLAttributes<HTM
     selectOptions: ISelectInputOption[],
     isError?: boolean,
     errorMessage?: string
+    isRequired?: boolean
 }
 
 const SelectInput: React.FC<ISelectInput> = forwardRef(({
@@ -19,13 +20,14 @@ const SelectInput: React.FC<ISelectInput> = forwardRef(({
     selectOptions,
     isError,
     errorMessage,
+    isRequired,
     ...rest
 }, ref ) => {
     return (
         <div className="w-full flex flex-col gap-1">
             <label
                 className={`block ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'} text-lg `} { ... id && { htmlFor: id }}>
-                {label}
+                {label}{ isRequired && <span className='text-red-700'>*</span> }
             </label>
             <select
                 ref={ref}      

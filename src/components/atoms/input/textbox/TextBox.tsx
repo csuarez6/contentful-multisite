@@ -9,6 +9,7 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
     isError,
     errorMessage,
     type,
+    isRequired,
     ...rest
 }, ref) => {
     const [viewPassword, setViewPassword] = React.useState(false);
@@ -16,7 +17,7 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
         <div className="w-full flex-col flex gap-1">
             {label && (
                 <label className={`block text-lg ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'}`} {...id && { htmlFor: id }}>
-                    {label}
+                    {label}{ isRequired && <span className='text-red-700'>*</span> }
                 </label>
             )}
             <div className='relative'>

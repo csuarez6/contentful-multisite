@@ -5,6 +5,7 @@ export interface ITextBox extends DetailedHTMLProps<InputHTMLAttributes<HTMLInpu
     htmlForLabel?:string,
     isError?: boolean,
     errorMessage?: string,
+    isRequired?: boolean
 }
 
 export const dataTextBox: ITextBox = {
