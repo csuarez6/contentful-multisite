@@ -3,6 +3,7 @@ import { getMenu } from "@/lib/services/menu-content.service";
 import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
+  DEFAULT_HELP_BUTTON_ID,
 } from "@/constants/contentful-ids.constants";
 import SignUpFormBlock from "@/components/blocks/sigup-form/SignUpFormBlock";
 import { IForm } from "@/components/organisms/forms/signup-form/SignUpForm.mocks";
@@ -136,11 +137,8 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(
-    DEFAULT_FOOTER_ID,
-    context.preview ?? false,
-    2
-  );
+  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
+  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   return {
     props: {
@@ -148,6 +146,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         name: "Registrarme",
         footerInfo,
         headerInfo,
+        helpButton,
       },
     },
     revalidate,
