@@ -7,6 +7,7 @@ import getReferencesContent from './references-content.service';
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 import getFilteredContent from './content-filter.service';
+import { getCommercelayerProduct } from './commerce-layer.service';
 
 const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
@@ -123,6 +124,11 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     });
 
     _.merge(entryContent, { preloadContent });
+  }
+
+  if (entryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && entryContent?.sku) {
+    const commercelayerProduct = await getCommercelayerProduct(entryContent.sku);
+    _.merge(entryContent, commercelayerProduct);
   }
 
   return entryContent;
