@@ -2,7 +2,7 @@ import Image from "next/image";
 import uuid from 'react-uuid';
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, EffectFade } from "swiper";
+import { Autoplay, Pagination, Navigation, EffectFade } from "swiper";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import "swiper/css";
@@ -26,15 +26,21 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
           <div className="-mx-[50vw]">
             <div className="w-screen mx-auto">
               <Swiper
-                modules={[Pagination, Navigation, EffectFade]}
+                modules={[Autoplay, Pagination, Navigation, EffectFade]}
                 allowTouchMove={true}
                 navigation={{
                   nextEl: `.nextSlide${customUUID}`,
-                  prevEl: `.prevSlide${customUUID}`
+                  prevEl: `.prevSlide${customUUID}`,
+                  enabled: true
                 }}
                 pagination={{
                   bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet",
-                  bulletActiveClass: "swiper-pagination-bullet-active"
+                  bulletActiveClass: "swiper-pagination-bullet-active",
+                  clickable: true
+                }}
+                autoplay={{
+                  delay: 4000,
+                  disableOnInteraction: false
                 }}
                 spaceBetween={5}
                 slidesPerView={1}
