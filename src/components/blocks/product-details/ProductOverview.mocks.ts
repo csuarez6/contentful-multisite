@@ -9,7 +9,7 @@ const data: IProductOverviewDetails = {
   productsQuantity: '1.000',
   state: 'Nuevo',
   promotion: '30%',
-  sku: "17434",
+  sku: "18217",
   rating: 3.6,
   cta: {
     href: '',

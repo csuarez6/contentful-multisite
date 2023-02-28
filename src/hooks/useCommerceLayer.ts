@@ -7,10 +7,9 @@ import CommerceLayer, {
 } from "@commercelayer/sdk";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
-import { getMerchantToken } from '@/lib/services/commerce-layer.service';
+import { getMerchantToken } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
-
-const INVALID_ORDER_ID_ERROR = 'INVALID_ORDER_ID';
+const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   include: ["line_items", "available_payment_methods", "shipments", "customer"],
@@ -50,8 +49,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
 export const useCommerceLayer = () => {
   const [client, setClient] = useState<CommerceLayerClient>();
   const [error, setError] = useState<unknown>();
-  const {clientLogged, user} = useContext(AuthContext);
-
+  const { clientLogged, user } = useContext(AuthContext);
+  const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState<Order>();
   const isError = useMemo(() => !!error, [error]);
@@ -65,13 +64,13 @@ export const useCommerceLayer = () => {
           setError(new Error("CREDENTIALS_ERROR"));
           return;
         }
-        
+
         setClient(
           CommerceLayer({ accessToken, organization: CL_ORGANIZATION })
         );
       } catch (error) {
         setError(error);
-        console.error('Error at: useCommerceLayer getSalesChannelToken', error);
+        console.error("Error at: useCommerceLayer getSalesChannelToken", error);
       }
 
       setIsLoading(false);
@@ -80,22 +79,20 @@ export const useCommerceLayer = () => {
 
   const getOrder = useCallback(async () => {
     try {
-
       const idOrder = localStorage.getItem("orderId");
 
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
-      
+
       const order = await client.orders.retrieve(idOrder, DEFAULT_ORDER_PARAMS);
 
       if (!["draft", "pending"].includes(order.status)) {
         throw new Error(INVALID_ORDER_ID_ERROR);
       }
-      
-      return order;
 
+      return order;
     } catch (error) {
       console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
-      
+
       const draftOrder = await client.orders.create({});
       localStorage.setItem("orderId", draftOrder.id);
       return draftOrder;
@@ -121,22 +118,24 @@ export const useCommerceLayer = () => {
     setOrder(order);
   }, [getOrder]);
 
-  const addToCart = useCallback(async (skuCode: string, productImage: string, productName: string) => {
+  const addToCart = useCallback(
+    async (skuCode: string, productImage: string, productName: string) => {
+      await client.line_items.create({
+        quantity: 1,
+        name: productName,
+        image_url: productImage,
+        sku_code: skuCode,
+        _update_quantity: true,
+        order: {
+          type: "orders",
+          id: orderId,
+        },
+      });
 
-    await client.line_items.create({
-      quantity: 1,
-      name: productName,
-      image_url: productImage,
-      sku_code: skuCode,
-      _update_quantity: true,
-      order: {
-        type: "orders",
-        id: orderId,
-      },
-    });
-
-    await reloadOrder();
-  }, [orderId, client, reloadOrder]);
+      await reloadOrder();
+    },
+    [orderId, client, reloadOrder]
+  );
 
   const updateItemQuantity = async (skuCode: string, quantity: number) => {
     const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
@@ -147,7 +146,7 @@ export const useCommerceLayer = () => {
       });
     } else {
       await client.line_items.delete(lineItem.id);
-      await updateMetadata({[VantiOrderMetadata.IsVerified]: false});
+      await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
     }
     await reloadOrder();
   };
@@ -204,7 +203,7 @@ export const useCommerceLayer = () => {
       billingAddress,
     };
   }, [client, orderId]);
-  
+
   const getCustomerAddresses = useCallback(async () => {
     if (!clientLogged) return [];
     return clientLogged.customer_addresses.list();
@@ -212,10 +211,9 @@ export const useCommerceLayer = () => {
 
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
-
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
-        ... billingAddress ? [client.addresses.create(billingAddress)] : [],
+        ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
       ]);
 
       const orderUpdate = await client.orders.update(
@@ -251,7 +249,6 @@ export const useCommerceLayer = () => {
 
   const updateMetadata = useCallback(
     async (metadata: Record<string, any>) => {
-
       const result = await client.orders.update(
         {
           id: orderId,
@@ -271,7 +268,6 @@ export const useCommerceLayer = () => {
   );
 
   const getPaymentMethods = useCallback(async () => {
-    
     return client.orders.available_payment_methods(orderId);
   }, [client, orderId]);
 
@@ -295,7 +291,6 @@ export const useCommerceLayer = () => {
 
   const addPaymentMethodSource = useCallback(
     async (token: string) => {
-
       await client.external_payments.create({
         payment_source_token: token,
         order: {
@@ -307,25 +302,19 @@ export const useCommerceLayer = () => {
     [client, orderId]
   );
 
-  const setDefaultShippingMethod = useCallback(
-    async () => {
-      const shipmentId = order.shipments.at(0)?.id;
+  const setDefaultShippingMethod = useCallback(async () => {
+    const shipmentId = order.shipments.at(0)?.id;
 
-      await client.shipments
-        .update({
-          id: shipmentId,
-          shipping_method: {
-            id: DEFAULT_SHIPPING_METHOD_ID,
-            type: "shipping_methods",
-          },
-        });
-
-    },
-    [client, order]
-  );
+    await client.shipments.update({
+      id: shipmentId,
+      shipping_method: {
+        id: DEFAULT_SHIPPING_METHOD_ID,
+        type: "shipping_methods",
+      },
+    });
+  }, [client, order]);
 
   const placeOrder = useCallback(async () => {
-
     const result = await client.orders.update(
       {
         id: orderId,
@@ -337,12 +326,49 @@ export const useCommerceLayer = () => {
     setOrder(result);
   }, [client, orderId]);
 
+  const validateExternal = useCallback(
+    async (recapchaResponse: string) => {
+      const result = await client.orders.update(
+        {
+          id: orderId,
+          _validate: true,
+          metadata: {
+            ...(order?.metadata && {
+              ...order.metadata,
+            }),
+            recapchaResponse,
+          },
+        },
+        DEFAULT_ORDER_PARAMS
+      );
+
+      setOrder(result);
+    },
+    [client, orderId, order]
+  );
+
+  const onRecaptcha = async (e) => {
+    try {
+      if (!e || e === "not authorized") {
+        setTokenRecaptcha("");
+        return;
+      }
+
+      setTokenRecaptcha(e);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     isError,
     isLoading,
     error,
     client,
     order,
+    tokenRecaptcha,
+    onRecaptcha,
     getOrder,
     addToCart,
     updateItemQuantity,
@@ -357,6 +383,7 @@ export const useCommerceLayer = () => {
     setPaymentMethod,
     addPaymentMethodSource,
     setDefaultShippingMethod,
+    validateExternal,
   };
 };
 

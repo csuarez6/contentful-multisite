@@ -11,6 +11,11 @@ export enum VantiOrderMetadata {
      */
     name = 'name',
     LastName = 'lastName',
+    recapchaResponse = "recapchaResponse"
 }
 
-export const PSE_STEPS_TO_VERIFY = [VantiOrderMetadata.IsVerified, VantiOrderMetadata.HasPersonalInfo, VantiOrderMetadata.HasAddresses];
+export const PSE_STEPS_TO_VERIFY = [
+    VantiOrderMetadata.IsVerified,
+    VantiOrderMetadata.HasPersonalInfo,
+    VantiOrderMetadata.HasAddresses
+];

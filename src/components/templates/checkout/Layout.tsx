@@ -18,12 +18,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push } = useRouter();
   const {
     order,
+    tokenRecaptcha,
     setPaymentMethod,
     addPaymentMethodSource,
     placeOrder,
     setDefaultShippingMethod,
+    validateExternal,
   } = useContext(CheckoutContext);
-  const [openModal, setOpenModal] = useState(false);
+  const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
   const [transactionToken, setTransactionToken] = useState('');
 
   const products = useMemo(() => {
@@ -57,25 +59,27 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
    */
   const onPlaceOrder = async () => {
     try {
+      await validateExternal(tokenRecaptcha);
+
       const token = uuid();
-      
+
       const paymentMethodId = order.available_payment_methods.find(
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
-      
+
       await Promise.all([
         setDefaultShippingMethod(),
         setPaymentMethod(paymentMethodId),
       ]);
       await addPaymentMethodSource(token),
 
-      await placeOrder();
+        await placeOrder();
 
-      setOpenModal(true);
+      setOpenDummyPGModal(true);
       setTransactionToken(token);
-      // window.location.href =
-      //   "https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524";
+
     } catch (error) {
+      alert(`'Error al Realizar la orden': ${error.message}`);
       console.error(error);
     }
   };
@@ -95,10 +99,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       console.error(error);
       alert('Error en la pasarela de pago.');
     } finally {
-      setOpenModal(false);
+      setOpenDummyPGModal(false);
     }
   };
-  
+
   return (
     <>
       <div className="grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
@@ -150,7 +154,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     {order?.formatted_total_amount_with_taxes}
                   </span>
                 </div>
-                {isComplete && (
+                {isComplete && tokenRecaptcha && (
                   <button
                     onClick={onPlaceOrder}
                     className="button button-primary w-full mt-[17px]"
@@ -163,17 +167,31 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           </article>
         )}
       </div>
-      {openModal && (
-      <ModalSuccess {...MocksModalSuccessProps.modalLayout} isActive={openModal}>
-        <div className="w-full flex justify-end gap-5">
-          <button className="button button-outline" onClick={() => { handlePayment(true); }}>
-            Cancelar pago
-          </button>
-          <button className="button button-primary" onClick={() => { handlePayment(); }}>
-            Pagar
-          </button>
-        </div>
-      </ModalSuccess>)}
+      {openDummyPGModal && (
+        <ModalSuccess
+          {...MocksModalSuccessProps.modalLayout}
+          isActive={openDummyPGModal}
+        >
+          <div className="w-full flex justify-end gap-5">
+            <button
+              className="button button-outline"
+              onClick={() => {
+                handlePayment(true);
+              }}
+            >
+              Cancelar pago
+            </button>
+            <button
+              className="button button-primary"
+              onClick={() => {
+                handlePayment();
+              }}
+            >
+              Pagar
+            </button>
+          </div>
+        </ModalSuccess>
+      )}
     </>
   );
 };

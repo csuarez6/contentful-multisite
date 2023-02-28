@@ -67,7 +67,6 @@ const CheckoutVerify = () => {
       alert(error.message);
     }
   };
-
   return (
     <>
       <HeadingCard

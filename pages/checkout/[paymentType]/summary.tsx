@@ -11,13 +11,13 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const CheckoutSummary = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const { isLogged, user } = useContext(AuthContext);
-
-  const { order, flow, getAddresses } = useContext(CheckoutContext);
+  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
 
@@ -46,14 +46,13 @@ const CheckoutSummary = () => {
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
-
   return (
     <>
       <HeadingCard
         classes="col-span-2"
         title="5. Datos de compra"
         icon="quotation"
-        isCheck={isCompleted}
+        isCheck={isCompleted && tokenRecaptcha && true}
       >
         <div className="bg-white rounded-lg">
           <dl className="space-y-5 text-sm">
@@ -86,10 +85,15 @@ const CheckoutSummary = () => {
             <div className="flex justify-between">
               <dt className="text-blue-dark">
                 Sabemos que eres un humano, pero debemos confirmarlo.
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  onChange={(e) => onRecaptcha(e)}
+                  className="mt-6"
+                />
               </dt>
             </div>
             <div className="flex justify-between">
-              <dt className="">
+              <dt>
                 NOTA: Al hacer click en “Enviar datos” serás contactado por un
                 agente de Vanti
               </dt>

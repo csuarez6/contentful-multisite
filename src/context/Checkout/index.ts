@@ -8,6 +8,7 @@ export interface IContextCheckout {
   isError: boolean;
   order: Order;
   flow: Flow;
+  tokenRecaptcha: string;
   addToCart: (sku: string, productImage?: string, productName?: string) => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
@@ -27,6 +28,8 @@ export interface IContextCheckout {
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: () => Promise<void>;
+  onRecaptcha: (e: any) => void;
+  validateExternal: (e: any) => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -34,6 +37,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   isLoading: false,
   isError: false,
   flow: undefined,
+  tokenRecaptcha: "",
   addToCart: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,
@@ -47,6 +51,8 @@ const CheckoutContext = createContext<IContextCheckout>({
   setPaymentMethod: () => undefined,
   addPaymentMethodSource: () => undefined,
   setDefaultShippingMethod: () => undefined,
+  onRecaptcha: () => undefined,
+  validateExternal: () => undefined,
 });
 
 export default CheckoutContext;
