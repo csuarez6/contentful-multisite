@@ -60,7 +60,6 @@ const Carousel: React.FC<ICarousel> = ({
             {el?.url && (
               <figure className="relative aspect-[595/548]">
                 <Image
-                  fill
                   className="w-full h-full cursor-pointer rounded-xl"
                   src={el.url}
                   alt={el.title}
@@ -101,7 +100,6 @@ const Carousel: React.FC<ICarousel> = ({
                   {el.url && (
                     <figure className="relative aspect-[104/92]">
                       <Image
-                        fill
                         className="w-full h-full rounded-md cursor-pointer xs:rounded-xl"
                         src={el.url}
                         alt={el.title}

@@ -50,16 +50,15 @@ const StepOne: React.FC<IPromoContent> = () => {
                                 <tr key={product.id} className="border-b border-grey-60">
                                     <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                         <div className="flex gap-3">
-                                            <figure>
-                                                <figure className="relative">
-                                                    <Image
-                                                        src={product.image}
-                                                        alt={product.name}
-                                                        width={64}
-                                                        height={64}
-                                                        priority
-                                                    />
-                                                </figure>
+                                            <figure className="relative w-16">
+                                                <Image
+                                                    className="w-full h-full"
+                                                    src={product.image}
+                                                    alt={product.name}
+                                                    width={64}
+                                                    height={64}
+                                                    priority
+                                                />
                                             </figure>
                                             <div className="text-grey-30">{product.name}</div>
                                         </div>

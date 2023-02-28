@@ -32,8 +32,7 @@ const ProductSmallCard: React.FC<IPromoContent> = (props) => {
               alt={promoImage.title}
               width={promoImage.width}
               height={promoImage.height}
-              className="object-cover"
-              fill
+              className="object-cover w-full h-full"
             />
           </figure>
         </div>

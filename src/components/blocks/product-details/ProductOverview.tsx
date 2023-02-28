@@ -322,12 +322,15 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       >
                         Conóce más
                       </CustomLink>
-                      <Image
-                        width={48}
-                        height={34}
-                        src="/images/VantiListo.png"
-                        alt="Conóce más - VantiListo"
-                      />
+                      <figure className="w-[48px] h-[34px]">
+                        <Image
+                          className="w-full h-full"
+                          width={48}
+                          height={34}
+                          src="/images/VantiListo.png"
+                          alt="Conóce más - VantiListo"
+                        />
+                      </figure>
                     </div>
                   </div>
                   <div className="pl-[11px] pt-1">
@@ -453,17 +456,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   {(price == undefined ||
                     productsQuantity == undefined ||
                     Number(productsQuantity) <= 0) && (
-                    <div
-                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                      role="alert"
-                    >
-                      <strong className="font-bold">Info! </strong>
-                      <span className="block sm:inline">
-                        Este producto no se encuentra disponible en este
-                        momento.
-                      </span>
-                    </div>
-                  )}
+                      <div
+                        className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                        role="alert"
+                      >
+                        <strong className="font-bold">Info! </strong>
+                        <span className="block sm:inline">
+                          Este producto no se encuentra disponible en este
+                          momento.
+                        </span>
+                      </div>
+                    )}
                   {price &&
                     productsQuantity &&
                     Number(productsQuantity) > 0 && (

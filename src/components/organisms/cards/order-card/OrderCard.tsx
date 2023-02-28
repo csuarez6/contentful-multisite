@@ -32,7 +32,6 @@ const OrderCard: React.FC<IPromoContent> = ({
                 width={214}
                 height={214}
                 className="h-full w-full object-cover"
-                fill
               />
             </figure>
           </div>

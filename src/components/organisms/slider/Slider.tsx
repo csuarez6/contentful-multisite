@@ -27,9 +27,8 @@ const Slider: React.FC<any> = ({ data }) => {
           const className = "slider-bullet";
           let bullets = "";
           for (let i = 0; i < total; i++) {
-            bullets += `<span data-bullet-index="${i}" class="${className}${
-              current === i + 1 ? " is-active" : ""
-            }"></span>`;
+            bullets += `<span data-bullet-index="${i}" class="${className}${current === i + 1 ? " is-active" : ""
+              }"></span>`;
           }
           return `<button class="sliderPrev carousel-control-prev-icon bg-no-repeat opacity-60 hover:opacity-100 w-[15px] mr-2 hidden lg:inline-block "></button>
                                 ${bullets}
@@ -66,7 +65,7 @@ const Slider: React.FC<any> = ({ data }) => {
             <Image
               src={slide?.urlImage}
               alt={slide?.title}
-              className="h-[350px] 2md:h-auto object-cover"
+              className="w-auto h-[350px] 2md:h-auto object-cover"
               width={1920}
               height={568}
               priority
@@ -80,9 +79,8 @@ const Slider: React.FC<any> = ({ data }) => {
               {!slide?.link?.isExternal ? (
                 <Link href={slide?.link?.href}>
                   <a
-                    className={`self-start ${
-                      slide?.link?.classes ?? ""
-                    } font-semibold py-[9px] px-4 button text-xs md:text-base`}
+                    className={`self-start ${slide?.link?.classes ?? ""
+                      } font-semibold py-[9px] px-4 button text-xs md:text-base`}
                     onClick={slide?.link?.onClick}
                   >
                     {slide?.link?.name}
@@ -91,9 +89,8 @@ const Slider: React.FC<any> = ({ data }) => {
               ) : (
                 <a
                   href={slide?.link?.href}
-                  className={`self-start ${
-                    slide?.link?.classes ?? ""
-                  } font-semibold py-[9px] px-4 button text-xs md:text-base`}
+                  className={`self-start ${slide?.link?.classes ?? ""
+                    } font-semibold py-[9px] px-4 button text-xs md:text-base`}
                   onClick={slide?.link?.onClick}
                 >
                   {slide?.link?.name}
@@ -104,10 +101,11 @@ const Slider: React.FC<any> = ({ data }) => {
         );
       })}
       <button
-        className="cursor-pointer z-20 absolute xl:ml-[120px] ml-5 bottom-5 xl:bottom-10 hidden md:block"
+        className="cursor-pointer z-20 w-[33px] absolute xl:ml-[120px] ml-5 bottom-5 xl:bottom-10 hidden md:block"
         onClick={() => setstopSliderRotation(!stopSliderRotation)}
       >
         <Image
+          className="w-full h-full"
           alt="stop/pause"
           src="/images/play-button.png"
           width={33}

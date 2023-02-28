@@ -340,6 +340,7 @@ const CallbackPage = () => {
               <div className="flex gap-3 flex-col items-start min-w-full">
                 <figure className="aspect-square w-[214px] self-center">
                   <Image
+                    className="w-full h-full"
                     src={productData.promoImage.url}
                     alt={productData.promoImage.title}
                     width={214}

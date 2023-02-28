@@ -46,7 +46,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                     src={promoImage.url}
                     width={336}
                     height={291}
-                    fill
                     className="w-full h-full"
                   />
                 </figure>
@@ -57,7 +56,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                     src={imagesCollection.items[0].url}
                     width={336}
                     height={291}
-                    fill
                     className="w-full h-full"
                   />
                 </figure>
@@ -89,8 +87,9 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               )}
               {rating && (
                 <div className="flex items-center gap-[13px] mr-1">
-                  <figure>
+                  <figure className="w-[15px]">
                     <Image
+                      className="w-full h-full"
                       src="/images/star.png"
                       width={15}
                       height={15}

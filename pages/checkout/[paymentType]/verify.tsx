@@ -20,7 +20,7 @@ import AuthContext from "@/context/Auth";
 const CheckoutVerify = () => {
   const router = useRouter();
   const lastPath = useLastPath();
-  
+
   const { isLogged } = useContext(AuthContext);
   const {
     order,
@@ -55,7 +55,7 @@ const CheckoutVerify = () => {
 
       if (isLogged) {
         await addLoggedCustomer();
-        
+
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
       }
 
@@ -105,9 +105,10 @@ const CheckoutVerify = () => {
                 <tr key={product.id} className="border-b border-grey-60">
                   <td className="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                     <div className="flex flex-col gap-3 xs:flex-row">
-                      <figure className="relative shrink-0">
+                      <figure className="relative w-16 shrink-0">
                         {product?.image_url && (
                           <Image
+                            className="w-full h-full"
                             src={product?.image_url}
                             alt={product?.name}
                             width={64}

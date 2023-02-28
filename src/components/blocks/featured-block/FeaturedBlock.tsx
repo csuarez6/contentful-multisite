@@ -67,7 +67,6 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                   alt={image.title}
                   width={view?.columnsSize > 2 ? 384 : 612}
                   height={view?.columnsSize > 2 ? 624 : 569}
-                  fill
                 />
               </figure>
             </div>

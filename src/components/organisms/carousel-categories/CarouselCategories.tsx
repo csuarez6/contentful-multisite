@@ -36,14 +36,13 @@ const CarouselCategories: React.FC<
         <Link href={link}>
           <span className="flex flex-col gap-2 items-center h-full group">
             {(promoImage || image) && (
-              <figure className="relative min-w-[98px] min-h-[98px]">
+              <figure className="relative w-[98px] h-[98px]">
                 <Image
                   src={promoImage?.url ?? image?.url}
                   alt={promoImage?.title ?? image?.title}
                   width={promoImage?.width ?? image?.width}
                   height={promoImage?.height ?? image?.height}
                   className="object-cover rounded-full w-full h-full"
-                  fill
                 />
               </figure>
             )}

@@ -10,7 +10,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 1',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -20,7 +22,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 2',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -30,7 +34,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 3',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -40,7 +46,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 4',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -50,7 +58,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 5',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -60,7 +70,9 @@ const data: IPromoBlock = {
         promoTitle: 'Título 6',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -82,7 +94,9 @@ const dataTop: IPromoBlock = {
         promoTitle: 'Título 1',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -92,7 +106,9 @@ const dataTop: IPromoBlock = {
         promoTitle: 'Título 2',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -102,7 +118,9 @@ const dataTop: IPromoBlock = {
         promoTitle: 'Título 3',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -123,7 +141,9 @@ const dataStatic: IPromoBlock = {
         promoTitle: 'Título 1',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -133,7 +153,9 @@ const dataStatic: IPromoBlock = {
         promoTitle: 'Título 2',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"
@@ -143,7 +165,9 @@ const dataStatic: IPromoBlock = {
         promoTitle: 'Título 3',
         promoImage: {
           url: 'https://via.placeholder.com/660x660.png',
-          title: 'Card image'
+          title: 'Card image',
+          width: 660,
+          height: 660
         },
         internalLink: {
           urlPath: "#"

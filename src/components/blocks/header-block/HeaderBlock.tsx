@@ -266,7 +266,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       alt={promoImage?.title ?? "Logo Grupo Vanti"}
                       width={180}
                       height={52}
-                      fill
                     />
                     <Image
                       className="hidden w-auto sm:block"
@@ -274,7 +273,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       alt={promoImage?.title ?? "Logo Grupo Vanti"}
                       width={180}
                       height={52}
-                      fill
                     />
                   </figure>
                 </CustomLink>
@@ -490,7 +488,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               alt={promoImage?.description ?? "Logo Grupo Vanti"}
                               width={180}
                               height={52}
-                              fill
                             />
                           </figure>
                         </CustomLink>

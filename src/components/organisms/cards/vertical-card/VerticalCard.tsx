@@ -36,7 +36,6 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
             width={promoImage.width}
             height={promoImage.height}
             className="h-full w-full object-cover"
-            fill
           />
         </figure>
       )}

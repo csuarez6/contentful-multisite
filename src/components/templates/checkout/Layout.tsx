@@ -119,7 +119,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         width={214}
                         height={214}
                         className="h-full w-full object-cover"
-                        fill
                       />
                     </figure>
                   )}

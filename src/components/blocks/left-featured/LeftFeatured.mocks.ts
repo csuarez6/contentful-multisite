@@ -8,7 +8,9 @@ const data: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://via.placeholder.com/1280x1050.png',
-    title: "PromoImage"
+    title: "PromoImage",
+    width: 1280,
+    height: 1050
   },
   ctaCollection: {
     items: [
@@ -33,7 +35,9 @@ const dataRounded: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://via.placeholder.com/1280x1050.png',
-    title: "PromoImage"
+    title: "PromoImage",
+    width: 1280,
+    height: 1050
   },
   ctaCollection: {
     items: [
@@ -61,7 +65,9 @@ const dataRoundedReverse: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://via.placeholder.com/1280x1050.png',
-    title: "PromoImage"
+    title: "PromoImage",
+    width: 1280,
+    height: 1050
   },
   ctaCollection: {
     items: [

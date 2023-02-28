@@ -76,7 +76,6 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
               alt={promoImage?.title ?? image?.title}
               width={promoImage?.width ?? image?.width}
               height={promoImage?.height ?? image?.height}
-              fill
             />
           </figure>
         </>

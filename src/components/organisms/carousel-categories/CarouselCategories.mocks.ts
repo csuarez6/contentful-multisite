@@ -4,7 +4,9 @@ const data: IPromoContent = {
   promoTitle: 'Título',
   promoImage: {
     url: 'https://via.placeholder.com/660x500.png',
-    title: 'circle'
+    title: 'circle',
+    width: 660,
+    height: 500
   }
 };
 

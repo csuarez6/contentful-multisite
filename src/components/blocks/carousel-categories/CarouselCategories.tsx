@@ -141,7 +141,7 @@ const CarouselCategoriesBlock: React.FC<
           </div>
         )}
         {ctaCollection?.items?.length > 0 && (
-          <div className="flex mt-6 justify-center">
+          <div className="flex gap-4 mt-6 justify-center">
             {ctaCollection.items.map(
               (cta) =>
                 (cta.externalLink || cta.internalLink) && (

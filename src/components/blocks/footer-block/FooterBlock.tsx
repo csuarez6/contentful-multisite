@@ -139,7 +139,7 @@ const FooterBlock: React.FC<INavigation> = ({
             </div>
             {promoImage && (
               <div className="w-[248px] md:w-[311px] mt-1 shrink-0 -mr-[7px]">
-                <figure className="relative w-100">
+                <figure className="relative w-full">
                   <Image
                     src={promoImage.url}
                     alt={promoImage.title}

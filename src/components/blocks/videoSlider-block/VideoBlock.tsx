@@ -82,11 +82,11 @@ const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCo
                                     {link?.promoImage &&
                                         <figure className="w-full h-full object-cover">
                                             <Image
+                                                className="w-full h-full"
                                                 src={link?.promoImage?.url}
                                                 alt={link?.promoImage?.title}
                                                 width={link?.promoImage?.width}
                                                 height={link?.promoImage?.height}
-                                                fill
                                             />
                                         </figure>
                                     }
