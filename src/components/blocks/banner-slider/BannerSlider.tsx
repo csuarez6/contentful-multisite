@@ -1,5 +1,4 @@
 import Image from "next/image";
-import uuid from 'react-uuid';
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper";
@@ -17,7 +16,8 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
   blockId,
   sysId
 }) => {
-  const customUUID = uuid();
+  const nextSlideId = `nextSlide${blockId}`;
+  const prevSlideId = `prevSlide${blockId}`;
 
   return (
     <section id={blockId ? blockId : sysId} className="grid">
@@ -29,8 +29,8 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 modules={[Autoplay, Pagination, Navigation, EffectFade]}
                 allowTouchMove={true}
                 navigation={{
-                  nextEl: `.nextSlide${customUUID}`,
-                  prevEl: `.prevSlide${customUUID}`,
+                  nextEl: `#${nextSlideId}`,
+                  prevEl: `#${prevSlideId}`,
                   enabled: true
                 }}
                 pagination={{
@@ -85,12 +85,12 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
           </div>
 
           <div className='z-10 absolute top-full md:top-1/2 -translate-y-14 md:-translate-y-1/2 -left-5 md:-left-10 2md:-left-5 2xl:-ml-20'>
-            <div className={`prevSlide${customUUID} w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center`}>
+            <div id={prevSlideId} className="w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center">
               <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
             </div>
           </div>
           <div className='z-10 absolute top-full md:top-1/2 -translate-y-14 md:-translate-y-1/2 -right-5 md:-right-10 2md:-right-5 2xl:-mr-20'>
-            <div className={`nextSlide${customUUID} w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center`}>
+            <div id={nextSlideId} className="w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center">
               <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
             </div>
           </div>
