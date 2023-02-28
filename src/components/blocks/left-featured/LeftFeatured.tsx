@@ -107,8 +107,10 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                   }}
                 >
                   <Image
-                    src={image.url}
-                    alt={image.title ?? image.description}
+                    src={image?.url}
+                    alt={image?.title ?? image?.description}
+                    width={image?.width}
+                    height={image?.height}
                     fill
                     className="object-cover w-full h-full"
                   />

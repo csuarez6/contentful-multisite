@@ -29,7 +29,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
               <Image
                 src={url}
                 className="w-auto h-auto max-w-full"
-                alt={description && description != "" ? description : title}
+                alt={title ?? description}
                 width={width}
                 height={height}
               />
@@ -40,8 +40,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
     },
   };
 
-  const imageAlignLocal =
-    view && view.imageAlign === "Derecha" ? "order-last" : "";
+  const imageAlignLocal = view?.imageAlign === "Derecha" ? "order-last" : "";
 
   return (
     <section id={blockId ? blockId : sysId} className="section grid">
@@ -49,7 +48,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
         <div
           className={classNames(
             "gap-x-16 gap-y-6 grid grid-cols-1",
-            view && view.columnsSize > 2 ? "lg:grid-cols-3" : "md:grid-cols-2"
+            view?.columnsSize > 2 ? "lg:grid-cols-3" : "md:grid-cols-2"
           )}
         >
           {image?.url && (
@@ -57,7 +56,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
               <figure
                 className={classNames(
                   "relative overflow-hidden rounded-lg",
-                  view && view.columnsSize > 2
+                  view?.columnsSize > 2
                     ? "aspect-[384/624]"
                     : "aspect-[612/569]"
                 )}
@@ -66,6 +65,8 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                   className="block w-auto object-cover"
                   src={image.url}
                   alt={image.title}
+                  width={view?.columnsSize > 2 ? 384 : 612}
+                  height={view?.columnsSize > 2 ? 624 : 569}
                   fill
                 />
               </figure>
@@ -77,7 +78,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
             ctaCollection?.items?.length > 0) && (
               <div
                 className={classNames(
-                  view && view.columnsSize > 2 ? "col-span-2" : ""
+                  view?.columnsSize > 2 ? "col-span-2" : ""
                 )}
               >
                 <div className="flex flex-col gap-y-6">

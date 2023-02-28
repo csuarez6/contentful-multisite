@@ -79,9 +79,15 @@ const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCo
                                         >
                                         </iframe>
                                     }
-                                    {link.promoImage &&
+                                    {link?.promoImage &&
                                         <figure className="w-full h-full object-cover">
-                                            <Image src={link.promoImage?.url} alt={link.promoImage?.title} fill />
+                                            <Image
+                                                src={link?.promoImage?.url}
+                                                alt={link?.promoImage?.title}
+                                                width={link?.promoImage?.width}
+                                                height={link?.promoImage?.height}
+                                                fill
+                                            />
                                         </figure>
                                     }
                                 </div>

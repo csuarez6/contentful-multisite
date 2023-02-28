@@ -78,6 +78,8 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
               <Image
                 src={image?.url}
                 alt={image.title ?? (image.description ?? "Imagen destacada")}
+                width={494}
+                height={500}
                 fill
                 className="object-cover w-full h-full"
               />

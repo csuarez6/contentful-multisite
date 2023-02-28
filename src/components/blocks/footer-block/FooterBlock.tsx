@@ -142,7 +142,7 @@ const FooterBlock: React.FC<INavigation> = ({
                 <figure className="relative w-100">
                   <Image
                     src={promoImage.url}
-                    alt={promoImage.description}
+                    alt={promoImage.title}
                     width={promoImage.width}
                     height={promoImage.height}
                     className="w-full h-auto"

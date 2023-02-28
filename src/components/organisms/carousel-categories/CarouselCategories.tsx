@@ -18,44 +18,44 @@ const CarouselCategories: React.FC<
   queryParamName = "categoria",
   value = null,
 }) => {
-  const { asPath } = useRouter();
-  const fullPath = asPath.split("?")[0];
+    const { asPath } = useRouter();
+    const fullPath = asPath.split("?")[0];
 
-  if (!promoImage && !promoTitle && internalLink?.urlPath) return;
+    if (!promoImage && !promoTitle && internalLink?.urlPath) return;
 
-  let link = internalLink?.urlPath
-  ? internalLink.urlPath
-  : value !== "*"
-  ? `${fullPath}?${queryParamName}=${value}`
-  : fullPath;
-  
-  link = linkParameters ? link + linkParameters : link;
-  
-  return (
-    <article className="flex justify-center">
-      <Link
-        href={link}
-      >
-        <span className="flex flex-col gap-2 items-center h-full group">
-          {(promoImage || image) && (
-            <figure className="relative min-w-[98px] min-h-[98px]">
-              <Image
-                src={promoImage?.url ?? image.url}
-                alt={promoImage?.title ?? image.title}
-                className="object-cover rounded-full w-full h-full"
-                fill
-              />
-            </figure>
-          )}
-          {(promoTitle || name) && (
-            <p className="text-center text-slate-600 font-semibold group-hover:underline">
-              {promoTitle ?? name}
-            </p>
-          )}
-        </span>
-      </Link>
-    </article>
-  );
-};
+    let link = internalLink?.urlPath
+      ? internalLink.urlPath
+      : value !== "*"
+        ? `${fullPath}?${queryParamName}=${value}`
+        : fullPath;
+
+    link = linkParameters ? link + linkParameters : link;
+
+    return (
+      <article className="flex justify-center">
+        <Link href={link}>
+          <span className="flex flex-col gap-2 items-center h-full group">
+            {(promoImage || image) && (
+              <figure className="relative min-w-[98px] min-h-[98px]">
+                <Image
+                  src={promoImage?.url ?? image?.url}
+                  alt={promoImage?.title ?? image?.title}
+                  width={promoImage?.width ?? image?.width}
+                  height={promoImage?.height ?? image?.height}
+                  className="object-cover rounded-full w-full h-full"
+                  fill
+                />
+              </figure>
+            )}
+            {(promoTitle || name) && (
+              <p className="text-center text-slate-600 font-semibold group-hover:underline">
+                {promoTitle ?? name}
+              </p>
+            )}
+          </span>
+        </Link>
+      </article>
+    );
+  };
 
 export default CarouselCategories;

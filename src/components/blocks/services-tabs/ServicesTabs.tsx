@@ -25,8 +25,10 @@ const TabElement = (tab) => {
           <figure className="w-[102px] rounded-full overflow-hidden aspect-square relative">
             <Image
               className="object-cover"
-              src={promoImage?.url ? promoImage.url : image.url}
-              alt={promoImage?.title ? promoImage.title : image?.title}
+              src={promoImage?.url ?? image?.url}
+              alt={promoImage?.title ?? image?.title}
+              width={102}
+              height={102}
               fill
             />
           </figure>

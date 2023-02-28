@@ -42,8 +42,10 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               {promoImage ? (
                 <figure className="aspect-[336/291]">
                   <Image
-                    alt={promoImage.title || "card"}
+                    alt={promoImage.title}
                     src={promoImage.url}
+                    width={336}
+                    height={291}
                     fill
                     className="w-full h-full"
                   />
@@ -51,8 +53,10 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
               ) : (
                 <figure className="aspect-[336/291]">
                   <Image
-                    alt={imagesCollection.items[0].title || "card"}
+                    alt={imagesCollection.items[0].title}
                     src={imagesCollection.items[0].url}
+                    width={336}
+                    height={291}
                     fill
                     className="w-full h-full"
                   />

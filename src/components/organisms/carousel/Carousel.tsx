@@ -57,13 +57,15 @@ const Carousel: React.FC<ICarousel> = ({
       >
         {content?.map((el, i) => (
           <SwiperSlide key={i}>
-            {el.url && (
+            {el?.url && (
               <figure className="relative aspect-[595/548]">
                 <Image
                   fill
                   className="w-full h-full cursor-pointer rounded-xl"
                   src={el.url}
-                  alt={el.title ?? "carousel"}
+                  alt={el.title}
+                  width={el.width}
+                  height={el.height}
                   priority
                 />
               </figure>
@@ -102,7 +104,9 @@ const Carousel: React.FC<ICarousel> = ({
                         fill
                         className="w-full h-full rounded-md cursor-pointer xs:rounded-xl"
                         src={el.url}
-                        alt={el.title ?? "carousel"}
+                        alt={el.title}
+                        width={el.width}
+                        height={el.height}
                         priority
                       />
                     </figure>

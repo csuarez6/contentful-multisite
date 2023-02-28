@@ -55,7 +55,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                       <figure className="sm:absolute md:w-screen h-[394px]">
                         <Image
                           src={content.promoImage.url}
-                          alt={content.promoImage.title ?? "SlideItem"}
+                          alt={content.promoImage.title}
                           className="w-full h-full object-cover object-right"
                           width={1440}
                           height={394}

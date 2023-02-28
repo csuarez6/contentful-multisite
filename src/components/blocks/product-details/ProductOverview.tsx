@@ -320,13 +320,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           urlPath: "financiacion/vanti-listo",
                         }}
                       >
-                        Conóce mas
+                        Conóce más
                       </CustomLink>
                       <Image
                         width={48}
                         height={34}
                         src="/images/VantiListo.png"
-                        alt="vanti"
+                        alt="Conóce más - VantiListo"
                       />
                     </div>
                   </div>

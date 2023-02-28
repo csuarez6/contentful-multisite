@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames } from '../../../../utils/functions';
 
 const productsArray = [
   {
@@ -24,12 +23,14 @@ const OrderCard: React.FC<IPromoContent> = ({
         {(promoTitle) && (
           <h4 className="text-blue-dark">{promoTitle}</h4>
         )}
-        {productsArray && (
+        {productsArray?.length > 0 && (
           <div className="flex justify-center">
-            <figure className={classNames("w-full relative aspect-[214/214]")}>
+            <figure className="w-full relative aspect-[214/214]">
               <Image
                 src={productsArray[0].image}
                 alt={productsArray[0].name}
+                width={214}
+                height={214}
                 className="h-full w-full object-cover"
                 fill
               />

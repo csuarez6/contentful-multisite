@@ -70,7 +70,7 @@ const defaultFormatOptions: Options = {
             <Image
               src={url}
               className="w-auto h-auto max-w-full"
-              alt={description && description != "" ? description : title}
+              alt={title ?? description}
               width={width}
               height={height}
             />

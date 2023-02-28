@@ -14,7 +14,7 @@ const dataButton: IButtonAtom = {
   text: 'Button',
   type: 'button',
   classes: 'button-secondary',
-  callbackAction: (_event) => { alert('Dispatch from stories'); }
+  callbackAction: () => { alert('Dispatch from stories'); }
 };
 
 export const mockButtonAtomProps = {

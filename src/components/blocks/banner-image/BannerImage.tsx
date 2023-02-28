@@ -22,7 +22,7 @@ const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockI
         <figure className="relative w-full h-full">
             <Image
                 className="w-full h-full object-cover object-center"
-                alt={image.title ?? 'Imagen de banner'}
+                alt={image.title}
                 src={image.url}
                 width={1440}
                 height={466}

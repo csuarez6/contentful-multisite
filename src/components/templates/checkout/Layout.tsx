@@ -116,6 +116,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       <Image
                         src={product?.image_url}
                         alt={product?.name}
+                        width={214}
+                        height={214}
                         className="h-full w-full object-cover"
                         fill
                       />

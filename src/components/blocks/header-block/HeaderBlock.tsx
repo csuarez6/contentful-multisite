@@ -26,7 +26,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
   } = props;
   let menuKey = firstPath;
   let firstLevelMenu, isFolder;
-  
+
   let secondLevelMenu = mainNavCollection?.items.find(
     (el) => el.internalLink?.slug === HOME_SLUG
   )?.mainNavCollection;
@@ -44,7 +44,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
       (el) => el.internalLink?.slug === firstPath
     )?.mainNavCollection;
   }
-  
+
   if (
     mainNavCollection?.items.some(
       (el) => el.secondaryNavCollection?.items.length > 0
@@ -66,7 +66,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
     secondLevelMenu = overrideNavCollection;
   }
 
-  if(!secondLevelMenu?.items?.length){
+  if (!secondLevelMenu?.items?.length) {
     menuKey = HOME_SLUG;
     isFolder = "";
     secondLevelMenu = mainNavCollection?.items.find(
@@ -95,7 +95,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     secondaryNavCollection,
     utilityNavCollection,
   } = props;
-  let {menuNavkey = null} = props;
+  let { menuNavkey = null } = props;
   const [open, setOpen] = useState<boolean>(false);
   const { status: sessionStatus, data: session } = useSession();
   // const router = useRouter();
@@ -153,8 +153,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             open
               ? getBackgroundColorClass(
-                  secondaryNavCollectionColor ?? "Azul Oscuro"
-                ).background
+                secondaryNavCollectionColor ?? "Azul Oscuro"
+              ).background
               : backgroundColor.background
           )}
         ></div>
@@ -263,13 +263,17 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <Image
                       className="block w-auto sm:hidden"
                       src={"/images/vanti-icon.png"}
-                      alt={promoImage?.description ?? "Grupo Vanti"}
+                      alt={promoImage?.title ?? "Logo Grupo Vanti"}
+                      width={180}
+                      height={52}
                       fill
                     />
                     <Image
                       className="hidden w-auto sm:block"
                       src={promoImage?.url ?? "/images/vanti-logo.png"}
-                      alt={promoImage?.description ?? "Grupo Vanti"}
+                      alt={promoImage?.title ?? "Logo Grupo Vanti"}
+                      width={180}
+                      height={52}
                       fill
                     />
                   </figure>
@@ -417,9 +421,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 {({ active }) => (
                                   <button
                                     className={classNames(
-                                      active
-                                        ? "text-blue-dark"
-                                        : "text-blue-dark",
+                                      active ? "text-blue-dark-8" : "text-blue-dark",
                                       "block w-full underline py-2 mb-9 text-left"
                                     )}
                                     onClick={() => signOut()}
@@ -485,7 +487,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             <Image
                               className="block w-auto"
                               src={promoImage?.url ?? "/images/vanti-logo.png"}
-                              alt={promoImage?.description ?? "Grupo Vanti"}
+                              alt={promoImage?.description ?? "Logo Grupo Vanti"}
+                              width={180}
+                              height={52}
                               fill
                             />
                           </figure>

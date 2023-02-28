@@ -72,8 +72,10 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
           >
             <Image
               className="object-cover w-full h-full"
-              src={promoImage?.url ? promoImage?.url : image?.url}
-              alt={promoImage?.title ? promoImage?.title : image?.title}
+              src={promoImage?.url ?? image?.url}
+              alt={promoImage?.title ?? image?.title}
+              width={promoImage?.width ?? image?.width}
+              height={promoImage?.height ?? image?.height}
               fill
             />
           </figure>

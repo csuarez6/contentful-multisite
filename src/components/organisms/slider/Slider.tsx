@@ -65,7 +65,7 @@ const Slider: React.FC<any> = ({ data }) => {
           >
             <Image
               src={slide?.urlImage}
-              alt="slider"
+              alt={slide?.title}
               className="h-[350px] 2md:h-auto object-cover"
               width={1920}
               height={568}
