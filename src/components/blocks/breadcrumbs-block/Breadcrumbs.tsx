@@ -11,7 +11,7 @@ const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
         <ul className='flex gap-0.5 flex-wrap'>
           {
             ctaCollection.items.map((el, i) => (
-              <li key={el.name} className="flex items-center gap-0.5">
+              <li key={`${el.name}-${i}`} className="flex items-center gap-0.5">
                 {
                   i + 1 !== ctaCollection.items.length
                     ? (

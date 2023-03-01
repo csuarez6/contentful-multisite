@@ -10,11 +10,12 @@ import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
-import { useState } from 'react';
+import { useContext, useEffect, useState } from "react";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
+import CheckoutContext from "@/context/Checkout";
 
 const iconInvoice: IIcon = {
   icon: "invoice",
@@ -148,6 +149,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   warranty,
 }) => {
   const router = useRouter();
+  const { addToCart, reloadOrder } = useContext(CheckoutContext);
   const currentSlug =
     router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback =
@@ -177,6 +179,39 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       setIsActivedModal(true);
     }, 200);
   };
+
+  const buyHandlerMap = {
+    [PaymentMethodType.pse]: () => {
+      router.push("/checkout/pse/verify");
+    },
+  };
+
+  const onBuyHandler = async (type: PaymentMethodType) => {
+    try {
+      await addToCart(sku, promoImage.url, promoTitle);
+      if (buyHandlerMap[type]) buyHandlerMap[type]();
+    } catch (e) {
+      const params = new URLSearchParams(location.search);
+      const retry = params.get("retry");
+
+      if (!retry) {
+        localStorage.removeItem("orderId");
+        await reloadOrder();
+        router.push(`${router.asPath}?retry=1&payment_method=${type}`);
+      }
+    }
+    if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const retry = params.get("retry");
+    const paymentMethod = params.get("payment_method");
+    if (retry && paymentMethod) {
+      onBuyHandler(paymentMethod as PaymentMethodType);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath]);
 
   return (
     <section className="bg-white section">
@@ -447,26 +482,27 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </p>
                     )}
                     <div className="flex gap-1">
-                      {(marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS) && (
-                        <Icon {...iconPSE} />
-                      )}
+                      {marketId &&
+                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
+                          <Icon {...iconPSE} />
+                        )}
                       <Icon {...iconInvoice} />
                     </div>
                   </div>
                   {(price == undefined ||
                     productsQuantity == undefined ||
                     Number(productsQuantity) <= 0) && (
-                      <div
-                        className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                        role="alert"
-                      >
-                        <strong className="font-bold">Info! </strong>
-                        <span className="block sm:inline">
-                          Este producto no se encuentra disponible en este
-                          momento.
-                        </span>
-                      </div>
-                    )}
+                    <div
+                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                      role="alert"
+                    >
+                      <strong className="font-bold">Info! </strong>
+                      <span className="block sm:inline">
+                        Este producto no se encuentra disponible en este
+                        momento.
+                      </span>
+                    </div>
+                  )}
                   {price &&
                     productsQuantity &&
                     Number(productsQuantity) > 0 && (
@@ -516,24 +552,22 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     className="hidden md:flex flex-col gap-[15px]"
                   >
                     <div className=" hidden sm:flex flex-col gap-[22px] pt-[5px] my-5">
-                      {(sku && price && (productsQuantity && Number(productsQuantity) > 0) && (marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS)) ?
-                        <a
+                      {sku &&
+                      price &&
+                      productsQuantity &&
+                      Number(productsQuantity) > 0 &&
+                      marketId &&
+                      marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
+                        <button
                           className="button button-primary 2xl:min-w-[348px] text-center border border-solid border-lucuma"
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (onBuy)
-                              onBuy(
-                                PaymentMethodType.pse,
-                                sku,
-                                promoImage.url,
-                                promoTitle
-                              );
-                          }}
+                          type="button"
+                          onClick={() => onBuyHandler(PaymentMethodType.pse)}
                         >
                           Comprar con PSE
-                        </a>
-                        : ''}
+                        </button>
+                      ) : (
+                        ""
+                      )}
                       <CustomLink
                         className="button button-outline 2xl:min-w-[348px] text-center block"
                         content={{ urlPath: callbackURL }}
@@ -542,23 +576,37 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <Icon {...iconCallback} />
                       </CustomLink>
                     </div>
-                    <ul className='hidden sm:flex flex-col gap-y-[11px]'>
-                      {(marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS) &&
-                        <li className="flex flex-col gap-3">
-                          <p className="text-size-subtitle1 text-blue-dark">Instala tu gasodoméstico</p>
-                          <div className="px-3 py-2">
-                            <p onClick={() => openModal('install')} className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer">
-                              <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon icon="expert" className="flex items-center w-full h-full text-neutral-30" />
-                              </span>
-                              <span className="text-size-p2 leading-[1.2] text-grey-30 grow">Contrata el servicio</span>
-                              <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon icon="arrow-right" className="flex items-center w-full h-full text-neutral-30" />
-                              </span>
+                    <ul className="hidden sm:flex flex-col gap-y-[11px]">
+                      {marketId &&
+                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
+                          <li className="flex flex-col gap-3">
+                            <p className="text-size-subtitle1 text-blue-dark">
+                              Instala tu gasodoméstico
                             </p>
-                          </div>
-                        </li>
-                      }
+                            <div className="px-3 py-2">
+                              <p
+                                onClick={() => openModal("install")}
+                                className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
+                              >
+                                <span className="flex items-center w-6 h-6 shrink-0">
+                                  <Icon
+                                    icon="expert"
+                                    className="flex items-center w-full h-full text-neutral-30"
+                                  />
+                                </span>
+                                <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
+                                  Contrata el servicio
+                                </span>
+                                <span className="flex items-center w-6 h-6 shrink-0">
+                                  <Icon
+                                    icon="arrow-right"
+                                    className="flex items-center w-full h-full text-neutral-30"
+                                  />
+                                </span>
+                              </p>
+                            </div>
+                          </li>
+                        )}
                       <li className="flex flex-col gap-3">
                         <p className="text-size-subtitle1 text-blue-dark">
                           Tipo de envío
@@ -640,7 +688,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
           )}
 
-          {(promoDescription || warranty) &&
+          {(promoDescription || warranty) && (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {promoDescription && (
                 <div className="w-full gap-8">
@@ -660,7 +708,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 </div>
               )}
             </div>
-          }
+          )}
         </div>
       </div>
       {isActivedModal && (
@@ -678,19 +726,29 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           )}
         </div>
         <div className="flex gap-4">
-          {sku && price && productsQuantity && Number(productsQuantity) > 0 && (marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS) && (
-            <a
-              className="button button-primary w-1/2 shrink-0 grow flex items-center justify-center text-center text-[13px]"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                if (onBuy)
-                  onBuy(PaymentMethodType.pse, sku, promoImage.url, promoTitle);
-              }}
-            >
-              Comprar con PSE
-            </a>
-          )}
+          {sku &&
+            price &&
+            productsQuantity &&
+            Number(productsQuantity) > 0 &&
+            marketId &&
+            marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
+              <a
+                className="button button-primary w-1/2 shrink-0 grow flex items-center justify-center text-center text-[13px]"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onBuy)
+                    onBuy(
+                      PaymentMethodType.pse,
+                      sku,
+                      promoImage.url,
+                      promoTitle
+                    );
+                }}
+              >
+                Comprar con PSE
+              </a>
+            )}
           <CustomLink
             linkClassName="button button-outline w-1/2 shrink-0 grow flex items-center justify-center text-center text-[13px] gap-1"
             content={{ urlPath: callbackURL }}

@@ -4,14 +4,11 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from "next";
-import { useContext } from "react";
-import { useRouter } from "next/router";
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import {
   IProductOverviewDetails,
-  PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
@@ -24,38 +21,18 @@ import {
 import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
-import CheckoutContext from "@/context/Checkout";
 import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 import getBreadcrumbs from "@/utils/breadcrumbs";
 
 const CustomPage: NextPageWithLayout = (
   props: IPage & IProductOverviewDetails
 ) => {
-  const router = useRouter();
-  const { addToCart } = useContext(CheckoutContext);
-
   const { blocksCollection, __typename } = props;
-
-  const buyHandlerMap = {
-    [PaymentMethodType.pse]: () => {
-      router.push("/checkout/pse/verify");
-    },
-  };
-
-  const onBuyHandler = async (
-    type: PaymentMethodType,
-    skuCode: string,
-    imageProduct: string,
-    titleProduct: string
-  ) => {
-    await addToCart(skuCode, imageProduct, titleProduct);
-    if (buyHandlerMap[type]) buyHandlerMap[type]();
-  };
 
   return __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
     <>
       {jsonToReactComponents(blocksCollection.items)}
-      <ProductOverview {...props} onBuy={onBuyHandler} />
+      <ProductOverview {...props} />
     </>
   ) : (
     <>{jsonToReactComponents(blocksCollection.items)}</>

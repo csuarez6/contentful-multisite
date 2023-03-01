@@ -134,6 +134,7 @@ export const useCommerceLayer = () => {
 
       await reloadOrder();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [orderId, client, reloadOrder]
   );
 
@@ -370,6 +371,7 @@ export const useCommerceLayer = () => {
     tokenRecaptcha,
     onRecaptcha,
     getOrder,
+    reloadOrder,
     addToCart,
     updateItemQuantity,
     addCustomer,

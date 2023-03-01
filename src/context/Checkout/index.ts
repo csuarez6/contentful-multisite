@@ -10,6 +10,7 @@ export interface IContextCheckout {
   flow: Flow;
   tokenRecaptcha: string;
   addToCart: (sku: string, productImage?: string, productName?: string) => void;
+  reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
   addLoggedCustomer: () => Promise<void>;
@@ -39,6 +40,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   flow: undefined,
   tokenRecaptcha: "",
   addToCart: () => undefined,
+  reloadOrder: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,
   addLoggedCustomer: () => undefined,

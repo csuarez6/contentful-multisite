@@ -203,7 +203,6 @@ export const updateCustomerResetPwd = async (tokenID: string, customerPWD: strin
 /** Retrieve a customer password reset */
 export const retrieveCustomerResetPwd = async (tokenID: string) => {
   try {
-    console.log("************** RetrieveCustomerResetPwd");
     let isTokenValid = false;
     const dateCurrent = new Date();
     const miliSecCurrent = dateCurrent.getTime();
@@ -211,19 +210,16 @@ export const retrieveCustomerResetPwd = async (tokenID: string) => {
 
     const cl = await getCLAdminCLient();
     const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(tokenID);
-    console.log({ retrieveCustomerRPwd });
 
     const dateCreate = new Date(retrieveCustomerRPwd.created_at);
     const miliSecCreate = dateCreate.getTime();
     difHoursDates = miliSecCurrent - miliSecCreate;
     const hours = difHoursDates / 3600000;
-    console.log("HORAS DIFF ", hours);
 
     if (retrieveCustomerRPwd.reset_password_at == null && hours <= 1) { //Token válido por 1 Hora
       isTokenValid = true;
     } else {
-      const deleteRecord = await deleteCustomerResetPwd(tokenID);
-      console.log("Delete customer Toke: ", deleteRecord);
+      await deleteCustomerResetPwd(tokenID);
     }
     return { status: 200, isTokenValid, resetToken: retrieveCustomerRPwd.reset_password_token, tokenID };
   } catch (error) {
@@ -235,10 +231,8 @@ export const retrieveCustomerResetPwd = async (tokenID: string) => {
 /** Delete a customer password reset */
 export const deleteCustomerResetPwd = async (tokenID: string) => {
   try {
-    console.log("************** DeleteCustomerResetPwd");
     const cl = await getCLAdminCLient();
     const deleteCustomerRPwd = await cl.customer_password_resets.delete(tokenID);
-    console.log({ deleteCustomerRPwd });
 
     return deleteCustomerRPwd;
   } catch (error) {
