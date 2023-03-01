@@ -19,11 +19,8 @@ import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobi
 import TopMenu from "@/components/organisms/top-menu/TopMenu";
 
 const findMenu = (props: INavigation, firstPath: string) => {
-  const {
-    mainNavCollection,
-    secondaryNavCollection,
-    overrideNavCollection,
-  } = props;
+  const { mainNavCollection, secondaryNavCollection, overrideNavCollection } =
+    props;
   let menuKey = firstPath;
   let firstLevelMenu, isFolder;
 
@@ -31,18 +28,25 @@ const findMenu = (props: INavigation, firstPath: string) => {
     (el) => el.internalLink?.slug === HOME_SLUG
   )?.mainNavCollection;
 
-  if (mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
+  if (
+    mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)
+  ) {
     secondLevelMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === firstPath
     )?.mainNavCollection;
   }
 
   if (
-    secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)
+    secondaryNavCollection?.items?.some(
+      (el) => el.internalLink?.slug === firstPath
+    )
   ) {
     secondLevelMenu = secondaryNavCollection?.items.find(
       (el) => el.internalLink?.slug === firstPath
     )?.mainNavCollection;
+    if (secondLevelMenu) {
+      secondLevelMenu = overrideNavCollection;
+    }
   }
 
   if (
@@ -56,9 +60,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
     )?.secondaryNavCollection;
   }
 
-  if (
-    firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)
-  ) {
+  if (firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)) {
     // secondLevelMenu = firstLevelMenu?.items?.find(
     //   (el) => el.internalLink?.slug === firstPath
     // )?.mainNavCollection;
@@ -153,8 +155,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             open
               ? getBackgroundColorClass(
-                secondaryNavCollectionColor ?? "Azul Oscuro"
-              ).background
+                  secondaryNavCollectionColor ?? "Azul Oscuro"
+                ).background
               : backgroundColor.background
           )}
         ></div>
@@ -419,7 +421,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 {({ active }) => (
                                   <button
                                     className={classNames(
-                                      active ? "text-blue-dark-8" : "text-blue-dark",
+                                      active
+                                        ? "text-blue-dark-8"
+                                        : "text-blue-dark",
                                       "block w-full underline py-2 mb-9 text-left"
                                     )}
                                     onClick={() => signOut()}
@@ -485,7 +489,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             <Image
                               className="block w-auto"
                               src={promoImage?.url ?? "/images/vanti-logo.png"}
-                              alt={promoImage?.description ?? "Logo Grupo Vanti"}
+                              alt={
+                                promoImage?.description ?? "Logo Grupo Vanti"
+                              }
                               width={180}
                               height={52}
                             />
