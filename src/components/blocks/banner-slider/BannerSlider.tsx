@@ -9,15 +9,38 @@ import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import Icon from "@/components/atoms/icon/Icon";
+const iconLeft = (id: string) => (
+  `<button id="${id}" class="carousel-control-prev-icon h-9 w-auto hidden sm:block mr-1">
+    <svg className="text-neutral-20 drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <path d="M618.667 277.333l-213.333 213.333 213.333 213.333" fill="none" stroke="currentcolor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
+    </svg>
+  </button>`
+);
+
+const iconRight = (id: string) => (
+  `<button id="${id}" class="carousel-control-next-icon w-auto h-9 hidden sm:block ml-1">
+    <svg className="text-neutral-20 drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]"  width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+      <path d="M405.333 704l213.333-213.333-213.333-213.333" fill="none" stroke="currentcolor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
+    </svg>
+  </button>`
+);
+
+const grid = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+  4: "grid-cols-4",
+  5: "grid-cols-5",
+  6: "grid-cols-6"
+};
 
 const BannerSliderBlock: React.FC<IPromoBlock> = ({
   featuredContentsCollection,
   blockId,
   sysId
 }) => {
-  const nextSlideId = `nextSlide${blockId}`;
-  const prevSlideId = `prevSlide${blockId}`;
+  const nextSlideId = `nextSlide${sysId}`;
+  const prevSlideId = `prevSlide${sysId}`;
 
   return (
     <section id={blockId ? blockId : sysId} className="grid">
@@ -29,17 +52,45 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 modules={[Autoplay, Pagination, Navigation, EffectFade]}
                 allowTouchMove={true}
                 navigation={{
-                  nextEl: `#${nextSlideId}`,
                   prevEl: `#${prevSlideId}`,
+                  nextEl: `#${nextSlideId}`,
                   enabled: true
                 }}
                 pagination={{
-                  bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet",
-                  bulletActiveClass: "swiper-pagination-bullet-active",
-                  clickable: true
+                  type: "custom",
+                  renderCustom(_, current, total) {
+                    const className = "slider-bullet swiper-pagination-bullet swiper-pagination-custom-bullet";
+                    let bullets = "";
+                    for (let i = 0; i < total; i++) {
+                      bullets += `
+                        <span data-bullet-index="${i}" class="${className} ${current === i + 1 ? "swiper-pagination-bullet-active" : ""}"></span>
+                      `;
+                    }
+                    return `
+                      <div class="indicators-bullets ${grid[featuredContentsCollection?.items?.length]}">
+                        ${iconLeft(prevSlideId)}
+                          ${bullets}
+                        ${iconRight(nextSlideId)}
+                      </div>
+                    `;
+                  },
+                }}
+                onPaginationRender={(swiper, el) => {
+                  el.querySelector(`#${prevSlideId}`).addEventListener("click", () => {
+                    swiper.slidePrev();
+                  });
+                  el.querySelector(`#${nextSlideId}`).addEventListener("click", () => {
+                    swiper.slideNext();
+                  });
+                  el.querySelectorAll(".slider-bullet").forEach((bullet) => {
+                    bullet.addEventListener("click", () => {
+                      const index = bullet.getAttribute("data-bullet-index");
+                      swiper.slideTo(Number(index) + 1);
+                    });
+                  });
                 }}
                 autoplay={{
-                  delay: 4000,
+                  delay: 7000,
                   disableOnInteraction: false
                 }}
                 spaceBetween={5}
@@ -47,24 +98,24 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 speed={1000}
                 loop={true}
                 effect="fade"
-                className="relative w-full sm:h-[394px] !pb-20 sm:!pb-24 md:!pb-0"
+                className="relative w-full h-[472px] sm:h-[394px]"
               >
                 {featuredContentsCollection.items.map((content) => (
                   content.promoImage?.url && (
                     <SwiperSlide className="flex flex-col sm:flex-row gap-4 md:gap-0 items-center !h-auto sm:h-full bg-white" key={content.promoTitle}>
-                      <figure className="sm:absolute md:w-screen h-[394px]">
+                      <figure className="md:w-screen h-[472px] sm:h-[394px]">
                         <Image
                           src={content.promoImage.url}
                           alt={content.promoImage.title}
-                          className="w-full h-full object-cover object-right"
+                          className="w-full h-full object-cover object-[right_-4rem_top_50%] sm:object-right"
                           width={1440}
                           height={394}
                           priority
                         />
                       </figure>
-                      <div className="container md:px-14 2md:px-28 mx-auto">
-                        <div className="relative flex justify-center items-center sm:items-start flex-col gap-[30px] px-2 xxs:px-0 md:px-2 sm:w-3/5">
-                          <h1 className="text-blue-dark text-2xl sm:text-3xl xl:text-[43px] xl:leading-[1.3] text-center sm:text-left">
+                      <div className="container sm:px-14  2md:px-28 mx-auto absolute h-full sm:h-auto flex items-end sm:block">
+                        <div className="relative flex justify-center items-center sm:items-start flex-col gap-[30px] px-2 xxs:px-0 md:px-2 sm:w-3/5 mb-6 sm:mb-0">
+                          <h1 className="text-blue-dark text-2xl sm:text-3xl xl:text-[43px] xl:leading-[1.3] text-center sm:text-left p-2 sm:px-1 bg-white bg-opacity-50 rounded-xl sm:bg-transparent sm:rounded-none">
                             {content.promoTitle ?? content.name}
                           </h1>
                           {(content.externalLink || content.internalLink) && (
@@ -81,17 +132,6 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                   )
                 ))}
               </Swiper>
-            </div>
-          </div>
-
-          <div className='z-10 absolute top-full md:top-1/2 -translate-y-14 md:-translate-y-1/2 -left-5 md:-left-10 2md:-left-5 2xl:-ml-20'>
-            <div id={prevSlideId} className="w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center">
-              <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
-            </div>
-          </div>
-          <div className='z-10 absolute top-full md:top-1/2 -translate-y-14 md:-translate-y-1/2 -right-5 md:-right-10 2md:-right-5 2xl:-mr-20'>
-            <div id={nextSlideId} className="w-16 h-16 md:h-24 md:w-24 rounded-full cursor-pointer flex items-center justify-center">
-              <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
             </div>
           </div>
         </div>

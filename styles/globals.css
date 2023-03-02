@@ -83,11 +83,18 @@ section.section {
 }
 
 .swiper-pagination-bullet.swiper-pagination-custom-bullet {
-  @apply w-[18px] h-[18px] bg-grey-80 opacity-100;
+  @apply sm:w-[18px] sm:h-[18px] bg-grey-80 opacity-100 cursor-pointer mx-[5px] w-full h-[2px];
+}
+
+.swiper-pagination{
+  @apply  pr-[18px] pl-[6px] sm:px-0 bottom-[97%] sm:bottom-6 !important;
 }
 
 .swiper-pagination-bullet-active.swiper-pagination-custom-bullet {
   @apply bg-lucuma;
+}
+.indicators-bullets {
+  @apply sm:flex sm:justify-center sm:items-center grid gap-3
 }
 .swiper-pagination-custom-bullet--iconslist{
   width: 14px !important;
