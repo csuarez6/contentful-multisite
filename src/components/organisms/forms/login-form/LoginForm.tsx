@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Textbox from "@/components/atoms/input/textbox/TextBox";
 import { IForm } from "./LoginForm.mocks";
 import { useForm } from "react-hook-form";
@@ -31,6 +31,7 @@ const schema = yup.object({
 
 const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
 
+    const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
     const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
     } = useForm<ITemsForm>({
         mode: "onChange",
@@ -40,6 +41,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
     });
 
     const onSubmit = (data: ITemsForm) => {
+        console.log({ tokenReCaptcha });
         if (onSubmitForm) onSubmitForm(data);
         reset();
     };

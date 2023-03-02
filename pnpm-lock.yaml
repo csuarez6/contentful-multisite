@@ -42,6 +42,7 @@ specifiers:
   lodash: ^4.17.21
   next: 13.0.3
   next-auth: ^4.19.2
+  next-recaptcha-v3: ^1.1.4
   postcss: ^8.4.19
   postcss-import: ^15.0.1
   prettier: ^2.7.1
@@ -79,6 +80,7 @@ dependencies:
   lodash: 4.17.21
   next: 13.0.3_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_ogpkrxaz2lg6nectum6dl66tn4
+  next-recaptcha-v3: 1.1.4_ogpkrxaz2lg6nectum6dl66tn4
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-google-recaptcha: 2.1.0_react@18.2.0
@@ -10524,6 +10526,22 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       uuid: 8.3.2
+    dev: false
+
+  /next-recaptcha-v3/1.1.4_ogpkrxaz2lg6nectum6dl66tn4:
+    resolution: {integrity: sha512-4nLDu8G/XXQDX/jCuabAPmQZOtJ0qV2l/2AwSesm/2e0GLIjretVa7zIcXZSfn+FYWQhn0NT9eMxgY4sXKT6/A==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      next: '>=11.0.0'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+    dependencies:
+      next: 13.0.3_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /next/13.0.3_biqbaboplfbrettd7655fr4n2y:

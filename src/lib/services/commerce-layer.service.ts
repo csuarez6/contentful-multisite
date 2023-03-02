@@ -15,6 +15,7 @@ export interface ICustomer {
   contractNumber: string;
   authorize: boolean;
   notificate: boolean;
+  tokenReCaptcha?: string;
 }
 
 export interface JWTProps {
@@ -152,7 +153,7 @@ export const createCustomer = async ({
     return { status: 201, ...createCustomer }; // this will return the created resource object
 
   } catch (error) {
-    console.error('Error - Customer Service: ', error.response);
+    console.error('Error - Customer Service: ', error);
     return { status: error.response.status };
   }
 };

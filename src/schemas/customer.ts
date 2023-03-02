@@ -27,7 +27,8 @@ export const customerSchema = object({
         .nullable()
         .transform((value) => (isNaN(value) ? undefined : value)),
     authorize: bool().oneOf([true], "Dato Requerido"),
-    notificate: bool()
+    notificate: bool(),
+    tokenReCaptcha: string(),
 });
 
 export type Customer = TypeOf<typeof customerSchema>;

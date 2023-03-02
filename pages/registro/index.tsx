@@ -55,6 +55,8 @@ const SignUp = () => {
       body: JSON.stringify(data),
     })
       .then(async (response) => {
+        const resp = await response.json();
+        let msgError = "Ha ocurrido un error o el usuario ya existe, por favor intente nuevamente.";
         if (response.status === 201) {
           setDataModal({
             children: <ModalContent statusSubmit={true} />,
@@ -64,9 +66,12 @@ const SignUp = () => {
               "Pronto recibirás en el correo electrónico registrado la confirmación de la creación de tu cuenta y los beneficios a los que tienes acceso.",
           });
         } else {
+          if (response.status === 400 && resp.error?.code == 'RE_CAPTCHA_ERROR_VALIDATION') {
+            msgError = resp.error.message;
+          }
           setDataModal({
             children: (
-              <ModalContent modalMsg="Ha ocurrido un error o el usuario ya existe, por favor intente nuevamente." />
+              <ModalContent modalMsg={msgError} />
             ),
             promoIcon: "cancel",
             promoTitle: "Error durante el proceso!",

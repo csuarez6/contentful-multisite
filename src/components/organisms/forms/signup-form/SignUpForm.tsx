@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Textbox from '@/components/atoms/input/textbox/TextBox';
 import CheckBox from '@/components/atoms/input/checkbox/CheckBox';
 import SelectInput from '@/components/atoms/selectInput/SelectInput';
@@ -9,6 +9,7 @@ import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
 import { customerSchema } from '@/schemas/customer';
+import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 // import "@/styles/forms.css";
 
 export interface ITemsForm {
@@ -22,7 +23,8 @@ export interface ITemsForm {
     confirmPassword: string;
     contractNumber: string;
     authorize: boolean;
-    notificate: boolean
+    notificate: boolean;
+    tokenReCaptcha: string;
 }
 const defaultValues: ITemsForm = {
     name: '',
@@ -35,13 +37,15 @@ const defaultValues: ITemsForm = {
     confirmPassword: '',
     contractNumber: '',
     authorize: false,
-    notificate: false
+    notificate: false,
+    tokenReCaptcha: ''
 };
 
 const schema = customerSchema;
 
 const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
 
+    const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
     const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
     } = useForm<ITemsForm>({
         mode: 'onChange',
@@ -51,7 +55,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
     });
 
     const onSubmit = (data: ITemsForm) => {
-        if (onSubmitForm) onSubmitForm(data);
+        if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
         reset();
     };
 
@@ -59,6 +63,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-10'>
+                    <ReCaptchaBox handleChange={setTokenReCaptcha} />
                     <Textbox
                         id='name'
                         label='Escribe tu nombre'
