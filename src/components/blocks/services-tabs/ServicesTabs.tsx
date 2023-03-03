@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Fragment } from "react";
-import { Tab } from "@headlessui/react";
+import { useRouter } from "next/router";
+import { Fragment, useState } from "react";
+import { Tab, Transition } from "@headlessui/react";
 
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
@@ -12,7 +13,7 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import Icon from "@/components/atoms/icon/Icon";
 
 const TabElement = (tab) => {
-  const {promoIcon, promoImage, image, promoTitle, name, display } = tab;
+  const { promoIcon, promoImage, image, promoTitle, name, display } = tab;
   return (
     <>
       {display === "Icono" ? (
@@ -45,22 +46,27 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   blockId,
   sysId,
 }) => {
+  const { asPath } = useRouter();
+  const [tabIndex, setTabIndex] = useState(0);
+  const updateTabIndex = (evt) => setTabIndex(evt);
+
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {title && <h2 className="text-blue-dark">{title}</h2>}
       {featuredContentsCollection?.items?.length > 0 && (
-        <Tab.Group as="div" className="grid mt-4">
-          <div className="flex justify-start md:justify-center overflow-x-auto  custom-scrollbar">
+        <Tab.Group as="div" className="grid mt-4" selectedIndex={tabIndex} onChange={updateTabIndex}>
+          <div className="flex justify-start md:justify-center overflow-x-auto custom-scrollbar">
             <div className="flex border-b border-transparent">
               <Tab.List className="flex gap-[30px]">
                 {featuredContentsCollection.items.map((tab) =>
-                  tab?.internalLink?.slug || tab?.externalLink ? (
+                  tab?.internalLink?.urlPath || tab?.externalLink ? (
                     <CustomLink
                       content={tab}
                       linkClassName="flex"
                       className={classNames(
+                        "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
                         (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                        "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-transparent hover:border-lucuma border-b-2 py-[10px] text-center"
+                        (asPath === tab?.internalLink?.urlPath || asPath === tab?.externalLink) ? "border-lucuma" : "border-transparent"
                       )}
                       key={tab?.name}
                     >
@@ -79,7 +85,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                         )
                       }
                     >
-                      {<TabElement {...tab}  display={view.tabDisplay}/>}
+                      {<TabElement {...tab} display={view.tabDisplay} />}
                     </Tab>
                   )
                 )}
@@ -89,19 +95,30 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
 
           <Tab.Panels as={Fragment}>
             {featuredContentsCollection.items.map(
-              (tab) =>
+              (tab, idx) =>
                 !tab?.internalLink &&
                 !tab?.externalLink && (
                   <Tab.Panel
                     key={tab?.name}
                     className="pt-6 focus:outline-none"
                   >
-                    {tab.__typename ===
-                    CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
-                      <LeftFeatured {...tab} buttonType={view?.buttonType} />
-                    ) : (
-                      jsonToReactComponent(tab)
-                    )}
+                    <Transition
+                      appear
+                      show={tabIndex === idx}
+                      enter="transition-opacity ease-out duration-1000"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="transition-opacity ease-in duration-1000"
+                      leaveFrom="opacity-100 "
+                      leaveTo="opacity-0"
+                    >
+                      {tab.__typename ===
+                        CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
+                        <LeftFeatured {...tab} buttonType={view?.buttonType} />
+                      ) : (
+                        jsonToReactComponent(tab)
+                      )}
+                    </Transition>
                   </Tab.Panel>
                 )
             )}
