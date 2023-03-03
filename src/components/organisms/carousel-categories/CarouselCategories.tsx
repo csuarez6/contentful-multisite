@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import { ICarouselCategoryBlock } from "@/lib/interfaces/content-filter-cf.interface";
+import { classNames } from "@/utils/functions";
 
 const CarouselCategories: React.FC<
   IPromoContent & ISelect & ICarouselCategoryBlock
@@ -17,7 +18,9 @@ const CarouselCategories: React.FC<
   linkParameters,
   queryParamName = "categoria",
   value = null,
+  filterName
 }) => {
+
     const { asPath } = useRouter();
     const fullPath = asPath.split("?")[0];
 
@@ -30,7 +33,7 @@ const CarouselCategories: React.FC<
         : fullPath;
 
     link = linkParameters ? link + linkParameters : link;
-
+    
     return (
       <article className="flex justify-center">
         <Link href={link}>
@@ -47,7 +50,8 @@ const CarouselCategories: React.FC<
               </figure>
             )}
             {(promoTitle || name) && (
-              <p className="text-center text-slate-600 font-semibold group-hover:underline">
+              <p className={classNames("text-center text-slate-600 font-semibold group-hover:underline ",
+                (filterName === promoTitle || filterName === name) && 'underline')}>
                 {promoTitle ?? name}
               </p>
             )}

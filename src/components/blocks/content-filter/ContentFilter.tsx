@@ -30,13 +30,12 @@ const ContentFilter: React.FC<IContentFilter> = ({
   const [queryString, setQueryString] = useState<string>(
     new URLSearchParams(fixedFilters).toString()
   );
-
+  const urlParams = new URLSearchParams(queryString);
   const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data, error, isLoading } = useSWR(
     `/api/content-filter?${queryString}&page=${page}`,
     fetcher
   );
-
   const facetsChangeHandle = (newQueryParams: string) => {
     const { pathname: realPathname } = location;
     push(pathname, realPathname + newQueryParams, { shallow: true });
@@ -107,6 +106,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
         }}
         blockId={blockId}
         queryParamName={mainFacetContent?.name ?? ""}
+        filterName={urlParams?.get(mainFacetContent?.name)}
       />
 
       <ProductFilterBlock

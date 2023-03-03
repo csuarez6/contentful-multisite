@@ -34,6 +34,7 @@ const CarouselCategoriesBlock: React.FC<
   blockId,
   sysId,
   queryParamName = "categoria",
+  filterName,
 }) => {
     const uui = uuid();
     const allowTouchMove = view?.isSlider ?? true;
@@ -125,6 +126,7 @@ const CarouselCategoriesBlock: React.FC<
                   <CarouselCategories
                     {...content}
                     queryParamName={queryParamName}
+                    filterName={filterName}
                   />
                 </SwiperSlide>
               ))}

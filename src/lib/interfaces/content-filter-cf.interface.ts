@@ -12,6 +12,7 @@ export interface IProductCategory {
 
 export interface ICarouselCategoryBlock {
   queryParamName?: string;
+  filterName?:string;
 }
 
 export interface IContentFilter {
