@@ -96,6 +96,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     mainNavCollection,
     secondaryNavCollection,
     utilityNavCollection,
+    name,
   } = props;
   let { menuNavkey = null } = props;
   const [open, setOpen] = useState<boolean>(false);
@@ -597,6 +598,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               <MegaMenu
                 mainNavCollection={mainNavCollectionMenu}
                 secondaryNavCollection={secondaryNavCollection}
+                name={name}
               />
             )}
           </div>

@@ -40,8 +40,8 @@ const CarouselCategories: React.FC<
                 <Image
                   src={promoImage?.url ?? image?.url}
                   alt={promoImage?.title ?? image?.title}
-                  width={promoImage?.width ?? image?.width}
-                  height={promoImage?.height ?? image?.height}
+                  width={promoImage?.width ?? image?.width ?? 50 }
+                  height={promoImage?.height ?? image?.height?? 50}
                   className="object-cover rounded-full w-full h-full"
                 />
               </figure>

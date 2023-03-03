@@ -1,6 +1,6 @@
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
-
+import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
@@ -37,10 +37,15 @@ const LinkElement = ({ item, isOpen }) => {
     </>
   );
 };
-const MegaMenuItem = ({ item }) => {
+const MegaMenuItem = ({ item, name }) => {
   const [open, setOpen] = useState(false);
   const columns = 6;
   // const [columns, setColumns] = useState(7);
+  const { asPath } = useRouter();
+  const ProductName = asPath.split('=')[1];
+  if(ProductName){
+    name = ProductName.charAt(0).toUpperCase()+ ProductName.slice(1);
+  }
 
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
@@ -177,7 +182,9 @@ const MegaMenuItem = ({ item }) => {
                                   <CustomLink
                                     content={itemList}
                                     onClick={() => setOpen(false)}
-                                    className="flex itemLists-center text-base text-blue-dark hover:text-lucuma-60"
+                                    className={classNames("flex itemLists-center text-base text-blue-dark hover:text-lucuma-60",
+                                      itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
+                                    )}
                                   >
                                     <span>
                                       {itemList?.promoTitle ?? itemList?.name}
@@ -225,7 +232,7 @@ const MegaMenuItem = ({ item }) => {
   );
 };
 
-const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
+const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name }) => {
   if (mainNavCollection.items?.length <= 0) return;
   return (
     <div className="hidden lg:block">
@@ -238,7 +245,7 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection }) => {
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-6">
               {mainNavCollection.items.map((item) => (
-                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} />
+                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name} />
               ))}
             </div>
           </div>
