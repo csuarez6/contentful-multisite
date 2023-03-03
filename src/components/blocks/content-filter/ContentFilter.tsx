@@ -117,46 +117,48 @@ const ContentFilter: React.FC<IContentFilter> = ({
         error={error}
       />
 
-      <div className="block w-full mb-12 my-4">
-        <ul className="flex flex-row justify-center items-center gap-1 w-full">
-          {(data?.actualPage !== undefined && data.actualPage > 0) && (
-            <li>
-              <button
-                onClick={() => setPage(data.actualPage)}
-                className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
-              >
-                &lt; Anterior
-              </button>
-            </li>
-          )}
-          {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
-            <li key={`page-${k}`}>
-              <button
-                onClick={() => setPage(k + 1)}
-                className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${
-                  k == data?.actualPage
-                    ? "border-blue-dark"
-                    : "border-transparent"
-                }`}
-              >
-                {k + 1}
-              </button>
-            </li>
-          ))}
-          {data?.actualPage !== undefined &&
-            data?.totalPages !== undefined &&
-            data.actualPage + 1 < data.totalPages && (
+      {data?.totalPages > 1 &&
+        <div className="block w-full mb-12 my-4">
+          <ul className="flex flex-row justify-center items-center gap-1 w-full">
+            {(data?.actualPage !== undefined && data.actualPage > 0) && (
               <li>
                 <button
-                  onClick={() => setPage(data.actualPage + 2)}
+                  onClick={() => setPage(data.actualPage)}
                   className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
                 >
-                  Siguiente &gt;
+                  &lt; Anterior
                 </button>
               </li>
             )}
-        </ul>
-      </div>
+            {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
+              <li key={`page-${k}`}>
+                <button
+                  onClick={() => setPage(k + 1)}
+                  className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${
+                    k == data?.actualPage
+                      ? "border-blue-dark"
+                      : "border-transparent"
+                  }`}
+                >
+                  {k + 1}
+                </button>
+              </li>
+            ))}
+            {data?.actualPage !== undefined &&
+              data?.totalPages !== undefined &&
+              data.actualPage + 1 < data.totalPages && (
+                <li>
+                  <button
+                    onClick={() => setPage(data.actualPage + 2)}
+                    className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
+                  >
+                    Siguiente &gt;
+                  </button>
+                </li>
+              )}
+          </ul>
+        </div>
+      }
     </div>
   );
 };
