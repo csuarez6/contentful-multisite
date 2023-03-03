@@ -7,7 +7,7 @@ const orderValidation = async ({ body, method }: NextApiRequest, res: NextApiRes
     const { data: { attributes }, included } = body;
 
     const reCaptchaResponse = attributes?.metadata?.recapchaResponse;
-    const isValidReCaptcha = await reCaptchaService.validate(reCaptchaResponse);
+    const isValidReCaptcha = await reCaptchaService.validate(reCaptchaResponse, 2);
 
     if (!isValidReCaptcha) {
         return res.status(400).json({
@@ -36,7 +36,7 @@ const orderValidation = async ({ body, method }: NextApiRequest, res: NextApiRes
         });
     }
     res.json({ success: true, data: {} });
-    return; 
+    return;
 };
 
 export default orderValidation;

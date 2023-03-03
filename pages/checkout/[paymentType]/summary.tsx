@@ -11,7 +11,8 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
+import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -85,10 +86,15 @@ const CheckoutSummary = () => {
             <div className="flex justify-between">
               <dt className="text-blue-dark">
                 Sabemos que eres un humano, pero debemos confirmarlo.
-                <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                {/* <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V2}
                   onChange={(e) => onRecaptcha(e)}
                   className="mt-6"
+                /> */}
+                <ReCaptchaBox
+                  version={2}
+                  handleChange={(e) => onRecaptcha(e)}
+                  classNames="mt-6"
                 />
               </dt>
             </div>
