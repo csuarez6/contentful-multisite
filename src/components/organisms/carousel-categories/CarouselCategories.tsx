@@ -33,7 +33,7 @@ const CarouselCategories: React.FC<
         : fullPath;
 
     link = linkParameters ? link + linkParameters : link;
-    
+
     return (
       <article className="flex justify-center">
         <Link href={link}>
@@ -51,7 +51,7 @@ const CarouselCategories: React.FC<
             )}
             {(promoTitle || name) && (
               <p className={classNames("text-center text-slate-600 font-semibold group-hover:underline ",
-                (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase()) && 'underline')}>
+                (filterName!==null && (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase())) && 'underline')}>
                 {promoTitle ?? name}
               </p>
             )}
