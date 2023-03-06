@@ -37,4 +37,5 @@ export interface INavigation {
     items?: Array<IPage & IPromoContent & INavigation>;
   };
   backgroundColor?: string;
+  currentMenu?: string;
 };

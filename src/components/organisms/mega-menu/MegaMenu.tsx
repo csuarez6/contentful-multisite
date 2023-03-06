@@ -37,7 +37,7 @@ const LinkElement = ({ item, isOpen }) => {
     </>
   );
 };
-const MegaMenuItem = ({ item, name }) => {
+const MegaMenuItem = ({ item, name, currentMenu }) => {
   const [open, setOpen] = useState(false);
   const columns = 6;
   // const [columns, setColumns] = useState(7);
@@ -110,7 +110,8 @@ const MegaMenuItem = ({ item, name }) => {
       onClick={() => setOpen(false)}
       className={classNames(
         "group/submenu min-h-[60px] -my-2 flex items-center",
-        open && "isOpen"
+        open && "isOpen",
+        currentMenu === item.name && "underline"
       )}
       ref={submenu}
     >
@@ -232,7 +233,7 @@ const MegaMenuItem = ({ item, name }) => {
   );
 };
 
-const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name }) => {
+const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name, currentMenu }) => {
   if (mainNavCollection.items?.length <= 0) return;
   return (
     <div className="hidden lg:block">
@@ -245,7 +246,7 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name }) => {
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-6">
               {mainNavCollection.items.map((item) => (
-                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name} />
+                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name}  currentMenu={currentMenu} />
               ))}
             </div>
           </div>

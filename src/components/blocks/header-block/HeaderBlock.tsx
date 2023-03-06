@@ -18,11 +18,13 @@ import { signOut, useSession } from "next-auth/react";
 import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobile";
 import TopMenu from "@/components/organisms/top-menu/TopMenu";
 
-const findMenu = (props: INavigation, firstPath: string) => {
+const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   const { mainNavCollection, secondaryNavCollection, overrideNavCollection } =
     props;
+  let { name } = props;
   let menuKey = firstPath;
-  let firstLevelMenu, isFolder;
+  const ProductName = asPath.split("=")[1];
+  let firstLevelMenu, isFolder, currentMenu;
 
   let secondLevelMenu = mainNavCollection?.items.find(
     (el) => el.internalLink?.slug === HOME_SLUG
@@ -76,6 +78,26 @@ const findMenu = (props: INavigation, firstPath: string) => {
     )?.mainNavCollection;
   }
 
+  secondLevelMenu?.items?.map((item) => {
+    item?.mainNavCollection?.items?.map((subItem) => {
+      if (ProductName) {
+        name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
+      }
+      if (subItem.mainNavCollection.items.some((el) => el.name === name)) {
+        if (
+          item.mainNavCollection.items.some(
+            (itemEl) => itemEl.name === subItem.name
+          )
+        ) {
+          currentMenu = item.name;
+        }
+      }
+    });
+    if(item?.mainNavCollection?.items.length === 0 && item?.name === name){
+      currentMenu = item?.name;
+    }
+  });
+
   if (
     !mainNavCollection?.items?.some(
       (el) => el.internalLink?.slug === firstPath
@@ -87,7 +109,7 @@ const findMenu = (props: INavigation, firstPath: string) => {
   ) {
     menuKey = HOME_SLUG;
   }
-  return { firstLevelMenu, secondLevelMenu, menuKey, isFolder };
+  return { firstLevelMenu, secondLevelMenu, menuKey, isFolder, currentMenu };
 };
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
@@ -118,10 +140,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   }
 
   // Assign menu
-  const menu = findMenu(props, firstPath);
+  const menu = findMenu(props, firstPath, asPath);
   const mainNavCollectionMenu = menu.secondLevelMenu;
   const secondaryNavCollectionMenu = menu.firstLevelMenu;
   const isFolder = menu.isFolder;
+  const currentMenu = menu.currentMenu;
   firstPath = menu.menuKey;
 
   const secondaryNavCollectionColor = mainNavCollection?.items.find(
@@ -599,6 +622,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 mainNavCollection={mainNavCollectionMenu}
                 secondaryNavCollection={secondaryNavCollection}
                 name={name}
+                currentMenu={currentMenu}
               />
             )}
           </div>
