@@ -51,7 +51,7 @@ const CarouselCategories: React.FC<
             )}
             {(promoTitle || name) && (
               <p className={classNames("text-center text-slate-600 font-semibold group-hover:underline ",
-                (filterName === promoTitle || filterName === name) && 'underline')}>
+                (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase()) && 'underline')}>
                 {promoTitle ?? name}
               </p>
             )}
