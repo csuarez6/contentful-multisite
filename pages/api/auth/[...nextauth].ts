@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import { getCustomerInfo, getCustomerTokenCl } from "@/lib/services/commerce-layer.service";
+import reCaptchaService from "@/lib/services/re-captcha.service";
 
 export const authOptions: NextAuthOptions = {
     // Configure one or more authentication providers
@@ -24,10 +25,19 @@ export const authOptions: NextAuthOptions = {
                     label: "Password",
                     type: "password",
                 },
+                tokenReCaptcha: {
+                    type: "hidden",
+                },
             },
             async authorize(credentials) {
+                const { username, password, tokenReCaptcha } = credentials as any;
+                const isValidReCaptcha = await reCaptchaService.validate(tokenReCaptcha);
+
+                if (!isValidReCaptcha) {
+                    throw new Error("ReCaptcha validation error");
+                }
+
                 try {
-                    const { username, password } = credentials as any;
                     const resToken = await getCustomerTokenCl({ email: username, password: password });
 
                     if (resToken) {
@@ -47,7 +57,7 @@ export const authOptions: NextAuthOptions = {
                     } else return null;
                 } catch (error) {
                     console.error("************** Error NextAuth: ", error);
-                    return null;
+                    throw new Error("Error de autenticación!!");
                 }
             },
         }),

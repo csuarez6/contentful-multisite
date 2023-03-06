@@ -36,6 +36,7 @@ const Login = () => {
             const resp = await signIn("credentials", {
                 username: data.email,
                 password: data.password,
+                tokenReCaptcha: data.tokenReCaptcha,
                 redirect: false
             });
             if (resp && resp.ok) {

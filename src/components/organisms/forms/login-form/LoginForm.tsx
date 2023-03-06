@@ -10,14 +10,17 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 // import "@/styles/forms.css";
 import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
+import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 
 export interface ITemsForm {
     email: string;
     password: string;
+    tokenReCaptcha: string;
 }
 const defaultValues: ITemsForm = {
     email: "",
     password: "",
+    tokenReCaptcha: ""
 };
 
 const schema = yup.object({
@@ -26,7 +29,8 @@ const schema = yup.object({
         .required("Dato Requerido"),
     password: yup.string()
         .required("Dato Requerido")
-        .min(6, "Mínimo 6 caracteres")
+        .min(6, "Mínimo 6 caracteres"),
+    tokenReCaptcha: yup.string()
 });
 
 const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
@@ -41,8 +45,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
     });
 
     const onSubmit = (data: ITemsForm) => {
-        console.log({ tokenReCaptcha });
-        if (onSubmitForm) onSubmitForm(data);
+        if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
         reset();
     };
 
@@ -76,6 +79,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
                         errorMessage={errors?.password?.message}
                         {...register("password")}
                     />
+                    <ReCaptchaBox handleChange={setTokenReCaptcha} />
                 </div>
                 <div className='self-end mt-[25px] w-full'>
                     {cta &&
