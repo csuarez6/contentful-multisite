@@ -3,7 +3,6 @@ import _ from 'lodash';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 
 import contentfulClient from './contentful-client.service';
-// import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { FACET_QUERY_MAP } from '@/constants/search.constants';

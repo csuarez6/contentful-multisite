@@ -58,7 +58,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
               <div className="grid md:grid-cols-3 gap-6 md:grid-rows-3">
                 {(tab.id === "Gasodomesticos") && (
                   featuredContentsCollection?.items?.slice(0, 7).map((item, idx) => {
-                    if (idx === 0) item.promoImage.isPortrait = true;
+                    if (idx === 0 && item?.promoImage) item.promoImage['isPortrait'] = true;
                     return (
                       <div key={item.name} className={idx === 0 ? "md:row-span-3" : "md:row-span-1"}>
                         <ProductSmallCard {...item} />
@@ -68,7 +68,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                 )}
                 {(tab.id === "VantiListo") && (
                   listedContentsCollection?.items?.slice(0, 7).map((item, idx) => {
-                    if (idx === 0) item.promoImage.isPortrait = true;
+                    if (idx === 0 && item?.promoImage) item.promoImage['isPortrait'] = true;
                     return (
                       <div key={item.name} className={idx === 0 ? "md:row-span-3" : "row-span-1"}>
                         <ProductSmallCard {...item} />

@@ -9,30 +9,6 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 import getFilteredContent from './content-filter.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 
-const REFERENCES = {
-  [CONTENTFUL_TYPENAMES.PAGE]: [
-    'blocksCollection',
-    'mainNavCollection',
-    'parent'
-  ],
-  [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: [
-    'parent'
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
-    'mainNavCollection',
-    'secondaryNavCollection',
-    'utilityNavCollection'
-  ],
-  [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
-    'ctaCollection',
-    'featuredContentsCollection',
-    'listedContentsCollection',
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    'mainNavCollection',
-  ],
-};
-
 type DefaultBlockInfo = {
   __typename: string;
   sys: {
@@ -40,9 +16,9 @@ type DefaultBlockInfo = {
   }
 };
 
-export const MAX_DEPTH_RECURSION = 14;
+const CACHE_CONTENT = {};
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, actualDepth = 1) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
@@ -54,6 +30,10 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   if (!blockInfo?.sys?.id) {
     console.error(`Error on entry query, sys.id not defined => `, blockInfo);
     return null;
+  }
+
+  if (CACHE_CONTENT[blockInfo?.sys?.id]) {
+    return { ...CACHE_CONTENT[blockInfo.sys.id] };
   }
 
   const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
@@ -96,22 +76,15 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     entryContent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
   }
 
-  if (
-    REFERENCES[entryContent.__typename] &&
-    REFERENCES[entryContent.__typename].length > 0 &&
-    recursive && actualDepth < MAX_DEPTH_RECURSION
-  ) {
+  if (recursive) {
     if (entryContent?.parent?.__typename) {
       entryContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
     }
 
-    const referencesContent = await getReferencesContent(
-      entryContent,
-      REFERENCES[entryContent.__typename],
+    const referencesContent = await getReferencesContent({
+      content: entryContent,
       preview,
-      recursive,
-      actualDepth
-    );
+    });
 
     _.merge(entryContent, referencesContent);
   }
@@ -126,6 +99,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     _.merge(entryContent, { preloadContent });
   }
 
+  CACHE_CONTENT[entryContent.sys.id] = { ...entryContent };
   if (entryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && entryContent?.sku) {
     const commercelayerProduct = await getCommercelayerProduct(entryContent.sku);
     _.merge(entryContent, commercelayerProduct);

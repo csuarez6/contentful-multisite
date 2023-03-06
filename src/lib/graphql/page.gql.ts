@@ -53,6 +53,7 @@ const PageQuery = `
 `;
 
 export const PageMinimalQuery = `
+  ${DefaultQuery}
   name
   promoTitle
   urlPath

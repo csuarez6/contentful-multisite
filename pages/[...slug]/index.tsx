@@ -74,12 +74,12 @@ export const getStaticProps: GetStaticProps = async (
 
   if (!pageContent) return { notFound: true };
   const breadCrumbContent = getBreadcrumbs(pageContent);
-  //let headerID = breadCrumbContent?.ctaCollection?.items[0]?.sys?.id ?? DEFAULT_HEADER_ID;
+  // const headerID = breadCrumbContent?.ctaCollection?.items[0]?.sys?.id ?? DEFAULT_HEADER_ID;
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getMenu(
     DEFAULT_FOOTER_ID,
     context.preview ?? false,
-    2
+    3
   );
   const helpButton = await getMenu(
     DEFAULT_HELP_BUTTON_ID,

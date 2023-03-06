@@ -8,8 +8,6 @@ import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 
-const REFERENCES = ['blocksCollection', 'mainNavCollection', 'parent'];
-
 const getPageContent = async (urlPath, preview = false) => {
   if (!urlPath || urlPath === '') {
     throw new Error(`«urlPath» is required`);
@@ -62,11 +60,13 @@ const getPageContent = async (urlPath, preview = false) => {
     )
   );
 
-  if (REFERENCES.length > 0) {
-    if (pageContent?.parent?.__typename) {
-      pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
-    }
-    const referencesContent = await getReferencesContent(pageContent, REFERENCES, preview);
+  if (pageContent?.parent?.__typename) {
+    pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+  }
+
+  const referencesContent = await getReferencesContent({ content: pageContent, preview });
+
+  if (referencesContent) {
     _.merge(pageContent, referencesContent);
   }
 
