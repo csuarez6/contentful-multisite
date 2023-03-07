@@ -19,8 +19,7 @@ import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobi
 import TopMenu from "@/components/organisms/top-menu/TopMenu";
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
-  const { mainNavCollection, secondaryNavCollection, overrideNavCollection } =
-    props;
+  const { mainNavCollection, secondaryNavCollection } = props;
   let { name } = props;
   let menuKey = firstPath;
   const ProductName = asPath.split("=")[1];
@@ -46,9 +45,6 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
     secondLevelMenu = secondaryNavCollection?.items.find(
       (el) => el.internalLink?.slug === firstPath
     )?.mainNavCollection;
-    if (secondLevelMenu) {
-      secondLevelMenu = overrideNavCollection;
-    }
   }
 
   if (
@@ -63,11 +59,10 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   }
 
   if (firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)) {
-    // secondLevelMenu = firstLevelMenu?.items?.find(
-    //   (el) => el.internalLink?.slug === firstPath
-    // )?.mainNavCollection;
+    secondLevelMenu = firstLevelMenu?.items?.find(
+      (el) => el.internalLink?.slug === firstPath
+    )?.mainNavCollection;
     isFolder = "Empresas";
-    secondLevelMenu = overrideNavCollection;
   }
 
   if (!secondLevelMenu?.items?.length) {
@@ -93,7 +88,7 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
         }
       }
     });
-    if(item?.mainNavCollection?.items.length === 0 && item?.name === name){
+    if (item?.mainNavCollection?.items.length === 0 && item?.name === name) {
       currentMenu = item?.name;
     }
   });
