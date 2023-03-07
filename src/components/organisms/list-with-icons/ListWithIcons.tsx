@@ -51,25 +51,26 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
   if (!iconBackgroundColor) iconSizeLocal += " text-blue-dark";
 
   return (
-    <div
-      className={classNames(
+    <div className={
+      classNames(
         "flex",
         iconPosition && iconPosition === "Izquierda"
           ? "flex-row gap-5"
           : "flex-col text-center gap-3 items-center"
-      )}
-    >
+      )
+    }>
       {promoIcon && (
         <div className={`flow-root shrink-0 ${iconSizeLocal}`}>
           <Icon icon={promoIcon} className="mx-auto w-full h-full" />
         </div>
       )}
       {(promoTitle || promoDescription || ctaLabel) && (
-        <div
-          className={`flex flex-col gap-6 ${
+        <div className={
+          classNames(
+            "flex flex-col gap-6",
             iconPosition !== "Izquierda" ? "items-center" : "items-start"
-          }`}
-        >
+          )
+        }>
           {promoTitle && (
             <h3 className="title is-4 pt-1 text-blue-dark">{promoTitle}</h3>
           )}

@@ -15,7 +15,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
   return (
-    <section id={blockId ? blockId : sysId} className="section md:grid gap-9">
+    <section id={blockId ? blockId : sysId} className="section md:grid gap-9 !pb-[90px] md:!pb-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
@@ -46,7 +46,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             freeMode={true}
             watchSlidesProgress={true}
             modules={[FreeMode, Navigation, Thumbs, Pagination]}
-            className="flex items-center mt-6 -z-10 !static"
+            className="flex items-center mt-6 -z-10 !static slider-listIcon"
             navigation={{
               nextEl: ".nextSlide",
               prevEl: ".prevSlide",
@@ -54,7 +54,8 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             }}
             pagination={{
               bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet swiper-pagination-custom-bullet--iconslist",
-              bulletActiveClass: "swiper-pagination-bullet-active" 
+              bulletActiveClass: "swiper-pagination-bullet-active",
+              clickable: true
             }}
           >
             <div className="relative">
@@ -70,12 +71,12 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             </div>
           </Swiper>
         </div>
-        <div className='z-10 absolute -translate-y-14 left-[5px] top-[112%]'>
+        <div className='z-10 absolute -translate-y-14 left-[5px] top-[98%]'>
           <div className={`prevSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
             <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
           </div>
         </div>
-        <div className='z-10 absolute -translate-y-14 right-[5px] top-[112%]'>
+        <div className='z-10 absolute -translate-y-14 right-[5px] top-[98%]'>
           <div className={`nextSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
             <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
           </div>
