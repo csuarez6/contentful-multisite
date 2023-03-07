@@ -26,14 +26,19 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
   let responseData = null;
   let responseError = null;
+  let cacheIndex = blockInfo.sys.id;
 
   if (!blockInfo?.sys?.id) {
     console.error(`Error on entry query, sys.id not defined => `, blockInfo);
     return null;
   }
 
-  if (CACHE_CONTENT[blockInfo?.sys?.id]) {
-    return { ...CACHE_CONTENT[blockInfo.sys.id] };
+  if(blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL){
+    cacheIndex += '_minimal'; 
+  }
+
+  if (CACHE_CONTENT[cacheIndex]) {
+    return { ...CACHE_CONTENT[cacheIndex] };
   }
 
   const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
@@ -99,7 +104,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     _.merge(entryContent, { preloadContent });
   }
 
-  CACHE_CONTENT[entryContent.sys.id] = { ...entryContent };
+  CACHE_CONTENT[cacheIndex] = { ...entryContent };
   if (entryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && entryContent?.sku) {
     const commercelayerProduct = await getCommercelayerProduct(entryContent.sku);
     _.merge(entryContent, commercelayerProduct);

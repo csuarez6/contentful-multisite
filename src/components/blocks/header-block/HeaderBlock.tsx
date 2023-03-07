@@ -78,7 +78,7 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
       if (ProductName) {
         name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
       }
-      if (subItem.mainNavCollection.items.some((el) => el.name === name)) {
+      if (subItem.mainNavCollection?.items.some((el) => el.name === name)) {
         if (
           item.mainNavCollection.items.some(
             (itemEl) => itemEl.name === subItem.name
