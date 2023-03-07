@@ -83,8 +83,4 @@ export interface IProductOverviewDetails {
     name?:string;
     image?: IImageAsset;
   };
-  category?: {
-    name?:string;
-    image?: IImageAsset;
-  };
 }
