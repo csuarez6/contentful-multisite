@@ -13,6 +13,9 @@ const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: [
     'parent'
   ],
+  [CONTENTFUL_TYPENAMES.PRODUCT]: [
+    'parent'
+  ],
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
     'mainNavCollection',
     'secondaryNavCollection',

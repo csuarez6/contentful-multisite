@@ -32,6 +32,11 @@ export interface JWTProps {
   test: boolean
 }
 
+export const CACHE_TOKENS = {
+  MERCHANT_TOKEN: null,
+  APP_TOKEN: null
+};
+
 export const getAppToken = async (): Promise<string> => {
 
   try {
@@ -58,6 +63,10 @@ export const getAppToken = async (): Promise<string> => {
 
 export const getMerchantToken = async () => {
   try {
+    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) {
+      return CACHE_TOKENS.MERCHANT_TOKEN;
+    }
+
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
     if (commercelayerScope.indexOf('[') === 0) {
       commercelayerScope = JSON.parse(commercelayerScope);
@@ -69,10 +78,10 @@ export const getMerchantToken = async () => {
       scope: commercelayerScope,
     });
 
+    CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
     return accessToken;
   } catch (error) {
     console.error(error);
-
     return '';
   };
 };
