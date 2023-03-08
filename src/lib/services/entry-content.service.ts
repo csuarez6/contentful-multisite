@@ -104,12 +104,12 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     _.merge(entryContent, { preloadContent });
   }
 
-  CACHE_CONTENT[cacheIndex] = { ...entryContent };
   if (entryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && entryContent?.sku) {
     const commercelayerProduct = await getCommercelayerProduct(entryContent.sku);
     _.merge(entryContent, commercelayerProduct);
   }
 
+  CACHE_CONTENT[cacheIndex] = { ...entryContent };
   return entryContent;
 };
 
