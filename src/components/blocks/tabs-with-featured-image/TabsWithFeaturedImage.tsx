@@ -12,7 +12,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
       {title && <h1 className="text-center text-blue-dark mb-[-30px]">{title}</h1>}
       <div className="flex flex-col md:flex-row items-start gap-[62px] py-[72px] border-y-2 border-x-grey-80">
         {(subtitle || description || featuredContentsCollection?.items?.length > 0) && (
-          <div className="grid gap-6 grow">
+          <div className="grid gap-6 grow w-full md:w-[661px]">
             {(subtitle || description) && (
               <div className="grid gap-6">
                 {title && <h2 className="text-category-sky-blue-50">{subtitle}</h2>}
