@@ -43,7 +43,7 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
       isLast: key == jsonItems.length - 1,
       key: item.__typename + "-" + key,
       asBlock: true,
-      sysId: item.sys.id,
+      sysId: item.sys?.id,
     };
 
     try {
