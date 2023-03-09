@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import _ from 'lodash';
 import contentfulClient from './contentful-client.service';
 
 const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
@@ -10,7 +9,7 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
-          pageCollection(where: { urlPath_exists: true }, limit: $limit, preview: $preview) {
+          pageCollection(where: { urlPath_exists: true },order: urlPath_ASC , limit: $limit, preview: $preview) {
             items {
               sys {
                 id
@@ -19,7 +18,7 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
               urlPath
             }
           }
-          productCollection(where: { urlPath_exists: true }, limit: $limit, preview: $preview) {
+          productCollection(where: { urlPath_exists: true },order: urlPath_ASC, limit: $limit, preview: $preview) {
             items {
               sys {
                 id
@@ -47,7 +46,7 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
 
   const resultEntries = responseData?.pageCollection?.items ?? [];
   if (responseData?.productCollection?.items) {
-    _.merge(resultEntries, responseData.productCollection.items);
+    resultEntries.push(...responseData.productCollection.items);
   }
 
   return resultEntries;
