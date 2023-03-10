@@ -57,6 +57,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
             <meta name="twitter:image" content={`${promoImage.url}?w=1200`} />
           </>
         )}
+        <meta name="robots" content="all" />
       </Head>
 
       <div className="min-h-screen flex flex-col">
