@@ -2,7 +2,6 @@ import Icon from "@/components/atoms/icon/Icon";
 import { useState, useContext, useRef, useEffect } from "react";
 import MenuContext from "./MenuContext";
 import MenuState from "./MenuState";
-import { getUrlPath } from "@/utils/link.utils";
 import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
@@ -21,49 +20,46 @@ const NavItem = ({
 
   const onPanel = () => {
     setPanel(!panel);
-    if (setParentPanel)
-      setParentPanel(!parentPanel);
+    if (setParentPanel) setParentPanel(!parentPanel);
     dispatch({ type: "setLevel", value: !panel ? next : (prev - 1) });
   };
 
-  const elements = !!item?.mainNavCollection?.items.length || !!item?.secondaryNavCollection?.items.length;
+  const elements = item?.mainNavCollection?.items?.length > 0 || item?.secondaryNavCollection?.items?.length > 0;
 
   useEffect(() => {
     const btn = refBtnCollapse.current;
-    if(btn){
+    if (btn) {
       const current_li = btn.parentElement;
       const ul_panel = current_li.childNodes[1];
       const ul = current_li.parentElement;
       const all_li = ul.childNodes;
-
       btn.onclick = () => {
         ul_panel.style.maxHeight = ul_panel.scrollHeight + "px";
-        if(current_li.classList.contains("open")){
+        if (current_li.classList.contains("open")) {
           current_li.classList.remove("open");
-        }else{
+        } else {
           all_li.forEach(li => li.classList.remove("open"));
           current_li.classList.add("open");
         }
       };
     }
-
-  },[]);
+  }, []);
 
   return (
     <>
-      <li className={classNames(
-        (next % 2 != 0 && elements) ? 
-          "collapse-list" : null,
-        (parentPanel && panel) ?
-          "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open" : null,
-        next % 2 != 0 && !noBorder ?
-          "border-b border-neutral-70" : null,
-        next % 2 == 0 ? "item-panel" : null,
-        "flex flex-col font-bold text-blue-dark empty:hidden list-item"
-      )}>
+      <li className={
+        classNames(
+          (next % 2 != 0 && elements) ? "collapse-list" : null,
+          (parentPanel && panel) ? "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open" : null,
+          next % 2 != 0 && !noBorder ? "border-b border-neutral-70" : null,
+          next % 2 == 0 ? "item-panel" : null,
+          !item?.promoTitle && "border-transparent",
+          "flex flex-col font-bold text-blue-dark empty:hidden"
+        )
+      }>
         {parentPanel && panel &&
           <span
-            className="font-bold cursor-pointer order-first flex gap-2 items-center block h-[50px] aspect-[180/52] absolute bg-white bottom-full left-0 mb-3"
+            className="font-bold cursor-pointer order-first flex gap-2 items-center h-[50px] aspect-[180/52] absolute bg-white bottom-full left-0 mb-3"
             onClick={onPanel}
           >
             <Icon
@@ -83,9 +79,10 @@ const NavItem = ({
                 getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background : null,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
-            onClick={() => {
-              next % 2 == 0 && !!item?.mainNavCollection?.items.length && !panel ?
-              onPanel() : null;
+            onClick={(evt: any) => {
+              const isLink = evt?.target?.tagName?.toLowerCase() === "a";
+              if (prev > 0 && isLink && (item?.internalLink?.urlPath === "/" || item?.urlPath === "/" || item?.externalLink === "/")) evt.preventDefault();
+              if (next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel) onPanel();
             }}
           >
             {item.promoIcon && (
@@ -97,21 +94,27 @@ const NavItem = ({
                 />
               </span>
             )}
-            {item?.mainNavCollection?.items.length == 0  && item?.secondaryNavCollection?.items.length == 0 ?
-              <a
-                className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
-                href={getUrlPath(item)}
-              >
-                {item.promoTitle ?? item.name}
-              </a> :
-              <span
-                className="py-2.5 px-3.5 -my-2.5 -mx-3.5 flex-grow"
-              >
-                {item.promoTitle ?? item.name}
-              </span>
+            {item?.internalLink?.urlPath || item?.urlPath || item?.externalLink
+              ? (
+                <CustomLink
+                  content={item}
+                  linkClassName={
+                    classNames(
+                      "py-2.5 px-3.5 -my-2.5 -mx-3.5",
+                      !elements && "flex-grow"
+                    )
+                  }
+                >
+                  {item.promoTitle ?? item.name}
+                </CustomLink>
+              )
+              : (
+                <span className="py-2.5 px-3.5 -my-2.5 -mx-3.5">
+                  {item.promoTitle ?? item.name}
+                </span>
+              )
             }
-            {(next % 2 != 0 && elements) &&
-
+            {(next % 2 != 0 && elements) && (
               <span
                 className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
               >
@@ -122,8 +125,8 @@ const NavItem = ({
                 />
 
               </span>
-            }
-            {next % 2 == 0 && !!item?.mainNavCollection?.items.length && !panel &&
+            )}
+            {next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel && (
               <span
                 className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
               >
@@ -133,7 +136,7 @@ const NavItem = ({
                   aria-hidden="true"
                 />
               </span>
-            }
+            )}
           </span>
         }
         {/*{(collapse || panel) && children}*/}
@@ -151,6 +154,7 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
 
   const lv = level + 1;
   const col = Math.floor(state.level / 2);
+
   return (
     <>
       <ul
@@ -180,9 +184,9 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
             </CustomLink>
           </div>
         }
-        {items.map((item) => (
+        {items?.map((item) => (
           <NavItem
-            key={item.name}
+            key={`${item?.sys?.id}-lv${lv}`}
             item={item}
             next={lv}
             prev={level}
@@ -190,8 +194,7 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
             parentPanel={currentPanel}
             setParentPanel={setCurrentPanel}
           >
-
-            {!!item?.mainNavCollection?.items.length &&
+            {item?.mainNavCollection?.items?.length > 0 && (
               <NavList
                 utilityNavCollection={utilityNavCollection}
                 level={lv}
@@ -199,30 +202,21 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
                 currentPanel={panel}
                 hasSetCurrentPanel={setPanel}
               />
-            }
-            {!!item?.secondaryNavCollection?.items.length &&
-              <NavList
-                utilityNavCollection={utilityNavCollection}
-                level={lv}
-                items={item?.secondaryNavCollection?.items}
-                currentPanel={panel}
-                hasSetCurrentPanel={setPanel}
-              />
-            }
+            )}
           </NavItem>
         ))}
-        {level == 1 && !!utilityNavCollection?.items.length &&
+        {level == 1 && utilityNavCollection?.items?.length > 0 &&
           <nav
             aria-label="Utility"
             className="relative p-5 border-t border-neutral-70 mt-2"
           >
-            <ul className="flex gap-2 flex-nowrap justify-center ">
-              {utilityNavCollection?.items.map((item) => (
-                <li className="flex max-w-[75px]" key={item.sys.id}>
+            <ul className="flex gap-2 flex-nowrap justify-center">
+              {utilityNavCollection?.items?.map((item) => (
+                <li className="flex max-w-[75px]" key={item?.sys?.id}>
                   <CustomLink
                     content={item}
                     className={classNames(
-                      "bg-white text-blue-dark group/icon hover:bg-blue-dark transition hover:text-white rounded-md bg-category-blue-light-90 flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-3",
+                      "text-blue-dark group/icon hover:bg-blue-dark transition hover:text-white rounded-md bg-category-blue-light-90 flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-3",
                       item.promoIcon
                         ? "justify-start"
                         : "justify-center"
@@ -247,18 +241,19 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
     </>
   );
 };
+
 const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection }) => {
   return (
     <MenuState>
       <MenuContext.Consumer>
-        {({state}) => (
+        {({ state }) => (
           <div className="relative">
             <NavList
               level={0}
               items={items}
               utilityNavCollection={utilityNavCollection}
             />
-            { state.level == 0 &&
+            {state.level == 0 && (
               <NavList
                 level={0}
                 noBorder={true}
@@ -266,7 +261,7 @@ const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection })
                 items={secondaryNavCollection?.items}
                 utilityNavCollection={utilityNavCollection}
               />
-            }
+            )}
           </div>
         )}
       </MenuContext.Consumer>
