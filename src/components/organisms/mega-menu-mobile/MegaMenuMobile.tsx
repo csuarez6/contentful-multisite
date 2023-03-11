@@ -28,7 +28,7 @@ const NavItem = ({
 
   useEffect(() => {
     const btn = refBtnCollapse.current;
-    if (btn) {
+    if (!!btn) {
       const current_li = btn.parentElement;
       const ul_panel = current_li.childNodes[1];
       const ul = current_li.parentElement;
@@ -75,8 +75,7 @@ const NavItem = ({
             ref={(next % 2 != 0 && elements) ? refBtnCollapse : null}
             className={classNames(
               panel ? "mb-4" : null,
-              (next % 2 != 0 && elements) ?
-                getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background : null,
+              (next % 2 != 0 && elements) && getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
             onClick={(evt: any) => {
@@ -194,15 +193,24 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
             parentPanel={currentPanel}
             setParentPanel={setCurrentPanel}
           >
-            {item?.mainNavCollection?.items?.length > 0 && (
-              <NavList
-                utilityNavCollection={utilityNavCollection}
-                level={lv}
-                items={item?.mainNavCollection?.items}
-                currentPanel={panel}
-                hasSetCurrentPanel={setPanel}
-              />
-            )}
+          {item?.mainNavCollection?.items?.length > 0 && (
+            <NavList
+              utilityNavCollection={utilityNavCollection}
+              level={lv}
+              items={item?.mainNavCollection?.items}
+              currentPanel={panel}
+              hasSetCurrentPanel={setPanel}
+            />
+          )}
+          {item?.secondaryNavCollection?.items?.length > 0 && level === 0 && (
+            <NavList
+              utilityNavCollection={utilityNavCollection}
+              level={lv}
+              items={item?.secondaryNavCollection?.items}
+              currentPanel={panel}
+              hasSetCurrentPanel={setPanel}
+            />
+          )}
           </NavItem>
         ))}
         {level == 1 && utilityNavCollection?.items?.length > 0 &&
