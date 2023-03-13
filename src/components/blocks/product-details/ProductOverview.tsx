@@ -86,9 +86,7 @@ const ModalShipping = () => {
       <div className="flex justify-end gap-2">
         <CustomLink
           className="button button-primary"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
+          onClick={(e) => e.preventDefault()}
           content={{ externalLink: "#" }}
         >
           Aceptar
