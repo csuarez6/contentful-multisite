@@ -174,8 +174,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             open
               ? getBackgroundColorClass(
-                  secondaryNavCollectionColor ?? "Azul Oscuro"
-                ).background
+                secondaryNavCollectionColor ?? "Azul Oscuro"
+              ).background
               : backgroundColor.background
           )}
         ></div>
@@ -485,7 +485,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               {/* Mobile */}
               <div className="relative z-10 flex items-center lg:hidden">
                 <Popover className="relative lg:hidden">
-                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 outline-0">
+                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none outline-none">
                     <span className="sr-only">Open menu</span>
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>
@@ -499,36 +499,42 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     leaveTo="transform -translate-x-full"
                   >
                     <Popover.Panel className="grid grid-cols-1 grid-rows-[auto,_1fr] h-full gap-4">
-                      <div className="flex items-center justify-between">
-                        <CustomLink
-                          content={{ urlPath: "/" }}
-                          className="flex items-center flex-shrink-0"
-                        >
-                          <figure className="relative h-[45px] aspect-[180/52]">
-                            <Image
-                              className="block w-auto"
-                              src={promoImage?.url ?? "/images/vanti-logo.png"}
-                              alt={
-                                promoImage?.description ?? "Logo Grupo Vanti"
-                              }
-                              width={180}
-                              height={52}
-                            />
-                          </figure>
-                        </CustomLink>
-                        <Popover.Button className="inline-flex items-center text-gray-400">
-                          <span className="sr-only">Open menu</span>
-                          <XMarkIcon
-                            className="block w-4 h-4"
-                            aria-hidden="true"
+                      {({ close }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <CustomLink
+                              content={{ urlPath: "/" }}
+                              className="flex items-center flex-shrink-0"
+                              onClick={close}
+                            >
+                              <figure className="relative h-[45px] aspect-[180/52]">
+                                <Image
+                                  className="block w-auto"
+                                  src={promoImage?.url ?? "/images/vanti-logo.png"}
+                                  alt={
+                                    promoImage?.description ?? "Logo Grupo Vanti"
+                                  }
+                                  width={180}
+                                  height={52}
+                                />
+                              </figure>
+                            </CustomLink>
+                            <Popover.Button className="inline-flex items-center text-gray-400">
+                              <span className="sr-only">Open menu</span>
+                              <XMarkIcon
+                                className="block w-4 h-4"
+                                aria-hidden="true"
+                              />
+                            </Popover.Button>
+                          </div>
+                          <MegaMenuMobile
+                            items={mainNavCollection?.items}
+                            secondaryNavCollection={secondaryNavCollection}
+                            utilityNavCollection={utilityNavCollection}
+                            close={close}
                           />
-                        </Popover.Button>
-                      </div>
-                      <MegaMenuMobile
-                        items={mainNavCollection?.items}
-                        secondaryNavCollection={secondaryNavCollection}
-                        utilityNavCollection={utilityNavCollection}
-                      />
+                        </>
+                      )}
                     </Popover.Panel>
                   </Transition>
                 </Popover>

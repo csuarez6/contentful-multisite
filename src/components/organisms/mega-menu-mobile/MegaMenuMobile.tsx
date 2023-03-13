@@ -12,11 +12,13 @@ const NavItem = ({
   prev,
   parentPanel,
   setParentPanel,
+  close,
   noBorder = false
 }) => {
   const [panel, setPanel] = useState(false);
   const { dispatch } = useContext(MenuContext);
   const refBtnCollapse = useRef(null);
+  const elements = item?.mainNavCollection?.items?.length > 0 || item?.secondaryNavCollection?.items?.length > 0;
 
   const onPanel = () => {
     setPanel(!panel);
@@ -24,7 +26,11 @@ const NavItem = ({
     dispatch({ type: "setLevel", value: !panel ? next : (prev - 1) });
   };
 
-  const elements = item?.mainNavCollection?.items?.length > 0 || item?.secondaryNavCollection?.items?.length > 0;
+  const handlerClick = (evt, item) => {
+    const isLink = evt?.target?.tagName?.toLowerCase() === "a";
+    if (isLink) close();
+    else if (next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel) onPanel();
+  };
 
   useEffect(() => {
     const btn = refBtnCollapse.current;
@@ -78,11 +84,7 @@ const NavItem = ({
               (next % 2 != 0 && elements) && getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
-            onClick={(evt: any) => {
-              const isLink = evt?.target?.tagName?.toLowerCase() === "a";
-              if (prev > 0 && isLink && (item?.internalLink?.urlPath === "/" || item?.urlPath === "/" || item?.externalLink === "/")) evt.preventDefault();
-              if (next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel) onPanel();
-            }}
+            onClick={(evt: any) => handlerClick(evt, item)}
           >
             {item.promoIcon && (
               <span className="flex items-center shrink-0 w-6 h-6">
@@ -97,6 +99,7 @@ const NavItem = ({
               ? (
                 <CustomLink
                   content={item}
+                  className="pointer-events-none"
                   linkClassName={
                     classNames(
                       "py-2.5 px-3.5 -my-2.5 -mx-3.5",
@@ -145,7 +148,7 @@ const NavItem = ({
   );
 };
 
-const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasSetCurrentPanel = null, noBorder = false, className = "" }) => {
+const NavList = ({ items, level, utilityNavCollection, close, currentPanel = null, hasSetCurrentPanel = null, noBorder = false, className = "" }) => {
   const { state } = useContext(MenuContext);
   const [panel, setPanel] = useState(false);
   const setCurrentPanel = hasSetCurrentPanel ?? setPanel;
@@ -192,25 +195,28 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
             noBorder={noBorder}
             parentPanel={currentPanel}
             setParentPanel={setCurrentPanel}
+            close={close}
           >
-          {item?.mainNavCollection?.items?.length > 0 && (
-            <NavList
-              utilityNavCollection={utilityNavCollection}
-              level={lv}
-              items={item?.mainNavCollection?.items}
-              currentPanel={panel}
-              hasSetCurrentPanel={setPanel}
-            />
-          )}
-          {item?.secondaryNavCollection?.items?.length > 0 && level === 0 && (
-            <NavList
-              utilityNavCollection={utilityNavCollection}
-              level={lv}
-              items={item?.secondaryNavCollection?.items}
-              currentPanel={panel}
-              hasSetCurrentPanel={setPanel}
-            />
-          )}
+            {item?.mainNavCollection?.items?.length > 0 && (
+              <NavList
+                utilityNavCollection={utilityNavCollection}
+                level={lv}
+                items={item?.mainNavCollection?.items}
+                currentPanel={panel}
+                hasSetCurrentPanel={setPanel}
+                close={close}
+              />
+            )}
+            {item?.secondaryNavCollection?.items?.length > 0 && level === 0 && (
+              <NavList
+                utilityNavCollection={utilityNavCollection}
+                level={lv}
+                items={item?.secondaryNavCollection?.items}
+                currentPanel={panel}
+                hasSetCurrentPanel={setPanel}
+                close={close}
+              />
+            )}
           </NavItem>
         ))}
         {level == 1 && utilityNavCollection?.items?.length > 0 &&
@@ -250,7 +256,7 @@ const NavList = ({ items, level, utilityNavCollection, currentPanel = null, hasS
   );
 };
 
-const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection }) => {
+const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection, close }) => {
   return (
     <MenuState>
       <MenuContext.Consumer>
@@ -260,6 +266,7 @@ const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection })
               level={0}
               items={items}
               utilityNavCollection={utilityNavCollection}
+              close={close}
             />
             {state.level == 0 && (
               <NavList
@@ -268,6 +275,7 @@ const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection })
                 className="mt-3"
                 items={secondaryNavCollection?.items}
                 utilityNavCollection={utilityNavCollection}
+                close={close}
               />
             )}
           </div>

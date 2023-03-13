@@ -11,7 +11,7 @@ export interface ICustomLink {
   children?: React.ReactNode;
   className?: string;
   linkClassName?: string;
-  onClick?: (e: Event) => void;
+  onClick?: () => void;
 }
 
 const CustomLink: React.FC<ICustomLink> = ({
