@@ -159,6 +159,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
           </ul>
         </div>
       }
+      {data === null &&
+          <h3 className="block w-full mb-12 text-center">
+              No se encontraron resultados 
+          </h3>
+      }
     </div>
   );
 };
