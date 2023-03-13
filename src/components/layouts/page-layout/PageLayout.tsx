@@ -55,8 +55,8 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         {image && (
           <>
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="og:image" content={`${image}?w=1200`} />
-            <meta name="twitter:image" content={`${image}?w=1200`} />
+            <meta property="og:image" content={`${image}`} />
+            <meta name="twitter:image" content={`${image}`} />
           </>
         )}
         <meta name="robots" content="noindex, nofollow" />
