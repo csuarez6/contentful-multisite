@@ -28,7 +28,7 @@ const NavItem = ({
 
   useEffect(() => {
     const btn = refBtnCollapse.current;
-    if (!!btn) {
+    if (btn) {
       const current_li = btn.parentElement;
       const ul_panel = current_li.childNodes[1];
       const ul = current_li.parentElement;
