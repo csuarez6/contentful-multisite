@@ -43,15 +43,25 @@ const CarouselCategories: React.FC<
                 <Image
                   src={promoImage?.url ?? image?.url}
                   alt={promoImage?.title ?? image?.title}
-                  width={promoImage?.width ?? image?.width ?? 50 }
-                  height={promoImage?.height ?? image?.height?? 50}
-                  className="object-cover rounded-full w-full h-full"
+                  width={promoImage?.width ?? image?.width ?? 50}
+                  height={promoImage?.height ?? image?.height ?? 50}
+                  className={
+                    classNames(
+                      "object-cover rounded-full w-full h-full border border-neutral-80 group-hover:border-[3px] group-hover:border-neutral-70",
+                      (filterName !== null && (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase())) && 'border-[4px] border-neutral-70'
+                    )
+                  }
                 />
               </figure>
             )}
             {(promoTitle || name) && (
-              <p className={classNames("text-center text-slate-600 font-semibold group-hover:underline ",
-                (filterName!==null && (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase())) && 'underline')}>
+              <p className={
+                classNames(
+                  "text-center text-slate-600 font-semibold group-hover:underline ",
+                  (filterName !== null && (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase())) && 'underline'
+                )
+              }
+              >
                 {promoTitle ?? name}
               </p>
             )}

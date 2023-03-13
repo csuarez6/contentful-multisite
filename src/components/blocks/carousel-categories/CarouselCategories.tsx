@@ -14,13 +14,13 @@ import { ICarouselCategoryBlock } from "@/lib/interfaces/content-filter-cf.inter
 const iconLeft: IIcon = {
   icon: "arrow-left",
   size: 28,
-  className: "z-10",
+  className: "z-10 text-blue-dark",
 };
 
 const iconRight: IIcon = {
   icon: "arrow-right",
   size: 28,
-  className: "z-10",
+  className: "z-10 text-blue-dark",
 };
 
 const CarouselCategoriesBlock: React.FC<
@@ -81,7 +81,7 @@ const CarouselCategoriesBlock: React.FC<
             {allowTouchMove && (
               <div className="flex justify-center items-center">
                 <div
-                  className={`prevSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
+                  className={`prevSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
                 >
                   <Icon {...iconLeft} />
                 </div>
@@ -134,7 +134,7 @@ const CarouselCategoriesBlock: React.FC<
             {allowTouchMove && (
               <div className="flex justify-center items-center">
                 <div
-                  className={`nextSlide${uui} bg-blue-dark-90 h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
+                  className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
                 >
                   <Icon {...iconRight} />
                 </div>
