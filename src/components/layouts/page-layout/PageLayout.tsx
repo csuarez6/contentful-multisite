@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-
+// import { GoogleAnalytics } from "nextjs-google-analytics";
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
@@ -11,7 +11,9 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection }) => {
   const { asPath } = useRouter() ?? { asPath: "/" };
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
-  
+  const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
+  const image = promoImage?.url ? promoImage.url : "";
+
   let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
   canonicalUrl = "https://www.grupovanti.com" + canonicalUrl;
 
@@ -43,21 +45,22 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
             <meta property="twitter:url" content={canonicalUrl} />
           </>
         )}
-        {promoDescription && (
+        {description && (
           <>
-            <meta name="description" content={documentToPlainTextString(promoDescription.json)} />
-            <meta name="og:description" content={documentToPlainTextString(promoDescription.json)} />
-            <meta name="twitter:description" content={documentToPlainTextString(promoDescription.json)} />
+            <meta name="description" content={description} />
+            <meta name="og:description" content={description} />
+            <meta name="twitter:description" content={description} />
           </>
         )}
-        {promoImage && (
+        {image && (
           <>
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="og:image" content={`${promoImage.url}?w=1200`} />
-            <meta name="twitter:image" content={`${promoImage.url}?w=1200`} />
+            <meta property="og:image" content={`${image}?w=1200`} />
+            <meta name="twitter:image" content={`${image}?w=1200`} />
           </>
         )}
-        <meta name="robots" content="all" />
+        <meta name="robots" content="noindex, nofollow" />
+        {/* <GoogleAnalytics trackPageViews /> */}
       </Head>
 
       <div className="min-h-screen flex flex-col">

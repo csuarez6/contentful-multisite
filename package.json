@@ -33,6 +33,7 @@
     "next": "13.0.3",
     "next-auth": "^4.19.2",
     "next-recaptcha-v3": "^1.1.4",
+    "nextjs-google-analytics": "^2.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-recaptcha": "^2.1.0",

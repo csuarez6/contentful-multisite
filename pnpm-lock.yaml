@@ -43,6 +43,7 @@ specifiers:
   next: 13.0.3
   next-auth: ^4.19.2
   next-recaptcha-v3: ^1.1.4
+  nextjs-google-analytics: ^2.3.3
   postcss: ^8.4.19
   postcss-import: ^15.0.1
   prettier: ^2.7.1
@@ -81,6 +82,7 @@ dependencies:
   next: 13.0.3_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_ogpkrxaz2lg6nectum6dl66tn4
   next-recaptcha-v3: 1.1.4_ogpkrxaz2lg6nectum6dl66tn4
+  nextjs-google-analytics: 2.3.3_next@13.0.3+react@18.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-google-recaptcha: 2.1.0_react@18.2.0
@@ -10587,6 +10589,18 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    dev: false
+
+  /nextjs-google-analytics/2.3.3_next@13.0.3+react@18.2.0:
+    resolution: {integrity: sha512-Y6sI6A7wt5dji8hYBnVkOh9LTyImSLFZXx3FpyQgVW7W4b4qEFHjH2u3fhDJsrRZeLlUGM8/RuHD/mhHc2Axfg==}
+    peerDependencies:
+      next: '>=11.0.0'
+      react: '>=17.0.0'
+    dependencies:
+      next: 13.0.3_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: false
 
   /nice-try/1.0.5:

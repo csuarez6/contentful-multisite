@@ -1,8 +1,9 @@
 # Block all crawlers for /pruebas-de-contenidos
 User-agent: *
-Disallow: /pruebas-de-contenidos
+# Disallow: /pruebas-de-contenidos
+Disallow: /
 
 # Allow all crawlers
-User-agent: *
-Allow: /
-Sitemap: https://www.grupovanti.com/sitemap.xml
+# User-agent: *
+# Allow: /
+# Sitemap: https://www.grupovanti.com/sitemap.xml
