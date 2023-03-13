@@ -12,7 +12,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   const { asPath } = useRouter() ?? { asPath: "/" };
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
-  const image = promoImage?.url ? promoImage.url : "";
+  const image = promoImage?.url ? promoImage.url : "/images/vanti-logo-og.png";
 
   let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
   canonicalUrl = "https://www.grupovanti.com" + canonicalUrl;
