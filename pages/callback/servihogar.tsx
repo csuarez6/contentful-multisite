@@ -18,6 +18,7 @@ import React, { useState, createRef, LegacyRef } from "react";
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 
 const modalBody = (isSuccess, errorMessage, closeModal) => {
   return (
@@ -28,7 +29,7 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
         </div>
       )}
       {!errorMessage && (
-        <div className="mt-2 grid gap-9">
+        <div className="grid mt-2 gap-9">
           {isSuccess ? (
             <p className="lg:text-size-p1 text-grey-30">
               En unos minutos te estaremos contactando.
@@ -101,6 +102,8 @@ const CallbackPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
+  const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
 
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
@@ -113,6 +116,7 @@ const CallbackPage = () => {
       body: JSON.stringify({
         type: lastPath,
         ...data,
+        tokenReCaptcha
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -123,7 +127,7 @@ const CallbackPage = () => {
         const { result } = json;
         setIsSuccess(result.success);
 
-        if (result.errors > 0) setErrorMessage(result.message);
+        if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();
       })
       .catch((err) => {
@@ -134,7 +138,10 @@ const CallbackPage = () => {
           );
         console.warn(err);
       })
-      .finally(() => openModal());
+      .finally(() => {
+        openModal();
+        setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
+      });
   };
 
   const breadcrumbs = {
@@ -184,7 +191,7 @@ const CallbackPage = () => {
 
             <form
               ref={refForm}
-              className="max-w-full flex flex-wrap gap-6"
+              className="flex flex-wrap max-w-full gap-6"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="w-full">
@@ -202,7 +209,7 @@ const CallbackPage = () => {
                   {...register("contractAccount")}
                 />
                 {errors.contractAccount && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.contractAccount?.message}
                   </p>
                 )}
@@ -216,7 +223,7 @@ const CallbackPage = () => {
                   {...register("fullName")}
                 />
                 {errors.fullName && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.fullName?.message}
                   </p>
                 )}
@@ -230,7 +237,7 @@ const CallbackPage = () => {
                   {...register("cellPhone")}
                 />
                 {errors.cellPhone && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.cellPhone?.message}
                   </p>
                 )}
@@ -245,7 +252,7 @@ const CallbackPage = () => {
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-red-600 mt-1">{errors.email?.message}</p>
+                  <p className="mt-1 text-red-600">{errors.email?.message}</p>
                 )}
               </div>
 
@@ -257,7 +264,7 @@ const CallbackPage = () => {
                   {...register("agreeHD")}
                 />
                 {errors.agreeHD && (
-                  <p className="text-red-600 mt-1">{errors.agreeHD?.message}</p>
+                  <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
                 )}
 
                 <CheckBox
@@ -269,19 +276,20 @@ const CallbackPage = () => {
                   {...register("acceptHD")}
                 />
                 {errors.acceptHD && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.acceptHD?.message}
                   </p>
                 )}
               </div>
+              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
 
               <div className="w-full">
-                <p className="text-size-p2 font-medium text-black">
+                <p className="font-medium text-black text-size-p2">
                   NOTA: Al hacer click en “Enviar datos” serás contactado por un
                   agente de Vanti
                 </p>
               </div>
-              <div className="w-full flex justify-end">
+              <div className="flex justify-end w-full">
                 <button type="submit" className="w-fit button button-primary">
                   Enviar datos
                 </button>

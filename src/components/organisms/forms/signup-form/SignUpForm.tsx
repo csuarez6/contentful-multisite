@@ -10,7 +10,6 @@ import ModalSuccess from '../../modal-success/ModalSuccess';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
 import { customerSchema } from '@/schemas/customer';
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
-// import "@/styles/forms.css";
 
 export interface ITemsForm {
     name: string;
@@ -46,6 +45,7 @@ const schema = customerSchema;
 const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
 
     const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
+    const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
     const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
     } = useForm<ITemsForm>({
         mode: 'onChange',
@@ -57,13 +57,14 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
     const onSubmit = (data: ITemsForm) => {
         if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
         reset();
+        setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
     };
 
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-10'>
-                    <ReCaptchaBox handleChange={setTokenReCaptcha} />
+                    <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
                     <Textbox
                         id='name'
                         label='Escribe tu nombre'

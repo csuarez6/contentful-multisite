@@ -7,7 +7,6 @@ import * as yup from "yup";
 import HeadingCard from "../../cards/heading-card/HeadingCard";
 import ModalSuccess from "../../modal-success/ModalSuccess";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-// import "@/styles/forms.css";
 import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
@@ -34,6 +33,7 @@ const schema = yup.object({
 
 const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
   const [tokenReCaptcha, setTokenReCaptcha] = useState<string>("");
+  const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
   const {
     register,
     handleSubmit,
@@ -49,6 +49,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
   const onSubmit = (data: ITemsForm) => {
     if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
     reset();
+    setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
   };
 
   return (
@@ -81,7 +82,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
             errorMessage={errors?.password?.message}
             {...register("password")}
           />
-          <ReCaptchaBox handleChange={setTokenReCaptcha} />
+          <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
         </div>
         <div className="self-end mt-[25px] w-full">
           {cta && (

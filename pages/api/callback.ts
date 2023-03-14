@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendEmail } from '@/lib/services/mailer.service';
+import reCaptchaService from '@/lib/services/re-captcha.service';
 
 const types: object = {
   "mantenimiento-y-reparacion": "Mantenimiento y reparación",
@@ -37,7 +38,7 @@ const handler = async (
     return;
   }
 
-  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees } = req.body;
+  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees, tokenReCaptcha } = req.body;
   const typeName = getType(type);
   const data = {
     body: []
@@ -86,6 +87,18 @@ const handler = async (
     message: data.body.join('\n'),
     from: "Vanti Marketplace <dev@aplyca.com>"
   };
+
+  /* Validate ReCaptcha **/
+  const isValidReCaptcha = await reCaptchaService.validate(tokenReCaptcha);
+  if (!isValidReCaptcha) {
+    res.status(400).json({
+      result: {
+        message: "ReCaptcha validation error",
+        success: false,
+        errors: ['ReCaptcha']
+      }
+    });
+  }
 
   const isMailSended = await sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
 

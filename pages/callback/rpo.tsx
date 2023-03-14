@@ -18,6 +18,7 @@ import { useLastPath } from "@/hooks/utils/useLastPath";
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Icon from "@/components/atoms/icon/Icon";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 
 const modalBody = (data, isSuccess, errorMessage, closeModal) => {
   return (
@@ -28,7 +29,7 @@ const modalBody = (data, isSuccess, errorMessage, closeModal) => {
         </div>
       )}
       {!errorMessage && (
-        <div className="mt-2 grid gap-9">
+        <div className="grid mt-2 gap-9">
           {isSuccess ? (
             <>
               <div className="px-[14px] py-3 bg-neutral-90 rounded-[10px] flex gap-3 justify-between items-center text-blue-dark">
@@ -56,7 +57,8 @@ const modalBody = (data, isSuccess, errorMessage, closeModal) => {
             </p>
           )}
         </div>
-      )}
+      )
+      }
 
       <div className="mt-4 text-right">
         <button
@@ -117,6 +119,8 @@ const CallbackPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [dateValue, setDateValue] = useState("");
   const [hourValue, setHourValue] = useState("");
+  const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
+  const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
 
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
@@ -131,6 +135,7 @@ const CallbackPage = () => {
       body: JSON.stringify({
         type: lastPath,
         ...data,
+        tokenReCaptcha
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -143,7 +148,7 @@ const CallbackPage = () => {
         setDateValue(getValues("date"));
         setHourValue(getValues("hour"));
 
-        if (result.errors > 0) setErrorMessage(result.message);
+        if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();
       })
       .catch((err) => {
@@ -154,7 +159,10 @@ const CallbackPage = () => {
           );
         console.warn(err);
       })
-      .finally(() => openModal());
+      .finally(() => {
+        openModal();
+        setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
+      });
   };
 
   const breadcrumbs = {
@@ -198,7 +206,7 @@ const CallbackPage = () => {
             </div>
             <form
               ref={refForm}
-              className="max-w-full flex flex-wrap gap-6"
+              className="flex flex-wrap max-w-full gap-6"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="w-full">
@@ -216,7 +224,7 @@ const CallbackPage = () => {
                   {...register("contractAccount")}
                 />
                 {errors.contractAccount && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.contractAccount?.message}
                   </p>
                 )}
@@ -231,7 +239,7 @@ const CallbackPage = () => {
                   {...register("date")}
                 />
                 {errors.date && (
-                  <p className="text-red-600 mt-1">{errors.date?.message}</p>
+                  <p className="mt-1 text-red-600">{errors.date?.message}</p>
                 )}
               </div>
               <div className="w-full">
@@ -243,7 +251,7 @@ const CallbackPage = () => {
                   {...register("hour")}
                 />
                 {errors.hour && (
-                  <p className="text-red-600 mt-1">{errors.hour?.message}</p>
+                  <p className="mt-1 text-red-600">{errors.hour?.message}</p>
                 )}
               </div>
               <div className="w-full">
@@ -255,18 +263,19 @@ const CallbackPage = () => {
                   {...register("cellPhone")}
                 />
                 {errors.cellPhone && (
-                  <p className="text-red-600 mt-1">
+                  <p className="mt-1 text-red-600">
                     {errors.cellPhone?.message}
                   </p>
                 )}
               </div>
+              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
               <div className="w-full">
-                <p className="text-size-p2 font-medium text-black">
+                <p className="font-medium text-black text-size-p2">
                   NOTA: Al hacer click en “Enviar datos” serás contactado por un
                   agente de Vanti
                 </p>
               </div>
-              <div className="w-full flex justify-end">
+              <div className="flex justify-end w-full">
                 <button type="submit" className="w-fit button button-primary">
                   Agendar cita
                 </button>
