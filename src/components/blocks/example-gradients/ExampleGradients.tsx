@@ -35,9 +35,8 @@ const ExampleGradients: React.FC<IExampleGradients> = ({ backgrounds }) => {
               Lorem ipsum dolor sit amet.
             </p>
           </div>
-        )
-      }
-      )}
+        );
+      })}
     </div>
   );
 };
