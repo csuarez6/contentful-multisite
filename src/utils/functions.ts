@@ -49,6 +49,54 @@ export const getBackgroundColorClass = (name) => {
         title: "text-white",
         text: "text-white"
       };
+    case "Degradado 1":
+      return {
+        background: "bg-gradient-1",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Degradado 2":
+      return {
+        background: "bg-gradient-2",
+        title: "text-blue-dark",
+        text: "text-neutral-30 drop-shadow-[0_1px_1px_rgb(255,255,255,0.65)] shadow-white"
+      };
+    case "Degradado 3":
+      return {
+        background: "bg-gradient-3",
+        title: "text-blue-dark",
+        text: "text-neutral-30 drop-shadow-[0_1px_1px_rgb(255,255,255,0.65)] shadow-white"
+      };
+    case "Degradado 4":
+      return {
+        background: "bg-gradient-4",
+        title: "text-blue-dark",
+        text: "text-blue-dark drop-shadow-[0_1px_1px_rgb(255,255,255,0.65)] shadow-white"
+      };
+    case "Degradado 5":
+      return {
+        background: "bg-gradient-5",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Degradado 6":
+      return {
+        background: "bg-gradient-6",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Degradado 7":
+      return {
+        background: "bg-gradient-7",
+        title: "text-white",
+        text: "text-white"
+      };
+    case "Degradado 8":
+      return {
+        background: "bg-gradient-8",
+        title: "text-white",
+        text: "text-white"
+      };
     case "Azul Degradado Oscuro":
       return {
         background: "bg-gradient-blue-dark",
