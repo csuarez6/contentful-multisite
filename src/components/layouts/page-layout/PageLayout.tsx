@@ -8,7 +8,7 @@ import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 import HelpButton from "@/components/organisms/help-button/HelpButton";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 
-const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection }) => {
+const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection, __typename }) => {
   const { asPath } = useRouter() ?? { asPath: "/" };
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
@@ -16,6 +16,33 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
 
   let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
   canonicalUrl = "https://www.grupovanti.com" + canonicalUrl;
+
+  const addProductJsonLd = () => {
+    let sdType = __typename;
+    if(sdType === 'Page') {
+      sdType = 'WebPage';
+    }
+    return {
+      __html: `{
+        "mainEntityOfPage":  "https://www.grupovanti.com/",
+        "name": ${ title },
+        "image": [${image}],
+        "description": ${description},
+        "url": ${canonicalUrl},
+        ${(sdType === 'WebPage' &&
+          `"headline": ${promoTitle ?? description},
+          "publisher": {
+            "@type": "Organization",
+            "name": "GrupoVanti web",
+            "logo": ${image}
+          },
+          "author": "Vanti",`
+        )}
+        "@context": "https://schema.org",
+        "@type": "${sdType}"
+      }`
+    };
+  };
 
   return (
     <>
@@ -61,6 +88,12 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         )}
         <meta name="robots" content="noindex, nofollow" />
         {/* <GoogleAnalytics trackPageViews /> */}
+
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={addProductJsonLd()}
+          key="product-jsonld"
+        />
       </Head>
 
       <div className="min-h-screen flex flex-col">
