@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from "react";
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
-import { GoogleAnalytics } from "nextjs-google-analytics";
+// import { GoogleAnalytics } from "nextjs-google-analytics";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return getLayout(
   <>
-    <GoogleAnalytics trackPageViews />
+    {/* <GoogleAnalytics trackPageViews /> */}
     <Component {...pageProps} />
   </>
   , pageProps);
