@@ -117,26 +117,45 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
               </>
             )}
             {(subtitle || pretitle || description) && (
-              <div className="flex items-center w-full md:w-1/2 lg:w-full px-3 py-6 md:pl-[45px] md:pr-10 md:py-4 grow">
+              <div className={classNames(
+                "flex items-center w-full md:w-1/2 lg:w-full px-3 py-6 md:pl-[45px] md:pr-10 md:py-4 grow",
+                (!image) && "justify-center"
+              )}>
                 <div className="grid space-y-3">
                   {pretitle && (
-                    <p className="text-blue-dark text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold">
+                    <p className={classNames(
+                      "text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold",
+                      (view?.backgroundColor == "Azul" || view?.backgroundColor == "Transparente") ? "text-blue-dark" : backgroundColor.title,
+                      (!image) && "flex items-center justify-center"
+                    )}>
                       {pretitle}
                     </p>
                   )}
                   {subtitle && (
-                    <h3 className="pb-1 text-lg md:text-4xl text-blue-dark">
+                    <h3 className={classNames(
+                      "pb-1 text-lg md:text-4xl",
+                      (view?.backgroundColor == "Azul" || view?.backgroundColor == "Transparente") ? "text-blue-dark" : backgroundColor.title,
+                      (!image) && "flex items-center justify-center"
+                    )}>
                       {subtitle}
                     </h3>
                   )}
                   {description && (
-                    <div className="richtext-container pb-3 text-sm text-grey-30 lg:text-lg">
+                    <div className={classNames(
+                      "richtext-container pb-3 text-sm lg:text-lg",
+                      (view?.backgroundColor == "Azul" || view?.backgroundColor == "Transparente") ? "text-grey-30" : backgroundColor.text,
+                      (!image) && "flex items-center justify-center"
+                    )}>
                       {documentToReactComponents(description.json, options)}
                     </div>
                   )}
 
                   {ctaCollection?.items?.length > 0 && (
-                    <div className="flex flex-col gap-3 md:flex-row">
+                    <div className={classNames(
+                      "flex flex-col gap-3 md:flex-row",
+                      (view?.backgroundColor == "Azul" || view?.backgroundColor == "Transparente") ? "text-grey-30" : backgroundColor.text,
+                      (!image) && "justify-center"
+                    )}>
                       {ctaCollection.items.map((cta, idx) => (cta.externalLink || cta.internalLink) && (
                         <CustomLink
                           content={cta}
