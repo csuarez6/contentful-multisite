@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-// import { GoogleAnalytics } from "nextjs-google-analytics";
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
@@ -86,8 +85,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
             <meta name="twitter:image" content={`${image}`} />
           </>
         )}
-        <meta name="robots" content="noindex, nofollow" />
-        {/* <GoogleAnalytics trackPageViews /> */}
+        <meta name="robots" content="noindex, nofollow" />       
 
         <script 
           type="application/ld+json"
