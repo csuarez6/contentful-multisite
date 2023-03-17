@@ -98,7 +98,7 @@ const NavItem = ({
             {item?.internalLink?.urlPath || item?.urlPath || item?.externalLink
               ? (
                 <CustomLink
-                  content={item}
+                  content={{ ...item, ...{ linkView: "" } }}
                   className="pointer-events-none"
                   linkClassName={
                     classNames(
@@ -228,7 +228,7 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
               {utilityNavCollection?.items?.map((item) => (
                 <li className="flex max-w-[75px]" key={item?.sys?.id}>
                   <CustomLink
-                    content={item}
+                    content={{ ...item, ...{ linkView: "" } }}
                     className={classNames(
                       "text-blue-dark group/icon hover:bg-blue-dark transition hover:text-white rounded-md bg-category-blue-light-90 flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-3",
                       item.promoIcon

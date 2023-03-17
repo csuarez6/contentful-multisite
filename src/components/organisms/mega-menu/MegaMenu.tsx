@@ -189,9 +189,9 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                   className="flow-root"
                                 >
                                   <CustomLink
-                                    content={itemList}
+                                    content={{ ...itemList, ...{ linkView: "" } }}
                                     onClick={() => setIsOpenMenu(false)}
-                                    className={classNames("flex itemLists-center text-base text-blue-dark hover:text-lucuma-60",
+                                    className={classNames("flex items-center text-base text-blue-dark hover:text-lucuma-60",
                                       itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
                                     )}
                                   >
