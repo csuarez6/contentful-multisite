@@ -19,33 +19,30 @@ const LinkElement = ({ item, isOpen }) => {
         </span>
       )}
       {item.promoTitle ?? item.name}
-      {item.mainNavCollection?.items?.length > 0 &&
-        item.__typename !== "AuxCustomContent" && (
-          <span
-            className={classNames(
-              "flex items-center w-6 h-6 shrink-0 text-blue-dark",
-              isOpen && "transform rotate-180"
-            )}
-          >
-            <Icon
-              icon="arrow-down"
-              className="w-full h-full"
-              aria-hidden="true"
-            />
-          </span>
-        )}
+      {item.mainNavCollection?.items?.length > 0 && item.__typename !== "AuxCustomContent" && (
+        <span
+          className={classNames(
+            "flex items-center w-6 h-6 shrink-0 text-blue-dark",
+            isOpen && "transform rotate-180"
+          )}
+        >
+          <Icon
+            icon="arrow-down"
+            className="w-full h-full"
+            aria-hidden="true"
+          />
+        </span>
+      )}
     </>
   );
 };
+
 const MegaMenuItem = ({ item, name, currentMenu }) => {
-  const [open, setOpen] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const columns = 6;
-  // const [columns, setColumns] = useState(7);
   const { asPath } = useRouter();
   const ProductName = asPath.split('=')[1];
-  if (ProductName) {
-    name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
-  }
+  if (ProductName) name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
 
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
@@ -57,7 +54,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     setScreenH(window.innerHeight);
 
     window.addEventListener("resize", () => {
-      setOpen(false);
+      setIsOpenMenu(false);
       setScreenW(window.innerWidth);
       setScreenH(window.innerHeight);
     });
@@ -80,9 +77,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
 
   const openSubmenu = () => {
     const _submenu = submenu.current;
-    const subTitles: NodeListOf<HTMLParagraphElement> =
-      _submenu.querySelectorAll(".subTitleList");
-
+    const subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
     const height: Array<number> = [];
 
     subTitles.forEach((item) => {
@@ -91,7 +86,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     height.sort().reverse();
 
     subTitles.forEach((item) => {
-      item.style.height = height[0] + "px";
+      item.style.height = `${height[0]}px`;
     });
 
     const coor = _submenu.getBoundingClientRect();
@@ -99,24 +94,29 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
   };
 
   useEffect(() => {
-    if (open) openSubmenu();
+    if (isOpenMenu) openSubmenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [isOpenMenu]);
 
   return (
     <div
-      onMouseOver={() => setOpen(true)}
-      onMouseOut={() => setOpen(false)}
-      onClick={() => setOpen(false)}
+      onMouseOver={() => setIsOpenMenu(true)}
+      onMouseOut={() => setIsOpenMenu(false)}
+      onFocus={() => setIsOpenMenu(true)}
+      onBlur={() => setIsOpenMenu(false)}
+      onClick={() => {
+        const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        if (!isTouchDevice) setIsOpenMenu(false);
+      }}
       className={classNames(
         "group/submenu min-h-[60px] -my-2 flex items-center",
-        open && "isOpen",
+        isOpenMenu && "isOpen",
         currentMenu === item.name && "underline"
       )}
       ref={submenu}
     >
       {/* contenido personalizado, Navegacion */}
-      {(!item.mainNavCollection?.items && (item.internalLink?.slug || item.externalLink)) && (
+      {(!item.mainNavCollection?.items && (item.internalLink?.urlPath || item.externalLink)) && (
         <CustomLink
           content={item}
           linkClassName={
@@ -124,24 +124,34 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
           }
           className={classNames(
             "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
-            open ? "border-lucuma" : "border-transparent"
+            isOpenMenu ? "border-lucuma" : "border-transparent"
           )}
         >
-          <LinkElement item={item} isOpen={open} />
+          <LinkElement item={item} isOpen={isOpenMenu} />
         </CustomLink>
       )}
 
       {/* Pagina, producto */}
-      {(item.mainNavCollection?.items || item.urlPath) && (
+      {item.urlPath && item.__typename !== "AuxNavigation" && (
         <CustomLink
           content={item}
           className={classNames(
             "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-            open && "border-blue-dark"
+            isOpenMenu && "border-blue-dark"
           )}
         >
           <LinkElement item={item} isOpen={false} />
         </CustomLink>
+      )}
+      {item.mainNavCollection?.items && item.__typename === "AuxNavigation" && (
+        <div className={
+          classNames(
+            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none cursor-pointer",
+            isOpenMenu && "border-blue-dark"
+          )
+        }>
+          <LinkElement item={item} isOpen={false} />
+        </div>
       )}
       {item.mainNavCollection?.items?.length > 0 && (
         <div
@@ -149,7 +159,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
           style={{ maxHeight: `${submenuH}px` }}
           className={classNames(
             "absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
-            open
+            isOpenMenu
               ? "pointer-events-auto opacity-100 transition-opacity"
               : "pointer-events-none opacity-0 transition-none"
           )}
@@ -180,7 +190,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                 >
                                   <CustomLink
                                     content={itemList}
-                                    onClick={() => setOpen(false)}
+                                    onClick={() => setIsOpenMenu(false)}
                                     className={classNames("flex itemLists-center text-base text-blue-dark hover:text-lucuma-60",
                                       itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
                                     )}
@@ -196,31 +206,30 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                       </div>
                     ))}
                   </div>
-                  {item?.secondaryNavCollection?.items &&
-                    item.secondaryNavCollection.items.length && (
-                      <div
-                        className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
-                        style={columnCard(item.mainNavCollection.items.length)}
-                      >
-                        {item.secondaryNavCollection.items.map((block) => (
-                          <div
-                            className={classNames(
-                              "card-mega-menu flex overflow-hidden",
-                              !block.promoImage && "not-image"
-                            )}
-                            key={`card_${block?.sys.id}-megamenu`}
-                            style={{
-                              gridColumn:
-                                block.__typename == "AuxNavigation"
-                                  ? `span 2 / span 2`
-                                  : null,
-                            }}
-                          >
-                            {jsonToReactComponent(block)}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  {item?.secondaryNavCollection.items.length > 0 && (
+                    <div
+                      className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
+                      style={columnCard(item.mainNavCollection.items.length)}
+                    >
+                      {item.secondaryNavCollection.items.map((block) => (
+                        <div
+                          className={classNames(
+                            "card-mega-menu flex overflow-hidden",
+                            !block.promoImage && "not-image"
+                          )}
+                          key={`card_${block?.sys.id}-megamenu`}
+                          style={{
+                            gridColumn:
+                              block.__typename == "AuxNavigation"
+                                ? `span 2 / span 2`
+                                : null,
+                          }}
+                        >
+                          {jsonToReactComponent(block)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </nav>
               </div>
             </div>
