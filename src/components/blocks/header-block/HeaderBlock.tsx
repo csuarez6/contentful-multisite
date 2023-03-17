@@ -183,7 +183,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             <nav
               aria-label="Menú principal"
-              className="relative flex justify-between gap-14 xl:gap-[76px] min-h-[42px] h-full"
+              className="relative flex justify-between gap-8 2lg:gap-10 xl:gap-[76px] min-h-[42px] h-full"
             >
               <ul className="relative flex gap-6 flex-nowrap grow">
                 {mainNavCollection?.items?.map((item, index) => {
@@ -198,13 +198,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             item.promoTitle === isFolder
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
-                            "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
+                            "inline-block relative hover:text-lucuma pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
                           )}
                         >
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-down"
-                            className="w-6 h-6 -my-3"
+                            className="w-6 h-6 absolute right-0"
                             aria-hidden="true"
                           />
                         </div>
@@ -460,7 +460,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <>
                       <CustomLink
                         content={{ urlPath: "/registro" }}
-                        className="flex items-center text-center button button-primary"
+                        className="h-full flex items-center text-center button button-primary"
                       >
                         Regístrate
                       </CustomLink>
@@ -469,7 +469,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           urlPath:
                             "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
                         }}
-                        className="flex items-center text-center button button-outline"
+                        className="h-full flex items-center text-center button button-outline"
                       >
                         Inicia sesión
                       </CustomLink>
