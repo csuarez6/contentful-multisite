@@ -16,6 +16,9 @@ export enum CONTENTFUL_TYPENAMES {
 
   PRODUCT_CATEGORY = 'ProductCategory',
   TRADEMARK = 'Trademark',
+/**
+ * In simple view the string is mapped and in the block view the identifier of the associated view
+ */
 
   VIEW_ACCORDION = "ViewAccordion",
   VIEW_BANNER_IMAGE = "ViewBannerImage",
@@ -26,7 +29,7 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_LIST_WITH_ICONS = "ViewListWithIcons",
   VIEW_BANNER_CAROUSEL = "ViewBannerCarousel",
   VIEW_PRODUCT_GRID = "ViewProductGrid",
-  VIEW_LINE_OF_STEPS = "ViewLineOfSteps",
+  VIEW_LINE_OF_STEPS = "Linea de pasos",
   VIEW_INFORMATION_CARDS = "ViewInformationCards",
   VIEW_PRODUCT_GRILL = "ViewProductGrill",
   VIEW_SERVICES_TABS = "ViewServicesTabs",

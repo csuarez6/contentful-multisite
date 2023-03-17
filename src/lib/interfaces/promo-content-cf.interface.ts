@@ -67,6 +67,7 @@ export interface IPromoBlock extends IBlockProps {
     featuredContentsCollection?: {
         items?: IPromoContent[] | IProductCategory[]
     };
+    simpleView?: string;
     view?: IView;
     cta?: IListItems;
     image?: IImageAsset;
