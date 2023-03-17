@@ -30,14 +30,14 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       )}
       <div className='hidden md:block'>
         {featuredContentsCollection?.items?.length > 0 && (
-          <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize))}>
+          <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
             {featuredContentsCollection.items.map((item: any, idx: number) => (
               <ListWithIcon key={`${item.sys.id}-desktop-${idx}`} {...{ ...item, ...view }} />
             ))}
           </div>
         )}
       </div>
-      <div className="sm:px-[72px] px-5 md:hidden shadow-card py-[21px] mt-6">
+      <div className="sm:px-[72px] px-5 md:hidden shadow-card py-[21px] mt-7">
         <div>
           <Swiper
             loop={true}
