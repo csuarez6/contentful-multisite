@@ -10,6 +10,9 @@ const jsonToReactComponent = (jsonItem, attachProps = {}) => {
   if (jsonItem?.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
     view = BLOCKSVIEW_MAP[jsonItem.__typename];
 
+    if (view && jsonItem?.simpleView) {
+      view = view[jsonItem.simpleView];
+    }
     if (view && jsonItem?.view?.__typename) {
       view = view[jsonItem.view.__typename];
     }
