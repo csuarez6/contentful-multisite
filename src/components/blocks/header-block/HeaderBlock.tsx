@@ -116,7 +116,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     name,
   } = props;
   let { menuNavkey = null } = props;
-  const [open, setOpen] = useState<boolean>(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   // const router = useRouter();
 
@@ -172,7 +172,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         <div
           className={classNames(
             "absolute inset-x-0 h-full",
-            open
+            isOpenMenu
               ? getBackgroundColorClass(
                 secondaryNavCollectionColor ?? "Azul Oscuro"
               ).background
@@ -191,14 +191,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <li className="flex items-center" key={item.sys.id}>
                       {item?.secondaryNavCollection?.items?.length > 0 ? (
                         <div
-                          onClick={() => setOpen(!open)}
-                          onMouseOver={() => setOpen(true)}
-                          onMouseOut={() => setOpen(false)}
+                          onClick={() => setIsOpenMenu(!isOpenMenu)}
+                          onMouseOver={() => setIsOpenMenu(true)}
+                          onMouseOut={() => setIsOpenMenu(false)}
                           className={classNames(
                             item.promoTitle === isFolder
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
-                            "inline-block relative hover:text-lucuma pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
+                            "cursor-pointer inline-block relative hover:text-lucuma pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
                           )}
                         >
                           {item.promoTitle ?? item.name}
@@ -259,17 +259,26 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         </div>
       </div>
       {/* TopMenu */}
-      {open && (
+      <Transition
+        show={isOpenMenu}
+        className="overflow-hidden"
+        enter="transition-all ease-in duration-700"
+        enterFrom="max-h-0"
+        enterTo="max-h-screen"
+        leave="transition-all ease-out duration-500"
+        leaveFrom="max-h-screen"
+        leaveTo="max-h-0"
+      >
         <div
-          onMouseOver={() => setOpen(true)}
-          onMouseOut={() => setOpen(false)}
+          onMouseOver={() => setIsOpenMenu(true)}
+          onMouseOut={() => setIsOpenMenu(false)}
         >
           <TopMenu
             secondaryNavCollection={secondaryNavCollectionMenu}
             firstPath={firstPath}
           />
         </div>
-      )}
+      </Transition>
       {/* Middle */}
       <div className="relative">
         <div className="mx-auto xl:container">

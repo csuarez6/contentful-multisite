@@ -109,7 +109,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
         if (!isTouchDevice) setIsOpenMenu(false);
       }}
       className={classNames(
-        "group/submenu min-h-[60px] -my-2 flex items-center",
+        "group/submenu min-h-[60px] px-3 first:pl-0 -my-2 flex items-center",
         isOpenMenu && "isOpen",
         currentMenu === item.name && "underline"
       )}
@@ -158,10 +158,10 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
           ref={submenu}
           style={{ maxHeight: `${submenuH}px` }}
           className={classNames(
-            "absolute inset-x-0 top-full z-10 transform duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
+            "absolute inset-x-0 top-full z-10 transform transition-opacity duration-500 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
             isOpenMenu
-              ? "pointer-events-auto opacity-100 transition-opacity"
-              : "pointer-events-none opacity-0 transition-none"
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
           )}
         >
           <div className="relative flex py-6 my-6 gap-6">
@@ -251,7 +251,7 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name, currentMenu 
       <div className="z-20">
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
-            <div className="flex gap-6">
+            <div className="flex">
               {mainNavCollection.items.map((item) => (
                 <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name} currentMenu={currentMenu} />
               ))}
