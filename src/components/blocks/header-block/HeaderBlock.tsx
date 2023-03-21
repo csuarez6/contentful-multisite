@@ -590,6 +590,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                     key={item.sys.id}
                                   >
                                     <CustomLink
+                                      onClick={() => close()}
                                       content={item}
                                       className={classNames(
                                         "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",

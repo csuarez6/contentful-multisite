@@ -175,12 +175,14 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
             <CustomLink
               content={{ urlPath: "/registro" }}
               className="!block text-center button button-primary"
+              onClick={() => close()}
             >
               Regístrate
             </CustomLink>
             <CustomLink
               content={{ urlPath: "/acceso" }}
               className="!block text-center button button-outline"
+              onClick={() => close()}
             >
               Inicia sesión
             </CustomLink>
@@ -228,6 +230,7 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
               {utilityNavCollection?.items?.map((item) => (
                 <li className="flex max-w-[75px]" key={item?.sys?.id}>
                   <CustomLink
+                    onClick={() => close()}
                     content={{ ...item, ...{ linkView: "" } }}
                     className={classNames(
                       "text-blue-dark group/icon hover:bg-blue-dark transition hover:text-white rounded-md bg-category-blue-light-90 flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-3",
