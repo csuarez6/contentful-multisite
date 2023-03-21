@@ -10,6 +10,7 @@ import uuid from "react-uuid";
 
 const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   title,
+  pretitle,
   description,
   featuredContentsCollection,
   view,
@@ -39,6 +40,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {(title || description) && (
         <div className="grid text-center gap-6">
+          {pretitle && <p className="text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold text-blue-dark uppercase">{pretitle}</p>}
           {title && <h2 className="text-blue-dark">{title}</h2>}
           {description && (
             <div className="text-neutral-30">

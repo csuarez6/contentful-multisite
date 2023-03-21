@@ -2,6 +2,7 @@ import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 
 const data: any = {
   title: 'Título',
+  pretitle: 'Antetitulo',
   description: RICHTEXT_SHORT_SIMPLE,
   featuredContentsCollection: {
     items: [
