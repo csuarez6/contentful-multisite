@@ -10,6 +10,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import { ICarouselCategoryBlock } from "@/lib/interfaces/content-filter-cf.interface";
+import React from "react";
 
 const iconLeft: IIcon = {
   icon: "arrow-left",
@@ -38,6 +39,8 @@ const CarouselCategoriesBlock: React.FC<
 }) => {
     const uui = uuid();
     const allowTouchMove = view?.isSlider ?? true;
+    const [isEndSlider, setIsEndSlider] = React.useState<boolean | null>(false);
+    const [indexSlide, setIndexSlide] = React.useState(0);
     const carouselAlignTitleClass = () => {
       switch (view.alignTitle) {
         case "Left":
@@ -74,21 +77,30 @@ const CarouselCategoriesBlock: React.FC<
         {featuredContentsCollection?.items?.length > 0 && (
           <div
             className={classNames(
-              "flex flex-nowrap relative grow w-full",
+              "flex flex-nowrap relative grow w-full items-center",
               view?.alignTitle === "Left" && "md:max-w-[75%] md:pl-9"
             )}
           >
             {allowTouchMove && (
-              <div className="flex justify-center items-center">
-                <div
-                  className={`prevSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
-                >
-                  <Icon {...iconLeft} />
+              <div className=' h-10 w-10'>
+                <div className={classNames(`${indexSlide + 1 === 1 ? " hidden": "flex"}`,' justify-center items-center')}>
+                  <div
+                    className={`prevSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
+                  >
+                    <Icon {...iconLeft} />
+                  </div>
                 </div>
               </div>
+
             )}
             <Swiper
               allowTouchMove={allowTouchMove}
+              onRealIndexChange={
+                ({ isEnd, realIndex }) => {
+                  setIsEndSlider(isEnd);
+                  setIndexSlide(realIndex);
+                }
+              }
               slidesPerView={1}
               breakpoints={{
                 375: {
@@ -99,21 +111,16 @@ const CarouselCategoriesBlock: React.FC<
                   slidesPerView: 3,
                   spaceBetween: 30,
                 },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 30,
-                },
                 960: {
-                  slidesPerView: 5,
+                  slidesPerView: 4,
                   spaceBetween: 20,
+
                 },
                 1024: {
                   slidesPerView: view?.columnsSize ?? 5,
                   spaceBetween: 40,
                 }
               }}
-              loop={true}
-              loopFillGroupWithBlank={true}
               modules={[Pagination, Navigation]}
               navigation={{
                 nextEl: `.nextSlide${uui}`,
@@ -132,13 +139,16 @@ const CarouselCategoriesBlock: React.FC<
               ))}
             </Swiper>
             {allowTouchMove && (
-              <div className="flex justify-center items-center">
-                <div
-                  className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
-                >
-                  <Icon {...iconRight} />
+              <div className=' h-10 w-10'>
+                <div className={classNames(`${isEndSlider && "!hidden"}`,' justify-center items-center flex lg:hidden')}>
+                  <div
+                    className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
+                  >
+                    <Icon {...iconRight} />
+                  </div>
                 </div>
               </div>
+
             )}
           </div>
         )}
