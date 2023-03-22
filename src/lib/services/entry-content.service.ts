@@ -18,7 +18,7 @@ type DefaultBlockInfo = {
 
 const CACHE_CONTENT = {};
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
@@ -88,6 +88,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
     const referencesContent = await getReferencesContent({
       content: entryContent,
+      maxDepthRecursion: overrideMaxDepth,
       preview,
     });
 

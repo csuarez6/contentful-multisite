@@ -36,11 +36,11 @@ Test_Linter:
   except:
     - tags
 
-Generate_Preview_APP:
+Deploy_To_QA:
   stage: Deploy
 
   variables:
-    PREVIEW_URL: $VERCEL_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
+    PREVIEW_URL: $VERCEL_PROJECT_NAME-qa.vercel.app
     VERCEL_SCOPE: $VERCEL_SCOPE
     VERCEL_ORG_ID: $VERCEL_ORG_ID
     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
@@ -51,17 +51,11 @@ Generate_Preview_APP:
   script:
     - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --yes --token $VERCEL_TOKEN --scope $VERCEL_SCOPE)
     - vercel alias set $DEPLOYMENT_URL $PREVIEW_URL -t $VERCEL_TOKEN --scope $VERCEL_SCOPE
-    - echo "export PREVIEW_DEV_URL=$DEPLOYMENT_URL" > preview-dev-url.env
-  artifacts:
-    expire_in: 1 week
-    when: always
-    paths: 
-      - preview-dev-url.env
 
   environment:
-    name: review/$CI_COMMIT_REF_NAME
-    url: https://$VERCEL_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
-    on_stop: Delete_Preview_APP
+    name: review/QA
+    url: https://$VERCEL_PROJECT_NAME-qa.vercel.app
+    # on_stop: Stop_QA_Deployment
 
   when: manual
   only:
@@ -70,35 +64,34 @@ Generate_Preview_APP:
     changes: *changes
   needs: ["Test_Linter"]
 
-Delete_Preview_APP:
-  stage: Stop
+# Stop_QA_Deployment:
+#   stage: Stop
 
-  variables:
-    VERCEL_ORG_ID: $VERCEL_ORG_ID
-    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
-    VERCEL_TOKEN: $VERCEL_TOKEN
-    VERCEL_SCOPE: $VERCEL_SCOPE
+#   variables:
+#     PREVIEW_DEV_URL: $VERCEL_PROJECT_NAME-qa.$VERCEL_SCOPE.vercel.app
+#     VERCEL_ORG_ID: $VERCEL_ORG_ID
+#     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+#     VERCEL_TOKEN: $VERCEL_TOKEN
+#     VERCEL_SCOPE: $VERCEL_SCOPE
 
-  when: delayed
-  start_in: 6 days
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    action: stop
+#   when: manual
+#   environment:
+#     name: review/QA
+#     action: stop
 
-  before_script:
-    - if [[ -f preview-dev-url.env ]]; then source preview-dev-url.env; fi;
-    - npm i -g vercel
-  script:
-    - if [[ $PREVIEW_DEV_URL ]]; then VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $PREVIEW_DEV_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes; fi;
+#   before_script:
+#     - npm i -g vercel
+#   script:
+#     - VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $PREVIEW_DEV_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes
 
-  only:
-    refs:
-      - merge_requests
-    changes: *changes
-  except:
-    - main
-    - tags
-  needs: ["Generate_Preview_APP"]
+#   only:
+#     refs:
+#       - merge_requests
+#     changes: *changes
+#   except:
+#     - main
+#     - tags
+#   needs: ["Deploy_To_QA"]
 
 Deploy_Production_APP:
   stage: Deploy

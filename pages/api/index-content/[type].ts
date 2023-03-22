@@ -36,13 +36,13 @@ const handler = async (
       sys: {
         id: entryData.sys.id
       }
-    }, false, false);
+    }, false, true, 3);
 
     if (!entryFields) {
       return res.status(404).json({ message: 'Content not found' });
     }
 
-    if (entryFields?.sku) {
+    if (type === 'Product') {
       const productPrices = await getCommercelayerProduct(entryFields.sku);
       if (productPrices) {
         entryFields = {
