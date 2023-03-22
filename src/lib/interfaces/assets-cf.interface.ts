@@ -1,4 +1,4 @@
-interface IAsset {
+export interface IAsset {
   title?: string;
   description?: string;
   url: string;

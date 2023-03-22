@@ -1,15 +1,15 @@
-import { gql } from '@apollo/client';
-import _ from 'lodash';
-import algoliasearch, { SearchIndex } from 'algoliasearch';
+import { gql } from "@apollo/client";
+import _ from "lodash";
+import algoliasearch, { SearchIndex } from "algoliasearch";
 
-import contentfulClient from './contentful-client.service';
+import contentfulClient from "./contentful-client.service";
 
-import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
-import { FACET_QUERY_MAP } from '@/constants/search.constants';
+import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
+import { FACET_QUERY_MAP } from "@/constants/search.constants";
 
 export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
   const searchClient = algoliasearch(appId, appKey);
-  const searchIndex = searchClient.initIndex('Production');
+  const searchIndex = searchClient.initIndex("Production");
 
   return searchIndex;
 };
@@ -17,17 +17,19 @@ export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
 const applyFilterModifier = (filterKey, filterValue, modifier) => {
   let filterValueModified = `${filterKey}:${filterValue}`;
 
-  if (modifier === 'stringify') {
+  if (modifier === "stringify") {
     filterValueModified = `${filterKey}:"${filterValue}"`;
   }
 
-  if (modifier === 'range') {
-    const [min, max] = filterValue.split('-');
-    filterValueModified = max ? (
-      min ? `${filterKey}:${min} TO ${max}` : `${filterKey} <= ${max}`
-    ) : (
-      min ? `${filterKey} >= ${min}` : ''
-    );
+  if (modifier === "range") {
+    const [min, max] = filterValue.split("-");
+    filterValueModified = max
+      ? min
+        ? `${filterKey}:${min} TO ${max}`
+        : `${filterKey} <= ${max}`
+      : min
+      ? `${filterKey} >= ${min}`
+      : "";
   }
 
   return filterValueModified;
@@ -39,49 +41,65 @@ const getAlgoliaResults = async ({
   availableFacets = [],
   pageResults = 9,
   filters = {},
-  page = 1
+  page = 1,
 }) => {
   const resultObject: {
-    items: any[],
-    totalItems: number,
-    totalPages: number,
-    actualPage: number,
-    facets: any
+    items: any[];
+    totalItems: number;
+    totalPages: number;
+    actualPage: number;
+    facets: any;
   } = {
     items: [],
     totalItems: 0,
     totalPages: 0,
     actualPage: 0,
-    facets: {}
+    facets: {},
   };
 
   const types = [];
   const algoliaFilter = [];
   const algoliaFacets = Object.keys(FACET_QUERY_MAP).filter(
-    fk => availableFacets.indexOf(FACET_QUERY_MAP[fk].title) >= 0
+    (fk) => availableFacets.indexOf(FACET_QUERY_MAP[fk].title) >= 0
   );
 
   for (const contentTypeFilter of contentTypesFilter) {
-    const { queryName: type } = CONTENTFUL_QUERY_MAPS[_.capitalize(contentTypeFilter)];
-    types.push(type);
+    const { queryName: type } = CONTENTFUL_QUERY_MAPS[
+      _.upperFirst(contentTypeFilter)
+    ] ?? { queryName: null };
+    if (type) types.push(type);
   }
 
-  const contentTypeFilterSearchQuery = types.map(ct => `sys.contentType.sys.id:${ct}`);
-  const parentIdsSearchQuery = parentIds.map(pid => `fields.parent.sys.id:${pid}`);
-  algoliaFilter.push(
-    `(${contentTypeFilterSearchQuery.join(' OR ')})`,
-    `(${parentIdsSearchQuery.join(' OR ')})`,
+  const contentTypeFilterSearchQuery = types.map(
+    (ct) => `sys.contentType.sys.id:${ct}`
   );
-
+  algoliaFilter.push(
+    `(${contentTypeFilterSearchQuery.join(" OR ")})`
+  );
+  
+  if (parentIds?.length) {
+    const parentIdsSearchQuery = parentIds?.map(
+      (pid) => `fields.parent.sys.id:${pid}`
+    );
+    algoliaFilter.push(
+      `(${parentIdsSearchQuery.join(" OR ")})`
+    );
+  }
   for (const filterName in filters) {
-    const filterDef = Object.keys(FACET_QUERY_MAP).find(fk => filterName === FACET_QUERY_MAP[fk].inputName);
+    const filterDef = Object.keys(FACET_QUERY_MAP).find(
+      (fk) => filterName === FACET_QUERY_MAP[fk].inputName
+    );
 
     if (filterDef) {
       let filterValue = `${filterDef}:${filters[filterName]}`;
       const modifier = FACET_QUERY_MAP[filterDef].modifier;
 
       if (modifier) {
-        filterValue = applyFilterModifier(filterDef, filters[filterName], modifier);
+        filterValue = applyFilterModifier(
+          filterDef,
+          filters[filterName],
+          modifier
+        );
       }
 
       algoliaFilter.push(filterValue);
@@ -92,12 +110,12 @@ const getAlgoliaResults = async ({
     process.env.ALGOLIASEARCH_APP_ID,
     process.env.ALGOLIASEARCH_READ_API_KEY
   );
-  const resultAlgolia = await indexSearch.search('', {
-    filters: algoliaFilter.join(' AND '),
+  const resultAlgolia = await indexSearch.search("", {
+    filters: algoliaFilter.join(" AND "),
     facets: algoliaFacets,
     hitsPerPage: pageResults,
-    attributesToRetrieve: ['fields'],
-    page: (--page)
+    attributesToRetrieve: ["fields"],
+    page: --page,
   });
 
   ({
@@ -105,7 +123,7 @@ const getAlgoliaResults = async ({
     nbHits: resultObject.totalItems,
     nbPages: resultObject.totalPages,
     page: resultObject.actualPage,
-    facets: resultObject.facets
+    facets: resultObject.facets,
   } = resultAlgolia);
 
   return resultObject;
@@ -126,7 +144,9 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           const { data: responseData } = await contentfulClient(preview).query({
             query: gql`
             query getEntriesCollection($preview: Boolean!, $limit: Int!) {
-              ${queryName}Collection(where: { name_in: ["${facetContentNames.join('", "')}"] }, preview: $preview, limit: $limit) {
+              ${queryName}Collection(where: { name_in: ["${facetContentNames.join(
+              '", "'
+            )}"] }, preview: $preview, limit: $limit) {
                 items {
                   ${query}
                 }
@@ -135,9 +155,9 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           `,
             variables: {
               preview,
-              limit: facetContentNames.length
+              limit: facetContentNames.length,
             },
-            errorPolicy: 'all'
+            errorPolicy: "all",
           });
 
           if (responseData?.[`${queryName}Collection`]?.items) {
@@ -145,27 +165,31 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
               name: FACET_QUERY_MAP[facetId].inputName,
               labelSelect: FACET_QUERY_MAP[facetId].title,
               placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
-              listedContents: FACET_QUERY_MAP[facetId].rawOptions ?? responseData[`${queryName}Collection`].items.map((facetContent: any) => {
-                return {
-                  ...facetContent,
-                  text: facetContent.promoTitle ?? facetContent.name,
-                  value: facetContent.name,
-                  totalItems: facets[facetId][facetContent.name]
-                };
-              })
+              listedContents:
+                FACET_QUERY_MAP[facetId].rawOptions ??
+                responseData[`${queryName}Collection`].items.map(
+                  (facetContent: any) => {
+                    return {
+                      ...facetContent,
+                      text: facetContent.promoTitle ?? facetContent.name,
+                      value: facetContent.name,
+                      totalItems: facets[facetId][facetContent.name],
+                    };
+                  }
+                ),
             };
 
             facetContents.listedContents.unshift({
               sys: {
-                id: `${facetContents.name}_all-items`
+                id: `${facetContents.name}_all-items`,
               },
               name: `Todo`,
               text: `Todo`,
-              value: '*',
+              value: "*",
               totalItems: 0,
               image: {
-                url: `/images/show-all-${facetContents.name}.png`
-              }
+                url: `/images/show-all-${facetContents.name}.png`,
+              },
             });
             facetsWithValues.push(facetContents);
           }
@@ -177,28 +201,30 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           name: FACET_QUERY_MAP[facetId].inputName,
           labelSelect: FACET_QUERY_MAP[facetId].title,
           placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
-          listedContents: FACET_QUERY_MAP[facetId].rawOptions ?? facetContentNames.map((facetValue: any) => {
-            return {
-              name: '',
-              text: facetValue,
-              value: facetValue,
-              image: null,
-              totalItems: facets[facetId][facetValue]
-            };
-          })
+          listedContents:
+            FACET_QUERY_MAP[facetId].rawOptions ??
+            facetContentNames.map((facetValue: any) => {
+              return {
+                name: "",
+                text: facetValue,
+                value: facetValue,
+                image: null,
+                totalItems: facets[facetId][facetValue],
+              };
+            }),
         };
 
         facetContents.listedContents.unshift({
-          name: '',
+          name: "",
           text: `Todo`,
           image: null,
-          value: '*',
-          totalItems: 0
+          value: "*",
+          totalItems: 0,
         });
         facetsWithValues.push(facetContents);
       }
     }
-  };
+  }
 
   return facetsWithValues;
 };
@@ -209,10 +235,12 @@ const getFilteredContent = async ({
   availableFacets = [],
   pageResults = 9,
   filters = {},
-  page = 1
+  page = 1,
 }) => {
   if (!contentTypesFilter) {
-    console.error(`Error on getFilteredContent: «contentTypesFilter» are required or it's not defined`);
+    console.error(
+      `Error on getFilteredContent: «contentTypesFilter» are required or it's not defined`
+    );
     return null;
   }
 
@@ -222,17 +250,26 @@ const getFilteredContent = async ({
     availableFacets,
     pageResults,
     filters,
-    page
+    page,
   });
 
   if (!filteredContentResults?.items?.length) {
     return null;
   }
 
-  filteredContentResults.items = filteredContentResults.items.map(item => item.fields);
+  filteredContentResults.items = filteredContentResults.items.map(
+    (item) => item.fields
+  );
 
-  if (filteredContentResults?.facets && Object.keys(filteredContentResults?.facets).length > 0) {
-    filteredContentResults.facets = await getFacetsValues(filteredContentResults.facets);
+  if (
+    filteredContentResults?.facets &&
+    Object.keys(filteredContentResults?.facets).length > 0
+  ) {
+    filteredContentResults.facets = await getFacetsValues(
+      filteredContentResults.facets
+    );
+  }else{
+   filteredContentResults.facets = []; 
   }
 
   return filteredContentResults;

@@ -33,7 +33,7 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
 
     // console.info(`Rendering view ${view} for ${item.__typename}`, item);
     if (!view || typeof view === 'object') {
-      return viewNoSupported(item.__typename, item?.view?.__typename);
+      return viewNoSupported(item.__typename, item?.view?.__typename ?? item?.simpleView);
     }
 
     const cleanItem = {

@@ -16,6 +16,7 @@ export enum CONTENTFUL_TYPENAMES {
 
   PRODUCT_CATEGORY = 'ProductCategory',
   TRADEMARK = 'Trademark',
+  AUX_RATE = 'AuxRate',
 /**
  * In simple view the string is mapped and in the block view the identifier of the associated view
  */

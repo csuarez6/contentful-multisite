@@ -1,4 +1,4 @@
-const AssetQuery = `
+export const AssetQuery = `
   title
   description
   fileName

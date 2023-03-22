@@ -9,6 +9,7 @@ import BlockContentFilterQuery from "@/lib/graphql/blocks/content-filter.gql";
 import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
 import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 import { BlockFormQuery } from "@/lib/graphql/blocks/form-content.gql";
+import RateQuery from "@/lib/graphql/rate.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -50,6 +51,10 @@ const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.TRADEMARK]: {
     queryName: 'trademark',
     query: TrademarkQuery,
+  },
+  [CONTENTFUL_TYPENAMES.AUX_RATE]: {
+    queryName: 'aux_Rate',
+    query: RateQuery,
   },
 };
 
