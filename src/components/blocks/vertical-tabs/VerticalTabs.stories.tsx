@@ -1,11 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import VerticalCard from './VerticalCard';
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { mockVerticalCardProps } from './VerticalCard.mocks';
+import VerticalTabs from './VerticalTabs';
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import { mockVerticalTabsProps } from './VerticalTabs.mocks';
 
 export default {
-  title: 'organisms/cards/VerticalCard',
-  component: VerticalCard,
+  title: 'blocks/VerticalTabs',
+  component: VerticalTabs,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
@@ -15,21 +15,16 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof VerticalCard>;
+} as ComponentMeta<typeof VerticalTabs>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof VerticalCard> = (args) => (
-  <VerticalCard {...args} />
+const Template: ComponentStory<typeof VerticalTabs> = (args) => (
+  <VerticalTabs {...args} />
 );
 
 export const Base = Template.bind({});
-export const WithButtons = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
-  ...mockVerticalCardProps.data,
-} as IPromoContent;
-
-WithButtons.args = {
-  ...mockVerticalCardProps.dataWithButtons,
-} as IPromoContent;
+  ...mockVerticalTabsProps.data,
+} as IPromoBlock;

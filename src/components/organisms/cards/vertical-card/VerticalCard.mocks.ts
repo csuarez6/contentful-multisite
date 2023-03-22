@@ -6,7 +6,9 @@ const data: IPromoContent = {
   promoDescription: RICHTEXT_SHORT_SIMPLE,
   promoImage: {
     url: 'https://via.placeholder.com/1280x392.png',
-    title: ''
+    title: '',
+    height: 120,
+    width: 380,
   },
   cta: {
     href: "#",
@@ -14,6 +16,26 @@ const data: IPromoContent = {
   }
 };
 
+const dataWithButtons: IPromoContent = {
+  promoTitle: 'Título',
+  promoDescription: RICHTEXT_SHORT_SIMPLE,
+  promoImage: {
+    url: 'https://via.placeholder.com/1280x392.png',
+    title: '',
+    height: 120,
+    width: 380,
+  },
+  cta: {
+    href: "#",
+    name: "Button"
+  },
+  ctaLabel: "Button",
+  internalLink: {
+    urlPath: "#"
+  }
+};
+
 export const mockVerticalCardProps = {
   data,
+  dataWithButtons
 };
