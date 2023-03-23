@@ -63,7 +63,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
               <Tab.List className="flex gap-[10px]">
                 {featuredContentsCollection.items.map((tab) => (
                   <Tab
-                    key={tab.name}
+                    key={`${tab.name}_tab`}
                     className={({ selected }) =>
                       classNames(
                         selected
@@ -83,7 +83,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
           <div className="relative">
             <Tab.Panels as={Fragment}>
               {featuredContentsCollection.items.map((collection) => (
-                <Tab.Panel key={collection.name} className="focus:outline-none">
+                <Tab.Panel key={`${collection.name}_content`} className="focus:outline-none">
                   {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
                     jsonToReactComponent(collection)
                   ) : (

@@ -83,7 +83,7 @@ const CarouselCategoriesBlock: React.FC<
           >
             {allowTouchMove && (
               <div className=' h-10 w-10'>
-                <div className={classNames(`${indexSlide + 1 === 1 ? " hidden": "flex"}`,' justify-center items-center')}>
+                <div className={classNames(`${indexSlide + 1 === 1 ? " hidden" : "flex"}`, ' justify-center items-center')}>
                   <div
                     className={`prevSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
                   >
@@ -91,7 +91,6 @@ const CarouselCategoriesBlock: React.FC<
                   </div>
                 </div>
               </div>
-
             )}
             <Swiper
               allowTouchMove={allowTouchMove}
@@ -129,7 +128,7 @@ const CarouselCategoriesBlock: React.FC<
               className="relative w-full"
             >
               {featuredContentsCollection?.items?.map((content) => (
-                <SwiperSlide key={content.name}>
+                <SwiperSlide key={content.name} className="h-auto">
                   <CarouselCategories
                     {...content}
                     queryParamName={queryParamName}
@@ -140,7 +139,7 @@ const CarouselCategoriesBlock: React.FC<
             </Swiper>
             {allowTouchMove && (
               <div className=' h-10 w-10'>
-                <div className={classNames(`${isEndSlider && "!hidden"}`,' justify-center items-center flex lg:hidden')}>
+                <div className={classNames(`${isEndSlider && "!hidden"}`, ' justify-center items-center flex lg:hidden')}>
                   <div
                     className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
                   >
@@ -148,7 +147,6 @@ const CarouselCategoriesBlock: React.FC<
                   </div>
                 </div>
               </div>
-
             )}
           </div>
         )}

@@ -20,7 +20,6 @@ const CarouselCategories: React.FC<
   value = null,
   filterName
 }) => {
-
     const { asPath } = useRouter();
     const fullPath = asPath.split("?")[0];
 
@@ -35,9 +34,14 @@ const CarouselCategories: React.FC<
     link = linkParameters ? link + linkParameters : link;
 
     return (
-      <article className="flex justify-center">
-        <Link href={link}>
-          <span className="flex flex-col gap-2 items-center h-full group">
+      <article className="flex justify-center h-full">
+        <Link href={link} className="h-full">
+          <span className={
+            classNames(
+              "flex flex-col gap-2 items-center h-full group",
+              (promoImage || image) ? "justify-start" : "justify-center"
+            )
+          }>
             {(promoImage || image) && (
               <figure className="relative w-[98px] h-[98px]">
                 <Image
