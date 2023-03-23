@@ -204,7 +204,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-down"
-                            className="w-6 h-6 absolute right-0"
+                            className="absolute right-0 w-6 h-6"
                             aria-hidden="true"
                           />
                         </div>
@@ -400,7 +400,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
-                                      content={{ urlPath: "#" }}
+                                      content={{ urlPath: "/dashboard/orders" }}
                                       className={classNames(
                                         active
                                           ? "bg-gray-100 text-gray-900"
@@ -469,7 +469,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <>
                       <CustomLink
                         content={{ urlPath: "/registro" }}
-                        className="h-full flex items-center text-center button button-primary"
+                        className="flex items-center h-full text-center button button-primary"
                       >
                         Regístrate
                       </CustomLink>
@@ -478,7 +478,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           urlPath:
                             "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
                         }}
-                        className="h-full flex items-center text-center button button-outline"
+                        className="flex items-center h-full text-center button button-outline"
                       >
                         Inicia sesión
                       </CustomLink>
@@ -494,7 +494,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               {/* Mobile */}
               <div className="relative z-10 flex items-center lg:hidden">
                 <Popover className="relative lg:hidden">
-                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none outline-none">
+                  <Popover.Button className="inline-flex items-center justify-center p-1 text-gray-400 rounded-md outline-none hover:bg-gray-100 hover:text-gray-500 focus:outline-none">
                     <span className="sr-only">Open menu</span>
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>

@@ -15,10 +15,11 @@ import {
 import { classNames } from "@/utils/functions";
 import { getCustomerInfo } from "@/lib/services/commerce-layer.service";
 import { useSession } from "next-auth/react";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const subNavigation = [
-  { name: "Cuenta", href: "#", icon: UserCircleIcon, current: true },
-  { name: "Ordenes", href: "#", icon: ShoppingCartIcon, current: false },
+  { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
+  { name: "Compras", href: "/dashboard/orders", icon: ShoppingCartIcon, current: false },
   { name: "Direcciones", href: "#", icon: MapPinIcon, current: false },
 ];
 
@@ -50,14 +51,14 @@ const Dashboard = () => {
   return (
     <>
       <div className="h-full">
-        <main className="mx-auto max-w-7xl pb-10 lg:py-12">
+        <main className="pb-10 mx-auto max-w-7xl lg:py-12">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-            <aside className="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
+            <aside className="px-2 py-6 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
               <nav className="space-y-1">
                 {subNavigation.map((item) => (
-                  <a
+                  <CustomLink
+                    content={{ urlPath: item.href }}
                     key={item.name}
-                    href={item.href}
                     className={classNames(
                       item.current
                         ? "bg-grey-90 text-blue-dark"
@@ -68,13 +69,12 @@ const Dashboard = () => {
                   >
                     <item.icon
                       className={classNames(
-                        item.current ? "" : "",
                         "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                       )}
                       aria-hidden="true"
                     />
                     <span className="truncate">{item.name}</span>
-                  </a>
+                  </CustomLink>
                 ))}
               </nav>
             </aside>
@@ -84,7 +84,7 @@ const Dashboard = () => {
               <section aria-labelledby="payment-details-heading">
                 <form action="#" method="POST">
                   <div className="shadow sm:overflow-hidden sm:rounded-md">
-                    <div className="bg-white py-6 px-4 sm:p-6">
+                    <div className="px-4 py-6 bg-white sm:p-6">
                       <div>
                         <h2
                           id="payment-details-heading"
@@ -97,7 +97,7 @@ const Dashboard = () => {
                         </p>
                       </div>
 
-                      <div className="mt-6 grid grid-cols-4 gap-6">
+                      <div className="grid grid-cols-4 gap-6 mt-6">
                         <div className="col-span-4 sm:col-span-2">
                           <label
                             htmlFor="first-name"
@@ -111,7 +111,7 @@ const Dashboard = () => {
                             id="first-name"
                             autoComplete="cc-given-name"
                             value={customerDataForm.name}
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             readOnly
                           />
                         </div>
@@ -129,7 +129,7 @@ const Dashboard = () => {
                             id="last-name"
                             autoComplete="cc-family-name"
                             value={customerDataForm.lastName}
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             readOnly
                           />
                         </div>
@@ -147,7 +147,7 @@ const Dashboard = () => {
                             id="email-address"
                             autoComplete="email"
                             value={customerDataForm.email}
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             readOnly
                           />
                         </div>
@@ -163,7 +163,7 @@ const Dashboard = () => {
                             id="document-type"
                             name="document-type"
                             autoComplete="document-type"
-                            className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           >
                             <option>{customerDataForm.docType}</option>
                           </select>
@@ -182,7 +182,7 @@ const Dashboard = () => {
                             id="document-num"
                             autoComplete="cc-csc"
                             value={customerDataForm.docNum}
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             readOnly
                           />
                         </div>
@@ -200,17 +200,17 @@ const Dashboard = () => {
                             id="cellphone-num"
                             autoComplete="cellphone-num"
                             value={customerDataForm.cellPhone}
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
+                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             readOnly
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <div className="px-4 py-3 text-right bg-gray-50 sm:px-6">
                       <button
                         type="submit"
                         disabled
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-dark py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2"
                       >
                         Actualizar
                       </button>
@@ -218,15 +218,6 @@ const Dashboard = () => {
                   </div>
                 </form>
               </section>
-            </div>
-            <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-              <button
-                type="submit"
-                disabled
-                className="inline-flex justify-center rounded-md border border-transparent bg-blue-dark py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
-              >
-                Actualizar
-              </button>
             </div>
           </div>
         </main>

@@ -14,6 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.2",
     "@commercelayer/js-auth": "^2.3.0",
+    "@commercelayer/react-components": "^4.3.3",
     "@commercelayer/sdk": "^4.24.1",
     "@contentful/rich-text-plain-text-renderer": "^16.0.2",
     "@contentful/rich-text-react-renderer": "^15.16.2",
