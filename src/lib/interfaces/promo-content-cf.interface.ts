@@ -1,4 +1,4 @@
-import { IImageAsset } from './assets-cf.interface';
+import { IAsset, IImageAsset } from './assets-cf.interface';
 import { ILink, IListItems } from "@/lib/interfaces/menu-cf.interface";
 import { IInquiryForm } from "./IForm-cf";
 import { IRichText } from './richtext-cf.interface';
@@ -52,6 +52,7 @@ export interface IPromoContent {
     backgroundColor?: string;
     showButton?: boolean;
     content?: IRichText;
+    mediaInternalLink?: IAsset;
 }
 
 export interface IPromoBlock extends IBlockProps {

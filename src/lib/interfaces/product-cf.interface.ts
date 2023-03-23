@@ -45,6 +45,7 @@ export interface IProductFilterBlock {
   products?: IPromoBlock;
   facets?: ISelect[];
   onFacetsChange?: (newQueryString: string) => void;
+  type?: string;
 };
 
 export interface IProductOverviewDetails {

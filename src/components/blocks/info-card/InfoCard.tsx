@@ -9,6 +9,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
     title,
     description,
     featuredContentsCollection,
+    listedContentsCollection,
     blockId,
     sysId,
     view,
@@ -55,6 +56,24 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
               showButton={view?.showButton}
             />
           ))}
+        </div>
+      )}
+
+      {listedContentsCollection?.items?.length > 0 && (
+        <div className="grid lg:grid-cols-4 col-span-3 gap-4">
+          {listedContentsCollection.items.map(content => (
+            <InfoCard 
+              key={content?.promoTitle?.es ?? content?.name}
+              promoTitle={content?.promoTitle?.es}
+              promoDescription={{json: content?.promoDescription?.es}}
+              ctaLabel={content?.ctaLabel?.es}
+              externalLink={content?.externalLink?.es}
+              internalLink={content?.internalLink?.es}
+              mediaInternalLink={content?.mediaInternalLink?.es}
+            />
+          ))
+
+          }
         </div>
       )}
 

@@ -3,6 +3,7 @@ import SelectAtom, { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import FeaturedProductBlock from "../product-featured/FeaturedProductBlock";
 
 import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProductBlockSkeleton/FeaturedProductBlockSkeleton";
+import InfoCardBlock from "../info-card/InfoCard";
 
 interface IWithLoadingData {
   isLoading?: boolean;
@@ -12,9 +13,10 @@ interface IWithLoadingData {
 const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   products,
   facets,
-  onFacetsChange=null,
+  onFacetsChange = null,
   isLoading = false,
-  error = false
+  error = false,
+  type,
 }) => {
   const onFacetsChangeHandle = (key, value) => {
     const { search: uri } = location;
@@ -24,9 +26,12 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
     const separator = uri.indexOf("?") !== -1 ? "&" : "?";
 
     if (uri.match(re)) {
-      newUri = value !== '*' ? uri.replace(re, "$1" + key + "=" + value + "$2") : uri.replace(re, "$2");
+      newUri =
+        value !== "*"
+          ? uri.replace(re, "$1" + key + "=" + value + "$2")
+          : uri.replace(re, "$2");
     } else {
-      newUri = value !== '*' ? uri + separator + key + "=" + value : uri;
+      newUri = value !== "*" ? uri + separator + key + "=" + value : uri;
     }
 
     onFacetsChange(newUri);
@@ -35,9 +40,13 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   const productGrill = () => {
     if (error) return <div>failed to load</div>;
     if (isLoading) return <FeaturedProductBlockSkeleton />;
-    return (
-      <FeaturedProductBlock {...products} />
-    );
+    return <FeaturedProductBlock {...products} />;
+  };
+
+  const rateGrill = () => {
+    if (error) return <div>failed to load</div>;
+    if (isLoading) return <FeaturedProductBlockSkeleton />;
+    return <InfoCardBlock {...products} />;
   };
 
   return (
@@ -55,8 +64,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
           })}
         </div>
       </div>
-
-      {productGrill()}
+      {type === "product" ? productGrill() : rateGrill()}
     </section>
   );
 };

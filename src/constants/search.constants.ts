@@ -31,4 +31,32 @@ export const FACET_QUERY_MAP = {
     ],
     modifier: 'range'
   },
+  "fields.month.es": {
+    title: 'Mes',
+    inputName: 'mes',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  },
+  "fields.year.es": {
+    title: 'Año',
+    inputName: 'año',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  },
+  "fields.zone.es": {
+    title: 'Zona',
+    inputName: 'zona',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  },
+  "fields.company.es": {
+    title: 'Compañia',
+    inputName: 'compañia',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  },
 };

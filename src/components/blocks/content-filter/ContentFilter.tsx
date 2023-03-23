@@ -44,27 +44,27 @@ const ContentFilter: React.FC<IContentFilter> = ({
       newQueryParams.indexOf("?") >= 0
         ? newQueryParams.substring(1)
         : newQueryParams;
+    if (searchQuery) {
+      const newQueryParamsArr = JSON.parse(
+        '{"' + searchQuery.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+        function (key, value) {
+          return key === "" ? value : decodeURIComponent(value);
+        }
+      );
+      const queryParams = [];
 
-    const newQueryParamsArr = JSON.parse(
-      '{"' + searchQuery.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-      function (key, value) {
-        return key === "" ? value : decodeURIComponent(value);
+      if (newQueryParamsArr && Object.keys(newQueryParamsArr)) {
+        for (const k in newQueryParamsArr) {
+          if (k === "slug") continue;
+
+          queryParams.push([k, newQueryParamsArr[k]]);
+        }
       }
-    );
 
-    const queryParams = [];
-
-    if (newQueryParamsArr && Object.keys(newQueryParamsArr)) {
-      for (const k in newQueryParamsArr) {
-        if (k === "slug") continue;
-
-        queryParams.push([k, newQueryParamsArr[k]]);
-      }
+      setQueryString(
+        new URLSearchParams([...fixedFilters, ...queryParams]).toString()
+      );
     }
-
-    setQueryString(
-      new URLSearchParams([...fixedFilters, ...queryParams]).toString()
-    );
   };
 
   useEffect(() => {
@@ -115,12 +115,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
         onFacetsChange={facetsChangeHandle}
         isLoading={isLoading}
         error={error}
+        type={contentTypesFilter[0]}
       />
 
-      {data?.totalPages > 1 &&
+      {data?.totalPages > 1 && (
         <div className="block w-full mb-12 my-4">
           <ul className="flex flex-row justify-center items-center gap-1 w-full">
-            {(data?.actualPage !== undefined && data.actualPage > 0) && (
+            {data?.actualPage !== undefined && data.actualPage > 0 && (
               <li>
                 <button
                   onClick={() => setPage(data.actualPage)}
@@ -158,12 +159,12 @@ const ContentFilter: React.FC<IContentFilter> = ({
               )}
           </ul>
         </div>
-      }
-      {data === null &&
-          <h3 className="block w-full mb-12 text-center">
-              No se encontraron resultados 
-          </h3>
-      }
+      )}
+      {data === null && (
+        <h3 className="block w-full mb-12 text-center">
+          No se encontraron resultados
+        </h3>
+      )}
     </div>
   );
 };

@@ -21,7 +21,6 @@ const BlockContentFilterQuery = `
   orderingOptions
   pageResults
   blockId
-  simpleView
 `;
 
 export default BlockContentFilterQuery;
