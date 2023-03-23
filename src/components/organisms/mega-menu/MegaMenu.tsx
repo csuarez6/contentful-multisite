@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import jsonToReactComponent from "@/lib/services/render-cards.service";
+import uuid from "react-uuid";
 
 const LinkElement = ({ item, isOpen }) => {
   return (
@@ -38,6 +39,7 @@ const LinkElement = ({ item, isOpen }) => {
 };
 
 const MegaMenuItem = ({ item, name, currentMenu }) => {
+  const uniqueId = `megamenu_${uuid()}`;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const columns = 6;
   const { asPath } = useRouter();
@@ -93,6 +95,14 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     setSubmenuH(screenH - (coor.top + 30));
   };
 
+  const handlerClick = (evt) => {
+    const item = evt.target;
+    const isChildren = item.closest(`#${uniqueId}`);
+    const isClickedInside = item.id === uniqueId || isChildren;
+    const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    if (!isTouchDevice && !isClickedInside) setIsOpenMenu(!isOpenMenu);
+  };
+
   useEffect(() => {
     if (isOpenMenu) openSubmenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,10 +114,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       onMouseOut={() => setIsOpenMenu(false)}
       onFocus={() => setIsOpenMenu(true)}
       onBlur={() => setIsOpenMenu(false)}
-      onClick={() => {
-        const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-        if (!isTouchDevice) setIsOpenMenu(false);
-      }}
+      onClick={handlerClick}
       className={classNames(
         "group/submenu min-h-[60px] px-3 first:pl-0 -my-2 flex items-center",
         isOpenMenu && "isOpen",
@@ -156,12 +163,13 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       {item.mainNavCollection?.items?.length > 0 && (
         <div
           ref={submenu}
+          id={uniqueId}
           style={{ maxHeight: `${submenuH}px` }}
           className={classNames(
-            "absolute inset-x-0 top-full z-10 transform transition-opacity duration-500 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
+            "absolute inset-x-0 top-full z-10 transform transition-opacity duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
             isOpenMenu
               ? "pointer-events-auto opacity-100"
-              : "pointer-events-none opacity-0"
+              : "pointer-events-none opacity-0 delay-100 duration-300"
           )}
         >
           <div className="relative flex py-6 my-6 gap-6">
