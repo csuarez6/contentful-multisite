@@ -1,4 +1,5 @@
 import { AssetImageQuery, AssetQuery  } from "./shared/asset.gql";
+import DefaultQuery from "./shared/default.gql";
 import RichtextQuery from "./shared/richtext.qql";
 
 const RateQuery = `
@@ -15,9 +16,23 @@ const RateQuery = `
         ${AssetImageQuery}
     }
     promoIcon
-    linkText
+    ctaLabel
     externalLink
-    internalLink{
+    internalLink {
+    ...on Page{
+        ${DefaultQuery}
+        slug
+        urlPath
+        promoTitle
+    }
+    ...on Product {
+        ${DefaultQuery}
+        slug
+        urlPath
+        promoTitle
+    }
+    }
+    mediaInternalLink{
         ${AssetQuery}
     }
 `;

@@ -12,8 +12,8 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).send({ message: 'Bad request (no body)' });
   }
 
-  const jsonBody = req.body;
-  const route = jsonBody.parameters.urlPath;
+  const jsonBody = typeof req.body == 'string' ? JSON.parse(req.body) : req.body;
+  const route = jsonBody.parameters.urlPath.es;
 
   try {
     await res.revalidate(route);

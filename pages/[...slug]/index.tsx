@@ -114,6 +114,7 @@ export const getStaticProps: GetStaticProps = async (
         headerInfo,
         menuNavkey: context.params.slug[0],
         helpButton,
+        preview: context.preview ?? false
       },
     },
     revalidate,

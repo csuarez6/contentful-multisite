@@ -53,7 +53,7 @@ const CONTENTFUL_QUERY_MAPS = {
     query: TrademarkQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_RATE]: {
-    queryName: 'aux_Rate',
+    queryName: 'auxRate',
     query: RateQuery,
   },
 };

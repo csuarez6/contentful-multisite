@@ -33,10 +33,5 @@ export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? (defaultLayout);
 
-  return getLayout(
-  <>
-    {/* <GoogleAnalytics trackPageViews /> */}
-    <Component {...pageProps} />
-  </>
-  , pageProps);
+  return getLayout(<Component {...pageProps} />, pageProps);
 }

@@ -8,7 +8,7 @@ import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 
-const getPageContent = async (urlPath, preview = false) => {
+const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (!urlPath || urlPath === '') {
     throw new Error(`«urlPath» is required`);
   }
@@ -64,15 +64,17 @@ const getPageContent = async (urlPath, preview = false) => {
     pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
   }
 
-  const referencesContent = await getReferencesContent({ content: pageContent, preview });
+  if (fullContent) {
+    const referencesContent = await getReferencesContent({ content: pageContent, preview });
 
-  if (referencesContent) {
-    _.merge(pageContent, referencesContent);
-  }
+    if (referencesContent) {
+      _.merge(pageContent, referencesContent);
+    }
 
-  if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
-    const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
-    _.merge(pageContent, commercelayerProduct);
+    if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
+      const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
+      _.merge(pageContent, commercelayerProduct);
+    }
   }
 
   return pageContent;

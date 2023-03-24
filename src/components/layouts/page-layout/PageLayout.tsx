@@ -6,9 +6,12 @@ import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
 import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 import HelpButton from "@/components/organisms/help-button/HelpButton";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
+import Link from "next/link";
 
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection, __typename }) => {
+  const { preview } = layout;
   const { asPath } = useRouter() ?? { asPath: "/" };
+
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
   const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
@@ -93,6 +96,15 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
           key="product-jsonld"
         />
       </Head>
+
+      {preview && (
+        <div className="z-30 fixed bottom-0 left-0 w-full h-8 flex justify-between items-center py-2 px-4 bg-category-orange-light-40 text-white font-semibold">
+          <span>Estás en modo previsualización (contenido en borrador no publicado)</span>
+          <Link href="/api/preview/exit" className="underline hover:text-red-800">
+            Exit
+          </Link>
+        </div>
+      )}
 
       <div className="min-h-screen flex flex-col">
         <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name}/>
