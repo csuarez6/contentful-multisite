@@ -12,13 +12,11 @@ import ViewProductGrill from "../views/product-grill.gql";
 import ViewProductGrid from "../views/product-grid.gql";
 import ViewServicesTabs from "../views/services-tabs.gql";
 import ViewFeaturedTabs from "../views/featured-tabs.gql";
-import ViewListedTabs from "../views/listed-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
 import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import ViewCarouselCategories from "../views/carousel-categories.gql";
 import ViewFeaturedProducts from "../views/featured-products.gql";
-import ViewQueryForm from "../views/QueryForm.gql";
 import ViewVideoSlider from "../views/videoSlider.gql";
 import ViewSecondaryBanner from "../views/secondaryBanner.gql";
 import ViewRichText from "../views/richText.gql";
@@ -113,9 +111,6 @@ const BlockPromoContentQuery = `
     ...on ViewFeaturedTabs {
       ${ViewFeaturedTabs}
     }
-    ...on ViewListedTabs {
-      ${ViewListedTabs}
-    }
     ...on ViewServicesCard {
       ${ViewServicesCard}
     }
@@ -130,9 +125,6 @@ const BlockPromoContentQuery = `
     }
     ...on ViewFeaturedProducts{
       ${ViewFeaturedProducts}
-    }
-    ...on ViewQueryForm{
-      ${ViewQueryForm}
     }
     ...on ViewVideoSlider{
       ${ViewVideoSlider}
