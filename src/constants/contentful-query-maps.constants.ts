@@ -54,6 +54,7 @@ const CONTENTFUL_QUERY_MAPS = {
   },
   [CONTENTFUL_TYPENAMES.AUX_RATE]: {
     queryName: 'auxRate',
+    algoliaType: 'aux_Rate',
     query: RateQuery,
   },
 };

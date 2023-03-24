@@ -64,16 +64,9 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
           {listedContentsCollection.items.map(content => (
             <InfoCard 
               key={content?.promoTitle?.es ?? content?.name}
-              promoTitle={content?.promoTitle?.es}
-              promoDescription={{json: content?.promoDescription?.es}}
-              ctaLabel={content?.ctaLabel?.es}
-              externalLink={content?.externalLink?.es}
-              internalLink={content?.internalLink?.es}
-              mediaInternalLink={content?.mediaInternalLink?.es}
+              {...content}
             />
-          ))
-
-          }
+          ))}
         </div>
       )}
 

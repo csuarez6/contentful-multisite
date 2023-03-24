@@ -64,10 +64,10 @@ const getAlgoliaResults = async ({
   );
 
   for (const contentTypeFilter of contentTypesFilter) {
-    const { queryName: type } = CONTENTFUL_QUERY_MAPS[
+    const { queryName: type, algoliaType } = CONTENTFUL_QUERY_MAPS[
       _.upperFirst(contentTypeFilter)
     ] ?? { queryName: null };
-    if (type) types.push(type);
+    if (type || algoliaType) types.push( algoliaType ?? type);
   }
 
   const contentTypeFilterSearchQuery = types.map(

@@ -36,6 +36,10 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
     urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
+  if(!urlPath && content?.mediaInternalLink?.url) {
+    urlPath = content.mediaInternalLink.url.replace(re, '');
+    urlPath = /^[http|mailto|tel|#]/.test(urlPath) ? urlPath : `/${urlPath}`;
+  }
   return urlPath ? urlPath + (content.linkParameters ?? ''): '/';
 };
 
@@ -43,7 +47,10 @@ export const getLinkProps = (content: GetUrlPathProps) => {
   let textLink = content?.name ?? '';
 
   const href = getUrlPath(content);
-  const isExternalLink = !content?.internalLink?.urlPath && content?.externalLink;
+  let isExternalLink;
+  if(!content?.internalLink?.urlPath){
+    isExternalLink = content?.mediaInternalLink?.url ?? content?.externalLink;
+  }
   const icon = getIconView(content?.linkView);
 
   if(content?.internalLink?.name){
