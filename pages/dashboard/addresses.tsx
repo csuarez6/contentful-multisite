@@ -28,6 +28,7 @@ import { classNames } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
+import Icon from "@/components/atoms/icon/Icon";
 
 const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -49,6 +50,16 @@ const messages: any = [
         message: `Must be valid email`,
     },
 ];
+
+const EmptyBlock = (): JSX.Element => {
+    return (
+        <div className="flex flex-col items-center content-center">
+            <Icon className="w-[168px] h-[127px] text-blue-dark" icon="place" />
+            <p className="mt-4 text-sm font-semibold md:text-lg text-blue-dark">No existen direcciones</p>
+            <p className="mt-1 text-gray-500">Por favor, intenta registrar una dirección</p>
+        </div>
+    );
+};
 
 const DashboardAddresses = () => {
     const [config, setConfig] = useState({
@@ -100,80 +111,73 @@ const DashboardAddresses = () => {
                     </aside>
 
                     {/* Payment details */}
-                    <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+                    <div className="space-y-3 sm:px-6 lg:col-span-9 lg:px-0">
                         <div>
-                            <h2 className="text-lg font-medium leading-6 text-gray-900">
+                            <h2 className="text-lg font-medium text-blue-dark">
                                 Direcciones
                             </h2>
                         </div>
                         <CommerceLayer {...config}>
                             <CustomerContainer>
                                 <AddressesContainer>
-                                    <AddressesEmpty>{() => <p>No hay direcciones disponibles.</p>}</AddressesEmpty>
-                                    <div className="w-full p-5">
-                                        <div className="flex flex-wrap w-full mx-auto">
-                                            <Address className="w-1/3 p-2 m-2 border rounded shadow-sm hover:border-blue-500">
-                                                <div className="flex flex-col justify-between h-full">
-                                                    <div className="flex font-bold">
-                                                        <AddressField name="first_name" />
-                                                        <AddressField name="last_name" className="ml-1" />
-                                                    </div>
-                                                    <div>
-                                                        <AddressField className="w-2/3" name="full_address" />
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <div>
-                                                            <AddressField
-                                                                className="cursor-pointer"
-                                                                type="edit"
-                                                                label="Edit"
-                                                                onClick={(address) => {
-                                                                    setAddress(address);
-                                                                    setShowForm(true);
-                                                                }}
-                                                            />
+                                    <AddressesEmpty>{() => (!showForm) ? (<EmptyBlock />) : <></>}</AddressesEmpty>
+                                    <div className="w-full">
+                                        {!showForm ? (
+                                            <>
+                                                <div className="flex flex-wrap w-full mx-auto">
+                                                    <Address className="relative flex w-1/3 p-4 m-2 bg-white border rounded-lg shadow-sm cursor-pointer focus:outline-none">
+                                                        <div className="flex flex-col justify-between h-full">
+                                                            <div className="flex font-bold">
+                                                                <AddressField name="first_name" />
+                                                                <AddressField name="last_name" className="ml-1" />
+                                                            </div>
+                                                            <div>
+                                                                <AddressField className="w-2/3" name="full_address" />
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <div>
+                                                                    <AddressField
+                                                                        className="text-sm font-medium text-indigo-600 cursor-pointer hover:text-indigo-500"
+                                                                        type="edit"
+                                                                        label="Editar"
+                                                                        onClick={(address) => {
+                                                                            setAddress(address);
+                                                                            setShowForm(true);
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <AddressField
+                                                                        className="text-sm font-medium text-red-600 cursor-pointer hover:text-red-500"
+                                                                        type="delete"
+                                                                        label="Eliminar"
+                                                                        onClick={() => { console.log("test Address"); }}
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <AddressField
-                                                                className="cursor-pointer"
-                                                                type="delete"
-                                                                label="Delete"
-                                                                onClick={() => { console.log("test Address"); }}
-                                                            />
-                                                        </div>
+                                                    </Address>
+                                                </div>
+                                                <div className="flex justify-center mt-3 ml-2">
+                                                    <div
+                                                        className="flex items-center justify-center w-full px-2 py-2 text-center text-gray-500 transition duration-200 ease-in border border-gray-300 rounded cursor-pointer bg-grey-90 hover:border-gray-400"
+                                                        onClick={() => {
+                                                            setAddress({});
+                                                            setShowForm(true);
+                                                        }}
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256" className="w-5 md:w-6">
+                                                            <rect width="256" height="256" fill="none"></rect>
+                                                            <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"></path>
+                                                        </svg>
+                                                        <p className="text-xs px-0.5">Agregar dirección</p>
                                                     </div>
                                                 </div>
-                                            </Address>
-                                        </div>
-                                        <div className="flex justify-center mt-3 ml-2">
-                                            <button
-                                                title='button'
-                                                type="button"
-                                                className="w-[250px] justify-center gap-3 inline-flex items-center px-4 py-2 font-bold text-gray-800 bg-gray-300 rounded hover:bg-gray-400"
-                                                onClick={() => {
-                                                    setAddress({});
-                                                    setShowForm(true);
-                                                }}
-                                            >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                    aria-hidden="true"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                                <span>Agregar</span>
-                                            </button>
-                                        </div>
+                                            </>
+                                        ) : null}
                                         {showForm ? (
                                             <HeadingCard
-                                                title="Llenar formulario"
+                                                title="Dirección"
                                                 headClasses="w-full !justify-center text-2xl text-blue-dark mt-2"
                                                 hideCheck={true}
                                             >
@@ -182,57 +186,59 @@ const DashboardAddresses = () => {
                                                     autoComplete="on"
                                                     className="p-2"
                                                 >
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_first_name"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Nombres
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressInput
-                                                                data-cy="billing_address_first_name"
-                                                                name="billing_address_first_name"
-                                                                type="text"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder="Ingresar Nombres"
-                                                                value={address?.first_name || ''}
-                                                            />
+                                                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_first_name"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Nombres
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressInput
+                                                                    data-cy="billing_address_first_name"
+                                                                    name="billing_address_first_name"
+                                                                    type="text"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder="Ingresar Nombres"
+                                                                    value={address?.first_name || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_first_name_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_first_name"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_first_name_error"
-                                                                resource="addresses"
-                                                                field="billing_address_first_name"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_last_name"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Apellidos
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressInput
-                                                                data-cy="billing_address_last_name"
-                                                                name="billing_address_last_name"
-                                                                type="text"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder="Ingresar Apellidos"
-                                                                value={address?.last_name || ''}
-                                                            />
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_last_name"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Apellidos
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressInput
+                                                                    data-cy="billing_address_last_name"
+                                                                    name="billing_address_last_name"
+                                                                    type="text"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder="Ingresar Apellidos"
+                                                                    value={address?.last_name || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_last_name_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_last_name"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_last_name_error"
-                                                                resource="addresses"
-                                                                field="billing_address_last_name"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
                                                     </div>
                                                     <div>
                                                         <label
@@ -260,115 +266,117 @@ const DashboardAddresses = () => {
                                                             />
                                                         </p>
                                                     </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_city"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Ciudad
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressInput
-                                                                data-cy="billing_address_city"
-                                                                name="billing_address_city"
-                                                                type="text"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder="Ingresar Ciudad"
-                                                                value={address?.city || ''}
-                                                            />
+                                                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_city"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Ciudad
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressInput
+                                                                    data-cy="billing_address_city"
+                                                                    name="billing_address_city"
+                                                                    type="text"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder="Ingresar Ciudad"
+                                                                    value={address?.city || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_city_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_city"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_city_error"
-                                                                resource="addresses"
-                                                                field="billing_address_city"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_country_code"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            País
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressCountrySelector
-                                                                data-cy="billing_address_country_code"
-                                                                name="billing_address_country_code"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder={{
-                                                                    value: '',
-                                                                    label: 'Sleccionar País',
-                                                                    disabled: true,
-                                                                }}
-                                                                value={address?.country_code || ''}
-                                                            />
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_country_code"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                País
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressCountrySelector
+                                                                    data-cy="billing_address_country_code"
+                                                                    name="billing_address_country_code"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder={{
+                                                                        value: '',
+                                                                        label: 'Sleccionar País',
+                                                                        disabled: true,
+                                                                    }}
+                                                                    value={address?.country_code || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_country_code_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_country_code"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_country_code_error"
-                                                                resource="addresses"
-                                                                field="billing_address_country_code"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_state_code"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Estado
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressStateSelector
-                                                                data-cy="billing_address_state_code"
-                                                                name="billing_address_state_code"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder={{
-                                                                    value: '',
-                                                                    label: 'Seleccionar estado',
-                                                                    disabled: true,
-                                                                }}
-                                                                value={address?.state_code || ''}
-                                                            />
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_state_code"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Estado
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressStateSelector
+                                                                    data-cy="billing_address_state_code"
+                                                                    name="billing_address_state_code"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder={{
+                                                                        value: '',
+                                                                        label: 'Seleccionar estado',
+                                                                        disabled: true,
+                                                                    }}
+                                                                    value={address?.state_code || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_state_code_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_state_code"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_state_code_error"
-                                                                resource="addresses"
-                                                                field="billing_address_state_code"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="billing_address_zip_code"
-                                                            className="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Código postal
-                                                        </label>
-                                                        <div className="mt-1">
-                                                            <AddressInput
-                                                                data-cy="billing_address_zip_code"
-                                                                name="billing_address_zip_code"
-                                                                type="text"
-                                                                className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
-                                                                placeholder="Código Postal"
-                                                                value={address?.zip_code || ''}
-                                                            />
+                                                        <div>
+                                                            <label
+                                                                htmlFor="billing_address_zip_code"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Código postal
+                                                            </label>
+                                                            <div className="mt-1">
+                                                                <AddressInput
+                                                                    data-cy="billing_address_zip_code"
+                                                                    name="billing_address_zip_code"
+                                                                    type="text"
+                                                                    className="border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                                                                    placeholder="Código Postal"
+                                                                    value={address?.zip_code || ''}
+                                                                />
+                                                            </div>
+                                                            <p className="mt-2 text-sm text-red-600" id="email-error">
+                                                                <Errors
+                                                                    data-cy="billing_address_zip_code_error"
+                                                                    resource="addresses"
+                                                                    field="billing_address_zip_code"
+                                                                    messages={messages}
+                                                                />
+                                                            </p>
                                                         </div>
-                                                        <p className="mt-2 text-sm text-red-600" id="email-error">
-                                                            <Errors
-                                                                data-cy="billing_address_zip_code_error"
-                                                                resource="addresses"
-                                                                field="billing_address_zip_code"
-                                                                messages={messages}
-                                                            />
-                                                        </p>
                                                     </div>
                                                     <div>
                                                         <label
@@ -433,7 +441,7 @@ const DashboardAddresses = () => {
                                                     <SaveAddressesButton
                                                         data-cy="save-addresses-button"
                                                         className="button button-primary"
-                                                        // onClick={() => setShowForm(false)}
+                                                        onClick={() => setShowForm(false)}
                                                         addressId={address.id}
                                                         label="Guardar"
                                                     />
