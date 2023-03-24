@@ -44,7 +44,7 @@ const CarouselCategoriesBlock: React.FC<
     const carouselAlignTitleClass = () => {
       switch (view.alignTitle) {
         case "Left":
-          return "md:w-[331px] md:max-w-[25%] md:text-left md:shrink-0";
+          return "md:w-[331px] md:min-w-[331px] 2md:max-w-[25%] md:text-left md:shrink-0";
         case "Top":
           return "text-center mb-3";
         default:
@@ -78,7 +78,7 @@ const CarouselCategoriesBlock: React.FC<
           <div
             className={classNames(
               "flex flex-nowrap relative grow w-full items-center",
-              view?.alignTitle === "Left" && "md:max-w-[75%] md:pl-9"
+              view?.alignTitle === "Left" && "md:max-w-[calc(100%-331px)] md:pl-[14px] lg:!pl-5"
             )}
           >
             {allowTouchMove && (
@@ -110,14 +110,21 @@ const CarouselCategoriesBlock: React.FC<
                   slidesPerView: 3,
                   spaceBetween: 30,
                 },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
                 960: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1120: {
                   slidesPerView: 4,
                   spaceBetween: 20,
-
                 },
-                1024: {
+                1280: {
                   slidesPerView: view?.columnsSize ?? 5,
-                  spaceBetween: 40,
+                  spaceBetween: 10,
                 }
               }}
               modules={[Pagination, Navigation]}
@@ -139,7 +146,7 @@ const CarouselCategoriesBlock: React.FC<
             </Swiper>
             {allowTouchMove && (
               <div className=' h-10 w-10'>
-                <div className={classNames(`${isEndSlider && "!hidden"}`, ' justify-center items-center flex lg:hidden')}>
+                <div className={classNames(`${isEndSlider && "!hidden"}`, ' justify-center items-center flex', featuredContentsCollection.items.length < 6 && "lg:hidden")}>
                   <div
                     className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
                   >
