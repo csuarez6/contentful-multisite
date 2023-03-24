@@ -43,7 +43,7 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_VIDEO_SLIDER = "ViewVideoSlider",
   VIEW_RICH_TEXT = "ViewRichText",
   VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
-  VIEW_TABS_VERTICAL = "ViewTabsVertical",
+  VIEW_TABS_VERTICAL = "Tabs verticales",
 
   FORM_RPO = "RPO",
   FORM_VANTILISTO = "Vantilisto",
