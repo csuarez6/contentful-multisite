@@ -102,6 +102,16 @@ const OrderStatusChip = ({ status }: Props): JSX.Element => {
     );
 };
 
+const EmptyBlock = (): JSX.Element => {
+    return (
+        <div className="flex flex-col items-center content-center">
+            <Icon className="w-[168px] h-[127px] text-blue-dark" icon="shopping-cart" />
+            <p className="mt-4 text-sm font-semibold md:text-lg text-blue-dark">No existen compras</p>
+            <p className="mt-1 text-gray-500">Te invitamos a realizar tu primera compra!</p>
+        </div>
+    );
+};
+
 const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
     { name: "Compras", href: "#", icon: ShoppingCartIcon, current: true },
@@ -120,7 +130,7 @@ const DashboardOrders = () => {
         if (status === "authenticated") {
             setConfig({
                 accessToken: session?.user["accessToken"],
-                endpoint: "https://vanti-poc.commercelayer.io"
+                endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT
             });
         }
     }, [status, session]);
@@ -158,7 +168,7 @@ const DashboardOrders = () => {
                     {/* Payment details */}
                     <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
                         <div>
-                            <h2 className="text-lg font-medium leading-6 text-gray-900">
+                            <h2 className="text-lg font-medium text-blue-dark">
                                 Mis Compras
                             </h2>
                         </div>
@@ -180,7 +190,7 @@ const DashboardOrders = () => {
                                     pageSize={5}
                                     paginationContainerClassName="flex justify-between items-center"
                                 >
-                                    <OrderListEmpty>{() => <p>No hay compraas disponibles.</p>}</OrderListEmpty>
+                                    <OrderListEmpty>{() => <EmptyBlock />}</OrderListEmpty>
                                     <OrderListRow field="number">
                                         {({ cell, order, ...p }) => {
                                             if (!order) return <></>;

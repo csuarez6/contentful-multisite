@@ -72,7 +72,7 @@ const DashboardAddresses = () => {
         if (status === "authenticated") {
             setConfig({
                 accessToken: session?.user["accessToken"],
-                endpoint: "https://vanti-poc.commercelayer.io"
+                endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT
             });
         }
     }, [status, session]);
@@ -125,7 +125,7 @@ const DashboardAddresses = () => {
                                         {!showForm ? (
                                             <>
                                                 <div className="flex flex-wrap w-full mx-auto">
-                                                    <Address className="relative flex w-1/3 p-4 m-2 bg-white border rounded-lg shadow-sm cursor-pointer focus:outline-none">
+                                                    <Address className="relative flex w-1/3 p-4 m-2 bg-white border rounded-lg shadow-sm focus:outline-none">
                                                         <div className="flex flex-col justify-between h-full">
                                                             <div className="flex font-bold">
                                                                 <AddressField name="first_name" />
@@ -137,7 +137,7 @@ const DashboardAddresses = () => {
                                                             <div className="flex justify-between">
                                                                 <div>
                                                                     <AddressField
-                                                                        className="text-sm font-medium text-indigo-600 cursor-pointer hover:text-indigo-500"
+                                                                        className="text-sm font-medium text-indigo-300 cursor-pointer hover:text-indigo-600"
                                                                         type="edit"
                                                                         label="Editar"
                                                                         onClick={(address) => {
@@ -148,10 +148,10 @@ const DashboardAddresses = () => {
                                                                 </div>
                                                                 <div>
                                                                     <AddressField
-                                                                        className="text-sm font-medium text-red-600 cursor-pointer hover:text-red-500"
+                                                                        className="text-sm font-medium text-red-300 cursor-pointer hover:text-red-600"
                                                                         type="delete"
                                                                         label="Eliminar"
-                                                                        onClick={() => { console.log("test Address"); }}
+                                                                        onClick={() => { console.log("Remove Address"); }}
                                                                     />
                                                                 </div>
                                                             </div>

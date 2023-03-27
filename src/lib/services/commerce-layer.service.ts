@@ -129,6 +129,7 @@ export const getCLAdminCLient = async () => {
   }
 };
 
+/** Create customer */
 export const createCustomer = async ({
   email,
   password,
@@ -167,6 +168,37 @@ export const createCustomer = async ({
   }
 };
 
+/** Update customer metadata */
+export const updateCustomerMetadata = async ({
+  accessToken,
+  name,
+  lastName,
+  documentType,
+  documentNumber,
+  cellPhone,
+}) => {
+  try {
+    const cl = await getCommerlayerClient(accessToken);
+    const { owner } = jwtDecode(accessToken) as JWTProps;
+    const customerID = owner?.id;
+    await cl.customers.update({
+      id: customerID,
+      metadata: {
+        name: name,
+        lastName: lastName,
+        documentType: documentType,
+        documentNumber: documentNumber,
+        cellPhone: cellPhone,
+      }
+    });
+    return { status: 200 };
+  } catch (error) {
+    console.error('Error customerUpdate: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** get customer data */
 export const getCustomerInfo = async (accessToken: string) => {
   try {
     const cl = await getCommerlayerClient(accessToken);

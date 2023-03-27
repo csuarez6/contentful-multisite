@@ -5,8 +5,7 @@ import {
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
 } from "@/constants/contentful-ids.constants";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   UserCircleIcon,
   ShoppingCartIcon,
@@ -16,37 +15,142 @@ import { classNames } from "@/utils/functions";
 import { getCustomerInfo } from "@/lib/services/commerce-layer.service";
 import { useSession } from "next-auth/react";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
+import Textbox from "@/components/atoms/input/textbox/TextBox";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import SelectInput from '@/components/atoms/selectInput/SelectInput';
+import Icon from "@/components/atoms/icon/Icon";
 
 const subNavigation = [
   { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
   { name: "Compras", href: "/dashboard/orders", icon: ShoppingCartIcon, current: false },
-  { name: "Direcciones", href: "#", icon: MapPinIcon, current: false },
+  { name: "Direcciones", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
 ];
 
+export interface ITemsForm {
+  name: string;
+  lastName: string;
+  documentType: string;
+  documentNumber: string;
+  email: string;
+  cellPhone: string;
+}
+
+const schema = yup.object({
+  name: yup.string().required("Dato Requerido").min(3, "Mínimo 3 caracteres"),
+  lastName: yup.string().required("Dato Requerido").min(3, "Mínimo 3 caracteres"),
+  documentType: yup.string().required("Dato Requerido"),
+  documentNumber: yup.number()
+    .required("Dato Requerido")
+    .nullable()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .positive("Solo números positivos"),
+  cellPhone: yup.number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable()
+    .required("Dato Requerido")
+    .min(8, "Faltan Números")
+});
+
 const Dashboard = () => {
+  const { status, data: session } = useSession();
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    color: "red"
+  });
   const [customerDataForm, setCustomerDataForm] = useState({
     name: "",
     lastName: "",
+    documentType: "",
+    documentNumber: "",
     email: "",
-    docType: "",
-    docNum: "",
     cellPhone: "",
   });
 
-  const { status, data: session } = useSession();
-  if (status === "authenticated" && customerDataForm.email === "") {
-    getCustomerInfo(session.user["accessToken"]).then((data) => {
-      const info = data.data;
-      setCustomerDataForm({
-        name: info?.metadata["name"],
-        lastName: info?.metadata["lastName"],
-        email: info?.email,
-        docType: info?.metadata["documentType"],
-        docNum: info?.metadata["documentNumber"],
-        cellPhone: info?.metadata["cellPhone"],
+  const { register, handleSubmit, setValue, formState: { errors, isValid } } = useForm<ITemsForm>({
+    mode: 'onChange',
+    resolver: yupResolver(schema),
+    shouldUnregister: true,
+    defaultValues: customerDataForm
+  });
+
+  const selectOptions = [
+    {
+      label: 'Seleccione un tipo de documento',
+      value: ''
+    },
+    {
+      label: 'Cédula',
+      value: 'cedula'
+    },
+    {
+      label: 'Pasaporte',
+      value: 'pasaporte'
+    },
+  ];
+
+  useEffect(() => {
+    if (status === "authenticated" && customerDataForm.email === "") {
+      getCustomerInfo(session.user["accessToken"]).then((data) => {
+        const info = data.data;
+        setCustomerDataForm({
+          name: info?.metadata["name"],
+          lastName: info?.metadata["lastName"],
+          documentType: info?.metadata["documentType"],
+          documentNumber: info?.metadata["documentNumber"],
+          email: info?.email,
+          cellPhone: info?.metadata["cellPhone"],
+        });
       });
-    });
-  }
+    }
+  }, [status, session, customerDataForm.email]);
+
+  useEffect(() => {
+    setValue('name', customerDataForm.name);
+    setValue('lastName', customerDataForm.lastName);
+    setValue('documentType', customerDataForm.documentType);
+    setValue('documentNumber', customerDataForm.documentNumber);
+    setValue('email', customerDataForm.email);
+    setValue('cellPhone', customerDataForm.cellPhone);
+  }, [customerDataForm]);
+
+  const onSubmit = (data: ITemsForm) => {
+    fetch("/api/customer-myaccount/profile", {
+      method: "POST",
+      body: JSON.stringify({
+        ...data
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        const { error } = json;
+        if (!error) {
+          setErrorMessage("Datos guardados con éxito!");
+          setShowAlert({ show: true, color: "green" });
+        } else {
+          setErrorMessage({ error });
+          setShowAlert({ show: true, color: "red" });
+        }
+      })
+      .catch((err) => {
+        if (!navigator.onLine) {
+          setErrorMessage(
+            "Comprueba tu conexión a internet e intenta de nuevo por favor."
+          );
+          setShowAlert({ show: true, color: "red" });
+        }
+        console.warn(err);
+      })
+      .finally(() => {
+        // setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
+      });
+  };
 
   return (
     <>
@@ -81,143 +185,127 @@ const Dashboard = () => {
 
             {/* Payment details */}
             <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-              <section aria-labelledby="payment-details-heading">
-                <form action="#" method="POST">
-                  <div className="shadow sm:overflow-hidden sm:rounded-md">
-                    <div className="px-4 py-6 bg-white sm:p-6">
-                      <div>
-                        <h2
-                          id="payment-details-heading"
-                          className="text-lg font-medium leading-6 text-gray-900"
-                        >
-                          Detalles usuario
-                        </h2>
-                        <p className="mt-1 text-sm text-gray-500">
-                          Información
-                        </p>
+              <HeadingCard
+                title="Detalles usuario"
+                headClasses="w-full !justify-center text-2xl text-blue-dark mt-2"
+                hideCheck={true}
+              >
+                {errorMessage && showAlert.show && (
+                  <div className={classNames(
+                    "p-4 rounded-md",
+                    `bg-${showAlert.color}-50`
+                  )}
+                  >
+                    <div className="flex">
+                      <div className="ml-3">
+                        <p className={classNames(
+                          "text-sm font-medium",
+                          `text-${showAlert.color}-800`
+                        )}
+                        >{errorMessage}</p>
                       </div>
-
-                      <div className="grid grid-cols-4 gap-6 mt-6">
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="first-name"
-                            className="block text-sm font-medium text-gray-700"
+                      <div className="pl-3 ml-auto">
+                        <div className="-mx-1.5 -my-1.5">
+                          <button
+                            onClick={() => setShowAlert({ show: false, color: "red" })}
+                            type="button"
+                            className={classNames(
+                              "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                              `text-${showAlert.color}-500 bg-${showAlert.color}-50 hover:bg-${showAlert.color}-100 focus:ring-${showAlert.color}-600 focus:ring-offset-${showAlert.color}-50`
+                            )}
                           >
-                            Nombres
-                          </label>
-                          <input
-                            type="text"
-                            name="first-name"
-                            id="first-name"
-                            autoComplete="cc-given-name"
-                            value={customerDataForm.name}
-                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="last-name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Apellidos
-                          </label>
-                          <input
-                            type="text"
-                            name="last-name"
-                            id="last-name"
-                            autoComplete="cc-family-name"
-                            value={customerDataForm.lastName}
-                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="email-address"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Correo Electrónico
-                          </label>
-                          <input
-                            type="text"
-                            name="email-address"
-                            id="email-address"
-                            autoComplete="email"
-                            value={customerDataForm.email}
-                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-1">
-                          <label
-                            htmlFor="document-type"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Tipo Documento
-                          </label>
-                          <select
-                            id="document-type"
-                            name="document-type"
-                            autoComplete="document-type"
-                            className="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                          >
-                            <option>{customerDataForm.docType}</option>
-                          </select>
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-1">
-                          <label
-                            htmlFor="document-num"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Número Documento
-                          </label>
-                          <input
-                            type="text"
-                            name="document-num"
-                            id="document-num"
-                            autoComplete="cc-csc"
-                            value={customerDataForm.docNum}
-                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                            readOnly
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="cellphone-num"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Celular
-                          </label>
-                          <input
-                            type="text"
-                            name="cellphone-num"
-                            id="cellphone-num"
-                            autoComplete="cellphone-num"
-                            value={customerDataForm.cellPhone}
-                            className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
-                            readOnly
-                          />
+                            <span className="sr-only">Dismiss</span>
+                            <Icon className="w-5 h-5" icon="cancel" />
+                          </button>
                         </div>
                       </div>
-                    </div>
-                    <div className="px-4 py-3 text-right bg-gray-50 sm:px-6">
-                      <button
-                        type="submit"
-                        disabled
-                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2"
-                      >
-                        Actualizar
-                      </button>
                     </div>
                   </div>
+                )}
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="flex flex-col gap-6 mt-6">
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                      <Textbox
+                        id="name"
+                        name="name"
+                        type="text"
+                        label="Nombres"
+                        className="form-input"
+                        isError={!!errors.name}
+                        errorMessage={errors?.name?.message}
+                        autoComplete="on"
+                        {...register('name')}
+                      />
+
+                      <Textbox
+                        id="lastName"
+                        type="text"
+                        label="Apellidos"
+                        className="form-input"
+                        isError={!!errors.lastName}
+                        errorMessage={errors?.lastName?.message}
+                        autoComplete="on"
+                        {...register('lastName')}
+                      />
+                    </div>
+
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                      <SelectInput
+                        selectOptions={selectOptions}
+                        className=""
+                        label='Tipo Documento'
+                        id='documentType'
+                        isError={!!errors.documentType}
+                        errorMessage={errors?.documentType?.message}
+                        {...register('documentType')}
+                      />
+
+                      <Textbox
+                        id="documentNumber"
+                        type="text"
+                        label="Número Documento"
+                        className="form-input"
+                        isError={!!errors.documentNumber}
+                        errorMessage={errors?.documentNumber?.message}
+                        autoComplete="on"
+                        {...register('documentNumber')}
+                      />
+                    </div>
+
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                      <Textbox
+                        id="email"
+                        type="email"
+                        label="Correo Electrónico"
+                        className="form-input text-grey-60"
+                        isError={!!errors.email}
+                        errorMessage={errors?.email?.message}
+                        autoComplete="on"
+                        {...register('email')}
+                        readOnly
+                        disabled
+                      />
+
+                      <Textbox
+                        id="cellPhone"
+                        type="text"
+                        label="Celular"
+                        className="form-input"
+                        isError={!!errors.cellPhone}
+                        errorMessage={errors?.cellPhone?.message}
+                        autoComplete="on"
+                        {...register('cellPhone')}
+                      />
+                    </div>
+
+                  </div>
+                  <div className='self-end mt-[25px]'>
+                    <button type="submit" disabled={!isValid} className="button button-primary">
+                      Actualizar
+                    </button>
+                  </div>
                 </form>
-              </section>
+              </HeadingCard>
             </div>
           </div>
         </main>
