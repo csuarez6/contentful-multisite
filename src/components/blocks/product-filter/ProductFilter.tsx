@@ -64,7 +64,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
           })}
         </div>
       </div>
-      {type === "Auxrate" ? rateGrill() : productGrill()}
+      {type === "AuxRate" ? rateGrill() : productGrill()}
     </section>
   );
 };
