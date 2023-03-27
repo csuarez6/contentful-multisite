@@ -21,7 +21,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
 }) => {
   return (
     <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
-      {(state || promotion || imagesCollection?.items) && (
+      {(state || promotion || imagesCollection?.items || promoImage) && (
         <div className="flex flex-col gap-2">
           {(state || promotion) && (
             <div className="flex gap-1">

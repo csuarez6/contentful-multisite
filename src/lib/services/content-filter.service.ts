@@ -36,6 +36,7 @@ const applyFilterModifier = (filterKey, filterValue, modifier) => {
 };
 
 const getAlgoliaResults = async ({
+  fullTextSearch = '',
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
@@ -110,8 +111,8 @@ const getAlgoliaResults = async ({
     process.env.ALGOLIASEARCH_APP_ID,
     process.env.ALGOLIASEARCH_READ_API_KEY
   );
-  const resultAlgolia = await indexSearch.search("", {
-    filters: algoliaFilter.join(" AND "),
+  const resultAlgolia = await indexSearch.search((fullTextSearch), {
+    filters: algoliaFilter.join(' AND '),
     facets: algoliaFacets,
     hitsPerPage: pageResults,
     attributesToRetrieve: ["fields"],
@@ -230,6 +231,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
 };
 
 const getFilteredContent = async ({
+  fullTextSearch,
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
@@ -245,6 +247,7 @@ const getFilteredContent = async ({
   }
 
   const filteredContentResults = await getAlgoliaResults({
+    fullTextSearch,
     contentTypesFilter,
     parentIds,
     availableFacets,
