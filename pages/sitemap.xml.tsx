@@ -8,10 +8,10 @@ const SitemapXML: React.FC = () => {
 
 const consolideEntriesWithLocales = (entries) => {
   const consolidatedEntries = [];
-
+  const domain = process.env.DEFAULT_DOMAIN;
   for (const index in entries) {
     consolidatedEntries.push({
-      loc: `https://www.grupovanti.com${entries[index].urlPath}`,
+      loc: domain+entries[index].urlPath,
       lastmod: entries[index].sys.publishedAt || undefined,
       priority: 0.7,
       changefreq: "weekly",

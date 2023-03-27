@@ -11,13 +11,13 @@ import Link from "next/link";
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection, __typename }) => {
   const { preview } = layout;
   const { asPath } = useRouter() ?? { asPath: "/" };
-
+  const domain = process.env.DEFAULT_DOMAIN;
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
   const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
 
   let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
-  canonicalUrl = "https://www.grupovanti.com" + canonicalUrl;
+  canonicalUrl = domain + canonicalUrl;
 
   const addProductJsonLd = () => {
     let sdType = __typename;
@@ -26,9 +26,9 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
     }
     return {
       __html: `{
-        "mainEntityOfPage":  "https://www.grupovanti.com/",
+        "mainEntityOfPage":  ${domain}/,
         "name": ${ title },
-        "image": [${image}],
+        "image": ["${image}"],
         "description": ${description},
         "url": ${canonicalUrl},
         ${(sdType === 'WebPage' &&
@@ -36,7 +36,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
           "publisher": {
             "@type": "Organization",
             "name": "GrupoVanti web",
-            "logo": ${image}
+            "logo": "${image}"
           },
           "author": "Vanti",`
         )}
