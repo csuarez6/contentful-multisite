@@ -26,13 +26,13 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
     }
     return {
       __html: `{
-        "mainEntityOfPage":  ${domain}/,
-        "name": ${ title },
-        "image": ["${image}"],
-        "description": ${description},
-        "url": ${canonicalUrl},
+        "mainEntityOfPage":  "${domain}/",
+        "name": "${ title }",
+        "image": "${image}",
+        "description": "${description}",
+        "url": "${canonicalUrl}",
         ${(sdType === 'WebPage' &&
-          `"headline": ${promoTitle ?? description},
+          `"headline": "${promoTitle ?? description}",
           "publisher": {
             "@type": "Organization",
             "name": "GrupoVanti web",
