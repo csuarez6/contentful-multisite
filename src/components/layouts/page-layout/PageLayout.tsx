@@ -109,7 +109,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
       <div className="min-h-screen flex flex-col">
         <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name}/>
         <HelpButton {...layout.helpButton} />
-        <main className="flex-grow overflow-hidden">
+        <main className="flex-grow">
           <div className="xl:container mx-auto px-3 sm:px-5 lg:px-8 2xl:px-28">
             {children}
           </div>

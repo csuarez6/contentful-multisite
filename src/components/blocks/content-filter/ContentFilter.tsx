@@ -161,7 +161,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
         </div>
       )}
       {data === null && (
-        <h3 className="block w-full mb-12 text-center">
+        <h3 className="flex justify-center items-center w-full min-h-[200px] pb-12 text-center">
           No se encontraron resultados
         </h3>
       )}
