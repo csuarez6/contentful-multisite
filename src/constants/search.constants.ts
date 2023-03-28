@@ -59,4 +59,18 @@ export const FACET_QUERY_MAP = {
     query: null,
     modifier: 'stringify'
   },
+  "fields.city": {
+    title: 'Ciudad',
+    inputName: 'city',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  },
+  "fields.name": {
+    title: 'Aliado',
+    inputName: 'name',
+    queryName: null,
+    query: null,
+    modifier: 'stringify'
+  }
 };

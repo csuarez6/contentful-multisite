@@ -10,6 +10,7 @@ import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
 import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 import { BlockFormQuery } from "@/lib/graphql/blocks/form-content.gql";
 import RateQuery from "@/lib/graphql/rate.gql";
+import AllyQuery from "@/lib/graphql/ally.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -56,6 +57,11 @@ const CONTENTFUL_QUERY_MAPS = {
     queryName: 'auxRate',
     algoliaType: 'aux_Rate',
     query: RateQuery,
+  },
+  [CONTENTFUL_TYPENAMES.AUX_ALLY]: {
+    queryName: 'auxAlly',
+    algoliaType: 'aux_Ally',
+    query: AllyQuery,
   },
 };
 
