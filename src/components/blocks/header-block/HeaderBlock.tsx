@@ -132,7 +132,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/busqueda?q=${searchText}`);
+    router.push(`/busqueda?text=${searchText}`);
   };
 
   const { asPath } = useRouter();
