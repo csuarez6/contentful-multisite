@@ -127,6 +127,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     }
   }, [session, sessionStatus]);
 
+  const [searchText, setSearchText] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    router.push(`/busqueda?q=${searchText}`);
+  };
+
   const { asPath } = useRouter();
   let firstPath = asPath.split("/")[1];
   if (menuNavkey === null) {
@@ -310,8 +318,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
               <div className="flex items-center justify-end flex-grow divide-x md:py-5 divide-neutral-70">
                 <form
-                  action="#"
-                  method="post"
+                  onSubmit={handleSubmit}
                   className="w-full h-10 lg:max-w-xs lg:pr-6"
                 >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
@@ -322,6 +329,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </label>
                     <input
                       id="search"
+                      onChange={(e) => setSearchText(e.target.value)}
+                      defaultValue={searchText}
                       type="text"
                       placeholder="Buscar"
                       className="bg-transparent focus:outline-none text-[#616B8A] text-lg font-medium w-full"
