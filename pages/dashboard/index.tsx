@@ -235,6 +235,7 @@ const Dashboard = () => {
                         errorMessage={errors?.name?.message}
                         autoComplete="on"
                         {...register('name')}
+                        isRequired={true}
                       />
 
                       <Textbox
@@ -246,6 +247,7 @@ const Dashboard = () => {
                         errorMessage={errors?.lastName?.message}
                         autoComplete="on"
                         {...register('lastName')}
+                        isRequired={true}
                       />
                     </div>
 
@@ -258,6 +260,7 @@ const Dashboard = () => {
                         isError={!!errors.documentType}
                         errorMessage={errors?.documentType?.message}
                         {...register('documentType')}
+                        isRequired={true}
                       />
 
                       <Textbox
@@ -269,6 +272,7 @@ const Dashboard = () => {
                         errorMessage={errors?.documentNumber?.message}
                         autoComplete="on"
                         {...register('documentNumber')}
+                        isRequired={true}
                       />
                     </div>
 
@@ -284,6 +288,7 @@ const Dashboard = () => {
                         {...register('email')}
                         readOnly
                         disabled
+                        isRequired={true}
                       />
 
                       <Textbox
@@ -295,6 +300,7 @@ const Dashboard = () => {
                         errorMessage={errors?.cellPhone?.message}
                         autoComplete="on"
                         {...register('cellPhone')}
+                        isRequired={true}
                       />
                     </div>
 
