@@ -16,6 +16,7 @@ import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import CheckoutContext from "@/context/Checkout";
+import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 
 const iconInvoice: IIcon = {
   icon: "invoice",
@@ -145,6 +146,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   state,
   rating,
   warranty,
+  relatedProducts
 }) => {
   const router = useRouter();
   const { addToCart, reloadOrder } = useContext(CheckoutContext);
@@ -513,38 +515,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         </div>
                       </>
                     )}
-                  {/* <div className="flex flex-col gap-[11px] mt-[26px]">
-                    <h4 className="text-size-subtitle1 text-blue-dark">
-                      Elige el tipo de producto
-                    </h4>
-                    <ul className="flex gap-2 pl-1">
-                      <li>
-                        <figure className="relative aspect-[62/62]">
-                          <Image alt="..." src='https://via.placeholder.com/62' height={62} width={62} priority className="rounded-[10px]"/>
-                        </figure>
-                      </li>
-                      <li>
-                        <figure className="relative aspect-[62/62]">
-                          <Image alt="..." src='https://via.placeholder.com/62' height={62} width={62} priority className="rounded-[10px]"/>
-                        </figure>
-                      </li>
-                      <li>
-                        <figure className="relative aspect-[62/62]">
-                          <Image alt="..." src='https://via.placeholder.com/62' height={62} width={62} priority className="rounded-[10px]"/>
-                        </figure>
-                      </li>
-                      <li>
-                        <figure className="relative aspect-[62/62]">
-                          <Image alt="..." src='https://via.placeholder.com/62' height={62} width={62} priority className="rounded-[10px]"/>
-                        </figure>
-                      </li>
-                      <li>
-                        <figure className="relative aspect-[62/62]">
-                          <Image alt="..." src='https://via.placeholder.com/62' height={62} width={62} priority className="rounded-[10px]"/>
-                        </figure>
-                      </li>
-                    </ul>
-                  </div> */}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden md:flex flex-col gap-[15px]"
@@ -670,7 +640,20 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
           </div>
         </section>
-
+        {
+          relatedProducts?.length > 0 && (
+            <section className="section grid gap-9">
+              <div className="grid gap-9 text-left">
+                <h2 className="text-blue-dark">Te puede interesar</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 2lg:grid-cols-3 gap-6">
+                {relatedProducts.map((el) => (
+                  <FeaturedProduct {...el} key={el.name} />
+                ))}
+              </div>
+            </section>
+          )
+        }
         <div className="flex flex-col 2md:w-3/5 gap-y-12">
           {features && (
             <div id="content-features" className="grid col-span-2 gap-9">

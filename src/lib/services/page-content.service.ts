@@ -7,6 +7,7 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
+import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
 
 const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (!urlPath || urlPath === '') {
@@ -46,12 +47,46 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
     responseData = {};
   }
 
-  if (responseError) {
-    console.error('Error on page content service, query => ', responseError.message);
-  }
+  if (responseError) console.error('Error on page content service, query => ', responseError.message);
 
-  if (!responseData[`${typePage}Collection`]?.items?.[0] && !responseData[`${typeProduct}Collection`]?.items?.[0]) {
-    return null;
+  if (!responseData[`${typePage}Collection`]?.items?.[0] && !responseData[`${typeProduct}Collection`]?.items?.[0]) return null;
+
+  // Get related products (with the same category)
+  if(responseData[`${typeProduct}Collection`]?.items?.[0]){
+    let dataRelatedProducts = null;
+    try {
+      ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
+        query: gql`
+          query getRelatedProducts($urlPath: String!, $categoryName: String!, $preview: Boolean!) {
+            ${typeProduct}Collection(where: { 
+              AND: [
+                { category: { name: $categoryName } },
+                { urlPath_not: $urlPath }
+              ]
+            }, limit: 2, preview: $preview, order: sys_publishedAt_DESC) {
+              items {
+                ${queryProduct}
+              }
+            }
+          }
+        `,
+        variables: {
+          urlPath,
+          categoryName: responseData[`${typeProduct}Collection`]?.items?.[0]?.category?.name ?? '',
+          preview
+        },
+        errorPolicy: 'all'
+      }));
+
+      if(dataRelatedProducts[`${typeProduct}Collection`]?.items){        
+        const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
+          return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
+        }));
+        responseData[`${typeProduct}Collection`].items[0].relatedProducts = relatedProducts;
+      }
+    } catch (e) {
+      console.error("An error has ocurred at related content fetching", e);
+    } 
   }
 
   const pageContent = JSON.parse(
@@ -60,9 +95,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
     )
   );
 
-  if (pageContent?.parent?.__typename) {
-    pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
-  }
+  if (pageContent?.parent?.__typename) pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
 
   if (fullContent) {
     const referencesContent = await getReferencesContent({ content: pageContent, preview });

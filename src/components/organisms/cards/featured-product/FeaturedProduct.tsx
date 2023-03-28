@@ -98,7 +98,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                     />
                   </figure>
                   <div className="text-blue-dark text-size-subtitle2 font-bold">
-                    <p>{rating}/5</p>100
+                    <p>{rating}/5</p>
                   </div>
                 </div>
               )}
