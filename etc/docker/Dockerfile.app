@@ -5,7 +5,7 @@ FROM node:16-alpine as base
 RUN apk add --update --no-cache vim
 
 ## Install contenful cli
-RUN npm install -g contentful-cli pnpm
+RUN npm install -g contentful-cli pnpm@v7
 
 RUN mkdir -p /app
 WORKDIR /app

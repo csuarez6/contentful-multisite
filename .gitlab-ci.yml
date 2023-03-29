@@ -23,7 +23,7 @@ Test_Linter:
   stage: Test
 
   before_script:
-    - npm i -g pnpm
+    - npm i -g pnpm@v7
     - pnpm install
   script:
     - pnpm lint
@@ -164,7 +164,7 @@ pages:
       - public
 
   before_script: 
-    - npm i -g pnpm
+    - npm i -g pnpm@v7
     - pnpm install
     - pnpm build-storybook
   script:
