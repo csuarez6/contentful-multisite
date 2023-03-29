@@ -27,6 +27,7 @@ import ServiceLineBlock from "@/components/blocks/service-line/ServiceLineBlock"
 import RichText from "@/components/organisms/rich-text/Richtext";
 import TabsWithFeaturedImageBlock from "@/components/blocks/tabs-with-featured-image/TabsWithFeaturedImage";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import VerticalCardGrill from "@/components/blocks/vertical-card-grill/VerticalCardGrill";
 import VerticalTabsBlock from '@/components/blocks/vertical-tabs/VerticalTabs';
 
 /**
@@ -61,6 +62,7 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_VIDEO_SLIDER]: VideoBlock,
     [CONTENTFUL_TYPENAMES.VIEW_RICH_TEXT]: RichText,
     [CONTENTFUL_TYPENAMES.VIEW_TABS_WITH_FEATURED_IMAGE]: TabsWithFeaturedImageBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_VERTICAL_CARD_GRILL]: VerticalCardGrill,
     [CONTENTFUL_TYPENAMES.VIEW_TABS_VERTICAL]: VerticalTabsBlock,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_FORM]: {

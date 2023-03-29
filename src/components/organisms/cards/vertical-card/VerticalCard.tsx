@@ -22,12 +22,12 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
   } = props;
 
   return (
-    <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px] flex flex-wrap">
+    <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px] flex flex-col">
       {promoImage && (
         <figure
           className={classNames(
             "w-full relative",
-            promoImage.isPortrait ? "aspect-[364/606]" : "aspect-[588/180]"
+            promoImage.isPortrait ? "aspect-[588/536]" : "aspect-[588/180]"
           )}
         >
           <Image

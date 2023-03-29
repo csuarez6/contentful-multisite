@@ -90,16 +90,16 @@ section.section {
   @apply bg-lucuma;
 }
 .indicators-bullets {
-  @apply sm:flex sm:justify-center sm:items-center grid gap-3 absolute pr-[18px] pl-[6px] sm:px-0 bottom-[448px] sm:bottom-[14px] left-0 right-0
+  @apply sm:flex sm:justify-center sm:items-center grid gap-3 absolute pr-[18px] pl-[6px] sm:px-0 bottom-[448px] sm:bottom-[14px] left-0 right-0;
 }
-.swiper-pagination-custom-bullet--iconslist{
+.swiper-pagination-custom-bullet--iconslist {
   width: 14px !important;
   height: 14px !important;
   margin-bottom: -34px !important;
 }
 .slider-listIcon .swiper-pagination {
   @apply flex justify-center gap-[14px];
-  bottom: 12.5% !important
+  bottom: 12.5% !important;
 }
 /* Firefox */
 .custom-scrollbar {

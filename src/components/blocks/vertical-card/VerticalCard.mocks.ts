@@ -11,7 +11,9 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
           url: 'https://via.placeholder.com/1280x392.png',
-          title: 'Card image'
+          title: 'Card image',
+          height: 400,
+          width: 500
         },
         ctaLabel: "Button",
         internalLink: {
@@ -23,25 +25,43 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
           url: 'https://via.placeholder.com/1280x392.png',
-          title: 'Card image'
+          title: 'Card image',
+          height: 400,
+          width: 500
         },
         ctaLabel: "Button",
         internalLink: {
           urlPath: "#"
         }
       },
-      // {
-      //   promoTitle: 'Título 3',
-      //   promoDescription: RICHTEXT_SHORT_SIMPLE,
-      //   promoImage: {
-      //     url: 'https://via.placeholder.com/1280x392.png',
-      //     title: 'Card image'
-      //   },
-      //   ctaLabel: "Button",
-      //   internalLink: {
-      //     urlPath: "#"
-      //   }
-      // }
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1280x392.png',
+          title: 'Card image',
+          height: 400,
+          width: 500
+        },
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
+        }
+      },
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoImage: {
+          url: 'https://via.placeholder.com/1280x392.png',
+          title: 'Card image',
+          height: 400,
+          width: 500
+        },
+        ctaLabel: "Button",
+        internalLink: {
+          urlPath: "#"
+        }
+      }
     ]
   },
   view: {
@@ -59,7 +79,9 @@ const dataPortrait: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
           url: 'https://via.placeholder.com/1220x2030.png',
-          title: 'Card image'
+          title: 'Card image',
+          height: 400,
+          width: 500
         },
         ctaLabel: "Button",
         internalLink: {
@@ -71,7 +93,9 @@ const dataPortrait: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
           url: 'https://via.placeholder.com/1220x2030.png',
-          title: 'Card image'
+          title: 'Card image',
+          height: 400,
+          width: 500
         },
         ctaLabel: "Button",
         internalLink: {
@@ -83,12 +107,15 @@ const dataPortrait: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
           url: 'https://via.placeholder.com/1220x2030.png',
-          title: 'Card image'
+          title: 'Card image',
+          height: 400,
+          width: 500
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
-        }
+          urlPath: "#",
+        },
+        alignButton: "izquierda"
       }
     ]
   },
