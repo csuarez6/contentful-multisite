@@ -128,6 +128,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   }, [session, sessionStatus]);
 
   const [searchText, setSearchText] = useState('');
+  const [timer, setTimer] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -136,8 +137,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const handleInputChange = (e) => {
     if (e.target.value) {
+      clearTimeout(timer);
       setSearchText(e.target.value);
-      handleSubmit(e); 
+      setTimer(setTimeout(() => handleSubmit(e), 1000));
     }
   };
 
