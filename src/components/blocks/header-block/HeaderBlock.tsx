@@ -118,7 +118,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   let { menuNavkey = null } = props;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
-  // const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (sessionStatus == "unauthenticated") {
@@ -128,11 +128,17 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   }, [session, sessionStatus]);
 
   const [searchText, setSearchText] = useState('');
-  const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/busqueda?text=${searchText}`);
+    router.push(`/busqueda?text=${e.target.value}`);
+  };
+
+  const handleInputChange = (e) => {
+    if (e.target.value) {
+      setSearchText(e.target.value);
+      handleSubmit(e); 
+    }
   };
 
   const { asPath } = useRouter();
@@ -329,7 +335,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </label>
                     <input
                       id="search"
-                      onChange={(e) => setSearchText(e.target.value)}
+                      onChange={handleInputChange}
                       defaultValue={searchText}
                       type="text"
                       placeholder="Buscar"

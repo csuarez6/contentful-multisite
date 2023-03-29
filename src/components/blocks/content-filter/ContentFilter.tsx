@@ -9,6 +9,7 @@ import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import { useRouter } from "next/router";
 
 const ContentFilter: React.FC<IContentFilter> = ({
+  sys,
   contentTypesFilter,
   parentsCollection,
   title = null,
@@ -95,6 +96,12 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   return (
     <div className="relative w-full">
+      {(sys.id == '75w6bsU9MWCoxDtT7HXyGb' && data?.totalItems > 0) && (
+        <div>
+          <h2 className="text-center text-blue-dark text-4xl">Resultados de búsqueda</h2>
+          <p className="text-center text-2xl">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
+        </div>
+      )}
       <CarouselCategoriesBlock
         view={{
           alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
