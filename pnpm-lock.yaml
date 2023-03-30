@@ -45,6 +45,7 @@ specifiers:
   next-auth: ^4.19.2
   next-recaptcha-v3: ^1.1.4
   nextjs-google-analytics: ^2.3.3
+  phosphor-react: ^1.4.1
   postcss: ^8.4.19
   postcss-import: ^15.0.1
   prettier: ^2.7.1
@@ -85,6 +86,7 @@ dependencies:
   next-auth: 4.19.2_ogpkrxaz2lg6nectum6dl66tn4
   next-recaptcha-v3: 1.1.4_ogpkrxaz2lg6nectum6dl66tn4
   nextjs-google-analytics: 2.3.3_next@13.0.3+react@18.2.0
+  phosphor-react: 1.4.1_react@18.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-google-recaptcha: 2.1.0_react@18.2.0
@@ -11401,6 +11403,15 @@ packages:
       safe-buffer: 5.2.1
       sha.js: 2.4.11
     dev: true
+
+  /phosphor-react/1.4.1_react@18.2.0:
+    resolution: {integrity: sha512-gO5j7U0xZrdglTAYDYPACU4xDOFBTJmptrrB/GeR+tHhCZF3nUMyGmV/0hnloKjuTrOmpSFlbfOY78H39rgjUQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /picocolors/0.2.1:
     resolution: {integrity: sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA==}
