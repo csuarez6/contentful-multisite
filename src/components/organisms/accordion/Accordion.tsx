@@ -7,7 +7,7 @@ import Icon from "@/components/atoms/icon/Icon";
 
 const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }) => {
   return (
-    <dl className={classNames("grid gap-3", classColumns(columnsSize ?? '2'))}>
+    <dl className={classNames("grid", classColumns(columnsSize ?? '2'))}>
       {featuredContents?.items?.map((el, i) => {
         if (!el.promoTitle && !el.name) return;
         return (
@@ -20,12 +20,11 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
               <div>
                 <dt className="text-lg">
                   <Disclosure.Button
-                    className={`flex w-full items-center justify-between pl-7 text-left text-gray-400 pt-[24px] ${!open ? "md:mb-[55px] mb-7" : ""
-                      }`}
+                    className={`flex w-full items-center justify-between px-7 text-left text-gray-400 py-6`}
                   >
-                    <div className="flex">
+                    <div className="flex items-center gap-3">
                       {(el.promoIcon && displayIcon) && (
-                        <span className={`flow-root shrink-0 w-7 h-7 mr-2`}>
+                        <span className={`flow-root shrink-0 w-7 h-7 -my-2`}>
                           <Icon icon={el.promoIcon} className="mx-auto w-full h-full text-blue-dark" />
                         </span>
                       )}
@@ -33,11 +32,11 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                         {el.promoTitle ?? el.name}
                       </h3>
                     </div>
-                    <span className="flex w-8 justify-center items-center h-full mr-2">
+                    <span className="flex w-7 justify-center items-center h-auto">
                       <ChevronDownIcon
                         className={classNames(
                           open ? "-rotate-180" : "rotate-0",
-                          "flex w-8 h-auto transform text-neutral-30"
+                          "flex w-full h-auto transform text-neutral-30"
                         )}
                         aria-hidden="true"
                         width={10}
@@ -46,8 +45,8 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                     </span>
                   </Disclosure.Button>
                 </dt>
-                <Disclosure.Panel as="dd" className="mt-2  pl-7 pr-12">
-                  <div className="text-base text-gray-500">
+                <Disclosure.Panel as="dd" className={`pb-6 ${(el.promoIcon && displayIcon) ? "px-10" : ""}`}>
+                  <div className="text-base text-gray-500 px-7">
                     {documentToReactComponents(el?.promoDescription?.json)}
                   </div>
                 </Disclosure.Panel>
