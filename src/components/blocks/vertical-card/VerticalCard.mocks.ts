@@ -34,39 +34,24 @@ const data: IPromoBlock = {
           urlPath: "#"
         }
       },
-      {
-        promoTitle: 'Título 2',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoImage: {
-          url: 'https://via.placeholder.com/1280x392.png',
-          title: 'Card image',
-          height: 400,
-          width: 500
-        },
-        ctaLabel: "Button",
-        internalLink: {
-          urlPath: "#"
-        }
-      },
-      {
-        promoTitle: 'Título 2',
-        promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoImage: {
-          url: 'https://via.placeholder.com/1280x392.png',
-          title: 'Card image',
-          height: 400,
-          width: 500
-        },
-        ctaLabel: "Button",
-        internalLink: {
-          urlPath: "#"
-        }
-      }
+      // {
+      //   promoTitle: 'Título 3',
+      //   promoDescription: RICHTEXT_SHORT_SIMPLE,
+      //   promoImage: {
+      //     url: 'https://via.placeholder.com/1280x392.png',
+      //     title: 'Card image'
+      //   },
+      //   ctaLabel: "Button",
+      //   internalLink: {
+      //     urlPath: "#"
+      //   }
+      // }
     ]
   },
   view: {
     columnsSize: 3,
-    buttonType: "Contorno"
+    buttonType: "Contorno",
+    alignButton: "Izquierda"
   }
 };
 const dataPortrait: IPromoBlock = {

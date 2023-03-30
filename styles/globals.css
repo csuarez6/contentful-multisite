@@ -101,6 +101,10 @@ section.section {
   @apply flex justify-center gap-[14px];
   bottom: 12.5% !important;
 }
+.slider-vertical .swiper-pagination {
+  @apply flex justify-center gap-[14px] bottom-[42px];
+}
+
 /* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
