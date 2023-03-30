@@ -10,9 +10,9 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
   return (
     <section id={blockId ? blockId : sysId} className="grid section gap-7 md:gap-9">
       {title && <h1 className="text-center text-blue-dark mb-[-30px]">{title}</h1>}
-      <div className="flex flex-col md:flex-row items-start gap-[62px] py-[72px] border-y-2 border-x-grey-80">
+      <div className="flex flex-col 2md:flex-row items-start gap-6 lg:gap-[62px] py-[72px] border-y-2 border-x-grey-80">
         {(subtitle || description || featuredContentsCollection?.items?.length > 0) && (
-          <div className="grid gap-6 grow w-full md:w-[661px]">
+          <div className="grid gap-6 grow w-full md:w-1/2 lg:w-[661px]">
             {(subtitle || description) && (
               <div className="grid gap-6">
                 {title && <h2 className="text-category-sky-blue-50">{subtitle}</h2>}
@@ -20,7 +20,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
               </div>
             )}
             {featuredContentsCollection?.items?.length > 0 && (
-              <Tab.Group as="div" className="grid items-baseline gap-12">
+              <Tab.Group as="div" className="grid items-baseline gap-6 2md:gap-12">
                 <div className="flex justify-start overflow-x-auto">
                   <div className="flex border-b border-transparent">
                     <Tab.List className="flex">
@@ -73,8 +73,8 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, de
         )}
 
         {image?.url && (
-          <div className="flex w-full md:w-[494px]">
-            <figure className="relative rounded-xl w-full aspect-[494/500] overflow-hidden">
+          <div className="flex w-full  2md:w-auto 2md:flex-grow">
+            <figure className="relative rounded-xl w-full 2md:aspect-[494/500] overflow-hidden">
               <Image
                 src={image?.url}
                 alt={image.title ?? (image.description ?? "Imagen destacada")}
