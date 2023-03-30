@@ -23,6 +23,7 @@ const Template: ComponentStory<typeof ButtonAtom> = (args) => (
 
 export const Base = Template.bind({});
 export const Button = Template.bind({});
+export const Modal = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
@@ -31,4 +32,8 @@ Base.args = {
 
 Button.args = {
   ...mockButtonAtomProps.dataButton,
+} as IButtonAtom;
+
+Modal.args = {
+  ...mockButtonAtomProps.dataModal,
 } as IButtonAtom;

@@ -17,7 +17,15 @@ const dataButton: IButtonAtom = {
   callbackAction: () => { alert('Dispatch from stories'); }
 };
 
+const dataModal: IButtonAtom = {
+  text: 'Modal',
+  type: 'Modal',
+  classes: 'button-secondary',
+  children: "Componente Hijo"
+};
+
 export const mockButtonAtomProps = {
   dataLink,
-  dataButton
+  dataButton,
+  dataModal
 };
