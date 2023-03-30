@@ -93,7 +93,6 @@ const ContentFilter: React.FC<IContentFilter> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath]);
-
   return (
     <div className="relative w-full">
       {(sys.id == '75w6bsU9MWCoxDtT7HXyGb' && data?.totalItems > 0) && (
@@ -102,29 +101,31 @@ const ContentFilter: React.FC<IContentFilter> = ({
           <p className="text-center text-2xl">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
-      <CarouselCategoriesBlock
-        view={{
-          alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
-        }}
-        title={title}
-        description={description}
-        featuredContentsCollection={{
-          items: mainFacetContent?.listedContents ?? [],
-        }}
-        blockId={blockId}
-        queryParamName={mainFacetContent?.name ?? ""}
-        filterName={urlParams?.get(mainFacetContent?.name)}
-      />
-
-      <ProductFilterBlock
-        products={{ listedContentsCollection: data }}
-        facets={facetsContent}
-        onFacetsChange={facetsChangeHandle}
-        isLoading={isLoading}
-        error={error}
-        type={contentTypesFilter[0]}
-      />
-
+      {mainFacetContent?.listedContents?.length > 0 &&(
+        <CarouselCategoriesBlock
+          view={{
+            alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
+          }}
+          title={title}
+          description={description}
+          featuredContentsCollection={{
+            items: mainFacetContent?.listedContents ?? [],
+          }}
+          blockId={blockId}
+          queryParamName={mainFacetContent?.name ?? ""}
+          filterName={urlParams?.get(mainFacetContent?.name)}
+        />
+      )}
+      {facetsContent&& (
+        <ProductFilterBlock
+          products={{ listedContentsCollection: data }}
+          facets={facetsContent}
+          onFacetsChange={facetsChangeHandle}
+          isLoading={isLoading}
+          error={error}
+          type={contentTypesFilter[0]}
+        />
+      )}
       {data?.totalPages > 1 && (
         <div className="block w-full mb-12 my-4">
           <ul className="flex flex-row justify-center items-center gap-1 w-full">

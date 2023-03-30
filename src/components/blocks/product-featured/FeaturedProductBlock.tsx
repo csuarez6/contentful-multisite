@@ -11,6 +11,7 @@ const FeaturedProductBlock: React.FC<IPromoBlock> = ({
   sysId,
 }) => {
   return (
+    (listedContentsCollection?.items?.length > 0 || title || description)&& (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {(title || description) && (
         <div className="grid gap-9 text-center">
@@ -30,6 +31,7 @@ const FeaturedProductBlock: React.FC<IPromoBlock> = ({
         </div>
       )}
     </section>
+    )
   );
 };
 
