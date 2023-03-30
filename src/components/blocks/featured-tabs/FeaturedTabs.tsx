@@ -87,7 +87,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                   {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
                     jsonToReactComponent(collection)
                   ) : (
-                    <div className="grid grid-cols-3 gap-5 mt-6">
+                    <div className="grid grid-cols-1 2md:grid-cols-3 gap-5 mt-6">
                       {collection.featuredContentsCollection.items.map((item) => (
                         <ListWithIcons {...item} key={item.name} />
                       ))}
