@@ -151,7 +151,7 @@ const DashboardAddresses = () => {
                                                                         className="text-sm font-medium text-red-300 cursor-pointer hover:text-red-600"
                                                                         type="delete"
                                                                         label="Eliminar"
-                                                                        onClick={() => { console.log("Remove Address"); }}
+                                                                        onClick={() => { console.info("Remove Address"); }}
                                                                     />
                                                                 </div>
                                                             </div>

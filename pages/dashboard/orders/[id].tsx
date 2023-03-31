@@ -157,7 +157,7 @@ const Parcel = (): JSX.Element => {
                 </div>
                 <div className="py-3">
                     <ParcelLineItemsCount>
-                        {(props) => {
+                        {(_props) => {
                             return (
                                 // <ShowHideMenu itemsCounter={props?.quantity}>
                                 <ParcelLineItem>

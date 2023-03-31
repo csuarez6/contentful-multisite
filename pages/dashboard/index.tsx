@@ -20,13 +20,23 @@ import Textbox from "@/components/atoms/input/textbox/TextBox";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SelectInput from '@/components/atoms/selectInput/SelectInput';
+import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Icon from "@/components/atoms/icon/Icon";
 
 const subNavigation = [
   { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
-  { name: "Compras", href: "/dashboard/orders", icon: ShoppingCartIcon, current: false },
-  { name: "Direcciones", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
+  {
+    name: "Compras",
+    href: "/dashboard/orders",
+    icon: ShoppingCartIcon,
+    current: false,
+  },
+  {
+    name: "Direcciones",
+    href: "/dashboard/addresses",
+    icon: MapPinIcon,
+    current: false,
+  },
 ];
 
 export interface ITemsForm {
@@ -40,18 +50,23 @@ export interface ITemsForm {
 
 const schema = yup.object({
   name: yup.string().required("Dato Requerido").min(3, "Mínimo 3 caracteres"),
-  lastName: yup.string().required("Dato Requerido").min(3, "Mínimo 3 caracteres"),
+  lastName: yup
+    .string()
+    .required("Dato Requerido")
+    .min(3, "Mínimo 3 caracteres"),
   documentType: yup.string().required("Dato Requerido"),
-  documentNumber: yup.number()
+  documentNumber: yup
+    .number()
     .required("Dato Requerido")
     .nullable()
     .transform((value) => (isNaN(value) ? undefined : value))
     .positive("Solo números positivos"),
-  cellPhone: yup.number()
+  cellPhone: yup
+    .number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .nullable()
     .required("Dato Requerido")
-    .min(8, "Faltan Números")
+    .min(8, "Faltan Números"),
 });
 
 const Dashboard = () => {
@@ -59,7 +74,7 @@ const Dashboard = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
-    color: "red"
+    color: "red",
   });
   const [customerDataForm, setCustomerDataForm] = useState({
     name: "",
@@ -70,25 +85,30 @@ const Dashboard = () => {
     cellPhone: "",
   });
 
-  const { register, handleSubmit, setValue, formState: { errors, isValid } } = useForm<ITemsForm>({
-    mode: 'onChange',
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isValid },
+  } = useForm<ITemsForm>({
+    mode: "onChange",
     resolver: yupResolver(schema),
     shouldUnregister: true,
-    defaultValues: customerDataForm
+    defaultValues: customerDataForm,
   });
 
   const selectOptions = [
     {
-      label: 'Seleccione un tipo de documento',
-      value: ''
+      label: "Seleccione un tipo de documento",
+      value: "",
     },
     {
-      label: 'Cédula',
-      value: 'cedula'
+      label: "Cédula",
+      value: "cedula",
     },
     {
-      label: 'Pasaporte',
-      value: 'pasaporte'
+      label: "Pasaporte",
+      value: "pasaporte",
     },
   ];
 
@@ -109,19 +129,20 @@ const Dashboard = () => {
   }, [status, session, customerDataForm.email]);
 
   useEffect(() => {
-    setValue('name', customerDataForm.name);
-    setValue('lastName', customerDataForm.lastName);
-    setValue('documentType', customerDataForm.documentType);
-    setValue('documentNumber', customerDataForm.documentNumber);
-    setValue('email', customerDataForm.email);
-    setValue('cellPhone', customerDataForm.cellPhone);
+    setValue("name", customerDataForm.name);
+    setValue("lastName", customerDataForm.lastName);
+    setValue("documentType", customerDataForm.documentType);
+    setValue("documentNumber", customerDataForm.documentNumber);
+    setValue("email", customerDataForm.email);
+    setValue("cellPhone", customerDataForm.cellPhone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerDataForm]);
 
   const onSubmit = (data: ITemsForm) => {
     fetch("/api/customer-myaccount/profile", {
       method: "POST",
       body: JSON.stringify({
-        ...data
+        ...data,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -172,9 +193,7 @@ const Dashboard = () => {
                     aria-current={item.current ? "page" : undefined}
                   >
                     <item.icon
-                      className={classNames(
-                        "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
-                      )}
+                      className={classNames("flex-shrink-0 -ml-1 mr-3 h-6 w-6")}
                       aria-hidden="true"
                     />
                     <span className="truncate">{item.name}</span>
@@ -191,23 +210,29 @@ const Dashboard = () => {
                 hideCheck={true}
               >
                 {errorMessage && showAlert.show && (
-                  <div className={classNames(
-                    "p-4 rounded-md",
-                    `bg-${showAlert.color}-50`
-                  )}
+                  <div
+                    className={classNames(
+                      "p-4 rounded-md",
+                      `bg-${showAlert.color}-50`
+                    )}
                   >
                     <div className="flex">
                       <div className="ml-3">
-                        <p className={classNames(
-                          "text-sm font-medium",
-                          `text-${showAlert.color}-800`
-                        )}
-                        >{errorMessage}</p>
+                        <p
+                          className={classNames(
+                            "text-sm font-medium",
+                            `text-${showAlert.color}-800`
+                          )}
+                        >
+                          {errorMessage}
+                        </p>
                       </div>
                       <div className="pl-3 ml-auto">
                         <div className="-mx-1.5 -my-1.5">
                           <button
-                            onClick={() => setShowAlert({ show: false, color: "red" })}
+                            onClick={() =>
+                              setShowAlert({ show: false, color: "red" })
+                            }
                             type="button"
                             className={classNames(
                               "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2",
@@ -224,7 +249,7 @@ const Dashboard = () => {
                 )}
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex flex-col gap-6 mt-6">
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
                       <Textbox
                         id="name"
                         name="name"
@@ -234,7 +259,7 @@ const Dashboard = () => {
                         isError={!!errors.name}
                         errorMessage={errors?.name?.message}
                         autoComplete="on"
-                        {...register('name')}
+                        {...register("name")}
                         isRequired={true}
                       />
 
@@ -246,20 +271,20 @@ const Dashboard = () => {
                         isError={!!errors.lastName}
                         errorMessage={errors?.lastName?.message}
                         autoComplete="on"
-                        {...register('lastName')}
+                        {...register("lastName")}
                         isRequired={true}
                       />
                     </div>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
                       <SelectInput
                         selectOptions={selectOptions}
                         className=""
-                        label='Tipo Documento'
-                        id='documentType'
+                        label="Tipo Documento"
+                        id="documentType"
                         isError={!!errors.documentType}
                         errorMessage={errors?.documentType?.message}
-                        {...register('documentType')}
+                        {...register("documentType")}
                         isRequired={true}
                       />
 
@@ -271,12 +296,12 @@ const Dashboard = () => {
                         isError={!!errors.documentNumber}
                         errorMessage={errors?.documentNumber?.message}
                         autoComplete="on"
-                        {...register('documentNumber')}
+                        {...register("documentNumber")}
                         isRequired={true}
                       />
                     </div>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-x-3'>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
                       <Textbox
                         id="email"
                         type="email"
@@ -285,7 +310,7 @@ const Dashboard = () => {
                         isError={!!errors.email}
                         errorMessage={errors?.email?.message}
                         autoComplete="on"
-                        {...register('email')}
+                        {...register("email")}
                         readOnly
                         disabled
                         isRequired={true}
@@ -299,14 +324,17 @@ const Dashboard = () => {
                         isError={!!errors.cellPhone}
                         errorMessage={errors?.cellPhone?.message}
                         autoComplete="on"
-                        {...register('cellPhone')}
+                        {...register("cellPhone")}
                         isRequired={true}
                       />
                     </div>
-
                   </div>
-                  <div className='self-end mt-[25px]'>
-                    <button type="submit" disabled={!isValid} className="button button-primary">
+                  <div className="self-end mt-[25px]">
+                    <button
+                      type="submit"
+                      disabled={!isValid}
+                      className="button button-primary"
+                    >
                       Actualizar
                     </button>
                   </div>
