@@ -21,9 +21,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
   const { push, pathname, asPath } = useRouter();
   const [page, setPage] = useState<number>(1);
 
+  const principalSearch = sys.id === '75w6bsU9MWCoxDtT7HXyGb';
+
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
-    ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
+    ...parentsCollection.items.map((p) => ["parent", p.sys.id])
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
@@ -95,13 +97,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
   }, [asPath]);
   return (
     <div className="relative w-full">
-      {(sys.id == '75w6bsU9MWCoxDtT7HXyGb' && data?.totalItems > 0) && (
+      {(principalSearch && data?.totalItems > 0) && (
         <div>
           <h2 className="text-center text-blue-dark text-4xl">Resultados de búsqueda</h2>
           <p className="text-center text-2xl">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
-      {mainFacetContent?.listedContents?.length > 0 &&(
+      {mainFacetContent?.listedContents?.length > 0 && (
         <CarouselCategoriesBlock
           view={{
             alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",
@@ -116,10 +118,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
           filterName={urlParams?.get(mainFacetContent?.name)}
         />
       )}
-      {facetsContent&& (
+      {facetsContent && (
         <ProductFilterBlock
           products={{ listedContentsCollection: data }}
           facets={facetsContent}
+          principalSearch={principalSearch}
           onFacetsChange={facetsChangeHandle}
           isLoading={isLoading}
           error={error}

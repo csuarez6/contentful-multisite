@@ -132,7 +132,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/busqueda?text=${e.target.value}`);
+    const value = e.target.value ?? searchText;
+    router.push(`/busqueda?text=${value}`);
   };
 
   const handleInputChange = (e) => {

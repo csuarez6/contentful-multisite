@@ -234,8 +234,8 @@ const getFilteredContent = async ({
   fullTextSearch,
   contentTypesFilter,
   parentIds = [],
-  availableFacets = [],
   pageResults = 9,
+  availableFacets = [],
   filters = {},
   page = 1,
 }) => {
@@ -271,7 +271,7 @@ const getFilteredContent = async ({
     filteredContentResults.facets = await getFacetsValues(
       filteredContentResults.facets
     );
-  }else{
+  } else {
    filteredContentResults.facets = []; 
   }
 

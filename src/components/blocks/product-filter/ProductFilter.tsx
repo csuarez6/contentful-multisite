@@ -4,6 +4,7 @@ import FeaturedProductBlock from "../product-featured/FeaturedProductBlock";
 
 import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProductBlockSkeleton/FeaturedProductBlockSkeleton";
 import InfoCardBlock from "../info-card/InfoCard";
+import SearchCardBlock from "../search-card/SearchCard";
 
 interface IWithLoadingData {
   isLoading?: boolean;
@@ -11,6 +12,7 @@ interface IWithLoadingData {
 }
 
 const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
+  principalSearch,
   products,
   facets,
   onFacetsChange = null,
@@ -49,6 +51,12 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
     return <InfoCardBlock {...products} />;
   };
 
+  const generalSearchGrill = () => {
+    if (error) return <div>failed to load</div>;
+    if (isLoading) return <FeaturedProductBlockSkeleton />;
+    return <SearchCardBlock {...products} />;
+  };
+
   return (
     <section className="w-full">
       <div className="flex md:justify-between">
@@ -64,7 +72,14 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
           })}
         </div>
       </div>
-      {type === "AuxRate" ? rateGrill() : productGrill()}
+      {principalSearch ? generalSearchGrill() : (() => {
+        switch (type) {
+          case 'AuxRate':
+            return rateGrill();
+          default:
+            return productGrill();
+        }
+      })()}
     </section>
   );
 };

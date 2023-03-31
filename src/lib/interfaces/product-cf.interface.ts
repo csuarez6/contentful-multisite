@@ -42,6 +42,7 @@ export interface IProductDetails {
 }
 
 export interface IProductFilterBlock {
+  principalSearch?: boolean;
   products?: IPromoBlock;
   facets?: ISelect[];
   onFacetsChange?: (newQueryString: string) => void;

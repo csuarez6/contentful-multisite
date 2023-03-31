@@ -53,6 +53,7 @@ export interface IPromoContent {
     showButton?: boolean;
     content?: IRichText;
     mediaInternalLink?: IAsset;
+    urlPath?: string;
 }
 
 export interface IPromoBlock extends IBlockProps {
