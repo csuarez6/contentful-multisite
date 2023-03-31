@@ -81,7 +81,7 @@ export const getMerchantToken = async () => {
     CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
     return accessToken;
   } catch (error) {
-    console.error(error);
+    console.error('Error on «getMerchantToken»', error);
     return '';
   };
 };
