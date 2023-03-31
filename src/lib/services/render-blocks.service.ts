@@ -36,10 +36,12 @@ const jsonToReactComponents = (jsonItems, attachProps = {}) => {
       return viewNoSupported(item.__typename, item?.view?.__typename ?? item?.simpleView);
     }
 
+    const isFirst = (jsonItems[key - 1]?.__typename === "BlockBreadcrumb" && key == 1) || key == 0;
+
     const cleanItem = {
       ...item,
       ...attachProps,
-      isFirst: key == 0,
+      isFirst,
       isLast: key == jsonItems.length - 1,
       key: item.__typename + "-" + key,
       asBlock: true,

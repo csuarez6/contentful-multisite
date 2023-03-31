@@ -45,6 +45,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   view,
   blockId,
   sysId,
+  isFirst
 }) => {
   const { asPath } = useRouter();
   const [tabIndex, setTabIndex] = useState(0);
@@ -55,7 +56,8 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
       {(pretitle || title || description) && (
         <div className="grid gap-3">
           {pretitle && <p className="title is-4 !font-semibold text-category-blue-dark text-center">{pretitle}</p>}
-          {title && <h2 className="text-blue-dark text-center">{title}</h2>}
+          {isFirst && title && <h1 className="text-blue-dark text-center">{title}</h1>}
+          {!isFirst && title && <h2 className="text-blue-dark text-center">{title}</h2>}
           {description && <div className="text grey-30">{documentToReactComponents(description.json)}</div>}
         </div>
       )}
