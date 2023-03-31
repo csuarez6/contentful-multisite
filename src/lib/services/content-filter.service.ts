@@ -235,7 +235,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
 };
 
 const getFilteredContent = async ({
-  fullTextSearch,
+  fullTextSearch = '',
   contentTypesFilter,
   parentIds = [],
   pageResults,
