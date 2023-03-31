@@ -50,6 +50,7 @@ const PageQuery = `
       }
     }
   }
+  showHeader
 `;
 
 export const PageMinimalQuery = `

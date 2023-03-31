@@ -1,6 +1,6 @@
 .richtext-container > p,
 .richtext-container :is(h1, h2, h3, h4, h5, h6) {
-  @apply mb-6;
+  @apply mb-4;
 }
 
 .richtext-container table :is(th, td) p:nth-child(n+2) {

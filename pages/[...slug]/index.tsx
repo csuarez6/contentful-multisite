@@ -7,9 +7,7 @@ import {
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import {
-  IProductOverviewDetails,
-} from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
@@ -23,19 +21,22 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
 import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 import getBreadcrumbs from "@/utils/breadcrumbs";
+import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
 
-const CustomPage: NextPageWithLayout = (
-  props: IPage & IProductOverviewDetails
-) => {
-  const { blocksCollection, __typename } = props;
+const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
+  const { blocksCollection, content, __typename } = props;
 
-  return __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
+  return (
     <>
       {jsonToReactComponents(blocksCollection.items)}
-      <ProductOverview {...props} />
+      {
+        __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
+          <ProductOverview {...props} />
+        ) : (
+          content?.json && <RichtextPage {...props} />
+        )
+      }
     </>
-  ) : (
-    <>{jsonToReactComponents(blocksCollection.items)}</>
   );
 };
 
