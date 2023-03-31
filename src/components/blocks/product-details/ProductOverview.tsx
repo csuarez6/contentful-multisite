@@ -492,40 +492,42 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   {(price == undefined ||
                     productsQuantity == undefined ||
                     Number(productsQuantity) <= 0) && (
-                    <div
-                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                      role="alert"
-                    >
-                      <strong className="font-bold">Info! </strong>
-                      <span className="block sm:inline">
-                        Este producto no se encuentra disponible en este
-                        momento.
-                      </span>
-                    </div>
-                  )}
+                      <div
+                        className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                        role="alert"
+                      >
+                        <strong className="font-bold">Info! </strong>
+                        <span className="block sm:inline">
+                          Este producto no se encuentra disponible en este
+                          momento.
+                        </span>
+                      </div>
+                    )}
                   {price &&
                     productsQuantity &&
-                    Number(productsQuantity) > 0 && (
-                      <>
-                        <p className="text-[#035177] max-md:text-2xl title is-3">
-                          {price} Hoy
-                        </p>
-                        <div className="text-sm text-grey-30">
-                          <p>{productsQuantity} unidades disponibles</p>
-                        </div>
-                      </>
-                    )}
+                    Number(productsQuantity) > 0 ? (
+                    <>
+                      <p className="text-[#035177] max-md:text-2xl title is-3">
+                        {price} Hoy
+                      </p>
+                      <div className="text-sm text-grey-30">
+                        <p>{productsQuantity} unidades disponibles</p>
+                      </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden md:flex flex-col gap-[15px]"
                   >
                     <div className=" hidden sm:flex flex-col gap-[22px] pt-[5px] my-5">
                       {sku &&
-                      price &&
-                      productsQuantity &&
-                      Number(productsQuantity) > 0 &&
-                      marketId &&
-                      marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
+                        price &&
+                        productsQuantity &&
+                        Number(productsQuantity) > 0 &&
+                        marketId &&
+                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
                         <button
                           className="button button-primary 2xl:min-w-[348px] text-center border border-solid border-lucuma"
                           type="button"
@@ -537,7 +539,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         ""
                       )}
                       <CustomLink
-                        className="button button-outline 2xl:min-w-[348px] text-center block"
+                        className="button button-outline w-full 2xl:min-w-[348px] text-center block"
                         content={{ urlPath: callbackURL }}
                       >
                         Te llamamos
@@ -642,11 +644,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         </section>
         {
           relatedProducts?.length > 0 && (
-            <section className="section grid gap-9">
-              <div className="grid gap-9 text-left">
+            <section className="grid section gap-9">
+              <div className="grid text-left gap-9">
                 <h2 className="text-blue-dark">Te puede interesar</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 2lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2lg:grid-cols-3">
                 {relatedProducts.map((el) => (
                   <FeaturedProduct {...el} key={el.name} />
                 ))}
@@ -714,7 +716,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             marketId &&
             marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
               <a
-                className="button button-primary w-1/2 shrink-0 grow flex items-center justify-center text-center text-[13px]"
+                className="button button-primary w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px]"
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
@@ -731,7 +733,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </a>
             )}
           <CustomLink
-            linkClassName="button button-outline w-1/2 shrink-0 grow flex items-center justify-center text-center text-[13px] gap-1"
+            linkClassName="button button-outline w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px] gap-1"
             content={{ urlPath: callbackURL }}
           >
             Te llamamos
