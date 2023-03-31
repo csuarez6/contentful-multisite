@@ -5,16 +5,18 @@ FROM node:16-alpine as base
 RUN apk add --update --no-cache vim
 
 ## Install contenful cli
-RUN npm install -g contentful-cli pnpm@v7
+RUN npm install -g contentful-cli
+# RUN npm install -g contentful-cli pnpm@v7
 
 RUN mkdir -p /app
 WORKDIR /app
 
 ## Copy package files
-COPY pnpm-lock.yam[l] package.json /app/
+# COPY pnpm-lock.yam[l] package.json /app/
+COPY yarn.loc[k] package.json /app/
 
 ## Install packages
-RUN pnpm install
+RUN yarn install
 
 ## Copy config files
 COPY tailwind.config.js postcss.config.js next* *.json sentry* tsconfig.json middleware.ts /app/
@@ -30,7 +32,7 @@ EXPOSE 3000 9229
 
 FROM base as dev
 
-CMD [ "pnpm", "dev" ]
+CMD [ "yarn", "dev" ]
 
 FROM base as prod
 
@@ -123,5 +125,5 @@ ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
 ARG DEFAULT_DOMAIN
 ENV DEFAULT_DOMAIN=$DEFAULT_DOMAIN
 
-RUN pnpm build
-CMD [ "pnpm", "start" ]
+RUN yarn build
+CMD [ "yarn", "start" ]

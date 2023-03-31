@@ -37,5 +37,5 @@ export interface IPage {
     mainNavCollection?: {
         items?: Array<IPage & INavigation & IPromoContent>;
     };
-    showHeader: boolean;
+    showHeader?: boolean;
 }
