@@ -40,7 +40,7 @@ const getAlgoliaResults = async ({
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
-  pageResults = 9,
+  pageResults,
   filters = {},
   page = 1,
 }) => {
@@ -50,12 +50,14 @@ const getAlgoliaResults = async ({
     totalPages: number;
     actualPage: number;
     facets: any;
+    pageResults: number;
   } = {
     items: [],
     totalItems: 0,
     totalPages: 0,
     actualPage: 0,
     facets: {},
+    pageResults: 9,
   };
 
   const types = [];
@@ -126,6 +128,8 @@ const getAlgoliaResults = async ({
     page: resultObject.actualPage,
     facets: resultObject.facets,
   } = resultAlgolia);
+
+  resultObject.pageResults = pageResults;
 
   return resultObject;
 };
@@ -234,7 +238,7 @@ const getFilteredContent = async ({
   fullTextSearch,
   contentTypesFilter,
   parentIds = [],
-  pageResults = 9,
+  pageResults,
   availableFacets = [],
   filters = {},
   page = 1,
@@ -261,7 +265,12 @@ const getFilteredContent = async ({
   }
 
   filteredContentResults.items = filteredContentResults.items.map(
-    (item) => item.fields
+    (item) =>  {
+      return {
+        ...item.fields,
+        objectID: item.objectID
+      };
+    }
   );
 
   if (

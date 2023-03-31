@@ -25,7 +25,8 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
-    ...parentsCollection.items.map((p) => ["parent", p.sys.id])
+    ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
+    ["pageResults", preloadContent?.pageResults ?? 9]
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
@@ -103,7 +104,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
           <p className="text-center text-2xl">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
-      {mainFacetContent?.listedContents?.length > 0 && (
+      {(title || mainFacetContent?.listedContents?.length > 0) && (
         <CarouselCategoriesBlock
           view={{
             alignTitle: mainFacet && mainFacetContent ? "Left" : "Center",

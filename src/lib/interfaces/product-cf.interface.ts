@@ -50,6 +50,7 @@ export interface IProductFilterBlock {
 };
 
 export interface IProductOverviewDetails {
+  __typename?: string;
   name?: string;
   promoTitle?: string;
   urlPath?: string;
@@ -86,4 +87,16 @@ export interface IProductOverviewDetails {
     image?: IImageAsset;
   };
   relatedProducts?: IProductOverviewDetails[]
+}
+
+export interface IAllyOverviewDetails {
+  __typename?: string;
+  name?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  promoTitle?: string;
+  promoDescription?: IRichText;
+  promoImage?: IImageAsset;
+  promoIcon?: string;
 }

@@ -17,6 +17,7 @@ interface IBlockProps {
 
 export interface IPromoContent {
     __typename?: string;
+    objectID?: string;
     sys?: {
         id?: string;
     };

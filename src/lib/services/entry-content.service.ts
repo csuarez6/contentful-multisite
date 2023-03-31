@@ -100,7 +100,8 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
       contentTypesFilter: entryContent.contentTypesFilter ?? [],
       parentIds: entryContent.parentsCollection?.items?.map((p) => p.sys.id) ?? [],
       availableFacets: entryContent.availableFacets ?? [],
-      fullTextSearch: entryContent.fullTextSearch ?? ''
+      fullTextSearch: entryContent.fullTextSearch ?? '',
+      pageResults: entryContent.pageResults ?? 9,
     });
 
     _.merge(entryContent, { preloadContent });

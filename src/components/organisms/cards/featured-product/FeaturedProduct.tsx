@@ -2,10 +2,24 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
+import { IAllyOverviewDetails, IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 
-const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
+const iconCellphone: IIcon = {
+  icon: "cellphone",
+  size: 28,
+  className: "h-5 w-5",
+};
+
+const iconLocation: IIcon = {
+  icon: "location",
+  size: 28,
+  className: "h-5 w-5",
+};
+
+const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> = ({
+  __typename,
   promoTitle,
   state,
   cta,
@@ -17,8 +31,13 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
   paymentMethods,
   promoImage,
   urlPath,
-  trademark
+  trademark,
+  phone,
+  address,
+  city,
 }) => {
+  const imageSize = __typename == 'AuxAlly' ? {'w': 384, 'h': 180} : {'w': 336, 'h': 291};
+
   return (
     <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items || promoImage) && (
@@ -38,24 +57,24 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
             </div>
           )}
           {(imagesCollection?.items || cta || promoImage) && (
-            <div className="relative aspect-[336/291]">
+            <div className={`relative aspect-[${imageSize.w}/${imageSize.h}]`}>
               {promoImage ? (
-                <figure className="aspect-[336/291]">
+                <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
                   <Image
                     alt={promoImage.title}
                     src={promoImage.url}
-                    width={336}
-                    height={291}
+                    width={imageSize.w}
+                    height={imageSize.h}
                     className="w-full h-full"
                   />
                 </figure>
               ) : (
-                <figure className="aspect-[336/291]">
+                <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
                   <Image
                     alt={imagesCollection.items[0].title}
                     src={imagesCollection.items[0].url}
-                    width={336}
-                    height={291}
+                    width={imageSize.w}
+                    height={imageSize.h}
                     className="w-full h-full"
                   />
                 </figure>
@@ -66,7 +85,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                     {cta?.name}
                   </a>
                 </Link>
-              ) : (
+              ) : urlPath && (
                 <CustomLink
                   className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10"
                   content={{
@@ -82,9 +101,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
         <div className="flex flex-col gap-[25px]">
           <div className="flex flex-col gap-[7px]">
             <div className="flex justify-between flex-wrap items-center gap-1">
-              {promoTitle && (
-                <h3 className="text-blue-dark title is-4">{promoTitle}</h3>
-              )}
+              <h3 className="text-blue-dark title is-4">{promoTitle}</h3>
               {rating && (
                 <div className="flex items-center gap-[13px] mr-1">
                   <figure className="w-[15px]">
@@ -103,6 +120,18 @@ const FeaturedProduct: React.FC<IProductOverviewDetails> = ({
                 </div>
               )}
             </div>
+            {address && (
+              <div className="text-size-small text-blue-dark">
+                <Icon {...iconLocation} />
+                {address} - {city}
+              </div>
+            )}
+            {phone && (
+              <div className="text-size-small text-blue-dark">
+                <Icon {...iconCellphone} />
+                {phone}
+              </div>
+            )}
             {trademark && (
               <div className="text-size-small text-blue-dark">
                 {trademark.name}
