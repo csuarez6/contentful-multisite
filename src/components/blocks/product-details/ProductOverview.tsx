@@ -519,7 +519,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   )}
                   <form
                     onSubmit={(e) => e.preventDefault()}
-                    className="hidden md:flex flex-col gap-[15px]"
+                    className="hidden sm:flex flex-col gap-[15px]"
                   >
                     <div className=" hidden sm:flex flex-col gap-[22px] pt-[5px] my-5">
                       {sku &&
