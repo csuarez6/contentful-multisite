@@ -90,11 +90,13 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         )}
         <meta name="robots" content="noindex, nofollow" />       
 
-        <script 
+        {domain && 
+          <script 
           type="application/ld+json"
           dangerouslySetInnerHTML={addProductJsonLd()}
           key="product-jsonld"
-        />
+          />
+        }
       </Head>
 
       {preview && (
