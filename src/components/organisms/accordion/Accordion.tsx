@@ -14,7 +14,7 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
           <Disclosure
             as="div"
             key={i}
-            className="border-t border-neutral-80"
+            className="first:border-0 border-t border-neutral-80"
           >
             {({ open }) => (
               <div>
