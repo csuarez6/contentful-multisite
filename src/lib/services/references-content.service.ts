@@ -8,6 +8,7 @@ const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
     'blocksCollection',
     'mainNavCollection',
+    'relatedContentCollection',
     'parent'
   ],
   [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: [

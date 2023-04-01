@@ -34,8 +34,11 @@ export interface IPage {
     layout?: ILayout;
     children?: React.ReactNode;
     urlPath?: string;
+    showHeader?: boolean;
     mainNavCollection?: {
         items?: Array<IPage & INavigation & IPromoContent>;
     };
-    showHeader?: boolean;
+    relatedContentCollection?: {
+        items?: Array<IPage & INavigation & IPromoContent>;
+    };
 }

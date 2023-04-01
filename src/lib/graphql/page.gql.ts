@@ -51,6 +51,22 @@ const PageQuery = `
     }
   }
   showHeader
+  relatedContentCollection{
+    items {
+      ...on Page {
+        ${DefaultQuery}
+      }
+      ...on AuxNavigation {
+        ${DefaultQuery}
+      }
+      ...on AuxCustomContent {
+        ${DefaultQuery}
+      }
+      ...on Product {
+        ${DefaultQuery}
+      }
+    }
+  }
 `;
 
 export const PageMinimalQuery = `
