@@ -4,15 +4,10 @@ FROM node:16-alpine as base
 ## Install util packages
 RUN apk add --update --no-cache vim
 
-## Install contenful cli
-RUN npm install -g contentful-cli
-# RUN npm install -g contentful-cli pnpm@v7
-
 RUN mkdir -p /app
 WORKDIR /app
 
 ## Copy package files
-# COPY pnpm-lock.yam[l] package.json /app/
 COPY yarn.loc[k] package.json /app/
 
 ## Install packages
@@ -31,6 +26,9 @@ COPY styles /app/styles
 EXPOSE 3000 9229
 
 FROM base as dev
+
+## Install contenful cli
+RUN npm install -g contentful-cli
 
 CMD [ "yarn", "dev" ]
 

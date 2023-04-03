@@ -21,13 +21,10 @@ stages:
 
 Test_Linter:
   stage: Test
-
   before_script:
-    - npm i -g pnpm@v7
-    - pnpm install
+    - yarn install
   script:
-    - pnpm lint
-
+    - yarn lint
   when: manual
   only:
     refs:
@@ -185,7 +182,6 @@ pages:
 
   variables:
     STORYBOOK_PREVIEW_URL: 'https://grupovanti.gitlab.io/Marketplace/web-commerce/main'
-
   cache:
     key: 'sp-storybook'
     paths:
@@ -193,11 +189,9 @@ pages:
   artifacts:
     paths:
       - public
-
   before_script: 
-    - npm i -g pnpm@v7
-    - pnpm install
-    - pnpm build-storybook
+    - yarn install
+    - yarn build-storybook
   script:
     - rm -rf "public/main"
     - mkdir -p "public/main"

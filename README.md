@@ -16,6 +16,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - [CommerceLayer](https://commercelayer.io/)
 - [Tailwindcss](https://tailwindcomponents.com/cheatsheet/)
 - [PNPM](https://pnpm.io/)
+- [YARN](https://yarnpkg.com/)
 
 Remember mantain the [best good practices](https://stackoverflow.blog/2022/03/30/best-practices-to-increase-the-speed-for-next-js-apps/) and check your code with `make lint`.
 

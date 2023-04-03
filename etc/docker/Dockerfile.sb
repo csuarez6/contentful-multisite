@@ -1,17 +1,14 @@
 ##### Building Base image #####
 FROM node:16-alpine
 
-## Install pnpm
-RUN npm install -g pnpm@v7
-
 RUN mkdir -p /app
 WORKDIR /app
 
 ## Cooy config files
-COPY package.json pnpm-lock.yaml /app/
+COPY package.json yarn.loc[k] /app/
 
 ## Install packages
-RUN pnpm install
+RUN yarn install
 
 ## Cooy config files
 COPY tailwind.config.js postcss.config.js next* *.json /app/
@@ -24,4 +21,4 @@ COPY public /app/public
 COPY styles /app/styles
 
 EXPOSE 6006
-CMD [ "pnpm", "storybook" ]
+CMD [ "yarn", "storybook" ]

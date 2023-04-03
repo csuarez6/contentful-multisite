@@ -21,13 +21,10 @@ stages:
 
 Test_Linter:
   stage: Test
-
   before_script:
-    - npm i -g pnpm@v7
-    - pnpm install
+    - yarn install
   script:
-    - pnpm lint
-
+    - yarn lint
   only:
     refs:
       - main
@@ -38,25 +35,25 @@ Test_Linter:
 
 Deploy_To_QA:
   stage: Deploy
-
   variables:
-    PREVIEW_URL: $VERCEL_PROJECT_NAME-qa.vercel.app
     VERCEL_SCOPE: $VERCEL_SCOPE
     VERCEL_ORG_ID: $VERCEL_ORG_ID
     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
     VERCEL_TOKEN: $VERCEL_TOKEN
-
   before_script:
     - npm i -g vercel
+    - |
+      if [[ $CI_ENVIRONMENT_URL ]]; then VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $CI_ENVIRONMENT_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes > /dev/null 2>&1; else echo "No env url, skipping"; fi;
   script:
     - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --yes --token $VERCEL_TOKEN --scope $VERCEL_SCOPE)
-    - vercel alias set $DEPLOYMENT_URL $PREVIEW_URL -t $VERCEL_TOKEN --scope $VERCEL_SCOPE
-
+    - echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" > deploy.env
+  artifacts:
+    reports:
+      dotenv: deploy.env 
   environment:
-    name: review/QA
-    url: https://$VERCEL_PROJECT_NAME-qa.vercel.app
-    # on_stop: Stop_QA_Deployment
-
+    name: review/$CI_COMMIT_REF_NAME
+    url: $DEPLOYMENT_URL
+    on_stop: Stop_QA_Deployment
   when: manual
   only:
     refs:
@@ -64,55 +61,48 @@ Deploy_To_QA:
     changes: *changes
   needs: ["Test_Linter"]
 
-# Stop_QA_Deployment:
-#   stage: Stop
-
-#   variables:
-#     PREVIEW_DEV_URL: $VERCEL_PROJECT_NAME-qa.$VERCEL_SCOPE.vercel.app
-#     VERCEL_ORG_ID: $VERCEL_ORG_ID
-#     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
-#     VERCEL_TOKEN: $VERCEL_TOKEN
-#     VERCEL_SCOPE: $VERCEL_SCOPE
-
-#   when: manual
-#   environment:
-#     name: review/QA
-#     action: stop
-
-#   before_script:
-#     - npm i -g vercel
-#   script:
-#     - VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $PREVIEW_DEV_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes
-
-#   only:
-#     refs:
-#       - merge_requests
-#     changes: *changes
-#   except:
-#     - main
-#     - tags
-#   needs: ["Deploy_To_QA"]
+Stop_QA_Deployment:
+  stage: Stop
+  variables:
+    PREVIEW_DEV_URL: $VERCEL_PROJECT_NAME-qa.$VERCEL_SCOPE.vercel.app
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    VERCEL_TOKEN: $VERCEL_TOKEN
+    VERCEL_SCOPE: $VERCEL_SCOPE
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  before_script:
+    - npm i -g vercel
+  script:
+    - |
+      if [[ $CI_ENVIRONMENT_URL ]]; then VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel remove $CI_ENVIRONMENT_URL --token $VERCEL_TOKEN --scope $VERCEL_SCOPE --yes > /dev/null 2>&1; else echo "No env url, skipping"; fi;
+  only:
+    refs:
+      - merge_requests
+    changes: *changes
+  except:
+    - main
+    - tags
+  needs: ["Deploy_To_QA"]
 
 Deploy_Production_APP:
   stage: Deploy
-
   variables:
     VERCEL_SCOPE: $VERCEL_SCOPE
     VERCEL_ORG_ID: $VERCEL_ORG_ID
     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
     VERCEL_TOKEN: $VERCEL_TOKEN
-
   before_script:
     - npm i -g vercel
   script:
     - VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --prod --token $VERCEL_TOKEN --scope $VERCEL_SCOPE
   # after_script:
   #   - ./etc/slack/notificationStack.sh -v
-
   environment:
     name: Production
     url: https://vanti.aplyca.com
-
   when: on_success
   only:
     refs:
@@ -123,38 +113,10 @@ Deploy_Production_APP:
     - tags
   needs: ["Test_Linter"]
 
-Delete_Preview_STORYBOOK:
-  stage: Stop
-
-  cache:
-    key: 'sp-storybook'
-    paths:
-      - public
-
-  script:
-    - rm -rf "public/main"
-
-  variables:
-    GIT_STRATEGY: none # needed to prevent "Couldn't find remote ref" error
-  environment:
-    name: Storybook
-    action: stop
-
-  when: manual
-  only:
-    refs:
-      - merge_requests
-    changes: *changes
-  except:
-    - main
-    - tags
-
 pages:
   stage: Deploy
-
   variables:
     STORYBOOK_PREVIEW_URL: 'https://grupovanti.gitlab.io/Marketplace/web-commerce/main'
-
   cache:
     key: 'sp-storybook'
     paths:
@@ -162,11 +124,9 @@ pages:
   artifacts:
     paths:
       - public
-
   before_script: 
-    - npm i -g pnpm@v7
-    - pnpm install
-    - pnpm build-storybook
+    - yarn install
+    - yarn build-storybook
   script:
     - rm -rf "public/main"
     - mkdir -p "public/main"
@@ -177,14 +137,12 @@ pages:
   environment:
     name: Storybook
     url: https://grupovanti.gitlab.io/Marketplace/web-commerce/main/
-    on_stop: Delete_Preview_STORYBOOK
-
   when: manual
   only:
     refs:
       - main
-      - merge_requests
     changes: *changes
   except:
+    - merge_requests
     - tags
   needs: ["Test_Linter"]
