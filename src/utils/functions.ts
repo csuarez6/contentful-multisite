@@ -172,3 +172,9 @@ export const getAlign = (name) => {
       return "center";
   }
 };
+
+export const scrollContent = (idContainer: string) => {
+  document
+    .querySelector("#" + idContainer)
+    .scrollIntoView({ behavior: "smooth", block: "start" });
+};

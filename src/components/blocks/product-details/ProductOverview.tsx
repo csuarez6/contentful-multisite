@@ -6,127 +6,17 @@ import {
 } from "@/lib/interfaces/product-cf.interface";
 import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
-import Icon, { IIcon } from "@/components/atoms/icon/Icon";
+import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { useContext, useEffect, useState } from "react";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
-import { BLOCKS } from "@contentful/rich-text-types";
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
-
-const iconInvoice: IIcon = {
-  icon: "invoice",
-  size: 28,
-  className: "",
-};
-
-const iconPSE: IIcon = {
-  icon: "pse",
-  size: 28,
-  className: "",
-};
-
-const iconCallback: IIcon = {
-  icon: "callback",
-  size: 28,
-  className: "h-5 w-5",
-};
-
-const scrollContent = (idContainer: string) => {
-  document
-    .querySelector("#" + idContainer)
-    .scrollIntoView({ behavior: "smooth", block: "start" });
-};
-
-const ModalIntall = () => {
-  return (
-    <div className="flex flex-col gap-12">
-      <p className="text-left">
-        Antes de empezar, queremos informarte que puedes adquirir la instalación
-        de tu gasodoméstico en esta compra.
-        <br />
-        Si aún no sabes qué incluye, puedes informarte en la landing de
-        instalación.
-      </p>
-      <div className="flex justify-end gap-2">
-        <CustomLink
-          className="button button-primary"
-          content={{ urlPath: "/" }}
-        >
-          Ir a comprar
-        </CustomLink>
-        <CustomLink
-          className="border button border-blue-dark rounded-3xl text-blue-dark"
-          content={{ urlPath: "/" }}
-        >
-          Conocer sobre instalación
-        </CustomLink>
-      </div>
-    </div>
-  );
-};
-
-const ModalShipping = () => {
-  return (
-    <div>
-      <p className="text-blue-dark">
-        Para llevar su producto, elija un tipo de envío:
-      </p>
-      <form>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Estándar (5 a 10 días hábiles)" />
-        </div>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Express (1 día hábil)" />
-        </div>
-      </form>
-      <div className="flex justify-end gap-2">
-        <CustomLink
-          className="button button-primary"
-          onClick={(e) => e.preventDefault()}
-          content={{ externalLink: "#" }}
-        >
-          Aceptar
-        </CustomLink>
-      </div>
-    </div>
-  );
-};
-
-const options = {
-  renderNode: {
-    [BLOCKS.UL_LIST]: (_node: any, children: any) => {
-      return <ul className="list-disc list-inside">{children}</ul>;
-    },
-    [BLOCKS.OL_LIST]: (_node: any, children: any) => {
-      return <ol className="list-decimal list-inside">{children}</ol>;
-    },
-    [BLOCKS.LIST_ITEM]: (_node: any, children: any) => {
-      return (
-        <li>
-          <div className="inline-block w-fit max-w-[calc(100%-50px)] align-top">
-            {children}
-          </div>
-        </li>
-      );
-    },
-    [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <table className="w-full table-auto">
-        <tbody>{children}</tbody>
-      </table>
-    ),
-    [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr className="odd:bg-neutral-90">{children}</tr>
-    ),
-    [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
-      <td className="px-3 py-4 text-grey-30 text-size-subtitle1">{children}</td>
-    ),
-  },
-};
+import { scrollContent } from "@/utils/functions";
+import { iconCallback, iconInvoice, iconPSE, ModalIntall, ModalShipping, options } from "./ProductConfig";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -150,10 +40,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 }) => {
   const router = useRouter();
   const { addToCart, reloadOrder } = useContext(CheckoutContext);
-  const currentSlug =
-    router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
-  const baseCallback =
-    currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
+  const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
+  const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
 
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
@@ -218,6 +106,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       <div className="flex flex-col gap-10 lg:gap-[72px]">
         <section className="flex flex-col gap-5 sm:gap-4 lg:flex-row xl:gap-9">
           <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6">
+
+            {/* Section - Info product */}
             <div className="flex flex-col lg:hidden">
               {sku && (
                 <div className="text-sm text-grey-30">
@@ -256,6 +146,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 </div>
               </div>
             </div>
+            {/* END Section - Info product */}
+
+            {/* Section - Carousel */}
             {imagesCollectionLocal?.length > 0 && (
               <Carousel content={imagesCollectionLocal} enableLoop={false} />
             )}
@@ -271,6 +164,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 derecho de retracto
               </CustomLink>
             </div>
+            {/* END Section - Carousel */}
+
           </div>
           <div className="flex xl:flex-grow">
             <div className="flex flex-col w-full gap-9">
@@ -642,6 +537,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
           </div>
         </section>
+
+        {/* Section - Related products */}
         {
           relatedProducts?.length > 0 && (
             <section className="grid section gap-9">
@@ -656,6 +553,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </section>
           )
         }
+        {/* END Section - Related products */}
+
+        {/* Section - Main features */}
         <div className="flex flex-col 2md:w-3/5 gap-y-12">
           {features && (
             <div id="content-features" className="grid col-span-2 gap-9">
@@ -670,7 +570,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </div>
             </div>
           )}
+          {/* END Section - Main features */}
 
+          {/* Section - promoDescription and  warranty */}
           {(promoDescription || warranty) && (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {promoDescription && (
@@ -692,6 +594,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               )}
             </div>
           )}
+          {/* END Section - promoDescription and  warranty */}
         </div>
       </div>
       {isActivedModal && (
@@ -699,6 +602,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           {modalChild}
         </ModalSuccess>
       )}
+      {/* ********* Buttons - Flow payment (mobile) ************ */}
       <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
         <div className="flex gap-[10px] items-center">
           {price && <p className="text-[#035177] title is-4">{price} Hoy</p>}
