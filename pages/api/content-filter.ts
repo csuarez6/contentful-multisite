@@ -17,7 +17,7 @@ const handler = async (
   }
 
   const filteredContent = await getFilteredContent({
-    fullTextSearch: typeof req.query.text == 'string' ? req.query.text : req.query.text[0],
+    fullTextSearch: typeof req.query.text == 'string' ? req.query.text : (req?.query?.text?.[0] ?? ''),
     pageResults: req.query.pageResults,
     contentTypesFilter: typeof req.query.type == 'string' ? [req.query.type] : req.query.type,
     parentIds: typeof req.query.parent == 'string' ? [req.query.parent] : req.query.parent,
