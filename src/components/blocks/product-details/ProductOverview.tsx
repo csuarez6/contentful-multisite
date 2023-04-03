@@ -714,24 +714,26 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             productsQuantity &&
             Number(productsQuantity) > 0 &&
             marketId &&
-            marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
-              <a
-                className="button button-primary w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px]"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onBuy)
-                    onBuy(
-                      PaymentMethodType.pse,
-                      sku,
-                      promoImage.url,
-                      promoTitle
-                    );
-                }}
-              >
-                Comprar con PSE
-              </a>
-            )}
+            marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
+            <a
+              className="button button-primary w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px]"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onBuy)
+                  onBuy(
+                    PaymentMethodType.pse,
+                    sku,
+                    promoImage.url,
+                    promoTitle
+                  );
+              }}
+            >
+              Comprar con PSE
+            </a>
+          ) : (
+            ""
+          )}
           <CustomLink
             linkClassName="button button-outline w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px] gap-1"
             content={{ urlPath: callbackURL }}
