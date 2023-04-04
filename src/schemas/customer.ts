@@ -17,11 +17,21 @@ export const customerSchema = object({
         .nullable()
         .required("Dato Requerido")
         .min(8, "Faltan Números"),
-    password: string().required("Dato Requerido").min(6, "Mínimo 6 caracteres"),
+    password: string()
+        .required("Dato Requerido")
+        .matches(
+            //eslint-disable-next-line
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
+        ),
     confirmPassword: string()
         .required("Dato Requerido")
-        .min(6, "Mínimo 6 caracteres")
-        .oneOf([ref("password")], "Contraseñas no coinciden"),
+        .oneOf([ref("password")], "Contraseñas no coinciden")
+        .matches(
+            //eslint-disable-next-line
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
+        ),
     contractNumber: number()
         .required("Dato Requerido")
         .nullable()

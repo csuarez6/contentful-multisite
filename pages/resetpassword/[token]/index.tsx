@@ -29,12 +29,20 @@ const schema = yup.object({
   password: yup
     .string()
     .required("Dato Requerido")
-    .min(6, "Mínimo 6 caracteres"),
+    .matches(
+      //eslint-disable-next-line
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
+    ),
   confirmPassword: yup
     .string()
     .required("Dato Requerido")
-    .min(6, "Mínimo 6 caracteres")
-    .oneOf([yup.ref("password")], "Contraseñas no coinciden"),
+    .oneOf([yup.ref("password")], "Contraseñas no coinciden")
+    .matches(
+      //eslint-disable-next-line
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
+    ),
   tID: yup.string(),
   resetT: yup.string(),
 });
