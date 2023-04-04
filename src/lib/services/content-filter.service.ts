@@ -28,8 +28,8 @@ const applyFilterModifier = (filterKey, filterValue, modifier) => {
         ? `${filterKey}:${min} TO ${max}`
         : `${filterKey} <= ${max}`
       : min
-      ? `${filterKey} >= ${min}`
-      : "";
+        ? `${filterKey} >= ${min}`
+        : "";
   }
 
   return filterValueModified;
@@ -70,7 +70,7 @@ const getAlgoliaResults = async ({
     const { queryName: type, algoliaType } = CONTENTFUL_QUERY_MAPS[
       _.upperFirst(contentTypeFilter)
     ] ?? { queryName: null };
-    if (type || algoliaType) types.push( algoliaType ?? type);
+    if (type || algoliaType) types.push(algoliaType ?? type);
   }
 
   const contentTypeFilterSearchQuery = types.map(
@@ -79,7 +79,7 @@ const getAlgoliaResults = async ({
   algoliaFilter.push(
     `(${contentTypeFilterSearchQuery.join(" OR ")})`
   );
-  
+
   if (parentIds?.length) {
     const parentIdsSearchQuery = parentIds?.map(
       (pid) => `fields.parent.sys.id:${pid}`
@@ -109,6 +109,9 @@ const getAlgoliaResults = async ({
     }
   }
 
+  // Filter to skip 'testPage'
+  algoliaFilter.push(`NOT metadata.tags.sys.id:testPage`);
+
   const indexSearch = getAlgoliaSearchIndex(
     process.env.ALGOLIASEARCH_APP_ID,
     process.env.ALGOLIASEARCH_READ_API_KEY
@@ -117,7 +120,7 @@ const getAlgoliaResults = async ({
     filters: algoliaFilter.join(' AND '),
     facets: algoliaFacets,
     hitsPerPage: pageResults,
-    attributesToRetrieve: ["fields"],
+    attributesToRetrieve: ["fields", "metadata"],
     page: --page,
   });
 
@@ -265,7 +268,7 @@ const getFilteredContent = async ({
   }
 
   filteredContentResults.items = filteredContentResults.items.map(
-    (item) =>  {
+    (item) => {
       return {
         ...item.fields,
         objectID: item.objectID
@@ -281,7 +284,7 @@ const getFilteredContent = async ({
       filteredContentResults.facets
     );
   } else {
-   filteredContentResults.facets = []; 
+    filteredContentResults.facets = [];
   }
 
   return filteredContentResults;
