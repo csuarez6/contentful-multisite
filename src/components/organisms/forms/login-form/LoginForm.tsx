@@ -27,11 +27,7 @@ const schema = yup.object({
   password: yup
     .string()
     .required("Dato Requerido")
-    .matches(
-      //eslint-disable-next-line
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
-    ),
+    .min(8, "Mínimo 8 caracteres"),
   tokenReCaptcha: yup.string(),
 });
 
