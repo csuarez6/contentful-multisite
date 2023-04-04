@@ -15,13 +15,9 @@ const handler = async (
 
   try {
     const index = await getAlgoliaSearchIndex(
-      process.env.ALGOLIASEARCH_APP_ID,
-      process.env.ALGOLIASEARCH_READ_API_KEY
+      req.headers['x-algolia-application-id'],
+      req.headers['x-algolia-api-key']
     );
-    // const index = await getAlgoliaSearchIndex(
-    //   req.headers['x-algolia-application-id'],
-    //   req.headers['x-algolia-api-key']
-    // );
 
     let entryData = typeof req.body == 'string' ? JSON.parse(req.body) : { ...req.body };
     const indexType = _.upperFirst(entryData.sys.contentType.sys.id).replaceAll('_', '');
