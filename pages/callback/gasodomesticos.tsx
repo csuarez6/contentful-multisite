@@ -230,177 +230,179 @@ const CallbackPage = () => {
 
   return (
     <>
-      <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="flex flex-col gap-6 section md:flex-row">
-        {isLoading && (
-          <div
-            role="status"
-            className="flex items-center justify-center w-full h-60"
-          >
-            <svg
-              aria-hidden="true"
-              className="w-20 h-20 text-gray-200 animate-spin fill-blue-dark"
-              viewBox="0 0 100 101"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+      <div className="main-container overflow-hidden">
+        <Breadcrumbs ctaCollection={breadcrumbs} />
+        <section className="flex flex-col gap-6 section md:flex-row">
+          {isLoading && (
+            <div
+              role="status"
+              className="flex items-center justify-center w-full h-60"
             >
-              <path
-                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                fill="currentColor"
-              />
-              <path
-                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                fill="currentFill"
-              />
-            </svg>
-            <span className="sr-only">Loading...</span>
-          </div>
-        )}
-        {sku && productData && !isLoading && (
-          <>
-            <HeadingCard
-              title="1. Diligencia tus datos para llamarte"
-              isCheck={isValid}
-              icon="personal-data"
-              classes="grow"
-            >
-              <div className="bg-white rounded-lg">
-                <form
-                  ref={refForm}
-                  className="flex flex-wrap max-w-full gap-6"
-                  onSubmit={handleSubmit(onSubmit)}
-                >
-                  <div className="w-full">
-                    <TextBox
-                      id="cellPhone"
-                      name="cellPhone"
-                      label="Escribe tu número de celular"
-                      placeholder="300 0000000"
-                      disabled={isSending}
-                      {...register("cellPhone")}
-                    />
-                    {errors.cellPhone && (
-                      <p className="mt-1 text-red-600">
-                        {errors.cellPhone?.message}
-                      </p>
-                    )}
-                  </div>
+              <svg
+                aria-hidden="true"
+                className="w-20 h-20 text-gray-200 animate-spin fill-blue-dark"
+                viewBox="0 0 100 101"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentFill"
+                />
+              </svg>
+              <span className="sr-only">Loading...</span>
+            </div>
+          )}
+          {sku && productData && !isLoading && (
+            <>
+              <HeadingCard
+                title="1. Diligencia tus datos para llamarte"
+                isCheck={isValid}
+                icon="personal-data"
+                classes="grow"
+              >
+                <div className="bg-white rounded-lg">
+                  <form
+                    ref={refForm}
+                    className="flex flex-wrap max-w-full gap-6"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
+                    <div className="w-full">
+                      <TextBox
+                        id="cellPhone"
+                        name="cellPhone"
+                        label="Escribe tu número de celular"
+                        placeholder="300 0000000"
+                        disabled={isSending}
+                        {...register("cellPhone")}
+                      />
+                      {errors.cellPhone && (
+                        <p className="mt-1 text-red-600">
+                          {errors.cellPhone?.message}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="w-full -mt-6">
-                    <CheckBox
-                      id="agreeHD"
-                      name="agreeHD"
-                      label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
-                      disabled={isSending}
-                      {...register("agreeHD")}
-                    />
-                    {errors.agreeHD && (
-                      <p className="mt-1 text-red-600">
-                        {errors.agreeHD?.message}
-                      </p>
-                    )}
-                  </div>
-                  <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
+                    <div className="w-full -mt-6">
+                      <CheckBox
+                        id="agreeHD"
+                        name="agreeHD"
+                        label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
+                        disabled={isSending}
+                        {...register("agreeHD")}
+                      />
+                      {errors.agreeHD && (
+                        <p className="mt-1 text-red-600">
+                          {errors.agreeHD?.message}
+                        </p>
+                      )}
+                    </div>
+                    <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
 
-                  <div className="w-full">
-                    <p className="font-medium text-black text-size-p2">
-                      NOTA: Al hacer click en “Enviar datos” serás contactado
-                      por un agente de Vanti
+                    <div className="w-full">
+                      <p className="font-medium text-black text-size-p2">
+                        NOTA: Al hacer click en “Enviar datos” serás contactado
+                        por un agente de Vanti
+                      </p>
+                    </div>
+                    <div className="flex justify-end w-full">
+                      <button
+                        type="submit"
+                        className="w-fit button button-primary"
+                        disabled={isSending}
+                      >
+                        Enviar datos
+                      </button>
+                    </div>
+                  </form>
+
+                  {isOpen && (
+                    <CustomModal
+                      close={closeModal}
+                      icon={isSuccess ? "callback" : "close"}
+                      title={
+                        isSuccess
+                          ? "Espera atento nuestra llamada"
+                          : "Intenta en otro momento"
+                      }
+                    >
+                      {modalBody(
+                        isSuccess,
+                        errorMessage,
+                        closeModal,
+                        productData
+                      )}
+                    </CustomModal>
+                  )}
+                </div>
+              </HeadingCard>
+              <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
+                <p className="title is-4 text-blue-dark !font-semibold">
+                  Detalle de tu pedido
+                </p>
+                <div className="flex flex-col items-start min-w-full gap-3">
+                  <figure className="aspect-square w-[214px] self-center">
+                    <Image
+                      className="w-full h-full"
+                      src={productData.promoImage.url}
+                      alt={productData.promoImage.title}
+                      width={214}
+                      height={214}
+                    />
+                  </figure>
+                  <div className="grid w-full grid-cols-2 gap-3">
+                    <p className="col-span-2 text-size-subtitle1 text-neutral-20">
+                      Productos
+                    </p>
+                    <p className="text-size-p2 text-grey-30 leading-[1.2]">
+                      {productData.productName}
+                    </p>
+                    <p className="text-size-subtitle2 text-blue-dark">
+                      {productData.price}
+                    </p>
+                    <p className="text-size-p2 text-grey-30">Cantidad</p>
+                    <p className="text-size-subtitle2 text-blue-dark">1</p>
+                  </div>
+                  <div className="grid items-center w-full grid-cols-2 p-1 rounded xxs:gap-3 bg-neutral-90">
+                    <p className="pr-3 font-semibold text-right text-black md:text-size-subtitle2 xxs:p-0">
+                      TOTAL
+                    </p>
+                    <p className="font-semibold text-black md:text-size-subtitle1">
+                      {productData.price}
                     </p>
                   </div>
-                  <div className="flex justify-end w-full">
-                    <button
-                      type="submit"
-                      className="w-fit button button-primary"
-                      disabled={isSending}
-                    >
-                      Enviar datos
-                    </button>
-                  </div>
-                </form>
-
-                {isOpen && (
-                  <CustomModal
-                    close={closeModal}
-                    icon={isSuccess ? "callback" : "close"}
-                    title={
-                      isSuccess
-                        ? "Espera atento nuestra llamada"
-                        : "Intenta en otro momento"
-                    }
-                  >
-                    {modalBody(
-                      isSuccess,
-                      errorMessage,
-                      closeModal,
-                      productData
-                    )}
-                  </CustomModal>
-                )}
+                </div>
               </div>
-            </HeadingCard>
-            <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
-              <p className="title is-4 text-blue-dark !font-semibold">
-                Detalle de tu pedido
+            </>
+          )}
+          {!sku && !isLoading && (
+            <div
+              className="w-full max-w-xs px-4 py-3 border rounded-md bg-lucuma-80 border-lucuma md:max-w-2xl"
+              role="alert"
+            >
+              <p className="font-bold text-black text-size-subtitle1">¡Alerta!</p>
+              <p className="text-black">
+                La URL es invalida, el SKU es obligatorio.
               </p>
-              <div className="flex flex-col items-start min-w-full gap-3">
-                <figure className="aspect-square w-[214px] self-center">
-                  <Image
-                    className="w-full h-full"
-                    src={productData.promoImage.url}
-                    alt={productData.promoImage.title}
-                    width={214}
-                    height={214}
-                  />
-                </figure>
-                <div className="grid w-full grid-cols-2 gap-3">
-                  <p className="col-span-2 text-size-subtitle1 text-neutral-20">
-                    Productos
-                  </p>
-                  <p className="text-size-p2 text-grey-30 leading-[1.2]">
-                    {productData.productName}
-                  </p>
-                  <p className="text-size-subtitle2 text-blue-dark">
-                    {productData.price}
-                  </p>
-                  <p className="text-size-p2 text-grey-30">Cantidad</p>
-                  <p className="text-size-subtitle2 text-blue-dark">1</p>
-                </div>
-                <div className="grid items-center w-full grid-cols-2 p-1 rounded xxs:gap-3 bg-neutral-90">
-                  <p className="pr-3 font-semibold text-right text-black md:text-size-subtitle2 xxs:p-0">
-                    TOTAL
-                  </p>
-                  <p className="font-semibold text-black md:text-size-subtitle1">
-                    {productData.price}
-                  </p>
-                </div>
-              </div>
             </div>
-          </>
-        )}
-        {!sku && !isLoading && (
-          <div
-            className="w-full max-w-xs px-4 py-3 border rounded-md bg-lucuma-80 border-lucuma md:max-w-2xl"
-            role="alert"
-          >
-            <p className="font-bold text-black text-size-subtitle1">¡Alerta!</p>
-            <p className="text-black">
-              La URL es invalida, el SKU es obligatorio.
-            </p>
-          </div>
-        )}
-        {sku && errorMessage && !isLoading && (
-          <div
-            className="w-full max-w-xs px-4 py-3 bg-red-100 border border-red-400 rounded-md md:max-w-2xl"
-            role="alert"
-          >
-            <p className="font-bold text-red-700 text-size-subtitle1">
-              ¡Error!
-            </p>
-            <p className="text-red-600">{errorMessage}</p>
-          </div>
-        )}
-      </section>
+          )}
+          {sku && errorMessage && !isLoading && (
+            <div
+              className="w-full max-w-xs px-4 py-3 bg-red-100 border border-red-400 rounded-md md:max-w-2xl"
+              role="alert"
+            >
+              <p className="font-bold text-red-700 text-size-subtitle1">
+                ¡Error!
+              </p>
+              <p className="text-red-600">{errorMessage}</p>
+            </div>
+          )}
+        </section>
+      </div>
     </>
   );
 };

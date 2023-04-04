@@ -6,7 +6,11 @@ import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/
 import { getMenu } from "@/lib/services/menu-content.service";
 
 const CustomErrorComponent = (props: any) => {
-  return <NextErrorComponent statusCode={props.statusCode} />;
+  return (
+    <div className="main-container overflow-hidden">
+      <NextErrorComponent statusCode={props.statusCode} />;
+    </div>
+  );
 };
 
 CustomErrorComponent.getInitialProps = async (context: any) => {

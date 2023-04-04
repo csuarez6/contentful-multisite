@@ -162,76 +162,78 @@ const CallbackPage = () => {
 
   return (
     <>
-      <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="section">
-        <HeadingCard
-          title="1. Diligencia tus datos para llamarte"
-          isCheck={isValid}
-          icon="personal-data"
-        >
-          <div className="bg-white rounded-lg">
-            <form
-              ref={refForm}
-              className="flex flex-wrap max-w-full gap-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="w-full">
-                <TextBox
-                  id="cellPhone"
-                  name="cellPhone"
-                  label="Escribe tu número de celular"
-                  placeholder="300 0000000"
-                  {...register("cellPhone")}
-                />
-                {errors.cellPhone && (
-                  <p className="mt-1 text-red-600">
-                    {errors.cellPhone?.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="w-full -mt-6">
-                <CheckBox
-                  id="agreeHD"
-                  name="agreeHD"
-                  label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
-                  {...register("agreeHD")}
-                />
-                {errors.agreeHD && (
-                  <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
-                )}
-              </div>
-              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
-
-              <div className="w-full">
-                <p className="font-medium text-black text-size-p2">
-                  NOTA: Al hacer click en “Enviar datos” serás contactado por un
-                  agente de Vanti
-                </p>
-              </div>
-              <div className="flex justify-end w-full">
-                <button type="submit" className="w-fit button button-primary">
-                  Enviar datos
-                </button>
-              </div>
-            </form>
-
-            {isOpen && (
-              <CustomModal
-                close={closeModal}
-                icon={isSuccess ? "alert" : "close"}
-                title={
-                  isSuccess
-                    ? "Espera nuestra llamada"
-                    : "Intenta en otro momento"
-                }
+      <div className="main-container overflow-hidden">
+        <Breadcrumbs ctaCollection={breadcrumbs} />
+        <section className="section">
+          <HeadingCard
+            title="1. Diligencia tus datos para llamarte"
+            isCheck={isValid}
+            icon="personal-data"
+          >
+            <div className="bg-white rounded-lg">
+              <form
+                ref={refForm}
+                className="flex flex-wrap max-w-full gap-6"
+                onSubmit={handleSubmit(onSubmit)}
               >
-                {modalBody(isSuccess, errorMessage, closeModal)}
-              </CustomModal>
-            )}
-          </div>
-        </HeadingCard>
-      </section>
+                <div className="w-full">
+                  <TextBox
+                    id="cellPhone"
+                    name="cellPhone"
+                    label="Escribe tu número de celular"
+                    placeholder="300 0000000"
+                    {...register("cellPhone")}
+                  />
+                  {errors.cellPhone && (
+                    <p className="mt-1 text-red-600">
+                      {errors.cellPhone?.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full -mt-6">
+                  <CheckBox
+                    id="agreeHD"
+                    name="agreeHD"
+                    label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
+                    {...register("agreeHD")}
+                  />
+                  {errors.agreeHD && (
+                    <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
+                  )}
+                </div>
+                <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
+
+                <div className="w-full">
+                  <p className="font-medium text-black text-size-p2">
+                    NOTA: Al hacer click en “Enviar datos” serás contactado por un
+                    agente de Vanti
+                  </p>
+                </div>
+                <div className="flex justify-end w-full">
+                  <button type="submit" className="w-fit button button-primary">
+                    Enviar datos
+                  </button>
+                </div>
+              </form>
+
+              {isOpen && (
+                <CustomModal
+                  close={closeModal}
+                  icon={isSuccess ? "alert" : "close"}
+                  title={
+                    isSuccess
+                      ? "Espera nuestra llamada"
+                      : "Intenta en otro momento"
+                  }
+                >
+                  {modalBody(isSuccess, errorMessage, closeModal)}
+                </CustomModal>
+              )}
+            </div>
+          </HeadingCard>
+        </section>
+      </div>
     </>
   );
 };

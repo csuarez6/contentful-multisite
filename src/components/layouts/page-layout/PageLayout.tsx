@@ -13,7 +13,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   const { asPath } = useRouter() ?? { asPath: "/" };
   const domain = process.env.DEFAULT_DOMAIN;
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
-  const description = promoDescription?.json? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
+  const description = promoDescription?.json ? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
   const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
 
   let canonicalUrl = ((asPath === "/" || asPath === "/index") ? "" : asPath).split("?")[0];
@@ -21,13 +21,13 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
 
   const addProductJsonLd = () => {
     let sdType = __typename;
-    if(sdType === 'Page') {
+    if (sdType === 'Page') {
       sdType = 'WebPage';
     }
     return {
       __html: `{
         "mainEntityOfPage":  "${domain}/",
-        "name": "${ title }",
+        "name": "${title}",
         "image": "${image}",
         "description": "${description}",
         "url": "${canonicalUrl}",
@@ -88,13 +88,13 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
             <meta name="twitter:image" content={`${image}`} />
           </>
         )}
-        <meta name="robots" content="noindex, nofollow" />       
+        <meta name="robots" content="noindex, nofollow" />
 
-        {domain && 
-          <script 
-          type="application/ld+json"
-          dangerouslySetInnerHTML={addProductJsonLd()}
-          key="product-jsonld"
+        {domain &&
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={addProductJsonLd()}
+            key="product-jsonld"
           />
         }
       </Head>
@@ -109,12 +109,10 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
       )}
 
       <div className="min-h-screen flex flex-col">
-        <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name}/>
+        <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name} />
         <HelpButton {...layout.helpButton} />
-        <main className="flex-grow overflow-hidden">
-          <div className="xl:container mx-auto px-3 sm:px-5 lg:px-8 2xl:px-28">
-            {children}
-          </div>
+        <main className="flex-grow">
+          {children}
         </main>
 
         <FooterBlock {...layout.footerInfo} />

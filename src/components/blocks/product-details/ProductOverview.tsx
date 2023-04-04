@@ -211,7 +211,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </div>
               {/* Caracteristicas */}
               <div className="w-full flex flex-col-reverse sm:flex-row gap-[22px]">
-                <div className="py-[2px] flex flex-col gap-[32px] lg:w-[43%] sm:w-1/2">
+                <div className="py-[2px] flex flex-col gap-[32px] lg:w-[43%] shrink-0 sm:w-1/2">
                   <div className="flex flex-col gap-[14px] bg-slate-50 p-3 rounded-xl">
                     <h4 className="text-blue-dark">
                       Características del producto

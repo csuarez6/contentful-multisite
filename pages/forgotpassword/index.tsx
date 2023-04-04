@@ -128,57 +128,59 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="block w-1/2 py-12 m-auto">
-        <HeadingCard
-          title="¿Olvidaste tu contraseña?"
-          headClasses="w-full !justify-center text-2xl text-blue-dark"
-          hideCheck={true}
-        >
-          <div className="py-2 text-center">
-            <p>
-              Te enviaremos un correo electrónico con instrucciones sobre cómo
-              restablecerlo.
-            </p>
-          </div>
-          <form
-            className="flex flex-col gap-6"
-            onSubmit={handleSubmit(onSubmit)}
+      <div className="main-container overflow-hidden">
+        <Breadcrumbs ctaCollection={breadcrumbs} />
+        <section className="block w-1/2 py-12 m-auto">
+          <HeadingCard
+            title="¿Olvidaste tu contraseña?"
+            headClasses="w-full !justify-center text-2xl text-blue-dark"
+            hideCheck={true}
           >
-            <div className="flex flex-col gap-y-5 gap-x-10">
-              <Textbox
-                id="email"
-                placeholder="Ingrese su correo"
-                type="email"
-                className="form-input"
-                isError={!!errors.email}
-                errorMessage={errors?.email?.message}
-                autoComplete="on"
-                {...register("email")}
+            <div className="py-2 text-center">
+              <p>
+                Te enviaremos un correo electrónico con instrucciones sobre cómo
+                restablecerlo.
+              </p>
+            </div>
+            <form
+              className="flex flex-col gap-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="flex flex-col gap-y-5 gap-x-10">
+                <Textbox
+                  id="email"
+                  placeholder="Ingrese su correo"
+                  type="email"
+                  className="form-input"
+                  isError={!!errors.email}
+                  errorMessage={errors?.email?.message}
+                  autoComplete="on"
+                  {...register("email")}
+                />
+              </div>
+              <div className="self-end w-full">
+                <button
+                  type="submit"
+                  disabled={!isValid || isSubmitting}
+                  className={classNames(
+                    "w-full button button-primary",
+                    isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
+                  )}
+                >
+                  {btnSubmitReset}
+                </button>
+              </div>
+            </form>
+            {activeModal && (
+              <ModalSuccess
+                key={submitCount}
+                {...dataModal}
+                isActive={activeModal}
               />
-            </div>
-            <div className="self-end w-full">
-              <button
-                type="submit"
-                disabled={!isValid || isSubmitting}
-                className={classNames(
-                  "w-full button button-primary",
-                  isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
-                )}
-              >
-                {btnSubmitReset}
-              </button>
-            </div>
-          </form>
-          {activeModal && (
-            <ModalSuccess
-              key={submitCount}
-              {...dataModal}
-              isActive={activeModal}
-            />
-          )}
-        </HeadingCard>
-      </section>
+            )}
+          </HeadingCard>
+        </section>
+      </div>
     </>
   );
 };

@@ -190,123 +190,125 @@ const CallbackPage = () => {
 
   return (
     <>
-      <Breadcrumbs ctaCollection={breadcrumbs} />
-      <section className="section">
-        <HeadingCard
-          title="1. Agenda tu cita"
-          isCheck={isValid}
-          icon="personal-data"
-        >
-          <div className="bg-white rounded-lg">
-            <div className="mb-6">
-              <p className="title is-4 !font-semibold text-grey-30">
-                Completa tus datos para agendar tu cita para la Revisión
-                Periódica Obligatoria
-              </p>
-            </div>
-            <form
-              ref={refForm}
-              className="flex flex-wrap max-w-full gap-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="w-full">
-                <label
-                  className="block text-lg text-grey-30"
-                  htmlFor="contractAccount"
-                >
-                  Escribe tu número de cuenta contrato
-                </label>
-                <TextBox
-                  id="contractAccount"
-                  name="contractAccount"
-                  label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
-                  placeholder="00000-000"
-                  {...register("contractAccount")}
-                />
-                {errors.contractAccount && (
-                  <p className="mt-1 text-red-600">
-                    {errors.contractAccount?.message}
-                  </p>
-                )}
-              </div>
-              <div className="w-full">
-                <TextBox
-                  id="date"
-                  name="date"
-                  type="date"
-                  label="Elige la fecha disponible en la cual quieres recibir la visita"
-                  placeholder="Fechas disponibles"
-                  {...register("date")}
-                />
-                {errors.date && (
-                  <p className="mt-1 text-red-600">{errors.date?.message}</p>
-                )}
-              </div>
-              <div className="w-full">
-                <TextBox
-                  id="hour"
-                  name="hour"
-                  label="Elige la hora disponible para recibir al técnico"
-                  placeholder="HH:MM"
-                  {...register("hour")}
-                />
-                {errors.hour && (
-                  <p className="mt-1 text-red-600">{errors.hour?.message}</p>
-                )}
-              </div>
-              <div className="w-full">
-                <TextBox
-                  id="cellPhone"
-                  name="cellPhone"
-                  label="Escribe tu número de celular para poder contactarte"
-                  placeholder="300 0000000"
-                  {...register("cellPhone")}
-                />
-                {errors.cellPhone && (
-                  <p className="mt-1 text-red-600">
-                    {errors.cellPhone?.message}
-                  </p>
-                )}
-              </div>
-              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
-              <div className="w-full">
-                <p className="font-medium text-black text-size-p2">
-                  NOTA: Al hacer click en “Enviar datos” serás contactado por un
-                  agente de Vanti
+      <div className="main-container overflow-hidden">
+        <Breadcrumbs ctaCollection={breadcrumbs} />
+        <section className="section">
+          <HeadingCard
+            title="1. Agenda tu cita"
+            isCheck={isValid}
+            icon="personal-data"
+          >
+            <div className="bg-white rounded-lg">
+              <div className="mb-6">
+                <p className="title is-4 !font-semibold text-grey-30">
+                  Completa tus datos para agendar tu cita para la Revisión
+                  Periódica Obligatoria
                 </p>
               </div>
-              <div className="flex justify-end w-full">
-                <button type="submit" className="w-fit button button-primary">
-                  Agendar cita
-                </button>
-              </div>
-            </form>
-
-            {isOpen && (
-              <CustomModal
-                close={closeModal}
-                icon={isSuccess ? "alert" : "close"}
-                title={
-                  isSuccess
-                    ? "¡Has agendado tu cita con éxito!"
-                    : "Intenta en otro momento"
-                }
-                subtitle={
-                  isSuccess &&
-                  "Recuerda tener presente la visita del técnico a la hora y dia que agendaste"
-                }
+              <form
+                ref={refForm}
+                className="flex flex-wrap max-w-full gap-6"
+                onSubmit={handleSubmit(onSubmit)}
               >
-                {modalBody(
-                  { date: dateValue, hour: hourValue },
-                  isSuccess,
-                  errorMessage,
-                  closeModal
-                )}
-              </CustomModal>
-            )}
-          </div>
-        </HeadingCard>
-      </section>
+                <div className="w-full">
+                  <label
+                    className="block text-lg text-grey-30"
+                    htmlFor="contractAccount"
+                  >
+                    Escribe tu número de cuenta contrato
+                  </label>
+                  <TextBox
+                    id="contractAccount"
+                    name="contractAccount"
+                    label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
+                    placeholder="00000-000"
+                    {...register("contractAccount")}
+                  />
+                  {errors.contractAccount && (
+                    <p className="mt-1 text-red-600">
+                      {errors.contractAccount?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <TextBox
+                    id="date"
+                    name="date"
+                    type="date"
+                    label="Elige la fecha disponible en la cual quieres recibir la visita"
+                    placeholder="Fechas disponibles"
+                    {...register("date")}
+                  />
+                  {errors.date && (
+                    <p className="mt-1 text-red-600">{errors.date?.message}</p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <TextBox
+                    id="hour"
+                    name="hour"
+                    label="Elige la hora disponible para recibir al técnico"
+                    placeholder="HH:MM"
+                    {...register("hour")}
+                  />
+                  {errors.hour && (
+                    <p className="mt-1 text-red-600">{errors.hour?.message}</p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <TextBox
+                    id="cellPhone"
+                    name="cellPhone"
+                    label="Escribe tu número de celular para poder contactarte"
+                    placeholder="300 0000000"
+                    {...register("cellPhone")}
+                  />
+                  {errors.cellPhone && (
+                    <p className="mt-1 text-red-600">
+                      {errors.cellPhone?.message}
+                    </p>
+                  )}
+                </div>
+                <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
+                <div className="w-full">
+                  <p className="font-medium text-black text-size-p2">
+                    NOTA: Al hacer click en “Enviar datos” serás contactado por un
+                    agente de Vanti
+                  </p>
+                </div>
+                <div className="flex justify-end w-full">
+                  <button type="submit" className="w-fit button button-primary">
+                    Agendar cita
+                  </button>
+                </div>
+              </form>
+
+              {isOpen && (
+                <CustomModal
+                  close={closeModal}
+                  icon={isSuccess ? "alert" : "close"}
+                  title={
+                    isSuccess
+                      ? "¡Has agendado tu cita con éxito!"
+                      : "Intenta en otro momento"
+                  }
+                  subtitle={
+                    isSuccess &&
+                    "Recuerda tener presente la visita del técnico a la hora y dia que agendaste"
+                  }
+                >
+                  {modalBody(
+                    { date: dateValue, hour: hourValue },
+                    isSuccess,
+                    errorMessage,
+                    closeModal
+                  )}
+                </CustomModal>
+              )}
+            </div>
+          </HeadingCard>
+        </section>
+      </div>
     </>
   );
 };

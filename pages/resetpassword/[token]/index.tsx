@@ -174,135 +174,132 @@ const ResetPassword = () => {
     fetcher
   );
 
-  if (error) {
-    return (
-      <section className="block w-1/2 py-12 m-auto">
-        <HeadingCard
-          title="Error de servicio"
-          headClasses="w-full !justify-center text-2xl text-blue-dark"
-          hideCheck={true}
-        >
-          <p className="text-xl text-center text-red-900">
-            Estimado usuario, ha ocurrido un error al comprobar la información o
-            el servicio no está disponible. <br />
-            <br />
-            Intente nuevamente o contacte al administrador.
-          </p>
-        </HeadingCard>
-      </section>
-    );
-  }
-  if (!data) {
-    return (
-      <section className="block w-1/2 py-12 m-auto">
-        <HeadingCard
-          title="Verificando Link"
-          headClasses="w-full !justify-center text-2xl text-blue-dark"
-          hideCheck={true}
-        >
-          <p className="text-xl text-center">
-            Espere por favor, comprobando información...
-          </p>
-        </HeadingCard>
-      </section>
-    );
-  }
-  if (data.isTokenValid) {
-    return (
-      <section className="block w-1/2 py-12 m-auto">
-        <HeadingCard
-          title="Recuperar contraseña"
-          headClasses="w-full !justify-center text-2xl text-blue-dark"
-          hideCheck={true}
-        >
-          <div className="py-2 text-center">
-            <form
-              className="flex flex-col gap-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="flex flex-col gap-y-5 gap-x-10">
-                <input
-                  type="hidden"
-                  id="tID"
-                  name="tID"
-                  {...register("tID", { value: data.tokenID })}
+  return (
+    <div className="main-container overflow-hidden">
+      {error && (
+        <section className="block w-1/2 py-12 m-auto">
+          <HeadingCard
+            title="Error de servicio"
+            headClasses="w-full !justify-center text-2xl text-blue-dark"
+            hideCheck={true}
+          >
+            <p className="text-xl text-center text-red-900">
+              Estimado usuario, ha ocurrido un error al comprobar la información o
+              el servicio no está disponible. <br />
+              <br />
+              Intente nuevamente o contacte al administrador.
+            </p>
+          </HeadingCard>
+        </section>
+      )}
+      {!data && !error && (
+        <section className="block w-1/2 py-12 m-auto">
+          <HeadingCard
+            title="Verificando Link"
+            headClasses="w-full !justify-center text-2xl text-blue-dark"
+            hideCheck={true}
+          >
+            <p className="text-xl text-center">
+              Espere por favor, comprobando información...
+            </p>
+          </HeadingCard>
+        </section>
+      )}
+      {data?.isTokenValid && (
+        <section className="block w-1/2 py-12 m-auto">
+          <HeadingCard
+            title="Recuperar contraseña"
+            headClasses="w-full !justify-center text-2xl text-blue-dark"
+            hideCheck={true}
+          >
+            <div className="py-2 text-center">
+              <form
+                className="flex flex-col gap-6"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="flex flex-col gap-y-5 gap-x-10">
+                  <input
+                    type="hidden"
+                    id="tID"
+                    name="tID"
+                    {...register("tID", { value: data.tokenID })}
+                  />
+                  <input
+                    type="hidden"
+                    id="resetT"
+                    name="resetT"
+                    {...register("resetT", { value: data.resetToken })}
+                  />
+                  <Textbox
+                    id="password"
+                    label="Nueva contraseña"
+                    type="password"
+                    placeholder="********"
+                    className="form-input"
+                    autoComplete="on"
+                    isError={!!errors.password}
+                    errorMessage={errors?.password?.message}
+                    {...register("password")}
+                  />
+                  <Textbox
+                    id="confirmPassword"
+                    label="Confirma nueva contraseña"
+                    type="password"
+                    placeholder="********"
+                    className="form-input"
+                    autoComplete="on"
+                    isError={!!errors.confirmPassword}
+                    errorMessage={errors?.confirmPassword?.message}
+                    {...register("confirmPassword")}
+                  />
+                </div>
+                <div className="self-end w-full">
+                  <button
+                    type="submit"
+                    disabled={!isValid || isSubmitting}
+                    className={classNames(
+                      "w-full button button-primary",
+                      isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
+                    )}
+                  >
+                    {btnSubmitReset}
+                  </button>
+                </div>
+              </form>
+              {activeModal && (
+                <ModalSuccess
+                  key={submitCount}
+                  {...dataModal}
+                  isActive={activeModal}
                 />
-                <input
-                  type="hidden"
-                  id="resetT"
-                  name="resetT"
-                  {...register("resetT", { value: data.resetToken })}
-                />
-                <Textbox
-                  id="password"
-                  label="Nueva contraseña"
-                  type="password"
-                  placeholder="********"
-                  className="form-input"
-                  autoComplete="on"
-                  isError={!!errors.password}
-                  errorMessage={errors?.password?.message}
-                  {...register("password")}
-                />
-                <Textbox
-                  id="confirmPassword"
-                  label="Confirma nueva contraseña"
-                  type="password"
-                  placeholder="********"
-                  className="form-input"
-                  autoComplete="on"
-                  isError={!!errors.confirmPassword}
-                  errorMessage={errors?.confirmPassword?.message}
-                  {...register("confirmPassword")}
-                />
-              </div>
-              <div className="self-end w-full">
-                <button
-                  type="submit"
-                  disabled={!isValid || isSubmitting}
-                  className={classNames(
-                    "w-full button button-primary",
-                    isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
-                  )}
-                >
-                  {btnSubmitReset}
-                </button>
-              </div>
-            </form>
-            {activeModal && (
-              <ModalSuccess
-                key={submitCount}
-                {...dataModal}
-                isActive={activeModal}
-              />
-            )}
-          </div>
-        </HeadingCard>
-      </section>
-    );
-  } else {
-    return (
-      <section className="block w-1/2 py-12 m-auto">
-        <HeadingCard
-          title="Link Inválido"
-          headClasses="w-full !justify-center text-2xl text-blue-dark"
-          hideCheck={true}
-        >
-          <p className="text-xl text-center text-red-900">
-            Estimado usuario, este link no es válido!
-          </p>
-          <div className="flex justify-center mt-5">
-            <CustomLink
-              className="block m-auto button button-primary text-grey-30"
-              content={{ urlPath: "/forgotpassword" }}
-            >
-              Generar nuevo link
-            </CustomLink>
-          </div>
-        </HeadingCard>
-      </section>
-    );
-  }
+              )}
+            </div>
+          </HeadingCard>
+        </section>
+      )}
+      {!data?.isTokenValid && !error && (
+        <section className="block w-1/2 py-12 m-auto">
+          <HeadingCard
+            title="Link Inválido"
+            headClasses="w-full !justify-center text-2xl text-blue-dark"
+            hideCheck={true}
+          >
+            <p className="text-xl text-center text-red-900">
+              Estimado usuario, este link no es válido!
+            </p>
+            <div className="flex justify-center mt-5">
+              <CustomLink
+                className="block m-auto button button-primary text-grey-30"
+                content={{ urlPath: "/forgotpassword" }}
+              >
+                Generar nuevo link
+              </CustomLink>
+            </div>
+          </HeadingCard>
+        </section>
+      )}
+    </div>
+  );
 };
 
 export const getStaticPaths: GetStaticPaths = () => {

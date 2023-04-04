@@ -28,14 +28,17 @@ const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) 
 
   return (
     <>
-      {jsonToReactComponents(blocksCollection.items)}
-      {
-        __typename == CONTENTFUL_TYPENAMES.PRODUCT ? (
+      <div className="main-container overflow-hidden">
+        {jsonToReactComponents(blocksCollection.items)}
+        {__typename == CONTENTFUL_TYPENAMES.PRODUCT && (
           <ProductOverview {...props} />
-        ) : (
-          content?.json && <RichtextPage {...props} />
-        )
-      }
+        )}
+      </div>
+      {content?.json && (
+        <div className="main-container">
+          <RichtextPage {...props} />
+        </div>
+      )}
     </>
   );
 };

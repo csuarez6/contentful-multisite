@@ -87,8 +87,10 @@ const Login = () => {
 
     return (
         <>
-            <Breadcrumbs ctaCollection={breadcrumbs} />
-            <LoginFormBlock {...formData} />
+            <div className="main-container overflow-hidden">
+                <Breadcrumbs ctaCollection={breadcrumbs} />
+                <LoginFormBlock {...formData} />
+            </div>
         </>
     );
 };
