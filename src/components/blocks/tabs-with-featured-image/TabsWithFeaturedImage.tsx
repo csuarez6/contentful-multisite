@@ -6,85 +6,100 @@ import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.in
 import Image from "next/image";
 import Icon from "@/components/atoms/icon/Icon";
 
-const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, subtitle, description, image, featuredContentsCollection, blockId, sysId }) => {
+const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description, image, featuredContentsCollection, blockId, sysId }) => {
   return (
     <section id={blockId ? blockId : sysId} className="grid section gap-7 md:gap-9">
-      {title && <h1 className="text-center text-blue-dark mb-[-30px]">{title}</h1>}
-      <div className="flex flex-col 2md:flex-row items-start gap-6 lg:gap-[62px] py-[72px] border-y-2 border-x-grey-80">
-        {(subtitle || description || featuredContentsCollection?.items?.length > 0) && (
-          <div className="grid gap-6 grow w-full md:w-1/2 lg:w-[661px]">
-            {(subtitle || description) && (
-              <div className="grid gap-6">
-                {title && <h2 className="text-category-sky-blue-50">{subtitle}</h2>}
-                {description && <div className="text-neutral-30">{documentToReactComponents(description?.json)}</div>}
-              </div>
-            )}
-            {featuredContentsCollection?.items?.length > 0 && (
-              <Tab.Group as="div" className="grid items-baseline gap-6 2md:gap-12">
-                <div className="flex justify-start overflow-x-auto">
-                  <div className="flex border-b border-transparent">
-                    <Tab.List className="flex">
-                      {featuredContentsCollection.items.map((tab: IPromoContent) =>
-                        <Tab
-                          key={tab.name}
-                          className={({ selected }) =>
-                            classNames(
-                              selected
-                                ? "border-lucuma text-blue-dark"
-                                : "border-transparent border-neutral-80 text-category-sky-blue-50",
-                              "flex flex-col items-center gap-4 shrink-0 grow focus:outline-none border-b-2 p-4 max-w-[92px]"
-                            )
-                          }
-                        >
-                          {({ selected }) => (
-                            <>
-                              <div className={
-                                classNames(
-                                  selected ? "bg-lucuma" : "bg-blue-dark-90",
-                                  "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30",
-                                )}
-                              >
-                                <Icon icon={tab.promoIcon} className="w-full h-full mx-auto" />
-                              </div>
-                              <p className="text-size-small text-grey-30">{tab.promoTitle ?? tab.name}</p>
-                            </>
-                          )}
-                        </Tab>
-                      )}
-                    </Tab.List>
-                  </div>
+      <div className="flex flex-col">
+        <hr className="min-w-[100vw] -mx-[50vw] border-t-2 pb-6 border-[#F3F3F3] hidden 2md:block" />
+        <div className="flex flex-col 2md:flex-row items-start gap-6 lg:gap-[62px] 2md:mb-6">
+          {(title || description || featuredContentsCollection?.items?.length > 0) && (
+            <div className="grid gap-6 grow w-full 2md:w-1/2 2md:py-6">
+              {(title || description) && (
+                <div className="grid gap-6">
+                  {title && <h2 className="text-blue-dark 2md:text-category-sky-blue-50 text-center 2md:text-left text-size-subtitle1 2md:text-[43px] leading-[1.3] font-bold">{title}</h2>}
+                  {description && <div className="text-neutral-30">{documentToReactComponents(description?.json)}</div>}
                 </div>
+              )}
+              {featuredContentsCollection?.items?.length > 0 && (
+                <Tab.Group as="div" className="grid items-baseline px-3 2md:p-0 gap-6 2md:gap-12">
+                  <div className="flex justify-center 2md:justify-start overflow-x-auto">
+                    <div className="flex 2md:border-b border-transparent">
+                      <Tab.List className="flex">
+                        {featuredContentsCollection.items.map((tab: IPromoContent) =>
+                          <Tab
+                            key={tab.name}
+                            className={({ selected }) =>
+                              classNames(
+                                selected
+                                  ? "border-lucuma text-blue-dark"
+                                  : "border-neutral-80 hover:border-lucuma text-category-sky-blue-50",
+                                "flex flex-col items-center gap-4 shrink-0 grow focus:outline-none 2md:border-b-2 p-4 max-w-[92px]"
+                              )
+                            }
+                          >
+                            {({ selected }) => (
+                              <>
+                                <div className={
+                                  classNames(
+                                    selected ? "bg-lucuma" : "bg-blue-dark-90",
+                                    "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30",
+                                  )}
+                                >
+                                  <Icon icon={tab.promoIcon} className="w-full h-full mx-auto" />
+                                </div>
+                                <p className="text-size-small text-grey-30">{tab.promoTitle ?? tab.name}</p>
+                              </>
+                            )}
+                          </Tab>
+                        )}
+                      </Tab.List>
+                    </div>
+                  </div>
 
-                <Tab.Panels as={Fragment}>
-                  {featuredContentsCollection.items.map((content: IPromoContent) => (
-                    <Tab.Panel key={content.promoTitle} className="focus:outline-none">
-                      <div className="flex flex-col gap-3">
-                        <h3 className="text-blue-dark">{content.subtitle ?? (content.promoTitle ?? content.name)}</h3>
-                        <div className="text-grey-30">
-                          {documentToReactComponents(content.promoDescription?.json)}
+                  <Tab.Panels as={Fragment}>
+                    {featuredContentsCollection.items.map((content: IPromoContent) => (
+                      <Tab.Panel key={content.promoTitle} className="focus:outline-none">
+                        <div className="flex flex-col gap-4">
+                          <h3 className="text-category-sky-blue-50 2md:text-blue-dark text-size-subtitle2 2md:text-2xl 2md:leading-7">{content.subtitle ?? (content.promoTitle ?? content.name)}</h3>
+                          {image?.url && (
+                            <div className="flex 2md:hidden w-full">
+                              <figure className="relative rounded-xl w-full aspect-[304/124] overflow-hidden">
+                                <Image
+                                  src={image?.url}
+                                  alt={image.title ?? (image.description ?? "Imagen destacada")}
+                                  width={494}
+                                  height={500}
+                                  className="object-cover w-full h-full"
+                                />
+                              </figure>
+                            </div>
+                          )}
+                          <div className="text-grey-30 text-size-p3 2md:text-size-p1">
+                            {documentToReactComponents(content.promoDescription?.json)}
+                          </div>
                         </div>
-                      </div>
-                    </Tab.Panel>
-                  ))}
-                </Tab.Panels>
-              </Tab.Group>
-            )}
-          </div>
-        )}
+                      </Tab.Panel>
+                    ))}
+                  </Tab.Panels>
+                </Tab.Group>
+              )}
+            </div>
+          )}
 
-        {image?.url && (
-          <div className="flex w-full  2md:w-auto 2md:flex-grow">
-            <figure className="relative rounded-xl w-full 2md:aspect-[494/500] overflow-hidden">
-              <Image
-                src={image?.url}
-                alt={image.title ?? (image.description ?? "Imagen destacada")}
-                width={494}
-                height={500}
-                className="object-cover w-full h-full"
-              />
-            </figure>
-          </div>
-        )}
+          {image?.url && (
+            <div className="hidden 2md:flex w-1/2 lg:w-[494px] shrink-0 grow">
+              <figure className="relative rounded-xl w-full aspect-[494/500] overflow-hidden">
+                <Image
+                  src={image?.url}
+                  alt={image.title ?? (image.description ?? "Imagen destacada")}
+                  width={494}
+                  height={500}
+                  className="object-cover w-full h-full"
+                />
+              </figure>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
