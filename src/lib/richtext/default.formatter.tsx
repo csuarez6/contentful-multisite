@@ -1,6 +1,7 @@
 import { Options } from "@contentful/rich-text-react-renderer";
 import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 import Image from "next/image";
+import Table from "@/components/organisms/table/Table";
 
 const defaultFormatOptions: Options = {
   renderNode: {
@@ -42,20 +43,18 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <table className="table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6">
-        <tbody>{children}</tbody>
-      </table>
+      <Table>
+        {children}
+      </Table>
     ),
-    [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => {
-      return (
-        <th className="px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
-      );
-    },
+    [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => (
+      <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
+    ),
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr className="text-center border-neutral-80">{children}</tr>
+      <tr className="overflow-hidden pointer-events-none scroll-smooth flex md:table-row w-full text-center border-neutral-80 ">{children}</tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
-      <td className="px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">{children}</td>
+      <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">{children}</td>
     ),
     [BLOCKS.QUOTE]: (_node, children) => {
       return (
