@@ -8,6 +8,7 @@ import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 import getFilteredContent from './content-filter.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
+import getReferencesRichtextContent from './richtext-references.service';
 
 type DefaultBlockInfo = {
   __typename: string;
@@ -33,8 +34,8 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     return null;
   }
 
-  if(blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL){
-    cacheIndex += '_minimal'; 
+  if (blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL) {
+    cacheIndex += '_minimal';
   }
 
   if (CACHE_CONTENT[cacheIndex]) {
@@ -79,6 +80,11 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
   if (blockInfo.__typename == CONTENTFUL_TYPENAMES.PAGE_MINIMAL) {
     entryContent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+  }
+
+  const richtextReferences = await getReferencesRichtextContent({ content: entryContent, preview });
+  if (richtextReferences) {
+    _.merge(entryContent, richtextReferences);
   }
 
   if (recursive) {

@@ -1,11 +1,14 @@
+import Icon from "@/components/atoms/icon/Icon";
 import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import defaultFormatOptions from '@/lib/richtext/default.formatter';
+import { attachLinksToRichtextContent } from '@/lib/services/render-blocks.service';
 import { classColumns, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper";
-import Icon from "@/components/atoms/icon/Icon";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -14,6 +17,7 @@ import "swiper/css/thumbs";
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
+
   return (
     <section id={blockId ? blockId : sysId} className="section md:grid gap-9 !pb-[90px] md:!pb-9">
       {view?.backgroundColor && (
@@ -28,75 +32,97 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
           {description && <div className={classNames(backgroundColor.text, textAlignHeading)}>{documentToReactComponents(description.json)}</div>}
         </div>
       )}
-      <div className='hidden md:block'>
-        {featuredContentsCollection?.items?.length > 0 && (
-          <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
-            {featuredContentsCollection.items.map((item: any, idx: number) => (
-              <ListWithIcon key={`${item.sys.id}-desktop-${idx}`} {...{ ...item, ...view }} />
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="sm:px-[72px] px-5 md:hidden shadow-card py-[21px] mt-7">
-        <div>
-          <Swiper
-            loop={true}
-            spaceBetween={12}
-            slidesPerView={1}
-            freeMode={true}
-            watchSlidesProgress={true}
-            modules={[FreeMode, Navigation, Thumbs, Pagination]}
-            className="flex items-center mt-6 -z-10 !static slider-listIcon"
-            navigation={{
-              nextEl: ".nextSlide",
-              prevEl: ".prevSlide",
-              lockClass: 'block'
-            }}
-            pagination={{
-              bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet swiper-pagination-custom-bullet--iconslist",
-              bulletActiveClass: "swiper-pagination-bullet-active",
-              clickable: true
-            }}
-          >
-            <div className="relative">
-              {featuredContentsCollection?.items.map((el) => {
-                return (
-                  <SwiperSlide key={el.promoTitle}>
-                    <div className={classNames("mx-auto", classColumns(view.columnsSize))}>
-                      <ListWithIcon key={el.promoTitle} {...el} />
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
+      {featuredContentsCollection?.items?.length > 0 && (
+        <>
+          <div className='hidden md:block'>
+            <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
+              {featuredContentsCollection.items.map((item) => (
+                <ListWithIcon key={`${item.sys.id}-desktop`} {...{ ...item, ...view }} />
+              ))}
             </div>
-          </Swiper>
-        </div>
-        <div className='z-10 absolute -translate-y-14 left-[5px] top-[98%]'>
-          <div className={`prevSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
-            <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
           </div>
-        </div>
-        <div className='z-10 absolute -translate-y-14 right-[5px] top-[98%]'>
-          <div className={`nextSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
-            <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
+          <div className="sm:px-[72px] px-5 md:hidden shadow-card py-[21px] mt-7">
+            <div>
+              <Swiper
+                loop={true}
+                spaceBetween={12}
+                slidesPerView={1}
+                freeMode={true}
+                watchSlidesProgress={true}
+                modules={[FreeMode, Navigation, Thumbs, Pagination]}
+                className="flex items-center mt-6 -z-10 !static slider-listIcon"
+                navigation={{
+                  nextEl: ".nextSlide",
+                  prevEl: ".prevSlide",
+                  lockClass: 'block'
+                }}
+                pagination={{
+                  bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet swiper-pagination-custom-bullet--iconslist",
+                  bulletActiveClass: "swiper-pagination-bullet-active",
+                  clickable: true
+                }}
+              >
+                <div className="relative">
+                  {featuredContentsCollection?.items.map((el) => {
+                    return (
+                      <SwiperSlide key={el.promoTitle}>
+                        <div className={classNames("mx-auto", classColumns(view.columnsSize))}>
+                          <ListWithIcon key={el.promoTitle} {...el} />
+                        </div>
+                      </SwiperSlide>
+                    );
+                  })}
+                </div>
+              </Swiper>
+            </div>
+            <div className='z-10 absolute -translate-y-14 left-[5px] top-[98%]'>
+              <div className={`prevSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
+                <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
+              </div>
+            </div>
+            <div className='z-10 absolute -translate-y-14 right-[5px] top-[98%]'>
+              <div className={`nextSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
+                <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {ctaCollection?.items?.length > 0 && (
         <div className="flex justify-center gap-3">
-          {ctaCollection.items.map(
-            (cta) =>
-              (cta.externalLink || cta.internalLink) && (
-                <CustomLink
-                  content={cta}
-                  key={cta.name}
-                  className={classNames("button w-fit", getButtonType(view.buttonType))}
-                >
-                  {cta.promoTitle ?? cta.name}
-                </CustomLink>
-              )
-          )}
+          {ctaCollection.items.map((cta) => {
+            let contentJson = cta?.content?.json;
+            if (attachLinksToRichtextContent && contentJson) {
+              contentJson = attachLinksToRichtextContent(contentJson, cta?.content?.links ?? []);
+            }
+            return (
+              <>
+                {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
+                  <CustomLink
+                    content={cta}
+                    key={cta.name}
+                    className={classNames("button w-fit", getButtonType(view.buttonType))}
+                  >
+                    {cta.promoTitle ?? cta.name}
+                  </CustomLink>
+                )}
+                {cta.linkView === "Modal" && (
+                  <ButtonAtom
+                    key={cta.name}
+                    type="Modal"
+                    classes={classNames("button w-fit", getButtonType(view.buttonType))}
+                    text={cta.promoTitle ?? cta.name}
+                  >
+                    {cta.promoDescription?.json && (
+                      <div>{documentToReactComponents(contentJson, defaultFormatOptions)}</div>
+                    )}
+                    {!cta.promoDescription && (cta.promoTitle ?? cta.name)}
+                  </ButtonAtom>
+                )}
+              </>
+            );
+          })}
         </div>
       )}
     </section>

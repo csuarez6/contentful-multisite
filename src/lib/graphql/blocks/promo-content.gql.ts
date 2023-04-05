@@ -1,6 +1,5 @@
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery from "../shared/default.gql";
-import RichtextQuery, { RichtextLinksQuery } from "../shared/richtext.qql";
 import ViewAccordionQuery from "../views/accordion.gql";
 import ViewBannerCarousel from "../views/banner-carousel.gql";
 import ViewBannerImage from "../views/banner-image.gql";
@@ -28,8 +27,7 @@ const BlockPromoContentQuery = `
   pretitle
   subtitle
   description {
-    ${RichtextQuery}
-    ${RichtextLinksQuery}
+    json
   }
   ctaCollection {
     items {
