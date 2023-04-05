@@ -49,74 +49,76 @@ const CheckoutSummary = () => {
   };
   return (
     <>
-      <div className="main-container overflow-hidden">
-        <HeadingCard
-          classes="col-span-2"
-          title="5. Datos de compra"
-          icon="quotation"
-          isCheck={isCompleted && tokenRecaptcha && true}
-        >
-          <div className="bg-white rounded-lg">
-            <dl className="space-y-5 text-sm">
-              <div className="flex justify-between">
-                <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-                <dd className="flex-1 font-bold text-grey-30">{order?.number}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
-                <dd className="flex-1 font-bold text-grey-30">{fullName}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex-1 text-grey-30">Método de pago:</dt>
-                <dd className="flex-1 font-bold text-grey-30">
-                  {router.query.paymentType?.toString().toUpperCase()}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
-                <dd className="flex-1 font-bold text-grey-30">
-                  Banco Davivienda
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
-                <dd className="flex-1 font-bold text-grey-30">
-                  {billingAddress?.full_address}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-blue-dark">
-                  Sabemos que eres un humano, pero debemos confirmarlo.
-                  {/* <ReCAPTCHA
+      <div className="overflow-hidden">
+        <div className="main-container">
+          <HeadingCard
+            classes="col-span-2"
+            title="5. Datos de compra"
+            icon="quotation"
+            isCheck={isCompleted && tokenRecaptcha && true}
+          >
+            <div className="bg-white rounded-lg">
+              <dl className="space-y-5 text-sm">
+                <div className="flex justify-between">
+                  <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
+                  <dd className="flex-1 font-bold text-grey-30">{order?.number}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
+                  <dd className="flex-1 font-bold text-grey-30">{fullName}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="flex-1 text-grey-30">Método de pago:</dt>
+                  <dd className="flex-1 font-bold text-grey-30">
+                    {router.query.paymentType?.toString().toUpperCase()}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
+                  <dd className="flex-1 font-bold text-grey-30">
+                    Banco Davivienda
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
+                  <dd className="flex-1 font-bold text-grey-30">
+                    {billingAddress?.full_address}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-blue-dark">
+                    Sabemos que eres un humano, pero debemos confirmarlo.
+                    {/* <ReCAPTCHA
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V2}
                   onChange={(e) => onRecaptcha(e)}
                   className="mt-6"
                 /> */}
-                  <ReCaptchaBox
-                    version={2}
-                    handleChange={(e) => onRecaptcha(e)}
-                    classNames="mt-6"
-                  />
-                </dt>
+                    <ReCaptchaBox
+                      version={2}
+                      handleChange={(e) => onRecaptcha(e)}
+                      classNames="mt-6"
+                    />
+                  </dt>
+                </div>
+                <div className="flex justify-between">
+                  <dt>
+                    NOTA: Al hacer click en “Enviar datos” serás contactado por un
+                    agente de Vanti
+                  </dt>
+                </div>
+              </dl>
+              <div className="flex justify-end w-full mt-5">
+                <button
+                  className="button button-outline"
+                  type="button"
+                  onClick={handlePrev}
+                >
+                  Volver
+                </button>
               </div>
-              <div className="flex justify-between">
-                <dt>
-                  NOTA: Al hacer click en “Enviar datos” serás contactado por un
-                  agente de Vanti
-                </dt>
-              </div>
-            </dl>
-            <div className="flex justify-end w-full mt-5">
-              <button
-                className="button button-outline"
-                type="button"
-                onClick={handlePrev}
-              >
-                Volver
-              </button>
             </div>
-          </div>
-        </HeadingCard>
+          </HeadingCard>
+        </div>
       </div>
     </>
   );

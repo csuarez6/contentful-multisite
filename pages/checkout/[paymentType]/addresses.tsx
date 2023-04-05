@@ -225,169 +225,171 @@ const CheckoutAddresses = () => {
 
   return (
     <>
-      <div className="main-container overflow-hidden">
-        <HeadingCard
-          classes="col-span-2"
-          title="3. Ingresar dirección para recibir el pedido"
-          icon="location"
-          isCheck={isCompleted}
-        >
-          <div className="bg-white rounded-lg">
-            <form
-              className="flex flex-wrap max-w-full gap-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="w-full">
-                <SelectInput
-                  label="Escoge tu departamento"
-                  id="shipping-state-code"
-                  options={states.map((state) => ({
-                    label: state.name,
-                    value: state.name,
-                  }))}
-                  {...register("shippingAddress.stateCode")}
-                  placeholder="Seleccionar"
-                />
-                {errors.shippingAddress?.stateCode && (
-                  <p className="text-red-600">
-                    {errors.shippingAddress?.stateCode?.message}
-                  </p>
+      <div className="overflow-hidden">
+        <div className="main-container">
+          <HeadingCard
+            classes="col-span-2"
+            title="3. Ingresar dirección para recibir el pedido"
+            icon="location"
+            isCheck={isCompleted}
+          >
+            <div className="bg-white rounded-lg">
+              <form
+                className="flex flex-wrap max-w-full gap-6"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="w-full">
+                  <SelectInput
+                    label="Escoge tu departamento"
+                    id="shipping-state-code"
+                    options={states.map((state) => ({
+                      label: state.name,
+                      value: state.name,
+                    }))}
+                    {...register("shippingAddress.stateCode")}
+                    placeholder="Seleccionar"
+                  />
+                  {errors.shippingAddress?.stateCode && (
+                    <p className="text-red-600">
+                      {errors.shippingAddress?.stateCode?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <SelectInput
+                    id="shipping-city-code"
+                    label="Escoge tu municipio"
+                    options={shippingCities.map((city) => ({
+                      label: city,
+                      value: city,
+                    }))}
+                    {...register("shippingAddress.cityCode")}
+                    placeholder="Seleccionar"
+                  />
+                  {errors?.shippingAddress?.cityCode && (
+                    <p className="text-red-600">
+                      {errors?.shippingAddress?.cityCode?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <TextBox
+                    id="shippingAddress.address"
+                    label="Escribe tu direccion"
+                    {...register("shippingAddress.address")}
+                    placeholder="Ejemplo carrera 00 # 0000"
+                  />
+                  {errors?.shippingAddress?.address && (
+                    <p className="text-red-600">
+                      {errors?.shippingAddress?.address?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <TextBox
+                    {...register("shippingAddress.phone")}
+                    id="shippingAddress.phone"
+                    label="Escribe tu telefono"
+                    type="number"
+                    placeholder="000 000 0000"
+                  />
+                  {errors?.shippingAddress?.phone && (
+                    <p className="text-red-600">
+                      {errors?.shippingAddress.phone?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full">
+                  <CheckBox
+                    {...register("shippingAddress.isSameAsBillingAddress")}
+                    id="shippingAddress.isSameAsBillingAddress"
+                    label="Acepto usar la dirección de envió para el proceso de facturación"
+                  />
+                </div>
+                {!isSameAsBillingAddress && (
+                  <>
+                    <h4 className="!font-semibold text-blue-dark">
+                      Direccion de facturación
+                    </h4>
+                    <div className="w-full">
+                      <SelectInput
+                        label="Escoge tu departamento"
+                        id="billingAddress-state-code"
+                        options={states.map((state) => ({
+                          label: state.name,
+                          value: state.name,
+                        }))}
+                        {...register("billingAddress.stateCode")}
+                        placeholder="Seleccionar"
+                      />
+                      {errors.billingAddress?.stateCode && (
+                        <p className="text-red-600">
+                          {errors.billingAddress?.stateCode?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <SelectInput
+                        id="billingCities-city-code"
+                        label="Escoge tu municipio"
+                        options={billingCities.map((city) => ({
+                          label: city,
+                          value: city,
+                        }))}
+                        {...register("billingAddress.cityCode")}
+                        placeholder="Seleccionar"
+                      />
+                      {errors?.billingAddress?.cityCode && (
+                        <p className="text-red-600">
+                          {errors?.billingAddress?.cityCode?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <TextBox
+                        id="billingAddress.address"
+                        label="Escribe tu direccion"
+                        {...register("billingAddress.address")}
+                        placeholder="Ejemplo carrera 00 # 0000"
+                      />
+                      {errors?.billingAddress?.address && (
+                        <p className="text-red-600">
+                          {errors?.billingAddress?.address?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <TextBox
+                        {...register("billingAddress.phone")}
+                        id="billingAddress.phone"
+                        label="Escribe tu telefono"
+                        type="number"
+                        placeholder="000 000 0000"
+                      />
+                      {errors?.billingAddress?.phone && (
+                        <p className="text-red-600">
+                          {errors?.billingAddress.phone?.message}
+                        </p>
+                      )}
+                    </div>
+                  </>
                 )}
-              </div>
-              <div className="w-full">
-                <SelectInput
-                  id="shipping-city-code"
-                  label="Escoge tu municipio"
-                  options={shippingCities.map((city) => ({
-                    label: city,
-                    value: city,
-                  }))}
-                  {...register("shippingAddress.cityCode")}
-                  placeholder="Seleccionar"
-                />
-                {errors?.shippingAddress?.cityCode && (
-                  <p className="text-red-600">
-                    {errors?.shippingAddress?.cityCode?.message}
-                  </p>
-                )}
-              </div>
-              <div className="w-full">
-                <TextBox
-                  id="shippingAddress.address"
-                  label="Escribe tu direccion"
-                  {...register("shippingAddress.address")}
-                  placeholder="Ejemplo carrera 00 # 0000"
-                />
-                {errors?.shippingAddress?.address && (
-                  <p className="text-red-600">
-                    {errors?.shippingAddress?.address?.message}
-                  </p>
-                )}
-              </div>
-              <div className="w-full">
-                <TextBox
-                  {...register("shippingAddress.phone")}
-                  id="shippingAddress.phone"
-                  label="Escribe tu telefono"
-                  type="number"
-                  placeholder="000 000 0000"
-                />
-                {errors?.shippingAddress?.phone && (
-                  <p className="text-red-600">
-                    {errors?.shippingAddress.phone?.message}
-                  </p>
-                )}
-              </div>
-              <div className="w-full">
-                <CheckBox
-                  {...register("shippingAddress.isSameAsBillingAddress")}
-                  id="shippingAddress.isSameAsBillingAddress"
-                  label="Acepto usar la dirección de envió para el proceso de facturación"
-                />
-              </div>
-              {!isSameAsBillingAddress && (
-                <>
-                  <h4 className="!font-semibold text-blue-dark">
-                    Direccion de facturación
-                  </h4>
-                  <div className="w-full">
-                    <SelectInput
-                      label="Escoge tu departamento"
-                      id="billingAddress-state-code"
-                      options={states.map((state) => ({
-                        label: state.name,
-                        value: state.name,
-                      }))}
-                      {...register("billingAddress.stateCode")}
-                      placeholder="Seleccionar"
-                    />
-                    {errors.billingAddress?.stateCode && (
-                      <p className="text-red-600">
-                        {errors.billingAddress?.stateCode?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <SelectInput
-                      id="billingCities-city-code"
-                      label="Escoge tu municipio"
-                      options={billingCities.map((city) => ({
-                        label: city,
-                        value: city,
-                      }))}
-                      {...register("billingAddress.cityCode")}
-                      placeholder="Seleccionar"
-                    />
-                    {errors?.billingAddress?.cityCode && (
-                      <p className="text-red-600">
-                        {errors?.billingAddress?.cityCode?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <TextBox
-                      id="billingAddress.address"
-                      label="Escribe tu direccion"
-                      {...register("billingAddress.address")}
-                      placeholder="Ejemplo carrera 00 # 0000"
-                    />
-                    {errors?.billingAddress?.address && (
-                      <p className="text-red-600">
-                        {errors?.billingAddress?.address?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <TextBox
-                      {...register("billingAddress.phone")}
-                      id="billingAddress.phone"
-                      label="Escribe tu telefono"
-                      type="number"
-                      placeholder="000 000 0000"
-                    />
-                    {errors?.billingAddress?.phone && (
-                      <p className="text-red-600">
-                        {errors?.billingAddress.phone?.message}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-              <div className="flex justify-end w-full gap-3">
-                <button
-                  className="button button-outline"
-                  type="button"
-                  onClick={handlePrev}
-                >
-                  Volver
-                </button>
-                <button className="button button-primary" type="submit">
-                  Continuar
-                </button>
-              </div>
-            </form>
-          </div>
-        </HeadingCard>
+                <div className="flex justify-end w-full gap-3">
+                  <button
+                    className="button button-outline"
+                    type="button"
+                    onClick={handlePrev}
+                  >
+                    Volver
+                  </button>
+                  <button className="button button-primary" type="submit">
+                    Continuar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </HeadingCard>
+        </div>
       </div>
     </>
   );

@@ -14,8 +14,10 @@ import { getMenu } from "@/lib/services/menu-content.service";
 const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   return (
     <>
-      <div className="main-container overflow-hidden">
-        {jsonToReactComponents(blocksCollection.items)}
+      <div className="overflow-hidden">
+        <div className="main-container">
+          {jsonToReactComponents(blocksCollection.items)}
+        </div>
       </div>
     </>
   );

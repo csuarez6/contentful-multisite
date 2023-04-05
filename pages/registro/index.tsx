@@ -132,9 +132,11 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="main-container overflow-hidden">
-        <Breadcrumbs ctaCollection={breadcrumbs} />
-        <SignUpFormBlock sidebar={mockSidebarInformativeProps.data} form={data} />
+      <div className="overflow-hidden">
+        <div className="main-container">
+          <Breadcrumbs ctaCollection={breadcrumbs} />
+          <SignUpFormBlock sidebar={mockSidebarInformativeProps.data} form={data} />
+        </div>
       </div>
     </>
   );

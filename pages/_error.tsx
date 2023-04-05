@@ -7,8 +7,10 @@ import { getMenu } from "@/lib/services/menu-content.service";
 
 const CustomErrorComponent = (props: any) => {
   return (
-    <div className="main-container overflow-hidden">
-      <NextErrorComponent statusCode={props.statusCode} />;
+    <div className="overflow-hidden">
+      <div className="main-container">
+        <NextErrorComponent statusCode={props.statusCode} />;
+      </div>
     </div>
   );
 };
