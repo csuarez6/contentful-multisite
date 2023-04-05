@@ -13,7 +13,7 @@ const iconCellphone: IIcon = {
 };
 
 const iconLocation: IIcon = {
-  icon: "location",
+  icon: "place",
   size: 28,
   className: "h-5 w-5",
 };
@@ -36,7 +36,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
   address,
   city,
 }) => {
-  const imageSize = __typename == 'AuxAlly' ? {'w': 384, 'h': 180} : {'w': 336, 'h': 291};
+  const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
 
   return (
     <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
@@ -45,12 +45,12 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
           {(state || promotion) && (
             <div className="flex gap-1">
               {state && (
-                <div className="bg-lucuma-80 text-grey-10 uppercase px-2 py-1 flex items-center text-center rounded-lg text-sm font-medium">
+                <div className="flex items-center px-2 py-1 text-sm font-medium text-center uppercase rounded-lg bg-lucuma-80 text-grey-10">
                   <p>{state}</p>
                 </div>
               )}
               {promotion && (
-                <div className="bg-category-sky-blue text-grey-10 uppercase px-2 py-1 flex items-center text-center rounded-lg text-sm font-medium">
+                <div className="flex items-center px-2 py-1 text-sm font-medium text-center uppercase rounded-lg bg-category-sky-blue text-grey-10">
                   <p>{promotion} de descuento</p>
                 </div>
               )}
@@ -100,7 +100,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
       {promoTitle && (
         <div className="flex flex-col gap-[25px]">
           <div className="flex flex-col gap-[7px]">
-            <div className="flex justify-between flex-wrap items-center gap-1">
+            <div className="flex flex-wrap items-center justify-between gap-1">
               <h3 className="text-blue-dark title is-4">{promoTitle}</h3>
               {rating && (
                 <div className="flex items-center gap-[13px] mr-1">
@@ -114,20 +114,20 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
                       priority
                     />
                   </figure>
-                  <div className="text-blue-dark text-size-subtitle2 font-bold">
+                  <div className="font-bold text-blue-dark text-size-subtitle2">
                     <p>{rating}/5</p>
                   </div>
                 </div>
               )}
             </div>
             {address && (
-              <div className="text-size-small text-blue-dark">
+              <div className="flex gap-1 text-size-small text-blue-dark">
                 <Icon {...iconLocation} />
                 {address} - {city}
               </div>
             )}
             {phone && (
-              <div className="text-size-small text-blue-dark">
+              <div className="flex gap-1 text-size-small text-blue-dark">
                 <Icon {...iconCellphone} />
                 {phone}
               </div>
@@ -141,7 +141,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
           {(price || priceBefore) && (
             <div className="flex flex-col gap-[6px]">
               {priceBefore && (
-                <p className="title is-4 line-through text-blue-dark">
+                <p className="line-through title is-4 text-blue-dark">
                   {priceBefore}
                 </p>
               )}
@@ -160,7 +160,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
               <div className="flex gap-1">
                 {paymentMethods?.map((el) => (
                   <p
-                    className="title is-5 text-grey-10 bg-neutral-90 rounded-lg px-2 py-1"
+                    className="px-2 py-1 rounded-lg title is-5 text-grey-10 bg-neutral-90"
                     key={`${el.name}-${promoTitle}`}
                   >
                     {el.name}
