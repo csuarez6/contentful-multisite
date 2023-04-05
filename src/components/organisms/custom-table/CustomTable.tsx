@@ -1,7 +1,7 @@
 import Icon from "@/components/atoms/icon/Icon";
-import {useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 
-const Table = ({children}) => {
+const CustomTable = ({ children }) => {
   const tableEl = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
@@ -10,7 +10,7 @@ const Table = ({children}) => {
 
   useEffect(() => {
     window.onresize = () => {
-      if(window.innerWidth >= 768){
+      if (window.innerWidth >= 768) {
         setCurrentPage(1);
       };
     };
@@ -20,34 +20,34 @@ const Table = ({children}) => {
     const table = tableEl.current;
     setRows(table.querySelectorAll("tr"));
     setColumns(table.querySelectorAll("tr:first-child > *"));
-  }, [children]); 
+  }, [children]);
 
   useEffect(() => {
     const page = [];
     columns?.forEach((item, index, arr) => {
-      if(index > 0){
+      if (index > 0) {
         page.push(index);
       };
 
-      if(index == (arr.length - 1))
+      if (index == (arr.length - 1))
         setPages(page);
     });
-  }, [columns]); 
+  }, [columns]);
 
   useEffect(() => {
     rows.forEach(item => {
       item.scrollLeft = (currentPage - 1) * (item?.clientWidth / 2);
     });
-  }, [currentPage, rows]); 
+  }, [currentPage, rows]);
 
   const prevPage = () => {
-    if(currentPage > 1){
+    if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     };
   };
 
   const nextPage = () => {
-    if(currentPage < pages.length){
+    if (currentPage < pages.length) {
       setCurrentPage(currentPage + 1);
     };
   };
@@ -66,9 +66,9 @@ const Table = ({children}) => {
               <Icon icon="arrow-left"></Icon>
             </span>
           </li>
-          { pages.map((i, index) => (
-            <li  className="list-none" key={`dot_${index}`}>
-              <span onClick={() => {setPage(i);}} className={`${currentPage == i ? "w-3.5 bg-yellow-500" : "w-3 bg-gray-200"} cursor-pointer block  aspect-square rounded-full`}></span>
+          {pages.map((i, index) => (
+            <li className="list-none" key={`dot_${index}`}>
+              <span onClick={() => { setPage(i); }} className={`${currentPage == i ? "w-3.5 bg-yellow-500" : "w-3 bg-gray-200"} cursor-pointer block  aspect-square rounded-full`}></span>
             </li>
           ))}
           <li className="w-8 list-none">
@@ -85,4 +85,4 @@ const Table = ({children}) => {
   );
 };
 
-export default Table;
+export default CustomTable;

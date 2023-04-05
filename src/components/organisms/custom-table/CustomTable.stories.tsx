@@ -1,10 +1,16 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Table from './Table';
-import { mockTabsProps } from './Table.mocks';
+import { ReactNode } from 'react';
+import CustomTable from './CustomTable';
+import { mockTabsProps } from './CustomTable.mocks';
+
+interface ITable {
+  children: ReactNode;
+  table: any;
+}
 
 export default {
-  title: 'Organisms/Table',
-  component: Table,
+  title: 'Organisms/CustomTable',
+  component: CustomTable,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
@@ -14,11 +20,11 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof Table>;
+} as ComponentMeta<typeof CustomTable>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Table> = (args) => (
-  <Table>
+const Template: ComponentStory<typeof CustomTable> = (args: ITable) => (
+  <CustomTable>
     {
       args.table?.map((item, i) => (
         <tr key={`tr_${i}`} className="bg-white overflow-hidden pointer-events-none scroll-smooth flex md:table-row w-full">
@@ -32,7 +38,7 @@ const Template: ComponentStory<typeof Table> = (args) => (
         </tr>
       ))
     }
-  </Table>
+  </CustomTable>
 );
 
 export const Base = Template.bind({});

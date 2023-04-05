@@ -1,7 +1,7 @@
 import { Options } from "@contentful/rich-text-react-renderer";
 import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 import Image from "next/image";
-import Table from "@/components/organisms/table/Table";
+import CustomTable from "@/components/organisms/custom-table/CustomTable";
 
 const defaultFormatOptions: Options = {
   renderNode: {
@@ -43,9 +43,9 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <Table>
+      <CustomTable>
         {children}
-      </Table>
+      </CustomTable>
     ),
     [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => (
       <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
