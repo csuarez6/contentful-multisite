@@ -5,6 +5,8 @@ import FeaturedProductBlock from "../product-featured/FeaturedProductBlock";
 import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProductBlockSkeleton/FeaturedProductBlockSkeleton";
 import InfoCardBlock from "../info-card/InfoCard";
 import SearchCardBlock from "../search-card/SearchCard";
+import Icon from "@/components/atoms/icon/Icon";
+import { useState } from "react";
 
 interface IWithLoadingData {
   isLoading?: boolean;
@@ -20,10 +22,12 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   error = false,
   type,
 }) => {
+  const [filterText, setFilterText] = useState<string>("");
   const onFacetsChangeHandle = (key, value) => {
     const { search: uri } = location;
     let newUri = "";
 
+    value = (value === "") ? "*" : value;
     const re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
     const separator = uri.indexOf("?") !== -1 ? "&" : "?";
 
@@ -59,7 +63,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
   return (
     <section className="w-full">
-      <div className="flex md:justify-between">
+      <div className="flex items-center md:justify-between">
         <div className="flex gap-6">
           {facets?.map((el: ISelect, i: number) => {
             return (
@@ -71,6 +75,28 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
             );
           })}
         </div>
+        {(type === "AuxAlly") ? (
+          <div className="flex">
+            <div className='relative'>
+              <input
+                className="border border-grey-60 rounded w-full py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                type="text"
+                placeholder="Buscar"
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+              />
+              <button
+                className='absolute right-[11px] top-[27%] flex h-fit text-grey-30'
+                onClick={() => onFacetsChangeHandle("name", filterText)}
+                type='button'
+              >
+                <Icon icon='search' size={20} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       {principalSearch ? generalSearchGrill() : (() => {
         switch (type) {

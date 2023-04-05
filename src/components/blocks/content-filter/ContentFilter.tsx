@@ -100,8 +100,8 @@ const ContentFilter: React.FC<IContentFilter> = ({
     <div className="relative w-full">
       {(principalSearch && data?.totalItems > 0) && (
         <div>
-          <h2 className="text-center text-blue-dark text-4xl">Resultados de búsqueda</h2>
-          <p className="text-center text-2xl">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
+          <h2 className="text-4xl text-center text-blue-dark">Resultados de búsqueda</h2>
+          <p className="text-2xl text-center">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
       {(title || mainFacetContent?.listedContents?.length > 0) && (
@@ -131,13 +131,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
         />
       )}
       {data?.totalPages > 1 && (
-        <div className="block w-full mb-12 my-4">
-          <ul className="flex flex-row justify-center items-center gap-1 w-full">
+        <div className="block w-full my-4 mb-12">
+          <ul className="flex flex-row items-center justify-center w-full gap-1">
             {data?.actualPage !== undefined && data.actualPage > 0 && (
               <li>
                 <button
                   onClick={() => setPage(data.actualPage)}
-                  className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
+                  className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
                 >
                   &lt; Anterior
                 </button>
@@ -147,11 +147,10 @@ const ContentFilter: React.FC<IContentFilter> = ({
               <li key={`page-${k}`}>
                 <button
                   onClick={() => setPage(k + 1)}
-                  className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${
-                    k == data?.actualPage
-                      ? "border-blue-dark"
-                      : "border-transparent"
-                  }`}
+                  className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${k == data?.actualPage
+                    ? "border-blue-dark"
+                    : "border-transparent"
+                    }`}
                 >
                   {k + 1}
                 </button>
@@ -163,7 +162,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
                 <li>
                   <button
                     onClick={() => setPage(data.actualPage + 2)}
-                    className="blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid border-transparent hover:border-blue-dark"
+                    className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
                   >
                     Siguiente &gt;
                   </button>
