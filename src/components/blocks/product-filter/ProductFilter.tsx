@@ -84,10 +84,11 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
                 placeholder="Buscar"
                 value={filterText}
                 onChange={e => setFilterText(e.target.value)}
+                onKeyDown={event => (event.key == 'Enter') ? onFacetsChangeHandle("text", filterText) : null}
               />
               <button
                 className='absolute right-[11px] top-[27%] flex h-fit text-grey-30'
-                onClick={() => onFacetsChangeHandle("name", filterText)}
+                onClick={() => onFacetsChangeHandle("text", filterText)}
                 type='button'
               >
                 <Icon icon='search' size={20} />
