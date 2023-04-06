@@ -63,7 +63,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
   return (
     <section className="w-full">
-      <div className="flex items-center md:justify-between">
+      <div className="flex items-end md:justify-between">
         <div className="flex gap-6">
           {facets?.map((el: ISelect, i: number) => {
             return (
@@ -75,11 +75,11 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
             );
           })}
         </div>
-        {(type === "AuxAlly") ? (
+        {(type === "AuxAlly" || type === "product") ? (
           <div className="flex">
             <div className='relative'>
               <input
-                className="border border-grey-60 rounded w-full py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                className="h-[50px] w-full md:w-[345px] border border-grey-60 rounded py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
                 type="text"
                 placeholder="Buscar"
                 value={filterText}
