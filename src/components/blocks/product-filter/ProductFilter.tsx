@@ -21,6 +21,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   isLoading = false,
   error = false,
   type,
+  types,
 }) => {
   const [filterText, setFilterText] = useState<string>("");
   const onFacetsChangeHandle = (key, value) => {
@@ -75,7 +76,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
             );
           })}
         </div>
-        {(type === "AuxAlly" || type === "product") ? (
+        {!types?.includes("page") && (type === "AuxAlly" || type === "product") ? (
           <div className="flex">
             <div className='relative'>
               <input

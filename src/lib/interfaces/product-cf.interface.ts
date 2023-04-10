@@ -47,6 +47,7 @@ export interface IProductFilterBlock {
   facets?: ISelect[];
   onFacetsChange?: (newQueryString: string) => void;
   type?: string;
+  types?: any;
 };
 
 export interface IProductOverviewDetails {
@@ -83,7 +84,7 @@ export interface IProductOverviewDetails {
     image?: IImageAsset;
   };
   category?: {
-    name?:string;
+    name?: string;
     image?: IImageAsset;
   };
   relatedProducts?: IProductOverviewDetails[]
