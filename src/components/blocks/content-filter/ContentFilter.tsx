@@ -128,6 +128,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
           isLoading={isLoading}
           error={error}
           type={contentTypesFilter[0]}
+          types={contentTypesFilter}
         />
       )}
       {data?.totalPages > 1 && (
