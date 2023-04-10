@@ -11,6 +11,7 @@ export interface IButtonAtom {
   text: string;
   type: string;
   classes?: string;
+  modalClass?: string;
   link?: ITypeLink;
   children?: React.ReactNode;
   callbackAction?: (event) => void;
@@ -20,6 +21,7 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
   text,
   type,
   classes,
+  modalClass,
   link,
   callbackAction,
   children
@@ -56,7 +58,7 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
           {text ?? "Botón"}
         </button>
         {(type === "Modal") && open && (
-          <CustomModal close={closeModal}>
+          <CustomModal close={closeModal} containerClass={modalClass}>
             {children}
           </CustomModal>
         )}

@@ -92,6 +92,9 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       {ctaCollection?.items?.length > 0 && (
         <div className="flex justify-center gap-3">
           {ctaCollection.items.map((cta) => {
+            const hasBlocks = cta?.content?.json?.content?.some(el => {
+              return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
+            });
             let contentJson = cta?.content?.json;
             if (attachLinksToRichtextContent && contentJson) {
               contentJson = attachLinksToRichtextContent(contentJson, cta?.content?.links ?? []);
@@ -112,6 +115,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                     key={cta.name}
                     type="Modal"
                     classes={classNames("button w-fit", getButtonType(view.buttonType))}
+                    modalClass={hasBlocks ? "main-container" : null}
                     text={cta.promoTitle ?? cta.name}
                   >
                     {cta.promoDescription?.json && (

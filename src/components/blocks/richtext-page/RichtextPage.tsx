@@ -8,6 +8,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
 import { useEffect, useState } from "react";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const fixId = (value) => {
   const newId = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -60,9 +61,7 @@ const filterHeading = (objData) => {
 const RichtextPage: React.FC<IPage> = (props) => {
   const { content, showHeader, promoTitle, promoImage, relatedContentCollection } = props;
   const filteredHeading = filterHeading(content?.json?.content);
-
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const calcScroll = () => {
     const header: HTMLElement = document.querySelector('header');
     const sectionHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.richtext-container h2');
@@ -84,6 +83,11 @@ const RichtextPage: React.FC<IPage> = (props) => {
     window.addEventListener('scroll', () => calcScroll());
   }, []);
 
+  let contentJson = content?.json;
+  if (attachLinksToRichtextContent && contentJson) {
+    contentJson = attachLinksToRichtextContent(contentJson, content?.links ?? []);
+  }
+
   return (
     <section className="section flex gap-10 md:gap-16 px-12">
       <div className="content-page flex flex-col gap-16">
@@ -103,9 +107,11 @@ const RichtextPage: React.FC<IPage> = (props) => {
             )}
           </div>
         )}
-        <div className="richtext-container grow">
-          {documentToReactComponents(content.json, richtextFormatOptions)}
-        </div>
+        {contentJson && (
+          <div className="richtext-container grow">
+            {documentToReactComponents(contentJson, richtextFormatOptions)}
+          </div>
+        )}
       </div>
       {(relatedContentCollection?.items?.length > 0 || filteredHeading) && (
         <div className="mt-16 hidden lg:flex flex-col gap-4 w-[278px] shrink-0">
