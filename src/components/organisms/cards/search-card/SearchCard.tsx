@@ -11,7 +11,7 @@ const SearchCard: React.FC<IPromoContent> = (props) => {
 
   return (
     <a href={urlPath} className="p-6 border rounded-xl bg-white border-neutral-70">
-      <div className="flex flex-col gap-1 h-full">
+      <div className="flex flex-col gap-3 h-full">
         {(promoImage) && (
           <div className="relative aspect-[336/291]">
             <figure className="aspect-[336/291]">
@@ -20,12 +20,12 @@ const SearchCard: React.FC<IPromoContent> = (props) => {
                 src={promoImage.url}
                 width={336}
                 height={291}
-                className="w-full h-full"
+                className="w-full h-full object-cover"
               />
             </figure>
           </div>
         )}
-        <h3 className="text-black">
+        <h3 className="text-blue-dark-8 hover:text-category-blue-dark">
           {promoTitle ?? name}
         </h3>
       </div>

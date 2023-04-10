@@ -21,6 +21,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
   const { push, pathname, asPath } = useRouter();
   const [page, setPage] = useState<number>(1);
 
+  const updatePage = (value) => {
+    setPage(value);
+    window.scrollTo(0, 0);
+  };
+
   const principalSearch = sys.id === '75w6bsU9MWCoxDtT7HXyGb';
 
   const fixedFilters = [
@@ -97,11 +102,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath]);
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex flex-col">
       {(principalSearch && data?.totalItems > 0) && (
-        <div>
-          <h2 className="text-4xl text-center text-blue-dark">Resultados de búsqueda</h2>
-          <p className="text-2xl text-center">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
+        <div className="flex flex-col gap-5 mb-7 md:mb-9">
+          <h1 className="text-4xl text-center text-blue-dark">Resultados de búsqueda</h1>
+          <p className="text-2xl text-center text-grey-30">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
       {(title || mainFacetContent?.listedContents?.length > 0) && (
@@ -136,7 +141,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
             {data?.actualPage !== undefined && data.actualPage > 0 && (
               <li>
                 <button
-                  onClick={() => setPage(data.actualPage)}
+                  onClick={() => updatePage(data.actualPage)}
                   className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
                 >
                   &lt; Anterior
@@ -146,7 +151,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
             {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
               <li key={`page-${k}`}>
                 <button
-                  onClick={() => setPage(k + 1)}
+                  onClick={() => updatePage(k + 1)}
                   className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${k == data?.actualPage
                     ? "border-blue-dark"
                     : "border-transparent"
@@ -161,7 +166,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
               data.actualPage + 1 < data.totalPages && (
                 <li>
                   <button
-                    onClick={() => setPage(data.actualPage + 2)}
+                    onClick={() => updatePage(data.actualPage + 2)}
                     className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
                   >
                     Siguiente &gt;

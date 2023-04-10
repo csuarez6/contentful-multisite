@@ -65,7 +65,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
                     src={promoImage.url}
                     width={imageSize.w}
                     height={imageSize.h}
-                    className="w-full h-full"
+                    className="w-full h-full object-cover"
                   />
                 </figure>
               ) : (
@@ -75,7 +75,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
                     src={imagesCollection.items[0].url}
                     width={imageSize.w}
                     height={imageSize.h}
-                    className="w-full h-full"
+                    className="w-full h-full object-cover"
                   />
                 </figure>
               )}
@@ -106,7 +106,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails> 
                 <div className="flex items-center gap-[13px] mr-1">
                   <figure className="w-[15px]">
                     <Image
-                      className="w-full h-full"
+                      className="w-full h-full object-cover"
                       src="/images/star.png"
                       width={15}
                       height={15}

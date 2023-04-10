@@ -90,7 +90,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
 
   return (
     <section className="section flex gap-10 md:gap-16 px-12">
-      <div className="content-page flex flex-col gap-16">
+      <div className="content-page flex flex-col grow gap-16">
         {showHeader && (promoTitle || promoImage) && (
           <div className="flex flex-col gap-8">
             {promoTitle && <h1 className="text-blue-dark">{promoTitle}</h1>}
@@ -113,7 +113,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
           </div>
         )}
       </div>
-      {(relatedContentCollection?.items?.length > 0 || filteredHeading) && (
+      {(relatedContentCollection?.items?.length > 0 || filteredHeading?.length > 0) && (
         <div className="mt-16 hidden lg:flex flex-col gap-4 w-[278px] shrink-0">
           {relatedContentCollection?.items?.length > 0 && (
             <div className="flex flex-col gap-5 p-6">
@@ -130,7 +130,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
               </div>
             </div>
           )}
-          {filteredHeading && (
+          {filteredHeading?.length > 0 && (
             <div className="flex flex-col gap-3 sticky top-56">
               <p className="title is-4 text-neutral-30 !font-semibold pl-6">En esta página:</p>
               <div className="flex flex-col gap-3">
