@@ -64,15 +64,16 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
   return (
     <section className="w-full">
-      <div className="flex items-end md:justify-between">
-        <div className="flex gap-6">
+      <div className="flex items-end md:justify-between gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-grow">
           {facets?.map((el: ISelect, i: number) => {
             return (
-              <SelectAtom
-                {...el}
-                key={`${el.name}-${i}`}
-                handleChange={(value) => onFacetsChangeHandle(el.name, value)}
-              />
+              <div className="flex flex-col w-full xs:w-auto" key={`${el.name}-${i}`}>
+                <SelectAtom
+                  {...el}
+                  handleChange={(value) => onFacetsChangeHandle(el.name, value)}
+                />
+              </div>
             );
           })}
         </div>
