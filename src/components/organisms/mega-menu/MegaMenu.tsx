@@ -222,7 +222,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                       {item.secondaryNavCollection.items.map((block) => (
                         <div
                           className={classNames(
-                            "card-mega-menu flex overflow-hidden",
+                            "group card-mega-menu flex overflow-hidden",
                             !block.promoImage && "not-image"
                           )}
                           key={`card_${block?.sys.id}-megamenu`}
@@ -233,7 +233,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                 : null,
                           }}
                         >
-                          {jsonToReactComponent(block)}
+                          {jsonToReactComponent({...block, hideDecimalPrice: true, hideBeforePrice: true})}
                         </div>
                       ))}
                     </div>
