@@ -8,6 +8,7 @@ import contentfulClient from './contentful-client.service';
 import getReferencesContent from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
+import getReferencesRichtextContent from './richtext-references.service';
 
 const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (!urlPath || urlPath === '') {
@@ -52,7 +53,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (!responseData[`${typePage}Collection`]?.items?.[0] && !responseData[`${typeProduct}Collection`]?.items?.[0]) return null;
 
   // Get related products (with the same category)
-  if(responseData[`${typeProduct}Collection`]?.items?.[0]){
+  if (responseData[`${typeProduct}Collection`]?.items?.[0]) {
     let dataRelatedProducts = null;
     try {
       ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
@@ -78,7 +79,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
         errorPolicy: 'all'
       }));
 
-      if(dataRelatedProducts[`${typeProduct}Collection`]?.items){        
+      if (dataRelatedProducts[`${typeProduct}Collection`]?.items) {
         const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
           return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
         }));
@@ -86,7 +87,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
       }
     } catch (e) {
       console.error("An error has ocurred at related content fetching", e);
-    } 
+    }
   }
 
   const pageContent = JSON.parse(
@@ -107,6 +108,11 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
     if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
       const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
       _.merge(pageContent, commercelayerProduct);
+    }
+
+    const richtextReferences = await getReferencesRichtextContent({ content: pageContent, preview });
+    if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+      _.merge(pageContent, richtextReferences);
     }
   }
 

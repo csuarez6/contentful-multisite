@@ -83,7 +83,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   }
 
   const richtextReferences = await getReferencesRichtextContent({ content: entryContent, preview });
-  if (richtextReferences) {
+  if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
     _.merge(entryContent, richtextReferences);
   }
 

@@ -81,8 +81,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
 
   useEffect(() => {
     window.addEventListener('scroll', () => calcScroll());
-  }, []);
-
+  }, []);  
   let contentJson = content?.json;
   if (attachLinksToRichtextContent && contentJson) {
     contentJson = attachLinksToRichtextContent(contentJson, content?.links ?? []);

@@ -54,15 +54,14 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
     }
 
     if (responseError) {
-      console.error(`Error on entry query (${type}) => `, responseError.message);
+      console.error(`Error on richtext query (${type}) => `, responseError.message);
     }
 
-    if (!responseData?.[type]) {
-      return null;
+    if (!responseData?.[type]?.[ref]?.links) {
+      continue;
     }
-    if (responseData?.auxCustomContent?.content?.links?.entries?.block[0] !== undefined) {
-      referencesContent[ref] = responseData?.auxCustomContent?.content;
-    }
+
+    referencesContent[ref] = responseData[type][ref];
   }
 
   return referencesContent;

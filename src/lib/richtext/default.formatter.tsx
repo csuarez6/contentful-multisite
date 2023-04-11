@@ -107,6 +107,9 @@ const defaultFormatOptions: Options = {
     },
     [BLOCKS.EMBEDDED_ENTRY]: (node) => {
       return jsonToReactComponent(node.data.target);
+    },
+    [INLINES.EMBEDDED_ENTRY]: (node) => { 
+      return jsonToReactComponent(node.data.target);
     }
   },
 };

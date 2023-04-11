@@ -34,15 +34,35 @@ const blockPromoRichText = `
     items {
       ...on Page {
         ${DefaultQuery}
+        promoTitle
+        promoDescription {
+          json
+        }
       }
       ...on Product {
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
         ${DefaultQuery}
+        name
+        promoTitle
+        promoDescription {
+          json
+        }
+        promoImage {
+          ${AssetImageQuery}
+        }
       }
       ...on BlockPromoContent{
         ${DefaultQuery}
+        name
+        title
+        pretitle
+        subtitle
+        description {
+          json
+        }
+        
       } 
     }
   }
@@ -97,6 +117,17 @@ export const RichtextLinksQuery = `
         }
         ...on BlockForm{
           ${BlockFormQuery}
+        }
+        ...on Page{
+          ${DefaultQuery}
+          promoTitle
+          promoDescription {
+            json
+          }
+          promoImage {
+            ${AssetImageQuery}
+          }
+          promoIcon
         }
       }
     }
