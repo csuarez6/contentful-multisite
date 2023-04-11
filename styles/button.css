@@ -1,9 +1,9 @@
 .button {
-  @apply px-4 py-2 leading-[1.6] font-semibold focus:outline-none;
+  @apply px-4 py-2 leading-[1.6] font-semibold focus:outline-none transition-colors duration-500;
 }
 
 .button.button-primary {
-  @apply rounded-[20px] bg-lucuma text-black hover:bg-lucuma-60 disabled:bg-lucuma-80 disabled:text-grey-60 border border-lucuma;
+  @apply rounded-[20px] bg-lucuma text-black hover:bg-lucuma-60 hover:border-lucuma-60 disabled:bg-lucuma-80 disabled:border-lucuma-80 disabled:text-grey-60 border border-lucuma;
 }
 
 .button.button-primary.disabled {

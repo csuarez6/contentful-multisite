@@ -1,5 +1,5 @@
 import React from "react";
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { classColumns, classNames } from '@/utils/functions';
@@ -45,11 +45,21 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                     </span>
                   </Disclosure.Button>
                 </dt>
-                <Disclosure.Panel as="dd" className={`pb-6 ${(el.promoIcon && displayIcon) ? "px-10" : ""}`}>
-                  <div className="text-base text-gray-500 px-7">
-                    {documentToReactComponents(el?.promoDescription?.json)}
-                  </div>
-                </Disclosure.Panel>
+                <Transition
+                  show={open}
+                  enter="transition-all ease-in duration-700"
+                  enterFrom="max-h-0 opacity-0"
+                  enterTo="max-h-screen opacity-100"
+                  leave="transition-all ease-out duration-500"
+                  leaveFrom="max-h-screen opacity-100"
+                  leaveTo="max-h-0 opacity-0"
+                >
+                  <Disclosure.Panel as="dd" className={`pb-6 ${(el.promoIcon && displayIcon) ? "px-10" : ""}`}>
+                    <div className="text-base text-gray-500 px-7">
+                      {documentToReactComponents(el?.promoDescription?.json)}
+                    </div>
+                  </Disclosure.Panel>
+                </Transition>
               </div>
             )}
           </Disclosure>

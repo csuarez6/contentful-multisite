@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { Tab } from "@headlessui/react";
+import { Tab, Transition } from "@headlessui/react";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { classNames } from "@/utils/functions";
 import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
@@ -42,7 +42,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                                 <div className={
                                   classNames(
                                     selected ? "bg-lucuma" : "bg-blue-dark-90",
-                                    "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30",
+                                    "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30 transition-colors duration-500",
                                   )}
                                 >
                                   <Icon icon={tab.promoIcon} className="w-full h-full mx-auto" />
@@ -59,25 +59,36 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                   <Tab.Panels as={Fragment}>
                     {featuredContentsCollection.items.map((content: IPromoContent) => (
                       <Tab.Panel key={content.promoTitle} className="focus:outline-none">
-                        <div className="flex flex-col gap-4">
-                          <h3 className="text-category-sky-blue-50 2md:text-blue-dark text-size-subtitle2 2md:text-2xl 2md:leading-7">{content.subtitle ?? (content.promoTitle ?? content.name)}</h3>
-                          {image?.url && (
-                            <div className="flex 2md:hidden w-full">
-                              <figure className="relative rounded-xl w-full aspect-[304/124] overflow-hidden">
-                                <Image
-                                  src={image?.url}
-                                  alt={image.title ?? (image.description ?? "Imagen destacada")}
-                                  width={494}
-                                  height={500}
-                                  className="object-cover w-full h-full"
-                                />
-                              </figure>
+                        <Transition
+                          appear
+                          show
+                          enter="transition-opacity ease-in duration-700"
+                          enterFrom="opacity-0"
+                          enterTo="opacity-100"
+                          leave="transition-opacity ease-out duration-700"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
+                          <div className="flex flex-col gap-4">
+                            <h3 className="text-category-sky-blue-50 2md:text-blue-dark text-size-subtitle2 2md:text-2xl 2md:leading-7">{content.subtitle ?? (content.promoTitle ?? content.name)}</h3>
+                            {image?.url && (
+                              <div className="flex 2md:hidden w-full">
+                                <figure className="relative rounded-xl w-full aspect-[304/124] overflow-hidden">
+                                  <Image
+                                    src={image?.url}
+                                    alt={image.title ?? (image.description ?? "Imagen destacada")}
+                                    width={494}
+                                    height={500}
+                                    className="object-cover w-full h-full"
+                                  />
+                                </figure>
+                              </div>
+                            )}
+                            <div className="text-grey-30 text-size-p3 2md:text-size-p1">
+                              {documentToReactComponents(content.promoDescription?.json)}
                             </div>
-                          )}
-                          <div className="text-grey-30 text-size-p3 2md:text-size-p1">
-                            {documentToReactComponents(content.promoDescription?.json)}
                           </div>
-                        </div>
+                        </Transition>
                       </Tab.Panel>
                     ))}
                   </Tab.Panels>

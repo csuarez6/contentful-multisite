@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { Tab } from "@headlessui/react";
+import { Tab, Transition } from "@headlessui/react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { classNames } from "@/utils/functions";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
@@ -84,15 +84,26 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
             <Tab.Panels as={Fragment}>
               {featuredContentsCollection.items.map((collection) => (
                 <Tab.Panel key={`${collection.name}_content`} className="focus:outline-none">
-                  {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
-                    jsonToReactComponent(collection)
-                  ) : (
-                    <div className="grid grid-cols-1 2md:grid-cols-3 gap-5 mt-6">
-                      {collection.featuredContentsCollection.items.map((item) => (
-                        <ListWithIcons {...item} key={item.name} />
-                      ))}
-                    </div>
-                  )}
+                  <Transition
+                    appear
+                    show
+                    enter="transition-opacity ease-in duration-700"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity ease-out duration-700"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
+                      jsonToReactComponent(collection)
+                    ) : (
+                      <div className="grid grid-cols-1 2md:grid-cols-3 gap-5 mt-6">
+                        {collection.featuredContentsCollection.items.map((item) => (
+                          <ListWithIcons {...item} key={item.name} />
+                        ))}
+                      </div>
+                    )}
+                  </Transition>
                 </Tab.Panel>
               ))}
             </Tab.Panels>

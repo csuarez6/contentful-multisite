@@ -19,7 +19,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
 
   return (
-    <section id={blockId ? blockId : sysId} className="section md:grid gap-9 !pb-[90px] md:!pb-9">
+    <section id={blockId ? blockId : sysId} className="section md:grid gap-9 max-md:!pb-[90px]">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>

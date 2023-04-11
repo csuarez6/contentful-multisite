@@ -66,7 +66,7 @@ const CarouselCategoriesBlock: React.FC<
               carouselAlignTitleClass()
             )}
           >
-            {title && <h2 className="text-blue-dark text-4xl">{title}</h2>}
+            {title && <h2 className="text-blue-dark text-4xl mb-2">{title}</h2>}
             {description && (
               <div className="text-blue-dark">
                 {documentToReactComponents(description.json)}
