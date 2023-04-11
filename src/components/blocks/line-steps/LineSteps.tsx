@@ -132,7 +132,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                         </div>
                       )}
                       {(item?.internalLink?.urlPath || item?.externalLink) && (
-                        <div className="hidden gap-3 mt-3 group-[.open]:block">
+                        <div className="hidden gap-3 mt-3 group-[.open]:block self-start">
                           <CustomLink
                             content={item}
                             key={item.name}
