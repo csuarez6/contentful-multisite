@@ -1,5 +1,4 @@
 import Image from "next/image";
-import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -50,12 +49,11 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   sysId,
   isFirst
 }) => {
-  const _uuid = uuid();
   const { asPath } = useRouter();
   const [tabIndex, setTabIndex] = useState(0);
   const updateTabIndex = (evt) => setTabIndex(evt);
-  const nextSlideId = `nextSlide_${_uuid}`;
-  const prevSlideId = `prevSlide_${_uuid}`;
+  const nextSlideId = `nextSlide_${sysId}`;
+  const prevSlideId = `prevSlide_${sysId}`;
 
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
@@ -151,11 +149,11 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     leaveFrom="opacity-100 "
                     leaveTo="opacity-0"
                   >
-                    {tab.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
-                      <LeftFeatured {...tab} buttonType={view?.buttonType} />
-                    ) : (
-                      jsonToReactComponent(tab)
-                    )}
+                    {
+                      tab.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
+                        ? (<LeftFeatured {...tab} buttonType={view?.buttonType} />)
+                        : (jsonToReactComponent(tab))
+                    }
                   </Transition>
                 </Tab.Panel>
               )
