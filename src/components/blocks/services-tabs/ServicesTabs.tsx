@@ -151,8 +151,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     leaveFrom="opacity-100 "
                     leaveTo="opacity-0"
                   >
-                    {tab.__typename ===
-                      CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
+                    {tab.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT ? (
                       <LeftFeatured {...tab} buttonType={view?.buttonType} />
                     ) : (
                       jsonToReactComponent(tab)
