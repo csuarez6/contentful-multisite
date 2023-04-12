@@ -158,7 +158,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                       (view?.backgroundColor == "Azul" || view?.backgroundColor == "Transparente") ? "text-grey-30" : backgroundColor.text,
                       (!image) && "justify-center"
                     )}>
-                      {ctaCollection.items.map((cta, idx) => (cta.externalLink || cta.internalLink || cta.__typename == CONTENTFUL_TYPENAMES.PAGE_MINIMAL) && (
+                      {ctaCollection.items.map((cta, idx) => (cta.externalLink || cta.internalLink || cta.__typename == CONTENTFUL_TYPENAMES.PAGE) && (
                         <CustomLink
                           content={cta}
                           key={cta.name}
