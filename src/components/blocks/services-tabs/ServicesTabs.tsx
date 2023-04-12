@@ -1,6 +1,9 @@
 import Image from "next/image";
+import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
 import { Tab, Transition } from "@headlessui/react";
 
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
@@ -22,7 +25,7 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
       />
     ) : (
       (promoImage || image) && (
-        <figure className="w-[102px] rounded-full overflow-hidden aspect-square relative">
+        <figure className="w-[72px] md:w-[102px] rounded-full overflow-hidden aspect-square relative">
           <Image
             className="object-cover w-full h-full"
             src={promoImage?.url ?? image?.url}
@@ -33,7 +36,7 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
         </figure>
       )
     )}
-    <p className="font-semibold leading-[1.6]">{promoTitle ?? name}</p>
+    <p className="font-semibold text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</p>
   </>
 );
 
@@ -47,6 +50,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   sysId,
   isFirst
 }) => {
+  const _uuid = uuid();
   const { asPath } = useRouter();
   const [tabIndex, setTabIndex] = useState(0);
   const updateTabIndex = (evt) => setTabIndex(evt);
@@ -63,42 +67,55 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
       )}
       {featuredContentsCollection?.items?.length > 0 && (
         <Tab.Group as="div" className="grid mt-4" selectedIndex={tabIndex} onChange={updateTabIndex}>
-          <div className="flex justify-start md:justify-center overflow-x-auto custom-scrollbar">
-            <div className="flex border-b border-transparent">
-              <Tab.List className="flex gap-[30px]">
+          <div className="relative overflow-hidden">
+            <Tab.List className="flex gap-[30px]">
+              <Swiper
+                slidesPerView={"auto"}
+                spaceBetween={20}
+                centerInsufficientSlides={true}
+                modules={[Navigation]}
+                navigation={{
+                  nextEl: `.nextSlide${_uuid}`,
+                  prevEl: `.prevSlide${_uuid}`,
+                }}
+                className="relative w-full"
+              >
                 {featuredContentsCollection.items.map((tab) => (
-                  (tab.urlPath || tab.internalLink?.urlPath || tab.externalLink) ? (
-                    <CustomLink
-                      content={tab}
-                      linkClassName="flex"
-                      className={classNames(
-                        "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
-                        (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                        ([asPath].includes(tab?.urlPath || tab?.internalLink?.urlPath || tab?.externalLink)) ? "border-lucuma" : "border-transparent"
-                      )}
-                      key={tab?.name}
-                    >
-                      {<TabElement {...tab} display={view?.tabDisplay} />}
-                    </CustomLink>
-                  ) : (
-                    <Tab
-                      key={tab?.name}
-                      className={({ selected }) => (
-                        classNames(
+                  <SwiperSlide
+                    key={tab?.name}
+                    className="max-w-[176px] w-[100px] xs:w-[120px] lg:w-[176px] h-full shrink-0"
+                  >
+                    {(tab.urlPath || tab.internalLink?.urlPath || tab.externalLink) ? (
+                      <CustomLink
+                        content={tab}
+                        linkClassName="flex"
+                        className={classNames(
+                          "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
                           (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                          selected
-                            ? "border-lucuma"
-                            : "border-transparent hover:border-lucuma",
-                          "flex flex-col items-center text-blue-dark gap-[10px] w-[176px] shrink-0 grow focus:outline-none border-b-2 px-2 py-[10px]"
-                        )
-                      )}
-                    >
-                      {<TabElement {...tab} display={view.tabDisplay} />}
-                    </Tab>
-                  )
+                          ([asPath].includes(tab?.urlPath || tab?.internalLink?.urlPath || tab?.externalLink)) ? "border-lucuma" : "border-transparent"
+                        )}
+                      >
+                        {<TabElement {...tab} display={view?.tabDisplay} />}
+                      </CustomLink>
+                    ) : (
+                      <Tab
+                        className={({ selected }) => (
+                          classNames(
+                            (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
+                            selected
+                              ? "border-lucuma"
+                              : "border-transparent hover:border-lucuma",
+                            "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none border-b-2 px-2 py-[10px]"
+                          )
+                        )}
+                      >
+                        {<TabElement {...tab} display={view.tabDisplay} />}
+                      </Tab>
+                    )}
+                  </SwiperSlide>
                 ))}
-              </Tab.List>
-            </div>
+              </Swiper>
+            </Tab.List>
           </div>
 
           <Tab.Panels as={Fragment}>
