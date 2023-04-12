@@ -54,6 +54,8 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   const { asPath } = useRouter();
   const [tabIndex, setTabIndex] = useState(0);
   const updateTabIndex = (evt) => setTabIndex(evt);
+  const nextSlideId = `nextSlide_${_uuid}`;
+  const prevSlideId = `prevSlide_${_uuid}`;
 
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
@@ -66,17 +68,23 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
         </div>
       )}
       {featuredContentsCollection?.items?.length > 0 && (
-        <Tab.Group as="div" className="grid mt-4" selectedIndex={tabIndex} onChange={updateTabIndex}>
+        <Tab.Group as="div" className="grid grid-cols-1 gap-4 md:mt-4" selectedIndex={tabIndex} onChange={updateTabIndex}>
           <div className="relative overflow-hidden">
             <Tab.List className="flex gap-[30px]">
               <Swiper
                 slidesPerView={"auto"}
                 spaceBetween={20}
+                breakpoints={{
+                  1024: {
+                    spaceBetween: 32
+                  }
+                }}
                 centerInsufficientSlides={true}
                 modules={[Navigation]}
                 navigation={{
-                  nextEl: `.nextSlide${_uuid}`,
-                  prevEl: `.prevSlide${_uuid}`,
+                  nextEl: `#${nextSlideId}`,
+                  prevEl: `#${prevSlideId}`,
+                  disabledClass: "swiper-button-disabled opacity-50"
                 }}
                 className="relative w-full"
               >
@@ -117,13 +125,21 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
               </Swiper>
             </Tab.List>
           </div>
+          <div className="flex justify-center gap-6">
+            <div id={prevSlideId} className="w-6 h-6 text-neutral-20">
+              <Icon icon="arrow-left" className="w-full h-full" />
+            </div>
+            <div id={nextSlideId} className="w-6 h-6 text-neutral-20">
+              <Icon icon="arrow-right" className="w-full h-full" />
+            </div>
+          </div>
 
           <Tab.Panels as={Fragment}>
             {featuredContentsCollection.items.map((tab, idx) => (
               (!tab.urlPath && !tab.internalLink && !tab.externalLink) && (
                 <Tab.Panel
                   key={tab?.name}
-                  className="pt-6 focus:outline-none"
+                  className="focus:outline-none"
                 >
                   <Transition
                     appear
