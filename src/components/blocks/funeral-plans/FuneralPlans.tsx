@@ -32,7 +32,7 @@ const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description, blockId,
                     )
                   }
                 >
-                  <h3>{tab.title}</h3>
+                  <span className="title is-3">{tab.title}</span>
                 </Tab>
               )}
             </Tab.List>
@@ -109,7 +109,7 @@ const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description, blockId,
                                   />
                                 </span>
                               )}
-                              <p className="text-size-p1 font-normal text-blue-dark">{tab.title}</p>
+                              <span className="text-size-p1 font-normal text-blue-dark">{tab.title}</span>
                             </Tab>
                           )}
                         </Tab.List>

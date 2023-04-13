@@ -37,7 +37,7 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
         </div>
       )
     )}
-    <p className="font-semibold text-center text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</p>
+    <span className="font-semibold text-center text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</span>
   </>
 );
 

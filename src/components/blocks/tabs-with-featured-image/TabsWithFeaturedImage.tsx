@@ -39,15 +39,15 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                           >
                             {({ selected }) => (
                               <>
-                                <div className={
+                                <span className={
                                   classNames(
                                     selected ? "bg-lucuma" : "bg-blue-dark-90",
                                     "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30 transition-colors duration-500",
                                   )}
                                 >
                                   <Icon icon={tab.promoIcon} className="w-full h-full mx-auto" />
-                                </div>
-                                <p className="text-size-small text-grey-30">{tab.promoTitle ?? tab.name}</p>
+                                </span>
+                                <span className="text-size-small text-grey-30">{tab.promoTitle ?? tab.name}</span>
                               </>
                             )}
                           </Tab>

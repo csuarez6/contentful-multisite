@@ -45,7 +45,7 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({ title, description, feat
                     )
                   }
                 >
-                  <p>{tab.name}</p>
+                  <span>{tab.name}</span>
                 </Tab>
               )}
             </Tab.List>
