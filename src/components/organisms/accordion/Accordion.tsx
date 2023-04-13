@@ -7,19 +7,20 @@ import Icon from "@/components/atoms/icon/Icon";
 
 const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }) => {
   return (
-    <dl className={classNames("grid", classColumns(columnsSize ?? '2'))}>
+    <div className={classNames("grid", classColumns(columnsSize ?? '2'))}>
       {featuredContents?.items?.map((el, i) => {
         if (!el.promoTitle && !el.name) return;
         return (
           <Disclosure
             as="div"
-            key={i}
+            key={el.name}
             className="first:border-0 border-t border-neutral-80"
           >
             {({ open }) => (
-              <div>
-                <dt className="text-lg">
+              <>
+                <div className="text-lg cursor-pointer">
                   <Disclosure.Button
+                    as="div"
                     className={`flex w-full items-center justify-between px-7 text-left text-gray-400 py-6`}
                   >
                     <div className="flex items-center gap-3">
@@ -44,7 +45,7 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                       />
                     </span>
                   </Disclosure.Button>
-                </dt>
+                </div>
                 <Transition
                   show={open}
                   enter="transition-all ease-in duration-700"
@@ -54,18 +55,18 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                   leaveFrom="max-h-screen opacity-100"
                   leaveTo="max-h-0 opacity-0"
                 >
-                  <Disclosure.Panel as="dd" className={`pb-6 ${(el.promoIcon && displayIcon) ? "px-10" : ""}`}>
+                  <Disclosure.Panel as="div" className={`pb-6 ${(el.promoIcon && displayIcon) ? "px-10" : ""}`}>
                     <div className="text-base text-gray-500 px-7">
                       {documentToReactComponents(el?.promoDescription?.json)}
                     </div>
                   </Disclosure.Panel>
                 </Transition>
-              </div>
+              </>
             )}
           </Disclosure>
         );
       })}
-    </dl>
+    </div>
   );
 };
 

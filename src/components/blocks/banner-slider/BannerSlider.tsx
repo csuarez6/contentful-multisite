@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 const iconLeft = (id: string) => (
-  `<button id="${id}" class="carousel-control-prev-icon h-9 w-auto hidden sm:block mr-1">
+  `<button id="${id}" class="carousel-control-prev-icon h-9 w-auto hidden sm:block mr-1" aria-label="Prev Slide">
     <svg className="text-neutral-20 drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
       <path d="M618.667 277.333l-213.333 213.333 213.333 213.333" fill="none" stroke="currentcolor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
     </svg>
@@ -18,7 +18,7 @@ const iconLeft = (id: string) => (
 );
 
 const iconRight = (id: string) => (
-  `<button id="${id}" class="carousel-control-next-icon w-auto h-9 hidden sm:block ml-1">
+  `<button id="${id}" class="carousel-control-next-icon w-auto h-9 hidden sm:block ml-1" aria-label="Next Slide">
     <svg className="text-neutral-20 drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]"  width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
       <path d="M405.333 704l213.333-213.333-213.333-213.333" fill="none" stroke="currentcolor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
     </svg>

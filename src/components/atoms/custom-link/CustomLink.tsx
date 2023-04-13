@@ -30,10 +30,10 @@ const CustomLink: React.FC<ICustomLink> = ({
       onClick={onClick}
       className={linkClassName}
     >
-      <span className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
+      <div className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
         {children ? children : textLink}
         {icon && <Icon icon={icon} className="w-6 h-6 shrink-0" />}
-      </span>
+      </div>
     </Link>
   );
 };

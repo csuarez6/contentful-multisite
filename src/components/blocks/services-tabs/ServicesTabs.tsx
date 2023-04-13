@@ -24,15 +24,17 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
       />
     ) : (
       (promoImage || image) && (
-        <figure className="w-[72px] md:w-[102px] rounded-full overflow-hidden aspect-square relative">
-          <Image
-            className="object-cover w-full h-full"
-            src={promoImage?.url ?? image?.url}
-            alt={promoImage?.title ?? image?.title}
-            width={102}
-            height={102}
-          />
-        </figure>
+        <div className="w-[72px] md:w-[102px] rounded-full overflow-hidden relative">
+          <figure className="w-full h-full aspect-square relative">
+            <Image
+              className="object-cover w-full h-full"
+              src={promoImage?.url ?? image?.url}
+              alt={promoImage?.title ?? image?.title}
+              width={102}
+              height={102}
+            />
+          </figure>
+        </div>
       )
     )}
     <p className="font-semibold text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</p>
@@ -73,7 +75,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                 slidesPerView={"auto"}
                 spaceBetween={20}
                 breakpoints={{
-                  1024: {
+                  768: {
                     spaceBetween: 32
                   }
                 }}
@@ -94,7 +96,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     {(tab.urlPath || tab.internalLink?.urlPath || tab.externalLink) ? (
                       <CustomLink
                         content={tab}
-                        linkClassName="flex"
+                        linkClassName="flex h-full"
                         className={classNames(
                           "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
                           (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",

@@ -39,7 +39,11 @@ const nextConfig = {
   staticPageGenerationTimeout: 300,
   experimental: {
     largePageDataBytes: 512 * 1024
-  }
+  },
+  i18n: {
+    locales: ['es'],
+    defaultLocale: 'es',
+  },
 };
 
 if (isProduction) {
