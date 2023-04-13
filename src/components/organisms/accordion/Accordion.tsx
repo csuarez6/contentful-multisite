@@ -8,7 +8,7 @@ import Icon from "@/components/atoms/icon/Icon";
 const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }) => {
   return (
     <div className={classNames("grid", classColumns(columnsSize ?? '2'))}>
-      {featuredContents?.items?.map((el, i) => {
+      {featuredContents?.items?.map((el) => {
         if (!el.promoTitle && !el.name) return;
         return (
           <Disclosure

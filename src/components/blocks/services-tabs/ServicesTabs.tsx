@@ -37,7 +37,7 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
         </div>
       )
     )}
-    <p className="font-semibold text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</p>
+    <p className="font-semibold text-center text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</p>
   </>
 );
 
@@ -84,7 +84,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                 navigation={{
                   nextEl: `#${nextSlideId}`,
                   prevEl: `#${prevSlideId}`,
-                  disabledClass: "swiper-button-disabled opacity-50"
+                  disabledClass: "swiper-button-disabled opacity-50 !cursor-default"
                 }}
                 className="relative w-full"
               >
@@ -107,13 +107,14 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                       </CustomLink>
                     ) : (
                       <Tab
+                        as="div"
                         className={({ selected }) => (
                           classNames(
                             (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
                             selected
                               ? "border-lucuma"
                               : "border-transparent hover:border-lucuma",
-                            "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none border-b-2 px-2 py-[10px]"
+                            "cursor-pointer flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none border-b-2 px-2 py-[10px]"
                           )
                         )}
                       >
@@ -126,10 +127,10 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
             </Tab.List>
           </div>
           <div className="flex justify-center gap-6">
-            <div id={prevSlideId} className="w-6 h-6 text-neutral-20">
+            <div id={prevSlideId} className="w-6 h-6 text-neutral-20 cursor-pointer">
               <Icon icon="arrow-left" className="w-full h-full" />
             </div>
-            <div id={nextSlideId} className="w-6 h-6 text-neutral-20">
+            <div id={nextSlideId} className="w-6 h-6 text-neutral-20 cursor-pointer">
               <Icon icon="arrow-right" className="w-full h-full" />
             </div>
           </div>

@@ -66,7 +66,7 @@ const FooterBlock: React.FC<INavigation> = ({
                 <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id + i}>
                   {({ open }) => (
                     <div>
-                      <dt className="text-lg">
+                      <div className="text-lg">
                         <Disclosure.Button
                           className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}>
                           <div className="flex">
@@ -78,7 +78,7 @@ const FooterBlock: React.FC<INavigation> = ({
                             <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26}/>
                           </span>
                         </Disclosure.Button>
-                      </dt>
+                      </div>
                       <Transition
                         enter='transition transition-[max-height] duration-200 ease-in'
                         enterFrom='transform max-h-0'

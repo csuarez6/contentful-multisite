@@ -102,7 +102,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
             >
               {({ open }) => (
                 <div>
-                  <dt className="text-lg">
+                  <div className="text-lg">
                     <Disclosure.Button
                       ref={refs[idx]}
                       data-id={`accordion-${idx}`}
@@ -134,7 +134,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
                         />
                       </span>
                     </Disclosure.Button>
-                  </dt>
+                  </div>
                   <Transition
                     enter="transition duration-100 ease-out"
                     enterFrom="transform scale-95 opacity-0"

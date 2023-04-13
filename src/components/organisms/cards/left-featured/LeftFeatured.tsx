@@ -51,10 +51,10 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
       {(promoImage || image) && (
         <>
           <svg className="sr-only" viewBox="0 0 620 429" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <clipPath id="path-img" clipPathUnits="objectBoundingBox">
+            <clipPath id={`path-img-${name}`} clipPathUnits="objectBoundingBox">
               <path d="M1,0.078 V0.002 H0.002 V1 H0.67 L0.701,0.994 L0.725,0.982 L0.74,0.973 L0.757,0.958 L0.767,0.948 L0.78,0.932 L0.797,0.907 L0.811,0.881 L0.823,0.85 L0.83,0.827 L0.842,0.775 L0.893,0.555 L1,0.093 V0.078" fill="black" stroke="black" />
             </clipPath>
-            <clipPath id="path-img-reverse" clipPathUnits="objectBoundingBox">
+            <clipPath id={`path-img-reverse-${name}`} clipPathUnits="objectBoundingBox">
               <path d="M0.002,0.078 V0.002 H1 V1 H0.333 L0.302,0.994 L0.278,0.982 L0.264,0.973 L0.246,0.958 L0.236,0.948 L0.223,0.932 L0.206,0.907 L0.192,0.881 L0.18,0.85 L0.173,0.827 L0.161,0.775 L0.11,0.555 L0.002,0.093 V0.078" fill="black" stroke="black" />
             </clipPath>
           </svg>
@@ -67,7 +67,11 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
               )
             }
             style={{
-              clipPath: hasRoundedImage && (view?.imageAlign === 'Derecha' ? "url(#path-img-reverse)" : "url(#path-img)")
+              clipPath: hasRoundedImage && (
+                view?.imageAlign === 'Derecha'
+                  ? `url(#path-img-reverse-${name})`
+                  : `url(#path-img-${name})`
+              )
             }}
           >
             <Image
