@@ -7,6 +7,7 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import defaultFormatOptions from '@/lib/richtext/default.formatter';
 import { attachLinksToRichtextContent } from '@/lib/services/render-blocks.service';
 import { classColumns, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper";
 import "swiper/css";
@@ -17,9 +18,26 @@ import "swiper/css/thumbs";
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
+  const _blockId = blockId ? blockId : sysId;
+  const [isRichtext, setIsRichtext] = useState(false);
+
+  useEffect(() => {
+    if (document) {
+      const blockElement = document.getElementById(_blockId);
+      if (blockElement) {
+        const hasContainer = blockElement.closest('.richtext-container');
+        setIsRichtext(!!hasContainer);
+      }
+    }
+  }, []);
 
   return (
-    <section id={blockId ? blockId : sysId} className="section md:grid gap-9 max-md:!pb-[90px]">
+    <section id={_blockId} className={
+      classNames(
+        "section md:grid gap-9 max-md:!pb-[90px]",
+        isRichtext && "rounded-xl overflow-hidden"
+      )
+    }>
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
@@ -34,7 +52,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       )}
       {featuredContentsCollection?.items?.length > 0 && (
         <>
-          <div className='hidden md:block'>
+          <div className='hidden md:block px-3'>
             <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
               {featuredContentsCollection.items.map((item) => (
                 <ListWithIcon key={`${item.sys.id}-desktop`} {...{ ...item, ...view }} />

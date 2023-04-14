@@ -89,7 +89,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
 
   return (
     <section className="section flex gap-10 md:gap-16 px-12">
-      <div className="content-page flex flex-col grow gap-16">
+      <div className="content-page flex flex-col grow gap-16 overflow-hidden">
         {showHeader && (promoTitle || promoImage) && (
           <div className="flex flex-col gap-8">
             {promoTitle && <h1 className="text-blue-dark">{promoTitle}</h1>}

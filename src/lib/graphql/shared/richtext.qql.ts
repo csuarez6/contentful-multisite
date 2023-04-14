@@ -52,6 +52,7 @@ const blockPromoRichText = `
         promoImage {
           ${AssetImageQuery}
         }
+        promoIcon
       }
       ...on BlockPromoContent{
         ${DefaultQuery}
@@ -62,7 +63,6 @@ const blockPromoRichText = `
         description {
           json
         }
-        
       } 
     }
   }
