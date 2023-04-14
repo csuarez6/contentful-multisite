@@ -59,33 +59,35 @@ const FooterBlock: React.FC<INavigation> = ({
 
             {/* Mobile navigation */}
             <div className="xl:max-w-xs pt-0.5 max-w-[225px] md:max-w-none md:hidden">
-              <p className="text-white  title is-1 !text-lg text-center !leading-5">{promoTitle}</p>
+              <p className="text-white title is-1 !text-lg text-center !leading-5">{promoTitle}</p>
             </div>
             <div className="md:hidden border-b-[0.5px] border-white border-opacity-75 mt-[33px] w-[105%]">
               {mainNavCollection?.items?.map((menuItem, i) => (
                 <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id + i}>
                   {({ open }) => (
-                    <div>
-                      <div className="text-lg">
+                    <>
+                      <div className="text-lg cursor-pointer">
                         <Disclosure.Button
-                          className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}>
+                          as="div"
+                          className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}
+                        >
                           <div className="flex">
                             <h3 className="text-white text-sm">
                               {menuItem.promoTitle ?? menuItem.name}
                             </h3>
                           </div>
                           <span className={`flow-root shrink-0 w-7 h-7 mr-[6px]`}>
-                            <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26}/>
+                            <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26} />
                           </span>
                         </Disclosure.Button>
                       </div>
                       <Transition
-                        enter='transition transition-[max-height] duration-200 ease-in'
-                        enterFrom='transform max-h-0'
-                        enterTo='transform max-h-screen'
-                        leave='transition transition-[max-height] duration-400 ease-out'
-                        leaveFrom='transform max-h-screen'
-                        leaveTo='transform max-h-0'
+                        enter='transition transition-[max-height] duration-300 ease-in'
+                        enterFrom='transform max-h-0 opacity-0'
+                        enterTo='transform max-h-screen opacity-100'
+                        leave='transition transition-[max-height] duration-300 ease-out'
+                        leaveFrom='transform max-h-screen opacity-100'
+                        leaveTo='transform max-h-0 opacity-0'
                       >
                         <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
                           {menuItem?.mainNavCollection?.items?.length > 0 && (
@@ -104,7 +106,7 @@ const FooterBlock: React.FC<INavigation> = ({
                           )}
                         </Disclosure.Panel>
                       </Transition>
-                    </div>
+                    </>
                   )}
                 </Disclosure>
               ))}
