@@ -52,7 +52,7 @@ const defaultFormatOptions: Options = {
       <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
     ),
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr className="overflow-hidden pointer-events-none scroll-smooth flex md:table-row w-full text-center border-neutral-80 ">{children}</tr>
+      <tr className="overflow-hidden pointer-events-none scroll-smooth group-[.touchOn]:scroll-auto flex md:table-row w-full text-center border-neutral-80 ">{children}</tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
       <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">{children}</td>

@@ -6,9 +6,11 @@ const CustomTable = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
   const [rows, setRows] = useState([]);
+  const [scrolls, setScrolls] = useState([]);
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
+    initTouch();
     window.onresize = () => {
       if (window.innerWidth >= 768) {
         setCurrentPage(1);
@@ -25,9 +27,8 @@ const CustomTable = ({ children }) => {
   useEffect(() => {
     const page = [];
     columns?.forEach((item, index, arr) => {
-      if (index > 0) {
+      if (index > 0)
         page.push(index);
-      };
 
       if (index == (arr.length - 1))
         setPages(page);
@@ -50,6 +51,87 @@ const CustomTable = ({ children }) => {
     if (currentPage < pages.length) {
       setCurrentPage(currentPage + 1);
     };
+  };
+
+  const [touchStart, setTouchStart] = useState(false);
+  const [yDown, setYDown] = useState(null);
+  const [xDown, setXDown] = useState(null);
+
+  useEffect(() => {
+    if(touchStart){
+      const arrScrolls = [];
+      rows.forEach(item => {
+        arrScrolls.push(item.scrollLeft);
+      });
+      setScrolls(arrScrolls);
+    }else{
+      rows.forEach(item => {
+        columns.forEach((col, index, colArr) => {
+          const width = item?.clientWidth / 2;
+          const start = index * width;
+          const mid = start + (width / 2);
+          const end = start + width;
+
+          if(index < colArr.length - 1){
+            if(item?.scrollLeft > start && item?.scrollLeft < mid){
+              setCurrentPage(index + 1);
+            }else if(item?.scrollLeft >= mid && item?.scrollLeft < end){
+              setCurrentPage(index + 2);
+            }else{
+              item.scrollLeft = scrolls[index];
+            }
+          }
+        });
+      });
+      document.removeEventListener('touchmove', handleTouchMove, false);
+    }
+  }, [touchStart]);
+
+  useEffect(() => {
+    document.addEventListener('touchmove', handleTouchMove, false);
+  }, [scrolls]);
+
+  function initTouch(){
+    const table = tableEl.current;
+    table.addEventListener('touchstart', handleTouchStart, false);
+    table.addEventListener('touchend', handleTouchEnd, false);
+  }
+
+  function getTouches(evt) {
+    return evt.touches;
+  }
+
+  function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];
+    setXDown(firstTouch.clientX);
+    setYDown(firstTouch.clientY);
+    setTouchStart(true);
+  };
+
+  function handleTouchEnd() {
+    setTouchStart(false);
+  };
+
+  function handleTouchMove(evt) {
+    if (!xDown || !yDown || evt.target.cellIndex == 0) {
+      return;
+    }
+
+    const xUp = evt.touches[0].clientX;
+    const yUp = evt.touches[0].clientY;
+
+    const xDiff = xDown - xUp;
+    const yDiff = yDown - yUp;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+      rows.forEach((item, index) => {
+        item.scrollLeft = scrolls[index] + xDiff;
+      });
+    } 
+
+    /* reset values */
+    setXDown(null);
+    setYDown(null);
   };
 
   const setPage = (i) => {
@@ -78,7 +160,7 @@ const CustomTable = ({ children }) => {
           </li>
         </ul>
       }
-      <table ref={tableEl} className="table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6">
+      <table ref={tableEl} className={`${touchStart ? 'touchOn' : null} group table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6`}>
         <tbody className="flex flex-col md:table-row-group w-full">{children}</tbody>
       </table>
     </>
