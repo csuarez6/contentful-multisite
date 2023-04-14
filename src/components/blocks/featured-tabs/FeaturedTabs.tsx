@@ -73,7 +73,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       )
                     }
                   >
-                    <p>{tab.title ?? tab.name}</p>
+                    <span>{tab.title ?? tab.name}</span>
                   </Tab>
                 ))}
               </Tab.List>

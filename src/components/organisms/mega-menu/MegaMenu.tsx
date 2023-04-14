@@ -188,7 +188,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                         <p className="subTitleList">
                           {subItem.promoTitle ?? subItem.name}
                         </p>
-                        <ul role="list" className="flex flex-col gap-5 mt-6">
+                        <ul className="flex flex-col gap-5 mt-6">
                           {subItem.mainNavCollection?.items?.map(
                             (itemList, idx) =>
                               itemList && (

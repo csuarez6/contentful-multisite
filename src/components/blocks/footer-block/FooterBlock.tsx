@@ -39,7 +39,7 @@ const FooterBlock: React.FC<INavigation> = ({
                       {menuItem.promoTitle ?? menuItem.name}
                     </h3>
                     {menuItem?.mainNavCollection?.items?.length > 0 && (
-                      <ul role="list" className="pt-[10px] space-y-3">
+                      <ul className="pt-[10px] space-y-3">
                         {menuItem.mainNavCollection.items.map((listItem, j) => (
                           <li key={listItem.sys.id + i + j}>
                             <CustomLink
@@ -89,7 +89,7 @@ const FooterBlock: React.FC<INavigation> = ({
                       >
                         <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
                           {menuItem?.mainNavCollection?.items?.length > 0 && (
-                            <ul role="list" className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
+                            <ul className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
                               {menuItem.mainNavCollection.items.map((listItem, j) => (
                                 <li key={listItem.sys.id + i + j} className="py-2">
                                   <CustomLink

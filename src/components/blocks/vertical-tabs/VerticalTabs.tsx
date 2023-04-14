@@ -23,7 +23,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
   const refs = useMemo(() => {
     return (
       featuredContentsCollection.items.map(() => {
-        return createRef<HTMLButtonElement>();
+        return createRef<HTMLDivElement>();
       }) ?? []
     );
   }, [featuredContentsCollection.items]);
@@ -104,12 +104,13 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
                 <div>
                   <div className="text-lg">
                     <Disclosure.Button
+                      as="div"
                       ref={refs[idx]}
                       data-id={`accordion-${idx}`}
                       data-open={open}
                       onClick={() => handleClosingOthers(`accordion-${idx}`)}
                       className={classNames(
-                        "flex justify-between items-center w-full py-3 px-6 text-left text-size-subtitle1 font-bold shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]",
+                        "cursor-pointer flex justify-between items-center w-full py-3 px-6 text-left text-size-subtitle1 font-bold shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]",
                         open ? "bg-blue-dark text-white rounded-t-xl" : "text-blue-dark bg-white rounded-xl"
                       )}
                     >
