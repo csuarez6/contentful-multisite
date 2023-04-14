@@ -49,7 +49,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
         >
           {featuredContentsCollection.items.map((content) => (
             <InfoCard
-              key={content.promoTitle}
+              key={content.sys.id}
               {...content}
               buttonType={view?.buttonType}
               backgroundColor={view?.backgroundColor}

@@ -3,6 +3,7 @@ import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 import Image from "next/image";
 import CustomTable from "@/components/organisms/custom-table/CustomTable";
 import jsonToReactComponent from "../services/render-cards.service";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const defaultFormatOptions: Options = {
   renderNode: {
@@ -44,23 +45,23 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <CustomTable>
-        {children}
-      </CustomTable>
+      <CustomTable>{children}</CustomTable>
     ),
     [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => (
-      <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">{children}</th>
+      <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 bg-neutral-90 text-grey-10 !font-semibold">
+        {children}
+      </th>
     ),
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
       <tr className="overflow-hidden pointer-events-none scroll-smooth group-[.touchOn]:scroll-auto flex md:table-row w-full text-center border-neutral-80 ">{children}</tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
-      <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">{children}</td>
+      <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell md:w-auto px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none">
+        {children}
+      </td>
     ),
     [BLOCKS.QUOTE]: (_node, children) => {
-      return (
-        <blockquote>{children}</blockquote>
-      );
+      return <blockquote>{children}</blockquote>;
     },
     [BLOCKS.EMBEDDED_ASSET]: (node) => {
       const { url, title, description, width, height } = node.data.target;
@@ -108,9 +109,16 @@ const defaultFormatOptions: Options = {
     [BLOCKS.EMBEDDED_ENTRY]: (node) => {
       return jsonToReactComponent(node.data.target);
     },
-    [INLINES.EMBEDDED_ENTRY]: (node) => { 
-      return jsonToReactComponent(node.data.target);
-    }
+    [INLINES.EMBEDDED_ENTRY]: (node) => {
+      return (
+        <CustomLink
+          content={node.data.target}
+          className="flex w-fit button button-primary text-sm sm:text-base"
+        >
+          {node.data.target.promoTitle ?? node.data.target.name}
+        </CustomLink>
+      );
+    },
   },
 };
 

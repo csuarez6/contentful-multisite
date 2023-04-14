@@ -136,7 +136,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
                 {filteredHeading.map((item, idxHeading) =>
                   <a
                     href={`#${fixId(item.value)}`}
-                    key={`#${item.value}`}
+                    key={`#${item.value}-${idxHeading}`}
                     onClick={() => setCurrentIndex(idxHeading)}
                     className={classNames(
                       (idxHeading + 1 == 1) && "border-blue-dark",
@@ -148,12 +148,12 @@ const RichtextPage: React.FC<IPage> = (props) => {
                       {(idxHeading <= currentIndex) ?
                         <svg width="35" height="34" viewBox="0 0 35 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="17.5" cy="17" r="14" fill="#113455" />
-                          <path d="M13.2768 17.1231H11.2098C10.445 17.1231 9.96331 17.9467 10.3383 18.6133L13.644 24.4903C13.8212 24.8051 14.1543 25 14.5156 25H18.1864C18.5905 25 18.9549 24.7568 19.1099 24.3836L24.9253 10.3836C25.1988 9.72505 24.7149 9 24.0018 9H21.2489C20.8425 9 20.4766 9.24589 20.323 9.6221L16.5477 18.8715C16.2137 19.6899 15.06 19.7042 14.7057 18.8944L14.1929 17.7223C14.0337 17.3583 13.6741 17.1231 13.2768 17.1231Z" fill="white" stroke="#F6F8F9" stroke-width="0.5" />
-                          <circle cx="17.5" cy="17" r="16.75" stroke="#113455" stroke-width="0.5" />
+                          <path d="M13.2768 17.1231H11.2098C10.445 17.1231 9.96331 17.9467 10.3383 18.6133L13.644 24.4903C13.8212 24.8051 14.1543 25 14.5156 25H18.1864C18.5905 25 18.9549 24.7568 19.1099 24.3836L24.9253 10.3836C25.1988 9.72505 24.7149 9 24.0018 9H21.2489C20.8425 9 20.4766 9.24589 20.323 9.6221L16.5477 18.8715C16.2137 19.6899 15.06 19.7042 14.7057 18.8944L14.1929 17.7223C14.0337 17.3583 13.6741 17.1231 13.2768 17.1231Z" fill="white" stroke="#F6F8F9" strokeWidth="0.5" />
+                          <circle cx="17.5" cy="17" r="16.75" stroke="#113455" strokeWidth="0.5" />
                         </svg>
                         :
                         <svg width="35" height="34" viewBox="0 0 35 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="17.5" cy="17" r="16.75" stroke="#113455" stroke-width="0.5" />
+                          <circle cx="17.5" cy="17" r="16.75" stroke="#113455" strokeWidth="0.5" />
                         </svg>
                       }
                     </span>

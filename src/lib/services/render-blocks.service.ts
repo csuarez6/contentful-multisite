@@ -81,6 +81,12 @@ export const attachLinksToRichtextContent = (jsonDocument, links) => {
       case 'embedded-entry-block':
         blockInfo = links?.entries?.block?.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
         break;
+      case 'embedded-entry-inline':
+        blockInfo = links?.entries?.inline?.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+        break;
+      case 'paragraph':
+        content[kCont] = attachLinksToRichtextContent(content[kCont], links);
+        break;
       default:
         continue;
     }

@@ -19,7 +19,7 @@ type DefaultBlockInfo = {
 
 const CACHE_CONTENT = {};
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6, minimal = false) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
@@ -34,7 +34,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     return null;
   }
 
-  if (blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL) {
+  if (blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL || minimal) {
     cacheIndex += '_minimal';
   }
 

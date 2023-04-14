@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
+import _ from 'lodash';
 import contentfulClient from "./contentful-client.service";
-// import getEntryContent from "./entry-content.service";
+import getEntryContent from "./entry-content.service";
 
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
@@ -13,6 +14,12 @@ const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
     "content",
   ]
+};
+
+const TO_MINIMAL = {
+  [CONTENTFUL_TYPENAMES.PAGE]: CONTENTFUL_TYPENAMES.PAGE_MINIMAL,
+  [CONTENTFUL_TYPENAMES.PRODUCT]: CONTENTFUL_TYPENAMES.PRODUCT_MINIMAL,
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT_MINIMAL,
 };
 
 const getReferencesRichtextContent = async ({ content, preview }) => {
@@ -57,11 +64,31 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
       console.error(`Error on richtext query (${type}) => `, responseError.message);
     }
 
-    if (!responseData?.[type]?.[ref]?.links) {
+    const richTextContent = JSON.parse(
+      JSON.stringify(
+        responseData?.[type]?.[ref]
+      )
+    );
+
+    if (!richTextContent?.links) {
       continue;
     }
 
-    referencesContent[ref] = responseData[type][ref];
+    if (richTextContent?.links?.entries?.inline?.length > 0) {
+      let inlineIndex = 0;
+      for (const inline of richTextContent.links.entries.inline) {
+        if (TO_MINIMAL[inline.__typename]) {
+          inline.__typename = TO_MINIMAL[inline.__typename];
+        }
+
+        const inlineContent = await getEntryContent(inline, preview, false, 1, true);
+        _.merge(richTextContent.links.entries.inline[inlineIndex], inlineContent);
+
+        inlineIndex++;
+      }
+    }
+
+    referencesContent[ref] = richTextContent;
   }
 
   return referencesContent;

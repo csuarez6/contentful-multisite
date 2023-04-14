@@ -51,4 +51,22 @@ const AuxCustomContent = `
   }
 `;
 
+export const AuxCustomContentMinimalQuery = `
+  promoTitle
+  name
+  internalLink {
+    ... on Page {
+      slug
+      urlPath
+      promoTitle
+    }
+    ... on Product {
+      slug
+      urlPath
+      promoTitle
+    }
+  }
+  externalLink
+`;
+
 export default AuxCustomContent;

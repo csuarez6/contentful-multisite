@@ -130,6 +130,12 @@ export const RichtextLinksQuery = `
           promoIcon
         }
       }
+      inline {
+        __typename
+        sys {
+          id
+        }
+      }
     }
     assets {
       block {

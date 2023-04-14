@@ -55,4 +55,10 @@ const ProductQuery = `
   }
 `;
 
+export const ProductMinimalQuery = `
+  name
+  promoTitle
+  urlPath
+`;
+
 export default ProductQuery;
