@@ -123,7 +123,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                 "flex items-center w-full md:w-1/2 lg:w-full px-3 py-6 md:pl-[45px] md:pr-10 md:py-4 grow",
                 (!image) && "justify-center"
               )}>
-                <div className="grid space-y-3">
+                <div className="grid space-y-3 w-full">
                   {pretitle && (
                     <p className={classNames(
                       "text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold",

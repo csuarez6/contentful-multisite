@@ -69,6 +69,7 @@ const FooterBlock: React.FC<INavigation> = ({
                       <div className="text-lg cursor-pointer">
                         <Disclosure.Button
                           as="div"
+                          role="button"
                           className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}
                         >
                           <div className="flex">
@@ -82,6 +83,7 @@ const FooterBlock: React.FC<INavigation> = ({
                         </Disclosure.Button>
                       </div>
                       <Transition
+                        className="overflow-hidden"
                         enter='transition transition-[max-height] duration-300 ease-in'
                         enterFrom='transform max-h-0 opacity-0'
                         enterTo='transform max-h-screen opacity-100'

@@ -86,7 +86,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
       )}
       {(subtitle || pretitle || promoTitle || promoDescription || title || description || ctaCollection) && (
         <div className="flex items-center w-full md:w-1/2 lg:w-full px-3 py-6 md:pl-[45px] md:pr-10 md:py-4 grow">
-          <div className="grid space-y-1 md:space-y-3">
+          <div className="grid space-y-1 md:space-y-3 w-full">
             {pretitle && (
               <p className="text-blue-dark text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold">{pretitle}</p>
             )}
