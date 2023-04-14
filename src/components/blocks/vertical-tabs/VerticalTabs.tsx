@@ -23,7 +23,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
   const refs = useMemo(() => {
     return (
       featuredContentsCollection.items.map(() => {
-        return createRef<HTMLDivElement>();
+        return createRef<HTMLButtonElement>();
       }) ?? []
     );
   }, [featuredContentsCollection.items]);
@@ -104,7 +104,6 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
                 <div>
                   <div className="text-lg">
                     <Disclosure.Button
-                      as="div"
                       ref={refs[idx]}
                       data-id={`accordion-${idx}`}
                       data-open={open}
@@ -114,15 +113,13 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
                         open ? "bg-blue-dark text-white rounded-t-xl" : "text-blue-dark bg-white rounded-xl"
                       )}
                     >
-                      <div className="flex">
-                        <h3 className={classNames(
-                          'text-size-subtitle1',
-                          open ? 'text-white' : 'text-blue-dark'
-                        )}
-                        >
-                          {tab?.name}
-                        </h3>
-                      </div>
+                      <span className={classNames(
+                        'text-size-subtitle1',
+                        open ? 'text-white' : 'text-blue-dark'
+                      )}
+                      >
+                        {tab?.name}
+                      </span>
                       <span className="flex items-center justify-center w-8 h-full">
                         <ChevronDownIcon
                           className={classNames(
