@@ -1,14 +1,14 @@
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
-const data :IPromoBlock = {
+const data: IPromoBlock = {
     title: 'Al crear tu cuenta en Vanti podrás:',
     listedContentsCollection: {
         items: [
             {
-                subtitle:'Comprar productos y servicios',
-                tags:[
+                subtitle: 'Comprar productos y servicios',
+                tags: [
                     {
-                        label:'Comprar gasodomésticos en linea'
+                        label: 'Comprar gasodomésticos en linea'
                     },
                     {
                         label: 'Comprar gasodomésticos a cuotas'
@@ -21,23 +21,23 @@ const data :IPromoBlock = {
                     }
                 ]
             },
-            {
-                subtitle: 'Administrar tu consumo de gas',
-                tags: [
-                    {
-                        label: 'Consultar tu factura'
-                    },
-                    {
-                        label: 'Consultar tarifas y estractos'
-                    },
-                    {
-                        label: 'Solicitar asesoría virtual'
-                    }
-                ]
-            }
+            // {
+            //     subtitle: 'Administrar tu consumo de gas',
+            //     tags: [
+            //         {
+            //             label: 'Consultar tu factura'
+            //         },
+            //         {
+            //             label: 'Consultar tarifas y estractos'
+            //         },
+            //         {
+            //             label: 'Solicitar asesoría virtual'
+            //         }
+            //     ]
+            // }
         ]
     }
 };
-export const mockSidebarInformativeProps ={
+export const mockSidebarInformativeProps = {
     data
 };

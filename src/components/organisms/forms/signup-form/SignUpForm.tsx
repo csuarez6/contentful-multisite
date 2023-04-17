@@ -60,6 +60,25 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
     };
 
+    const formatToPhone = (event) => {
+        if ((event.keyCode < 48 || event.keyCode > 57) &&
+            (event.keyCode < 96 || event.keyCode > 105) &&
+            event.keyCode !== 190 && event.keyCode !== 110 &&
+            event.keyCode !== 8 && event.keyCode !== 9) {
+            event.preventDefault();
+            return false;
+        }
+        setTimeout(() => {
+            const target = event.target;
+            const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits of input only
+            const first = input.substring(0, 4);
+            const middle = input.substring(4, 6);
+            if (input.length > 4) { target.value = `${first}-${middle}`; }
+            else if (input.length > 0) { target.value = `${first}`; }
+            return true;
+        }, 200);
+    };
+
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
@@ -168,21 +187,22 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         autoComplete="on"
                         {...register("contractNumber")}
                         isRequired={true}
+                        onKeyDown={(event) => formatToPhone(event)}
                     />
                     <div className='-mt-[6px]'>
                         <CheckBox
                             id='authorize'
-                            label={(<p>
-                                Autorizo el uso de mis datos de acuerdo a
-                                la <CustomLink
-                                    className='underline text-[#7DBFD3]'
-                                    content={{ internalLink: { urlPath: '#' } }}>
-                                    Politica de privacidad
-                                </CustomLink> y acepto <CustomLink
-                                    className='underline text-[#7DBFD3]'
-                                    content={{ internalLink: { urlPath: '#' } }}>
-                                    los terminos y condiciones</CustomLink> y la autorizacion
-                                de <CustomLink className='underline text-[#7DBFD3]' content={{ internalLink: { urlPath: '#' } }}>tratamiento de datos</CustomLink>
+                            label={(<p className=''>
+                                Autorizo de manera libre, expresa, inequívoca e informada el tratamiento de
+                                mis datos personales de acuerdo con lo dispuesto en la Ley 1581/2012 y
+                                conforme a la política de tratamiento de datos personales publicada en el
+                                <CustomLink
+                                    linkClassName='inline-block ml-1'
+                                    className='underline'
+                                    content={{ internalLink: { urlPath: '/terminos-y-condiciones' } }}
+                                >
+                                    siguiente link
+                                </CustomLink>.
                                 <span className='text-red-700'>*</span>
                             </p>)}
                             isError={!!errors.authorize}

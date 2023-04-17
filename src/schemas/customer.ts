@@ -32,10 +32,7 @@ export const customerSchema = object({
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
             "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
         ),
-    contractNumber: number()
-        .required("Dato Requerido")
-        .nullable()
-        .transform((value) => (isNaN(value) ? undefined : value)),
+    contractNumber: string().required("Dato Requerido"),
     authorize: bool().oneOf([true], "Dato Requerido"),
     notificate: bool(),
     tokenReCaptcha: string(),
