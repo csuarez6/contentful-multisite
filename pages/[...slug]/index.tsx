@@ -24,7 +24,7 @@ import getBreadcrumbs from "@/utils/breadcrumbs";
 import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
 
 const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
-  const { blocksCollection, content, __typename } = props;
+  const { blocksCollection, content, __typename, sys } = props;
 
   return (
     <>
@@ -38,7 +38,7 @@ const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) 
       </div>
       {content?.json && (
         <div className="main-container">
-          <RichtextPage {...props} />
+          <RichtextPage {...props} key={sys?.id}/>
         </div>
       )}
     </>

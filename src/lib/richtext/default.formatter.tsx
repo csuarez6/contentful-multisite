@@ -107,7 +107,7 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.EMBEDDED_ENTRY]: (node) => {
-      return jsonToReactComponent(node.data.target);
+      return <div key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
     },
     [INLINES.EMBEDDED_ENTRY]: (node) => {
       return (
