@@ -36,7 +36,7 @@ const CarouselCategories: React.FC<
     return (
       <article className="flex justify-center h-full">
         <Link href={link} className="h-full">
-          <span className={
+          <div className={
             classNames(
               "flex flex-col gap-2 items-center h-full group",
               (promoImage || image) ? "justify-start" : "justify-center"
@@ -59,17 +59,17 @@ const CarouselCategories: React.FC<
               </figure>
             )}
             {(promoTitle || name) && (
-              <p className={
+              <h3 className={
                 classNames(
-                  "text-center text-slate-600 font-semibold group-hover:underline ",
+                  "text-center text-slate-600 !font-semibold group-hover:underline text-base",
                   (filterName !== null && (filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase())) && 'underline'
                 )
               }
               >
                 {promoTitle ?? name}
-              </p>
+              </h3>
             )}
-          </span>
+          </div>
         </Link>
       </article>
     );

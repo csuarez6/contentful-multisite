@@ -21,6 +21,7 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                 <div className="text-lg cursor-pointer">
                   <Disclosure.Button
                     as="div"
+                    role="button"
                     className={`flex w-full items-center justify-between px-7 text-left text-gray-400 py-6`}
                   >
                     <div className="flex items-center gap-3">

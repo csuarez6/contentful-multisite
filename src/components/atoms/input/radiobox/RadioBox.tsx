@@ -14,7 +14,7 @@ const RadioBox: React.FC<IRadioBox> = ({ id, name, label, checked, icon }) => {
             "-space-y-px rounded-md p-4"
         )}>
             <label className="relative flex justify-between cursor-pointer">
-                <div className="flex">
+                <span className="flex">
                     <input
                         className={classNames(
                             "mt-0.5 h-4 w-4 shrink-0 accent-neutral-30 focus:ring-neutral-30",
@@ -28,7 +28,7 @@ const RadioBox: React.FC<IRadioBox> = ({ id, name, label, checked, icon }) => {
                     <span className="ml-3 flex flex-col">
                         <span className="block text-sm">{label}</span>
                     </span>
-                </div>
+                </span>
                 {(icon) &&
                     <span className="flex items-center shrink-0 w-6 h-6">
                         <Icon icon={icon} className="w-full h-full" aria-hidden="true" />

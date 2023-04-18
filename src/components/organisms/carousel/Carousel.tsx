@@ -42,7 +42,7 @@ const Carousel: React.FC<ICarousel> = ({
   const [thumbsSwiper, setThumbsSwiper] = React.useState<ISwiper>();
   if (!content) return;
   return (
-    <section>
+    <div>
       {(title || description) && (
         <div className="grid mb-8 text-center gap-9">
           {title && <h2 className="text-blue-dark title is-1">{title}</h2>}
@@ -130,7 +130,7 @@ const Carousel: React.FC<ICarousel> = ({
           </Link>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
