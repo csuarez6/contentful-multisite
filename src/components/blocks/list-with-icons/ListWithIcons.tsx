@@ -29,6 +29,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
         setIsRichtext(!!hasContainer);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -45,14 +46,14 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       )}
 
       {(title || description) && (
-        <div className="text-center grid gap-6 px-3">
+        <div className="grid gap-6 px-3 text-center">
           {title && <h2 className={classNames(backgroundColor.title, textAlignHeading)}>{title}</h2>}
           {description && <div className={classNames(backgroundColor.text, textAlignHeading)}>{documentToReactComponents(description.json)}</div>}
         </div>
       )}
       {featuredContentsCollection?.items?.length > 0 && (
         <>
-          <div className='hidden md:block px-3'>
+          <div className='hidden px-3 md:block'>
             <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
               {featuredContentsCollection.items.map((item) => (
                 <ListWithIcon key={`${item.sys.id}-desktop`} {...{ ...item, ...view }} />

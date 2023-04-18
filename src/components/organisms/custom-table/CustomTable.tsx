@@ -16,6 +16,7 @@ const CustomTable = ({ children }) => {
         setCurrentPage(1);
       };
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -58,13 +59,13 @@ const CustomTable = ({ children }) => {
   const [xDown, setXDown] = useState(null);
 
   useEffect(() => {
-    if(touchStart){
+    if (touchStart) {
       const arrScrolls = [];
       rows.forEach(item => {
         arrScrolls.push(item.scrollLeft);
       });
       setScrolls(arrScrolls);
-    }else{
+    } else {
       rows.forEach(item => {
         columns.forEach((col, index, colArr) => {
           const width = item?.clientWidth / 2;
@@ -72,12 +73,12 @@ const CustomTable = ({ children }) => {
           const mid = start + (width / 2);
           const end = start + width;
 
-          if(index < colArr.length - 1){
-            if(item?.scrollLeft > start && item?.scrollLeft < mid){
+          if (index < colArr.length - 1) {
+            if (item?.scrollLeft > start && item?.scrollLeft < mid) {
               setCurrentPage(index + 1);
-            }else if(item?.scrollLeft >= mid && item?.scrollLeft < end){
+            } else if (item?.scrollLeft >= mid && item?.scrollLeft < end) {
               setCurrentPage(index + 2);
-            }else{
+            } else {
               item.scrollLeft = scrolls[index];
             }
           }
@@ -85,13 +86,15 @@ const CustomTable = ({ children }) => {
       });
       document.removeEventListener('touchmove', handleTouchMove, false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [touchStart]);
 
   useEffect(() => {
     document.addEventListener('touchmove', handleTouchMove, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrolls]);
 
-  function initTouch(){
+  function initTouch() {
     const table = tableEl.current;
     table.addEventListener('touchstart', handleTouchStart, false);
     table.addEventListener('touchend', handleTouchEnd, false);
@@ -127,7 +130,7 @@ const CustomTable = ({ children }) => {
       rows.forEach((item, index) => {
         item.scrollLeft = scrolls[index] + xDiff;
       });
-    } 
+    }
 
     /* reset values */
     setXDown(null);
@@ -142,7 +145,7 @@ const CustomTable = ({ children }) => {
     <>
       {
         Boolean(pages.length) &&
-        <ul className="flex md:hidden flex-wrap items-center justify-center gap-4">
+        <ul className="flex flex-wrap items-center justify-center gap-4 md:hidden">
           <li className="w-8 list-none">
             <span onClick={prevPage} className="cursor-pointer text-neutral-20">
               <Icon icon="arrow-left"></Icon>
@@ -161,7 +164,7 @@ const CustomTable = ({ children }) => {
         </ul>
       }
       <table ref={tableEl} className={`${touchStart ? 'touchOn' : null} group table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6`}>
-        <tbody className="flex flex-col md:table-row-group w-full">{children}</tbody>
+        <tbody className="flex flex-col w-full md:table-row-group">{children}</tbody>
       </table>
     </>
   );
