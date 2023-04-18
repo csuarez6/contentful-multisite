@@ -139,8 +139,7 @@ const ForgotPassword = () => {
             >
               <div className="py-2 text-center">
                 <p>
-                  Te enviaremos un correo electrónico con instrucciones sobre cómo
-                  restablecerlo.
+                  Si existe una cuenta con el correo electrónico ingresado, te enviaremos un correo electrónico con instrucciones sobre cómo restablecerlo.
                 </p>
               </div>
               <form

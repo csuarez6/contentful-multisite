@@ -177,6 +177,24 @@ const ResetPassword = () => {
   return (
     <div className="overflow-hidden">
       <div className="main-container">
+
+        {/* waiting info */}
+        {!data && !error && (
+          <section className="block w-1/2 py-12 m-auto">
+            <HeadingCard
+              title="Verificando Link"
+              headClasses="w-full !justify-center text-2xl text-blue-dark"
+              hideCheck={true}
+            >
+              <p className="text-xl text-center">
+                Espere por favor, comprobando información...
+              </p>
+            </HeadingCard>
+          </section>
+        )}
+        {/* **************** */}
+
+        {/* error info */}
         {error && (
           <section className="block w-1/2 py-12 m-auto">
             <HeadingCard
@@ -193,20 +211,34 @@ const ResetPassword = () => {
             </HeadingCard>
           </section>
         )}
-        {!data && !error && (
+        {/* **************** */}
+
+        {/* validate link */}
+        {data && !data?.isTokenValid && !error && (
           <section className="block w-1/2 py-12 m-auto">
             <HeadingCard
-              title="Verificando Link"
+              title="Link Inválido"
               headClasses="w-full !justify-center text-2xl text-blue-dark"
               hideCheck={true}
             >
-              <p className="text-xl text-center">
-                Espere por favor, comprobando información...
+              <p className="text-xl text-center text-red-900">
+                Estimado usuario, este link no es válido!
               </p>
+              <div className="flex justify-center mt-5">
+                <CustomLink
+                  className="block m-auto button button-primary text-grey-30"
+                  content={{ urlPath: "/forgotpassword" }}
+                >
+                  Generar nuevo link
+                </CustomLink>
+              </div>
             </HeadingCard>
           </section>
         )}
-        {data?.isTokenValid && (
+        {/* **************** */}
+
+        {/* form */}
+        {data && data?.isTokenValid && (
           <section className="block w-1/2 py-12 m-auto">
             <HeadingCard
               title="Recuperar contraseña"
@@ -278,27 +310,8 @@ const ResetPassword = () => {
             </HeadingCard>
           </section>
         )}
-        {!data?.isTokenValid && !error && (
-          <section className="block w-1/2 py-12 m-auto">
-            <HeadingCard
-              title="Link Inválido"
-              headClasses="w-full !justify-center text-2xl text-blue-dark"
-              hideCheck={true}
-            >
-              <p className="text-xl text-center text-red-900">
-                Estimado usuario, este link no es válido!
-              </p>
-              <div className="flex justify-center mt-5">
-                <CustomLink
-                  className="block m-auto button button-primary text-grey-30"
-                  content={{ urlPath: "/forgotpassword" }}
-                >
-                  Generar nuevo link
-                </CustomLink>
-              </div>
-            </HeadingCard>
-          </section>
-        )}
+        {/* **************** */}
+
       </div>
     </div>
   );

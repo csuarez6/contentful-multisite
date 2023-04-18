@@ -256,9 +256,10 @@ export const retrieveCustomerResetPwd = async (tokenID: string) => {
     const dateCreate = new Date(retrieveCustomerRPwd.created_at);
     const miliSecCreate = dateCreate.getTime();
     difHoursDates = miliSecCurrent - miliSecCreate;
-    const hours = difHoursDates / 3600000;
+    // const hours = difHoursDates / 3600000;
+    const minutes = (difHoursDates / 1000) / 60;
 
-    if (retrieveCustomerRPwd.reset_password_at == null && hours <= 1) { //Token válido por 1 Hora
+    if (retrieveCustomerRPwd.reset_password_at == null && minutes <= 15) { //Token válido 15 min
       isTokenValid = true;
     } else {
       await deleteCustomerResetPwd(tokenID);
