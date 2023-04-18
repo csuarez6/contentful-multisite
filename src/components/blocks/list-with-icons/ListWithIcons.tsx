@@ -1,4 +1,3 @@
-import Icon from "@/components/atoms/icon/Icon";
 import ListWithIcon from '@/components/organisms/list-with-icons/ListWithIcons';
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import ButtonAtom from "@/components/atoms/button/ButtonAtom";
@@ -14,6 +13,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import { iconLeft, iconRight } from "@/components/atoms/icons-indicators-slider";
 
 const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
@@ -56,7 +56,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
           <div className='hidden px-3 md:block'>
             <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize, [4]))}>
               {featuredContentsCollection.items.map((item) => (
-                <ListWithIcon key={`${item.sys.id}-desktop`} {...{ ...item, ...view }} />
+                <ListWithIcon key={`${item.sys.id}`} {...{ ...item, ...view }} />
               ))}
             </div>
           </div>
@@ -71,38 +71,58 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                 modules={[FreeMode, Navigation, Thumbs, Pagination]}
                 className="flex items-center mt-6 -z-10 !static slider-listIcon"
                 navigation={{
-                  nextEl: ".nextSlide",
-                  prevEl: ".prevSlide",
-                  lockClass: 'block'
+                  prevEl: `.prevSliderListIcon`,
+                  nextEl: `.nextSliderListIcon`,
+                  enabled: true
                 }}
                 pagination={{
-                  bulletClass: "swiper-pagination-bullet swiper-pagination-custom-bullet swiper-pagination-custom-bullet--iconslist",
-                  bulletActiveClass: "swiper-pagination-bullet-active",
-                  clickable: true
+                  type: "custom",
+                  renderCustom(_, current, total) {
+                    const className = "slider-bullet swiper-pagination-bullet swiper-pagination-custom-bullet-sliders ";
+                    let bullets = "";
+                    for (let i = 0; i < total; i++) {
+                      bullets += `
+                        <span data-bullet-index="${i}" class="${className} ${current === i + 1 ? "swiper-pagination-bullet-active" : ""}"></span>
+                      `;
+                    }
+                    return `
+                      <div class="slider-bullets-custom">
+                        ${iconLeft(`prevSliderListIcon`)}
+                        <div class="flex">
+                          ${bullets}
+                        </div>
+                        ${iconRight(`nextSliderListIcon`)}
+                      </div>
+                    `;
+                  },
+                }}
+                onPaginationRender={(swiper, el) => {
+                  el.querySelector(`.prevSliderListIcon`)?.addEventListener("click", () => {
+                    swiper.slidePrev();
+                  });
+                  el.querySelector(`.nextSliderListIcon`)?.addEventListener("click", () => {
+                    swiper.slideNext();
+                  });
+                  el.querySelectorAll(".slider-bullet")?.forEach((bullet) => {
+                    bullet.addEventListener("click", () => {
+                      const index = bullet.getAttribute("data-bullet-index");
+                      swiper.slideTo(Number(index) + 1);
+                    });
+                  });
                 }}
               >
                 <div className="relative">
-                  {featuredContentsCollection?.items.map((el) => {
+                  {featuredContentsCollection?.items.map((el, i) => {
                     return (
-                      <SwiperSlide key={el.promoTitle}>
+                      <SwiperSlide key={`${el.promoTitle}-${i}`}>
                         <div className={classNames("mx-auto", classColumns(view.columnsSize))}>
-                          <ListWithIcon key={el.promoTitle} {...el} />
+                          <ListWithIcon key={`${el.sys.id}-desktop-${i}`} {...el} />
                         </div>
                       </SwiperSlide>
                     );
                   })}
                 </div>
               </Swiper>
-            </div>
-            <div className='z-10 absolute -translate-y-14 left-[5px] top-[98%]'>
-              <div className={`prevSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
-                <Icon icon="arrow-left" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)]" />
-              </div>
-            </div>
-            <div className='z-10 absolute -translate-y-14 right-[5px] top-[98%]'>
-              <div className={`nextSlide w-10 h-10 rounded-full cursor-pointer flex items-center justify-center`}>
-                <Icon icon="arrow-right" className=" pointer-events-none w-full h-full text-blue-dark drop-shadow-[1px_2px_2px_rgba(255,255,255,1)]" />
-              </div>
             </div>
           </div>
         </>

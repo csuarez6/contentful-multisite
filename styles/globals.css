@@ -90,25 +90,36 @@ h6 {
   @apply sm:w-[18px] sm:h-[18px] bg-grey-80 opacity-100 cursor-pointer mx-[5px] w-full h-[2px];
 }
 
-.swiper-pagination-bullet-active.swiper-pagination-custom-bullet {
+.swiper-pagination-bullet.swiper-pagination-custom-bullet-sliders {
+  @apply w-[14px] h-[14px] bg-grey-80 opacity-100 cursor-pointer mx-[5px] 
+}
+
+.banner-slider .swiper-pagination {
+  @apply  pr-[18px] pl-[6px] sm:px-0 bottom-[97%] sm:bottom-6 h-auto block !important;
+}
+
+.swiper-pagination-bullet-active.swiper-pagination-custom-bullet,
+.swiper-pagination-bullet-active.swiper-pagination-custom-bullet-sliders{
   @apply bg-lucuma;
 }
 .indicators-bullets {
-  @apply sm:flex sm:justify-center sm:items-center grid gap-3 absolute pr-[18px] pl-[6px] sm:px-0 bottom-[448px] sm:bottom-[14px] left-0 right-0;
+  @apply sm:flex sm:justify-center sm:items-center grid gap-3
 }
-.swiper-pagination-custom-bullet--iconslist {
+.swiper-pagination-custom-bullet--iconslist{
   width: 14px !important;
   height: 14px !important;
-  margin-bottom: -34px !important;
 }
 .slider-listIcon .swiper-pagination {
   @apply flex justify-center gap-[14px];
-  bottom: 12.5% !important;
+  bottom: 26px !important;
 }
-.slider-vertical .swiper-pagination {
-  @apply flex justify-center gap-[14px] bottom-[42px];
+.slider-bullets-custom {
+  @apply flex justify-between items-center w-full;
 }
 
+.swiper-pagination {
+  @apply h-10 items-center flex justify-center bottom-[2.2%] !important
+}
 /* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;

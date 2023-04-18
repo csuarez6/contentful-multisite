@@ -98,7 +98,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 speed={1000}
                 loop={true}
                 effect="fade"
-                className="relative w-full h-[472px] sm:h-[394px]"
+                className="relative w-full h-[472px] sm:h-[394px] banner-slider"
               >
                 {featuredContentsCollection.items.map((content) => (
                   content.promoImage?.url && (
