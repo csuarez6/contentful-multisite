@@ -30,7 +30,7 @@ const Accordion: React.FC<any> = ({ featuredContents, columnsSize, displayIcon }
                           <Icon icon={el.promoIcon} className="mx-auto w-full h-full text-blue-dark" />
                         </span>
                       )}
-                      <h3 className="text-blue-dark text-size-subtitle1">
+                      <h3 className="text-blue-dark text-size-subtitle1 !mb-0">
                         {el.promoTitle ?? el.name}
                       </h3>
                     </div>
