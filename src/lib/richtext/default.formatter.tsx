@@ -113,6 +113,7 @@ const defaultFormatOptions: Options = {
       return (
         <CustomLink
           content={node.data.target}
+          linkClassName="inline-block mr-4 mb-4"
           className="flex w-fit button button-primary text-sm sm:text-base"
         >
           {node.data.target.promoTitle ?? node.data.target.name}
