@@ -67,7 +67,7 @@ const defaultFormatOptions: Options = {
       const { url, title, description, width, height } = node.data.target;
       return url ? (
         <>
-          <figure className="w-full mt-10 block text-center">
+          <figure className="w-full mt-10 mb-4 block text-center">
             <Image
               src={url}
               className="w-auto h-auto max-w-full"
@@ -107,7 +107,7 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.EMBEDDED_ENTRY]: (node) => {
-      return <div key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
+      return <div className="mb-4" key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
     },
     [INLINES.EMBEDDED_ENTRY]: (node) => {
       return (
