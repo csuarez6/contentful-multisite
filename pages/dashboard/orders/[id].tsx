@@ -554,7 +554,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const footerInfo = await getMenu(
         DEFAULT_FOOTER_ID,
         context.preview ?? false,
-        2
+        3
     );
     const helpButton = await getMenu(
         DEFAULT_HELP_BUTTON_ID,

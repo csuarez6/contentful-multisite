@@ -205,7 +205,7 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 2);
+  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
   const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   return {
