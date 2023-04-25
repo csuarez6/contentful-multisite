@@ -424,7 +424,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         marketId &&
                         marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
                         <button
-                          className="button button-primary 2xl:min-w-[348px] text-center border border-solid border-lucuma"
+                          className="button button-primary 2xl:min-w-[348px] justify-center border border-solid border-lucuma "
                           type="button"
                           onClick={() => onBuyHandler(PaymentMethodType.pse)}
                         >
@@ -434,7 +434,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         ""
                       )}
                       <CustomLink
-                        className="button button-outline w-full 2xl:min-w-[348px] text-center block"
+                        className="button button-outline w-full 2xl:min-w-[348px] justify-center block"
                         content={{ urlPath: callbackURL }}
                       >
                         Te llamamos

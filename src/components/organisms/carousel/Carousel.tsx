@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Swiper as ISwiper } from "swiper";
@@ -40,6 +40,13 @@ const Carousel: React.FC<ICarousel> = ({
   enableLoop
 }) => {
   const [thumbsSwiper, setThumbsSwiper] = React.useState<ISwiper>();
+  const [isFirst, setIsFirst] = useState(true);
+  const [isLast, setIsLast] = useState(false);
+
+  const onIndexChange = ({realIndex, isEnd}) => {
+    setIsFirst(realIndex === 0);
+    setIsLast(isEnd);
+  };
   if (!content) return;
   return (
     <div>
@@ -60,7 +67,7 @@ const Carousel: React.FC<ICarousel> = ({
             {el?.url && (
               <figure className="relative aspect-[595/548]">
                 <Image
-                  className="w-full h-full cursor-pointer rounded-xl"
+                  className="w-full h-full cursor-pointer rounded-xl object-contain"
                   src={el.url}
                   alt={el.title}
                   width={el.width}
@@ -73,11 +80,13 @@ const Carousel: React.FC<ICarousel> = ({
         ))}
       </Swiper>
       <div className="sm:px-[72px] relative px-5 ">
-        <div className="absolute top-0 bottom-0 left-0 z-10 items-center justify-center hidden ml-5 sm:flex">
-          <figure className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer prevSlide bg-blue-dark-90">
-            <Icon {...iconLeft} />
-          </figure>
-        </div>
+        {content.length > (imagesPerView ?? 4) &&
+          <div className="absolute top-0 bottom-0 left-0 z-10 items-center justify-center hidden ml-5 sm:flex">
+            <figure className={`flex items-center justify-center w-10 h-10 rounded-full prevSlide bg-blue-dark-90 ${isFirst ? " cursor-default opacity-50" : " cursor-pointer"}`}>
+              <Icon {...iconLeft} />
+            </figure>
+          </div>
+        }
         <Swiper
           onSwiper={setThumbsSwiper}
           loop={enableLoop ?? true}
@@ -92,6 +101,7 @@ const Carousel: React.FC<ICarousel> = ({
             prevEl: ".prevSlide",
             lockClass: 'block'
           }}
+          onRealIndexChange={onIndexChange}
         >
           <div className="relative">
             {content?.map((el, i) => {
@@ -114,11 +124,13 @@ const Carousel: React.FC<ICarousel> = ({
             })}
           </div>
         </Swiper>
-        <div className="absolute top-0 bottom-0 right-0 z-10 items-center justify-center hidden mr-5 sm:flex">
-          <figure className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer nextSlide bg-blue-dark-90">
-            <Icon {...iconRight} />
-          </figure>
-        </div>
+        {content.length > (imagesPerView ?? 4) &&
+          <div className="absolute top-0 bottom-0 right-0 z-10 items-center justify-center hidden mr-5 sm:flex">
+            <figure className={`flex items-center justify-center w-10 h-10 rounded-full nextSlide bg-blue-dark-90 ${isLast ? "cursor-default opacity-50" : "cursor-pointer"}`}>
+              <Icon {...iconRight} />
+            </figure>
+          </div>
+        }
       </div>
       {footerText && (
         <div className="mt-5 max-w-[310px] lg:ml-6 relative leading-4">
