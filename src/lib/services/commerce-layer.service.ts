@@ -176,6 +176,7 @@ export const updateCustomerMetadata = async ({
   documentType,
   documentNumber,
   cellPhone,
+  contractNumber,
 }) => {
   try {
     const cl = await getCommerlayerClient(accessToken);
@@ -189,6 +190,7 @@ export const updateCustomerMetadata = async ({
         documentType: documentType,
         documentNumber: documentNumber,
         cellPhone: cellPhone,
+        contractNumber: contractNumber,
       }
     });
     return { status: 200 };

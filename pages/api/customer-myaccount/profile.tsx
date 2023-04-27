@@ -17,7 +17,8 @@ const schema = object({
         .transform((value) => (isNaN(value) ? undefined : value))
         .nullable()
         .required("Dato Requerido")
-        .min(8, "Faltan Números")
+        .min(8, "Faltan Números"),
+    contractNumber: string().required("Dato Requerido"),
 });
 
 const validate = (

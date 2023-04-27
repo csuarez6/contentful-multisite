@@ -46,6 +46,7 @@ export interface ITemsForm {
   documentNumber: string;
   email: string;
   cellPhone: string;
+  contractNumber: string;
 }
 
 const schema = yup.object({
@@ -67,6 +68,7 @@ const schema = yup.object({
     .nullable()
     .required("Dato Requerido")
     .min(8, "Faltan Números"),
+  contractNumber: yup.string().required("Dato Requerido"),
 });
 
 const Dashboard = () => {
@@ -74,7 +76,8 @@ const Dashboard = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
-    color: "red",
+    bgcolor: "bg-red-50",
+    color: "text-red-800"
   });
   const [customerDataForm, setCustomerDataForm] = useState({
     name: "",
@@ -83,6 +86,7 @@ const Dashboard = () => {
     documentNumber: "",
     email: "",
     cellPhone: "",
+    contractNumber: "",
   });
 
   const {
@@ -123,6 +127,7 @@ const Dashboard = () => {
           documentNumber: info?.metadata["documentNumber"],
           email: info?.email,
           cellPhone: info?.metadata["cellPhone"],
+          contractNumber: info?.metadata["contractNumber"],
         });
       });
     }
@@ -135,6 +140,7 @@ const Dashboard = () => {
     setValue("documentNumber", customerDataForm.documentNumber);
     setValue("email", customerDataForm.email);
     setValue("cellPhone", customerDataForm.cellPhone);
+    setValue("contractNumber", customerDataForm.contractNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerDataForm]);
 
@@ -153,10 +159,10 @@ const Dashboard = () => {
         const { error } = json;
         if (!error) {
           setErrorMessage("Datos guardados con éxito!");
-          setShowAlert({ show: true, color: "green" });
+          setShowAlert({ show: true, bgcolor: "bg-green-50", color: "text-green-800" });
         } else {
           setErrorMessage({ error });
-          setShowAlert({ show: true, color: "red" });
+          setShowAlert({ show: true, bgcolor: "bg-red-50", color: "text-red-800" });
         }
       })
       .catch((err) => {
@@ -164,13 +170,32 @@ const Dashboard = () => {
           setErrorMessage(
             "Comprueba tu conexión a internet e intenta de nuevo por favor."
           );
-          setShowAlert({ show: true, color: "red" });
+          setShowAlert({ show: true, bgcolor: "bg-red-50", color: "text-red-800" });
         }
         console.warn(err);
       })
       .finally(() => {
         // setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
       });
+  };
+
+  const formatToPhone = (event) => {
+    if ((event.keyCode < 48 || event.keyCode > 57) &&
+      (event.keyCode < 96 || event.keyCode > 105) &&
+      event.keyCode !== 190 && event.keyCode !== 110 &&
+      event.keyCode !== 8 && event.keyCode !== 9) {
+      event.preventDefault();
+      return false;
+    }
+    setTimeout(() => {
+      const target = event.target;
+      const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits
+      const first = input.substring(0, 4);
+      const middle = input.substring(4, 6);
+      if (input.length > 4) { target.value = `${first}-${middle}`; }
+      else if (input.length > 0) { target.value = `${first}`; }
+      return true;
+    }, 200);
   };
 
   return (
@@ -215,7 +240,7 @@ const Dashboard = () => {
                       <div
                         className={classNames(
                           "p-4 rounded-md",
-                          `bg-${showAlert.color}-50`
+                          showAlert.bgcolor
                         )}
                       >
                         <div className="flex">
@@ -223,7 +248,7 @@ const Dashboard = () => {
                             <p
                               className={classNames(
                                 "text-sm font-medium",
-                                `text-${showAlert.color}-800`
+                                showAlert.color
                               )}
                             >
                               {errorMessage}
@@ -233,12 +258,13 @@ const Dashboard = () => {
                             <div className="-mx-1.5 -my-1.5">
                               <button
                                 onClick={() =>
-                                  setShowAlert({ show: false, color: "red" })
+                                  setShowAlert({ show: false, bgcolor: "bg-red-50", color: "bg-red-800" })
                                 }
                                 type="button"
                                 className={classNames(
-                                  "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                  `text-${showAlert.color}-500 bg-${showAlert.color}-50 hover:bg-${showAlert.color}-100 focus:ring-${showAlert.color}-600 focus:ring-offset-${showAlert.color}-50`
+                                  "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 opacity-50",
+                                  showAlert.color,
+                                  showAlert.bgcolor,
                                 )}
                               >
                                 <span className="sr-only">Dismiss</span>
@@ -250,6 +276,9 @@ const Dashboard = () => {
                       </div>
                     )}
                     <form onSubmit={handleSubmit(onSubmit)}>
+                      <p className="pb-2 font-bold">
+                        Todos los campos marcados con <span className='text-red-700'>*</span> son obligatorios.
+                      </p>
                       <div className="flex flex-col gap-6 mt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
                           <Textbox
@@ -315,7 +344,7 @@ const Dashboard = () => {
                             {...register("email")}
                             readOnly
                             disabled
-                            isRequired={true}
+                            isRequired={false}
                           />
 
                           <Textbox
@@ -328,6 +357,21 @@ const Dashboard = () => {
                             autoComplete="on"
                             {...register("cellPhone")}
                             isRequired={true}
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
+                          <Textbox
+                            id="contractNumber"
+                            type="text"
+                            placeholder='0000-00'
+                            label="Número de Cuenta Contrato"
+                            className="form-input"
+                            isError={!!errors.contractNumber}
+                            errorMessage={errors?.contractNumber?.message}
+                            autoComplete="on"
+                            {...register("contractNumber")}
+                            isRequired={true}
+                            onKeyDown={(event) => formatToPhone(event)}
                           />
                         </div>
                       </div>
