@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
-import CustomLink from '@/components/atoms/custom-link/CustomLink';
 import { customerSchema } from '@/schemas/customer';
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 
@@ -70,7 +69,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         }
         setTimeout(() => {
             const target = event.target;
-            const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits of input only
+            const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits
             const first = input.substring(0, 4);
             const middle = input.substring(4, 6);
             if (input.length > 4) { target.value = `${first}-${middle}`; }
@@ -81,6 +80,9 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
 
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
+            <p className="pb-5 font-bold">
+                Todos los campos marcados con <span className='text-red-700'>*</span> son obligatorios.
+            </p>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-10'>
                     <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
@@ -196,13 +198,13 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                                 Autorizo de manera libre, expresa, inequívoca e informada el tratamiento de
                                 mis datos personales de acuerdo con lo dispuesto en la Ley 1581/2012 y
                                 conforme a la política de tratamiento de datos personales publicada en el
-                                <CustomLink
-                                    linkClassName='inline-block ml-1'
-                                    className='underline'
-                                    content={{ internalLink: { urlPath: '/terminos-y-condiciones' } }}
-                                >
-                                    siguiente link
-                                </CustomLink>.
+                                <a
+                                    href="/terminos-y-condiciones"
+                                    target="_blank"
+                                    className='inline-block ml-1 underline'
+                                    rel="noopener noreferrer">
+                                    siguiente link.
+                                </a>
                                 <span className='text-red-700'>*</span>
                             </p>)}
                             isError={!!errors.authorize}
