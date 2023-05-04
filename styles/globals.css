@@ -189,6 +189,3 @@ h6 {
 .card-mega-menu a {
   @apply md:text-size-subtitle2 text-center;
 }
-.product img{
-  @apply xl:object-contain xl:w-[110%]
-}

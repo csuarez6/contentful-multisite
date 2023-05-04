@@ -89,7 +89,7 @@ const ProductGrillBlock: React.FC<IPromoBlock> = ({ title, description, listedCo
           )}
 
           {listedContentsCollection?.items?.length > 0 && (
-            <div className={classNames("grid grid-cols-1 gap-5", listedClasses(listedContentsCollection.items, featuredContentsCollection?.items, view?.columnsSize, view?.isReverse), view?.columnsSize > 2 ? "product" : "")}>
+            <div className={classNames("grid grid-cols-1 gap-5", listedClasses(listedContentsCollection.items, featuredContentsCollection?.items, view?.columnsSize))}>
               {listedContentsCollection.items.map(item => (
                 <ProductSmallCard key={item.promoTitle} {...item} />
               ))}
