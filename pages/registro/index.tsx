@@ -43,13 +43,16 @@ const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
 };
 
 const SignUp = () => {
-  const [dataModal, setDataModal] = useState<IPromoContent>({
+  const modalDefault = {
     children: <ModalContent modalMsg="..." />,
     promoIcon: "loader",
     promoTitle: "Espere...",
-  });
+  };
+  const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data): Promise<boolean> => {
+    let resultBoolean = false;
+    setDataModal(modalDefault);
     await fetch("api/signup", {
       method: "POST",
       body: JSON.stringify(data),
@@ -65,6 +68,7 @@ const SignUp = () => {
             subtitle:
               "Pronto recibirás en el correo electrónico registrado la confirmación de la creación de tu cuenta y los beneficios a los que tienes acceso.",
           });
+          resultBoolean = true;
         } else {
           if (response.status === 400 && resp.error?.code == 'RE_CAPTCHA_ERROR_VALIDATION') {
             msgError = resp.error.message;
@@ -88,6 +92,7 @@ const SignUp = () => {
           promoTitle: "Error durante el proceso!",
         });
       });
+    return Promise.resolve(resultBoolean);
   };
 
   const data: IForm = {

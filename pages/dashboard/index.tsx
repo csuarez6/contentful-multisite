@@ -159,10 +159,10 @@ const Dashboard = () => {
         const { error } = json;
         if (!error) {
           setErrorMessage("Datos guardados con éxito!");
-          setShowAlert({ show: true, bgcolor: "bg-green-50", color: "text-green-800" });
+          setShowAlert({ show: true, bgcolor: "bg-green-50 border-green-950", color: "text-green-800" });
         } else {
           setErrorMessage({ error });
-          setShowAlert({ show: true, bgcolor: "bg-red-50", color: "text-red-800" });
+          setShowAlert({ show: true, bgcolor: "bg-red-50 border-red-950", color: "text-red-800" });
         }
       })
       .catch((err) => {
@@ -170,7 +170,7 @@ const Dashboard = () => {
           setErrorMessage(
             "Comprueba tu conexión a internet e intenta de nuevo por favor."
           );
-          setShowAlert({ show: true, bgcolor: "bg-red-50", color: "text-red-800" });
+          setShowAlert({ show: true, bgcolor: "bg-red-50 border-red-950", color: "text-red-800" });
         }
         console.warn(err);
       })
@@ -239,7 +239,7 @@ const Dashboard = () => {
                     {errorMessage && showAlert.show && (
                       <div
                         className={classNames(
-                          "p-4 rounded-md",
+                          "p-4 rounded-md border",
                           showAlert.bgcolor
                         )}
                       >
@@ -258,7 +258,7 @@ const Dashboard = () => {
                             <div className="-mx-1.5 -my-1.5">
                               <button
                                 onClick={() =>
-                                  setShowAlert({ show: false, bgcolor: "bg-red-50", color: "bg-red-800" })
+                                  setShowAlert({ show: false, bgcolor: "bg-red-50 border-red-950", color: "bg-red-800" })
                                 }
                                 type="button"
                                 className={classNames(

@@ -8,7 +8,7 @@ interface IButtonForm {
     className?: string;
 }
 export interface IForm {
-    onSubmitForm?: (e: ITemsForm) => void
+    onSubmitForm?: (e: ITemsForm) => any
     cta: IButtonForm;
     modal?: IPromoContent,
     selectOptions?: ISelectInputOption[]

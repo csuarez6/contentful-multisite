@@ -45,7 +45,8 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
 
     const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
     const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
-    const { register, handleSubmit, formState: { errors, isValid, isSubmitSuccessful }, reset
+    const [activeModal, setActiveModal] = useState<boolean>(false);
+    const { register, handleSubmit, formState: { errors, isValid, submitCount }, reset
     } = useForm<ITemsForm>({
         mode: 'onChange',
         resolver: yupResolver(schema),
@@ -53,10 +54,18 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         defaultValues
     });
 
-    const onSubmit = (data: ITemsForm) => {
-        if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
-        reset();
+    const onSubmit = async (data: ITemsForm) => {
+        setActiveModal(false);
         setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
+        if (onSubmitForm) {
+            setActiveModal(true);
+            const result = onSubmitForm({ ...data, tokenReCaptcha });
+            result.then((result) => {
+                if (result) reset();
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
     };
 
     const formatToPhone = (event) => {
@@ -230,7 +239,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                     </div>
                 </div>
             </form>
-            {isSubmitSuccessful && (<ModalSuccess {...modal} isActive={isSubmitSuccessful} />)}
+            {activeModal && (<ModalSuccess key={submitCount} {...modal} isActive={activeModal} />)}
         </HeadingCard>
     );
 };
