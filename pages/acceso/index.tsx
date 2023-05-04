@@ -26,7 +26,6 @@ const Login = () => {
         promoIcon: 'loader',
         promoTitle: 'Espere...',
     };
-
     const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
 
     const onSubmit = async (data) => {
@@ -56,7 +55,6 @@ const Login = () => {
             });
         }
     };
-
     const formData: IForm = {
         formData: {
             cta: {
@@ -67,7 +65,6 @@ const Login = () => {
             modal: dataModal
         }
     };
-
     const breadcrumbs = {
         items: [
             {
