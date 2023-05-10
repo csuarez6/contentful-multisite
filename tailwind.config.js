@@ -122,7 +122,8 @@ module.exports = {
         'size-button': ['1rem', '1.6'],
         'size-subtitle1': ['1.125rem', '1.2'],
         'size-subtitle2': ['1rem', '1.8'],
-        'size-subtitle3': ['.875rem', '1.8']
+        'size-subtitle3': ['.875rem', '1.8'],
+        'size-span': ['.6rem', '1']
       }
     },
   },
