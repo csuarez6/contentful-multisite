@@ -28,6 +28,7 @@ export interface JWTProps {
   }
   owner?: {
     id?: string
+    type?: string
   }
   test: boolean
 }
@@ -315,4 +316,23 @@ export const getCommercelayerProduct = async (skuCode: string) => {
   }
 
   return product;
+};
+
+export const updatePassWord = async (user: string, customerPWD: string, newPWD:string) => {
+  try { 
+    const validPassword:any = await getCustomerTokenCl({email: user, password: customerPWD});
+    if(validPassword.status === 200){
+      const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
+      const cl = await getCommerlayerClient(validPassword.access_token);
+      const response = await cl.customers.update({
+        id: owner.id,
+        password: newPWD
+      });
+      if(response) return { status: 200, data: 'password is update' };
+    }
+    return { status: 401, data: 'password is invalid' };
+  } catch (error) {
+    console.error('Error updating password', error);
+    return { status: 401, error: error };
+  }
 };

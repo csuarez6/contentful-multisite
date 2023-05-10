@@ -42,6 +42,7 @@ import {
     UserCircleIcon,
     ShoppingCartIcon,
     MapPinIcon,
+    ArrowPathIcon
 } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/functions";
 import { useRouter } from "next/router";
@@ -55,6 +56,7 @@ const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
     { name: "Compras", href: "/dashboard/orders", icon: ShoppingCartIcon, current: true },
     { name: "Direcciones", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
+    { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false},
 ];
 
 const handlerStatusColor = (status: string) => {

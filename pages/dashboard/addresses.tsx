@@ -23,6 +23,7 @@ import {
     UserCircleIcon,
     ShoppingCartIcon,
     MapPinIcon,
+    ArrowPathIcon
 } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -34,6 +35,7 @@ const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
     { name: "Compras", href: "/dashboard/orders", icon: ShoppingCartIcon, current: false },
     { name: "Direcciones", href: "#", icon: MapPinIcon, current: true },
+    { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false},
 ];
 
 const messages: any = [

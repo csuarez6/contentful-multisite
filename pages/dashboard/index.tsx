@@ -10,6 +10,7 @@ import {
   UserCircleIcon,
   ShoppingCartIcon,
   MapPinIcon,
+  ArrowPathIcon
 } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/functions";
 import { getCustomerInfo } from "@/lib/services/commerce-layer.service";
@@ -35,6 +36,12 @@ const subNavigation = [
     name: "Direcciones",
     href: "/dashboard/addresses",
     icon: MapPinIcon,
+    current: false,
+  },
+  {
+    name: "Actualizar Contraseña",
+    href: "/dashboard/upgradePassword",
+    icon: ArrowPathIcon,
     current: false,
   },
 ];
