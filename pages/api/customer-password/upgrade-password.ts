@@ -30,7 +30,8 @@ const validate = (
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-        return await updatePassWord(req.body.user, req.body.password, req.body.newPassword);
+        res.status(200)
+        .json(await updatePassWord(req.body.user, req.body.password, req.body.newPassword));
     } catch (error) {
         res.status(402).json(error);
     }

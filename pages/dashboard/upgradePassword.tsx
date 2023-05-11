@@ -52,13 +52,13 @@ interface ITemsForm {
 }
 
 const schema = yup.object({
-  password: string()
-    .required("Dato Requerido")
-    .matches(
-      //eslint-disable-next-line
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
-    ),
+  // password: string()
+  //   .required("Dato Requerido")
+  //   .matches(
+  //     //eslint-disable-next-line
+  //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+  //     "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
+  //   ),
   newPassword: string()
     .required("Dato Requerido")
     .matches(
@@ -128,8 +128,8 @@ const DashboardUpgradePassword = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        const { error } = json;
-        if (!error) {
+        const { status } = json;
+        if (status === 200) {
           setErrorMessage("Datos guardados con éxito!");
           setShowAlert({
             show: true,
@@ -137,7 +137,7 @@ const DashboardUpgradePassword = () => {
             color: "text-green-800",
           });
         } else {
-          setErrorMessage({ error });
+          setErrorMessage("Contraseña invalida");
           setShowAlert({
             show: true,
             bgcolor: "bg-red-50 border-red-950",
@@ -157,9 +157,6 @@ const DashboardUpgradePassword = () => {
           });
         }
         console.warn(err);
-      })
-      .finally(() => {
-        // setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
       });
   };
 

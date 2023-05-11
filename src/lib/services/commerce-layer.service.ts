@@ -321,7 +321,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 export const updatePassWord = async (user: string, customerPWD: string, newPWD:string) => {
   try { 
     const validPassword:any = await getCustomerTokenCl({email: user, password: customerPWD});
-    if(validPassword.status === 200){
+    if(validPassword?.status === 200){
       const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
       const cl = await getCommerlayerClient(validPassword.access_token);
       const response = await cl.customers.update({
