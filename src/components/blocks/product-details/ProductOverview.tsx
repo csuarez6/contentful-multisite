@@ -9,14 +9,14 @@ import Rating from "@/components/organisms/ratings/Rating";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
-import { useContext, useEffect, useState } from "react";
-import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { useContext, useEffect } from "react";
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 import { scrollContent } from "@/utils/functions";
-import { iconCallback, iconInvoice, iconPSE, ModalIntall, ModalShipping, options } from "./ProductConfig";
+import { iconInvoice, iconPSE, options } from "./ProductConfig";
+import ProductServices from "@/components/organisms/product-services/ProductServices";
+import ProductActions from "@/components/organisms/product-actions/ProductActions";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -45,28 +45,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
 
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
-  const [isActivedModal, setIsActivedModal] = useState(false);
-  const [paramModal, setParamModal] = useState<IPromoContent>();
-  const [modalChild, setmodalChild] = useState<any>();
-
-  const openModal = (service: string) => {
-    if (service === "shipping") {
-      setParamModal({
-        promoTitle: "Tipo de envío",
-      });
-      setmodalChild(<ModalShipping />);
-    } else {
-      setParamModal({
-        promoTitle: "Instala tu gasodoméstico",
-      });
-      setmodalChild(<ModalIntall />);
-    }
-    setmodalChild(service === "shipping" ? <ModalShipping /> : <ModalIntall />);
-    setIsActivedModal(false);
-    setTimeout(() => {
-      setIsActivedModal(true);
-    }, 200);
-  };
 
   const buyHandlerMap = {
     [PaymentMethodType.pse]: () => {
@@ -281,92 +259,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <p>*Aclaracion</p>
                     </div>
                   </div>
-                  <ul className="sm:hidden  flex flex-col gap-y-[11px]">
-                    <li className="flex flex-col gap-3">
-                      <p className="text-size-subtitle1 text-blue-dark">
-                        Instala tu gasodoméstico
-                      </p>
-                      <div className="px-3 py-2">
-                        <p
-                          onClick={() => openModal("install")}
-                          className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                        >
-                          <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                              icon="expert"
-                              className="flex items-center w-full h-full text-neutral-30"
-                            />
-                          </span>
-                          <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                            Contrata el servicio
-                          </span>
-                          <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                              icon="arrow-right"
-                              className="flex items-center w-full h-full text-neutral-30"
-                            />
-                          </span>
-                        </p>
-                      </div>
-                    </li>
-                    <li className="flex flex-col gap-3">
-                      <p className="text-size-subtitle1 text-blue-dark">
-                        Tipo de envío
-                      </p>
-                      <div className="px-3 py-2">
-                        <p
-                          onClick={() => openModal("shipping")}
-                          className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                        >
-                          <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                              icon="expert"
-                              className="flex items-center w-full h-full text-neutral-30"
-                            />
-                          </span>
-                          <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                            Estándar (5 a 10 dias hábiles)
-                          </span>
-                          <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                              icon="arrow-right"
-                              className="flex items-center w-full h-full text-neutral-30"
-                            />
-                          </span>
-                        </p>
-                      </div>
-                    </li>
-                    {warranty && (
-                      <li className="flex flex-col gap-3">
-                        <p className="text-size-subtitle1 text-blue-dark">
-                          Garantía
-                        </p>
-                        <div className="px-3 pb-2 pt-[10px]">
-                          <p
-                            onClick={() => {
-                              scrollContent("content-warranty");
-                            }}
-                            className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                          >
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon
-                                icon="expert"
-                                className="flex items-center w-full h-full text-neutral-30"
-                              />
-                            </span>
-                            <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                              {warranty.name}
-                            </span>
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon
-                                icon="arrow-right"
-                                className="flex items-center w-full h-full text-neutral-30"
-                              />
-                            </span>
-                          </p>
-                        </div>
-                      </li>
-                    )}
+                  <ul className="sm:hidden flex flex-col gap-y-[11px]">
+                    <ProductServices marketId={marketId} warranty={warranty} />
                   </ul>
                 </div>
                 <div className="flex flex-col gap-[10px] sm:flex-grow">
@@ -416,120 +310,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden sm:flex flex-col gap-[15px]"
                   >
-                    <div className=" hidden sm:flex flex-col gap-[22px] pt-[5px] my-5">
-                      {sku &&
-                        price &&
-                        productsQuantity &&
-                        Number(productsQuantity) > 0 &&
-                        marketId &&
-                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
-                        <button
-                          className="button button-primary 2xl:min-w-[348px] justify-center border border-solid border-lucuma "
-                          type="button"
-                          onClick={() => onBuyHandler(PaymentMethodType.pse)}
-                        >
-                          Comprar con PSE
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                      <CustomLink
-                        className="button button-outline w-full 2xl:min-w-[348px] justify-center block"
-                        content={{ urlPath: callbackURL }}
-                      >
-                        Te llamamos
-                        <Icon {...iconCallback} />
-                      </CustomLink>
-                    </div>
+                    <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
                     <ul className="hidden sm:flex flex-col gap-y-[11px]">
-                      {marketId &&
-                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
-                          <li className="flex flex-col gap-3">
-                            <p className="text-size-subtitle1 text-blue-dark">
-                              Instala tu gasodoméstico
-                            </p>
-                            <div className="px-3 py-2">
-                              <p
-                                onClick={() => openModal("install")}
-                                className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                              >
-                                <span className="flex items-center w-6 h-6 shrink-0">
-                                  <Icon
-                                    icon="expert"
-                                    className="flex items-center w-full h-full text-neutral-30"
-                                  />
-                                </span>
-                                <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                                  Contrata el servicio
-                                </span>
-                                <span className="flex items-center w-6 h-6 shrink-0">
-                                  <Icon
-                                    icon="arrow-right"
-                                    className="flex items-center w-full h-full text-neutral-30"
-                                  />
-                                </span>
-                              </p>
-                            </div>
-                          </li>
-                        )}
-                      <li className="flex flex-col gap-3">
-                        <p className="text-size-subtitle1 text-blue-dark">
-                          Tipo de envío
-                        </p>
-                        <div className="px-3 py-2">
-                          <p
-                            onClick={() => openModal("shipping")}
-                            className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                          >
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon
-                                icon="expert"
-                                className="flex items-center w-full h-full text-neutral-30"
-                              />
-                            </span>
-                            <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                              Estándar (5 a 10 dias hábiles)
-                            </span>
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                              <Icon
-                                icon="arrow-right"
-                                className="flex items-center w-full h-full text-neutral-30"
-                              />
-                            </span>
-                          </p>
-                        </div>
-                      </li>
-                      {warranty && (
-                        <li className="flex flex-col gap-3">
-                          <p className="text-size-subtitle1 text-blue-dark">
-                            Garantía
-                          </p>
-                          <div className="px-3 pb-2 pt-[10px]">
-                            <p
-                              onClick={() => {
-                                scrollContent("content-warranty");
-                              }}
-                              className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                            >
-                              <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon
-                                  icon="expert"
-                                  className="flex items-center w-full h-full text-neutral-30"
-                                />
-                              </span>
-                              <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                                {warranty.name}
-                              </span>
-                              <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon
-                                  icon="arrow-right"
-                                  className="flex items-center w-full h-full text-neutral-30"
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        </li>
-                      )}
+                      <ProductServices marketId={marketId} warranty={warranty} />
                     </ul>
                   </form>
                 </div>
@@ -597,11 +380,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           {/* END Section - promoDescription and  warranty */}
         </div>
       </div>
-      {isActivedModal && (
-        <ModalSuccess {...paramModal} isActive={isActivedModal}>
-          {modalChild}
-        </ModalSuccess>
-      )}
       {/* ********* Buttons - Flow payment (mobile) ************ */}
       <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
         <div className="flex gap-[10px] items-center">
@@ -612,42 +390,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </p>
           )}
         </div>
-        <div className="flex gap-4">
-          {sku &&
-            price &&
-            productsQuantity &&
-            Number(productsQuantity) > 0 &&
-            marketId &&
-            marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS ? (
-            <a
-              className="button button-primary w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px]"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                if (onBuy)
-                  onBuy(
-                    PaymentMethodType.pse,
-                    sku,
-                    promoImage.url,
-                    promoTitle
-                  );
-              }}
-            >
-              Comprar con PSE
-            </a>
-          ) : (
-            ""
-          )}
-          <CustomLink
-            linkClassName="button button-outline w-1/2 sm:shrink-0 sm:grow flex items-center justify-center text-center text-[13px] gap-1"
-            content={{ urlPath: callbackURL }}
-          >
-            Te llamamos
-            <span>
-              <Icon {...iconCallback} />
-            </span>
-          </CustomLink>
-        </div>
+        <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
       </div>
     </section>
   );
