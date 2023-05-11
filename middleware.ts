@@ -74,3 +74,4 @@ function isAuthenticated(req: NextRequest) {
 export const config = {
   matcher: ['/dashboard/:path*', '/acceso', '/forgotpassword', '/registro']
 };
+// ***********
