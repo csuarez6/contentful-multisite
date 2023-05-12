@@ -100,33 +100,32 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         {/* Start Warranty section */}
         {
             warranty && (
-                <li className="flex flex-col gap-3">
-                    <p className="text-size-subtitle1 text-blue-dark">
-                        Garantía
-                    </p>
-                    <div className="px-3 pb-2 pt-[10px]">
-                        <p
-                            // onClick={() => {
-                            //     scrollContent("content-warranty");
-                            // }}
-                            className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                        >
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon
-                                    icon="expert"
-                                    className="flex items-center w-full h-full text-neutral-30"
-                                />
-                            </span>
-                            <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                                {warranty.name}
-                            </span>
-                            <span className="flex items-center w-6 h-6 shrink-0">
-                                <Icon
-                                    icon="arrow-right"
-                                    className="flex items-center w-full h-full text-neutral-30"
-                                />
-                            </span>
-                        </p>
+                <li className="flex flex-col gap-3 w-full">
+                    <p className="text-size-subtitle1 text-blue-dark">Garantía extendida</p>
+                    <div className="px-3 py-[10px] gap-2 border-b border-neutral-70 grid grid-cols-1 sm:grid-cols-2">
+                        {[
+                            {
+                                label: "1 año",
+                                price: "$ 300.000,00"
+                            },
+                            {
+                                label: "2 año",
+                                price: "$ 60.000,00"
+                            },
+                            {
+                                label: "3 año",
+                                price: "$ 90.000,00"
+                            },
+                            {
+                                label: "Sin garantía",
+                                price: "$ 0"
+                            }
+                        ].map((item, index) => {
+                            return (<button className="button button-outline flex flex-col items-center" key={index}>
+                                <span className="text-size-span font-bold">{item.label}</span>
+                                <span className="text-size-small">{item.price}</span>
+                            </button>);
+                        })}
                     </div>
                 </li>
             )

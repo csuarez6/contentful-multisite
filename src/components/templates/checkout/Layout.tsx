@@ -105,7 +105,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
+      <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
         <div className="col-span-2">{children}</div>
         {products.length > 0 && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
