@@ -9,7 +9,7 @@ import Rating from "@/components/organisms/ratings/Rating";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
@@ -17,6 +17,7 @@ import { scrollContent } from "@/utils/functions";
 import { iconInvoice, iconPSE, options } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
+import CartModal from "@/components/organisms/cart-modal/CartModal";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -38,17 +39,18 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   warranty,
   relatedProducts
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { addToCart, reloadOrder } = useContext(CheckoutContext);
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
-
+  const closeModal = () => setIsOpen(false);
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
 
   const buyHandlerMap = {
     [PaymentMethodType.pse]: () => {
-      router.push("/checkout/pse/verify");
+      setIsOpen(true);
     },
   };
 
@@ -392,6 +394,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         </div>
         <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
       </div>
+      {isOpen &&
+        <CartModal close={closeModal} /> 
+      }
     </section>
   );
 };
