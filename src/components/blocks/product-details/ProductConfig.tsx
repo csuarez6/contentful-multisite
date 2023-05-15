@@ -54,16 +54,56 @@ export const options = {
 
 export const ModalIntall = () => {
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-6">
       <p className="text-left">
+        <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
+          <p>
+            el servicio está sujeto a ubicación, si desea más información puede hacer
+            <CustomLink
+              className="!inline-block ml-1 font-bold underline"
+              content={{ urlPath: "/otros-servicios/instalacion" }}
+            >
+              clic aquí
+            </CustomLink>.
+          </p>
+        </div>
         Antes de empezar, queremos informarte que puedes adquirir la instalación
         de tu gasodoméstico en esta compra.
         <br />
         Si aún no sabes qué incluye, puedes informarte en la landing de
         instalación.
       </p>
+      <ul className="px-3 py-[10px] gap-2 grid grid-cols-1 sm:grid-cols-2">
+        {[
+          {
+            label: "Dato 1",
+            price: "$ 300.000,00"
+          },
+          {
+            label: "Sin instalación",
+            price: "$ 0"
+          }
+        ].map((item, index) => {
+          return (
+            <>
+              <li key={index}>
+                <input type="radio" id={`installbox-${index}`} name="installbox" value="" className="hidden peer" required />
+                <label
+                  htmlFor={`installbox-${index}`}
+                  className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-bold text-size-span">{item.label}</span>
+                    <span className="text-size-small">{item.price}</span>
+                  </div>
+                </label>
+              </li>
+            </>
+          );
+        })}
+      </ul>
       <div className="flex justify-end gap-2">
-        <CustomLink
+        {/* <CustomLink
           className="button button-primary"
           content={{ urlPath: "/" }}
         >
@@ -74,7 +114,10 @@ export const ModalIntall = () => {
           content={{ urlPath: "/" }}
         >
           Conocer sobre instalación
-        </CustomLink>
+        </CustomLink> */}
+        <button className="button button-primary">
+          Hecho
+        </button>
       </div>
     </div>
   );
