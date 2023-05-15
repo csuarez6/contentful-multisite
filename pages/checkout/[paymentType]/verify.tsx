@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useMemo } from "react";
+import { ReactElement, useContext, useMemo, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -16,19 +16,21 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { defaultLayout } from "../../_app";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
+import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 
 const CheckoutVerify = () => {
   const router = useRouter();
   const lastPath = useLastPath();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({
+    icon: "",
+    type: "",
+    title: "",
+  });
 
   const { isLogged } = useContext(AuthContext);
-  const {
-    order,
-    flow,
-    updateMetadata,
-    updateItemQuantity,
-    addLoggedCustomer
-  } = useContext(CheckoutContext);
+  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer } =
+    useContext(CheckoutContext);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -47,10 +49,34 @@ const CheckoutVerify = () => {
 
   const handleNext = async () => {
     try {
-      if (!products.length) return;
+      if (!products.length) {
+        setError(true);
+        setErrorMessage({
+          icon: "alert",
+          type: "warning",
+          title: "No hay productos en el carrito",
+        });
+        return;
+      }
+      let totalAmount = 0;
+      for (let i = 0; i < products.length; i++) {
+        const formattedAmount = products[i].formatted_total_amount;
+        const amount = parseFloat(formattedAmount.replace(/[$.,]/g, ""));
+        totalAmount += amount;
+      }
+
+      if (totalAmount >= 10000000) {
+        setError(true);
+        setErrorMessage({
+          icon: "alert",
+          type: "warning",
+          title: "Su Compra tiene mas de $10.000.000",
+        });
+        return;
+      }
 
       const meta = {
-        [VantiOrderMetadata.IsVerified]: true
+        [VantiOrderMetadata.IsVerified]: true,
       };
 
       if (isLogged) {
@@ -64,6 +90,13 @@ const CheckoutVerify = () => {
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
     } catch (error) {
       console.error(error);
+
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Algo a salido mal",
+      });
       alert(error.message);
     }
   };
@@ -91,7 +124,10 @@ const CheckoutVerify = () => {
         {/* End Heading */}
 
         {products.map((product) => (
-          <div className="grid grid-template-product-details border-b" key={product.id}>
+          <div
+            className="grid grid-template-product-details border-b"
+            key={product.id}
+          >
             <div className="row-start-1 row-end-4 py-3.5">
               <figure className="relative w-16 shrink-0">
                 {product?.image_url && (
@@ -115,8 +151,8 @@ const CheckoutVerify = () => {
                   <button
                     data-action="decrement"
                     className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
-                    onClick={() =>
-                      updateItemQuantity(
+                    onClick={async () =>
+                      await updateItemQuantity(
                         product?.sku_code,
                         product?.quantity - 1
                       )
@@ -134,12 +170,21 @@ const CheckoutVerify = () => {
                   <button
                     data-action="increment"
                     className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
-                    onClick={() =>
-                      updateItemQuantity(
-                        product?.sku_code,
-                        product.quantity + 1
-                      )
-                    }
+                    onClick={async () => {
+                      if (
+                        (await updateItemQuantity(
+                          product?.sku_code,
+                          product.quantity + 1
+                        )) === false
+                      ) {
+                        setError(true);
+                        setErrorMessage({
+                          icon: "alert",
+                          type: "warning",
+                          title: `No hay productos disponibles para el ${product?.name}`,
+                        });
+                      }
+                    }}
                   >
                     <span className="m-auto">+</span>
                   </button>
@@ -150,25 +195,37 @@ const CheckoutVerify = () => {
               {product.formatted_unit_amount}
             </div>
             <div className="text-left py-1 pl-4 text-grey-30 text-sm">
-              1 año de garantía extendida <button className="text-blue-500 hover:text-blue-800 ml-2">Cambiar</button>
+              1 año de garantía extendida{" "}
+              <button className="text-blue-500 hover:text-blue-800 ml-2">
+                Cambiar
+              </button>
             </div>
             <div className="text-center">
-              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">x10</span>
+              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
+                x10
+              </span>
             </div>
             <div className="hidden sm:inline-block py-1 text-right text-blue-dark text-sm pr-1">
               $ 150.000,00
             </div>
             <div className="text-left py-1 pl-4 text-grey-30 text-sm">
-              Servicio de instalación <button className="text-blue-500 hover:text-blue-800 ml-2">Cambiar</button>
+              Servicio de instalación{" "}
+              <button className="text-blue-500 hover:text-blue-800 ml-2">
+                Cambiar
+              </button>
             </div>
             <div className="text-center">
-              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">x10</span>
+              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
+                x10
+              </span>
             </div>
             <div className="hidden sm:inline-block py-1 text-right text-blue-dark text-sm pr-1">
               $ 150.000,00
             </div>
             <div className="col-start-1 col-end-3 bg-blue-50 mt-3"></div>
-            <div className="hidden sm:inline-block mt-3 py-1 text-center text-blue-dark text-md bg-blue-50 font-bold">Total Producto</div>
+            <div className="hidden sm:inline-block mt-3 py-1 text-center text-blue-dark text-md bg-blue-50 font-bold">
+              Total Producto
+            </div>
             <div className="hidden sm:inline-block mt-3 py-1 text-right text-blue-dark text-md bg-blue-50 font-bold pr-1">
               {product.formatted_total_amount}
             </div>
@@ -194,6 +251,14 @@ const CheckoutVerify = () => {
           </button>
         )}
       </div>
+      {error && (
+        <InformationModal
+          icon={errorMessage.icon}
+          type={errorMessage.type}
+          title={errorMessage.title}
+          close={() => setError(false)}
+        />
+      )}
     </HeadingCard>
   );
 };
@@ -207,8 +272,15 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    3
+  );
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {

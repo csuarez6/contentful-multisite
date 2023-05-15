@@ -25,7 +25,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
                     type="button"
                     onClick={() => onBuyHandler(PaymentMethodType.pse)}
                 >
-                    Comprar con PSE
+                    Agregar al carro
                 </button>
             ) : (
                 ""

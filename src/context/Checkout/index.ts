@@ -14,7 +14,7 @@ export interface IContextCheckout {
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
   addLoggedCustomer: () => Promise<void>;
-  updateItemQuantity: (skuCode: string, quantity: number) => Promise<void>;
+  updateItemQuantity: (skuCode: string, quantity: number) => Promise<boolean>;
   addAddresses: (
     shippingAddress: AddressCreate,
     billingAddress?: AddressCreate

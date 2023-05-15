@@ -139,17 +139,23 @@ export const useCommerceLayer = () => {
   );
 
   const updateItemQuantity = async (skuCode: string, quantity: number) => {
-    const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
-    if (quantity > 0) {
-      await client.line_items.update({
-        id: lineItem.id,
-        quantity,
-      });
-    } else {
-      await client.line_items.delete(lineItem.id);
-      await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
+    try {
+      const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
+      if (quantity > 0) {
+        await client.line_items.update({
+          id: lineItem.id,
+          quantity,
+        });
+      } else {
+        await client.line_items.delete(lineItem.id);
+        await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
+      }
+      await reloadOrder();
+    } catch(err) {
+      console.error('error', err);
+      return false;
     }
-    await reloadOrder();
+    return true;
   };
 
   const addLoggedCustomer = useCallback(async () => {
@@ -356,7 +362,6 @@ export const useCommerceLayer = () => {
       }
 
       setTokenRecaptcha(e);
-
     } catch (error) {
       console.error(error);
     }
