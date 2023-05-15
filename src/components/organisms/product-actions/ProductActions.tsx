@@ -55,7 +55,8 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
           linkClassName="button button-outline w-1/2 sm:w-full flex justify-center items-center gap-1 text-[13px] sm:text-size-p2"
           content={{ urlPath: callbackURL }}
         >
-          Te llamamos
+          <span className="hidden sm:inline-block">Financiar con Vantilisto</span>
+          <span className="inline-block sm:hidden">Con Vantilisto</span>
           <Icon {...iconCallback} />
         </CustomLink>
       </div>

@@ -1,6 +1,4 @@
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
-import { classNames } from "@/utils/functions";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useMemo, useState } from "react";
 import CheckoutContext from "../../../context/Checkout";
@@ -110,47 +108,24 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         {products.length > 0 && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
-              <h4 className="text-blue-dark">Detalle de tu pedido</h4>
-              {products?.map((product, i) => (
-                <div className="flex justify-center" key={i}>
-                  {product?.image_url && (
-                    <figure
-                      className={classNames("w-full relative aspect-[214/214]")}
-                    >
-                      <Image
-                        src={product?.image_url}
-                        alt={product?.name}
-                        width={214}
-                        height={214}
-                        className="h-full w-full object-cover"
-                      />
-                    </figure>
-                  )}
-                </div>
-              ))}
-              <div className="p-5 flex flex-col gap-3">
-                <p className="text-neutral-20">Productos</p>
+              <h4 className="text-blue-dark border-b border-blue-dark pb-3">Detalle de tu pedido</h4>
+              <div className="flex flex-col gap-3 text-sm">
                 {products?.map((product, i) => (
-                  <div key={i}>
-                    <div className="relative">
-                      <div className="grid grid-cols-2">
-                        <p className="">{product.name}</p>
-                        <span className="text-center text-blue-dark">
-                          {product?.formatted_unit_amount}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2">
-                        <p>Cantidad</p>
-                        <span className="text-center text-blue-dark">
-                          {product.quantity}
-                        </span>
-                      </div>
+                  <>
+                    <div className="grid grid-cols-1" key={"product-name" + i}>
+                      <p className="">{product.name}</p>
                     </div>
-                  </div>
+                    <div className="grid grid-cols-2 border-b border-gray-300 mb-2 pb-2" key={"product-count" + i}>
+                      <p>Cantidad: {product.quantity}</p>
+                      <span className="text-right text-blue-dark">
+                        {product?.formatted_unit_amount}
+                      </span>
+                    </div>
+                  </>
                 ))}
-                <div className="grid grid-cols-2 bg-neutral-90 rounded justify-items-center p-1 mt-[17px]">
-                  <p className="font-bold">TOTAL</p>
-                  <span className="font-bold">
+                <div className="grid grid-cols-2 rounded mt-[17px]">
+                  <p className="font-bold text-left">TOTAL A PAGAR</p>
+                  <span className="font-bold text-right">
                     {order?.formatted_total_amount_with_taxes}
                   </span>
                 </div>
