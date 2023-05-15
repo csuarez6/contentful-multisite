@@ -41,7 +41,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { addToCart, reloadOrder } = useContext(CheckoutContext);
+  const { addToCart } = useContext(CheckoutContext);
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
@@ -58,17 +58,19 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     try {
       await addToCart(sku, promoImage.url, promoTitle);
       if (buyHandlerMap[type]) buyHandlerMap[type]();
+      if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
     } catch (e) {
-      const params = new URLSearchParams(location.search);
-      const retry = params.get("retry");
-
-      if (!retry) {
-        localStorage.removeItem("orderId");
-        await reloadOrder();
-        router.push(`${router.asPath}?retry=1&payment_method=${type}`);
-      }
+      // const params = new URLSearchParams(location.search);
+      // const retry = params.get("retry");
+      // if (!retry) {
+      //   localStorage.removeItem("orderId");
+      //   await reloadOrder();
+      //   router.push(`${router.asPath}?retry=1&payment_method=${type}`);
+      // }
+      console.error('error', e);
+      return false;
     }
-    if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
+    return true;
   };
 
   useEffect(() => {
