@@ -56,7 +56,7 @@ const HeadingCard: React.FC<IHeadingCard> = ({
           </span>
         }
       </div>
-      <div id="Content" className="p-6">
+      <div id="Content" className="p-6 relative">
         {children}
       </div>
     </div>

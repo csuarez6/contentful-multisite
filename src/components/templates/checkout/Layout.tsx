@@ -109,13 +109,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
               <h4 className="text-blue-dark border-b border-blue-dark pb-3">Detalle de tu pedido</h4>
-              <div className="flex flex-col gap-3 text-sm">
+              <div className="flex flex-col gap-3">
                 {products?.map((product, i) => (
                   <>
-                    <div className="grid grid-cols-1" key={"product-name" + i}>
+                    <div className="grid grid-cols-1 text-sm" key={"product-name" + i}>
                       <p className="">{product.name}</p>
                     </div>
-                    <div className="grid grid-cols-2 border-b border-gray-300 mb-2 pb-2" key={"product-count" + i}>
+                    <div className="grid grid-cols-2 text-sm border-b border-gray-300 mb-2 pb-2" key={"product-count" + i}>
                       <p>Cantidad: {product.quantity}</p>
                       <span className="text-right text-blue-dark">
                         {product?.formatted_unit_amount}
@@ -123,7 +123,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   </>
                 ))}
-                <div className="grid grid-cols-2 rounded mt-[17px]">
+                <div className="grid grid-cols-2 rounded mt-2">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
                     {order?.formatted_total_amount_with_taxes}

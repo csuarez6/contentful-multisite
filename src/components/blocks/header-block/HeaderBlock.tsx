@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Popover, Transition, Menu } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -126,9 +126,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     order
   } = useContext(CheckoutContext);
 
-  const numProducts = useMemo(() => {
-    if (!order?.line_items) return [];
-    return order.line_items.reduce((acum, line_item) => acum + line_item.quantity, 0);
+  const [numProducts, setNumProducts] = useState(0);
+  
+  useEffect(() => {
+    setNumProducts(order?.line_items ? (order.line_items.reduce((acum, line_item) => acum + line_item.quantity, 0)) : 0);
   }, [order]);
 
   useEffect(() => {
@@ -400,9 +401,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               />
                               <span className={classNames(
                                 "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                                numProducts > 0
-                                  ? "bg-blue-dark text-white"
-                                  : "bg-blue-100"
+                                numProducts > 0 ? "bg-blue-dark text-white" : "bg-blue-100"
                               )}>{ numProducts }</span>
                             </span>
                             Carrito

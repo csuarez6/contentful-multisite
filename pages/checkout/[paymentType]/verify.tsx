@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useMemo, useState } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import { defaultLayout } from "../../_app";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
+import { classNames } from "@/utils/functions";
 
 const CheckoutVerify = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const CheckoutVerify = () => {
     type: "",
     title: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const { isLogged } = useContext(AuthContext);
   const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer } =
@@ -101,6 +103,10 @@ const CheckoutVerify = () => {
     }
   };
 
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -123,8 +129,8 @@ const CheckoutVerify = () => {
         </div>
         {/* End Heading */}
 
-        {products.map((product) => (
-          <div
+        {products.map((product) => {
+          return (<div
             className="grid grid-template-product-details border-b"
             key={product.id}
           >
@@ -145,20 +151,34 @@ const CheckoutVerify = () => {
             <div className="text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
               {product?.name}
             </div>
-            <div className="hidden sm:inline-block py-3.5 px-3 text-blue-dark mx-auto">
+            <div className="hidden sm:inline-block py-3.5 pb-0 px-3 text-blue-dark mx-auto">
               <div className="w-32 custom-number-input h-9">
                 <div className="relative flex flex-row w-full h-full bg-transparent rounded-lg">
                   <button
                     data-action="decrement"
                     className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
-                    onClick={async () =>
-                      await updateItemQuantity(
+                    disabled={product?.quantity == 1}
+                    onClick={() => {
+                      setIsLoading(true);
+                      updateItemQuantity(
                         product?.sku_code,
                         product?.quantity - 1
-                      )
-                    }
+                      ).then(result => {
+                        if (result === false) {
+                          setError(true);
+                          setErrorMessage({
+                            icon: "alert",
+                            type: "warning",
+                            title: `Ocurrió un error con el producto seleccionado, por favor intente nuevamente.`,
+                          });
+                        }
+                      }).finally(() => setIsLoading(false));
+                    } }
                   >
-                    <span className="m-auto">−</span>
+                    <span className={classNames(
+                      "m-auto",
+                      product?.quantity == 1 ? "opacity-25" : ""
+                    )}>−</span>
                   </button>
                   <input
                     type="text"
@@ -170,67 +190,86 @@ const CheckoutVerify = () => {
                   <button
                     data-action="increment"
                     className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
-                    onClick={async () => {
-                      if (
-                        (await updateItemQuantity(
-                          product?.sku_code,
-                          product.quantity + 1
-                        )) === false
-                      ) {
-                        setError(true);
-                        setErrorMessage({
-                          icon: "alert",
-                          type: "warning",
-                          title: `No hay productos disponibles para el ${product?.name}`,
-                        });
-                      }
+                    onClick={() => {
+                      setIsLoading(true);
+                      updateItemQuantity(
+                        product?.sku_code,
+                        product.quantity + 1
+                      ).then(result => {
+                        if (result === false) {
+                          setError(true);
+                          setErrorMessage({
+                            icon: "alert",
+                            type: "warning",
+                            title: `No hay más unidades disponibles para el producto seleccionado.`,
+                          });
+                        }
+                      }).finally(() => setIsLoading(false));
                     }}
                   >
                     <span className="m-auto">+</span>
                   </button>
                 </div>
               </div>
+              <button 
+                className="text-blue-500 hover:text-blue-800 text-xs"
+                onClick={() => {
+                  setIsLoading(true);
+                  updateItemQuantity(
+                    product?.sku_code,
+                    0
+                  ).then(result => {
+                    if (result === false) {
+                      setError(true);
+                      setErrorMessage({
+                        icon: "alert",
+                        type: "warning",
+                        title: `Ocurrió un error al eliminar el producto seleccionado, por favor intente nuevamente.`,
+                      });
+                    }
+                  }).finally(() => setIsLoading(false));
+                } }>Eliminar</button>
             </div>
-            <div className="hidden sm:inline-block py-3.5 text-right text-blue-dark text-md pr-1">
+            <div className="inline-block py-3.5 text-right text-blue-dark text-md pr-1">
               {product.formatted_unit_amount}
             </div>
             <div className="text-left py-1 pl-4 text-grey-30 text-sm">
               1 año de garantía extendida{" "}
-              <button className="text-blue-500 hover:text-blue-800 ml-2">
+              <button className="text-blue-500 hover:text-blue-800 ml-2 text-xs">
                 Cambiar
               </button>
             </div>
-            <div className="text-center">
-              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
+            <div className="text-right px-3">
+              <span className="inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
                 x10
               </span>
             </div>
-            <div className="hidden sm:inline-block py-1 text-right text-blue-dark text-sm pr-1">
+            <div className="inline-block py-1 text-right text-blue-dark text-sm pr-1">
               $ 150.000,00
             </div>
             <div className="text-left py-1 pl-4 text-grey-30 text-sm">
               Servicio de instalación{" "}
-              <button className="text-blue-500 hover:text-blue-800 ml-2">
+              <button className="text-blue-500 hover:text-blue-800 ml-2 text-xs">
                 Cambiar
               </button>
             </div>
-            <div className="text-center">
-              <span className="hidden sm:inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
+            <div className="text-right px-3">
+              <span className="inline-block bg-blue-50 rounded-lg mx-auto p-1 text-size-span">
                 x10
               </span>
             </div>
-            <div className="hidden sm:inline-block py-1 text-right text-blue-dark text-sm pr-1">
+            <div className="inline-block py-1 text-right text-blue-dark text-sm pr-1">
               $ 150.000,00
             </div>
             <div className="col-start-1 col-end-3 bg-blue-50 mt-3"></div>
-            <div className="hidden sm:inline-block mt-3 py-1 text-center text-blue-dark text-md bg-blue-50 font-bold">
+            <div className="inline-block mt-3 py-1 text-center text-blue-dark text-md bg-blue-50 font-bold">
               Total Producto
             </div>
-            <div className="hidden sm:inline-block mt-3 py-1 text-right text-blue-dark text-md bg-blue-50 font-bold pr-1">
+            <div className="inline-block mt-3 py-1 text-right text-blue-dark text-md bg-blue-50 font-bold pr-1">
               {product.formatted_total_amount}
             </div>
-          </div>
-        ))}
+          </div>);
+        })}
       </div>
       <div className="flex justify-end items-center">
         {products.length < 1 && (
@@ -258,6 +297,30 @@ const CheckoutVerify = () => {
           title={errorMessage.title}
           close={() => setError(false)}
         />
+      )}
+      {isLoading && (
+        <div
+          role="status"
+          className="absolute w-full h-full flex justify-center items-center top-0 left-0 bg-gray-100 bg-opacity-25"
+        >
+        <svg
+          aria-hidden="true"
+          className="w-20 h-20 text-gray-200 animate-spin fill-blue-dark"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <span className="sr-only">Loading...</span>
+      </div>
       )}
     </HeadingCard>
   );

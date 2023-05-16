@@ -10,10 +10,9 @@ import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { useContext, useEffect, useState } from "react";
-import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
-import { scrollContent } from "@/utils/functions";
+import { isGasAppliance, scrollContent } from "@/utils/functions";
 import { iconInvoice, iconPSE, options } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
@@ -264,7 +263,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     </div>
                   </div>
                   <ul className="sm:hidden flex flex-col gap-y-[11px]">
-                    <ProductServices marketId={marketId} warranty={warranty} />
+                    {isGasAppliance(marketId) && (
+                      <ProductServices warranty={warranty} />
+                    ) }
                   </ul>
                 </div>
                 <div className="flex flex-col gap-[10px] sm:flex-grow">
@@ -275,10 +276,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </p>
                     )}
                     <div className="flex gap-1">
-                      {marketId &&
-                        marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS && (
-                          <Icon {...iconPSE} />
-                        )}
+                      {isGasAppliance(marketId) && (
+                        <Icon {...iconPSE} />
+                      )}
                       <Icon {...iconInvoice} />
                     </div>
                   </div>
@@ -315,9 +315,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     className="hidden sm:flex flex-col gap-[15px]"
                   >
                     <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
-                    <ul className="hidden sm:flex flex-col gap-y-[11px]">
-                      <ProductServices marketId={marketId} warranty={warranty} />
-                    </ul>
+                    {isGasAppliance(marketId) && (
+                      <ProductServices warranty={warranty} />
+                    ) }
                   </form>
                 </div>
               </div>

@@ -1,3 +1,5 @@
+import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
+
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ');
 };
@@ -177,4 +179,8 @@ export const scrollContent = (idContainer: string) => {
   document
     .querySelector("#" + idContainer)
     .scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+export const isGasAppliance = (marketId: string) => {
+  return marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS;
 };
