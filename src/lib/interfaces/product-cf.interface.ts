@@ -88,6 +88,8 @@ export interface IProductOverviewDetails {
   category?: {
     name?: string;
     image?: IImageAsset;
+    clWarrantyReference?: string;
+    clInstallationReference?: string;
   };
   relatedProducts?: IProductOverviewDetails[]
 }

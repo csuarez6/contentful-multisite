@@ -18,6 +18,18 @@ export interface ICustomer {
   tokenReCaptcha?: string;
 }
 
+export interface IAdjustments {
+  name?: string;
+  currency_code?: string;
+  amount_cents?: string;
+  type?: string;
+  sku_id?: string;
+  sku_code?: string;
+  sku_name?: string;
+  sku_option_id?: string;
+  sku_option_name?: string;
+}
+
 export interface JWTProps {
   organization: {
     slug: string
@@ -318,21 +330,73 @@ export const getCommercelayerProduct = async (skuCode: string) => {
   return product;
 };
 
-export const updatePassWord = async (user: string, customerPWD: string, newPWD:string) => {
-  try { 
-    const validPassword:any = await getCustomerTokenCl({email: user, password: customerPWD});
-    if(validPassword?.status === 200){
+export const updatePassWord = async (user: string, customerPWD: string, newPWD: string) => {
+  try {
+    const validPassword: any = await getCustomerTokenCl({ email: user, password: customerPWD });
+    if (validPassword?.status === 200) {
       const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
       const cl = await getCommerlayerClient(validPassword.access_token);
       const response = await cl.customers.update({
         id: owner.id,
         password: newPWD
       });
-      if(response) return { status: 200, data: 'password is update' };
+      if (response) return { status: 200, data: 'password is update' };
     }
     return { status: 401, data: 'password is invalid' };
   } catch (error) {
     console.error('Error updating password', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Get sku_options */
+export const getSkuOptionsService = async (filter?: string) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const skuOptionList = await cl.sku_options.list({
+      filters: {
+        reference_eq: filter ?? "",
+      }
+    });
+
+    return { status: 200, data: skuOptionList };
+  } catch (error) {
+    console.error('Error getSkuOptions: ', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** Create adjustments */
+export const createAdjustmentsService = async ({
+  name,
+  currency_code,
+  amount_cents,
+  type,
+  sku_id,
+  sku_code,
+  sku_name,
+  sku_option_id,
+  sku_option_name
+}: IAdjustments) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const adjustment = await cl.adjustments.create({
+      name: name,
+      currency_code: currency_code ?? "COP",
+      amount_cents: parseInt(amount_cents),
+      metadata: {
+        type: type,
+        sku_id: sku_id,
+        sku_code: sku_code,
+        sku_name: sku_name,
+        sku_option_id: sku_option_id,
+        sku_option_name: sku_option_name,
+      }
+    });
+
+    return { status: 200, data: adjustment };
+  } catch (error) {
+    console.error('Error create-adjustments: ', error);
     return { status: 401, error: error };
   }
 };

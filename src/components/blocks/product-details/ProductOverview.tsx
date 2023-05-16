@@ -36,6 +36,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   state,
   rating,
   warranty,
+  category,
   relatedProducts
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -264,8 +265,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </div>
                   <ul className="sm:hidden flex flex-col gap-y-[11px]">
                     {isGasAppliance(marketId) && (
-                      <ProductServices warranty={warranty} />
-                    ) }
+                      <ProductServices
+                        key={marketId}
+                        warranty={warranty}
+                        category={category}
+                      />
+                    )}
                   </ul>
                 </div>
                 <div className="flex flex-col gap-[10px] sm:flex-grow">
@@ -314,10 +319,20 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden sm:flex flex-col gap-[15px]"
                   >
-                    <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
+                    <ProductActions
+                      sku={sku}
+                      price={price}
+                      productsQuantity={productsQuantity}
+                      marketId={marketId}
+                      callbackURL={callbackURL}
+                      onBuyHandler={onBuyHandler}
+                    />
                     {isGasAppliance(marketId) && (
-                      <ProductServices warranty={warranty} />
-                    ) }
+                      <ProductServices
+                        warranty={warranty}
+                        category={category}
+                      />
+                    )}
                   </form>
                 </div>
               </div>
@@ -394,10 +409,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </p>
           )}
         </div>
-        <ProductActions sku={sku} price={price} productsQuantity={productsQuantity} marketId={marketId} callbackURL={callbackURL} onBuyHandler={onBuyHandler} />
+        <ProductActions
+          sku={sku}
+          price={price}
+          productsQuantity={productsQuantity}
+          marketId={marketId}
+          callbackURL={callbackURL}
+          onBuyHandler={onBuyHandler}
+        />
       </div>
       {isOpen &&
-        <CartModal close={closeModal} /> 
+        <CartModal close={closeModal} />
       }
     </section>
   );

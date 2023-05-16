@@ -32,6 +32,8 @@ const ProductQuery = `
     image {
       ${AssetImageQuery}
     }
+    clWarrantyReference
+    clInstallationReference
   }
   features {
     ${RichtextQuery}

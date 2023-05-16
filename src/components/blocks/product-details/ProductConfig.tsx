@@ -1,6 +1,7 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
+import { classNames } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 
 export const iconInvoice: IIcon = {
@@ -52,7 +53,7 @@ export const options = {
   },
 };
 
-export const ModalIntall = () => {
+export const ModalIntall: React.FC<any> = ({ optionsList }) => {
   return (
     <div className="flex flex-col gap-6">
       <p className="text-left">
@@ -73,28 +74,32 @@ export const ModalIntall = () => {
         Si aún no sabes qué incluye, puedes informarte en la landing de
         instalación.
       </p>
-      <ul className="px-3 py-[10px] gap-2 grid grid-cols-1 sm:grid-cols-2">
-        {[
-          {
-            label: "Dato 1",
-            price: "$ 300.000,00"
-          },
-          {
-            label: "Sin instalación",
-            price: "$ 0"
-          }
-        ].map((item, index) => {
+      <ul
+        className={classNames(
+          "px-3 py-[10px] gap-2 grid",
+          (optionsList.length > 0) ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+        )}
+      >
+        {(optionsList.length > 0) && optionsList.map((item, index) => {
           return (
             <>
-              <li key={index}>
-                <input type="radio" id={`installbox-${index}`} name="installbox" value="" className="hidden peer" required />
+              <li key={item.id}>
+                <input
+                  type="radio"
+                  id={`installbox-${index}`}
+                  name="installbox"
+                  value=""
+                  // checked={index === 0}
+                  className="hidden peer"
+                  required
+                />
                 <label
                   htmlFor={`installbox-${index}`}
                   className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
                 >
                   <div className="flex flex-col">
-                    <span className="font-bold text-size-span">{item.label}</span>
-                    <span className="text-size-small">{item.price}</span>
+                    <span className="font-bold text-size-span">{item.name}</span>
+                    <span className="text-size-small">{item.formatted_price_amount}</span>
                   </div>
                 </label>
               </li>
