@@ -149,7 +149,11 @@ const CheckoutVerify = () => {
               </figure>
             </div>
             <div className="text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
-              {product?.name}
+              <CustomLink
+                content={{ urlPath: `/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}` }}
+              >
+                {product?.name}
+              </CustomLink>
             </div>
             <div className="hidden sm:inline-block py-3.5 pb-0 px-3 text-blue-dark mx-auto">
               <div className="w-32 custom-number-input h-9">

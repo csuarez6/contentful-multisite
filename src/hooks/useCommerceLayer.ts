@@ -338,7 +338,6 @@ export const useCommerceLayer = () => {
       const result = await client.orders.update(
         {
           id: orderId,
-          _validate: true,
           metadata: {
             ...(order?.metadata && {
               ...order.metadata,

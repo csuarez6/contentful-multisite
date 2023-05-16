@@ -60,7 +60,7 @@ export interface IProductOverviewDetails {
   productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string, imageProduct: string, nameProduct: string) => void
-  onBuyHandler?: (type: PaymentMethodType) => void,
+  onBuyHandler?: (type: PaymentMethodType) => Promise<boolean>,
   features?: IRichText;
   warranty?: {
     name?: string;
