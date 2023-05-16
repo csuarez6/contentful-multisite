@@ -366,7 +366,7 @@ export const getSkuOptionsService = async (filter?: string) => {
   }
 };
 
-/** Create adjustments */
+/*** Create adjustments */
 export const createAdjustmentsService = async ({
   name,
   currency_code,
