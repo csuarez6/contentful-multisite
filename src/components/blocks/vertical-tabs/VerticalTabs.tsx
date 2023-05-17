@@ -112,6 +112,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
                         "cursor-pointer flex justify-between items-center w-full py-3 px-6 text-left text-size-subtitle1 font-bold shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]",
                         open ? "bg-blue-dark text-white rounded-t-xl" : "text-blue-dark bg-white rounded-xl"
                       )}
+                      data-testid={idx}
                     >
                       <span className={classNames(
                         'text-size-subtitle1',

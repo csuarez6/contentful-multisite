@@ -25,6 +25,7 @@ const SelectInput: React.FC<ISelectInput> = forwardRef(({
                 {label}
             </label>
             <select
+                data-testid="select"
                 ref={ref}      
                 className={`border w-full py-2 px-3 text-gray-700 leading-tight ${className ?? ''}`}
                 { ... id && { id }}

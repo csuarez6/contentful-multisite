@@ -6,7 +6,9 @@ const data: IPromoContent = {
   ctaLabel: 'Ver más',
   promoImage: {
     url: 'https://via.placeholder.com/1220x972.png',
-    title: ''
+    title: '',
+    width: 300,
+    height:300
   }
 };
 
@@ -17,7 +19,9 @@ const dataPortrait: IPromoContent = {
   promoImage: {
     url: 'https://via.placeholder.com/1220x972.png',
     title: '',
-    isPortrait: true
+    isPortrait: true,
+    width:300,
+    height:300
   },
 };
 

@@ -17,7 +17,7 @@ const TopMenu: React.FC<ITopMenu> = ({ secondaryNavCollection, firstPath }) => {
             <div className="flex items-center mx-auto">
               <div className="flex flex-1 items-center py-2 min-h-[60px]">
                 <div className="grid grid-cols-5 gap-12">
-                  {secondaryNavCollection?.items.map((item, idx) => (
+                  {secondaryNavCollection?.items?.map((item, idx) => (
                     <div key={item?.promoTitle + "-" + idx}>
                       <CustomLink content={item}>
                         <h2 className={classNames("text-base font-semibold  mb-5 flex flex-wrap gap-2", item.internalLink?.slug === firstPath

@@ -12,7 +12,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -21,7 +23,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -30,7 +34,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -39,7 +45,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -48,7 +56,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -57,7 +67,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       }
     ]
@@ -70,7 +82,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -79,7 +93,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
         
       },
@@ -89,7 +105,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -98,7 +116,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -107,7 +127,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -116,7 +138,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       },
       {
@@ -125,7 +149,9 @@ const data: IPromoBlock = {
         ctaLabel:'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
-          title: ''
+          title: '',
+          width: 400,
+          height: 300
         },
       }
     ]

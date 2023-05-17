@@ -22,6 +22,7 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
             )}
             <div className='relative'>
                 <input
+                    data-testid="textbox"
                     ref={ref}
                     className={`border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none ${className ?? ''}`}
                     {...rest}
@@ -30,7 +31,7 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
                     {...type && { type: `${type ? (type === 'password' ? (viewPassword ? 'text' : 'password') : type) : null}` }}
                 />
                 {type === 'password' &&
-                    <button className='absolute right-[11px] top-[27%] flex h-fit text-grey-30' type='button' onClick={() => setViewPassword(!viewPassword)}>
+                    <button data-testid="button" className='absolute right-[11px] top-[27%] flex h-fit text-grey-30' type='button' onClick={() => setViewPassword(!viewPassword)}>
                         <Icon icon='rpo' size={20} />
                     </button>
                 }

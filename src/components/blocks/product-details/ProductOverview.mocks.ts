@@ -16,39 +16,61 @@ const data: IProductOverviewDetails = {
     name: 'Comprar con PSE'
   },
   promoImage: {
-    url: 'https://via.placeholder.com/600x550'
+    url: 'https://via.placeholder.com/600x550',
+    width: 500,
+    height: 400
   },
   imagesCollection: {
     items: [
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       },
       {
-        url: 'https://via.placeholder.com/600x550'
+        url: 'https://via.placeholder.com/600x550',
+        width: 500,
+        height: 400
       }
     ],
   },

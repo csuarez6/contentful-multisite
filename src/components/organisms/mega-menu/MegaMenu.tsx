@@ -107,7 +107,8 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     if (isOpenMenu) openSubmenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenMenu]);
-
+  
+  // console.info({ item, name, currentMenu});
   return (
     <div
       onMouseOver={() => setIsOpenMenu(true)}
@@ -233,7 +234,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                 : null,
                           }}
                         >
-                          {jsonToReactComponent({...block, hideDecimalPrice: true, hideBeforePrice: true})}
+                          {jsonToReactComponent({ ...block, hideDecimalPrice: true, hideBeforePrice: true })}
                         </div>
                       ))}
                     </div>

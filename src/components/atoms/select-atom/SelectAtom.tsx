@@ -50,7 +50,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
     useEffect(() => {
       const input = getInput();
-      input.addEventListener("change", onChangeInput, false);
+      input?.addEventListener("change", onChangeInput, false);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -75,6 +75,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
         {/* <div className="sr-only"> */}
         <select
           name={name}
+          data-testid="select"
           ref={ref}
           {...rest}
           defaultValue={defaultOption.value}

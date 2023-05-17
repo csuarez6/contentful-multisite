@@ -4,14 +4,13 @@ import Icon from '@/components/atoms/icon/Icon';
 import { IPromoBlock } from '@/lib/interfaces/promo-content-cf.interface';
 
 const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
-  if (ctaCollection?.items?.length <= 0) return;
   return (
     <section className='py-6'>
       <nav>
         <ul className='flex gap-0.5 flex-wrap'>
           {
             ctaCollection.items.map((el, i) => (
-              <li key={`${el.name}-${i}`} className="flex items-center gap-0.5">
+              <li key={`${el.name ?? el.promoTitle}-${i}`} className="flex items-center gap-0.5">
                 {
                   i + 1 !== ctaCollection.items.length
                     ? (

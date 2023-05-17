@@ -5,6 +5,7 @@ const data: IPromoContent = {
   promoTitle: 'lorem ipsum Promo Title',
   subtitle: 'lorem ipsum subtitle',
   promoDescription: RICHTEXT_WITH_IMAGE,
+  
 };
 
 export const mockRichTextProps = {

@@ -6,7 +6,9 @@ const data: IPromoContent = {
   subtitle: 'Subtítulo',
   promoDescription: RICHTEXT_SHORT_SIMPLE,
   promoImage: {
-    url: 'https://via.placeholder.com/1280x1050.png'
+    url: 'https://via.placeholder.com/1280x1050.png',
+    width: 1280,
+    height: 1050
   },
   cta: {
     href: "#",

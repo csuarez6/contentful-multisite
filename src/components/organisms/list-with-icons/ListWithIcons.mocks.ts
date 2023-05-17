@@ -9,7 +9,8 @@ const data: IPromoContent = {
   cta: {
     href: '#',
     name: 'button'
-  }
+  },
+  iconBackgroundColor: 'Azul Claro'
 };
 
 const iconLeft: IPromoContent = {
@@ -17,7 +18,12 @@ const iconLeft: IPromoContent = {
   promoIcon: 'invoice-filled',
   iconSize: 'medium',
   promoDescription: RICHTEXT_SHORT_SIMPLE,
-  iconPosition: 'left'
+  iconPosition: 'left',
+  iconBackgroundColor: 'Azul Oscuro',
+  internalLink:{
+    urlPath: '#',
+  },
+  ctaLabel: 'Consultar'
 };
 
 const iconLeftRounded: IPromoContent = {
@@ -25,7 +31,7 @@ const iconLeftRounded: IPromoContent = {
   promoIcon: 'whatsapp',
   iconPosition: 'left',
   iconSize: 'small',
-  iconBackgroundColor: 'Azul Claro',
+  iconBackgroundColor: 'Blanco',
   internalLink:{
     urlPath: '#',
   },
@@ -35,13 +41,23 @@ const iconLeftRounded: IPromoContent = {
 const iconLeftNoTitle: IPromoContent = {
   promoIcon: 'invoice-filled',
   promoDescription: RICHTEXT_SHORT_SIMPLE,
-  iconPosition: 'left'
+  iconPosition: 'left',
+  iconBackgroundColor: 'Transparente',
+  internalLink:{
+    urlPath: '#',
+  },
+  ctaLabel: 'Consultar'
 };
 
 const iconLeftNoDescription: IPromoContent = {
   promoTitle: 'Title',
   promoIcon: 'invoice-filled',
-  iconPosition: 'left'
+  iconPosition: 'left',
+  iconBackgroundColor: '',
+  internalLink:{
+    urlPath: '#',
+  },
+  ctaLabel: 'Consultar'
 };
 
 export const mockListWithIconsProps = {

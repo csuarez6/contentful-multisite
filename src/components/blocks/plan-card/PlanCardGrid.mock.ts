@@ -2,7 +2,7 @@ import { RICHTEXT_SHORT_SIMPLE, RICHTEXT_WITH_IMAGE } from "@/constants/mocks.co
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data1Column: IPromoBlock = {
-  description: RICHTEXT_SHORT_SIMPLE,
+  // description: RICHTEXT_SHORT_SIMPLE,
   title: 'Lorem Ipsum Dolor',
   view: {
     isReverse: true,
@@ -93,7 +93,7 @@ const data1Column: IPromoBlock = {
 };
 
 const data2Column: IPromoBlock = {
-  description: RICHTEXT_SHORT_SIMPLE,
+  // description: RICHTEXT_SHORT_SIMPLE,
   title: 'Lorem Ipsum Dolor',
   view: {
     isReverse: false,

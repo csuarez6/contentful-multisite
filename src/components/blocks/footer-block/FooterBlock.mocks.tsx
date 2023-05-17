@@ -8,7 +8,8 @@ const data: INavigation = {
   promoImage: {
     url: "/images/industria-y-comercio.png",
     height: 75,
-    width: 311
+    width: 311,
+    title: 'industria-y-comercio'
   },
   mainNavCollection: {
     items: [

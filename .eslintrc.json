@@ -11,6 +11,7 @@
   "globals": {
     "React": "readonly"
   },
+  "ignorePatterns": ["*.test.js", "jest.transform.ts"],
   "rules": {
     "prefer-const": "warn",
     "@typescript-eslint/no-unused-vars": [

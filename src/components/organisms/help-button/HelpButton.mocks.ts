@@ -11,7 +11,8 @@ const data: INavigation = {
                 name: 'Whatsapp',
                 promoIcon: 'whatsapp',
                 externalLink: '#',
-                ctaLabel: 'Consultar'
+                ctaLabel: 'Consultar',
+                promoTitle: 'atención',
             },
             {
                 name: 'Lineas de atención',

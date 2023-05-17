@@ -26,7 +26,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
     window.scrollTo(0, 0);
   };
 
-  const principalSearch = sys.id === '75w6bsU9MWCoxDtT7HXyGb';
+  const principalSearch = sys?.id === '75w6bsU9MWCoxDtT7HXyGb';
 
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),

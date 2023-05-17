@@ -16,6 +16,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -25,6 +27,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -34,6 +38,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -43,6 +49,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -52,6 +60,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -61,6 +71,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       }
@@ -74,6 +86,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -83,6 +97,8 @@ const data: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       }
@@ -106,6 +122,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -115,6 +133,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -124,6 +144,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -133,6 +155,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -142,6 +166,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       },
@@ -151,6 +177,8 @@ const dataListedContents: IPromoBlock = {
         ctaLabel: 'Ver más',
         promoImage: {
           url: 'https://via.placeholder.com/1220x972.png',
+          width: 1220,
+          height: 972,
           title: ''
         },
       }

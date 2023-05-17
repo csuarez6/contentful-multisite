@@ -21,7 +21,7 @@ const data: IContentFilter = {
   parentsCollection: {
     items: [{
       sys: {
-        id: '75TurWcpITURu2Z4RPY5tB'
+        id: '75w6bsU9MWCoxDtT7HXyGb'
       }
     }]
   },

@@ -4,10 +4,9 @@ import { classNames } from '@/utils/functions';
 import CustomLink from '@/components/atoms/custom-link/CustomLink';
 
 const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockId, sysId, isFirst }) => {
-    if (!image) return;
 
-    const bannerHeightClass = () => {
-        switch (view.bannerHeight) {
+    const bannerHeightClass = (value: string) => {
+        switch (value) {
             case "Small":
                 return "max-h-[200px]";
             case "Medium":
@@ -39,7 +38,7 @@ const BannerImage: React.FC<IPromoBlock> = ({ image, ctaCollection, view, blockI
                         classNames(
                             "mx-auto relative h-auto",
                             view.bannerWidth === "Large" ? "w-screen" : "w-full",
-                            bannerHeightClass()
+                            bannerHeightClass(view.bannerHeight)
                         )}
                     >
                         {getCTA && <CustomLink content={getCTA}>{bannerContent}</CustomLink>}

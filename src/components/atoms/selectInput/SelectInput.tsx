@@ -30,7 +30,8 @@ const SelectInput: React.FC<ISelectInput> = forwardRef(({
                 {label}{ isRequired && <span className='text-red-700'>*</span> }
             </label>
             <select
-                ref={ref}      
+                ref={ref}
+                data-testid="select" 
                 className={`form-select form-select--signin border w-full py-2 px-3 text-grey-30 leading-tight bg-transparent focus:outline-none cursor-pointer bg-no-repeat ${className ?? ''} ${isError && 'form-select--error'}`}
                 { ... id && { id }}
                 { ... id && { name: id }}

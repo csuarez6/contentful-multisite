@@ -4,7 +4,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { mockCarouselCategoriesProps } from './CarouselCategories.mocks';
 
 export default {
-  title: 'organisms/cards/CarouselCategories',
+  title: 'organisms/CarouselCategories',
   component: CarouselCategories,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

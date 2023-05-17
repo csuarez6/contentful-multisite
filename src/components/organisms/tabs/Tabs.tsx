@@ -15,7 +15,7 @@ const Tabs: React.FC<ITabBlock> = ({ tabs, isSecondary }) => {
                     'isolate flex'
                 )}
                 aria-label="Tabs">
-                {tabs.map((tab: ITab, tabIdx: number) => (
+                {tabs?.map((tab: ITab, tabIdx: number) => (
                     <a
                         key={tab.name}
                         onClick={() => setCurrentActive(tabIdx)}
@@ -24,6 +24,7 @@ const Tabs: React.FC<ITabBlock> = ({ tabs, isSecondary }) => {
                             currentActive === tabIdx ? 'active' : ''
                         )}
                         aria-current={currentActive === tabIdx ? 'page' : undefined}
+                        data-testid={tabIdx}
                     >
                         <h3>{tab.name}</h3>
                         {!isSecondary && <span aria-hidden="true" />}
@@ -31,7 +32,7 @@ const Tabs: React.FC<ITabBlock> = ({ tabs, isSecondary }) => {
                 ))}
             </nav>
             {/* content tabs */}
-            {tabs.map((tab: ITab, tabIdx: number) => (
+            {tabs?.map((tab: ITab, tabIdx: number) => (
                 <div
                     key={`content-` + tab.name}
                     id={`tab-` + tabIdx}

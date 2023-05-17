@@ -41,6 +41,7 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
   if (type === "link") {
     component = (
       <a
+        data-testid="button-atom"
         className={classNames("button", classes ?? "text-button")}
         href={link.href}
         target={link.target}
@@ -52,6 +53,7 @@ const ButtonAtom: React.FC<IButtonAtom> = ({
     component = (
       <>
         <button
+          data-testid="button-atom"
           className={classNames("button", classes ?? "text-button")}
           onClick={(event) => handlerClicked(event)}
         >

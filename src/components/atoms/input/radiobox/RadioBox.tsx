@@ -16,6 +16,7 @@ const RadioBox: React.FC<IRadioBox> = ({ id, name, label, checked, icon }) => {
             <label className="relative flex justify-between cursor-pointer">
                 <span className="flex">
                     <input
+                        data-testid="radiobox"
                         className={classNames(
                             "mt-0.5 h-4 w-4 shrink-0 accent-neutral-30 focus:ring-neutral-30",
                         )}

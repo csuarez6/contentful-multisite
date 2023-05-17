@@ -949,7 +949,7 @@ const data: INavigation = {
         }
       }
     ]
-  }
+  },
 };
 
 export const mockTopMenuProps = {

@@ -9,17 +9,26 @@ const data: IPromoBlock = {
       {
         promoTitle: 'Título',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoIcon: 'dialogs'
+        promoIcon: 'dialogs',
+        sys: {
+          id: '70947823727800'
+        }
       },
       {
         promoTitle: 'Título 1',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoIcon: 'experience'
+        promoIcon: 'experience',
+        sys: {
+          id: '70937823727804'
+        }
       },
       {
         promoTitle: 'Título 2',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
-        promoIcon: 'assists'
+        promoIcon: 'assists',
+        sys: {
+          id: '70947823997804'
+        }
       },
     ]
   },
@@ -41,6 +50,9 @@ const left: IPromoBlock = {
         ctaLabel: "Card 1",
         internalLink: {
           urlPath: "#"
+        },
+        sys: {
+          id: '70947823727834'
         }
       },
       {
@@ -50,6 +62,9 @@ const left: IPromoBlock = {
         ctaLabel: "Card 2",
         internalLink: {
           urlPath: "#"
+        },
+        sys: {
+          id: '70947823727804'
         }
       }
     ]
