@@ -36,7 +36,6 @@ const WarrantyModal: React.FC<IModal> = ({
         >
           <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" />
         </Transition.Child>
-
         <div className="fixed inset-0 overflow-auto">
           <div
             className={classNames(
