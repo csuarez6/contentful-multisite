@@ -78,7 +78,7 @@ const InformationModal: React.FC<IModal> = ({
                     <Dialog.Title as="h3" className="flex gap-3 items-center">
                       <Icon
                         icon={icon ?? "check"}
-                        className={`w-12 h-12 ${
+                        className={`w-1/2 h-1/2 ${
                           type === "warning"
                             ? "text-orange-400"
                             : "text-green-400"
@@ -97,9 +97,9 @@ const InformationModal: React.FC<IModal> = ({
                       )}
                     </Dialog.Title>
                   </div>
-                  <div className="flex justify-center gap-4">
+                  <div className="flex justify-center gap-4 item">
                     <div
-                      className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
+                      className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline absolute bottom-[9%] right-12`}
                       onClick={close}
                     >
                       Cerrar
