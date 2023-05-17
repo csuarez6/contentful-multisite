@@ -31,7 +31,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     icon: "",
     type: "",
     title: "",
-  })
+  });
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -100,7 +100,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       await fetch(path, {
         method: "POST",
       });
-      const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario"
+      const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
       setErrorMessage({
         icon: "alert",
