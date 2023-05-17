@@ -60,22 +60,6 @@ const CheckoutVerify = () => {
         });
         return;
       }
-      let totalAmount = 0;
-      for (let i = 0; i < products.length; i++) {
-        const formattedAmount = products[i].formatted_total_amount;
-        const amount = parseFloat(formattedAmount.replace(/[$.,]/g, ""));
-        totalAmount += amount;
-      }
-
-      if (totalAmount >= 10000000) {
-        setError(true);
-        setErrorMessage({
-          icon: "alert",
-          type: "warning",
-          title: "Su Compra tiene mas de $10.000.000",
-        });
-        return;
-      }
 
       const meta = {
         [VantiOrderMetadata.IsVerified]: true,
@@ -92,14 +76,12 @@ const CheckoutVerify = () => {
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
     } catch (error) {
       console.error(error);
-
       setError(true);
       setErrorMessage({
         icon: "alert",
         type: "warning",
         title: "Algo a salido mal",
       });
-      alert(error.message);
     }
   };
 

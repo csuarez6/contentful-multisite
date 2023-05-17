@@ -5,6 +5,7 @@ import CheckoutContext from "../../../context/Checkout";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
 import uuid from "react-uuid";
+import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -25,6 +26,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   } = useContext(CheckoutContext);
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
   const [transactionToken, setTransactionToken] = useState('');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({
+    icon: "",
+    type: "",
+    title: "",
+  })
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -77,7 +84,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       setTransactionToken(token);
 
     } catch (error) {
-      alert(`'Error al Realizar la orden': ${error.message}`);
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Error al Realizar la orden",
+      });
       console.error(error);
     }
   };
@@ -88,14 +100,23 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       await fetch(path, {
         method: "POST",
       });
-
-      alert(!toCancel ? "Pagado con éxito" : "Cancelado por usuario");
-
+      const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario"
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: title,
+      });
       push('/');
 
     } catch (error) {
       console.error(error);
-      alert('Error en la pasarela de pago.');
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Error en la pasarela de pago.",
+      });
     } finally {
       setOpenDummyPGModal(false);
     }
@@ -166,6 +187,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             </button>
           </div>
         </ModalSuccess>
+      )}
+      {error && (
+        <InformationModal
+          icon={errorMessage.icon}
+          type={errorMessage.type}
+          title={errorMessage.title}
+          close={() => setError(false)}
+        />
       )}
     </>
   );
