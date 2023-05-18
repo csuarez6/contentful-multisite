@@ -17,6 +17,7 @@ import { iconInvoice, iconPSE, options } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
 import CartModal from "@/components/organisms/cart-modal/CartModal";
+import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -56,9 +57,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
-      await addToCart(sku, promoImage.url, promoTitle);
-      if (buyHandlerMap[type]) buyHandlerMap[type]();
+      const res:apiResponse = await addToCart(sku, promoImage.url, promoTitle);
+      if (buyHandlerMap[type] && res.status === 200 ) buyHandlerMap[type]();
       if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
+      return res;
     } catch (e) {
       const params = new URLSearchParams(location.search);
       const retry = params.get("retry");
@@ -67,10 +69,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         await reloadOrder();
         router.push(`${router.asPath}?retry=1&payment_method=${type}`);
       }
-      console.error('error', e);
-      return false;
+      console.error('error on buy handler', e);
+      return {status: 402, data:'error on buy handler'};
     }
-    return true;
   };
 
   useEffect(() => {

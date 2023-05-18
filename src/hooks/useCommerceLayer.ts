@@ -93,8 +93,8 @@ export const useCommerceLayer = () => {
     } catch (error) {
       console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
 
-      const draftOrder = await client.orders.create({});
-      localStorage.setItem("orderId", draftOrder.id);
+      const draftOrder = await client.orders.create({}).catch(err => err.errors);
+      if(draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
       return draftOrder;
     }
   }, [client]);
@@ -114,28 +114,47 @@ export const useCommerceLayer = () => {
   }, [isLoading]);
 
   const reloadOrder = useCallback(async () => {
-    const order = await getOrder();
-    setOrder(order);
+    try {
+      const order = await getOrder();
+      setOrder(order);
+      return {status: 200, data: 'success at reload order'};
+    } catch (error) {
+      console.error('error reloadOrder ', error);
+      return {status: 400, data: 'error at reload order'};
+    }
+    
   }, [getOrder]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string) => {
-      await client.line_items.create({
-        quantity: 1,
-        name: productName,
-        image_url: productImage,
-        sku_code: skuCode,
-        _update_quantity: true,
-        order: {
-          type: "orders",
-          id: orderId,
-        },
-      });
-
-      await reloadOrder();
+      try{
+        const resCreate = await client.line_items.create({
+          quantity: 1,
+          name: productName,
+          image_url: productImage,
+          sku_code: skuCode,
+          _update_quantity: true,
+          order: {
+            type: "orders",
+            id: orderId,
+          },
+        })
+        .catch(error => error.errors);
+        if(resCreate?.[0]?.status){
+          return {status: parseInt(resCreate[0].status), data: resCreate[0].title};
+        }
+        const orderRes = await reloadOrder();
+        if(orderRes?.[0]?.status ) return {status: parseInt(orderRes[0].status), data: 'error at add to card'}; 
+        return {status: 200, data: 'product add to card'};
+        
+      }catch(error){
+        console.error('error add to card', error);
+        return {status: 500, data: 'error at add to card'};
+      }
+      
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [orderId, client, reloadOrder]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   );
 
   const updateItemQuantity = async (skuCode: string, quantity: number) => {

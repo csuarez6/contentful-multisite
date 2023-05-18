@@ -2,6 +2,7 @@ import { Address, AddressCreate, Order, PaymentMethod } from "@commercelayer/sdk
 import { ListResponse } from "@commercelayer/sdk/lib/cjs/resource";
 import { createContext } from "react";
 import { Flow, VantiChekoutCustomer } from "./flows";
+import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 export interface IContextCheckout {
   isLoading: boolean;
@@ -9,7 +10,7 @@ export interface IContextCheckout {
   order: Order;
   flow: Flow;
   tokenRecaptcha: string;
-  addToCart: (sku: string, productImage?: string, productName?: string) => void;
+  addToCart: (sku: string, productImage?: string, productName?: string) => Promise<apiResponse>;
   reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;

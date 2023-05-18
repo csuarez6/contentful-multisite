@@ -4,6 +4,7 @@ import { IImageAsset } from './assets-cf.interface';
 import { ILink } from './menu-cf.interface';
 import { IPromoBlock } from './promo-content-cf.interface';
 import { IRichText } from './richtext-cf.interface';
+import { apiResponse } from './api-response.interface';
 
 export enum PaymentMethodType {
   pse = 'pse',
@@ -60,7 +61,7 @@ export interface IProductOverviewDetails {
   productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string, imageProduct: string, nameProduct: string) => void
-  onBuyHandler?: (type: PaymentMethodType) => Promise<boolean>,
+  onBuyHandler?: (type: PaymentMethodType) => Promise<apiResponse>,
   features?: IRichText;
   warranty?: {
     name?: string;

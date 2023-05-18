@@ -43,12 +43,12 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
             onClick={async () => {
               setIsLoading(true);
               onBuyHandler(PaymentMethodType.pse).then(result => {
-                if (result === false ) {
+                if (result.status !== 200 ) {
                   setError(true);
                   setErrorMessage({
                     icon: "alert",
                     type: "warning",
-                    title: `No hay más unidades disponibles para este producto.`,
+                    title: result.status === 422? `No hay más unidades disponibles para este producto.`: "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
                   });
                 }
               }).finally(() => setIsLoading(false));
