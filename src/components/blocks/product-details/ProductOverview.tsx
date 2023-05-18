@@ -17,6 +17,7 @@ import { iconInvoice, iconPSE, options } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
 import CartModal from "@/components/organisms/cart-modal/CartModal";
+import { IAdjustments } from "@/lib/services/commerce-layer.service";
 import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
@@ -42,12 +43,44 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { addToCart, reloadOrder } = useContext(CheckoutContext);
+  const { addToCart, order, reloadOrder } = useContext(CheckoutContext);
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
   const closeModal = () => setIsOpen(false);
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
+  const [warrantyCheck, setWarrantyCheck] = useState({});
+  const [installCheck, setInstallCheck] = useState({});
+
+  const servicesHandler = (type: string, params) => {
+    if (type === "warranty") {
+      setWarrantyCheck(params);
+    }
+    if (type === "installation") {
+      setInstallCheck(params);
+    }
+  };
+
+  const requestService = (data: IAdjustments, orderId: string, quantity: string) => {
+    fetch("/api/product/service-adition", {
+      method: "POST",
+      body: JSON.stringify({
+        data,
+        orderId,
+        quantity
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.status === 200 && json.data != null) {
+          reloadOrder();
+        } else {
+          console.error("Error requestService");
+        }
+      });
+  };
 
   const buyHandlerMap = {
     [PaymentMethodType.pse]: () => {
@@ -57,8 +90,37 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
-      const res:apiResponse = await addToCart(sku, promoImage.url, promoTitle);
-      if (buyHandlerMap[type] && res.status === 200 ) buyHandlerMap[type]();
+      // Add to cart- product
+      const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle);
+      // validate and add to cart a service (Installation)
+      if (Object.keys(installCheck).length > 0 && installCheck["id"] != "defInstall1") {
+        const dataAdjustment: IAdjustments = {
+          name: installCheck["name"] + " - " + sku,
+          amount_cents: installCheck["price_amount_cents"],
+          type: "installation",
+          sku_id: "",
+          sku_code: sku,
+          sku_name: name,
+          sku_option_id: installCheck["id"],
+          sku_option_name: installCheck["name"]
+        };
+        requestService(dataAdjustment, order.id, "1");
+      }
+      // validate and add to cart a service (Warranty)
+      if (Object.keys(warrantyCheck).length > 0 && warrantyCheck["id"] != "defWarranty1") {
+        const dataAdjustment: IAdjustments = {
+          name: warrantyCheck["name"] + " - " + sku,
+          amount_cents: warrantyCheck["price_amount_cents"],
+          type: "",
+          sku_id: "warranty",
+          sku_code: sku,
+          sku_name: name,
+          sku_option_id: warrantyCheck["id"],
+          sku_option_name: warrantyCheck["name"]
+        };
+        requestService(dataAdjustment, order.id, "1");
+      }
+      if (buyHandlerMap[type] && res.status === 200) buyHandlerMap[type]();
       if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
       return res;
     } catch (e) {
@@ -70,7 +132,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         router.push(`${router.asPath}?retry=1&payment_method=${type}`);
       }
       console.error('error on buy handler', e);
-      return {status: 402, data:'error on buy handler'};
+      return { status: 402, data: 'error on buy handler' };
     }
   };
 
@@ -270,6 +332,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         key={marketId}
                         warranty={warranty}
                         category={category}
+                        onEventHandler={servicesHandler}
                       />
                     )}
                   </ul>
@@ -332,6 +395,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <ProductServices
                         warranty={warranty}
                         category={category}
+                        onEventHandler={servicesHandler}
                       />
                     )}
                   </form>

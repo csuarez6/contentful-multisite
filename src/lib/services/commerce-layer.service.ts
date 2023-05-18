@@ -400,3 +400,29 @@ export const createAdjustmentsService = async ({
     return { status: 401, error: error };
   }
 };
+
+/*** Create service - Aditional */
+export const createServiceAditional = async (adjustment: IAdjustments, idOrder: string, quantity: string) => {
+  try {
+    const respAdj = await createAdjustmentsService(adjustment);
+    const cl = await getCLAdminCLient();
+    if (respAdj) {
+      const Aditional = await cl.line_items.create({
+        quantity: parseInt(quantity),
+        order: {
+          id: idOrder,
+          type: "orders"
+        },
+        item: {
+          id: respAdj.data.id,
+          type: "adjustments"
+        }
+      });
+      return { status: 200, data: Aditional };
+    }
+    return { status: 200, data: null };
+  } catch (error) {
+    console.error('Error create-adjustments: ', error);
+    return { status: 401, error: error };
+  }
+};

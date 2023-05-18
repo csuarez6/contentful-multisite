@@ -62,6 +62,7 @@ export interface IProductOverviewDetails {
   paymentMethods?: IPaymentMethod[];
   onBuy?: (type: PaymentMethodType, skuCode: string, imageProduct: string, nameProduct: string) => void
   onBuyHandler?: (type: PaymentMethodType) => Promise<apiResponse>,
+  onEventHandler?: (type: string, params?: object) => void,
   features?: IRichText;
   warranty?: {
     name?: string;
