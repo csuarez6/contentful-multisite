@@ -160,21 +160,25 @@ export const useCommerceLayer = () => {
   const updateItemQuantity = async (skuCode: string, quantity: number) => {
     try {
       const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
+      let response;
       if (quantity > 0) {
-        await client.line_items.update({
+        response = await client.line_items.update({
           id: lineItem.id,
           quantity,
-        });
+        }).catch(err => err.errors);
       } else {
-        await client.line_items.delete(lineItem.id);
+        response = await client.line_items.delete(lineItem.id).catch(err => err.errors);
         await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
       }
       await reloadOrder();
+      if(response?.[0]?.status){
+        return {status: parseInt(response[0].status), data: response[0].title};
+      }
+      return {status: 200, data: 'success update item'};
     } catch(err) {
       console.error('error', err);
-      return false;
+      return {status: 500, data: 'error update item'};
     }
-    return true;
   };
 
   const addLoggedCustomer = useCallback(async () => {

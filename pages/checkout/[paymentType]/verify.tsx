@@ -214,7 +214,7 @@ const CheckoutVerify = () => {
                         product?.sku_code,
                         product?.quantity - 1
                       ).then(result => {
-                        if (result === false) {
+                        if (result.status !== 200) {
                           setError(true);
                           setErrorMessage({
                             icon: "alert",
@@ -246,12 +246,13 @@ const CheckoutVerify = () => {
                         product?.sku_code,
                         product.quantity + 1
                       ).then(result => {
-                        if (result === false) {
+                        if (result.status !== 200) {
+                          const message = result.status === 422? `No hay más unidades disponibles para el producto seleccionado.` : 'Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente';
                           setError(true);
                           setErrorMessage({
                             icon: "alert",
                             type: "warning",
-                            title: `No hay más unidades disponibles para el producto seleccionado.`,
+                            title: message,
                           });
                         }
                       }).finally(() => setIsLoading(false));
@@ -269,7 +270,7 @@ const CheckoutVerify = () => {
                     product?.sku_code,
                     0
                   ).then(result => {
-                    if (result === false) {
+                    if (result.status !== 200) {
                       setError(true);
                       setErrorMessage({
                         icon: "alert",
