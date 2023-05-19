@@ -144,6 +144,7 @@ const CallbackPage = () => {
       .then((response) => response.json())
       .then((json) => {
         const { result } = json;
+        console.info(result);
         setIsSuccess(result.success);
         setDateValue(getValues("date"));
         setHourValue(getValues("hour"));
