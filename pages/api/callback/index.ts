@@ -42,16 +42,28 @@ const handler = async (
   const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees, tokenReCaptcha } = req.body;
   const typeName = getType(type);
 
-  const token = await getToken();
-  console.log(token);
+  const response = await getToken();
+  console.log(response);
 
-  res.status(200).json({
-    result: {
-      message: "El número de celular es obligatorio.",
-      success: true,
-      token
-    }
-  });
+  if (response.error) {
+    res.status(400).json({
+      result: {
+        message: response.error === "invalid_client"
+          ? "Error de credenciales"
+          : response.description,
+        success: false,
+        errors: ["client_credentials"]
+      }
+    });
+  } else {
+    res.status(200).json({
+      result: {
+        message: "Se ha obtenido el token con exito.",
+        success: true,
+        response
+      }
+    });
+  }
   /* const data = {
     body: []
   };

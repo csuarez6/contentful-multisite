@@ -23,7 +23,7 @@ const getToken = async () => {
 
   try {
     const response = await fetch(VARS.URL, requestOptions);
-    const result = await response.text();
+    const result = await response.json();
     console.info(result);
     return result;
   } catch (error) {
