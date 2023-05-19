@@ -39,7 +39,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   rating,
   warranty,
   category,
-  relatedProducts
+  relatedProducts,
+  priceVantiListo
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -379,6 +380,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   ) : (
                     ""
                   )}
+                  {priceVantiListo && (
+                      <p className="text-grey-30 text-sm md:text-xl">
+                        {priceVantiListo} vantilisto
+                      </p>
+                    )}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden sm:flex flex-col gap-[15px]"

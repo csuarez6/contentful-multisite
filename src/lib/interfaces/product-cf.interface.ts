@@ -94,6 +94,7 @@ export interface IProductOverviewDetails {
     clInstallationReference?: string;
   };
   relatedProducts?: IProductOverviewDetails[]
+  priceVantiListo?: string;
 }
 
 export interface IAllyOverviewDetails {

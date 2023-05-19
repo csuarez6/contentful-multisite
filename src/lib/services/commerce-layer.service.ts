@@ -53,8 +53,10 @@ export const CACHE_TOKENS = {
 export const getAppToken = async (): Promise<string> => {
 
   try {
-    let token = Cookies.get("clIntegrationToken");
-
+    if (CACHE_TOKENS.APP_TOKEN !== null && CACHE_TOKENS.APP_TOKEN) {
+      return CACHE_TOKENS.APP_TOKEN;
+    }
+    let token = Cookies.get("clIntegrationToken");    
     if (!token) {
       const auth = await getIntegrationToken({
         endpoint: process.env.COMMERCELAYER_ENDPOINT,
@@ -66,7 +68,7 @@ export const getAppToken = async (): Promise<string> => {
         expires: auth.expires,
       });
     }
-
+    CACHE_TOKENS.APP_TOKEN = token;
     return token;
 
   } catch (error) {
@@ -302,11 +304,10 @@ export const deleteCustomerResetPwd = async (tokenID: string) => {
 export const getCommercelayerProduct = async (skuCode: string) => {
   let product = null;
   try {
-    const token = await getMerchantToken();
-    const client = await getCommerlayerClient(token);
+    const clientGasodomesticos = await getCLAdminCLient();
 
     const sku = (
-      await client.skus.list({
+      await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
         include: ['prices', 'stock_items'],
         fields: ['id', 'prices', 'stock_items'],
@@ -315,11 +316,13 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 
     if (sku) {
       product = {
-        price: sku?.prices[0]?.formatted_amount,
-        priceBefore: sku?.prices[0]?.formatted_compare_at_amount,
-        productsQuantity: sku?.stock_items[0]?.quantity,
+        price:  sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.prices[0]?.formatted_amount,
+        priceBefore: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.prices[0]?.formatted_compare_at_amount,
+        productsQuantity: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.stock_items[0]?.quantity ?? 0,
+        priceVantiListo:  sku?.prices?.find(p => p.reference === 'vantiListo')?.formatted_amount ?? null,
 
-        _price: sku?.prices[0]?.amount_float,
+        _price: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.amount_float ?? sku?.prices[0]?.amount_float,
+        _priceVantiListo:  sku?.prices?.find(p => p.reference === 'vantiListo')?.amount_float ?? null,
         _priceBefore: sku?.prices[0]?.compare_at_amount_float,
       };
     }
