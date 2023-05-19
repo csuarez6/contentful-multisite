@@ -317,8 +317,8 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     if (sku) {
       product = {
         price:  sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.prices[0]?.formatted_amount,
-        priceBefore: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.prices[0]?.formatted_compare_at_amount,
-        productsQuantity: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.stock_items[0]?.quantity ?? 0,
+        priceBefore: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_compare_at_amount ?? sku?.prices[0]?.formatted_compare_at_amount,
+        productsQuantity: sku?.stock_items?.find(p => p.reference === 'Gasodomesticos')?.quantity ?? sku?.stock_items[0]?.quantity ?? 0,
         priceVantiListo:  sku?.prices?.find(p => p.reference === 'vantiListo')?.formatted_amount ?? null,
 
         _price: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.amount_float ?? sku?.prices[0]?.amount_float,
