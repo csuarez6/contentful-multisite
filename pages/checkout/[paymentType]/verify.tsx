@@ -4,11 +4,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import {
-  DEFAULT_FOOTER_ID,
-  DEFAULT_HEADER_ID,
-  DEFAULT_HELP_BUTTON_ID,
-} from "@/constants/contentful-ids.constants";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
