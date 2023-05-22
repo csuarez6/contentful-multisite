@@ -12,7 +12,7 @@ import AuthContext from "@/context/Auth";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "available_payment_methods", "shipments", "customer"],
+  include: ["line_items", "line_items.item", "available_payment_methods", "shipments", "customer"],
   fields: {
     orders: [
       "number",
@@ -41,6 +41,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_unit_amount",
       "quantity",
       "formatted_total_amount",
+      "item"
     ],
     customer: ["id"],
   },
@@ -77,13 +78,65 @@ export const useCommerceLayer = () => {
     })();
   }, []);
 
+  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve) => {
+    let data = { status: 400, data: "Error updating order" };
+    await fetch("/api/order", {
+      method: "POST",
+      body: JSON.stringify({
+        idOrder: idOrder,
+        orderParams: params
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 200) {
+          data = json;
+        } else {
+          console.error("Error get UpdateOrderAdmin");
+          data = { status: 400, data: "Error updating order - 1" };
+        }
+      }).catch((error) => {
+        console.error({ error });
+      });
+    return data;
+  };
+
+  const getSkuList = async (filter?: string) => {
+    let data = { status: 400, data: "Error Util_SkuList" };
+    await fetch("/api/sku-options", {
+      method: "POST",
+      body: JSON.stringify({
+        filter: filter,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 200) {
+          data = json;
+        } else {
+          console.error("Error Util sku-options");
+        }
+      }).catch((error) => {
+        console.error({ error });
+      });
+    return data;
+  };
+
   const getOrder = useCallback(async () => {
     try {
       const idOrder = localStorage.getItem("orderId");
 
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
 
-      const order = await client.orders.retrieve(idOrder, DEFAULT_ORDER_PARAMS);
+      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS);
+      const order = orderResp.data as unknown as Order;
+      // const order = await client.orders.retrieve(idOrder, DEFAULT_ORDER_PARAMS);
 
       if (!["draft", "pending"].includes(order.status)) {
         throw new Error(INVALID_ORDER_ID_ERROR);
@@ -94,7 +147,7 @@ export const useCommerceLayer = () => {
       console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
 
       const draftOrder = await client.orders.create({}).catch(err => err.errors);
-      if(draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
+      if (draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
       return draftOrder;
     }
   }, [client]);
@@ -117,17 +170,17 @@ export const useCommerceLayer = () => {
     try {
       const order = await getOrder();
       setOrder(order);
-      return {status: 200, data: 'success at reload order'};
+      return { status: 200, data: 'success at reload order' };
     } catch (error) {
       console.error('error reloadOrder ', error);
-      return {status: 400, data: 'error at reload order'};
+      return { status: 400, data: 'error at reload order' };
     }
-    
+
   }, [getOrder]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string) => {
-      try{
+      try {
         const resCreate = await client.line_items.create({
           quantity: 1,
           name: productName,
@@ -139,19 +192,23 @@ export const useCommerceLayer = () => {
             id: orderId,
           },
         })
-        .catch(error => error.errors);
-        if(resCreate?.[0]?.status){
-          return {status: parseInt(resCreate[0].status), data: resCreate[0].title};
+          .catch(error => error.errors);
+        if (resCreate?.[0]?.status) {
+          return { status: parseInt(resCreate[0].status), data: resCreate[0].title };
         }
         const orderRes = await reloadOrder();
-        if(orderRes?.[0]?.status ) return {status: parseInt(orderRes[0].status), data: 'error at add to card'}; 
-        return {status: 200, data: 'product add to card'};
-        
-      }catch(error){
+        if (orderRes?.[0]?.status) return { status: parseInt(orderRes[0].status), data: 'error at add to card' };
+        const infoResp = {
+          message: 'product add to card',
+          id: resCreate.id
+        };
+        return { status: 200, data: infoResp };
+
+      } catch (error) {
         console.error('error add to card', error);
-        return {status: 500, data: 'error at add to card'};
+        return { status: 500, data: 'error at add to card' };
       }
-      
+
     },
     [orderId, client, reloadOrder]
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,18 +223,36 @@ export const useCommerceLayer = () => {
           id: lineItem.id,
           quantity,
         }).catch(err => err.errors);
+        if (lineItem["installlation_service"].length > 0) {
+          await client.line_items.update({
+            id: lineItem["installlation_service"][0].id,
+            quantity
+          });
+        }
+        if (lineItem["warranty_service"].length > 0) {
+          await client.line_items.update({
+            id: lineItem["warranty_service"][0].id,
+            quantity
+          });
+        }
       } else {
         response = await client.line_items.delete(lineItem.id).catch(err => err.errors);
+        if (lineItem["installlation_service"].length > 0) {
+          await client.line_items.delete(lineItem["installlation_service"][0].id).catch(err => err.errors);
+        }
+        if (lineItem["warranty_service"].length > 0) {
+          await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
+        }
         await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
       }
       await reloadOrder();
-      if(response?.[0]?.status){
-        return {status: parseInt(response[0].status), data: response[0].title};
+      if (response?.[0]?.status) {
+        return { status: parseInt(response[0].status), data: response[0].title };
       }
-      return {status: 200, data: 'success update item'};
-    } catch(err) {
+      return { status: 200, data: 'success update item' };
+    } catch (err) {
       console.error('error', err);
-      return {status: 500, data: 'error update item'};
+      return { status: 500, data: 'error update item' };
     }
   };
 
@@ -413,6 +488,7 @@ export const useCommerceLayer = () => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     validateExternal,
+    getSkuList
   };
 };
 

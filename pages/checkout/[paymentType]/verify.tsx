@@ -14,53 +14,9 @@ import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames } from "@/utils/functions";
-
-export const ModalWarranty: React.FC<any> = ({ optionsList }) => {
-  return (
-    <div className="flex flex-col gap-6">
-      <p className="text-left">
-        <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
-          <p>
-            Garantía extendida<br />
-            Protege tu inversión
-          </p>
-        </div>
-      </p>
-      <ul
-        className={classNames(
-          "px-3 py-[10px] gap-2 grid",
-          (optionsList.length > 0) ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
-        )}
-      >
-        {(optionsList.length > 0) && optionsList.map((item, index) => {
-          return (
-            <>
-              <li key={item.id}>
-                <input
-                  type="radio"
-                  id={`installbox-${index}`}
-                  name="installbox"
-                  value=""
-                  className="hidden peer"
-                  required
-                />
-                <label
-                  htmlFor={`installbox-${index}`}
-                  className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
-                >
-                  <div className="flex flex-col">
-                    <span className="font-bold text-size-span">{item.name}</span>
-                    <span className="text-size-small">{item.formatted_price_amount}</span>
-                  </div>
-                </label>
-              </li>
-            </>
-          );
-        })}
-      </ul>
-    </div>
-  );
-};
+import { ModalIntall } from "@/components/blocks/product-details/ProductConfig";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 
 const CheckoutVerify = () => {
   const router = useRouter();
@@ -72,6 +28,38 @@ const CheckoutVerify = () => {
     title: "",
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isActivedModal, setIsActivedModal] = useState(false);
+  const [paramModal, setParamModal] = useState<IPromoContent>();
+  const [modalChild, setmodalChild] = useState<any>();
+  const [installCurrent, setinstallCurrent] = useState<any>();
+  // const [warrantyCheck, setWarrantyCheck] = useState({});
+  // const [installCheck, setInstallCheck] = useState({});
+  const defaultInstallList = {
+    id: "defInstall1",
+    name: "Sin intalación",
+    formatted_price_amount: "$0"
+  };
+  // const defaultWarrantyList = {
+  //   id: "defWarranty1",
+  //   name: "Sin garantia",
+  //   formatted_price_amount: "$0"
+  // };
+  const [installList, setInstallList] = useState<any>([{ ...defaultInstallList }]);
+  // const [warrantyList, setWarrantyList] = useState<any>([{ ...defaultWarrantyList }]);
+
+  const servicesHandler = (type: string, params) => {
+    console.info(params);
+    if (type === "warranty") {
+      // setWarrantyCheck(params);
+    }
+    if (type === "installation") {
+      // setInstallCheck(params);
+    }
+  };
+
+  const updateInstallCurrent = (value) => {
+    setinstallCurrent(value);
+  };
 
   const { isLogged } = useContext(AuthContext);
   const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer } =
@@ -79,9 +67,40 @@ const CheckoutVerify = () => {
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    const productsList = (order.line_items).filter(item => item.item_type === "skus");
+    const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
+    const productsList = (order.line_items)
+      .filter(item => item.item_type === "skus")
+      .map((item) => {
+        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "installation");
+        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "warranty");
+        item["installlation_service"] = installAdjItem;
+        item["warranty_service"] = warrantyAdjItem;
+        return item;
+      });
     return productsList;
   }, [order]);
+
+  //   useEffect(() => {
+  //     (async () => {
+  //         try {
+  //             if (category.clInstallationReference) {
+  //                 const infoSkuInstall = await getSkuList(category.clInstallationReference);
+  //                 if (infoSkuInstall) {
+  //                     setInstallList([defaultInstallList, infoSkuInstall.data]);
+  //                 }
+  //             }
+  //             if (category.clWarrantyReference) {
+  //                 const infoSkuWarra = await getSkuList(category.clWarrantyReference);
+  //                 if (infoSkuWarra) {
+  //                     setWarrantyList([defaultInstallList, infoSkuWarra.data]);
+  //                 }
+  //             }
+  //         } catch (error) {
+  //             console.error("Error at: ProductService", error);
+  //         }
+  //     })();
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [category]);
 
   const isCompleted = useMemo(
     () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
@@ -93,6 +112,24 @@ const CheckoutVerify = () => {
     [router.query]
   );
 
+  const openModal = (optionsList?: any) => {
+    setParamModal({
+      promoTitle: "Instala tu gasodoméstico",
+    });
+    setmodalChild(
+      <ModalIntall
+        optionsList={optionsList}
+        onEventHandler={servicesHandler}
+        installCurrent={installCurrent}
+        upInstallCurrent={updateInstallCurrent}
+      />
+    );
+    setIsActivedModal(false);
+    setTimeout(() => {
+      setIsActivedModal(true);
+    }, 200);
+  };
+
   const handleNext = async () => {
     try {
       if (!products.length) {
@@ -101,22 +138,6 @@ const CheckoutVerify = () => {
           icon: "alert",
           type: "warning",
           title: "No hay productos en el carrito",
-        });
-        return;
-      }
-      let totalAmount = 0;
-      for (let i = 0; i < products.length; i++) {
-        const formattedAmount = products[i].formatted_total_amount;
-        const amount = parseFloat(formattedAmount.replace(/[$.,]/g, ""));
-        totalAmount += amount;
-      }
-
-      if (totalAmount >= 10000000) {
-        setError(true);
-        setErrorMessage({
-          icon: "alert",
-          type: "warning",
-          title: "Su Compra tiene mas de $10.000.000",
         });
         return;
       }
@@ -147,6 +168,7 @@ const CheckoutVerify = () => {
 
   useEffect(() => {
     setIsLoading(false);
+    setInstallList([{ ...defaultInstallList }]);
   }, []);
 
   return (
@@ -243,7 +265,7 @@ const CheckoutVerify = () => {
                         product.quantity + 1
                       ).then(result => {
                         if (result.status !== 200) {
-                          const message = result.status === 422? `No hay más unidades disponibles para el producto seleccionado.` : 'Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente';
+                          const message = result.status === 422 ? `No hay más unidades disponibles para el producto seleccionado.` : 'Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente';
                           setError(true);
                           setErrorMessage({
                             icon: "alert",
@@ -283,31 +305,44 @@ const CheckoutVerify = () => {
             {/* ********* Services ******** */}
             <div className="py-1 pl-4 text-sm text-left text-grey-30">
               Garantía extendida{" "}
-              <button className="ml-2 text-xs text-blue-500 hover:text-blue-800">
-                Agregar
-              </button>
-            </div>
-            <div className="px-3 text-right">
-              <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                0
-              </span>
-            </div>
-            <div className="inline-block py-1 pr-1 text-sm text-right text-blue-dark">
-              $0
-            </div>
-            <div className="py-1 pl-4 text-sm text-left text-grey-30">
-              Servicio de instalación{" "}
+              {product["warranty_service"].length > 0 &&
+                <>
+                  <br /><b>{product["warranty_service"][0]["name"]}</b>
+                </>
+              }
               <button className="ml-2 text-xs text-blue-500 hover:text-blue-800">
                 Cambiar
               </button>
             </div>
             <div className="px-3 text-right">
               <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                0
+                {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["quantity"] : "0"}x
               </span>
             </div>
             <div className="inline-block py-1 pr-1 text-sm text-right text-blue-dark">
-              $0
+              {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["formatted_total_amount"] : "$0"}
+            </div>
+            <div className="py-1 pl-4 text-sm text-left text-grey-30">
+              Servicio de instalación{" "}
+              {product["installlation_service"].length > 0 &&
+                <>
+                  <br /><b>{product["installlation_service"][0]["name"]}</b>
+                </>
+              }
+              <button
+                className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                onClick={() => openModal(installList)}
+              >
+                Cambiar
+              </button>
+            </div>
+            <div className="px-3 text-right">
+              <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["quantity"] : "0"}x
+              </span>
+            </div>
+            <div className="inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+              {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["formatted_total_amount"] : "$0"}
             </div>
             {/* ********* End Services ******** */}
             <div className="col-start-1 col-end-3 mt-3 bg-blue-50"></div>
@@ -370,6 +405,11 @@ const CheckoutVerify = () => {
           </svg>
           <span className="sr-only">Loading...</span>
         </div>
+      )}
+      {isActivedModal && (
+        <ModalSuccess {...paramModal} isActive={isActivedModal}>
+          {modalChild}
+        </ModalSuccess>
       )}
     </HeadingCard>
   );

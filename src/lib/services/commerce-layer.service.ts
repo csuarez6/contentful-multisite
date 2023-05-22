@@ -1,4 +1,4 @@
-import CommerceLayer from '@commercelayer/sdk';
+import CommerceLayer, { QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import Cookies from "js-cookie";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
@@ -348,6 +348,19 @@ export const updatePassWord = async (user: string, customerPWD: string, newPWD: 
     return { status: 401, data: 'password is invalid' };
   } catch (error) {
     console.error('Error updating password', error);
+    return { status: 401, error: error };
+  }
+};
+
+/** updateOrderAdminService */
+export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const updateOrder = await cl.orders.retrieve(idOrder, defaultOrderParams);
+
+    return { status: 200, data: updateOrder };
+  } catch (error) {
+    console.error('Error updateOrderAdminService: ', error);
     return { status: 401, error: error };
   }
 };

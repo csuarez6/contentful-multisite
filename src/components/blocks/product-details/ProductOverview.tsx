@@ -93,33 +93,35 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     try {
       // Add to cart- product
       const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle);
-      // validate and add to cart a service (Installation)
-      if (Object.keys(installCheck).length > 0 && installCheck["id"] != "defInstall1") {
-        const dataAdjustment: IAdjustments = {
-          name: installCheck["name"] + " - " + sku,
-          amount_cents: installCheck["price_amount_cents"],
-          type: "installation",
-          sku_id: "",
-          sku_code: sku,
-          sku_name: name,
-          sku_option_id: installCheck["id"],
-          sku_option_name: installCheck["name"]
-        };
-        requestService(dataAdjustment, order.id, "1");
-      }
-      // validate and add to cart a service (Warranty)
-      if (Object.keys(warrantyCheck).length > 0 && warrantyCheck["id"] != "defWarranty1") {
-        const dataAdjustment: IAdjustments = {
-          name: warrantyCheck["name"] + " - " + sku,
-          amount_cents: warrantyCheck["price_amount_cents"],
-          type: "",
-          sku_id: "warranty",
-          sku_code: sku,
-          sku_name: name,
-          sku_option_id: warrantyCheck["id"],
-          sku_option_name: warrantyCheck["name"]
-        };
-        requestService(dataAdjustment, order.id, "1");
+      if (res.status === 200) {
+        // validate and add to cart a service (Installation)
+        if (Object.keys(installCheck).length > 0 && installCheck["id"] != "defInstall1") {
+          const dataAdjustment: IAdjustments = {
+            name: installCheck["name"] + " - " + sku,
+            amount_cents: installCheck["price_amount_cents"],
+            type: "installation",
+            sku_id: res.data["id"] ?? "",
+            sku_code: sku,
+            sku_name: name,
+            sku_option_id: installCheck["id"],
+            sku_option_name: installCheck["name"]
+          };
+          requestService(dataAdjustment, order.id, "1");
+        }
+        // validate and add to cart a service (Warranty)
+        if (Object.keys(warrantyCheck).length > 0 && warrantyCheck["id"] != "defWarranty1") {
+          const dataAdjustment: IAdjustments = {
+            name: warrantyCheck["name"] + " - " + sku,
+            amount_cents: warrantyCheck["price_amount_cents"],
+            type: "warranty",
+            sku_id: res.data["id"] ?? "",
+            sku_code: sku,
+            sku_name: name,
+            sku_option_id: warrantyCheck["id"],
+            sku_option_name: warrantyCheck["name"]
+          };
+          requestService(dataAdjustment, order.id, "1");
+        }
       }
       if (buyHandlerMap[type] && res.status === 200) buyHandlerMap[type]();
       if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
@@ -129,7 +131,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       const retry = params.get("retry");
       if (!retry) {
         // localStorage.removeItem("orderId");
-        await reloadOrder();
+        reloadOrder();
         router.push(`${router.asPath}?retry=1&payment_method=${type}`);
       }
       console.error('error on buy handler', e);
