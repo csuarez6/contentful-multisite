@@ -53,6 +53,10 @@ const createCallback = async (body) => {
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${access_token}`);
 
+    // const newDate = new Date(date);
+    // const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    // const date = newDate.toLocaleDateString('es-CO', options);
+
     const raw = {
       "scriptId": "90968378-7f4a-4973-ad25-665feb88f8ca",
       "routingData": {

@@ -91,10 +91,13 @@ const schema = yup.object({
   date: yup
     .date()
     .typeError("El valor debe ser una fecha (mm/dd/yyy)")
-    .required("This field is required"),
-  hour: yup.string().required("Dato requerido").matches(regexTime, {
-    message: "No es una hora valida",
-  }),
+    .required("Dato requerido"),
+  hour: yup
+    .string()
+    .matches(regexTime, {
+      message: "No es una hora valida",
+    })
+    .required("Dato requerido"),
   cellPhone: yup.string().required("Dato requerido").matches(regexCellPhone, {
     message:
       "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
@@ -249,6 +252,7 @@ const CallbackPage = () => {
                     <TextBox
                       id="hour"
                       name="hour"
+                      type="time"
                       label="Elige la hora disponible para recibir al técnico"
                       placeholder="HH:MM"
                       {...register("hour")}
