@@ -27,7 +27,7 @@ const handler = async (
     return;
   }
 
-  const { tokenReCaptcha } = req.body;
+  /* const { tokenReCaptcha } = req.body;
   const isValidReCaptcha = await reCaptchaService.validate(tokenReCaptcha);
 
   if (!isValidReCaptcha) {
@@ -38,7 +38,7 @@ const handler = async (
         errors: ['ReCaptcha']
       }
     });
-  }
+  } */
 
   const response = await createCallback(req.body);
   console.info(response);
