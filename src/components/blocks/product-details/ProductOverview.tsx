@@ -106,7 +106,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_option_id: installCheck["id"],
             sku_option_name: installCheck["name"]
           };
-          requestService(dataAdjustment, order.id, "1");
+          requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
         }
         // validate and add to cart a service (Warranty)
         if (Object.keys(warrantyCheck).length > 0 && warrantyCheck["id"] != "defWarranty1") {
@@ -120,7 +120,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_option_id: warrantyCheck["id"],
             sku_option_name: warrantyCheck["name"]
           };
-          requestService(dataAdjustment, order.id, "1");
+          requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
         }
       }
       if (buyHandlerMap[type] && res.status === 200) buyHandlerMap[type]();
@@ -383,10 +383,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     ""
                   )}
                   {priceVantiListo && (
-                      <p className="text-grey-30 text-sm md:text-xl">
-                        {priceVantiListo} vantilisto
-                      </p>
-                    )}
+                    <p className="text-sm text-grey-30 md:text-xl">
+                      {priceVantiListo} vantilisto
+                    </p>
+                  )}
                   <form
                     onSubmit={(e) => e.preventDefault()}
                     className="hidden sm:flex flex-col gap-[15px]"

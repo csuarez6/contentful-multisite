@@ -46,7 +46,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
     customer: ["id"],
   },
 };
-
+// useCommercelayer - start
 export const useCommerceLayer = () => {
   const [client, setClient] = useState<CommerceLayerClient>();
   const [error, setError] = useState<unknown>();
@@ -200,6 +200,7 @@ export const useCommerceLayer = () => {
         if (orderRes?.[0]?.status) return { status: parseInt(orderRes[0].status), data: 'error at add to card' };
         const infoResp = {
           message: 'product add to card',
+          quantity: resCreate.quantity,
           id: resCreate.id
         };
         return { status: 200, data: infoResp };
@@ -223,24 +224,26 @@ export const useCommerceLayer = () => {
           id: lineItem.id,
           quantity,
         }).catch(err => err.errors);
-        if (lineItem["installlation_service"].length > 0) {
-          await client.line_items.update({
-            id: lineItem["installlation_service"][0].id,
-            quantity
-          });
-        }
-        if (lineItem["warranty_service"].length > 0) {
-          await client.line_items.update({
-            id: lineItem["warranty_service"][0].id,
-            quantity
-          });
+        if (!response?.[0]?.status) {
+          if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
+            await client.line_items.update({
+              id: lineItem["installlation_service"][0].id,
+              quantity
+            });
+          }
+          if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
+            await client.line_items.update({
+              id: lineItem["warranty_service"][0].id,
+              quantity
+            });
+          }
         }
       } else {
         response = await client.line_items.delete(lineItem.id).catch(err => err.errors);
-        if (lineItem["installlation_service"].length > 0) {
+        if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
           await client.line_items.delete(lineItem["installlation_service"][0].id).catch(err => err.errors);
         }
-        if (lineItem["warranty_service"].length > 0) {
+        if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
           await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
         }
         await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
@@ -354,7 +357,8 @@ export const useCommerceLayer = () => {
 
   const updateMetadata = useCallback(
     async (metadata: Record<string, any>) => {
-      const result = await client.orders.update(
+      // const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           metadata: {
@@ -367,8 +371,10 @@ export const useCommerceLayer = () => {
         DEFAULT_ORDER_PARAMS
       );
 
-      setOrder(result);
+      // setOrder(result); //Comentado temporalamente hasta estabilizar token para client.
+      await reloadOrder();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [order, client, orderId]
   );
 

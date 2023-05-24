@@ -4,10 +4,12 @@ import cities from '@/utils/static/cities-co.json';
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<string[]>
+  res: NextApiResponse
 ) {
   /**
    * More info: https://simplemaps.com/data/co-cities
    */
-  res.json(cities.filter(city => city.admin_name === req.query.stateName).map(i => i.city).sort());
+  const citiesFilter = cities.filter(city => city.admin_name === req.query.stateName).map(i => { return { city: i.city, isCovered: i.isCovered }; });
+  // res.json(cities.filter(city => city.admin_name === req.query.stateName).map(i => i.city).sort());
+  res.json(citiesFilter);
 }

@@ -169,6 +169,7 @@ const CheckoutVerify = () => {
   useEffect(() => {
     setIsLoading(false);
     setInstallList([{ ...defaultInstallList }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
