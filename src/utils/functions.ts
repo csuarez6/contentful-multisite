@@ -184,3 +184,21 @@ export const scrollContent = (idContainer: string) => {
 export const isGasAppliance = (marketId: string) => {
   return marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS;
 };
+
+export const isVantilisto = (marketId: string) => {
+  return marketId && marketId === COMMERLAYER_MARKET_IDS.VANTILISTO;
+};
+
+export const isAvailableGasAppliance = (marketId: string, priceGasodomestico: string, productsQuantityGasodomestico: string) => {
+  if(isGasAppliance(marketId)){
+    return priceGasodomestico != null && productsQuantityGasodomestico != null && Number(productsQuantityGasodomestico) > 0;
+  }
+  return false;
+};
+
+export const isAvailableVantilisto = (marketId: string, priceVantiListo: string, productsQuantityVantiListo: string) => {
+  if(isVantilisto(marketId)){
+    return priceVantiListo != null && productsQuantityVantiListo != null && Number(productsQuantityVantiListo) > 0;
+  }
+  return false;
+};

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { IAllyOverviewDetails, IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
+import { isAvailableGasAppliance, isAvailableVantilisto, isGasAppliance } from "@/utils/functions";
 
 const iconCellphone: IIcon = {
   icon: "cellphone",
@@ -28,8 +29,12 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   promoTitle,
   state,
   cta,
-  price,
-  priceBefore,
+  priceGasodomestico,
+  priceBeforeGasodomestico,
+  priceVantiListo,
+  priceBeforeVantiListo,
+  productsQuantityGasodomestico,
+  productsQuantityVantiListo,
   rating,
   promotion,
   imagesCollection,
@@ -41,9 +46,10 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   address,
   city,
   hideBeforePrice,
-  hideDecimalPrice
+  hideDecimalPrice,
+  marketId
 }) => {
-  
+
   const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
   return (
     <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
@@ -145,20 +151,18 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
               </div>
             )}
           </div>
-          {(price || priceBefore) && (
+          {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
             <div className="flex flex-col gap-[6px]">
-              {(priceBefore && !hideBeforePrice) && (
+              {!hideBeforePrice && (
                 <p className="line-through title is-4 text-blue-dark before-price">
-                  {priceBefore}
+                  {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
                 </p>
               )}
-              {price && (
-                <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
-                  {
-                    hideDecimalPrice ?  price.split(",")[0] : price
-                  }
-                </p>
-              )}
+              <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
+                {
+                  hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)
+                }
+              </p>
             </div>
           )}
           {paymentMethods && (

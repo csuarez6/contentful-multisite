@@ -9,7 +9,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { useContext, useState } from "react";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
-import { isGasAppliance, scrollContent } from "@/utils/functions";
+import { isAvailableGasAppliance, isAvailableVantilisto, isGasAppliance, scrollContent } from "@/utils/functions";
 import { iconInvoice, iconPSE, options } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
@@ -21,14 +21,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
   promoTitle,
   promoDescription,
-  price,
+  priceGasodomestico,
+  priceBeforeGasodomestico,
+  priceVantiListo,
+  priceBeforeVantiListo,
+  productsQuantityGasodomestico,
+  productsQuantityVantiListo,
   productFeatures,
   onBuy,
   features,
   promoImage,
   imagesCollection,
-  priceBefore,
-  productsQuantity,
   promotion,
   sku,
   marketId,
@@ -36,8 +39,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   rating,
   warranty,
   category,
-  relatedProducts,
-  priceVantiListo
+  relatedProducts
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -316,73 +318,65 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     )}
                   </ul>
                 </div>
-                <div className="flex flex-col gap-[10px] sm:flex-grow">
-                  <div className="flex items-center justify-between gap-2">
-                    {priceBefore && (
-                      <p className="line-through text-[#035177] text-sm md:text-xl">
-                        {priceBefore} Antes
-                      </p>
-                    )}
-                    <div className="flex gap-1">
-                      {isGasAppliance(marketId) && (
-                        <Icon {...iconPSE} />
-                      )}
-                      <Icon {...iconInvoice} />
-                    </div>
-                  </div>
-                  {(price == undefined ||
-                    productsQuantity == undefined ||
-                    Number(productsQuantity) <= 0) && (
-                      <div
-                        className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                        role="alert"
-                      >
-                        <strong className="font-bold">Info! </strong>
-                        <span className="block sm:inline">
-                          Este producto no se encuentra disponible en este
-                          momento.
-                        </span>
-                      </div>
-                    )}
-                  {price &&
-                    productsQuantity &&
-                    Number(productsQuantity) > 0 ? (
+                <div className="hidden sm:flex flex-col gap-[10px] sm:flex-grow">
+                  {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) ? (
                     <>
-                      <p className="text-[#035177] max-md:text-2xl title is-3">
-                        {price} Hoy
-                      </p>
-                      <div className="text-sm text-grey-30">
-                        <p>{productsQuantity} unidades disponibles</p>
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="line-through text-[#035177] text-sm md:text-xl">
+                          {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo} Antes
+                        </p>
+                        <div className="flex gap-1">
+                          {isGasAppliance(marketId) && (<Icon {...iconPSE} />)}
+                          <Icon {...iconInvoice} />
+                        </div>
                       </div>
+                      {/* Main price */}
+                      <p className="text-[#035177] max-md:text-2xl title is-3">
+                        {isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo}
+                      </p>
+                      {/* Secondary text */}
+                      {(isGasAppliance(marketId) && priceVantiListo) && (
+                        <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                          <span>{priceVantiListo}</span>
+                          <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">Vanti Listo</span>
+                        </p>
+                      )}
+                      {/* Product stock */}
+                      <div className="text-sm text-grey-30">
+                        <p>{isGasAppliance(marketId) ? productsQuantityGasodomestico : productsQuantityVantiListo} unidades disponibles</p>
+                      </div>
+
+                      <form
+                        onSubmit={(e) => e.preventDefault()}
+                        className="hidden sm:flex flex-col gap-[15px]"
+                      >
+                        <ProductActions
+                          priceGasodomestico={priceGasodomestico}
+                          productsQuantityGasodomestico={productsQuantityGasodomestico}
+                          marketId={marketId}
+                          callbackURL={callbackURL}
+                          onBuyHandler={onBuyHandler}
+                        />
+                        {isGasAppliance(marketId) && (
+                          <ProductServices
+                            warranty={warranty}
+                            category={category}
+                            onEventHandler={servicesHandler}
+                          />
+                        )}
+                      </form>
                     </>
                   ) : (
-                    ""
+                    <div
+                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                      role="alert"
+                    >
+                      <strong className="font-bold">¡Lo sentimos! </strong>
+                      <span className="block sm:inline">
+                        Este producto no se encuentra disponible en este momento.
+                      </span>
+                    </div>
                   )}
-                  {priceVantiListo && (
-                    <p className="text-sm text-grey-30 md:text-xl">
-                      {priceVantiListo} vantilisto
-                    </p>
-                  )}
-                  <form
-                    onSubmit={(e) => e.preventDefault()}
-                    className="hidden sm:flex flex-col gap-[15px]"
-                  >
-                    <ProductActions
-                      sku={sku}
-                      price={price}
-                      productsQuantity={productsQuantity}
-                      marketId={marketId}
-                      callbackURL={callbackURL}
-                      onBuyHandler={onBuyHandler}
-                    />
-                    {isGasAppliance(marketId) && (
-                      <ProductServices
-                        warranty={warranty}
-                        category={category}
-                        onEventHandler={servicesHandler}
-                      />
-                    )}
-                  </form>
                 </div>
               </div>
             </div>
@@ -449,24 +443,41 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         </div>
       </div>
       {/* ********* Buttons - Flow payment (mobile) ************ */}
-      <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
-        <div className="flex gap-[10px] items-center">
-          {price && <p className="text-[#035177] title is-4">{price} Hoy</p>}
-          {priceBefore && (
-            <p className="line-through text-[#035177] text-size-small">
-              {priceBefore} Antes
+      {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
+        <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
+          <div className="flex gap-[10px] items-center">
+            {/* Main price */}
+            <p className="text-[#035177] title is-4">
+              {isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo}
             </p>
-          )}
+            {/* Before price */}
+            <p className="line-through text-[#035177] text-size-small">
+              {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo} Antes
+            </p>
+            {/* Secondary price */}
+            {(isGasAppliance(marketId) && priceVantiListo) && (
+              <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                <span>{priceVantiListo}</span>
+                <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">Vanti Listo</span>
+              </p>
+            )}
+            {/* Product stock */}
+            <div className="text-sm text-grey-30">
+              <p>{isGasAppliance(marketId) ? productsQuantityGasodomestico : productsQuantityVantiListo} unidades disponibles</p>
+            </div>
+          </div>
+          <ProductActions
+            sku={sku}
+            priceGasodomestico={priceGasodomestico}
+            priceVantiListo={priceVantiListo}
+            productsQuantityGasodomestico={productsQuantityGasodomestico}
+            productsQuantityVantiListo={productsQuantityVantiListo}
+            marketId={marketId}
+            callbackURL={callbackURL}
+            onBuyHandler={onBuyHandler}
+          />
         </div>
-        <ProductActions
-          sku={sku}
-          price={price}
-          productsQuantity={productsQuantity}
-          marketId={marketId}
-          callbackURL={callbackURL}
-          onBuyHandler={onBuyHandler}
-        />
-      </div>
+      )};
       {isOpen &&
         <CartModal close={closeModal} />
       }

@@ -22,8 +22,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {
@@ -53,8 +55,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.8,
                 paymentMethods: [
                     {
@@ -83,8 +87,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$300.000',
-                price: '$250.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 5,
                 paymentMethods: [
                     {
@@ -114,8 +120,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {
@@ -145,8 +153,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {
@@ -176,8 +186,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {
@@ -207,8 +219,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {
@@ -238,8 +252,10 @@ export const data: IPromoBlock = {
                     name: 'Conoce mas'
                 },
                 promoDescription: RICHTEXT_SHORT_SIMPLE,
-                priceBefore: '$100.000',
-                price: '$90.000',
+                priceGasodomestico: '$100.000,00',
+                priceBeforeGasodomestico: '$90.000,00',
+                priceVantiListo: '',
+                priceBeforeVantiListo: '',
                 rating: 3.1,
                 paymentMethods: [
                     {

@@ -23,7 +23,12 @@ export interface IPaymentMethod {
  */
 export interface IProductDetails {
   productName?: string;
-  price?: string;
+  priceGasodomestico?: string;
+  priceBeforeGasodomestico?: string;
+  priceVantiListo?: string;
+  priceBeforeVantiListo?: string;
+  productsQuantityGasodomestico?: string;
+  productsQuantityVantiListo?: string;
   description?: string;
   images?: IImageAsset[];
   details?: string[];
@@ -33,12 +38,9 @@ export interface IProductDetails {
   cta?: ILink;
   state?: string;
   promotion?: string;
-  priceBefore?: string;
-  productsQuantity?: string;
   referenceCode?: number;
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
-
   rating?: number;
 }
 
@@ -56,7 +58,12 @@ export interface IProductOverviewDetails {
   name?: string;
   promoTitle?: string;
   urlPath?: string;
-  price?: string;
+  priceGasodomestico?: string;
+  priceBeforeGasodomestico?: string;
+  priceVantiListo?: string;
+  priceBeforeVantiListo?: string;
+  productsQuantityGasodomestico?: string;
+  productsQuantityVantiListo?: string;
   promoDescription?: IRichText;
   productFeatures?: IRichText;
   paymentMethods?: IPaymentMethod[];
@@ -72,8 +79,6 @@ export interface IProductOverviewDetails {
   state?: string;
   callbackURL?: string;
   promotion?: string;
-  priceBefore?: string;
-  productsQuantity?: string;
   sku?: string;
   marketId?: string;
   promoImage?: IImageAsset;
@@ -93,8 +98,7 @@ export interface IProductOverviewDetails {
     clWarrantyReference?: string;
     clInstallationReference?: string;
   };
-  relatedProducts?: IProductOverviewDetails[]
-  priceVantiListo?: string;
+  relatedProducts?: IProductOverviewDetails[];
 }
 
 export interface IAllyOverviewDetails {

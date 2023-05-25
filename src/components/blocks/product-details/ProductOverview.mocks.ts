@@ -1,12 +1,16 @@
 import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
+import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 
 const data: IProductOverviewDetails = {
   name: 'Calefactor de Torre',
   promoTitle: 'Calefactor de Torre',
-  price: '$420.000',
-  priceBefore: '$450.000',
-  productsQuantity: '1.000',
+  priceGasodomestico: '$420.000',
+  priceBeforeGasodomestico: '$450.000',
+  priceVantiListo: '$320.000',
+  priceBeforeVantiListo: '$350.000',
+  productsQuantityGasodomestico: '20',
+  productsQuantityVantiListo: '10',
   state: 'Nuevo',
   promotion: '30%',
   sku: "18217",
@@ -98,43 +102,8 @@ const data: IProductOverviewDetails = {
   warranty: {
     name: "name",
     description: RICHTEXT_SHORT_SIMPLE
-  }
-  // features: {
-  //   main: [
-  //     {
-  //       name: "Dimensiones",
-  //       description: "30x 48,4x 15,1 cm"
-  //     },
-  //     {
-  //       name: "Sistemas de seguridad",
-  //       description: "5 sistemas"
-  //     },
-  //     {
-  //       name: "Encendido automático",
-  //       description: "Sí"
-  //     },
-  //     {
-  //       name: "Regulador de gas",
-  //       description: "Sí"
-  //     },
-  //     {
-  //       name: "Selector de temperatura",
-  //       description: "Sí"
-  //     }
-  //   ],
-  //   description: [
-  //     '2500 watts',
-  //     '3 niveles de calentamiento: 800, 1200 y 2000 watts',
-  //     '11 celdas',
-  //     'Incrementa la temperatura de 5°C a 10°C',
-  //     'Timer para programar el apagado y el encendido varias veces (entre 0 y 24 horas)',
-  //     'Cubre un área de 30 m²'
-  //   ],
-  //   warranty: [
-  //     '<strong>Compra protegida con Vanti</strong><br>Recibe el producto que esperabas o te devolvemos tu dinero',
-  //     '<strong>Garantía del vendedor</strong><br>Garantía de fábrica: 12 meses'
-  //   ]
-  // }
+  },
+  marketId: COMMERLAYER_MARKET_IDS.GASODOMESTICOS
 };
 
 export const mockProductOverviewProps = {

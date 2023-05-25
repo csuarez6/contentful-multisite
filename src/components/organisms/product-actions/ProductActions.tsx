@@ -7,12 +7,11 @@ import {
   PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames, isGasAppliance } from "@/utils/functions";
+import { classNames, isAvailableGasAppliance } from "@/utils/functions";
 
 const ProductActions: React.FC<IProductOverviewDetails> = ({
-  sku,
-  price,
-  productsQuantity,
+  priceGasodomestico,
+  productsQuantityGasodomestico,
   marketId,
   callbackURL,
   onBuyHandler,
@@ -28,11 +27,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
   return (
     <>
       <div className="flex flex-row sm:flex-col gap-4 sm:gap-[22px] sm:pt-[5px] sm:my-5">
-        {sku &&
-        price &&
-        productsQuantity &&
-        Number(productsQuantity) > 0 &&
-        isGasAppliance(marketId) ? (
+        {isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) && (
           <button
             className={classNames(
               "button button-primary justify-center w-1/2 sm:w-full text-[13px] sm:text-size-p2",
@@ -43,12 +38,12 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
             onClick={async () => {
               setIsLoading(true);
               onBuyHandler(PaymentMethodType.pse).then(result => {
-                if (result.status !== 200 ) {
+                if (result.status !== 200) {
                   setError(true);
                   setErrorMessage({
                     icon: "alert",
                     type: "warning",
-                    title: result.status === 422? `No hay más unidades disponibles para este producto.`: "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
+                    title: result.status === 422 ? `No hay más unidades disponibles para este producto.` : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
                   });
                 }
               }).finally(() => setIsLoading(false));
@@ -74,8 +69,6 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
             )}
             {isLoading ? "Agregando" : "Agregar al carro"}
           </button>
-        ) : (
-          ""
         )}
         <CustomLink
           linkClassName="button button-outline w-1/2 sm:w-full flex justify-center items-center gap-1 text-[13px] sm:text-size-p2"

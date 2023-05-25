@@ -305,21 +305,25 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
-        include: ['prices', 'stock_items'],
+        include: ['prices', 'stock_items', 'prices.price_list', 'stock_items.stock_location'],
         fields: ['id', 'prices', 'stock_items'],
       })
     ).first();
 
     if (sku) {
       product = {
-        price: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_amount ?? sku?.prices[0]?.formatted_amount,
-        priceBefore: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.formatted_compare_at_amount ?? sku?.prices[0]?.formatted_compare_at_amount,
-        productsQuantity: sku?.stock_items?.find(p => p.reference === 'Gasodomesticos')?.quantity ?? sku?.stock_items[0]?.quantity ?? 0,
-        priceVantiListo: sku?.prices?.find(p => p.reference === 'vantiListo')?.formatted_amount ?? null,
-
-        _price: sku?.prices?.find(p => p.reference === 'Gasodomesticos')?.amount_float ?? sku?.prices[0]?.amount_float,
-        _priceVantiListo: sku?.prices?.find(p => p.reference === 'vantiListo')?.amount_float ?? null,
-        _priceBefore: sku?.prices[0]?.compare_at_amount_float,
+        priceGasodomestico:  sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_amount ?? null,
+        priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_compare_at_amount ?? null,
+        priceVantiListo:  sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_amount ?? null,
+        priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_compare_at_amount ?? null,
+        
+        _priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.amount_float ?? null,
+        _priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.compare_at_amount_float ?? null,
+        _priceVantiListo:  sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.amount_float ?? null,
+        _priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.compare_at_amount_float ?? null,
+        
+        productsQuantityGasodomestico: sku?.stock_items?.find(p => p.stock_location.reference === 'gasodomesticos')?.quantity ?? 0,
+        productsQuantityVantiListo: sku?.stock_items?.find(p => p.stock_location.reference === 'vantiListo')?.quantity ?? 0,
       };
     }
   } catch (error) {

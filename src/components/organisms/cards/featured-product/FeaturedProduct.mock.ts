@@ -1,3 +1,4 @@
+import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
 import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 
@@ -30,8 +31,12 @@ const data: IProductOverviewDetails = {
     name: 'Conoce mas'
   },
   promoDescription: RICHTEXT_SHORT_SIMPLE,
-  priceBefore: '$100.000',
-  price: '$90.000',
+  priceGasodomestico: '$100.000,00',
+  priceBeforeGasodomestico: '$90.000,00',
+  priceVantiListo: '$200.000,00',
+  priceBeforeVantiListo: '$190.000,00',
+  productsQuantityGasodomestico: '10',
+  productsQuantityVantiListo: '10',
   rating: 3.1,
   paymentMethods: [
     {
@@ -42,7 +47,8 @@ const data: IProductOverviewDetails = {
       name: 'PSE',
       type: PaymentMethodType.pse
     }
-  ]
+  ],
+  marketId: COMMERLAYER_MARKET_IDS.VANTILISTO
 };
 
 const list = [
@@ -64,7 +70,10 @@ const list = [
       name: 'Ver detalle'
     },
     promoDescription: RICHTEXT_SHORT_SIMPLE,
-    price: '$90.000',
+    priceGasodomestico: '$100.000,00',
+    priceBeforeGasodomestico: '$90.000,00',
+    priceVantiListo: '',
+    priceBeforeVantiListo: '',
   },{
     sys: {
       id: 'pid-1',
@@ -83,7 +92,10 @@ const list = [
       name: 'Ver detalle'
     },
     promoDescription: RICHTEXT_SHORT_SIMPLE,
-    price: '$90.000'
+    priceGasodomestico: '$100.000,00',
+    priceBeforeGasodomestico: '$90.000,00',
+    priceVantiListo: '',
+    priceBeforeVantiListo: '',
   }
 ];
 
