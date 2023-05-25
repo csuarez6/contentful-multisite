@@ -5,8 +5,6 @@ import { Flow, VantiChekoutCustomer } from "./flows";
 import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 export interface IContextCheckout {
-  isLoading: boolean;
-  isError: boolean;
   order: Order;
   flow: Flow;
   tokenRecaptcha: string;
@@ -37,8 +35,6 @@ export interface IContextCheckout {
 
 const CheckoutContext = createContext<IContextCheckout>({
   order: undefined,
-  isLoading: false,
-  isError: false,
   flow: undefined,
   tokenRecaptcha: "",
   addToCart: () => undefined,

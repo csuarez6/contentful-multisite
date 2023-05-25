@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     secret: 'secret',
   });
   console.info("********** middleware: ", token);
-  console.log("********** enviroment: ", enviroment);
+  console.info("********** enviroment: ", enviroment);
   const pathname = request.nextUrl.pathname;
 
   // Check access - Enviroment
@@ -40,7 +40,6 @@ export async function middleware(request: NextRequest) {
     // the user is not logged in, redirect to the sign-in page
     console.info("********** Middleware Response: No User Session");
     const requestedPage = request.nextUrl.pathname;
-    console.log({ requestedPage });
     const url = request.nextUrl.clone();
     url.pathname = `/acceso`;
     url.search = `p=${requestedPage}`;

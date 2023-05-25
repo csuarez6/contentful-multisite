@@ -3,7 +3,7 @@ import {dataSelect} from './SelectAtom.mocks'
 import SelectAtom from './SelectAtom.tsx'
 import '@testing-library/jest-dom'
 
-dataSelect.handleChange = (e) =>  {console.log(e)}
+dataSelect.handleChange = (e) =>  {console.warn(e)}
 
 describe('SelectAtom Base', () => {
   it('renders', async () => {

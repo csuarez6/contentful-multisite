@@ -9,8 +9,6 @@ const CheckoutProvider = ({ children }) => {
   const { paymentType } = router.query;
 
   const {
-    isLoading,
-    isError,
     order,
     addToCart,
     reloadOrder,
@@ -36,8 +34,6 @@ const CheckoutProvider = ({ children }) => {
 
   const valuesProvider: IContextCheckout = {
     flow,
-    isLoading,
-    isError,
     order,
     tokenRecaptcha,
     addToCart,

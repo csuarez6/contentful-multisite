@@ -1,15 +1,12 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-  IProductOverviewDetails,
-  PaymentMethodType,
-} from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import Carousel from "@/components/organisms/carousel/Carousel";
 import Rating from "@/components/organisms/ratings/Rating";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 import { isGasAppliance, scrollContent } from "@/utils/functions";
@@ -54,12 +51,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [installCheck, setInstallCheck] = useState({});
 
   const servicesHandler = (type: string, params) => {
-    if (type === "warranty") {
-      setWarrantyCheck(params);
-    }
-    if (type === "installation") {
-      setInstallCheck(params);
-    }
+    if (type === "warranty") setWarrantyCheck(params);
+    if (type === "installation") setInstallCheck(params);
   };
 
   const requestService = (data: IAdjustments, orderId: string, quantity: string) => {
@@ -127,27 +120,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (onBuy) onBuy(type, sku, promoImage.url, promoTitle);
       return res;
     } catch (e) {
-      const params = new URLSearchParams(location.search);
-      const retry = params.get("retry");
-      if (!retry) {
-        // localStorage.removeItem("orderId");
-        reloadOrder();
-        router.push(`${router.asPath}?retry=1&payment_method=${type}`);
-      }
       console.error('error on buy handler', e);
       return { status: 402, data: 'error on buy handler' };
     }
   };
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const retry = params.get("retry");
-    const paymentMethod = params.get("payment_method");
-    if (retry && paymentMethod) {
-      onBuyHandler(paymentMethod as PaymentMethodType);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.asPath]);
 
   return (
     <section className="bg-white section">

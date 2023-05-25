@@ -1,6 +1,5 @@
 import CommerceLayer, { QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
 export interface ICustomer {
@@ -50,50 +49,47 @@ export const CACHE_TOKENS = {
   APP_TOKEN: null
 };
 
-export const getAppToken = async (): Promise<string> => {
-
+/* For full integration permissions (2 hours) */
+export const getIntegrationAppToken = async (): Promise<string> => {
   try {
-    if (CACHE_TOKENS.APP_TOKEN !== null && CACHE_TOKENS.APP_TOKEN) {
-      return CACHE_TOKENS.APP_TOKEN;
-    }
-    let token = Cookies.get("clIntegrationToken");
-    if (!token) {
-      const auth = await getIntegrationToken({
-        endpoint: process.env.COMMERCELAYER_ENDPOINT,
-        clientId: process.env.COMMERCELAYER_CLIENT_ID,
-        clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
-      });
-      token = auth.accessToken;
-      Cookies.set("clIntegrationToken", token, {
-        expires: auth.expires,
-      });
-    }
-    CACHE_TOKENS.APP_TOKEN = token;
-    return token;
+    if (CACHE_TOKENS.APP_TOKEN) return CACHE_TOKENS.APP_TOKEN;
+    
+    const { accessToken, data: { expires_in } } = await getIntegrationToken({
+      endpoint: process.env.COMMERCELAYER_ENDPOINT,
+      clientId: process.env.COMMERCELAYER_CLIENT_ID,
+      clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
+    });
+
+    CACHE_TOKENS.APP_TOKEN = accessToken;
+
+    setTimeout(() => {
+      CACHE_TOKENS.APP_TOKEN = null;
+    }, 1000 * parseInt(expires_in));
+    return accessToken;
 
   } catch (error) {
     throw new Error("UNABLE_GETTING_CL_TOKEN", { cause: error });
   }
 };
 
+/* For CRUD in the order, items and similars (4 hours) */
 export const getMerchantToken = async () => {
   try {
-    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) {
-      return CACHE_TOKENS.MERCHANT_TOKEN;
-    }
+    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) return CACHE_TOKENS.MERCHANT_TOKEN;
 
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf('[') === 0) {
-      commercelayerScope = JSON.parse(commercelayerScope);
-    }
+    if (commercelayerScope.indexOf('[') === 0) commercelayerScope = JSON.parse(commercelayerScope);
 
-    const { accessToken } = await getSalesChannelToken({
+    const { accessToken, data: { expires_in }} = await getSalesChannelToken({
       endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
     });
 
     CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
+    setTimeout(() => {
+      CACHE_TOKENS.MERCHANT_TOKEN = null;
+    }, 1000 * parseInt(expires_in));
     return accessToken;
   } catch (error) {
     console.error('Error on «getMerchantToken»', error);
@@ -101,8 +97,8 @@ export const getMerchantToken = async () => {
   };
 };
 
+/* For specific user (10 min)  */
 export const getCustomerTokenCl = async ({ email, password }) => {
-
   try {
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
     if (commercelayerScope.indexOf('[') === 0) {
@@ -136,7 +132,7 @@ const getCommerlayerClient = async (accessToken: string) =>
 
 export const getCLAdminCLient = async () => {
   try {
-    const accessToken = await getAppToken();
+    const accessToken = await getIntegrationAppToken();
 
     return getCommerlayerClient(accessToken);
   } catch (error) {
