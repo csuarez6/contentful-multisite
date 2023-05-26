@@ -163,6 +163,9 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                   hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)
                 }
               </p>
+              <div className="text-xs text-grey-30">
+                <p>* Precio IVA incluido</p>
+              </div>
             </div>
           )}
           {paymentMethods && (

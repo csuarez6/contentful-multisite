@@ -341,6 +341,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">Vanti Listo</span>
                         </p>
                       )}
+                      <div className="text-xs text-grey-30">
+                        <p>* Precio IVA incluido</p>
+                      </div>
                       {/* Product stock */}
                       <div className="text-sm text-grey-30">
                         <p>{isGasAppliance(marketId) ? productsQuantityGasodomestico : productsQuantityVantiListo} unidades disponibles</p>

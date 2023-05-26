@@ -219,6 +219,7 @@ const CheckoutVerify = () => {
               >
                 {product?.name}
               </CustomLink>
+              <p className="text-xs text-left text-grey-60">* Precio IVA incluido</p>
             </div>
             <div className="hidden sm:inline-block py-3.5 pb-0 px-3 text-blue-dark mx-auto">
               <div className="w-32 custom-number-input h-9">
