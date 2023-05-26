@@ -448,25 +448,29 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       {/* ********* Buttons - Flow payment (mobile) ************ */}
       {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
         <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
-          <div className="flex gap-[10px] items-center">
-            {/* Main price */}
-            <p className="text-[#035177] title is-4">
-              {isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo}
-            </p>
-            {/* Before price */}
-            <p className="line-through text-[#035177] text-size-small">
-              {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo} Antes
-            </p>
-            {/* Secondary price */}
-            {(isGasAppliance(marketId) && priceVantiListo) && (
-              <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                <span>{priceVantiListo}</span>
-                <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">Vanti Listo</span>
+          <div className="flex gap-[10px] items-center justify-between">
+            <div className="flex flex-col-reverse xs:flex-row gap-x-[10px]">
+              {/* Main price */}
+              <p className="text-[#035177] title is-4">
+                {isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo}
               </p>
-            )}
-            {/* Product stock */}
-            <div className="text-sm text-grey-30">
-              <p>{isGasAppliance(marketId) ? productsQuantityGasodomestico : productsQuantityVantiListo} unidades disponibles</p>
+              {/* Before price */}
+              <p className="line-through text-[#035177] text-size-small flex items-center">
+                {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo} Antes
+              </p>
+            </div>
+            <div className="flex flex-col xs:flex-row  gap-x-[10px]">
+              {/* Secondary price */}
+              {(isGasAppliance(marketId) && priceVantiListo) && (
+                <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                  <span>{priceVantiListo}</span>
+                  <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">Vanti Listo</span>
+                </p>
+              )}
+              {/* Product stock */}
+              <div className="text-sm text-grey-30">
+                <p>{isGasAppliance(marketId) ? productsQuantityGasodomestico : productsQuantityVantiListo} unidades disponibles</p>
+              </div>
             </div>
           </div>
           <ProductActions
@@ -480,7 +484,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             onBuyHandler={onBuyHandler}
           />
         </div>
-      )};
+      )}
       {isOpen &&
         <CartModal close={closeModal} />
       }
