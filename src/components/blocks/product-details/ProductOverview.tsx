@@ -87,7 +87,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
       // Add to cart- product
-      const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle);
+      const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle, category);
       if (res.status === 200) {
         // validate and add to cart a service (Installation)
         if (Object.keys(installCheck).length > 0 && installCheck["id"] != "defInstall1") {
@@ -99,7 +99,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_code: sku,
             sku_name: name,
             sku_option_id: installCheck["id"],
-            sku_option_name: installCheck["name"]
+            sku_option_name: installCheck["name"],
+            categoryReference: category.clInstallationReference ?? null,
           };
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
         }
@@ -113,7 +114,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_code: sku,
             sku_name: name,
             sku_option_id: warrantyCheck["id"],
-            sku_option_name: warrantyCheck["name"]
+            sku_option_name: warrantyCheck["name"],
+            categoryReference: category.clWarrantyReference ?? null,
           };
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
         }

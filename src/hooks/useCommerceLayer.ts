@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CommerceLayer, { AddressCreate, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
-import { getMerchantToken } from "@/lib/services/commerce-layer.service";
+import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
@@ -157,15 +157,19 @@ export const useCommerceLayer = () => {
   }, [getOrder]);
 
   const addToCart = useCallback(
-    async (skuCode: string, productImage: string, productName: string) => {
+    async (skuCode: string, productImage: string, productName: string, category?: object) => {
       try {
         const client = await generateClient();
-        const resCreate : any = await client.line_items.create({
+        const resCreate: any = await client.line_items.create({
           quantity: 1,
           name: productName,
           image_url: productImage,
           sku_code: skuCode,
           _update_quantity: true,
+          metadata: {
+            clWarrantyReference: category?.["clWarrantyReference"],
+            clInstallationReference: category?.["clInstallationReference"],
+          },
           order: {
             type: "orders",
             id: orderId,
@@ -237,6 +241,49 @@ export const useCommerceLayer = () => {
     }
   };
 
+  const requestService = async (data: IAdjustments, orderId: string, quantity: string) => {
+    await fetch("/api/product/service-adition", {
+      method: "POST",
+      body: JSON.stringify({
+        data,
+        orderId,
+        quantity
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((response) => response.json())
+      .then(async (json) => {
+        if (json.status === 200 && json.data != null) {
+          console.info(json);
+        } else {
+          console.error("Error requestService or Null");
+        }
+      });
+    await reloadOrder();
+  };
+
+  const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number) => {
+    try {
+      await reloadOrder();
+      let response;
+      const lineItem = order.line_items.find((i) => i.id === idItemDelete);
+      const client = await generateClient();
+      if (lineItem) {
+        response = await client.line_items.delete(idItemDelete).catch(err => err.errors);
+        if (response?.[0]?.status) {
+          return { status: parseInt(response[0].status), data: response[0].title };
+        }
+        await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      }
+
+      return { status: 200, data: 'change - update item' };
+    } catch (err) {
+      console.error('error', err);
+      return { status: 500, data: 'error change item' };
+    }
+  };
+
   const addLoggedCustomer = useCallback(async () => {
     if (!clientLogged) throw new Error("unauthorized");
 
@@ -298,9 +345,9 @@ export const useCommerceLayer = () => {
 
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
-      
+
       const client = await generateClient();
-      
+
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
         ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
@@ -475,7 +522,8 @@ export const useCommerceLayer = () => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     validateExternal,
-    getSkuList
+    getSkuList,
+    changeItemService
   };
 };
 

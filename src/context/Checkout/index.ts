@@ -8,8 +8,9 @@ export interface IContextCheckout {
   order: Order;
   flow: Flow;
   tokenRecaptcha: string;
-  addToCart: (sku: string, productImage?: string, productName?: string) => Promise<apiResponse>;
+  addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
+  changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number) => Promise<apiResponse>;
   reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
@@ -39,6 +40,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   tokenRecaptcha: "",
   addToCart: () => undefined,
   getSkuList: () => undefined,
+  changeItemService: () => undefined,
   reloadOrder: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,

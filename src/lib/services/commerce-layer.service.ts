@@ -27,6 +27,7 @@ export interface IAdjustments {
   sku_name?: string;
   sku_option_id?: string;
   sku_option_name?: string;
+  categoryReference?: string;
 }
 
 export interface JWTProps {
@@ -53,7 +54,7 @@ export const CACHE_TOKENS = {
 export const getIntegrationAppToken = async (): Promise<string> => {
   try {
     if (CACHE_TOKENS.APP_TOKEN) return CACHE_TOKENS.APP_TOKEN;
-    
+
     const { accessToken, data: { expires_in } } = await getIntegrationToken({
       endpoint: process.env.COMMERCELAYER_ENDPOINT,
       clientId: process.env.COMMERCELAYER_CLIENT_ID,
@@ -80,7 +81,7 @@ export const getMerchantToken = async () => {
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
     if (commercelayerScope.indexOf('[') === 0) commercelayerScope = JSON.parse(commercelayerScope);
 
-    const { accessToken, data: { expires_in }} = await getSalesChannelToken({
+    const { accessToken, data: { expires_in } } = await getSalesChannelToken({
       endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
@@ -312,16 +313,16 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 
     if (sku) {
       product = {
-        priceGasodomestico:  sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_amount ?? null,
+        priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_amount ?? null,
         priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_compare_at_amount ?? null,
-        priceVantiListo:  sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_amount ?? null,
+        priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_amount ?? null,
         priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_compare_at_amount ?? null,
-        
+
         _priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.amount_float ?? null,
         _priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.compare_at_amount_float ?? null,
-        _priceVantiListo:  sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.amount_float ?? null,
+        _priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.amount_float ?? null,
         _priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.compare_at_amount_float ?? null,
-        
+
         productsQuantityGasodomestico: sku?.stock_items?.find(p => p.stock_location.reference === 'gasodomesticos')?.quantity ?? 0,
         productsQuantityVantiListo: sku?.stock_items?.find(p => p.stock_location.reference === 'vantiListo')?.quantity ?? 0,
       };
@@ -372,7 +373,8 @@ export const getSkuOptionsService = async (filter?: string) => {
     const skuOptionList = await cl.sku_options.list({
       filters: {
         reference_eq: filter ?? "",
-      }
+      },
+      pageSize: 25 // The maximum page size allowed is 25 - Commercelayer
     });
 
     return { status: 200, data: skuOptionList };
@@ -392,7 +394,8 @@ export const createAdjustmentsService = async ({
   sku_code,
   sku_name,
   sku_option_id,
-  sku_option_name
+  sku_option_name,
+  categoryReference,
 }: IAdjustments) => {
   try {
     const cl = await getCLAdminCLient();
@@ -407,6 +410,7 @@ export const createAdjustmentsService = async ({
         sku_name: sku_name,
         sku_option_id: sku_option_id,
         sku_option_name: sku_option_name,
+        categoryReference: categoryReference,
       }
     });
 

@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -14,9 +14,10 @@ import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames } from "@/utils/functions";
-import { ModalIntall } from "@/components/blocks/product-details/ProductConfig";
+import { ModalIntall, ModalWarranty } from "@/components/blocks/product-details/ProductConfig";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { IAdjustments } from "@/lib/services/commerce-layer.service";
 
 const CheckoutVerify = () => {
   const router = useRouter();
@@ -31,38 +32,22 @@ const CheckoutVerify = () => {
   const [isActivedModal, setIsActivedModal] = useState(false);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
-  const [installCurrent, setinstallCurrent] = useState<any>();
-  // const [warrantyCheck, setWarrantyCheck] = useState({});
-  // const [installCheck, setInstallCheck] = useState({});
   const defaultInstallList = {
     id: "defInstall1",
     name: "Sin intalación",
     formatted_price_amount: "$0"
   };
-  // const defaultWarrantyList = {
-  //   id: "defWarranty1",
-  //   name: "Sin garantia",
-  //   formatted_price_amount: "$0"
-  // };
-  const [installList, setInstallList] = useState<any>([{ ...defaultInstallList }]);
+  const defaultWarrantyList = {
+    id: "defWarranty1",
+    name: "Sin garantia",
+    formatted_price_amount: "$0"
+  };
+  const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
+  const productSelected = useRef(null);
   // const [warrantyList, setWarrantyList] = useState<any>([{ ...defaultWarrantyList }]);
 
-  const servicesHandler = (type: string, params) => {
-    console.info(params);
-    if (type === "warranty") {
-      // setWarrantyCheck(params);
-    }
-    if (type === "installation") {
-      // setInstallCheck(params);
-    }
-  };
-
-  const updateInstallCurrent = (value) => {
-    setinstallCurrent(value);
-  };
-
   const { isLogged } = useContext(AuthContext);
-  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer } =
+  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } =
     useContext(CheckoutContext);
 
   const products = useMemo(() => {
@@ -80,27 +65,59 @@ const CheckoutVerify = () => {
     return productsList;
   }, [order]);
 
-  //   useEffect(() => {
-  //     (async () => {
-  //         try {
-  //             if (category.clInstallationReference) {
-  //                 const infoSkuInstall = await getSkuList(category.clInstallationReference);
-  //                 if (infoSkuInstall) {
-  //                     setInstallList([defaultInstallList, infoSkuInstall.data]);
-  //                 }
-  //             }
-  //             if (category.clWarrantyReference) {
-  //                 const infoSkuWarra = await getSkuList(category.clWarrantyReference);
-  //                 if (infoSkuWarra) {
-  //                     setWarrantyList([defaultInstallList, infoSkuWarra.data]);
-  //                 }
-  //             }
-  //         } catch (error) {
-  //             console.error("Error at: ProductService", error);
-  //         }
-  //     })();
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [category]);
+  const servicesHandler = async (type: string, params) => {
+    const productItem = productSelected.current;
+    const itemService = products.filter(item => item.id === productItem).map((item) => { return item; });
+    if (type === "warranty") {
+      const metadataItemService = itemService?.[0]?.["warranty_service"]?.[0]?.["item"]?.["metadata"];
+      const dataAdjustment: IAdjustments = {
+        name: params.name + " - " + metadataItemService?.["sku_code"],
+        amount_cents: params.price_amount_cents,
+        type: "warranty",
+        sku_id: metadataItemService?.["sku_id"],
+        sku_code: metadataItemService?.["sku_code"],
+        sku_name: metadataItemService?.["sku_name"],
+        sku_option_id: params.id,
+        sku_option_name: params.name,
+        categoryReference: params.reference,
+      };
+      await changeItemService(itemService?.[0]?.["warranty_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"]);
+    }
+    if (type === "installation") {
+      const metadataItemService = itemService?.[0]?.["installlation_service"]?.[0]?.["item"]?.["metadata"];
+      const dataAdjustment: IAdjustments = {
+        name: params.name + " - " + metadataItemService?.["sku_code"],
+        amount_cents: params.price_amount_cents,
+        type: "installation",
+        sku_id: metadataItemService?.["sku_id"],
+        sku_code: metadataItemService?.["sku_code"],
+        sku_name: metadataItemService?.["sku_name"],
+        sku_option_id: params.id,
+        sku_option_name: params.name,
+        categoryReference: params.reference,
+      };
+      await changeItemService(itemService?.[0]?.["installlation_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"]);
+    }
+  };
+
+  const updateInstallCurrent = (value) => {
+    console.info(value);
+    // setinstallCurrent(value);
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const infoSkus = await getSkuList();
+        if (infoSkus) {
+          setSkuOptionsGlobal(infoSkus.data);
+        }
+      } catch (error) {
+        console.error("Error at: ProductService", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isCompleted = useMemo(
     () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
@@ -112,18 +129,32 @@ const CheckoutVerify = () => {
     [router.query]
   );
 
-  const openModal = (optionsList?: any) => {
+  const openModal = (category?: any, type?: string, idService?: string, idProduct?: string) => {
+    productSelected.current = idProduct;
+    const skusOptions = skuOptionsGlobal.filter(item => item.reference === category);
+    const posSkuIdService = skusOptions.findIndex(x => x.id === idService);
     setParamModal({
-      promoTitle: "Instala tu gasodoméstico",
+      promoTitle: (type === "installlation_service") ? "Instala tu gasodoméstico" : "Servicio Garantía",
     });
-    setmodalChild(
-      <ModalIntall
-        optionsList={optionsList}
-        onEventHandler={servicesHandler}
-        installCurrent={installCurrent}
-        upInstallCurrent={updateInstallCurrent}
-      />
-    );
+    if (type === "installlation_service") {
+      setmodalChild(
+        <ModalIntall
+          optionsList={[defaultInstallList, ...skusOptions]}
+          onEventHandler={servicesHandler}
+          installCurrent={posSkuIdService + 1}
+          upInstallCurrent={updateInstallCurrent}
+        />
+      );
+    } else {
+      setmodalChild(
+        <ModalWarranty
+          optionsList={[defaultWarrantyList, ...skusOptions]}
+          onEventHandler={servicesHandler}
+          installCurrent={posSkuIdService + 1}
+          upInstallCurrent={updateInstallCurrent}
+        />
+      );
+    }
     setIsActivedModal(false);
     setTimeout(() => {
       setIsActivedModal(true);
@@ -168,7 +199,6 @@ const CheckoutVerify = () => {
 
   useEffect(() => {
     setIsLoading(false);
-    setInstallList([{ ...defaultInstallList }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -312,8 +342,18 @@ const CheckoutVerify = () => {
                   <br /><b>{product["warranty_service"][0]["name"]}</b>
                 </>
               }
-              <button className="ml-2 text-xs text-blue-500 hover:text-blue-800">
-                Cambiar
+              <button
+                className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                onClick={
+                  () => openModal(
+                    product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clWarrantyReference"],
+                    "warranty_service",
+                    product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
+                    product.id
+                  )
+                }
+              >
+                {(product["warranty_service"].length > 0) ? "Cambiar" : "Agregar"}
               </button>
             </div>
             <div className="px-3 text-right">
@@ -333,9 +373,16 @@ const CheckoutVerify = () => {
               }
               <button
                 className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                onClick={() => openModal(installList)}
+                onClick={
+                  () => openModal(
+                    product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clInstallationReference"],
+                    "installlation_service",
+                    product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
+                    product.id
+                  )
+                }
               >
-                Cambiar
+                {(product["installlation_service"].length > 0) ? "Cambiar" : "Agregar"}
               </button>
             </div>
             <div className="px-3 text-right">
