@@ -226,7 +226,7 @@ const CheckoutVerify = () => {
 
         {products.map((product) => {
           return (<div
-            className="grid border-b grid-template-product-details"
+            className="flex flex-wrap sm:grid border-b grid-template-product-details"
             key={product.id}
           >
             <div className="row-start-1 row-end-4 py-3.5">
@@ -243,7 +243,7 @@ const CheckoutVerify = () => {
                 )}
               </figure>
             </div>
-            <div className="text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
+            <div className="w-[calc(100%_-_70px)] flex-grow sm:w-auto text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
               <CustomLink
                 content={{ urlPath: `/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}` }}
               >
@@ -251,7 +251,7 @@ const CheckoutVerify = () => {
               </CustomLink>
               <p className="text-xs text-left text-grey-60">* Precio IVA incluido</p>
             </div>
-            <div className="hidden sm:inline-block py-3.5 pb-0 px-3 text-blue-dark mx-auto">
+            <div className="inline-block py-3.5 pb-0 sm:px-3 text-blue-dark sm:mx-auto">
               <div className="w-32 custom-number-input h-9">
                 <div className="relative flex flex-row w-full h-full bg-transparent rounded-lg">
                   <button
@@ -331,11 +331,12 @@ const CheckoutVerify = () => {
                   }).finally(() => setIsLoading(false));
                 }}>Eliminar</button>
             </div>
-            <div className="inline-block py-3.5 text-right text-blue-dark text-md pr-1">
+            <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1 sm:m-0">
               {product.formatted_unit_amount}
             </div>
+            <div className="w-full mt-3 sm:hidden"></div>
             {/* ********* Services ******** */}
-            <div className="py-1 pl-4 text-sm text-left text-grey-30">
+            <div className="flex flex-col items-start sm:block py-1 sm:pl-4 text-sm text-left text-grey-30">
               Garantía extendida{" "}
               {product["warranty_service"].length > 0 &&
                 <>
@@ -361,10 +362,11 @@ const CheckoutVerify = () => {
                 {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["quantity"] : "0"}x
               </span>
             </div>
-            <div className="inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+            <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
               {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["formatted_total_amount"] : "$0"}
             </div>
-            <div className="py-1 pl-4 text-sm text-left text-grey-30">
+            <div className="w-full sm:hidden"></div>
+            <div className="flex flex-col items-start sm:block py-1 sm:pl-4 text-sm text-left text-grey-30">
               Servicio de instalación{" "}
               {product["installlation_service"].length > 0 &&
                 <>
@@ -390,15 +392,15 @@ const CheckoutVerify = () => {
                 {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["quantity"] : "0"}x
               </span>
             </div>
-            <div className="inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+            <div className="flex-grow ms:flex-grow-0 inline-block py-1 pr-1 text-sm text-right text-blue-dark">
               {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["formatted_total_amount"] : "$0"}
             </div>
             {/* ********* End Services ******** */}
-            <div className="col-start-1 col-end-3 mt-3 bg-blue-50"></div>
+            <div className="w-full sm:w-auto col-start-1 col-end-3 mt-3 bg-blue-50"></div>
             <div className="inline-block py-1 mt-3 font-bold text-center text-blue-dark text-md bg-blue-50">
               Total Producto
             </div>
-            <div className="inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
+            <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
               {product.formatted_total_amount}
             </div>
           </div>);
