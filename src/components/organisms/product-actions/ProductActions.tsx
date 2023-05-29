@@ -75,7 +75,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
           content={{ urlPath: callbackURL }}
         >
           <span className="hidden sm:inline-block">Financiar con Vantilisto</span>
-          <span className="inline-block sm:hidden">Con Vantilisto</span>
+          <span className="inline-block sm:hidden text-center">Con Vantilisto</span>
           <Icon {...iconCallback} />
         </CustomLink>
       </div>
