@@ -40,6 +40,11 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         setinstallCurrent(value);
     };
 
+    const servicesHandler = async (type: string, params) => {
+        onEventHandler(type, params);
+        setIsActivedModal(false);
+    };
+
     const openModal = (service: string, optionsList?: any) => {
         if (service === "shipping") {
             setParamModal({
@@ -53,7 +58,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
             setmodalChild(
                 <ModalIntall
                     optionsList={optionsList}
-                    onEventHandler={onEventHandler}
+                    onEventHandler={servicesHandler}
                     installCurrent={installCurrent}
                     upInstallCurrent={updateInstallCurrent}
                 />
@@ -64,7 +69,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                 ? <ModalShipping />
                 : <ModalIntall
                     optionsList={optionsList}
-                    onEventHandler={onEventHandler}
+                    onEventHandler={servicesHandler}
                     installCurrent={installCurrent}
                     upInstallCurrent={updateInstallCurrent}
                 />
@@ -74,16 +79,6 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
             setIsActivedModal(true);
         }, 200);
     };
-    // switch (type) {
-    //   case "warranty":
-    //     setWarrantyList([defaultWarrantyList, ...json.data]);
-    //     break;
-    //   case "installation":
-    //     setInstallList([defaultInstallList, ...json.data]);
-    //     break;
-    //   default:
-    //     break;
-    // }
 
     useEffect(() => {
         (async () => {

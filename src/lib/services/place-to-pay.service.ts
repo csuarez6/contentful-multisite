@@ -31,7 +31,7 @@ export interface IDiscount {
   base: string,
   code: string,
   type: string,
-  amount: string|number,
+  amount: string | number,
 }
 
 export interface IDispersion {
@@ -49,11 +49,11 @@ export interface IDispersion {
   amount: {
     from: {
       currency: string,
-      total: string|number,
+      total: string | number,
     },
     to: {
       currency: string,
-      total: string|number,
+      total: string | number,
     },
     factor: string,
   },
@@ -107,15 +107,15 @@ export interface ICreateRequest {
     description: string,
     amount: {
       currency: string,
-      total: string|number,
+      total: string | number,
       taxes?: [{
         kind: string,
-        amount: string|number,
-        base: string|number,
+        amount: string | number,
+        base: string | number,
       }],
       details?: [{
         kind: string,
-        amount: string|number,
+        amount: string | number,
       }],
     },
     allowPartial: boolean,
@@ -141,8 +141,8 @@ export interface ICreateRequest {
       name: string,
       category: string,
       qty: string,
-      price: string|number,
-      tax: string|number,
+      price: string | number,
+      tax: string | number,
     }],
     fields?: [{
       keyword: string,
@@ -153,7 +153,7 @@ export interface ICreateRequest {
       periodicity: string,
       interval: string,
       nextPayment: string,
-      maxPeriods: string|number,
+      maxPeriods: string | number,
       dueDate: string,
       notificationUrl: string,
     },
@@ -163,12 +163,12 @@ export interface ICreateRequest {
       agreementType: string,
       amount: {
         currency: string,
-        total: string|number,
+        total: string | number,
       },
     }],
     modifiers?: [{
       type: string,
-      code: string|number,
+      code: string | number,
       additional: {
         invoice: string,
       },
@@ -185,7 +185,7 @@ export interface ICreateRequest {
   },
   fields: [{
     keyword: string,
-    value: string|object|[],
+    value: string | object | [],
     displayOn: string,
   }],
   paymentMethod: string,
@@ -206,7 +206,7 @@ export interface IRequest {
     message?: string,
     date: string
   },
-  requestId?: string|number,
+  requestId?: string | number,
   processUrl?: string
 }
 
@@ -370,7 +370,7 @@ export const getAuth = () => {
   const nonce = generateNonce();
   const tranKeyBase64 = generateTranKey(nonce, seed, PLACE_TO_PAY_SECRET_KEY);
   const nonceBase64 = base64.encode(nonce);
-  
+
   const authOptions: IAuth = {
     login: PLACE_TO_PAY_LOGIN,
     seed: seed,
@@ -481,8 +481,8 @@ export const createRequest = async (): Promise<IRequest> => {
         interval: "1",
         nextPayment: "2019-08-24",
         maxPeriods: 1,
-        dueDate : "2019-09-24",
-        notificationUrl : "https://checkout.placetopay.com"
+        dueDate: "2019-09-24",
+        notificationUrl: "https://checkout.placetopay.com"
       },
       subscribe: false,
       dispersion: [
@@ -534,14 +534,14 @@ export const createRequest = async (): Promise<IRequest> => {
 
   const options = {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', Accept: 'application/json'},
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(bodyRequest)
   };
 
   try {
     const response = await fetch(PLACE_TO_PAY_ENDPOINT, options);
     const data = await response.json() as IRequest;
-    console.log(data);
+    console.info(data);
     return data;
   } catch (error) {
     console.error(error);
@@ -559,14 +559,14 @@ export const getRequestInformation = async (requestId: string) => {
 
   const options = {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', Accept: 'application/json'},
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(bodyRequest)
   };
 
   try {
     const response = await fetch(url, options);
     const data = await response.json() as IRequestInformation;
-    console.log(data);
+    console.info(data);
     return data;
   } catch (error) {
     console.error(error);

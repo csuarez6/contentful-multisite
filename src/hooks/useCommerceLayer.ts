@@ -36,7 +36,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_unit_amount",
       "quantity",
       "formatted_total_amount",
-      "item"
+      "item",
+      "metadata"
     ],
     customer: ["id"],
   },
@@ -259,13 +260,13 @@ export const useCommerceLayer = () => {
         } else {
           console.error("Error requestService or Null");
         }
-      });
-    await reloadOrder();
+      }).finally(async () => { await reloadOrder(); });
+
   };
 
-  const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number) => {
+  const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number, idProductOrigin: string) => {
     try {
-      await reloadOrder();
+      console.info(idProductOrigin);
       let response;
       const lineItem = order.line_items.find((i) => i.id === idItemDelete);
       const client = await generateClient();
@@ -274,10 +275,10 @@ export const useCommerceLayer = () => {
         if (response?.[0]?.status) {
           return { status: parseInt(response[0].status), data: response[0].title };
         }
-        await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
       }
+      await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      await reloadOrder();
 
-      return { status: 200, data: 'change - update item' };
     } catch (err) {
       console.error('error', err);
       return { status: 500, data: 'error change item' };

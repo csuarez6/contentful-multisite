@@ -44,7 +44,7 @@ const CheckoutVerify = () => {
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
   const productSelected = useRef(null);
-  // const [warrantyList, setWarrantyList] = useState<any>([{ ...defaultWarrantyList }]);
+  const fechRequestStatus = useRef(false);
 
   const { isLogged } = useContext(AuthContext);
   const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } =
@@ -67,42 +67,30 @@ const CheckoutVerify = () => {
 
   const servicesHandler = async (type: string, params) => {
     const productItem = productSelected.current;
-    const itemService = products.filter(item => item.id === productItem).map((item) => { return item; });
-    if (type === "warranty") {
-      const metadataItemService = itemService?.[0]?.["warranty_service"]?.[0]?.["item"]?.["metadata"];
-      const dataAdjustment: IAdjustments = {
-        name: params.name + " - " + metadataItemService?.["sku_code"],
-        amount_cents: params.price_amount_cents,
-        type: "warranty",
-        sku_id: metadataItemService?.["sku_id"],
-        sku_code: metadataItemService?.["sku_code"],
-        sku_name: metadataItemService?.["sku_name"],
-        sku_option_id: params.id,
-        sku_option_name: params.name,
-        categoryReference: params.reference,
-      };
-      await changeItemService(itemService?.[0]?.["warranty_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"]);
-    }
-    if (type === "installation") {
-      const metadataItemService = itemService?.[0]?.["installlation_service"]?.[0]?.["item"]?.["metadata"];
-      const dataAdjustment: IAdjustments = {
-        name: params.name + " - " + metadataItemService?.["sku_code"],
-        amount_cents: params.price_amount_cents,
-        type: "installation",
-        sku_id: metadataItemService?.["sku_id"],
-        sku_code: metadataItemService?.["sku_code"],
-        sku_name: metadataItemService?.["sku_name"],
-        sku_option_id: params.id,
-        sku_option_name: params.name,
-        categoryReference: params.reference,
-      };
-      await changeItemService(itemService?.[0]?.["installlation_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"]);
-    }
+    const itemService = (order.line_items).filter(item => item.id === productItem).map((item) => { return item; });
+    const dataAdjustment: IAdjustments = {
+      name: params.name + " - " + itemService?.[0]?.["sku_code"],
+      amount_cents: params.price_amount_cents,
+      type: (type === "warranty") ? "warranty" : "installation",
+      sku_id: itemService?.[0]?.["id"],
+      sku_code: itemService?.[0]?.["sku_code"],
+      sku_name: itemService?.[0]?.["name"],
+      sku_option_id: params.id,
+      sku_option_name: params.name,
+      categoryReference: params.reference,
+    };
+    if (fechRequestStatus.current) return;
+    fechRequestStatus.current = true;
+    if (type === "warranty") await changeItemService(itemService?.[0]?.["warranty_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"], productItem);
+    if (type === "installation") await changeItemService(itemService?.[0]?.["installlation_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"], productItem);
+    setTimeout(() => {
+      fechRequestStatus.current = false;
+    }, 1500);
+    setIsActivedModal(false);
   };
 
   const updateInstallCurrent = (value) => {
     console.info(value);
-    // setinstallCurrent(value);
   };
 
   useEffect(() => {
@@ -129,9 +117,10 @@ const CheckoutVerify = () => {
     [router.query]
   );
 
-  const openModal = (category?: any, type?: string, idService?: string, idProduct?: string) => {
+  const openModal = (category?: string, type?: string, idService?: string, idProduct?: string, productCategory?: string) => {
     productSelected.current = idProduct;
-    const skusOptions = skuOptionsGlobal.filter(item => item.reference === category);
+    const compareCategory = category ?? productCategory;
+    const skusOptions = skuOptionsGlobal.filter(item => item.reference === compareCategory);
     const posSkuIdService = skusOptions.findIndex(x => x.id === idService);
     setParamModal({
       promoTitle: (type === "installlation_service") ? "Instala tu gasodoméstico" : "Servicio Garantía",
@@ -350,7 +339,8 @@ const CheckoutVerify = () => {
                     product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clWarrantyReference"],
                     "warranty_service",
                     product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
-                    product.id
+                    product.id,
+                    product.metadata.clWarrantyReference
                   )
                 }
               >
@@ -380,7 +370,8 @@ const CheckoutVerify = () => {
                     product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clInstallationReference"],
                     "installlation_service",
                     product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
-                    product.id
+                    product.id,
+                    product.metadata.clInstallationReference
                   )
                 }
               >

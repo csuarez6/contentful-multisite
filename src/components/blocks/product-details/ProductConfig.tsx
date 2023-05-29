@@ -89,7 +89,6 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
                   onClick={() => {
                     upInstallCurrent(index);
                     setChecked(index);
-                    onEventHandler("installation", item);
                   }}
                 >
                   <input
@@ -114,10 +113,15 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
             })}
           </ul>
         </div>
-        <div className="flex justify-end gap-2">
-          {/* <button className="button button-primary">
+        <div
+          className="flex justify-end gap-2"
+          onClick={() => {
+            onEventHandler("installation", optionsList[checked]);
+          }}
+        >
+          <button className="button button-primary">
             Hecho
-          </button> */}
+          </button>
         </div>
       </div>
     </>
@@ -146,7 +150,6 @@ export const ModalWarranty: React.FC<any> = ({ optionsList, onEventHandler, inst
                   onClick={() => {
                     upInstallCurrent(index);
                     setChecked(index);
-                    onEventHandler("warranty", item);
                   }}
                 >
                   <input
@@ -172,9 +175,14 @@ export const ModalWarranty: React.FC<any> = ({ optionsList, onEventHandler, inst
           </ul>
         </div>
         <div className="flex justify-end gap-2">
-          {/* <button className="button button-primary">
+          <button
+            className="button button-primary"
+            onClick={() => {
+              onEventHandler("warranty", optionsList[checked]);
+            }}
+          >
             Hecho
-          </button> */}
+          </button>
         </div>
       </div>
     </>

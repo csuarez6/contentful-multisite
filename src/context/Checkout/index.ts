@@ -10,7 +10,7 @@ export interface IContextCheckout {
   tokenRecaptcha: string;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
-  changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number) => Promise<apiResponse>;
+  changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
   reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
