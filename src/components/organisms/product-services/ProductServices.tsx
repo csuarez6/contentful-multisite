@@ -4,17 +4,19 @@ import {
     ModalShipping,
 } from "@/components/blocks/product-details/ProductConfig";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ModalSuccess from "../modal-success/ModalSuccess";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import { classNames } from "@/utils/functions";
 import WarrantyModal from "../warranty-modal/WarrantyModal";
+import CheckoutContext from "@/context/Checkout";
 
 const ProductServices: React.FC<IProductOverviewDetails> = ({
     warranty,
     category,
     onEventHandler
 }) => {
+    const { getSkuList } = useContext(CheckoutContext);
     const [isActivedModal, setIsActivedModal] = useState(false);
     const [paramModal, setParamModal] = useState<IPromoContent>();
     const [modalChild, setmodalChild] = useState<any>();
@@ -38,6 +40,11 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         setinstallCurrent(value);
     };
 
+    const servicesHandler = async (type: string, params) => {
+        onEventHandler(type, params);
+        setIsActivedModal(false);
+    };
+
     const openModal = (service: string, optionsList?: any) => {
         if (service === "shipping") {
             setParamModal({
@@ -51,7 +58,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
             setmodalChild(
                 <ModalIntall
                     optionsList={optionsList}
-                    onEventHandler={onEventHandler}
+                    onEventHandler={servicesHandler}
                     installCurrent={installCurrent}
                     upInstallCurrent={updateInstallCurrent}
                 />
@@ -62,7 +69,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                 ? <ModalShipping />
                 : <ModalIntall
                     optionsList={optionsList}
-                    onEventHandler={onEventHandler}
+                    onEventHandler={servicesHandler}
                     installCurrent={installCurrent}
                     upInstallCurrent={updateInstallCurrent}
                 />
@@ -73,42 +80,25 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         }, 200);
     };
 
-    const getSkuList = (filter?: string, type?: string) => {
-        fetch("/api/sku-options", {
-            method: "POST",
-            body: JSON.stringify({
-                filter: filter,
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                if (json.status === 200) {
-                    switch (type) {
-                        case "warranty":
-                            setWarrantyList([defaultWarrantyList, ...json.data]);
-                            break;
-                        case "installation":
-                            setInstallList([defaultInstallList, ...json.data]);
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    console.error("Error get sku-options");
-                }
-            });
-    };
-
     useEffect(() => {
-        if (category.clInstallationReference) {
-            getSkuList(category.clInstallationReference, "installation");
-        }
-        if (category.clWarrantyReference) {
-            getSkuList(category.clWarrantyReference, "warranty");
-        }
+        (async () => {
+            try {
+                if (category.clInstallationReference) {
+                    const infoSkuInstall = await getSkuList(category.clInstallationReference);
+                    if (infoSkuInstall) {
+                        setInstallList([defaultInstallList, ...infoSkuInstall.data]);
+                    }
+                }
+                if (category.clWarrantyReference) {
+                    const infoSkuWarra = await getSkuList(category.clWarrantyReference);
+                    if (infoSkuWarra) {
+                        setWarrantyList([defaultInstallList, ...infoSkuWarra.data]);
+                    }
+                }
+            } catch (error) {
+                console.error("Error at: ProductService", error);
+            }
+        })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 

@@ -1,6 +1,5 @@
-import CommerceLayer from '@commercelayer/sdk';
+import CommerceLayer, { QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
 export interface ICustomer {
@@ -28,6 +27,7 @@ export interface IAdjustments {
   sku_name?: string;
   sku_option_id?: string;
   sku_option_name?: string;
+  categoryReference?: string;
 }
 
 export interface JWTProps {
@@ -50,48 +50,47 @@ export const CACHE_TOKENS = {
   APP_TOKEN: null
 };
 
-export const getAppToken = async (): Promise<string> => {
-
+/* For full integration permissions (2 hours) */
+export const getIntegrationAppToken = async (): Promise<string> => {
   try {
-    let token = Cookies.get("clIntegrationToken");
+    if (CACHE_TOKENS.APP_TOKEN) return CACHE_TOKENS.APP_TOKEN;
 
-    if (!token) {
-      const auth = await getIntegrationToken({
-        endpoint: process.env.COMMERCELAYER_ENDPOINT,
-        clientId: process.env.COMMERCELAYER_CLIENT_ID,
-        clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
-      });
-      token = auth.accessToken;
-      Cookies.set("clIntegrationToken", token, {
-        expires: auth.expires,
-      });
-    }
+    const { accessToken, data: { expires_in } } = await getIntegrationToken({
+      endpoint: process.env.COMMERCELAYER_ENDPOINT,
+      clientId: process.env.COMMERCELAYER_CLIENT_ID,
+      clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
+    });
 
-    return token;
+    CACHE_TOKENS.APP_TOKEN = accessToken;
+
+    setTimeout(() => {
+      CACHE_TOKENS.APP_TOKEN = null;
+    }, 1000 * parseInt(expires_in));
+    return accessToken;
 
   } catch (error) {
     throw new Error("UNABLE_GETTING_CL_TOKEN", { cause: error });
   }
 };
 
+/* For CRUD in the order, items and similars (4 hours) */
 export const getMerchantToken = async () => {
   try {
-    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) {
-      return CACHE_TOKENS.MERCHANT_TOKEN;
-    }
+    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) return CACHE_TOKENS.MERCHANT_TOKEN;
 
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf('[') === 0) {
-      commercelayerScope = JSON.parse(commercelayerScope);
-    }
+    if (commercelayerScope.indexOf('[') === 0) commercelayerScope = JSON.parse(commercelayerScope);
 
-    const { accessToken } = await getSalesChannelToken({
+    const { accessToken, data: { expires_in } } = await getSalesChannelToken({
       endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
     });
 
     CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
+    setTimeout(() => {
+      CACHE_TOKENS.MERCHANT_TOKEN = null;
+    }, 1000 * parseInt(expires_in));
     return accessToken;
   } catch (error) {
     console.error('Error on «getMerchantToken»', error);
@@ -99,8 +98,8 @@ export const getMerchantToken = async () => {
   };
 };
 
+/* For specific user (10 min)  */
 export const getCustomerTokenCl = async ({ email, password }) => {
-
   try {
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
     if (commercelayerScope.indexOf('[') === 0) {
@@ -134,7 +133,7 @@ const getCommerlayerClient = async (accessToken: string) =>
 
 export const getCLAdminCLient = async () => {
   try {
-    const accessToken = await getAppToken();
+    const accessToken = await getIntegrationAppToken();
 
     return getCommerlayerClient(accessToken);
   } catch (error) {
@@ -302,25 +301,30 @@ export const deleteCustomerResetPwd = async (tokenID: string) => {
 export const getCommercelayerProduct = async (skuCode: string) => {
   let product = null;
   try {
-    const token = await getMerchantToken();
-    const client = await getCommerlayerClient(token);
+    const clientGasodomesticos = await getCLAdminCLient();
 
     const sku = (
-      await client.skus.list({
+      await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
-        include: ['prices', 'stock_items'],
+        include: ['prices', 'stock_items', 'prices.price_list', 'stock_items.stock_location'],
         fields: ['id', 'prices', 'stock_items'],
       })
     ).first();
 
     if (sku) {
       product = {
-        price: sku?.prices[0]?.formatted_amount,
-        priceBefore: sku?.prices[0]?.formatted_compare_at_amount,
-        productsQuantity: sku?.stock_items[0]?.quantity,
+        priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_amount ?? null,
+        priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_compare_at_amount ?? null,
+        priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_amount ?? null,
+        priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_compare_at_amount ?? null,
 
-        _price: sku?.prices[0]?.amount_float,
-        _priceBefore: sku?.prices[0]?.compare_at_amount_float,
+        _priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.amount_float ?? null,
+        _priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.compare_at_amount_float ?? null,
+        _priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.amount_float ?? null,
+        _priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.compare_at_amount_float ?? null,
+
+        productsQuantityGasodomestico: sku?.stock_items?.find(p => p.stock_location.reference === 'gasodomesticos')?.quantity ?? 0,
+        productsQuantityVantiListo: sku?.stock_items?.find(p => p.stock_location.reference === 'vantiListo')?.quantity ?? 0,
       };
     }
   } catch (error) {
@@ -349,6 +353,19 @@ export const updatePassWord = async (user: string, customerPWD: string, newPWD: 
   }
 };
 
+/** updateOrderAdminService */
+export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const updateOrder = await cl.orders.retrieve(idOrder, defaultOrderParams);
+
+    return { status: 200, data: updateOrder };
+  } catch (error) {
+    console.error('Error updateOrderAdminService: ', error);
+    return { status: 401, error: error };
+  }
+};
+
 /** Get sku_options */
 export const getSkuOptionsService = async (filter?: string) => {
   try {
@@ -356,7 +373,8 @@ export const getSkuOptionsService = async (filter?: string) => {
     const skuOptionList = await cl.sku_options.list({
       filters: {
         reference_eq: filter ?? "",
-      }
+      },
+      pageSize: 25 // The maximum page size allowed is 25 - Commercelayer
     });
 
     return { status: 200, data: skuOptionList };
@@ -376,7 +394,8 @@ export const createAdjustmentsService = async ({
   sku_code,
   sku_name,
   sku_option_id,
-  sku_option_name
+  sku_option_name,
+  categoryReference,
 }: IAdjustments) => {
   try {
     const cl = await getCLAdminCLient();
@@ -391,6 +410,7 @@ export const createAdjustmentsService = async ({
         sku_name: sku_name,
         sku_option_id: sku_option_id,
         sku_option_name: sku_option_name,
+        categoryReference: categoryReference,
       }
     });
 

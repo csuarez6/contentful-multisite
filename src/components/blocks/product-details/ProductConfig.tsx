@@ -89,7 +89,67 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
                   onClick={() => {
                     upInstallCurrent(index);
                     setChecked(index);
-                    onEventHandler("installation", item);
+                  }}
+                >
+                  <input
+                    type="radio"
+                    id={`installbox-${index}`}
+                    name="installbox"
+                    checked={checked === index}
+                    className="hidden peer"
+                    readOnly
+                  />
+                  <label
+                    htmlFor={`installbox-${index}`}
+                    className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-bold text-size-span">{item.name}</span>
+                      <span className="text-size-small">{item.formatted_price_amount}</span>
+                    </div>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div
+          className="flex justify-end gap-2"
+          onClick={() => {
+            onEventHandler("installation", optionsList[checked]);
+          }}
+        >
+          <button className="button button-primary">
+            Hecho
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const ModalWarranty: React.FC<any> = ({ optionsList, onEventHandler, installCurrent, upInstallCurrent }) => {
+  const [checked, setChecked] = useState(installCurrent ?? 0);
+  return (
+    <>
+      <div className="flex flex-col gap-6">
+        <div className="text-left">
+          Servicio de garantía para su producto.
+        </div>
+        <div>
+          <ul
+            className={classNames(
+              "px-3 py-[10px] gap-2 grid",
+              (optionsList.length > 0) ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+            )}
+          >
+            {(optionsList.length > 0) && optionsList.map((item, index) => {
+              return (
+                <li
+                  key={item.id}
+                  onClick={() => {
+                    upInstallCurrent(index);
+                    setChecked(index);
                   }}
                 >
                   <input
@@ -115,9 +175,14 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
           </ul>
         </div>
         <div className="flex justify-end gap-2">
-          {/* <button className="button button-primary">
+          <button
+            className="button button-primary"
+            onClick={() => {
+              onEventHandler("warranty", optionsList[checked]);
+            }}
+          >
             Hecho
-          </button> */}
+          </button>
         </div>
       </div>
     </>

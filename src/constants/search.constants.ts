@@ -16,9 +16,24 @@ export const FACET_QUERY_MAP = {
     query: ProductCategoryQuery,
     modifier: 'stringify'
   },
-  "fields._price": {
+  "fields._priceGasodomestico": {
     title: 'Precio',
-    inputName: 'precio',
+    inputName: 'precio_gasodomestico',
+    queryName: null,
+    query: null,
+    rawOptions: [
+      {name: '', text: `0 - 1'000.000`, image: null, value: '-1000000', totalItems: 0},
+      {name: '', text: `1'000.001 - 2'000.000`, image: null, value: '1000001-2000000', totalItems: 0},
+      {name: '', text: `2'000.001 - 3'000.000`, image: null, value: '2000001-3000000', totalItems: 0},
+      {name: '', text: `3'000.001 - 4'000.000`, image: null, value: '3000001-4000000', totalItems: 0},
+      {name: '', text: `4'000.001 - 5'000.000`, image: null, value: '4000001-5000000', totalItems: 0},
+      {name: '', text: `+5'000.000`, image: null, value: '5000001-', totalItems: 0},
+    ],
+    modifier: 'range'
+  },
+  "fields._priceVantiListo": {
+    title: 'Precio',
+    inputName: 'precio_vantilisto',
     queryName: null,
     query: null,
     rawOptions: [

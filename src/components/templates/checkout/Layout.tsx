@@ -135,6 +135,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <>
                     <div className="grid grid-cols-1 text-sm" key={"product-name" + i}>
                       <p className="">{product.name}</p>
+                      <p className="text-xs">* IVA incluido</p>
                     </div>
                     <div className="grid grid-cols-2 text-sm border-b border-gray-300 mb-2 pb-2" key={"product-count" + i}>
                       <p>Cantidad: {product.quantity}</p>

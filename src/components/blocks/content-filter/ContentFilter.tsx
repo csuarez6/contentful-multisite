@@ -7,6 +7,7 @@ import ProductFilterBlock from "../product-filter/ProductFilter";
 import CarouselCategoriesBlock from "../carousel-categories/CarouselCategories";
 import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import { useRouter } from "next/router";
+import { DEFAULT_GASODOMESTICOS_PARENT_ID } from "@/constants/contentful-ids.constants";
 
 const ContentFilter: React.FC<IContentFilter> = ({
   sys,
@@ -77,6 +78,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
   };
 
   useEffect(() => {
+    // Delete the filter Vantilisto in the gasodomestico searching
+    if(preloadContent?.facets) {
+      preloadContent.facets = preloadContent.facets.filter((facet: any) => {
+        return !(facet?.name === "precio_vantilisto" && parentsCollection.items?.[0]?.sys?.id === DEFAULT_GASODOMESTICOS_PARENT_ID);
+      });
+    }
+
     if (mainFacet && preloadContent?.facets?.length) {
       const tmpMainFacetContent = preloadContent.facets.find(
         (f: ISelect) => f.labelSelect === mainFacet

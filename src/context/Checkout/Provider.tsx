@@ -9,8 +9,6 @@ const CheckoutProvider = ({ children }) => {
   const { paymentType } = router.query;
 
   const {
-    isLoading,
-    isError,
     order,
     addToCart,
     reloadOrder,
@@ -28,15 +26,15 @@ const CheckoutProvider = ({ children }) => {
     setDefaultShippingMethod,
     onRecaptcha,
     validateExternal,
-    tokenRecaptcha
+    tokenRecaptcha,
+    getSkuList,
+    changeItemService
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
 
   const valuesProvider: IContextCheckout = {
     flow,
-    isLoading,
-    isError,
     order,
     tokenRecaptcha,
     addToCart,
@@ -55,6 +53,8 @@ const CheckoutProvider = ({ children }) => {
     setDefaultShippingMethod,
     onRecaptcha,
     validateExternal,
+    getSkuList,
+    changeItemService
   };
 
   return (

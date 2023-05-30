@@ -5,12 +5,12 @@ import { Flow, VantiChekoutCustomer } from "./flows";
 import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 export interface IContextCheckout {
-  isLoading: boolean;
-  isError: boolean;
   order: Order;
   flow: Flow;
   tokenRecaptcha: string;
-  addToCart: (sku: string, productImage?: string, productName?: string) => Promise<apiResponse>;
+  addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
+  getSkuList: (filter?: string) => Promise<apiResponse>;
+  changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
   reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
@@ -36,11 +36,11 @@ export interface IContextCheckout {
 
 const CheckoutContext = createContext<IContextCheckout>({
   order: undefined,
-  isLoading: false,
-  isError: false,
   flow: undefined,
   tokenRecaptcha: "",
   addToCart: () => undefined,
+  getSkuList: () => undefined,
+  changeItemService: () => undefined,
   reloadOrder: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,

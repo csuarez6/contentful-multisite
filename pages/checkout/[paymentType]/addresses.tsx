@@ -17,6 +17,10 @@ import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
+import citiesFile from '@/utils/static/cities-co.json';
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 interface IAddress {
   id?: string;
@@ -69,6 +73,28 @@ const DEFAULT_ZIP_CODE = '000000';
 const getCitiesByState = async (state: string) =>
   (await fetch(`/api/static/cities/${state}`)).json();
 
+export const ModalConfirm: React.FC<any> = ({ data, onEventHandler }) => {
+  return (
+    <>
+      <div className="flex flex-col gap-6">
+        <div className="text-left">
+          Recuerde que si continua con el proceso, el servicio de instalación será removida por falta de cobertura en la ubicación registrada.
+        </div>
+        <div>
+          <button
+            className="button button-primary"
+            onClick={() => {
+              onEventHandler(data);
+            }}
+          >
+            Hecho
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const CheckoutAddresses = () => {
   const router = useRouter();
   const lastPath = useLastPath();
@@ -76,6 +102,10 @@ const CheckoutAddresses = () => {
   const [shippingCities, setShippingCities] = useState([]);
   const [billingCities, setBillingCities] = useState([]);
   const { isLogged, user } = useContext(AuthContext);
+  const [showAlert, setShowAlert] = useState(false);
+  const [isActivedModal, setIsActivedModal] = useState(false);
+  const [paramModal, setParamModal] = useState<IPromoContent>();
+  const [modalChild, setmodalChild] = useState<any>();
 
   const { order, flow, addAddresses, getAddresses } =
     useContext(CheckoutContext);
@@ -115,13 +145,30 @@ const CheckoutAddresses = () => {
     name: "shippingAddress.stateCode",
   });
 
+  const shippingCityWatched = useWatch({
+    control,
+    name: "shippingAddress.cityCode",
+  });
+
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
       const cities: string[] = await getCitiesByState(shippingStateWatched);
       setShippingCities(cities);
+      setShowAlert(false);
     })();
   }, [shippingStateWatched]);
+
+  useEffect(() => {
+    if (!shippingCityWatched) return;
+    const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    if (cityCheck[0]?.isCovered == "false") {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shippingCityWatched]);
 
   const billingStateWatched = useWatch({
     control,
@@ -129,7 +176,6 @@ const CheckoutAddresses = () => {
   });
 
   useEffect(() => {
-
     if (!billingStateWatched) return;
     (async () => {
       const cities: string[] = await getCitiesByState(billingStateWatched);
@@ -176,8 +222,9 @@ const CheckoutAddresses = () => {
     zip_code: DEFAULT_ZIP_CODE,
   });
 
-  const onSubmit = async (data: IAddresses) => {
+  const sendData = async (data: IAddresses) => {
     try {
+      setIsActivedModal(false);
       const { shippingAddress, billingAddress } = data;
 
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
@@ -199,6 +246,30 @@ const CheckoutAddresses = () => {
       );
 
       await handleNext();
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
+
+  const onSubmit = async (data: IAddresses) => {
+    try {
+      const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+      if (cityCheck[0]?.isCovered == "false") {
+        setParamModal({ promoTitle: "Servicio Instalación" });
+        setmodalChild(
+          <ModalConfirm
+            data={data}
+            onEventHandler={sendData}
+          />
+        );
+        setIsActivedModal(false);
+        setTimeout(() => {
+          setIsActivedModal(true);
+        }, 200);
+      } else {
+        await sendData(data);
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -235,6 +306,23 @@ const CheckoutAddresses = () => {
           className="flex flex-wrap max-w-full gap-6"
           onSubmit={handleSubmit(onSubmit)}
         >
+          {showAlert &&
+            <div className="w-full">
+              <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
+                La ubicación que ha seleccionado no tiene cobertura para el servicio de instalación.
+                <br />
+                Si desea más información puede hacer
+                <CustomLink
+                  className="!inline-block ml-1 font-bold underline"
+                  content={{ urlPath: "/otros-servicios/instalacion" }}
+                >
+                  clic aquí
+                </CustomLink>.
+                <br />
+                <strong>Si continua con el proceso, el servicio de instalación será removido automáticamente de la compra.</strong>
+              </div>
+            </div>
+          }
           <div className="w-full">
             <SelectInput
               label="Escoge tu departamento"
@@ -257,8 +345,8 @@ const CheckoutAddresses = () => {
               id="shipping-city-code"
               label="Escoge tu municipio"
               options={shippingCities.map((city) => ({
-                label: city,
-                value: city,
+                label: city.city,
+                value: city.city,
               }))}
               {...register("shippingAddress.cityCode")}
               placeholder="Seleccionar"
@@ -330,8 +418,8 @@ const CheckoutAddresses = () => {
                   id="billingCities-city-code"
                   label="Escoge tu municipio"
                   options={billingCities.map((city) => ({
-                    label: city,
-                    value: city,
+                    label: city.city,
+                    value: city.city,
                   }))}
                   {...register("billingAddress.cityCode")}
                   placeholder="Seleccionar"
@@ -384,8 +472,13 @@ const CheckoutAddresses = () => {
             </button>
           </div>
         </form>
-      </div>
-    </HeadingCard>
+      </div >
+      {isActivedModal && (
+        <ModalSuccess {...paramModal} isActive={isActivedModal}>
+          {modalChild}
+        </ModalSuccess>
+      )}
+    </HeadingCard >
   );
 };
 

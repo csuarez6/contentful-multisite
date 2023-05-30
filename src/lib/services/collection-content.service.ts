@@ -67,22 +67,6 @@ const getCollectionContent = async (
     )
   );
 
-  // if (
-  //   REFERENCES[entryContent.__typename] &&
-  //   REFERENCES[entryContent.__typename].length > 0 &&
-  //   recursive && actualDeepth < MAX_DEEPTH_RECURSION
-  // ) {
-  //   const referencesContent = await getReferencesContent(
-  //     entryContent,
-  //     REFERENCES[entryContent.__typename],
-  //     preview,
-  //     recursive,
-  //     actualDeepth
-  //   );
-
-  //   _.merge(entryContent, referencesContent);
-  // }
-
   return collectionContent;
 };
 
