@@ -28,7 +28,8 @@ const CheckoutProvider = ({ children }) => {
     validateExternal,
     tokenRecaptcha,
     getSkuList,
-    changeItemService
+    changeItemService,
+    deleteItemService
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -54,7 +55,8 @@ const CheckoutProvider = ({ children }) => {
     onRecaptcha,
     validateExternal,
     getSkuList,
-    changeItemService
+    changeItemService,
+    deleteItemService
   };
 
   return (

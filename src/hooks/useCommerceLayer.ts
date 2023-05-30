@@ -285,6 +285,27 @@ export const useCommerceLayer = () => {
     }
   };
 
+  const deleteItemService = async (idItemsDelete: Array<string>) => {
+    try {
+      let response;
+      const client = await generateClient();
+      idItemsDelete.forEach(async idElement => {
+        const lineItem = order.line_items.find((i) => i.id === idElement);
+        if (lineItem) {
+          response = await client.line_items.delete(idElement).catch(err => err.errors);
+          if (response?.[0]?.status) {
+            return { status: parseInt(response[0].status), data: response[0].title };
+          }
+        }
+      });
+      await reloadOrder();
+
+    } catch (err) {
+      console.error('error', err);
+      return { status: 500, data: 'error change item' };
+    }
+  };
+
   const addLoggedCustomer = useCallback(async () => {
     if (!clientLogged) throw new Error("unauthorized");
 
@@ -524,7 +545,8 @@ export const useCommerceLayer = () => {
     setDefaultShippingMethod,
     validateExternal,
     getSkuList,
-    changeItemService
+    changeItemService,
+    deleteItemService
   };
 };
 

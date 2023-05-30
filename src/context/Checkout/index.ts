@@ -11,6 +11,7 @@ export interface IContextCheckout {
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
+  deleteItemService: (idItems: Array<string>) => Promise<apiResponse>;
   reloadOrder: () => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
@@ -41,6 +42,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,
+  deleteItemService: () => undefined,
   reloadOrder: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,

@@ -18,7 +18,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import citiesFile from '@/utils/static/cities-co.json';
-import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
@@ -78,7 +77,7 @@ export const ModalConfirm: React.FC<any> = ({ data, onEventHandler }) => {
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
-          Recuerde que si continua con el proceso, el servicio de instalación será removida por falta de cobertura en la ubicación registrada.
+          Recuerde que si continua con el proceso, el servicio de instalación será removido por falta de cobertura en la ubicación registrada.
         </div>
         <div>
           <button
@@ -107,7 +106,7 @@ const CheckoutAddresses = () => {
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
 
-  const { order, flow, addAddresses, getAddresses } =
+  const { order, flow, addAddresses, getAddresses, deleteItemService } =
     useContext(CheckoutContext);
 
   const {
@@ -225,6 +224,10 @@ const CheckoutAddresses = () => {
   const sendData = async (data: IAddresses) => {
     try {
       setIsActivedModal(false);
+      const checkCovered = checkCityCovered();
+      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
+        await deleteItemService(checkCovered["idItemsIntall"]);
+      }
       const { shippingAddress, billingAddress } = data;
 
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
@@ -252,10 +255,22 @@ const CheckoutAddresses = () => {
     }
   };
 
+  const checkCityCovered = () => {
+    let status = true;
+    const adjustmentsList = (order.line_items)
+      .filter(item => item?.item_type === "adjustments" && item?.item?.metadata?.["type"] === "installation")
+      .map((itemInstall) => {
+        return itemInstall.id;
+      });
+    const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    if (cityCheck[0]?.isCovered == "false") status = false;
+    return { isCovered: status, idItemsIntall: adjustmentsList };
+  };
+
   const onSubmit = async (data: IAddresses) => {
     try {
-      const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
-      if (cityCheck[0]?.isCovered == "false") {
+      const checkCovered = checkCityCovered();
+      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Servicio Instalación" });
         setmodalChild(
           <ModalConfirm
@@ -310,14 +325,6 @@ const CheckoutAddresses = () => {
             <div className="w-full">
               <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
                 La ubicación que ha seleccionado no tiene cobertura para el servicio de instalación.
-                <br />
-                Si desea más información puede hacer
-                <CustomLink
-                  className="!inline-block ml-1 font-bold underline"
-                  content={{ urlPath: "/otros-servicios/instalacion" }}
-                >
-                  clic aquí
-                </CustomLink>.
                 <br />
                 <strong>Si continua con el proceso, el servicio de instalación será removido automáticamente de la compra.</strong>
               </div>
