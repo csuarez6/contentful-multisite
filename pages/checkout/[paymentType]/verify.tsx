@@ -56,8 +56,8 @@ const CheckoutVerify = () => {
     const productsList = (order.line_items)
       .filter(item => item.item_type === "skus")
       .map((item) => {
-        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "installation");
-        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "warranty");
+        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "installation");
+        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "warranty");
         item["installlation_service"] = installAdjItem;
         item["warranty_service"] = warrantyAdjItem;
         return item;
@@ -171,7 +171,6 @@ const CheckoutVerify = () => {
 
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
       }
-
       await updateMetadata(meta);
 
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
@@ -215,7 +214,7 @@ const CheckoutVerify = () => {
 
         {products.map((product) => {
           return (<div
-            className="flex flex-wrap sm:grid border-b grid-template-product-details"
+            className="flex flex-wrap border-b sm:grid grid-template-product-details"
             key={product.id}
           >
             <div className="row-start-1 row-end-4 py-3.5">
@@ -325,7 +324,7 @@ const CheckoutVerify = () => {
             </div>
             <div className="w-full mt-3 sm:hidden"></div>
             {/* ********* Services ******** */}
-            <div className="flex flex-col items-start sm:block py-1 sm:pl-4 text-sm text-left text-grey-30">
+            <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
               Garantía extendida{" "}
               {product["warranty_service"].length > 0 &&
                 <>
@@ -356,7 +355,7 @@ const CheckoutVerify = () => {
               {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["formatted_total_amount"] : "$0"}
             </div>
             <div className="w-full sm:hidden"></div>
-            <div className="flex flex-col items-start sm:block py-1 sm:pl-4 text-sm text-left text-grey-30">
+            <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
               Servicio de instalación{" "}
               {product["installlation_service"].length > 0 &&
                 <>
@@ -383,11 +382,11 @@ const CheckoutVerify = () => {
                 {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["quantity"] : "0"}x
               </span>
             </div>
-            <div className="flex-grow ms:flex-grow-0 inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+            <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
               {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["formatted_total_amount"] : "$0"}
             </div>
             {/* ********* End Services ******** */}
-            <div className="w-full sm:w-auto col-start-1 col-end-3 mt-3 bg-blue-50"></div>
+            <div className="w-full col-start-1 col-end-3 mt-3 sm:w-auto bg-blue-50"></div>
             <div className="inline-block py-1 mt-3 font-bold text-center text-blue-dark text-md bg-blue-50">
               Total Producto
             </div>
