@@ -19,6 +19,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Icon from "@/components/atoms/icon/Icon";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
+import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 
 const modalBody = (data, isSuccess, errorMessage, closeModal) => {
   return (
@@ -78,6 +79,8 @@ interface IForm {
   date: string;
   hour: string;
   cellPhone: string;
+  agreeHD: boolean;
+  acceptHD: boolean;
 }
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
@@ -102,6 +105,8 @@ const schema = yup.object({
     message:
       "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
   }),
+  agreeHD: yup.bool().oneOf([true], "Dato requerido"),
+  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
 });
 
 const CallbackPage = () => {
@@ -275,6 +280,32 @@ const CallbackPage = () => {
                       </p>
                     )}
                   </div>
+                  <div className="w-full">
+                    <CheckBox
+                      id="agreeHD"
+                      name="agreeHD"
+                      label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales"
+                      {...register("agreeHD")}
+                    />
+                    {errors.agreeHD && (
+                      <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
+                    )}
+
+                    <CheckBox
+                      id="acceptHD"
+                      name="acceptHD"
+                      label="Autorizo que me contacten para agendar tu servicio"
+                      type="checkbox"
+                      value={true}
+                      {...register("acceptHD")}
+                    />
+                    {errors.acceptHD && (
+                      <p className="mt-1 text-red-600">
+                        {errors.acceptHD?.message}
+                      </p>
+                    )}
+                  </div>
+
                   <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
                   <div className="w-full">
                     <p className="font-medium text-black text-size-p2">

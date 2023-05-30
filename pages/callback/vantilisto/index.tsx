@@ -115,23 +115,23 @@ const CallbackPage = () => {
               name,
               promoTitle,
               promoImage,
-              price,
-              _price,
-              productsQuantity,
+              priceVantiListo,
+              _priceVantiListo,
+              productsQuantityVantiListo,
               urlPath,
             } = res;
             const _product = {
               productName: promoTitle ?? name,
-              price,
-              _price,
+              price: priceVantiListo,
+              _price: _priceVantiListo,
               promoImage,
               sku,
               urlProduct: `${location.origin}${urlPath}` ?? null,
-              productsQuantity,
+              productsQuantity: productsQuantityVantiListo,
             };
             setProductData(_product);
             updateFormData(_product);
-            updateAmount(_price);
+            updateAmount(_priceVantiListo);
           }
         })
         .catch((err) => {

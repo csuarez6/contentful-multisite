@@ -132,19 +132,19 @@ const CallbackPage = () => {
               name,
               promoTitle,
               promoImage,
-              price,
-              _price,
-              productsQuantity,
+              priceGasodomestico,
+              _priceGasodomestico,
+              productsQuantityGasodomestico,
               urlPath,
             } = res;
             setProductData({
               productName: promoTitle ?? name,
-              price,
-              _price,
+              price: priceGasodomestico,
+              _price: _priceGasodomestico,
               promoImage,
               sku,
               urlProduct: `${location.origin}${urlPath}` ?? null,
-              productsQuantity,
+              productsQuantity: productsQuantityGasodomestico,
             });
           }
         })
