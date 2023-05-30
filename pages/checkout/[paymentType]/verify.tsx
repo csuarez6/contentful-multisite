@@ -85,7 +85,7 @@ const CheckoutVerify = () => {
     if (type === "installation") await changeItemService(itemService?.[0]?.["installlation_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"], productItem);
     setTimeout(() => {
       fechRequestStatus.current = false;
-    }, 1500);
+    }, 1000);
     setIsActivedModal(false);
   };
 

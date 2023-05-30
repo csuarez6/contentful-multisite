@@ -43,7 +43,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { addToCart, order, reloadOrder } = useContext(CheckoutContext);
+  const { addToCart, order, reloadOrder, deleteItemService, updateItemQuantity } = useContext(CheckoutContext);
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
@@ -84,11 +84,28 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     },
   };
 
+  const getProductsFull = () => {
+    if (!order?.line_items) return [];
+    const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
+    const productsList = (order.line_items)
+      .filter(item => item.item_type === "skus")
+      .map((item) => {
+        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "installation");
+        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "warranty");
+        item["installlation_service"] = installAdjItem;
+        item["warranty_service"] = warrantyAdjItem;
+        return item;
+      });
+    return productsList;
+  };
+
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
       // Add to cart- product
       const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle, category);
       if (res.status === 200) {
+        const productsFull = getProductsFull();
+        const itemProduct = productsFull.filter(item => item.item_type === "skus" && item.id === res.data["id"]);
         // validate and add to cart a service (Installation)
         if (Object.keys(installCheck).length > 0 && installCheck["id"] != "defInstall1") {
           const dataAdjustment: IAdjustments = {
@@ -102,6 +119,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_option_name: installCheck["name"],
             categoryReference: category.clInstallationReference ?? null,
           };
+          if (itemProduct.length > 0 && itemProduct[0]["installlation_service"].length > 0) {
+            const idTmp = [itemProduct[0]["installlation_service"][0]["id"]];
+            await deleteItemService(idTmp);
+          }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
         }
         // validate and add to cart a service (Warranty)
@@ -117,7 +138,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_option_name: warrantyCheck["name"],
             categoryReference: category.clWarrantyReference ?? null,
           };
+          if (itemProduct.length > 0 && itemProduct[0]["warranty_service"].length > 0) {
+            const idTmp = [itemProduct[0]["warranty_service"][0]["id"]];
+            await deleteItemService(idTmp);
+          }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
+        }
+        if (itemProduct.length > 0) {
+          updateItemQuantity(
+            sku,
+            res.data["quantity"]
+          );
         }
       }
       if (buyHandlerMap[type] && res.status === 200) buyHandlerMap[type]();
