@@ -1,5 +1,5 @@
 {
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "testing-library"],
   "extends": [
     "plugin:storybook/recommended",
     "next",
