@@ -75,7 +75,7 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
         <div className="flex justify-center">
           {ctaCollection.items.map(
             (item) =>
-              (item.externalLink || item.internalLink?.urlPath) && (
+              (item.externalLink || item.internalLink?.urlPaths?.[0]) && (
                 <div className="ml-2" key={item.name}>
                   <CustomLink
                     content={item}

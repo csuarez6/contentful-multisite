@@ -57,7 +57,7 @@ export interface IProductOverviewDetails {
   __typename?: string;
   name?: string;
   promoTitle?: string;
-  urlPath?: string;
+  urlPaths?: [string];
   priceGasodomestico?: string;
   priceBeforeGasodomestico?: string;
   priceVantiListo?: string;

@@ -10,7 +10,7 @@ import {
   UserCircleIcon,
   ShoppingCartIcon,
   MapPinIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/functions";
 import { getCustomerInfo } from "@/lib/services/commerce-layer.service";
@@ -84,7 +84,7 @@ const Dashboard = () => {
   const [showAlert, setShowAlert] = useState({
     show: false,
     bgcolor: "bg-red-50",
-    color: "text-red-800"
+    color: "text-red-800",
   });
   const [customerDataForm, setCustomerDataForm] = useState({
     name: "",
@@ -166,10 +166,18 @@ const Dashboard = () => {
         const { error } = json;
         if (!error) {
           setErrorMessage("Datos guardados con éxito!");
-          setShowAlert({ show: true, bgcolor: "bg-green-50 border-green-950", color: "text-green-800" });
+          setShowAlert({
+            show: true,
+            bgcolor: "bg-green-50 border-green-950",
+            color: "text-green-800",
+          });
         } else {
           setErrorMessage({ error });
-          setShowAlert({ show: true, bgcolor: "bg-red-50 border-red-950", color: "text-red-800" });
+          setShowAlert({
+            show: true,
+            bgcolor: "bg-red-50 border-red-950",
+            color: "text-red-800",
+          });
         }
       })
       .catch((err) => {
@@ -177,7 +185,11 @@ const Dashboard = () => {
           setErrorMessage(
             "Comprueba tu conexión a internet e intenta de nuevo por favor."
           );
-          setShowAlert({ show: true, bgcolor: "bg-red-50 border-red-950", color: "text-red-800" });
+          setShowAlert({
+            show: true,
+            bgcolor: "bg-red-50 border-red-950",
+            color: "text-red-800",
+          });
         }
         console.warn(err);
       })
@@ -187,20 +199,27 @@ const Dashboard = () => {
   };
 
   const formatToPhone = (event) => {
-    if ((event.keyCode < 48 || event.keyCode > 57) &&
+    if (
+      (event.keyCode < 48 || event.keyCode > 57) &&
       (event.keyCode < 96 || event.keyCode > 105) &&
-      event.keyCode !== 190 && event.keyCode !== 110 &&
-      event.keyCode !== 8 && event.keyCode !== 9) {
+      event.keyCode !== 190 &&
+      event.keyCode !== 110 &&
+      event.keyCode !== 8 &&
+      event.keyCode !== 9
+    ) {
       event.preventDefault();
       return false;
     }
     setTimeout(() => {
       const target = event.target;
-      const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits
+      const input = event.target.value.replace(/\D/g, "").substring(0, 10); // First ten digits
       const first = input.substring(0, 4);
       const middle = input.substring(4, 6);
-      if (input.length > 4) { target.value = `${first}-${middle}`; }
-      else if (input.length > 0) { target.value = `${first}`; }
+      if (input.length > 4) {
+        target.value = `${first}-${middle}`;
+      } else if (input.length > 0) {
+        target.value = `${first}`;
+      }
       return true;
     }, 200);
   };
@@ -216,7 +235,7 @@ const Dashboard = () => {
                   <nav className="space-y-1">
                     {subNavigation.map((item) => (
                       <CustomLink
-                        content={{ urlPath: item.href }}
+                        content={{ urlPaths: [item.href] }}
                         key={item.name}
                         className={classNames(
                           item.current
@@ -227,7 +246,9 @@ const Dashboard = () => {
                         aria-current={item.current ? "page" : undefined}
                       >
                         <item.icon
-                          className={classNames("flex-shrink-0 -ml-1 mr-3 h-6 w-6")}
+                          className={classNames(
+                            "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                          )}
                           aria-hidden="true"
                         />
                         <span className="truncate">{item.name}</span>
@@ -265,13 +286,17 @@ const Dashboard = () => {
                             <div className="-mx-1.5 -my-1.5">
                               <button
                                 onClick={() =>
-                                  setShowAlert({ show: false, bgcolor: "bg-red-50 border-red-950", color: "bg-red-800" })
+                                  setShowAlert({
+                                    show: false,
+                                    bgcolor: "bg-red-50 border-red-950",
+                                    color: "bg-red-800",
+                                  })
                                 }
                                 type="button"
                                 className={classNames(
                                   "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 opacity-50",
                                   showAlert.color,
-                                  showAlert.bgcolor,
+                                  showAlert.bgcolor
                                 )}
                               >
                                 <span className="sr-only">Dismiss</span>
@@ -284,7 +309,9 @@ const Dashboard = () => {
                     )}
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <p className="pb-2 font-bold">
-                        Todos los campos marcados con <span className='text-red-700'>*</span> son obligatorios.
+                        Todos los campos marcados con{" "}
+                        <span className="text-red-700">*</span> son
+                        obligatorios.
                       </p>
                       <div className="flex flex-col gap-6 mt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
@@ -370,7 +397,7 @@ const Dashboard = () => {
                           <Textbox
                             id="contractNumber"
                             type="text"
-                            placeholder='0000-00'
+                            placeholder="0000-00"
                             label="Número de Cuenta Contrato"
                             className="form-input"
                             isError={!!errors.contractNumber}

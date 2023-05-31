@@ -6,31 +6,31 @@ const data: IPromoBlock = {
             {
                 promoTitle: 'Hogares',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             },
             {
                 promoTitle: 'Solicitar Servicio',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             },
             {
                 promoTitle: 'Nuevo Punto de Gas',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             },
             {
                 promoTitle: 'Paso a paso instalación',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             },
             {
                 promoTitle: 'Firmas Instaladoras',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             }
         ]

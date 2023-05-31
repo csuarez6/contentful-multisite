@@ -22,13 +22,13 @@ const RateQuery = `
     ...on Page{
         ${DefaultQuery}
         slug
-        urlPath
+        s
         promoTitle
     }
     ...on Product {
         ${DefaultQuery}
         slug
-        urlPath
+        urlPaths
         promoTitle
     }
     }

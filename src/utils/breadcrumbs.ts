@@ -11,7 +11,7 @@ const convertParentsToBreadcrumb = (parentItem): any => {
     sys: { id: parentItem?.sys?.id ?? '' }, 
     promoTitle: parentItem.title ?? parentItem.name ?? '',
     internalLink: {
-      urlPath: parentItem.urlPath ?? '/',
+      urlPaths: parentItem?.urlPaths ?? ['/'],
     },
   });
 
@@ -35,7 +35,7 @@ const getBreadcrumbs = ({ sys, name, promoTitle, parent }) => {
         {
           promoTitle: promoTitle ?? name,
           internalLink: {
-            urlPath: "#",
+            urlPaths: ["#"],
           },
         },
       ],

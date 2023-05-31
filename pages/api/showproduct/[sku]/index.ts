@@ -21,8 +21,8 @@ const handler = async (
       attributesToRetrieve: ['fields'],
     });
 
-    if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields) {
-      redirect(res, resultAlgolia.hits[0].fields.urlPath);
+    if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields?.urlPaths?.[0]) {
+      redirect(res, resultAlgolia.hits[0].fields.urlPaths[0]);
     }
   } catch (err) {
     console.error(err);

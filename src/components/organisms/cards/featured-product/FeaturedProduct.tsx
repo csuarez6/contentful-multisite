@@ -40,7 +40,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   imagesCollection,
   paymentMethods,
   promoImage,
-  urlPath,
+  urlPaths,
   trademark,
   phone,
   address,
@@ -98,11 +98,11 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                     {cta?.name}
                   </a>
                 </Link>
-              ) : urlPath && (
+              ) : urlPaths && (
                 <CustomLink
                   className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10"
                   content={{
-                    internalLink: { urlPath, promoTitle: "Conoce más" },
+                    internalLink: { urlPaths, promoTitle: "Conoce más" },
                   }}
                 />
               )}

@@ -149,25 +149,25 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Asistencias",
         internalLink: {
-          urlPath: "/asistencias",
+          urlPaths: ["/asistencias"],
         },
       },
       {
         promoTitle: "Servihogar",
         internalLink: {
-          urlPath: "/asistencias/servihogar",
+          urlPaths: ["/asistencias/servihogar"],
         },
       },
       {
         promoTitle: "Adquierelo",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

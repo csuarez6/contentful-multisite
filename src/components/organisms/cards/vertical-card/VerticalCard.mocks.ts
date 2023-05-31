@@ -31,7 +31,7 @@ const dataWithButtons: IPromoContent = {
   },
   ctaLabel: "Button",
   internalLink: {
-    urlPath: "#"
+    urlPaths: ["#"]
   }
 };
 

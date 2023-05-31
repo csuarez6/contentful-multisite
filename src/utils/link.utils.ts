@@ -21,8 +21,8 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
 
   let urlPath = null;
 
-  if (content?.internalLink?.urlPath) {
-    urlPath = content.internalLink.urlPath.replace(re, '');
+  if (content?.internalLink?.urlPaths?.[0]) {
+    urlPath = content.internalLink.urlPaths[0].replace(re, '');
     urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
@@ -31,8 +31,8 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
     urlPath = /^[http|mailto|tel|#]/.test(urlPath) ? urlPath : generateFullUrl(urlPath);
   }
 
-  if (!urlPath && content?.urlPath) {
-    urlPath = content.urlPath.replace(re, '');
+  if (!urlPath && content?.urlPaths?.[0]) {
+    urlPath = content.urlPaths[0].replace(re, '');
     urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
@@ -48,7 +48,7 @@ export const getLinkProps = (content: GetUrlPathProps) => {
 
   const href = getUrlPath(content);
   let isExternalLink;
-  if(!content?.internalLink?.urlPath){
+  if(!content?.internalLink?.urlPaths?.[0]){
     isExternalLink = content?.mediaInternalLink?.url ?? content?.externalLink;
   }
   const icon = getIconView(content?.linkView);

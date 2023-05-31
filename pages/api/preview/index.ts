@@ -7,7 +7,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   const entry = await getPageContent((path as string), true, false);
 
   if (!entry) {
-    return res.status(401).json({ message: 'Invalid urlPath' });
+    return res.status(401).json({ message: 'Invalid url path' });
   }
 
   res.setPreviewData({

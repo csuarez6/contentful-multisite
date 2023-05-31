@@ -124,7 +124,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       ref={submenu}
     >
       {/* contenido personalizado, Navegacion */}
-      {(!item.mainNavCollection?.items && (item.internalLink?.urlPath || item.externalLink)) && (
+      {(!item.mainNavCollection?.items && (item.internalLink?.urlPaths?.[0] || item.externalLink)) && (
         <CustomLink
           content={item}
           linkClassName={
@@ -140,7 +140,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       )}
 
       {/* Pagina, producto */}
-      {item.urlPath && item.__typename !== "AuxNavigation" && (
+      {item.urlPaths?.[0] && item.__typename !== "AuxNavigation" && (
         <CustomLink
           content={item}
           className={classNames(

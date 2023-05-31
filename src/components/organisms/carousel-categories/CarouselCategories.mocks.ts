@@ -9,7 +9,7 @@ const data: IPromoContent = {
     height: 500
   },
   name: "Category Name",
-  internalLink: { urlPath: "/path" },
+  internalLink: { urlPaths: ["/path"] },
   linkParameters: "?param=value"
 };
 

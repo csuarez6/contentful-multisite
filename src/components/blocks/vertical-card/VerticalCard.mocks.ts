@@ -17,7 +17,7 @@ const data: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -31,7 +31,7 @@ const data: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       // {
@@ -43,7 +43,7 @@ const data: IPromoBlock = {
       //   },
       //   ctaLabel: "Button",
       //   internalLink: {
-      //     urlPath: "#"
+      //     urlPaths: ["#"]
       //   }
       // }
     ]
@@ -70,7 +70,7 @@ const dataPortrait: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -84,7 +84,7 @@ const dataPortrait: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -98,7 +98,7 @@ const dataPortrait: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#",]
         },
         alignButton: "izquierda"
       }

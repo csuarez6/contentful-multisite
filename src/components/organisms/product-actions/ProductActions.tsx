@@ -27,7 +27,11 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
   return (
     <>
       <div className="flex flex-row sm:flex-col gap-4 sm:gap-[22px] sm:pt-[5px] sm:my-5">
-        {isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) && (
+        {isAvailableGasAppliance(
+          marketId,
+          priceGasodomestico,
+          productsQuantityGasodomestico
+        ) && (
           <button
             className={classNames(
               "button button-primary justify-center w-1/2 sm:w-full text-[13px] sm:text-size-p2",
@@ -37,16 +41,21 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
             type="button"
             onClick={async () => {
               setIsLoading(true);
-              onBuyHandler(PaymentMethodType.pse).then(result => {
-                if (result.status !== 200) {
-                  setError(true);
-                  setErrorMessage({
-                    icon: "alert",
-                    type: "warning",
-                    title: result.status === 422 ? `No hay más unidades disponibles para este producto.` : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
-                  });
-                }
-              }).finally(() => setIsLoading(false));
+              onBuyHandler(PaymentMethodType.pse)
+                .then((result) => {
+                  if (result.status !== 200) {
+                    setError(true);
+                    setErrorMessage({
+                      icon: "alert",
+                      type: "warning",
+                      title:
+                        result.status === 422
+                          ? `No hay más unidades disponibles para este producto.`
+                          : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
+                    });
+                  }
+                })
+                .finally(() => setIsLoading(false));
             }}
           >
             {isLoading && (
@@ -72,10 +81,14 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
         )}
         <CustomLink
           linkClassName="button button-outline w-1/2 sm:w-full flex justify-center items-center gap-1 text-[13px] sm:text-size-p2"
-          content={{ urlPath: callbackURL }}
+          content={{ urlPaths: [callbackURL] }}
         >
-          <span className="hidden sm:inline-block">Financiar con Vantilisto</span>
-          <span className="inline-block sm:hidden text-center">Con Vantilisto</span>
+          <span className="hidden sm:inline-block">
+            Financiar con Vantilisto
+          </span>
+          <span className="inline-block sm:hidden text-center">
+            Con Vantilisto
+          </span>
           <Icon {...iconCallback} />
         </CustomLink>
       </div>

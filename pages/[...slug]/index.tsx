@@ -51,10 +51,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const entries = await getEntriesSlugs({ limit: 100 }, false);
 
   for (const entry of entries) {
-    if (entry.urlPath !== null && entry.urlPath !== "/") {
+    if (entry.urlPaths !== null && entry.urlPaths.length > 0 && entry.urlPaths[0] !== "/") {
       paths.push({
         params: {
-          slug: entry.urlPath.split("/").slice(1),
+          slug: entry.urlPaths[0].split("/").slice(1),
         },
       });
     }
@@ -72,13 +72,23 @@ export const getStaticProps: GetStaticProps = async (
     typeof context.params.slug === "string"
       ? ["", context.params.slug]
       : ["", ...context.params.slug];
+  const slugStringPath = slugArray.join("/");
 
   const pageContent = await getPageContent(
-    slugArray.join("/"),
+    slugStringPath,
     context.preview ?? false
   );
 
   if (!pageContent) return { notFound: true };
+  if (pageContent.urlPaths[0] != slugStringPath) {
+    return {
+      redirect: {
+        destination: pageContent.urlPaths[0],
+        permanent: false,
+      },
+    };
+  }
+
   const breadCrumbContent = getBreadcrumbs(pageContent);
   // const headerID = breadCrumbContent?.ctaCollection?.items[0]?.sys?.id ?? DEFAULT_HEADER_ID;
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);

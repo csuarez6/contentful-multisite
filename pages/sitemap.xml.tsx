@@ -11,7 +11,7 @@ const consolideEntriesWithLocales = (entries) => {
   const domain = process.env.DEFAULT_DOMAIN;
   for (const index in entries) {
     consolidatedEntries.push({
-      loc: domain+entries[index].urlPath,
+      loc: domain+entries[index].urlPaths[0],
       lastmod: entries[index].sys.publishedAt || undefined,
       priority: 0.7,
       changefreq: "weekly",

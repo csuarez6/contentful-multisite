@@ -23,10 +23,10 @@ const CarouselCategories: React.FC<
     const { asPath } = useRouter();
     const fullPath = asPath.split("?")[0];
 
-    if (!promoImage && !promoTitle && internalLink?.urlPath) return;
+    if (!promoImage && !promoTitle && internalLink?.urlPaths?.[0]) return;
 
-    let link = internalLink?.urlPath
-      ? internalLink.urlPath
+    let link = internalLink?.urlPaths?.[0]
+      ? internalLink.urlPaths?.[0]
       : value !== "*"
         ? `${fullPath}?${queryParamName}=${value}`
         : fullPath;

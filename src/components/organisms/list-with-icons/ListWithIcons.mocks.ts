@@ -21,7 +21,7 @@ const iconLeft: IPromoContent = {
   iconPosition: 'left',
   iconBackgroundColor: 'Azul Oscuro',
   internalLink:{
-    urlPath: '#',
+    urlPaths: ['#'],
   },
   ctaLabel: 'Consultar'
 };
@@ -33,7 +33,7 @@ const iconLeftRounded: IPromoContent = {
   iconSize: 'small',
   iconBackgroundColor: 'Blanco',
   internalLink:{
-    urlPath: '#',
+    urlPaths: ['#'],
   },
   ctaLabel: 'Consultar'
 };
@@ -44,7 +44,7 @@ const iconLeftNoTitle: IPromoContent = {
   iconPosition: 'left',
   iconBackgroundColor: 'Transparente',
   internalLink:{
-    urlPath: '#',
+    urlPaths: ['#'],
   },
   ctaLabel: 'Consultar'
 };
@@ -55,7 +55,7 @@ const iconLeftNoDescription: IPromoContent = {
   iconPosition: 'left',
   iconBackgroundColor: '',
   internalLink:{
-    urlPath: '#',
+    urlPaths: ['#'],
   },
   ctaLabel: 'Consultar'
 };

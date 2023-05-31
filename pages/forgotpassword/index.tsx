@@ -114,13 +114,13 @@ const ForgotPassword = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Recuperar contraseña",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],
@@ -139,7 +139,9 @@ const ForgotPassword = () => {
             >
               <div className="py-2 text-center">
                 <p>
-                  Si existe una cuenta con el correo electrónico ingresado, te enviaremos un correo electrónico con instrucciones sobre cómo restablecerlo.
+                  Si existe una cuenta con el correo electrónico ingresado, te
+                  enviaremos un correo electrónico con instrucciones sobre cómo
+                  restablecerlo.
                 </p>
               </div>
               <form
@@ -190,8 +192,15 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    3
+  );
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {

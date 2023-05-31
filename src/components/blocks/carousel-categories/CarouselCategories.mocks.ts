@@ -1,5 +1,5 @@
-import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { RICHTEXT_SHORT_SIMPLE } from "@/constants/mocks.constants";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 
 const data: IPromoBlock = {
   title: 'Título',
@@ -15,7 +15,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -27,7 +27,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -39,7 +39,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -51,7 +51,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -63,7 +63,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -75,7 +75,7 @@ const data: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]
@@ -99,7 +99,7 @@ const dataTop: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -111,7 +111,7 @@ const dataTop: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -123,7 +123,7 @@ const dataTop: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]
@@ -146,7 +146,7 @@ const dataStatic: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -158,7 +158,7 @@ const dataStatic: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -170,7 +170,7 @@ const dataStatic: IPromoBlock = {
           height: 660
         },
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]

@@ -8,7 +8,7 @@ const ProductQuery = `
   sku
   marketId
   slug
-  urlPath
+  urlPaths
   parent {
     ${DefaultQuery}
   }
@@ -60,7 +60,7 @@ const ProductQuery = `
 export const ProductMinimalQuery = `
   name
   promoTitle
-  urlPath
+  urlPaths
 `;
 
 export default ProductQuery;

@@ -60,14 +60,14 @@ const InfoCard: React.FC<IPromoContent> = (props) => {
         {promoDescription && (
           <div className="text-size-p1 text-grey-30">{documentToReactComponents(promoDescription.json, options)}</div>
         )}
-        {(externalLink || internalLink?.urlPath) && showButton && (
+        {(externalLink || internalLink?.urlPaths?.[0]) && showButton && (
           <div className="flex justify-start mt-3">
             <CustomLink content={props} className={classNames("button !rounded-full", getButtonType(buttonType ?? 'Secundario'))} >
               {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
             </CustomLink>
           </div>
         )}
-        {(externalLink || internalLink?.urlPath || mediaInternalLink) &&
+        {(externalLink || internalLink?.urlPaths?.[0] || mediaInternalLink) &&
           <div className="flex justify-start mt-3">
             <CustomLink content={props} className={classNames("button !rounded-full", getButtonType(buttonType ?? 'Contorno'))} >
               {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}

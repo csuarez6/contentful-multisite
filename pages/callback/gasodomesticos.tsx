@@ -135,7 +135,7 @@ const CallbackPage = () => {
               price,
               _price,
               productsQuantity,
-              urlPath,
+              urlPaths,
             } = res;
             setProductData({
               productName: promoTitle ?? name,
@@ -143,7 +143,7 @@ const CallbackPage = () => {
               _price,
               promoImage,
               sku,
-              urlProduct: `${location.origin}${urlPath}` ?? null,
+              urlProduct: `${location.origin}${urlPaths?.[0] ?? ''}` ?? null,
               productsQuantity,
             });
           }
@@ -210,19 +210,19 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Gasodomésticos",
         internalLink: {
-          urlPath: "/gasodomesticos",
+          urlPaths: ["/gasodomesticos"],
         },
       },
       {
         promoTitle: "Te llamamos",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

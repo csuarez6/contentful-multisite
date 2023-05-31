@@ -70,13 +70,13 @@ const Login = () => {
             {
                 promoTitle: 'Hogares',
                 internalLink: {
-                    urlPath: '/'
+                    urlPaths: ['/']
                 }
             },
             {
                 promoTitle: 'Iniciar sesión',
                 internalLink: {
-                    urlPath: '#'
+                    urlPaths: ['#']
                 }
             },
         ],

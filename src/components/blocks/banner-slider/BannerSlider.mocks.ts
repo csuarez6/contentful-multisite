@@ -10,7 +10,7 @@ const data: IPromoBlock = {
         },
         ctaLabel: 'Ir a la tienda',
         internalLink: {
-          urlPath:'#'
+          urlPaths:['#']
         }
       },
       {
@@ -20,7 +20,7 @@ const data: IPromoBlock = {
         },
         ctaLabel:'Conocer Vanti Listo',
         internalLink: {
-          urlPath:'#'
+          urlPaths:['#']
         }
       },
       {
@@ -30,7 +30,7 @@ const data: IPromoBlock = {
         },
         ctaLabel:'Solicitar punto de gas',
         internalLink:{
-          urlPath:'#'
+          urlPaths:['#']
         }
       },
       {
@@ -40,7 +40,7 @@ const data: IPromoBlock = {
         },
         ctaLabel:'Conocer Vanti Listo',
         internalLink:{
-          urlPath: '#'
+          urlPaths:[ '#']
         }
       }
     ]

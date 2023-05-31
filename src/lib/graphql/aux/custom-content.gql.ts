@@ -9,13 +9,13 @@ const AuxCustomContent = `
     ...on Page{
       ${DefaultQuery}
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
     ...on Product {
       ${DefaultQuery}
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
   }
@@ -57,12 +57,12 @@ export const AuxCustomContentMinimalQuery = `
   internalLink {
     ... on Page {
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
     ... on Product {
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
   }

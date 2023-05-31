@@ -33,7 +33,7 @@ const PageQuery = `
     ${RichtextQuery}
   }
   promoIcon
-  urlPath
+  urlPaths
   mainNavCollection {
     items {
       ...on Page {
@@ -73,7 +73,7 @@ export const PageMinimalQuery = `
   ${DefaultQuery}
   name
   promoTitle
-  urlPath
+  urlPaths
   parent {
     ${DefaultQuery}
   }

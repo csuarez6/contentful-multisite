@@ -38,7 +38,7 @@ const InformativeGridCard: React.FC<IPromoContent> = (props) => {
               </div>
             </div>
           )}
-          {(externalLink || internalLink?.urlPath) && (
+          {(externalLink || internalLink?.urlPaths?.[0]) && (
             <div className="flex justify-center">
               <CustomLink  content={props} className={classNames("button", getButtonType(buttonType ?? 'Texto'))} >
                 {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}

@@ -15,7 +15,7 @@ const data: IPromoBlock = {
       {
         ctaLabel: 'internalLink',
         internalLink: {
-          urlPath: '/mantenimiento'
+          urlPaths: ['/mantenimiento']
         }
       },
       {

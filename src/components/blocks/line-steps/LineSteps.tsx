@@ -131,7 +131,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                           )}
                         </div>
                       )}
-                      {(item?.internalLink?.urlPath || item?.externalLink) && (
+                      {(item?.internalLink?.urlPaths?.[0] || item?.externalLink) && (
                         <div className="hidden gap-3 mt-3 group-[.open]:block self-start">
                           <CustomLink
                             content={item}
@@ -154,7 +154,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
         <div className="flex gap-3 mt-3 justify-center">
           {ctaCollection.items.map(
             (cta) =>
-              (cta.externalLink || cta.internalLink?.urlPath) && (
+              (cta.externalLink || cta.internalLink?.urlPaths?.[0]) && (
                 <CustomLink
                   content={cta}
                   key={cta.name}

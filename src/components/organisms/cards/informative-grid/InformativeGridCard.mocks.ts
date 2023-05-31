@@ -6,7 +6,7 @@ const data: IPromoContent = {
   promoDescription: RICHTEXT_SHORT_SIMPLE,
   ctaLabel: "Conocelós",
   internalLink: {
-    urlPath: "#"
+    urlPaths: ["#"]
   }
 };
 

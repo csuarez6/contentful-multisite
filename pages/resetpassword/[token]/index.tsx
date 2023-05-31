@@ -54,7 +54,7 @@ const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
         <p className="text-center">{modalMsg}</p>
         <div className="flex justify-end">
           <CustomLink
-            content={{ urlPath: "/acceso" }}
+            content={{ urlPaths: ["/acceso"] }}
             linkClassName="button button-primary w-[140px] h-[42px]"
           >
             Inicia sesión
@@ -177,7 +177,6 @@ const ResetPassword = () => {
   return (
     <div className="overflow-hidden">
       <div className="main-container">
-
         {/* waiting info */}
         {!data && !error && (
           <section className="block w-1/2 py-12 m-auto">
@@ -203,8 +202,8 @@ const ResetPassword = () => {
               hideCheck={true}
             >
               <p className="text-xl text-center text-red-900">
-                Estimado usuario, ha ocurrido un error al comprobar la información o
-                el servicio no está disponible. <br />
+                Estimado usuario, ha ocurrido un error al comprobar la
+                información o el servicio no está disponible. <br />
                 <br />
                 Intente nuevamente o contacte al administrador.
               </p>
@@ -227,7 +226,7 @@ const ResetPassword = () => {
               <div className="flex justify-center mt-5">
                 <CustomLink
                   className="block m-auto button button-primary text-grey-30"
-                  content={{ urlPath: "/forgotpassword" }}
+                  content={{ urlPaths: ["/forgotpassword"] }}
                 >
                   Generar nuevo link
                 </CustomLink>
@@ -292,7 +291,9 @@ const ResetPassword = () => {
                       disabled={!isValid || isSubmitting}
                       className={classNames(
                         "w-full button button-primary",
-                        isSubmitting ? "!opacity-75 !bg-lucuma !text-grey-30" : ""
+                        isSubmitting
+                          ? "!opacity-75 !bg-lucuma !text-grey-30"
+                          : ""
                       )}
                     >
                       {btnSubmitReset}
@@ -311,7 +312,6 @@ const ResetPassword = () => {
           </section>
         )}
         {/* **************** */}
-
       </div>
     </div>
   );
@@ -326,8 +326,15 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    3
+  );
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {

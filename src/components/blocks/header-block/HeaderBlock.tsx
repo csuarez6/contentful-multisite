@@ -122,14 +122,19 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
-  const {
-    order
-  } = useContext(CheckoutContext);
+  const { order } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
-  
+
   useEffect(() => {
-    setNumProducts(order?.line_items ? (order.line_items.reduce((acum, line_item) => acum + line_item.quantity, 0)) : 0);
+    setNumProducts(
+      order?.line_items
+        ? order.line_items.reduce(
+            (acum, line_item) => acum + line_item.quantity,
+            0
+          )
+        : 0
+    );
   }, [order]);
 
   useEffect(() => {
@@ -139,7 +144,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     }
   }, [session, sessionStatus]);
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [timer, setTimer] = useState(null);
 
   const handleSubmit = (e) => {
@@ -203,8 +208,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             isOpenMenu
               ? getBackgroundColorClass(
-                secondaryNavCollectionColor ?? "Azul Oscuro"
-              ).background
+                  secondaryNavCollectionColor ?? "Azul Oscuro"
+                ).background
               : backgroundColor.background
           )}
         ></div>
@@ -315,7 +320,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             <div className="relative flex items-center p-3 md:p-0 md:min-h-[92px] justify-between gap-2 xxs:gap-3 xs:gap-4 md:gap-6">
               <div className="relative z-10 flex md:px-2 lg:px-0 lg:mt-[10px]">
                 <CustomLink
-                  content={{ urlPath: "/" }}
+                  content={{ urlPaths: ["/"] }}
                   className="flex items-center flex-shrink-0"
                 >
                   <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
@@ -390,22 +395,28 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       ))}
                       {/* Carrito de compras */}
                       <li className="flex max-w-[75px]" key={`cart_${uuid()}`}>
-                          <Link
-                            href="/checkout/pse/verify"
-                            className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
-                          >
-                            <span className="relative flex items-center w-9 h-7 shrink-0 text-neutral-30 mb-2">
-                              <Icon
-                                icon="shopping-cart"
-                                className="w-full h-full mx-auto absolute right-1"
-                              />
-                              <span className={classNames(
+                        <Link
+                          href="/checkout/pse/verify"
+                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
+                        >
+                          <span className="relative flex items-center w-9 h-7 shrink-0 text-neutral-30 mb-2">
+                            <Icon
+                              icon="shopping-cart"
+                              className="w-full h-full mx-auto absolute right-1"
+                            />
+                            <span
+                              className={classNames(
                                 "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                                numProducts > 0 ? "bg-blue-dark text-white" : "bg-blue-100"
-                              )}>{ numProducts }</span>
+                                numProducts > 0
+                                  ? "bg-blue-dark text-white"
+                                  : "bg-blue-100"
+                              )}
+                            >
+                              {numProducts}
                             </span>
-                            Carrito
-                          </Link>
+                          </span>
+                          Carrito
+                        </Link>
                       </li>
                     </ul>
                   </nav>
@@ -449,7 +460,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
-                                      content={{ urlPath: "/dashboard/orders" }}
+                                      content={{
+                                        urlPaths: ["/dashboard/orders"],
+                                      }}
                                       className={classNames(
                                         active
                                           ? "bg-gray-100 text-gray-900"
@@ -464,7 +477,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
-                                      content={{ urlPath: "#" }}
+                                      content={{ urlPaths: ["#"] }}
                                       className={classNames(
                                         active
                                           ? "bg-gray-100 text-gray-900"
@@ -481,7 +494,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               <Menu.Item>
                                 {({ active }) => (
                                   <CustomLink
-                                    content={{ urlPath: "/dashboard" }}
+                                    content={{ urlPaths: ["/dashboard"] }}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -517,15 +530,16 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   ) : (
                     <>
                       <CustomLink
-                        content={{ urlPath: "/registro" }}
+                        content={{ urlPaths: ["/registro"] }}
                         className="flex items-center h-full text-center button button-primary"
                       >
                         Regístrate
                       </CustomLink>
                       <CustomLink
                         content={{
-                          urlPath:
+                          urlPaths: [
                             "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
+                          ],
                         }}
                         className="flex items-center h-full text-center button button-outline"
                       >
@@ -550,12 +564,16 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       icon="shopping-cart"
                       className="w-full h-full mx-auto absolute right-1"
                     />
-                    <span className={classNames(
-                      "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                      numProducts > 0
-                        ? "bg-blue-dark text-white"
-                        : "bg-blue-100"
-                    )}>{ numProducts }</span>
+                    <span
+                      className={classNames(
+                        "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
+                        numProducts > 0
+                          ? "bg-blue-dark text-white"
+                          : "bg-blue-100"
+                      )}
+                    >
+                      {numProducts}
+                    </span>
                   </span>
                 </Link>
               </div>
@@ -580,16 +598,19 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         <>
                           <div className="flex items-center justify-between">
                             <CustomLink
-                              content={{ urlPath: "/" }}
+                              content={{ urlPaths: ["/"] }}
                               className="flex items-center flex-shrink-0"
                               onClick={close}
                             >
                               <figure className="relative h-[45px] aspect-[180/52]">
                                 <Image
                                   className="block w-auto"
-                                  src={promoImage?.url ?? "/images/vanti-logo.png"}
+                                  src={
+                                    promoImage?.url ?? "/images/vanti-logo.png"
+                                  }
                                   alt={
-                                    promoImage?.description ?? "Logo Grupo Vanti"
+                                    promoImage?.description ??
+                                    "Logo Grupo Vanti"
                                   }
                                   width={180}
                                   height={52}

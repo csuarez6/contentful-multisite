@@ -79,7 +79,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
               {documentToReactComponents(promoDescription.json)}
             </div>
           )}
-          {(internalLink?.urlPath || externalLink) && (
+          {(internalLink?.urlPaths?.[0] || externalLink) && (
             <CustomLink
               content={props}
               className={classNames("button w-fit", getButtonType(buttonType))}
