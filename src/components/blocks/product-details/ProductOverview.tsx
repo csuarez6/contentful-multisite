@@ -30,6 +30,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   promoTitle,
   promoDescription,
   priceGasodomestico,
+  _priceGasodomestico,
   priceBeforeGasodomestico,
   priceVantiListo,
   priceBeforeVantiListo,
@@ -153,7 +154,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         ) {
           const dataAdjustment: IAdjustments = {
             name: warrantyCheck["name"] + " - " + sku,
-            amount_cents: warrantyCheck["price_amount_cents"],
+            amount_cents: (Number(warrantyCheck["price_amount_float"]) * Number(_priceGasodomestico) / 100).toString() + "00",
             type: "warranty",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,
@@ -370,6 +371,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         warranty={warranty}
                         category={category}
                         onEventHandler={servicesHandler}
+                        _priceGasodomestico={_priceGasodomestico}
                       />
                     )}
                   </ul>
@@ -444,6 +446,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                             warranty={warranty}
                             category={category}
                             onEventHandler={servicesHandler}
+                            _priceGasodomestico={_priceGasodomestico}
                           />
                         )}
                       </form>

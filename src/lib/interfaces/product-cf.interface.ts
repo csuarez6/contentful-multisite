@@ -59,6 +59,7 @@ export interface IProductOverviewDetails {
   promoTitle?: string;
   urlPaths?: [string];
   priceGasodomestico?: string;
+  _priceGasodomestico?: string;
   priceBeforeGasodomestico?: string;
   priceVantiListo?: string;
   priceBeforeVantiListo?: string;

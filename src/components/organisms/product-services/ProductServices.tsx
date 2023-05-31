@@ -7,14 +7,15 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { useState, useEffect, useContext } from "react";
 import ModalSuccess from "../modal-success/ModalSuccess";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import WarrantyModal from "../warranty-modal/WarrantyModal";
 import CheckoutContext from "@/context/Checkout";
 
 const ProductServices: React.FC<IProductOverviewDetails> = ({
     warranty,
     category,
-    onEventHandler
+    onEventHandler,
+    _priceGasodomestico
 }) => {
     const { getSkuList } = useContext(CheckoutContext);
     const [isActivedModal, setIsActivedModal] = useState(false);
@@ -202,7 +203,11 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                                             >
                                                 <div className="flex flex-col text-center">
                                                     <span className="font-bold text-size-span">{item.name}</span>
-                                                    <span className="text-size-small">{item.formatted_price_amount}</span>
+                                                    <span className="text-size-small">
+                                                        {(index === 0)
+                                                            ? item.formatted_price_amount
+                                                            : formatPrice((Number(item.price_amount_float) * Number(_priceGasodomestico)) / 100)}
+                                                    </span>
                                                 </div>
                                             </label>
                                         </li>

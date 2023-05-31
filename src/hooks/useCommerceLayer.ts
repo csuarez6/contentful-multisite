@@ -36,6 +36,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_unit_amount",
       "quantity",
       "formatted_total_amount",
+      "unit_amount_float",
       "item",
       "metadata"
     ],
