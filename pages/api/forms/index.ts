@@ -1,11 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import consultQuotaVantilisto from './vantilisto';
+import ReCaptchaService from '@/lib/services/re-captcha.service';
 
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { type, contractAccount, identity, qrCode } = req.body;
+  const { type, contractAccount, identity, qrCode, tokenReCaptcha } = req.body;
+
+  /* Validate ReCaptcha **/
+  const isValidReCaptcha = await ReCaptchaService.validate(tokenReCaptcha);
+  if (!isValidReCaptcha) {
+    res.status(400).json({
+      result: {
+        message: "Error al validar el ReCaptcha.",
+        success: false,
+        errors: ['ReCaptcha']
+      }
+    });
+  }
+
   if (type === "Identidad") {
     if ((!identity || !qrCode)) {
       res.status(400).json({

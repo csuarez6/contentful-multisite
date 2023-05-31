@@ -9,6 +9,7 @@ import { IFormBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import RadioBox from '@/components/atoms/input/radiobox/RadioBox';
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import { classNames } from '@/utils/functions';
+import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 
 interface IForm {
   contractAccount: string;
@@ -37,6 +38,8 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
   const [showInfo, setShowInfo] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [tokenReCaptcha, setTokenReCaptcha] = useState<string>("");
+  const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
 
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
@@ -79,6 +82,7 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
       method: 'POST',
       body: JSON.stringify({
         type: simpleView,
+        tokenReCaptcha,
         ...data,
       }),
       headers: {
@@ -104,7 +108,10 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
         openModal();
         console.error(err);
       })
-      .finally(() => setIsSending(false));
+      .finally(() => {
+        setIsSending(false);
+        setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
+      });
   };
 
   return (
@@ -152,6 +159,7 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
             </div>
           </div>
         )}
+        <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
 
         <div className="w-full flex gap-6">
           <button type="submit" className='w-fit button button-primary flex items-center gap-1' disabled={isSending}>
