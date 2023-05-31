@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CommerceLayer, { AddressCreate, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
-import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
+import { useRouter } from "next/router";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
@@ -43,12 +43,30 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
     customer: ["id"],
   },
 };
+
 // useCommercelayer - start
 export const useCommerceLayer = () => {
   const { clientLogged, user } = useContext(AuthContext);
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
+  const [productUpdates, setProductUpdates] = useState([]);
+  const { asPath } = useRouter();
   const orderId = useMemo(() => order?.id, [order]);
+
+  const needsRefresh = () => asPath.startsWith("/checkout/pse/verify");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const checkPrices = needsRefresh();
+        const order = await getOrder(checkPrices);
+        setOrder(order);
+      } catch (error) {
+        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asPath]);
 
   const generateClient = async () => {
     try {
@@ -61,13 +79,14 @@ export const useCommerceLayer = () => {
     }
   };
 
-  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve) => {
-    let data = { status: 400, data: "Error updating order" };
+  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkPrices = false) => {
+    let data = { status: 400, data: "Error updating order", productUpdates: [] };
     await fetch("/api/order", {
       method: "POST",
       body: JSON.stringify({
         idOrder: idOrder,
-        orderParams: params
+        orderParams: params,
+        checkPrices
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -79,7 +98,7 @@ export const useCommerceLayer = () => {
           data = json;
         } else {
           console.error("Error get UpdateOrderAdmin");
-          data = { status: 400, data: "Error updating order - 1" };
+          data = { status: 400, data: "Error updating order - 1", productUpdates: [] };
         }
       }).catch((error) => {
         console.error({ error });
@@ -111,13 +130,16 @@ export const useCommerceLayer = () => {
     return data;
   };
 
-  const getOrder = useCallback(async () => {
+  const getOrder = useCallback(async (checkPrices?: boolean) => {
     try {
       const idOrder = localStorage.getItem("orderId");
 
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
 
-      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS);
+      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkPrices);
+
+      if (checkPrices) setProductUpdates(orderResp.productUpdates);
+
       const order = orderResp.data as unknown as Order;
 
       if (!["draft", "pending"].includes(order.status)) {
@@ -132,18 +154,6 @@ export const useCommerceLayer = () => {
       if (draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
       return draftOrder;
     }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const order = await getOrder();
-        setOrder(order);
-      } catch (error) {
-        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const reloadOrder = useCallback(async () => {
@@ -230,7 +240,6 @@ export const useCommerceLayer = () => {
         if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
           await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
         }
-        await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
       }
       await reloadOrder();
       if (response?.[0]?.status) {
@@ -512,6 +521,16 @@ export const useCommerceLayer = () => {
     [orderId, order]
   );
 
+  const checkCurrentPrices = useCallback(() => {
+    console.warn(order);
+    return [
+      {
+        sku: "Therm 1400 F 12 lt",
+        productName: "Calendator 12LT Tiro Forzado THERM1400F Bosh",
+      }
+    ];
+  }, [order]);
+
   const onRecaptcha = async (e) => {
     try {
       if (!e || e === "not authorized") {
@@ -527,6 +546,7 @@ export const useCommerceLayer = () => {
 
   return {
     order,
+    productUpdates,
     tokenRecaptcha,
     onRecaptcha,
     getOrder,
@@ -547,6 +567,7 @@ export const useCommerceLayer = () => {
     validateExternal,
     getSkuList,
     changeItemService,
+    checkCurrentPrices,
     deleteItemService
   };
 };

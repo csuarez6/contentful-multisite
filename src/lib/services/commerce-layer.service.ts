@@ -1,4 +1,4 @@
-import CommerceLayer, { QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { LineItem, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
 
@@ -353,13 +353,63 @@ export const updatePassWord = async (user: string, customerPWD: string, newPWD: 
   }
 };
 
-/** updateOrderAdminService */
-export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve) => {
-  try {
-    const cl = await getCLAdminCLient();
-    const updateOrder = await cl.orders.retrieve(idOrder, defaultOrderParams);
+export const getReformatedOrder = (order: Order) => {
+  const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
+  const productsList = (order.line_items)
+    .filter(item => item.item_type === "skus")
+    .map((item) => {
+      const installAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "installation");
+      const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "warranty");
+      item["installlation_service"] = installAdjItem;
+      item["warranty_service"] = warrantyAdjItem;
+      return item;
+    });
+  order.line_items = productsList;
+  return order;
+};
 
-    return { status: 200, data: updateOrder };
+/** updateOrderAdminService */
+export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve, checkPrices?: boolean) => {
+  try {
+    const productUpdates = [];
+    const response = { status: 200 };
+    
+    const client = await getCLAdminCLient();
+    const formatedOrder = getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams));
+    
+    if(checkPrices){
+      await Promise.all(formatedOrder.line_items.map(async (line_item: LineItem) => {
+        try {
+          const productPrices = await getCommercelayerProduct(line_item.sku_code);
+          if(productPrices?.priceGasodomestico !== line_item.formatted_unit_amount) {
+
+            productUpdates.push({
+              id: line_item.id,
+              sku_code: line_item.sku_code,
+              name: line_item.name
+            });
+
+            await client.line_items.delete(line_item.id).catch(err => { console.error("Error deleting the main line item in updateOrderAdminService:", err.errors); });
+
+            if (line_item["installlation_service"] && line_item["installlation_service"].length > 0) {
+              await client.line_items.delete(line_item["installlation_service"][0].id).catch(err => { console.error("Error deleting the instalation service in updateOrderAdminService:", err.errors); });
+            }
+
+            if (line_item["warranty_service"] && line_item["warranty_service"].length > 0) {
+              await client.line_items.delete(line_item["warranty_service"][0].id).catch(err => { console.error("Error deleting the warranty service in updateOrderAdminService:", err.errors); });
+            }
+          }
+        } catch (err){
+          console.error("General error in the checkPrices section:", err, "line-item:", line_item);
+        }
+
+      }));
+    }
+
+    response["productUpdates"] = productUpdates;
+    response["data"] = productUpdates.length > 0 ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
+    
+    return response;
   } catch (error) {
     console.error('Error updateOrderAdminService: ', error);
     return { status: 401, error: error };

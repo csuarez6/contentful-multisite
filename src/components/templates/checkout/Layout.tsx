@@ -132,7 +132,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               <h4 className="text-blue-dark border-b border-blue-dark pb-3">Detalle de tu pedido</h4>
               <div className="flex flex-col gap-3">
                 {products?.map((product, i) => (
-                  <>
+                  <div key={`lateral-product-overview-${product.id}`}>
                     <div className="grid grid-cols-1 text-sm" key={"product-name" + i}>
                       <p className="">{product.name}</p>
                       <p className="text-xs">* IVA incluido</p>
@@ -143,7 +143,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         {product?.formatted_unit_amount}
                       </span>
                     </div>
-                  </>
+                  </div>
                 ))}
                 <div className="grid grid-cols-2 rounded mt-2">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>

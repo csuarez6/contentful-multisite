@@ -32,6 +32,7 @@ import {
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IAdjustments } from "@/lib/services/commerce-layer.service";
+import Link from "next/link";
 
 const CheckoutVerify = () => {
   const router = useRouter();
@@ -61,39 +62,12 @@ const CheckoutVerify = () => {
   const fechRequestStatus = useRef(false);
 
   const { isLogged } = useContext(AuthContext);
-  const {
-    order,
-    flow,
-    updateMetadata,
-    updateItemQuantity,
-    addLoggedCustomer,
-    getSkuList,
-    changeItemService,
-  } = useContext(CheckoutContext);
+  const { order, productUpdates, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
+    setIsLoading(false);
     if (!order?.line_items) return [];
-    const adjustmentsList = order.line_items.filter(
-      (item) => item.item_type === "adjustments"
-    );
-    const productsList = order.line_items
-      .filter((item) => item.item_type === "skus")
-      .map((item) => {
-        const installAdjItem = adjustmentsList.filter(
-          (adjItem) =>
-            adjItem?.item?.metadata?.sku_id === item.id &&
-            adjItem?.item?.metadata?.type === "installation"
-        );
-        const warrantyAdjItem = adjustmentsList.filter(
-          (adjItem) =>
-            adjItem?.item?.metadata?.sku_id === item.id &&
-            adjItem?.item?.metadata?.type === "warranty"
-        );
-        item["installlation_service"] = installAdjItem;
-        item["warranty_service"] = warrantyAdjItem;
-        return item;
-      });
-    return productsList;
+    return order.line_items;
   }, [order]);
 
   const servicesHandler = async (type: string, params) => {
@@ -243,11 +217,6 @@ const CheckoutVerify = () => {
     }
   };
 
-  useEffect(() => {
-    setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <HeadingCard
       classes="col-span-2"
@@ -256,6 +225,18 @@ const CheckoutVerify = () => {
       isCheck={isCompleted}
     >
       <div className="flex flex-col sm:-mx-6 md:mx-0">
+        {(productUpdates && productUpdates?.length > 0) && (
+          <div className="w-full">
+            {productUpdates.map((productUpdate: any) => {
+              return (
+                <div key={`product-update-${productUpdate.id}`} className="py-1 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
+                  El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que cambió de precio.
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Start Heading */}
         <div className="grid font-bold border-b grid-template-product text-blue-dark border-grey-60 text-md">
           <div className="text-left py-3.5 pl-4 sm:pl-6 md:pl-0">
@@ -270,11 +251,11 @@ const CheckoutVerify = () => {
         </div>
         {/* End Heading */}
 
-        {products.map((product) => {
+        {products.map((product: any) => {
           return (
             <div
               className="flex flex-wrap border-b sm:grid grid-template-product-details"
-              key={product.id}
+              key={`cart-product-${product.id}`}
             >
               <div className="row-start-1 row-end-4 py-3.5">
                 <figure className="relative w-16 shrink-0">
