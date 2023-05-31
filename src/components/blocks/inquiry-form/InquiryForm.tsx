@@ -8,8 +8,8 @@ const InquiryFormBlock: React.FC<IFormBlock> = ({ title, description, simpleView
     <section id={blockId ? blockId : sysId} className="section grid gap-7 md:gap-9">
       {(title || description) &&
         <div className="grid gap-9 text-center">
-          <h2 className="text-blue-dark">{title}</h2>
-          <div className="text-blue-dark">{documentToReactComponents(description?.json)}</div>
+          {title && <h2 className="text-blue-dark">{title}</h2>}
+          {description?.json && <div className="text-grey-30 text-size-p1">{documentToReactComponents(description?.json)}</div>}
         </div>
       }
 

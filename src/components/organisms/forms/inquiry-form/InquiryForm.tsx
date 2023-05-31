@@ -41,6 +41,15 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
+  const formatPrice = (price) => {
+    const formatter = new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
+      minimumFractionDigits: 0,
+    });
+    return formatter.format(price);
+  };
+
   const refForm: LegacyRef<HTMLFormElement> = createRef();
   const {
     register,
@@ -118,7 +127,7 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
           <TextBox
             id="cellPhone"
             name="cellPhone"
-            label={`Escribe tu número celular ${!isRPO ? "para notificarte" : ""}`}
+            label="Escribe tu número celular"
             placeholder="300 0000000"
             {...register("cellPhone")}
           />
@@ -156,7 +165,7 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
           </button>
         </div>
         <div className="w-full">
-          <p className='text-size-p3 text-neutral-20'>Al dar click en “consulta la fecha” aceptas las políticas de financiación y de tratamiento de datos personales.</p>
+          <p className='text-size-p3 text-neutral-20'>Al dar click en consultar aceptas las políticas de financiación y de tratamiento de datos personales.</p>
         </div>
       </form>
 
@@ -171,23 +180,23 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
             </div>
             <div className="rounded-xl bg-neutral-30 p-3 flex items-center justify-center">
               <p className='text-white title is-1 text-center'>
-                {showInfo && response ? (isRPO ? response.date : response.quota) : "-----"}
+                {showInfo && response ? (isRPO ? response.date : `${formatPrice(response.quota)}*`) : "-----"}
               </p>
             </div>
 
             <hr className='rounded-xl border-2 border-category-sky-blue-50 mt-[18px]' />
 
             <div className="flex flex-col gap-2">
-              <div className="grid grid-cols-2">
-                <p className='text-size-subtitle1 font-bold text-blue-dark'>Nombre del titular</p>
-                <p className='text-size-p1 text-blue-dark text-right'>
+              <div className="grid grid-cols-2 sm:grid-cols-5">
+                <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Nombre del titular</p>
+                <p className='text-size-p1 text-blue-dark text-right col-span-3'>
                   {showInfo && response ? response.name : "-----"}
                 </p>
               </div>
-              <div className="grid grid-cols-2">
-                <p className='text-size-subtitle1 font-bold text-blue-dark'>Dirección del predio</p>
-                <p className='text-size-p1 text-blue-dark text-right'>
-                  {showInfo && response ? response.address : "-----"}
+              <div className="grid grid-cols-2 sm:grid-cols-5">
+                <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Dirección del predio</p>
+                <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
+                  {showInfo && response?.address ? response.address : "-----"}
                 </p>
               </div>
             </div>

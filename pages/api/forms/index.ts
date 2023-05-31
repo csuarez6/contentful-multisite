@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import consultQuotaVantilisto from './vantilisto';
 
 const handler = async (
   req: NextApiRequest,
@@ -56,25 +57,38 @@ const handler = async (
     return;
   }
   else if (type === "Vantilisto") {
-    if (contractAccount != 12345) {
+    try {
+      const response = await consultQuotaVantilisto(req.body);
+
+      if (response.result) {
+        const { account, clientName, creditAvailable } = response.data;
+        res.status(200).json({
+          result: {
+            success: true,
+            quota: creditAvailable,
+            name: clientName,
+            address: "",
+            account,
+          }
+        });
+      }
+      else {
+        res.status(400).json({
+          result: {
+            message: response.error ? response.message : "Ocurrió un error, intenta de nuevo o comunícate con atención al cliente.",
+            success: false
+          }
+        });
+      }
+      return;
+    } catch (error) {
       res.status(400).json({
         result: {
-          message: "La cuenta contrato ingresada es erronea.",
+          message: "Ocurrió un error, intenta de nuevo o comunícate con atención al cliente.",
           success: false
         }
       });
     }
-    else {
-      res.status(200).json({
-        result: {
-          success: true,
-          quota: "$ 3.000.000",
-          name: "Maria Flores",
-          address: "Calle 1 A # 45-12"
-        }
-      });
-    }
-    return;
   }
 
   res.status(400).json({
