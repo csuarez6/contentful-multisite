@@ -566,11 +566,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       </CustomLink>
                     </>
                   )}
-                  {/* {timeToPay >= 0 && ( */}
+                  {timeToPay >= 0 && (
                     <div className="m-auto flex shrink-0 items-center justify-center p-1 w-10 h-10 border border-blue-dark bg-blue-100 rounded-full">
                       <span className="text-blue-dark font-semibold">{timeToPay}30</span>
                     </div>
-                  {/* )} */}
+                  )}
                 </div>
               </div>
               <div className="relative z-10 flex items-center lg:hidden">
