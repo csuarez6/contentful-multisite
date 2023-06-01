@@ -51,6 +51,7 @@ export const useCommerceLayer = () => {
   const [order, setOrder] = useState<Order>();
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
+  const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
 
   const needsRefresh = () => asPath.startsWith("/checkout/pse/verify");
@@ -488,16 +489,21 @@ export const useCommerceLayer = () => {
   }, [order]);
 
   const placeOrder = useCallback(async () => {
-    const client = await generateClient();
-    const result = await client.orders.update(
-      {
-        id: orderId,
-        _place: true,
-      },
-      DEFAULT_ORDER_PARAMS
-    );
-
-    setOrder(result);
+    try {
+      const client = await generateClient();
+      const result = await client.orders.update(
+        {
+          id: orderId,
+          _place: true,
+        },
+        DEFAULT_ORDER_PARAMS
+      ).catch(err => err.errors);
+      setOrder(result);
+      return {status: 200, data: result};
+    } catch (error) {
+      console.error('error place order', error); 
+      return {status: 500, data: error};
+    }
   }, [orderId]);
 
   const validateExternal = useCallback(
@@ -544,10 +550,18 @@ export const useCommerceLayer = () => {
     }
   };
 
+  const upgradeTimePay = useCallback(
+    async (time: number) => {
+      setTimeToPay(time);
+    },
+    []
+  );
+
   return {
     order,
     productUpdates,
     tokenRecaptcha,
+    timeToPay,
     onRecaptcha,
     getOrder,
     reloadOrder,
@@ -568,7 +582,8 @@ export const useCommerceLayer = () => {
     getSkuList,
     changeItemService,
     checkCurrentPrices,
-    deleteItemService
+    deleteItemService,
+    upgradeTimePay,
   };
 };
 

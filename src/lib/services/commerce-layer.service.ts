@@ -1,6 +1,10 @@
 import CommerceLayer, { LineItem, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
-import { getCustomerToken, getIntegrationToken, getSalesChannelToken } from "@commercelayer/js-auth";
+import {
+  getCustomerToken,
+  getIntegrationToken,
+  getSalesChannelToken,
+} from "@commercelayer/js-auth";
 
 export interface ICustomer {
   name: string;
@@ -32,22 +36,22 @@ export interface IAdjustments {
 
 export interface JWTProps {
   organization: {
-    slug: string
-    id: string
-  }
+    slug: string;
+    id: string;
+  };
   application: {
-    kind: string
-  }
+    kind: string;
+  };
   owner?: {
-    id?: string
-    type?: string
-  }
-  test: boolean
+    id?: string;
+    type?: string;
+  };
+  test: boolean;
 }
 
 export const CACHE_TOKENS = {
   MERCHANT_TOKEN: null,
-  APP_TOKEN: null
+  APP_TOKEN: null,
 };
 
 /* For full integration permissions (2 hours) */
@@ -55,7 +59,10 @@ export const getIntegrationAppToken = async (): Promise<string> => {
   try {
     if (CACHE_TOKENS.APP_TOKEN) return CACHE_TOKENS.APP_TOKEN;
 
-    const { accessToken, data: { expires_in } } = await getIntegrationToken({
+    const {
+      accessToken,
+      data: { expires_in },
+    } = await getIntegrationToken({
       endpoint: process.env.COMMERCELAYER_ENDPOINT,
       clientId: process.env.COMMERCELAYER_CLIENT_ID,
       clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
@@ -67,7 +74,6 @@ export const getIntegrationAppToken = async (): Promise<string> => {
       CACHE_TOKENS.APP_TOKEN = null;
     }, 1000 * parseInt(expires_in));
     return accessToken;
-
   } catch (error) {
     throw new Error("UNABLE_GETTING_CL_TOKEN", { cause: error });
   }
@@ -76,12 +82,17 @@ export const getIntegrationAppToken = async (): Promise<string> => {
 /* For CRUD in the order, items and similars (4 hours) */
 export const getMerchantToken = async () => {
   try {
-    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN) return CACHE_TOKENS.MERCHANT_TOKEN;
+    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN)
+      return CACHE_TOKENS.MERCHANT_TOKEN;
 
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf('[') === 0) commercelayerScope = JSON.parse(commercelayerScope);
+    if (commercelayerScope.indexOf("[") === 0)
+      commercelayerScope = JSON.parse(commercelayerScope);
 
-    const { accessToken, data: { expires_in } } = await getSalesChannelToken({
+    const {
+      accessToken,
+      data: { expires_in },
+    } = await getSalesChannelToken({
       endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
@@ -93,16 +104,16 @@ export const getMerchantToken = async () => {
     }, 1000 * parseInt(expires_in));
     return accessToken;
   } catch (error) {
-    console.error('Error on «getMerchantToken»', error);
-    return '';
-  };
+    console.error("Error on «getMerchantToken»", error);
+    return "";
+  }
 };
 
 /* For specific user (10 min)  */
 export const getCustomerTokenCl = async ({ email, password }) => {
   try {
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf('[') === 0) {
+    if (commercelayerScope.indexOf("[") === 0) {
       commercelayerScope = JSON.parse(commercelayerScope);
     }
 
@@ -114,7 +125,7 @@ export const getCustomerTokenCl = async ({ email, password }) => {
       },
       {
         username: email,
-        password
+        password,
       }
     );
 
@@ -152,7 +163,7 @@ export const createCustomer = async ({
   cellPhone,
   contractNumber,
   authorize,
-  notificate
+  notificate,
 }: ICustomer) => {
   try {
     const merchantToken = await getMerchantToken();
@@ -170,12 +181,11 @@ export const createCustomer = async ({
         contractNumber: contractNumber,
         privacyPolicy: authorize,
         notifications: notificate,
-      }
+      },
     });
     return { status: 201, ...createCustomer }; // this will return the created resource object
-
   } catch (error) {
-    console.error('Error - Customer Service: ', error);
+    console.error("Error - Customer Service: ", error);
     return { status: error.response.status };
   }
 };
@@ -203,11 +213,11 @@ export const updateCustomerMetadata = async ({
         documentNumber: documentNumber,
         cellPhone: cellPhone,
         contractNumber: contractNumber,
-      }
+      },
     });
     return { status: 200 };
   } catch (error) {
-    console.error('Error customerUpdate: ', error);
+    console.error("Error customerUpdate: ", error);
     return { status: 401, error: error };
   }
 };
@@ -221,7 +231,7 @@ export const getCustomerInfo = async (accessToken: string) => {
     const customerInfo = await cl.customers.retrieve(customerID);
     return { status: 200, data: customerInfo };
   } catch (error) {
-    console.error('Error customerInfo: ', error);
+    console.error("Error customerInfo: ", error);
     return { status: 401, error: error };
   }
 };
@@ -231,27 +241,31 @@ export const createCustomerResetPwd = async (customerEmail: string) => {
   try {
     const cl = await getCLAdminCLient();
     const createCustomerRPwd = await cl.customer_password_resets.create({
-      customer_email: customerEmail
+      customer_email: customerEmail,
     });
     return { status: 200, data: createCustomerRPwd };
   } catch (error) {
-    console.error('Error Create Customer Reset: ', error);
+    console.error("Error Create Customer Reset: ", error);
     return { status: 401, error: error };
   }
 };
 
 /** Update a customer password reset */
-export const updateCustomerResetPwd = async (tokenID: string, customerPWD: string, resetToken: string) => {
+export const updateCustomerResetPwd = async (
+  tokenID: string,
+  customerPWD: string,
+  resetToken: string
+) => {
   try {
     const cl = await getCLAdminCLient();
     const updateCustomerRPwd = await cl.customer_password_resets.update({
       id: tokenID,
       customer_password: customerPWD,
-      _reset_password_token: resetToken
+      _reset_password_token: resetToken,
     });
     return { status: 200, data: updateCustomerRPwd };
   } catch (error) {
-    console.error('Error Update Customer Reset: ', error);
+    console.error("Error Update Customer Reset: ", error);
     return { status: 401, error: error };
   }
 };
@@ -265,22 +279,30 @@ export const retrieveCustomerResetPwd = async (tokenID: string) => {
     let difHoursDates = null;
 
     const cl = await getCLAdminCLient();
-    const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(tokenID);
+    const retrieveCustomerRPwd = await cl.customer_password_resets.retrieve(
+      tokenID
+    );
 
     const dateCreate = new Date(retrieveCustomerRPwd.created_at);
     const miliSecCreate = dateCreate.getTime();
     difHoursDates = miliSecCurrent - miliSecCreate;
     // const hours = difHoursDates / 3600000;
-    const minutes = (difHoursDates / 1000) / 60;
+    const minutes = difHoursDates / 1000 / 60;
 
-    if (retrieveCustomerRPwd.reset_password_at == null && minutes <= 15) { //Token válido 15 min
+    if (retrieveCustomerRPwd.reset_password_at == null && minutes <= 15) {
+      //Token válido 15 min
       isTokenValid = true;
     } else {
       await deleteCustomerResetPwd(tokenID);
     }
-    return { status: 200, isTokenValid, resetToken: retrieveCustomerRPwd.reset_password_token, tokenID };
+    return {
+      status: 200,
+      isTokenValid,
+      resetToken: retrieveCustomerRPwd.reset_password_token,
+      tokenID,
+    };
   } catch (error) {
-    console.error('Error Check Customer Token: ', error);
+    console.error("Error Check Customer Token: ", error);
     return { status: 401, error: error };
   }
 };
@@ -289,11 +311,13 @@ export const retrieveCustomerResetPwd = async (tokenID: string) => {
 export const deleteCustomerResetPwd = async (tokenID: string) => {
   try {
     const cl = await getCLAdminCLient();
-    const deleteCustomerRPwd = await cl.customer_password_resets.delete(tokenID);
+    const deleteCustomerRPwd = await cl.customer_password_resets.delete(
+      tokenID
+    );
 
     return deleteCustomerRPwd;
   } catch (error) {
-    console.error('Error Delete Customer Token: ', error);
+    console.error("Error Delete Customer Token: ", error);
     return { status: 401, error: error };
   }
 };
@@ -306,49 +330,83 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
-        include: ['prices', 'stock_items', 'prices.price_list', 'stock_items.stock_location'],
-        fields: ['id', 'prices', 'stock_items'],
+        include: [
+          "prices",
+          "stock_items",
+          "prices.price_list",
+          "stock_items.stock_location",
+        ],
+        fields: ["id", "prices", "stock_items"],
       })
     ).first();
 
     if (sku) {
       product = {
-        priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_amount ?? null,
-        priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.formatted_compare_at_amount ?? null,
-        priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_amount ?? null,
-        priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.formatted_compare_at_amount ?? null,
+        priceGasodomestico:
+          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+            ?.formatted_amount ?? null,
+        priceBeforeGasodomestico:
+          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+            ?.formatted_compare_at_amount ?? null,
+        priceVantiListo:
+          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+            ?.formatted_amount ?? null,
+        priceBeforeVantiListo:
+          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+            ?.formatted_compare_at_amount ?? null,
 
-        _priceGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.amount_float ?? null,
-        _priceBeforeGasodomestico: sku?.prices?.find(p => p.price_list.reference === 'gasodomesticos')?.compare_at_amount_float ?? null,
-        _priceVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.amount_float ?? null,
-        _priceBeforeVantiListo: sku?.prices?.find(p => p.price_list.reference === 'vantiListo')?.compare_at_amount_float ?? null,
+        _priceGasodomestico:
+          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+            ?.amount_float ?? null,
+        _priceBeforeGasodomestico:
+          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+            ?.compare_at_amount_float ?? null,
+        _priceVantiListo:
+          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+            ?.amount_float ?? null,
+        _priceBeforeVantiListo:
+          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+            ?.compare_at_amount_float ?? null,
 
-        productsQuantityGasodomestico: sku?.stock_items?.find(p => p.stock_location.reference === 'gasodomesticos')?.quantity ?? 0,
-        productsQuantityVantiListo: sku?.stock_items?.find(p => p.stock_location.reference === 'vantiListo')?.quantity ?? 0,
+        productsQuantityGasodomestico:
+          sku?.stock_items?.find(
+            (p) => p.stock_location.reference === "gasodomesticos"
+          )?.quantity ?? 0,
+        productsQuantityVantiListo:
+          sku?.stock_items?.find(
+            (p) => p.stock_location.reference === "vantiListo"
+          )?.quantity ?? 0,
       };
     }
   } catch (error) {
-    console.error('Error retrieving SKU: ', error);
+    console.error("Error retrieving SKU: ", error);
   }
 
   return product;
 };
 
-export const updatePassWord = async (user: string, customerPWD: string, newPWD: string) => {
+export const updatePassWord = async (
+  user: string,
+  customerPWD: string,
+  newPWD: string
+) => {
   try {
-    const validPassword: any = await getCustomerTokenCl({ email: user, password: customerPWD });
+    const validPassword: any = await getCustomerTokenCl({
+      email: user,
+      password: customerPWD,
+    });
     if (validPassword?.status === 200) {
       const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
       const cl = await getCommerlayerClient(validPassword.access_token);
       const response = await cl.customers.update({
         id: owner.id,
-        password: newPWD
+        password: newPWD,
       });
-      if (response) return { status: 200, data: 'password is update' };
+      if (response) return { status: 200, data: "password is update" };
     }
-    return { status: 401, data: 'password is invalid' };
+    return { status: 401, data: "password is invalid" };
   } catch (error) {
-    console.error('Error updating password', error);
+    console.error("Error updating password", error);
     return { status: 401, error: error };
   }
 };
@@ -411,7 +469,7 @@ export const updateOrderAdminService = async (idOrder?: string, defaultOrderPara
     
     return response;
   } catch (error) {
-    console.error('Error updateOrderAdminService: ', error);
+    console.error("Error updateOrderAdminService: ", error);
     return { status: 401, error: error };
   }
 };
@@ -424,12 +482,12 @@ export const getSkuOptionsService = async (filter?: string) => {
       filters: {
         reference_eq: filter ?? "",
       },
-      pageSize: 25 // The maximum page size allowed is 25 - Commercelayer
+      pageSize: 25, // The maximum page size allowed is 25 - Commercelayer
     });
 
     return { status: 200, data: skuOptionList };
   } catch (error) {
-    console.error('Error getSkuOptions: ', error);
+    console.error("Error getSkuOptions: ", error);
     return { status: 401, error: error };
   }
 };
@@ -461,18 +519,22 @@ export const createAdjustmentsService = async ({
         sku_option_id: sku_option_id,
         sku_option_name: sku_option_name,
         categoryReference: categoryReference,
-      }
+      },
     });
 
     return { status: 200, data: adjustment };
   } catch (error) {
-    console.error('Error create-adjustments: ', error);
+    console.error("Error create-adjustments: ", error);
     return { status: 401, error: error };
   }
 };
 
 /*** Create service - Aditional */
-export const createServiceAditional = async (adjustment: IAdjustments, idOrder: string, quantity: string) => {
+export const createServiceAditional = async (
+  adjustment: IAdjustments,
+  idOrder: string,
+  quantity: string
+) => {
   try {
     const respAdj = await createAdjustmentsService(adjustment);
     const cl = await getCLAdminCLient();
@@ -481,18 +543,18 @@ export const createServiceAditional = async (adjustment: IAdjustments, idOrder: 
         quantity: parseInt(quantity),
         order: {
           id: idOrder,
-          type: "orders"
+          type: "orders",
         },
         item: {
           id: respAdj.data.id,
-          type: "adjustments"
-        }
+          type: "adjustments",
+        },
       });
       return { status: 200, data: Aditional };
     }
     return { status: 200, data: null };
   } catch (error) {
-    console.error('Error create-adjustments: ', error);
+    console.error("Error create-adjustments: ", error);
     return { status: 401, error: error };
   }
 };

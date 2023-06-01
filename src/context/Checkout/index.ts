@@ -9,6 +9,7 @@ export interface IContextCheckout {
   productUpdates: any;
   flow: Flow;
   tokenRecaptcha: string;
+  timeToPay: number;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
@@ -27,13 +28,14 @@ export interface IContextCheckout {
     billingAddress?: Address;
   }>;
   getCustomerAddresses: () => Promise<Address[]>;
-  placeOrder: () => Promise<void>;
+  placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: () => Promise<void>;
   onRecaptcha: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
+  upgradeTimePay: (e: number) => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -41,6 +43,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   productUpdates: undefined,
   flow: undefined,
   tokenRecaptcha: "",
+  timeToPay: undefined,
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,
@@ -60,6 +63,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   setDefaultShippingMethod: () => undefined,
   onRecaptcha: () => undefined,
   validateExternal: () => undefined,
+  upgradeTimePay: () => undefined,
 });
 
 export default CheckoutContext;

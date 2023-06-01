@@ -24,7 +24,7 @@ const CheckoutSummary = () => {
 
   const fullName = useMemo(() => {
     return (
-      (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
+      (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
     )(isLogged ? user : order);
 
   }, [user, order, isLogged]);

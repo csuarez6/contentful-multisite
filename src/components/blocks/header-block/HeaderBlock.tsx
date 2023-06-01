@@ -122,9 +122,28 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
-  const { order } = useContext(CheckoutContext);
+  const {
+    order,
+    timeToPay,
+    upgradeTimePay
+  } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
+
+  useEffect(() => {
+    if(timeToPay > 0){
+      const interval = setInterval(() => {
+        upgradeTimePay(timeToPay - 1);
+        if (timeToPay === 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+    
+  }, [timeToPay]);
 
   useEffect(() => {
     setNumProducts(
@@ -547,6 +566,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       </CustomLink>
                     </>
                   )}
+                  {timeToPay >= 0 && <div>
+                      {timeToPay}
+                  </div> }
                 </div>
               </div>
               <div className="relative z-10 flex items-center lg:hidden">

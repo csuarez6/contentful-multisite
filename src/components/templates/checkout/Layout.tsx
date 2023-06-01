@@ -18,11 +18,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const {
     order,
     tokenRecaptcha,
+    timeToPay,
     setPaymentMethod,
     addPaymentMethodSource,
     placeOrder,
     setDefaultShippingMethod,
     validateExternal,
+    upgradeTimePay,
   } = useContext(CheckoutContext);
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
   const [transactionToken, setTransactionToken] = useState('');
@@ -78,11 +80,19 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       ]);
       await addPaymentMethodSource(token),
 
-        await placeOrder();
-
-      setOpenDummyPGModal(true);
-      setTransactionToken(token);
-
+      await placeOrder().then(res => {
+        if(res?.data?.length >= 1){
+          setError(true);
+          setErrorMessage({
+            icon: "alert",
+            type: "warning",
+            title: "Transaccion no permitida",
+          });
+        }else{
+          setOpenDummyPGModal(true);
+          setTransactionToken(token);
+        }
+      });
     } catch (error) {
       setError(true);
       setErrorMessage({
@@ -107,6 +117,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         type: "warning",
         title: title,
       });
+      if(!toCancel){
+        if(isNaN(timeToPay) || timeToPay === 0){
+          upgradeTimePay(30);
+        }
+      }
       push('/');
 
     } catch (error) {
