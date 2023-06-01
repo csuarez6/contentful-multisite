@@ -228,11 +228,9 @@ const CheckoutVerify = () => {
         {(productUpdates && productUpdates?.length > 0) && (
           <div className="w-full">
             {productUpdates.map((productUpdate: any) => {
-              return (
-                <div key={`product-update-${productUpdate.id}`} className="py-1 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
-                  El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que cambió de precio.
-                </div>
-              );
+              return (<div key={`product-update-${productUpdate.id}`} className="py-2 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
+                El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que cambió de precio.
+              </div>);
             })}
           </div>
         )}
@@ -377,7 +375,7 @@ const CheckoutVerify = () => {
               {/* ********* Services ******** */}
               <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
                 Garantía extendida{" "}
-                {product["warranty_service"].length > 0 && (
+                {product["warranty_service"]?.length > 0 && (
                   <>
                     <br />
                     <b>{product["warranty_service"][0]["name"]}</b>
@@ -400,28 +398,28 @@ const CheckoutVerify = () => {
                     )
                   }
                 >
-                  {product["warranty_service"].length > 0
+                  {product["warranty_service"]?.length > 0
                     ? "Cambiar"
                     : "Agregar"}
                 </button>
               </div>
               <div className="px-3 text-right">
                 <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                  {product["warranty_service"].length > 0
+                  {product["warranty_service"]?.length > 0
                     ? product["warranty_service"][0]["quantity"]
                     : "0"}
                   x
                 </span>
               </div>
               <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
-                {product["warranty_service"].length > 0
+                {product["warranty_service"]?.length > 0
                   ? product["warranty_service"][0]["formatted_total_amount"]
                   : "$0"}
               </div>
               <div className="w-full sm:hidden"></div>
               <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
                 Servicio de instalación{" "}
-                {product["installlation_service"].length > 0 && (
+                {product["installlation_service"]?.length > 0 && (
                   <>
                     <br />
                     <b>{product["installlation_service"][0]["name"]}</b>
@@ -444,21 +442,21 @@ const CheckoutVerify = () => {
                     )
                   }
                 >
-                  {product["installlation_service"].length > 0
+                  {product["installlation_service"]?.length > 0
                     ? "Cambiar"
                     : "Agregar"}
                 </button>
               </div>
               <div className="px-3 text-right">
                 <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                  {product["installlation_service"].length > 0
+                  {product["installlation_service"]?.length > 0
                     ? product["installlation_service"][0]["quantity"]
                     : "0"}
                   x
                 </span>
               </div>
               <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-                {product["installlation_service"].length > 0
+                {product["installlation_service"]?.length > 0
                   ? product["installlation_service"][0][
                       "formatted_total_amount"
                     ]

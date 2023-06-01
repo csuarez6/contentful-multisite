@@ -53,15 +53,19 @@ export const useCommerceLayer = () => {
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
-
-  const needsRefresh = () => asPath.startsWith("/checkout/pse/verify");
+  const [isInitialRender, setIsInitialRender] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const checkPrices = needsRefresh();
-        const order = await getOrder(checkPrices);
-        setOrder(order);
+        const checkPrices = asPath.startsWith("/checkout/pse/verify");
+
+        if (isInitialRender) setIsInitialRender(false);
+
+        if (isInitialRender || checkPrices){
+          const order = await getOrder(checkPrices);
+          setOrder(order);
+        }
       } catch (error) {
         console.error("Error at: useCommerceLayer getOrder, setOrder", error);
       }
@@ -157,9 +161,9 @@ export const useCommerceLayer = () => {
     }
   }, []);
 
-  const reloadOrder = useCallback(async () => {
+  const reloadOrder = useCallback(async (checkPrices?: boolean) => {
     try {
-      const order = await getOrder();
+      const order = await getOrder(checkPrices);
       setOrder(order);
       return { status: 200, data: 'success at reload order' };
     } catch (error) {
@@ -319,8 +323,7 @@ export const useCommerceLayer = () => {
 
   const addLoggedCustomer = useCallback(async () => {
     if (!clientLogged) throw new Error("unauthorized");
-
-    const result = await clientLogged.orders.update(
+    await clientLogged.orders.update(
       {
         id: orderId,
         customer: {
@@ -330,14 +333,13 @@ export const useCommerceLayer = () => {
       },
       DEFAULT_ORDER_PARAMS
     );
-
-    setOrder(result);
-  }, [user?.id, clientLogged, orderId]);
+    reloadOrder();
+  }, [user?.id, clientLogged, orderId, reloadOrder]);
 
   const addCustomer = useCallback(
     async ({ email, name, lastName, cellPhone }) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           customer_email: email,
@@ -353,9 +355,9 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      setOrder(result);
+      reloadOrder();
     },
-    [order, orderId]
+    [order, orderId, reloadOrder]
   );
 
   const getAddresses = useCallback(async () => {
@@ -386,7 +388,7 @@ export const useCommerceLayer = () => {
         ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
       ]);
 
-      const orderUpdate = await client.orders.update(
+      await client.orders.update(
         {
           id: order.id,
           shipping_address: {
@@ -411,16 +413,15 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(orderUpdate);
+      reloadOrder();
     },
-    [order]
+    [order, reloadOrder]
   );
 
   const updateMetadata = useCallback(
     async (metadata: Record<string, any>) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           metadata: {
@@ -432,10 +433,9 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(result);
+      reloadOrder();
     },
-    [order, orderId]
+    [order, orderId, reloadOrder]
   );
 
   const getPaymentMethods = useCallback(async () => {
@@ -446,7 +446,7 @@ export const useCommerceLayer = () => {
   const setPaymentMethod = useCallback(
     async (paymentMethodId: string) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           payment_method: {
@@ -456,10 +456,9 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(result);
+      reloadOrder();
     },
-    [orderId]
+    [orderId, reloadOrder]
   );
 
   const addPaymentMethodSource = useCallback(
@@ -498,18 +497,18 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       ).catch(err => err.errors);
-      setOrder(result);
+      reloadOrder();
       return {status: 200, data: result};
     } catch (error) {
       console.error('error place order', error); 
       return {status: 500, data: error};
     }
-  }, [orderId]);
+  }, [orderId, reloadOrder]);
 
   const validateExternal = useCallback(
     async (recapchaResponse: string) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           metadata: {
@@ -521,10 +520,9 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(result);
+      reloadOrder();
     },
-    [orderId, order]
+    [orderId, order, reloadOrder]
   );
 
   const checkCurrentPrices = useCallback(() => {

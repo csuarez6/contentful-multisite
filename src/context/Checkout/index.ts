@@ -14,7 +14,7 @@ export interface IContextCheckout {
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
   deleteItemService: (idItems: Array<string>) => Promise<apiResponse>;
-  reloadOrder: () => void;
+  reloadOrder: (checkPrices?: boolean) => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
   addLoggedCustomer: () => Promise<void>;

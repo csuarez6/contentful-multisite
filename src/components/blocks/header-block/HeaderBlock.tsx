@@ -142,8 +142,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         clearInterval(interval);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeToPay]);
+  }, [timeToPay, upgradeTimePay]);
 
   useEffect(() => {
     setNumProducts(
