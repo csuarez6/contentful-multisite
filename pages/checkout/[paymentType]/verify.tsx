@@ -272,17 +272,7 @@ const CheckoutVerify = () => {
                 </figure>
               </div>
               <div className="w-[calc(100%_-_70px)] flex-grow sm:w-auto text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
-                <CustomLink
-                  content={{
-                    urlPaths: [
-                      `/api/showproduct/${encodeURIComponent(
-                        product?.sku_code ?? ""
-                      )}`,
-                    ],
-                  }}
-                >
-                  {product?.name}
-                </CustomLink>
+                <Link href={`/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}`}>{product?.name}</Link>
                 <p className="text-xs text-left text-grey-60">
                   * Precio IVA incluido
                 </p>
@@ -380,7 +370,7 @@ const CheckoutVerify = () => {
                   Eliminar
                 </button>
               </div>
-              <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1 sm:m-0">
+              <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
                 {product.formatted_unit_amount}
               </div>
               <div className="w-full mt-3 sm:hidden"></div>
