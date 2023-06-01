@@ -60,12 +60,12 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
           </svg>
 
           <figure
-            className={
-              classNames(
-                "relative w-full md:w-1/2 shrink-0 grow md:h-full aspect-[328/180] overflow-hidden",
-                view?.roundedImage ? "md:aspect-[630/428] xl:w-[630px]" : "md:aspect-[488/400] xl:w-[488px]"
-              )
-            }
+            className={classNames(
+              "relative w-full md:w-1/2 shrink-0 grow md:h-full overflow-hidden",
+              view?.bannerWidth === "Largo" && !view?.roundedImage && "xl:w-[630px]",
+              view?.bannerWidth !== "Largo" && !view?.roundedImage && "xl:w-[488px]",
+              view?.roundedImage && "xl:w-[630px] !h-auto",
+            )}
             style={{
               clipPath: hasRoundedImage && (
                 view?.imageAlign === 'Derecha'
@@ -75,11 +75,16 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             }}
           >
             <Image
-              className="object-cover w-full h-full"
               src={promoImage?.url ?? image?.url}
               alt={promoImage?.title ?? image?.title}
               width={promoImage?.width ?? image?.width}
               height={promoImage?.height ?? image?.height}
+              className={classNames(
+                "object-cover w-full h-full aspect-[328/180]",
+                view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
+                view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
+                view?.roundedImage && "xl:w-[630px]",
+              )}
             />
           </figure>
         </>

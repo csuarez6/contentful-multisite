@@ -131,7 +131,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [numProducts, setNumProducts] = useState(0);
 
   useEffect(() => {
-    if(timeToPay > 0){
+    if (timeToPay > 0) {
       const interval = setInterval(() => {
         upgradeTimePay(timeToPay - 1);
         if (timeToPay === 0) {
@@ -142,16 +142,16 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         clearInterval(interval);
       };
     }
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeToPay]);
 
   useEffect(() => {
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
-            (acum, line_item) => acum + line_item.quantity,
-            0
-          )
+          (acum, line_item) => acum + line_item.quantity,
+          0
+        )
         : 0
     );
   }, [order]);
@@ -227,8 +227,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             isOpenMenu
               ? getBackgroundColorClass(
-                  secondaryNavCollectionColor ?? "Azul Oscuro"
-                ).background
+                secondaryNavCollectionColor ?? "Azul Oscuro"
+              ).background
               : backgroundColor.background
           )}
         ></div>
@@ -566,9 +566,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       </CustomLink>
                     </>
                   )}
-                  {timeToPay >= 0 && <div>
-                      {timeToPay}
-                  </div> }
+                  {/* {timeToPay >= 0 && ( */}
+                    <div className="m-auto flex shrink-0 items-center justify-center p-1 w-10 h-10 border border-blue-dark bg-blue-100 rounded-full">
+                      <span className="text-blue-dark font-semibold">{timeToPay}30</span>
+                    </div>
+                  {/* )} */}
                 </div>
               </div>
               <div className="relative z-10 flex items-center lg:hidden">
