@@ -455,7 +455,7 @@ export const useCommerceLayer = () => {
           },
         },
         DEFAULT_ORDER_PARAMS
-      );
+      ).catch(err => console.error(err.errors));
       reloadOrder();
     },
     [orderId, reloadOrder]
@@ -484,21 +484,28 @@ export const useCommerceLayer = () => {
         id: DEFAULT_SHIPPING_METHOD_ID,
         type: "shipping_methods",
       },
-    });
+    }).catch(err => console.error('error set default shipping method', err.errors));
   }, [order]);
 
   const placeOrder = useCallback(async () => {
     try {
       const client = await generateClient();
-      const result = await client.orders.update(
+      const response = await client.orders.update(
         {
           id: orderId,
           _place: true,
         },
         DEFAULT_ORDER_PARAMS
-      ).catch(err => err.errors);
-      reloadOrder();
-      return {status: 200, data: result};
+      )
+      .then( () => {
+        reloadOrder();
+        return {status: 200, data: 'esta todo ok'};
+      })
+      .catch(err =>{
+        console.error('error place order', err.errors);
+        return{status: 500, data: err.errors};
+      });
+      return response;
     } catch (error) {
       console.error('error place order', error); 
       return {status: 500, data: error};

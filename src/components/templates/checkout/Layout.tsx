@@ -29,9 +29,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     validateExternal,
     upgradeTimePay,
   } = useContext(CheckoutContext);
-  const [onPayment, setOnPayment] = useState(false);
+  const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
-  const [transactionToken, setTransactionToken] = useState('');
+  const [transactionToken, setTransactionToken] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     icon: "",
@@ -43,7 +43,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    return order.line_items.filter(i => i.sku_code);
+    return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
   const isComplete = useMemo(
@@ -66,49 +66,64 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
    * 2. Have Setted a payment method
    * 3. Have Added a payment method source
    */
-  const onPlaceOrder = useCallback(() => {
-    async () => {
-      setIsLoading(true);
-      try {
-        await validateExternal(tokenRecaptcha);
+  const onPlaceOrder = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await validateExternal(tokenRecaptcha);
 
-        const token = uuid();
+      const token = uuid();
 
-        const paymentMethodId = order.available_payment_methods.find(
-          (i) => i.reference === DEFAULT_PAYMENT_METHOD
-        )?.id;
+      const paymentMethodId = order.available_payment_methods.find(
+        (i) => i.reference === DEFAULT_PAYMENT_METHOD
+      )?.id;
 
-        await Promise.all([
-          setDefaultShippingMethod(),
-          setPaymentMethod(paymentMethodId),
-        ]);
-        await addPaymentMethodSource(token),
-
-          await placeOrder().then(res => {
-            if (res?.data?.length >= 1) {
-              setError(true);
-              setErrorMessage({
-                icon: "alert",
-                type: "warning",
-                title: "Transaccion no permitida",
-              });
-            } else {
+      await setDefaultShippingMethod();
+      await setPaymentMethod(paymentMethodId);
+      await addPaymentMethodSource(token),
+        await placeOrder()
+          .then((res) => {
+            if (res.status === 200) {
               setOpenDummyPGModal(true);
               setTransactionToken(token);
             }
-          });
-      } catch (error) {
-        console.error(error);
-        setError(true);
-        setErrorMessage({
-          icon: "alert",
-          type: "warning",
-          title: "Error al Realizar la orden",
-        });
-      }
-      setIsLoading(false);
-    };
-  }, [addPaymentMethodSource, placeOrder, setDefaultShippingMethod, setPaymentMethod, tokenRecaptcha, validateExternal, order?.available_payment_methods]);
+          })
+          .catch((err) => {
+            console.error("error on place order", err);
+            setError(true);
+            if (!navigator.onLine)
+              setErrorMessage({
+                icon: "alert",
+                type: "warning",
+                title:
+                  "Comprueba tu conexión a internet e intenta de nuevo por favor.",
+              });
+            else
+              setErrorMessage({
+                icon: "alert",
+                type: "warning",
+                title: `Ocurrió un error al continuar con la pasarela de pagos.`,
+              });
+          })
+          .finally();
+    } catch (error) {
+      console.error(error);
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Error al Realizar la orden",
+      });
+    }
+    setIsLoading(false);
+  }, [
+    addPaymentMethodSource,
+    placeOrder,
+    setDefaultShippingMethod,
+    setPaymentMethod,
+    tokenRecaptcha,
+    validateExternal,
+    order?.available_payment_methods,
+  ]);
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
@@ -120,32 +135,36 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   }, [asPath, order]);
 
   useEffect(() => {
-    if (onPayment) {
-      setOnPayment(false);
-      if (productUpdates?.length === 0) {
-        onPlaceOrder();
-      } else {
-        setError(true);
-        setErrorMessage({
-          icon: "alert",
-          type: "warning",
-          title: "La orden ha tenido algunos cambios de especificaciones, por favor compruebe si desea continuar.",
-        });
+    (async () => {
+      if (onPayment) {
+        setOnPayment(false);
+        if (productUpdates?.length === 0) {
+          await onPlaceOrder();
+        } else {
+          setError(true);
+          setErrorMessage({
+            icon: "alert",
+            type: "warning",
+            title:
+              "La orden ha tenido algunos cambios de especificaciones, por favor compruebe si desea continuar.",
+          });
+        }
       }
-    }
+    })();
   }, [productUpdates, onPayment, onPlaceOrder]);
 
   const handlePayment = async (toCancel = false) => {
     try {
-      const path = `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : '');
+      const path =
+        `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
       });
       const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
       setErrorMessage({
-        icon: "alert",
-        type: "warning",
+        icon: !toCancel? "check" : "alert",
+        type:  !toCancel ? "success" : "warning",
         title: title,
       });
       if (!toCancel) {
@@ -153,8 +172,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           upgradeTimePay(30);
         }
       }
-      push('/');
-
+      push("/");
     } catch (error) {
       console.error(error);
       setError(true);
@@ -175,15 +193,23 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         {products.length > 0 && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
-              <h4 className="text-blue-dark border-b border-blue-dark pb-3">Detalle de tu pedido</h4>
+              <h4 className="text-blue-dark border-b border-blue-dark pb-3">
+                Detalle de tu pedido
+              </h4>
               <div className="flex flex-col gap-3">
                 {products?.map((product, i) => (
                   <div key={`lateral-product-overview-${product.id}`}>
-                    <div className="grid grid-cols-1 text-sm" key={"product-name" + i}>
+                    <div
+                      className="grid grid-cols-1 text-sm"
+                      key={"product-name" + i}
+                    >
                       <p className="">{product.name}</p>
                       <p className="text-xs">* IVA incluido</p>
                     </div>
-                    <div className="grid grid-cols-2 text-sm border-b border-gray-300 mb-2 pb-2" key={"product-count" + i}>
+                    <div
+                      className="grid grid-cols-2 text-sm border-b border-gray-300 mb-2 pb-2"
+                      key={"product-count" + i}
+                    >
                       <p>Cantidad: {product.quantity}</p>
                       <span className="text-right text-blue-dark">
                         {product?.formatted_unit_amount}
@@ -203,7 +229,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     disabled={isLoading}
                     className={classNames(
                       "button button-primary w-full mt-[17px]",
-                      isLoading ? "disabled flex items-center justify-center gap-3" : ""
+                      isLoading
+                        ? "disabled flex items-center justify-center gap-3"
+                        : ""
                     )}
                   >
                     {isLoading && (
