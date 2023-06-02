@@ -1,4 +1,4 @@
-import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CheckoutContext from "../../../context/Checkout";
@@ -7,6 +7,7 @@ import { MocksModalSuccessProps } from "@/components/organisms/modal-success/Mod
 import uuid from "react-uuid";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames } from "@/utils/functions";
+import Link from "next/link";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -56,8 +57,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   );
 
   const validateOrder = async () => {
+    setIsLoading(true);
     setOnPayment(true);
     await reloadOrder(true);
+    setIsLoading(false);
   };
 
   /**
@@ -79,32 +82,32 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
       await setDefaultShippingMethod();
       await setPaymentMethod(paymentMethodId);
-      await addPaymentMethodSource(token),
-        await placeOrder()
-          .then((res) => {
-            if (res.status === 200) {
-              setOpenDummyPGModal(true);
-              setTransactionToken(token);
-            }
-          })
-          .catch((err) => {
-            console.error("error on place order", err);
-            setError(true);
-            if (!navigator.onLine)
-              setErrorMessage({
-                icon: "alert",
-                type: "warning",
-                title:
-                  "Comprueba tu conexión a internet e intenta de nuevo por favor.",
-              });
-            else
-              setErrorMessage({
-                icon: "alert",
-                type: "warning",
-                title: `Ocurrió un error al continuar con la pasarela de pagos.`,
-              });
-          })
-          .finally();
+      await addPaymentMethodSource(token);
+      await placeOrder()
+        .then((res) => {
+          if (res.status === 200) {
+            setOpenDummyPGModal(true);
+            setTransactionToken(token);
+          }
+        })
+        .catch((err) => {
+          console.error("error on place order", err);
+          setError(true);
+          if (!navigator.onLine)
+            setErrorMessage({
+              icon: "alert",
+              type: "warning",
+              title:
+                "Comprueba tu conexión a internet e intenta de nuevo por favor.",
+            });
+          else
+            setErrorMessage({
+              icon: "alert",
+              type: "warning",
+              title: `Ocurrió un error al continuar con la pasarela de pagos.`,
+            });
+        })
+        .finally();
     } catch (error) {
       console.error(error);
       setError(true);
@@ -151,7 +154,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         }
       }
     })();
-  }, [productUpdates, onPayment, onPlaceOrder]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productUpdates]);
 
   const handlePayment = async (toCancel = false) => {
     try {
@@ -163,8 +167,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
       setErrorMessage({
-        icon: !toCancel? "check" : "alert",
-        type:  !toCancel ? "success" : "warning",
+        icon: !toCancel ? "check" : "alert",
+        type: !toCancel ? "success" : "warning",
         title: title,
       });
       if (!toCancel) {
@@ -190,13 +194,22 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     <>
       <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
         <div className="col-span-2">{children}</div>
-        {products.length > 0 && (
+        {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
               <h4 className="text-blue-dark border-b border-blue-dark pb-3">
                 Detalle de tu pedido
               </h4>
               <div className="flex flex-col gap-3">
+                {(productUpdates?.length > 0) && (
+                  <div className="w-full">
+                    {productUpdates.map((productUpdate: any) => {
+                      return (<div key={`product-update-payment-${productUpdate.id}`} className="py-2 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
+                        El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que { productUpdate?.type === PRICE_VALIDATION_ID ? "cambió de precio" : "no hay unidades suficientes" }.
+                      </div>);
+                    })}
+                  </div>
+                )}
                 {products?.map((product, i) => (
                   <div key={`lateral-product-overview-${product.id}`}>
                     <div

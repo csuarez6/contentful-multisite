@@ -8,8 +8,8 @@ const handler = async (
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
-        const { idOrder, orderParams, checkPrices } = req.body;
-        const resp = await updateOrderAdminService(idOrder, orderParams, checkPrices);
+        const { idOrder, orderParams, checkUpdates } = req.body;
+        const resp = await updateOrderAdminService(idOrder, orderParams, checkUpdates);
         return res.status(200).json({ ...resp });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: e.message });

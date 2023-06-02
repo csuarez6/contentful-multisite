@@ -58,12 +58,12 @@ export const useCommerceLayer = () => {
   useEffect(() => {
     (async () => {
       try {
-        const checkPrices = asPath.startsWith("/checkout/pse/verify");
+        const checkUpdates = asPath.startsWith("/checkout/pse/verify");
 
         if (isInitialRender) setIsInitialRender(false);
 
-        if (isInitialRender || checkPrices){
-          const order = await getOrder(checkPrices);
+        if (isInitialRender || checkUpdates){
+          const order = await getOrder(checkUpdates);
           setOrder(order);
         }
       } catch (error) {
@@ -84,14 +84,14 @@ export const useCommerceLayer = () => {
     }
   };
 
-  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkPrices = false) => {
+  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkUpdates = false) => {
     let data = { status: 400, data: "Error updating order", productUpdates: [] };
     await fetch("/api/order", {
       method: "POST",
       body: JSON.stringify({
         idOrder: idOrder,
         orderParams: params,
-        checkPrices
+        checkUpdates
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -135,15 +135,15 @@ export const useCommerceLayer = () => {
     return data;
   };
 
-  const getOrder = useCallback(async (checkPrices?: boolean) => {
+  const getOrder = useCallback(async (checkUpdates?: boolean) => {
     try {
       const idOrder = localStorage.getItem("orderId");
 
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
 
-      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkPrices);
+      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkUpdates);
 
-      if (checkPrices) setProductUpdates(orderResp.productUpdates);
+      if (checkUpdates) setProductUpdates(orderResp.productUpdates);
 
       const order = orderResp.data as unknown as Order;
 
@@ -161,9 +161,9 @@ export const useCommerceLayer = () => {
     }
   }, []);
 
-  const reloadOrder = useCallback(async (checkPrices?: boolean) => {
+  const reloadOrder = useCallback(async (checkUpdates?: boolean) => {
     try {
-      const order = await getOrder(checkPrices);
+      const order = await getOrder(checkUpdates);
       setOrder(order);
       return { status: 200, data: 'success at reload order' };
     } catch (error) {

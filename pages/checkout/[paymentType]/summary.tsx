@@ -11,15 +11,13 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
-// import ReCAPTCHA from "react-google-recaptcha";
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
-import Link from "next/link";
 
 const CheckoutSummary = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const { isLogged, user } = useContext(AuthContext);
-  const { order, flow, productUpdates, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
+  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
 
@@ -56,15 +54,6 @@ const CheckoutSummary = () => {
       isCheck={isCompleted && tokenRecaptcha && true}
     >
       <div className="bg-white rounded-lg">
-        {(productUpdates && productUpdates?.length > 0) && (
-          <div className="w-full mb-5">
-            {productUpdates.map((productUpdate: any) => {
-              return (<div key={`product-update-${productUpdate.id}`} className="py-2 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
-                El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que cambió de precio.
-              </div>);
-            })}
-          </div>
-        )}
         <dl className="space-y-5 text-sm">
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
@@ -95,11 +84,6 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="text-blue-dark">
               Sabemos que eres un humano, pero debemos confirmarlo.
-              {/* <ReCAPTCHA
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V2}
-            onChange={(e) => onRecaptcha(e)}
-            className="mt-6"
-          /> */}
               <ReCaptchaBox
                 version={2}
                 handleChange={(e) => onRecaptcha(e)}

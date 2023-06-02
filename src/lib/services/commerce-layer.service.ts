@@ -1,10 +1,11 @@
-import CommerceLayer, { LineItem, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { CommerceLayerClient, LineItem, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
   getIntegrationToken,
   getSalesChannelToken,
 } from "@commercelayer/js-auth";
+import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from '@/constants/checkout.constants';
 
 export interface ICustomer {
   name: string;
@@ -427,38 +428,37 @@ export const getReformatedOrder = (order: Order) => {
 };
 
 /** updateOrderAdminService */
-export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve, checkPrices?: boolean) => {
+export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve, checkUpdates?: boolean) => {
   try {
     const productUpdates = [];
     const response = { status: 200 };
-    
+
     const client = await getCLAdminCLient();
     const formatedOrder = getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams));
-    
-    if(checkPrices){
+
+    if (checkUpdates) {
       await Promise.all(formatedOrder.line_items.map(async (line_item: LineItem) => {
         try {
-          const productPrices = await getCommercelayerProduct(line_item.sku_code);
-          if(productPrices?.priceGasodomestico !== line_item.formatted_unit_amount) {
-
+          const productCL = await getCommercelayerProduct(line_item.sku_code);
+          if (productCL?.priceGasodomestico !== line_item.formatted_unit_amount) {
+            await deleteLineItem(client, line_item);
             productUpdates.push({
               id: line_item.id,
               sku_code: line_item.sku_code,
-              name: line_item.name
+              name: line_item.name,
+              type: PRICE_VALIDATION_ID
             });
-
-            await client.line_items.delete(line_item.id).catch(err => { console.error("Error deleting the main line item in updateOrderAdminService:", err.errors); });
-
-            if (line_item["installlation_service"] && line_item["installlation_service"].length > 0) {
-              await client.line_items.delete(line_item["installlation_service"][0].id).catch(err => { console.error("Error deleting the instalation service in updateOrderAdminService:", err.errors); });
-            }
-
-            if (line_item["warranty_service"] && line_item["warranty_service"].length > 0) {
-              await client.line_items.delete(line_item["warranty_service"][0].id).catch(err => { console.error("Error deleting the warranty service in updateOrderAdminService:", err.errors); });
-            }
+          } else if (productCL.productsQuantityGasodomestico < line_item.quantity) {
+            await deleteLineItem(client, line_item);
+            productUpdates.push({
+              id: line_item.id,
+              sku_code: line_item.sku_code,
+              name: line_item.name,
+              type: STOCK_VALIDATION_ID
+            });
           }
-        } catch (err){
-          console.error("General error in the checkPrices section:", err, "line-item:", line_item);
+        } catch (err) {
+          console.error("General error in the checkUpdates section:", err, "line-item:", line_item);
         }
 
       }));
@@ -466,11 +466,23 @@ export const updateOrderAdminService = async (idOrder?: string, defaultOrderPara
 
     response["productUpdates"] = productUpdates;
     response["data"] = productUpdates.length > 0 ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
-    
+
     return response;
   } catch (error) {
     console.error("Error updateOrderAdminService: ", error);
     return { status: 401, error: error };
+  }
+};
+
+export const deleteLineItem = async (client: CommerceLayerClient, line_item: LineItem) => {
+  await client.line_items.delete(line_item.id).catch(err => { console.error("Error deleting the main line item in updateOrderAdminService:", err.errors); });
+
+  if (line_item["installlation_service"] && line_item["installlation_service"].length > 0) {
+    await client.line_items.delete(line_item["installlation_service"][0].id).catch(err => { console.error("Error deleting the instalation service in updateOrderAdminService:", err.errors); });
+  }
+
+  if (line_item["warranty_service"] && line_item["warranty_service"].length > 0) {
+    await client.line_items.delete(line_item["warranty_service"][0].id).catch(err => { console.error("Error deleting the warranty service in updateOrderAdminService:", err.errors); });
   }
 };
 
