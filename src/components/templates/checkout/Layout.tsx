@@ -1,6 +1,6 @@
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CheckoutContext from "../../../context/Checkout";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
@@ -108,7 +108,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       }
       setIsLoading(false);
     };
-  }, [addPaymentMethodSource, placeOrder, setDefaultShippingMethod, setPaymentMethod, tokenRecaptcha, validateExternal, order.available_payment_methods]);
+  }, [addPaymentMethodSource, placeOrder, setDefaultShippingMethod, setPaymentMethod, tokenRecaptcha, validateExternal, order?.available_payment_methods]);
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
