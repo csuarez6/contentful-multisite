@@ -20,6 +20,8 @@ import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   const { mainNavCollection, secondaryNavCollection } = props;
@@ -566,8 +568,29 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </>
                   )}
                   {timeToPay >= 0 && (
-                    <div className="m-auto flex shrink-0 items-center justify-center p-1 w-10 h-10 border border-blue-dark bg-blue-100 rounded-full">
-                      <span className="text-blue-dark font-semibold">{timeToPay}</span>
+                    <div className="m-auto flex shrink-0 items-center justify-center w-10 h-10">
+                      <CircularProgressbar
+                        value={(timeToPay / 30)}
+                        minValue={0}
+                        maxValue={1}
+                        text={`${timeToPay}`}
+                        styles={{
+                          path: {
+                            stroke: '#00182B',
+                            strokeLinecap: 'butt',
+                            transitionDuration: "0.5s"
+                          },
+                          trail: {
+                            stroke: '#ADABA580',
+                            strokeLinecap: 'butt'
+                          },
+                          text: {
+                            fill: '#113455',
+                            fontSize: '32px',
+                            fontWeight: "bold",
+                          }
+                        }}
+                      />
                     </div>
                   )}
                 </div>
