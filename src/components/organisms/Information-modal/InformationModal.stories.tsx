@@ -4,7 +4,7 @@ import { MocksModalProps } from './InformationModal.mocks';
 import { IModal } from '../custom-modal/CustomModal';
 
 export default {
-    title: 'organisms/CartModal',
+    title: 'organisms/InformationModal',
     component: CartModal,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {},
@@ -23,8 +23,13 @@ const Template: ComponentStory<typeof CartModal> = (args) => (
 );
 
 export const Base = Template.bind({});
+export const Error = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 
 Base.args = {
     ...MocksModalProps.data,
+} as IModal;
+
+Error.args = {
+    ...MocksModalProps.error,
 } as IModal;
