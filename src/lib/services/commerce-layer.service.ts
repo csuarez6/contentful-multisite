@@ -336,11 +336,17 @@ export const getCommercelayerProduct = async (skuCode: string) => {
           "stock_items",
           "prices.price_list",
           "stock_items.stock_location",
+          "stock_items.stock_reservations"
         ],
         fields: ["id", "prices", "stock_items"],
       })
     ).first();
 
+    let reservation = 0;
+    reservation = sku?.stock_items?.find(
+      (p) => p.stock_location.reference === "gasodomesticos"
+    )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
+      
     if (sku) {
       product = {
         priceGasodomestico:
@@ -377,6 +383,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
           sku?.stock_items?.find(
             (p) => p.stock_location.reference === "vantiListo"
           )?.quantity ?? 0,
+        stock_reservation: reservation,
       };
     }
   } catch (error) {

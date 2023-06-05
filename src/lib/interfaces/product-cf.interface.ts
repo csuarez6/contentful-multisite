@@ -100,6 +100,7 @@ export interface IProductOverviewDetails {
     clInstallationReference?: string;
   };
   relatedProducts?: IProductOverviewDetails[];
+  stock_reservation?: number;
 }
 
 export interface IAllyOverviewDetails {

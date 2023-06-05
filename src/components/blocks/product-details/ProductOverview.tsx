@@ -50,6 +50,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   warranty,
   category,
   relatedProducts,
+  stock_reservation
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -62,6 +63,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
   const orderLocalRef = useRef<LineItem[]>();
+  const stockItems = isGasAppliance(marketId)? productsQuantityGasodomestico: productsQuantityVantiListo;
+  const totalStockItems = Number(stockItems) - stock_reservation;
 
   useEffect(() => {
     orderLocalRef.current = order?.line_items;
@@ -427,9 +430,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       {/* Product stock */}
                       <div className="text-sm text-grey-30">
                         <p>
-                          {isGasAppliance(marketId)
-                            ? productsQuantityGasodomestico
-                            : productsQuantityVantiListo}{" "}
+                          {totalStockItems}{" "}
                           unidades disponibles
                         </p>
                       </div>
@@ -573,9 +574,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {/* Product stock */}
                 <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
                   <p>
-                    {isGasAppliance(marketId)
-                      ? productsQuantityGasodomestico
-                      : productsQuantityVantiListo}{" "}
+                    {totalStockItems}{" "}
                     unidades disponibles
                   </p>
                 </div>

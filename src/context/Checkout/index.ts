@@ -27,7 +27,7 @@ export interface IContextCheckout {
     shippingAddress?: Address;
     billingAddress?: Address;
   }>;
-  getCustomerAddresses: () => Promise<Address[]>;
+  getCustomerAddresses: () => Promise<any[] | ListResponse<Address>>;
   placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
