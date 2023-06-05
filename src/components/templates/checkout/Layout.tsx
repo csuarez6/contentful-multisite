@@ -197,15 +197,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
-              <h4 className="text-blue-dark border-b border-blue-dark pb-3">
+              <h4 className="pb-3 border-b text-blue-dark border-blue-dark">
                 Detalle de tu pedido
               </h4>
               <div className="flex flex-col gap-3">
                 {(productUpdates?.length > 0) && (
                   <div className="w-full">
                     {productUpdates.map((productUpdate: any) => {
-                      return (<div key={`product-update-payment-${productUpdate.id}`} className="py-2 px-3 mb-2 text-orange-700 bg-orange-100 border-l-4 border-orange-500 text-sm">
-                        El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que { productUpdate?.type === PRICE_VALIDATION_ID ? "cambió de precio" : "no hay unidades suficientes" }.
+                      return (<div key={`product-update-payment-${productUpdate.id}`} className="px-3 py-2 mb-2 text-sm text-orange-700 bg-orange-100 border-l-4 border-orange-500">
+                        El producto <Link href={`/api/showproduct/${encodeURIComponent(productUpdate?.sku_code ?? "")}`} className="inline-block font-bold underline">{productUpdate?.name}</Link> ha sido removido del carrito debido a que {productUpdate?.type === PRICE_VALIDATION_ID ? "cambió de precio" : "no hay unidades suficientes"}.
                       </div>);
                     })}
                   </div>
@@ -220,7 +220,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       <p className="text-xs">* IVA incluido</p>
                     </div>
                     <div
-                      className="grid grid-cols-2 text-sm border-b border-gray-300 mb-2 pb-2"
+                      className="grid grid-cols-2 pb-2 mb-2 text-sm border-b border-gray-300"
                       key={"product-count" + i}
                     >
                       <p>Cantidad: {product.quantity}</p>
@@ -230,7 +230,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   </div>
                 ))}
-                <div className="grid grid-cols-2 rounded mt-2">
+                <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
                     {order?.formatted_total_amount_with_taxes}
@@ -278,7 +278,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           {...MocksModalSuccessProps.modalLayout}
           isActive={openDummyPGModal}
         >
-          <div className="w-full flex justify-end gap-5">
+          <div className="flex justify-end w-full gap-5">
             <button
               className="button button-outline"
               onClick={() => {

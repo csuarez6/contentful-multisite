@@ -9,7 +9,7 @@ import Rating from "@/components/organisms/ratings/Rating";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
 import {
@@ -24,6 +24,7 @@ import ProductActions from "@/components/organisms/product-actions/ProductAction
 import CartModal from "@/components/organisms/cart-modal/CartModal";
 import { IAdjustments } from "@/lib/services/commerce-layer.service";
 import { apiResponse } from "@/lib/interfaces/api-response.interface";
+import { LineItem } from "@commercelayer/sdk";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -52,7 +53,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { addToCart, order, reloadOrder, deleteItemService, updateItemQuantity } = useContext(CheckoutContext);
+  const { addToCart, order, reloadOrder, deleteItemService } = useContext(CheckoutContext);
   const currentSlug = router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
   const baseCallback = currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
@@ -60,6 +61,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
+  const orderLocalRef = useRef<LineItem[]>();
+
+  useEffect(() => {
+    orderLocalRef.current = order?.line_items;
+  }, [order?.line_items]);
 
   const servicesHandler = (type: string, params) => {
     if (type === "warranty") setWarrantyCheck(params);
@@ -98,21 +104,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     },
   };
 
-  const getProductsFull = () => {
-    if (!order?.line_items) return [];
-    const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
-    const productsList = (order.line_items)
-      .filter(item => item.item_type === "skus")
-      .map((item) => {
-        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "installation");
-        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "warranty");
-        item["installlation_service"] = installAdjItem;
-        item["warranty_service"] = warrantyAdjItem;
-        return item;
-      });
-    return productsList;
-  };
-
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
       // Add to cart- product
@@ -123,8 +114,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         category
       );
       if (res.status === 200) {
-        const productsFull = getProductsFull();
-        const itemProduct = productsFull.filter(item => item.item_type === "skus" && item.id === res.data["id"]);
+        const itemProduct = orderLocalRef.current.filter(item => item.item_type === "skus" && item.id === res.data["id"]);
         // validate and add to cart a service (Installation)
         if (
           Object.keys(installCheck).length > 0 &&
@@ -146,6 +136,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             await deleteItemService(idTmp);
           }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
+          // if (itemProduct.length > 0) {
+          //   updateItemQuantity(
+          //     sku,
+          //     res.data["quantity"]
+          //   );
+          // }
+        } else {
+          if (itemProduct.length > 0 && itemProduct[0]["installlation_service"].length > 0) {
+            const idTmp = [itemProduct[0]["installlation_service"][0]["id"]];
+            await deleteItemService(idTmp);
+          }
         }
         // validate and add to cart a service (Warranty)
         if (
@@ -168,12 +169,17 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             await deleteItemService(idTmp);
           }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
-        }
-        if (itemProduct.length > 0) {
-          updateItemQuantity(
-            sku,
-            res.data["quantity"]
-          );
+          // if (itemProduct.length > 0) {
+          //   updateItemQuantity(
+          //     sku,
+          //     res.data["quantity"]
+          //   );
+          // }
+        } else {
+          if (itemProduct.length > 0 && itemProduct[0]["warranty_service"].length > 0) {
+            const idTmp = [itemProduct[0]["warranty_service"][0]["id"]];
+            await deleteItemService(idTmp);
+          }
         }
       }
       if (buyHandlerMap[type] && res.status === 200) buyHandlerMap[type]();
@@ -382,11 +388,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     priceGasodomestico,
                     productsQuantityGasodomestico
                   ) ||
-                  isAvailableVantilisto(
-                    marketId,
-                    priceVantiListo,
-                    productsQuantityVantiListo
-                  ) ? (
+                    isAvailableVantilisto(
+                      marketId,
+                      priceVantiListo,
+                      productsQuantityVantiListo
+                    ) ? (
                     <>
                       <div className="flex items-center justify-between gap-2">
                         <p className="line-through text-[#035177] text-sm md:text-xl">
@@ -537,56 +543,56 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           priceVantiListo,
           productsQuantityVantiListo
         )) && (
-        <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
-          <div className="flex gap-[10px] items-start xxs:items-center justify-between">
-            <div className="flex flex-col-reverse gap-x-[10px]">
-              {/* Main price */}
-              <p className="text-[#035177] title is-4">
-                {isGasAppliance(marketId)
-                  ? priceGasodomestico
-                  : priceVantiListo}
-              </p>
-              {/* Before price */}
-              <p className="line-through text-[#035177] text-size-small flex items-center">
-                {isGasAppliance(marketId)
-                  ? priceBeforeGasodomestico
-                  : priceBeforeVantiListo}{" "}
-                Antes
-              </p>
-            </div>
-            <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
-              {/* Secondary price */}
-              {isGasAppliance(marketId) && priceVantiListo && (
-                <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
-                  <span>{priceVantiListo}</span>
-                  <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
-                    Vanti Listo
-                  </span>
-                </p>
-              )}
-              {/* Product stock */}
-              <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
-                <p>
+          <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
+            <div className="flex gap-[10px] items-start xxs:items-center justify-between">
+              <div className="flex flex-col-reverse gap-x-[10px]">
+                {/* Main price */}
+                <p className="text-[#035177] title is-4">
                   {isGasAppliance(marketId)
-                    ? productsQuantityGasodomestico
-                    : productsQuantityVantiListo}{" "}
-                  unidades disponibles
+                    ? priceGasodomestico
+                    : priceVantiListo}
+                </p>
+                {/* Before price */}
+                <p className="line-through text-[#035177] text-size-small flex items-center">
+                  {isGasAppliance(marketId)
+                    ? priceBeforeGasodomestico
+                    : priceBeforeVantiListo}{" "}
+                  Antes
                 </p>
               </div>
+              <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
+                {/* Secondary price */}
+                {isGasAppliance(marketId) && priceVantiListo && (
+                  <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
+                    <span>{priceVantiListo}</span>
+                    <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
+                      Vanti Listo
+                    </span>
+                  </p>
+                )}
+                {/* Product stock */}
+                <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
+                  <p>
+                    {isGasAppliance(marketId)
+                      ? productsQuantityGasodomestico
+                      : productsQuantityVantiListo}{" "}
+                    unidades disponibles
+                  </p>
+                </div>
+              </div>
             </div>
+            <ProductActions
+              sku={sku}
+              priceGasodomestico={priceGasodomestico}
+              priceVantiListo={priceVantiListo}
+              productsQuantityGasodomestico={productsQuantityGasodomestico}
+              productsQuantityVantiListo={productsQuantityVantiListo}
+              marketId={marketId}
+              callbackURL={callbackURL}
+              onBuyHandler={onBuyHandler}
+            />
           </div>
-          <ProductActions
-            sku={sku}
-            priceGasodomestico={priceGasodomestico}
-            priceVantiListo={priceVantiListo}
-            productsQuantityGasodomestico={productsQuantityGasodomestico}
-            productsQuantityVantiListo={productsQuantityVantiListo}
-            marketId={marketId}
-            callbackURL={callbackURL}
-            onBuyHandler={onBuyHandler}
-          />
-        </div>
-      )}
+        )}
       {isOpen && <CartModal close={closeModal} />}
     </section>
   );

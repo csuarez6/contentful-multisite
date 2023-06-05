@@ -1,7 +1,7 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { useState } from "react";
 
@@ -148,6 +148,7 @@ export const ModalWarranty: React.FC<any> = ({
   onEventHandler,
   installCurrent,
   upInstallCurrent,
+  productPrice
 }) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
   return (
@@ -190,7 +191,10 @@ export const ModalWarranty: React.FC<any> = ({
                           {item.name}
                         </span>
                         <span className="text-size-small">
-                          {item.formatted_price_amount}
+                          {/* {item.formatted_price_amount} */}
+                          {(index === 0)
+                            ? item.formatted_price_amount
+                            : formatPrice((Number(item.price_amount_float) * Number(productPrice)) / 100)}
                         </span>
                       </div>
                     </label>

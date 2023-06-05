@@ -79,7 +79,7 @@ const CheckoutVerify = () => {
       });
     const dataAdjustment: IAdjustments = {
       name: params.name + " - " + itemService?.[0]?.["sku_code"],
-      amount_cents: params.price_amount_cents,
+      amount_cents: type === "warranty" ? (Number(params["price_amount_float"]) * Number(itemService[0]["unit_amount_float"]) / 100).toString() + "00" : params.price_amount_cents,
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
       sku_code: itemService?.[0]?.["sku_code"],
@@ -146,6 +146,7 @@ const CheckoutVerify = () => {
     productCategory?: string
   ) => {
     productSelected.current = idProduct;
+    const productPriceItem = order?.line_items.find((i) => i.id === idProduct)?.unit_amount_float;
     const compareCategory = category ?? productCategory;
     const skusOptions = skuOptionsGlobal.filter(
       (item) => item.reference === compareCategory
@@ -173,6 +174,7 @@ const CheckoutVerify = () => {
           onEventHandler={servicesHandler}
           installCurrent={posSkuIdService + 1}
           upInstallCurrent={updateInstallCurrent}
+          productPrice={productPriceItem}
         />
       );
     }
@@ -376,12 +378,12 @@ const CheckoutVerify = () => {
                   onClick={() =>
                     openModal(
                       product["warranty_service"]?.[0]?.["item"]?.[
-                        "metadata"
+                      "metadata"
                       ]?.["categoryReference"] ??
-                        product["clWarrantyReference"],
+                      product["clWarrantyReference"],
                       "warranty_service",
                       product["warranty_service"]?.[0]?.["item"]?.[
-                        "metadata"
+                      "metadata"
                       ]?.["sku_option_id"],
                       product.id,
                       product.metadata.clWarrantyReference
@@ -420,12 +422,12 @@ const CheckoutVerify = () => {
                   onClick={() =>
                     openModal(
                       product["installlation_service"]?.[0]?.["item"]?.[
-                        "metadata"
+                      "metadata"
                       ]?.["categoryReference"] ??
-                        product["clInstallationReference"],
+                      product["clInstallationReference"],
                       "installlation_service",
                       product["installlation_service"]?.[0]?.["item"]?.[
-                        "metadata"
+                      "metadata"
                       ]?.["sku_option_id"],
                       product.id,
                       product.metadata.clInstallationReference
@@ -448,8 +450,8 @@ const CheckoutVerify = () => {
               <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                 {product["installlation_service"]?.length > 0
                   ? product["installlation_service"][0][
-                      "formatted_total_amount"
-                    ]
+                  "formatted_total_amount"
+                  ]
                   : "$0"}
               </div>
               {/* ********* End Services ******** */}

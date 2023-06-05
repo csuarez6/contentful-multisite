@@ -62,7 +62,7 @@ export const useCommerceLayer = () => {
 
         if (isInitialRender) setIsInitialRender(false);
 
-        if (isInitialRender || checkUpdates){
+        if (isInitialRender || checkUpdates) {
           const order = await getOrder(checkUpdates);
           setOrder(order);
         }
@@ -193,8 +193,8 @@ export const useCommerceLayer = () => {
           }
         }).catch(err => err.errors);
 
-        if (resCreate?.[0]?.status) return { status: parseInt(resCreate[0].status), data: resCreate[0].title };
         const orderRes = await reloadOrder();
+        if (resCreate?.[0]?.status) return { status: parseInt(resCreate[0].status), data: resCreate[0].title };
         if (orderRes?.[0]?.status) return { status: parseInt(orderRes[0].status), data: 'error at add to card' };
         const infoResp = {
           message: 'product add to card',
@@ -275,49 +275,48 @@ export const useCommerceLayer = () => {
         } else {
           console.error("Error requestService or Null");
         }
-      }).finally(async () => { await reloadOrder(); });
+      })
+      .catch((err) => {
+        console.warn(err);
+      })
+      .finally(async () => { await reloadOrder(); });
 
   };
 
   const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number, idProductOrigin: string) => {
     try {
-      console.info(idProductOrigin);
       let response;
-      const lineItem = order.line_items.find((i) => i.id === idItemDelete);
+      const lineItem = order.line_items.find((i) => i.id === idProductOrigin);
+      const checkItem = newAdjustment.type === "warranty" ? lineItem?.["warranty_service"] : lineItem?.["installlation_service"];
       const client = await generateClient();
-      if (lineItem) {
-        response = await client.line_items.delete(idItemDelete).catch(err => err.errors);
+      if (checkItem.length > 0) {
+        response = await client.line_items.delete(checkItem[0].id).catch(err => err.errors);
         if (response?.[0]?.status) {
           return { status: parseInt(response[0].status), data: response[0].title };
         }
       }
-      await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      if (!isNaN(parseInt(newAdjustment.amount_cents))) {
+        await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      }
       await reloadOrder();
 
     } catch (err) {
       console.error('error', err);
-      return { status: 500, data: 'error change item' };
+      return { status: 500, data: 'Error changing item-service' };
     }
   };
 
   const deleteItemService = async (idItemsDelete: Array<string>) => {
     try {
-      let response;
       const client = await generateClient();
       idItemsDelete.forEach(async idElement => {
-        const lineItem = order.line_items.find((i) => i.id === idElement);
-        if (lineItem) {
-          response = await client.line_items.delete(idElement).catch(err => err.errors);
-          if (response?.[0]?.status) {
-            return { status: parseInt(response[0].status), data: response[0].title };
-          }
-        }
+        await client.line_items.delete(idElement).catch(err => err.errors);
       });
       await reloadOrder();
 
     } catch (err) {
       console.error('error', err);
-      return { status: 500, data: 'error change item' };
+      return { status: 500, data: 'Error Deleting item-service' };
     }
   };
 
@@ -497,18 +496,18 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       )
-      .then( () => {
-        reloadOrder();
-        return {status: 200, data: 'esta todo ok'};
-      })
-      .catch(err =>{
-        console.error('error place order', err.errors);
-        return{status: 500, data: err.errors};
-      });
+        .then(() => {
+          reloadOrder();
+          return { status: 200, data: 'esta todo ok' };
+        })
+        .catch(err => {
+          console.error('error place order', err.errors);
+          return { status: 500, data: err.errors };
+        });
       return response;
     } catch (error) {
-      console.error('error place order', error); 
-      return {status: 500, data: error};
+      console.error('error place order', error);
+      return { status: 500, data: error };
     }
   }, [orderId, reloadOrder]);
 
