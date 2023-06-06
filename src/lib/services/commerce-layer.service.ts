@@ -380,9 +380,9 @@ export const getCommercelayerProduct = async (skuCode: string) => {
             (p) => p.stock_location.reference === "gasodomesticos"
           )?.quantity) - reservation ?? 0,
         productsQuantityVantiListo:
-         Number(sku?.stock_items?.find(
+          sku?.stock_items?.find(
             (p) => p.stock_location.reference === "vantiListo"
-          )?.quantity)- reservation ?? 0,
+          )?.quantity ?? 0,
       };
     }
   } catch (error) {
