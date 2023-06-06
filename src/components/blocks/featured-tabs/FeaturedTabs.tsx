@@ -8,6 +8,15 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import jsonToReactComponent from "@/lib/services/render-cards.service";
 import uuid from "react-uuid";
 
+const grid = {
+  1: "",
+  2: "2md:grid-cols-2",
+  3: "2md:grid-cols-3",
+  4: "2md:grid-cols-4",
+  5: "2md:grid-cols-5",
+  6: "2md:grid-cols-6"
+};
+
 const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   title,
   pretitle,
@@ -35,7 +44,6 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
       window.removeEventListener('resize', checkWidth);
     };
   });
-
   return (
     <section id={blockId ? blockId : sysId} className="section grid gap-9">
       {(title || description) && (
@@ -97,9 +105,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                     {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
                       jsonToReactComponent(collection)
                     ) : (
-                      <div className="grid grid-cols-1 2md:grid-cols-3 gap-5 mt-6">
+                      <div className={classNames("grid grid-cols-1 gap-5 mt-6", grid[collection?.featuredContentsCollection?.items?.length])}>
                         {collection.featuredContentsCollection.items.map((item) => (
-                          <ListWithIcons {...item} key={item.name} />
+                            <div key={item.name} className="grid">
+                              <ListWithIcons {...item} />
+                            </div>
                         ))}
                       </div>
                     )}
