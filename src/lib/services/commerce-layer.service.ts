@@ -376,14 +376,13 @@ export const getCommercelayerProduct = async (skuCode: string) => {
             ?.compare_at_amount_float ?? null,
 
         productsQuantityGasodomestico:
-          sku?.stock_items?.find(
+          Number(sku?.stock_items?.find(
             (p) => p.stock_location.reference === "gasodomesticos"
-          )?.quantity ?? 0,
+          )?.quantity) - reservation ?? 0,
         productsQuantityVantiListo:
-          sku?.stock_items?.find(
+         Number(sku?.stock_items?.find(
             (p) => p.stock_location.reference === "vantiListo"
-          )?.quantity ?? 0,
-        stock_reservation: reservation,
+          )?.quantity)- reservation ?? 0,
       };
     }
   } catch (error) {
