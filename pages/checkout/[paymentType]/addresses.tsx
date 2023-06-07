@@ -258,9 +258,9 @@ const CheckoutAddresses = () => {
   const checkCityCovered = () => {
     let status = true;
     const adjustmentsList = (order.line_items)
-      .filter(item => item?.item_type === "adjustments" && item?.item?.metadata?.["type"] === "installation")
+      .filter(item => item?.item_type === "skus" && item?.["installlation_service"].length > 0)
       .map((itemInstall) => {
-        return itemInstall.id;
+        return itemInstall?.["installlation_service"]?.[0]?.id;
       });
     const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
     if (cityCheck[0]?.isCovered == "false") status = false;
@@ -270,6 +270,7 @@ const CheckoutAddresses = () => {
   const onSubmit = async (data: IAddresses) => {
     try {
       const checkCovered = checkCityCovered();
+      console.info(checkCovered);
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Servicio Instalación" });
         setmodalChild(
