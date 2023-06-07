@@ -4,14 +4,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 export type State = { code: string; name: string };
 
 export default function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse<State[]>
 ) {
 
   /**
    * More info: https://www.iso.org/obp/ui/#iso:code:3166:CO
    */
-  res.status(200).json([
+  const states : any = [
     { code: "CO-AMA", name: "Amazonas" },
     { code: "CO-ANT", name: "Antioquia" },
     { code: "CO-ARA", name: "Arauca" },
@@ -45,5 +45,9 @@ export default function handler(
     { code: "CO-VAC", name: "Valle del Cauca" },
     { code: "CO-VAU", name: "Vaupés" },
     { code: "CO-VID", name: "Vichada" },
-  ]);
+  ];
+
+  states.sort((a: any, b: any) => a.name.localeCompare(b.name));
+
+  res.status(200).json(states);
 }
