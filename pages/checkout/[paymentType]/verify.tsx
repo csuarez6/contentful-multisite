@@ -202,9 +202,9 @@ const CheckoutVerify = () => {
 
       if (isLogged) {
         await addLoggedCustomer();
-
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
       }
+
       await updateMetadata(meta);
 
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
