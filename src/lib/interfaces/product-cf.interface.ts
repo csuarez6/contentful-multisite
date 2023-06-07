@@ -100,6 +100,8 @@ export interface IProductOverviewDetails {
     clInstallationReference?: string;
   };
   relatedProducts?: IProductOverviewDetails[];
+  isNew?: boolean;
+  discount?: string;
 }
 
 export interface IAllyOverviewDetails {

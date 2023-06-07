@@ -417,8 +417,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   ) ? (
                     <>
                       <div className="flex items-center justify-between gap-2">
-                        {(priceBeforeGasodomestico ||
-                          priceBeforeVantiListo) && (
+                        {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
                           <p className="line-through text-[#035177] text-sm md:text-xl">
                             {isGasAppliance(marketId)
                               ? priceBeforeGasodomestico
@@ -578,7 +577,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   : priceVantiListo}
               </p>
               {/* Before price */}
-              {(priceBeforeGasodomestico || priceBeforeVantiListo) && (
+              {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
                 <p className="line-through text-[#035177] text-size-small flex items-center">
                   {isGasAppliance(marketId)
                     ? priceBeforeGasodomestico

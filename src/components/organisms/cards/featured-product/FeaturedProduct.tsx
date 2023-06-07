@@ -47,12 +47,18 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   city,
   hideBeforePrice,
   hideDecimalPrice,
-  marketId
-}) => {
-
+  marketId,
+  isNew,
+  discount,
+}) => {  
   const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
   return (
-    <article className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
+    <article className="relative">
+      <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10">
+         {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 ">nuevo</span>}
+         {discount && <span className="p-2 uppercase rounded-md bg-cyan-300">{discount}</span>}
+      </div>
+    <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items || promoImage) && (
         <div className="flex flex-col gap-2">
           {(state || promotion) && (
@@ -70,7 +76,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
             </div>
           )}
           {(imagesCollection?.items || cta || promoImage) && (
-            <div className={`relative aspect-[${imageSize.w}/${imageSize.h}]`}>
+            <div className={`relative mt-5 aspect-[${imageSize.w}/${imageSize.h}]`}>
               {promoImage ? (
                 <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
                   <Image
@@ -187,6 +193,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           )}
         </div>
       )}
+    </div>
     </article>
   );
 };
