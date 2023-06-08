@@ -150,7 +150,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
-          (acum, line_item) => acum + line_item.quantity,
+          (acum, line_item) =>
+            acum + line_item.quantity +
+            (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
+            (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
           0
         )
         : 0
@@ -419,10 +422,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           href="/checkout/pse/verify"
                           className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
                         >
-                          <span className="relative flex items-center w-9 h-7 shrink-0 text-neutral-30 mb-2">
+                          <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
                             <Icon
                               icon="shopping-cart"
-                              className="w-full h-full mx-auto absolute right-1"
+                              className="absolute w-full h-full mx-auto right-1"
                             />
                             <span
                               className={classNames(
@@ -568,7 +571,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </>
                   )}
                   {timeToPay >= 0 && (
-                    <div className="m-auto flex shrink-0 items-center justify-center w-10 h-10">
+                    <div className="flex items-center justify-center w-10 h-10 m-auto shrink-0">
                       <CircularProgressbar
                         value={(timeToPay / 30)}
                         minValue={0}
@@ -605,10 +608,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   href="/checkout/pse/verify"
                   className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
                 >
-                  <span className="relative flex items-center w-9 h-8 shrink-0 text-neutral-30">
+                  <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
                     <Icon
                       icon="shopping-cart"
-                      className="w-full h-full mx-auto absolute right-1"
+                      className="absolute w-full h-full mx-auto right-1"
                     />
                     <span
                       className={classNames(
