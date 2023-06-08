@@ -8,6 +8,7 @@ import { IRequestInformation } from '../interfaces/IRequestInformation-p2p-cf.in
 import { IRequest } from '../interfaces/IRequest-p2p-cf.interface';
 import { ICreateRequest } from '../interfaces/ICreateRequest-p2p-cf.interface';
 import { IAuth } from '../interfaces/IAuth-p2p-cf.interface';
+import { INotification } from '../interfaces/INotification-p2p-cf.interface';
 
 const PLACE_TO_PAY_ENDPOINT = process.env.PLACE_TO_PAY_URL;
 const PLACE_TO_PAY_LOGIN = process.env.PLACE_TO_PAY_LOGIN;
@@ -57,11 +58,11 @@ export const createRequest = async (buyer: IPerson, payment: IPayment, ipAddress
   const authOptions = getAuth();
 
   const bodyRequest: ICreateRequest = {
-    locale: 'es_CO',
+    locale: "es_CO",
     auth: authOptions,
     buyer: buyer,
     payment: payment,
-    expiration: "2019-08-24T14:15:22Z",
+    expiration: new Date(Date.now() + 600 * 1000).toISOString(),
     returnUrl: RETURN_URL,
     ipAddress: ipAddress,
     userAgent: userAgent,
@@ -112,4 +113,15 @@ export const getRequestInformation = async (requestId: string): Promise<IRequest
     else
       return `Ocurrió un error al consultar la transacción ${requestId} en P2P`;
   }
+};
+
+export const validateSignature = (params: INotification): boolean => {
+  const createSignature = sha1(
+    params.requestId +
+    params.status.status +
+    params.status.date +
+    PLACE_TO_PAY_SECRET_KEY
+  );
+  
+  return (createSignature === params.signature);
 };
