@@ -6,6 +6,7 @@ import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 export interface IContextCheckout {
   order: Order;
+  orderError: boolean;
   productUpdates: any;
   flow: Flow;
   tokenRecaptcha: string;
@@ -40,6 +41,7 @@ export interface IContextCheckout {
 
 const CheckoutContext = createContext<IContextCheckout>({
   order: undefined,
+  orderError: undefined,
   productUpdates: undefined,
   flow: undefined,
   tokenRecaptcha: "",

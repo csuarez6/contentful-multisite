@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { iconCallback } from "@/components/blocks/product-details/ProductConfig";
@@ -8,6 +8,7 @@ import {
 } from "@/lib/interfaces/product-cf.interface";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames, isAvailableGasAppliance } from "@/utils/functions";
+import CheckoutContext from "@/context/Checkout";
 
 const ProductActions: React.FC<IProductOverviewDetails> = ({
   priceGasodomestico,
@@ -23,6 +24,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
     title: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { orderError } = useContext(CheckoutContext);
 
   return (
     <>
@@ -37,7 +39,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
               "button button-primary justify-center w-1/2 sm:w-full text-[13px] sm:text-size-p2",
               isLoading ? "disabled flex items-center gap-3" : ""
             )}
-            disabled={isLoading}
+            disabled={(isLoading || orderError)}
             type="button"
             onClick={async () => {
               setIsLoading(true);

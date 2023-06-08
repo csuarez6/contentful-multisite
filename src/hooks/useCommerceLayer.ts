@@ -49,6 +49,7 @@ export const useCommerceLayer = () => {
   const { clientLogged, user } = useContext(AuthContext);
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
+  const [orderError, setOrderError] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
@@ -59,13 +60,19 @@ export const useCommerceLayer = () => {
     (async () => {
       try {
         const checkUpdates = asPath.startsWith("/checkout/pse/verify");
-
+        const localOrderId = localStorage.getItem('orderId');
         if (isInitialRender) setIsInitialRender(false);
 
         if (isInitialRender || checkUpdates) {
           const order = await getOrder(checkUpdates);
           setOrder(order);
         }
+        if(!order || !localOrderId) {
+          setOrderError(true);
+        }else{
+          setOrderError(false);
+        }
+        
       } catch (error) {
         console.error("Error at: useCommerceLayer getOrder, setOrder", error);
       }
@@ -563,6 +570,7 @@ export const useCommerceLayer = () => {
 
   return {
     order,
+    orderError,
     productUpdates,
     tokenRecaptcha,
     timeToPay,
