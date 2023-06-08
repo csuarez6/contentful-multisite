@@ -6,7 +6,7 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
 import uuid from "react-uuid";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import Link from "next/link";
 
 interface IChekoutLayoutProps {
@@ -157,6 +157,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productUpdates]);
 
+  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
+    const productPriceTmp = productPrice ?? 0;
+    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].unit_amount_float : 0;
+    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].unit_amount_float : 0;
+    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
+  };
+
   const handlePayment = async (toCancel = false) => {
     try {
       const path =
@@ -225,7 +232,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     >
                       <p>Cantidad: {product.quantity}</p>
                       <span className="text-right text-blue-dark">
-                        {product?.formatted_unit_amount}
+                        {/* {product?.formatted_unit_amount} */}
+                        {showProductTotal(product?.unit_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
                       </span>
                     </div>
                   </div>

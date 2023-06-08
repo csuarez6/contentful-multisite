@@ -24,7 +24,7 @@ import { defaultLayout } from "../../_app";
 import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import {
   ModalIntall,
   ModalWarranty,
@@ -182,6 +182,13 @@ const CheckoutVerify = () => {
     setTimeout(() => {
       setIsActivedModal(true);
     }, 200);
+  };
+
+  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
+    const productPriceTmp = productPrice ?? 0;
+    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].unit_amount_float : 0;
+    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].unit_amount_float : 0;
+    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
   };
 
   const handleNext = async () => {
@@ -460,7 +467,7 @@ const CheckoutVerify = () => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {product.formatted_total_amount}
+                {showProductTotal(product?.unit_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
               </div>
             </div>
           );
