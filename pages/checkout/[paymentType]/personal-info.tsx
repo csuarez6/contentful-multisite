@@ -12,6 +12,7 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 
 interface ICustomer {
   name: string;
@@ -31,8 +32,6 @@ const schema = yup.object({
   email: yup.string().email("Email no válido").required("Dato Requerido"),
 });
 
-const STEP_META_FIELD = "hasPersonalInfo";
-
 const CheckoutPersonalInfo = () => {
   const router = useRouter();
   const lastPath = useLastPath();
@@ -49,28 +48,24 @@ const CheckoutPersonalInfo = () => {
   });
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[STEP_META_FIELD],
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
   useEffect(() => {
-    if (!isCompleted) return;
-
-    const { name, lastName, cellPhone } = order.metadata;
-
     reset({
-      email: order.customer_email,
-      name,
-      lastName,
-      cellPhone,
+      email: order?.customer_email ?? "",
+      name: order?.metadata?.name ?? "",
+      lastName: order?.metadata?.lastName ?? "",
+      cellPhone: order?.metadata?.cellPhone ?? "",
     });
-  }, [isCompleted, order, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order]);
 
   const onSubmit = async (data: ICustomer) => {
     try {
       await addCustomer(data);
       await handleNext();
-
     } catch (error) {
       alert(error.message);
     }
@@ -175,7 +170,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: 'Orden - Informacion Personal',
+        name: 'Informacion personal de la orden',
         footerInfo,
         headerInfo,
         helpButton,

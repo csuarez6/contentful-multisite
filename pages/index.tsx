@@ -23,11 +23,6 @@ const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   );
 };
 
-/// Explicit pageLayout assign example
-// Home.getLayout = (page: ReactElement, pageProps: IPage = null) => {
-//   return <PageLayout {...pageProps}>{page}</PageLayout>;
-// };
-
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {

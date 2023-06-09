@@ -60,7 +60,7 @@ export const useCommerceLayer = () => {
   useEffect(() => {
     (async () => {
       try {
-        const checkUpdates = asPath.startsWith("/checkout/pse/verify");
+        const checkUpdates = asPath.startsWith("/checkout/pse");
         setLocalOrderId(localStorage.getItem('orderId'));
         if (isInitialRender) setIsInitialRender(false);
 
@@ -340,8 +340,7 @@ export const useCommerceLayer = () => {
       },
       DEFAULT_ORDER_PARAMS
     );
-    reloadOrder();
-  }, [user?.id, clientLogged, orderId, reloadOrder]);
+  }, [user?.id, clientLogged, orderId]);
 
   const addCustomer = useCallback(
     async ({ email, name, lastName, cellPhone }) => {
@@ -362,10 +361,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      reloadOrder();
-    },
-    [order, orderId, reloadOrder]
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order]);
 
   const getAddresses = useCallback(async () => {
     const client = await generateClient();
@@ -420,9 +417,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      reloadOrder();
     },
-    [order, reloadOrder]
+    [order]
   );
 
   const updateMetadata = useCallback(
@@ -440,9 +436,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      reloadOrder();
     },
-    [order, orderId, reloadOrder]
+    [order, orderId]
   );
 
   const getPaymentMethods = useCallback(async () => {
@@ -463,9 +458,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       ).catch(err => console.error(err.errors));
-      reloadOrder();
     },
-    [orderId, reloadOrder]
+    [orderId]
   );
 
   const addPaymentMethodSource = useCallback(
@@ -505,7 +499,6 @@ export const useCommerceLayer = () => {
         DEFAULT_ORDER_PARAMS
       )
         .then(() => {
-          reloadOrder();
           return { status: 200, data: 'esta todo ok' };
         })
         .catch(err => {
@@ -517,7 +510,7 @@ export const useCommerceLayer = () => {
       console.error('error place order', error);
       return { status: 500, data: error };
     }
-  }, [orderId, reloadOrder]);
+  }, [orderId]);
 
   const validateExternal = useCallback(
     async (recapchaResponse: string) => {
@@ -534,9 +527,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      reloadOrder();
     },
-    [orderId, order, reloadOrder]
+    [orderId, order]
   );
 
   const checkCurrentPrices = useCallback(() => {

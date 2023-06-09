@@ -41,6 +41,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isPlacing, setIsPlacing] = useState(false);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -48,11 +49,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   }, [order]);
 
   const isComplete = useMemo(
-    () =>
-      order &&
-      PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every(
-        (i) => i
-      ),
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
@@ -70,7 +67,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
    * 3. Have Added a payment method source
    */
   const onPlaceOrder = useCallback(async () => {
-    setIsLoading(true);
+    setIsPlacing(true);
     try {
       await validateExternal(tokenRecaptcha);
 
@@ -117,7 +114,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         title: "Error al Realizar la orden",
       });
     }
-    setIsLoading(false);
+    setIsPlacing(false);
   }, [
     addPaymentMethodSource,
     placeOrder,
@@ -247,15 +244,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 {isComplete && tokenRecaptcha && (
                   <button
                     onClick={validateOrder}
-                    disabled={isLoading}
+                    disabled={isLoading || isPlacing}
                     className={classNames(
                       "button button-primary w-full mt-[17px]",
-                      isLoading
+                      (isLoading || isPlacing)
                         ? "disabled flex items-center justify-center gap-3"
                         : ""
                     )}
                   >
-                    {isLoading && (
+                    {(isLoading || isPlacing) && (
                       <svg
                         aria-hidden="true"
                         className="inline-block w-5 h-5 text-gray-200 animate-spin fill-blue-dark"
@@ -273,7 +270,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         />
                       </svg>
                     )}
-                    {isLoading ? "Validando" : "Comprar"}
+                    {isLoading ? "Validando" : (isPlacing ? "Procesando" : "Comprar")}
                   </button>
                 )}
               </div>

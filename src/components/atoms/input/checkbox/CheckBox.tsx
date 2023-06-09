@@ -8,11 +8,10 @@ export interface ICheckBox {
     checked?: boolean,
     value?: any,
     isError?: boolean,
-    errorMessage?: string,
-    onChangeEvent?: () => void
+    errorMessage?: string
 }
 
-const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, onChangeEvent, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
+const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
     return (
         <div className="relative">
             <div className="mt-6 flex items-center space-x-2">
@@ -26,7 +25,7 @@ const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMes
                         type="checkbox"
                         className="h-5 w-5 accent-neutral-30 rounded-lg border-blue-dark"
                         {...rest}
-                        onChange={onChangeEvent}
+                        
                     />
                 </div>
                 <label {...id && { htmlFor: id }} className={`text-base font-medium ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'} `}>

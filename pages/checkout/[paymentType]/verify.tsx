@@ -21,7 +21,7 @@ import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { defaultLayout } from "../../_app";
-import { VantiOrderMetadata } from "@/constants/checkout.constants";
+import { PSE_STEPS_TO_VERIFY, VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames, formatPrice } from "@/utils/functions";
@@ -129,7 +129,7 @@ const CheckoutVerify = () => {
   }, []);
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
@@ -555,7 +555,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: "Orden - Verificar",
+        name: "Carrito de compras",
         footerInfo,
         headerInfo,
         helpButton,
