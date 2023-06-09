@@ -93,7 +93,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     key={tab?.name+'_'+tab?.sys.id}
                     className="max-w-[176px] w-[100px] xs:w-[120px] lg:w-[176px] h-full shrink-0"
                   >
-                    {(tab.urlPaths?.[0] || tab.internalLink?.urlPaths?.[0] || tab.externalLink) ? (
+                    {(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink) ? (
                       <CustomLink
                         content={tab}
                         linkClassName="flex h-full"
@@ -137,7 +137,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
 
           <Tab.Panels as={Fragment}>
             {featuredContentsCollection.items.map((tab, idx) => (
-              (!tab.urlPaths?.[0] && !tab.internalLink && !tab.externalLink) && (
+              (!tab?.urlPaths?.[0] && !tab?.internalLink && !tab?.externalLink) && (
                 <Tab.Panel
                   key={tab?.name+'_'+tab?.sys.id}
                   className="focus:outline-none"
@@ -153,7 +153,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     leaveTo="opacity-0"
                   >
                     {
-                      tab.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
+                      tab?.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
                         ? (<LeftFeatured {...tab} buttonType={view?.buttonType} />)
                         : (<div key={tab?.name+'_'+tab?.sys.id}>{jsonToReactComponent(tab)}</div>)
                     }

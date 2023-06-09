@@ -55,12 +55,13 @@ export const useCommerceLayer = () => {
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
   const [isInitialRender, setIsInitialRender] = useState(true);
+  const [localOrderId, setLocalOrderId] = useState<string>();
 
   useEffect(() => {
     (async () => {
       try {
         const checkUpdates = asPath.startsWith("/checkout/pse/verify");
-        const localOrderId = localStorage.getItem('orderId');
+        setLocalOrderId(localStorage.getItem('orderId'));
         if (isInitialRender) setIsInitialRender(false);
 
         if (isInitialRender || checkUpdates) {
@@ -78,7 +79,7 @@ export const useCommerceLayer = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath]);
+  }, [asPath, order, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {

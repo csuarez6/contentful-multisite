@@ -55,8 +55,8 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   return (
     <article className="relative">
       <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10">
-         {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 ">nuevo</span>}
-         {discount && <span className="p-2 uppercase rounded-md bg-cyan-300">{discount}</span>}
+         {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 group-[.card-mega-menu]:text-xs">nuevo</span>}
+         {discount && <span className="p-2 uppercase rounded-md bg-cyan-300 group-[.card-mega-menu]:text-xs">{discount}</span>}
       </div>
     <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items || promoImage) && (
