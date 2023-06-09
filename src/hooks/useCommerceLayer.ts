@@ -68,7 +68,7 @@ export const useCommerceLayer = () => {
           const order = await getOrder(checkUpdates);
           setOrder(order);
         }
-        if(!order || !localOrderId) {
+        if(!orderId || !localOrderId) {
           setOrderError(true);
         }else{
           setOrderError(false);
@@ -79,7 +79,7 @@ export const useCommerceLayer = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath, order, orderError, localOrderId]);
+  }, [asPath, orderId, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {
