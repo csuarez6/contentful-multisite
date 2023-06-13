@@ -113,7 +113,7 @@ const CheckoutAddresses = () => {
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
 
-  const { order, flow, addAddresses, getAddresses, deleteItemService } = useContext(CheckoutContext);
+  const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
   const {
     register,
@@ -171,6 +171,7 @@ const CheckoutAddresses = () => {
   useEffect(() => {
     if (!shippingCityWatched) return;
     const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    onHasShipment(cityCheck[0]?.isCovered == "false");
     setShowAlert(cityCheck[0]?.isCovered == "false");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);

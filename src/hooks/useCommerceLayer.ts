@@ -53,6 +53,7 @@ export const useCommerceLayer = () => {
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
   const [orderError, setOrderError] = useState<boolean>(false);
+  const [hasShipment, setHasShipment] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
@@ -557,6 +558,18 @@ export const useCommerceLayer = () => {
     }
   };
 
+  const onHasShipment = async (e) => {
+    try {
+      if (!e || e === "not authorized") {
+        setHasShipment(false);
+        return;
+      }
+      setHasShipment(e);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const upgradeTimePay = useCallback(
     async (time: number) => {
       setTimeToPay(time);
@@ -571,6 +584,8 @@ export const useCommerceLayer = () => {
     tokenRecaptcha,
     timeToPay,
     onRecaptcha,
+    onHasShipment,
+    hasShipment,
     getOrder,
     reloadOrder,
     addToCart,

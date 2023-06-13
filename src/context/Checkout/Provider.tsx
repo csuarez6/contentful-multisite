@@ -13,6 +13,7 @@ const CheckoutProvider = ({ children }) => {
     orderError,
     productUpdates,
     timeToPay,
+    hasShipment,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -28,6 +29,7 @@ const CheckoutProvider = ({ children }) => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     onRecaptcha,
+    onHasShipment,
     validateExternal,
     tokenRecaptcha,
     getSkuList,
@@ -45,6 +47,7 @@ const CheckoutProvider = ({ children }) => {
     productUpdates,
     tokenRecaptcha,
     timeToPay,
+    hasShipment,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -60,11 +63,12 @@ const CheckoutProvider = ({ children }) => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     onRecaptcha,
+    onHasShipment,
     validateExternal,
     getSkuList,
     changeItemService,
     deleteItemService,
-    upgradeTimePay,
+    upgradeTimePay
   };
 
   return (

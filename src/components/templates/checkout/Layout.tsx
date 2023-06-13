@@ -29,6 +29,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setDefaultShippingMethod,
     validateExternal,
     upgradeTimePay,
+    hasShipment
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
@@ -45,6 +46,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
+    // console.log({ hasShipment });
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -240,6 +242,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   </div>
                 ))}
+                <div className="grid grid-cols-2 mt-2 rounded">
+                  <p className="font-semibold text-left">Costo de envío</p>
+                  <span className="font-semibold text-right">
+                    {(hasShipment) ? "$20.000,00" : "$0"}
+                  </span>
+                </div>
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
