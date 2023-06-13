@@ -71,21 +71,29 @@ const DEFAULT_ZIP_CODE = '000000';
 
 const getCitiesByState = async (state: string) => (await fetch(`/api/static/cities/${state}`)).json();
 
-export const ModalConfirm: React.FC<any> = ({ data, onEventHandler }) => {
+export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedModal }) => {
   return (
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
           Recuerde que si continua con el proceso, el servicio de instalación será removido por falta de cobertura en la ubicación registrada.
         </div>
-        <div>
+        <div className="flex justify-end gap-2">
           <button
             className="button button-primary"
             onClick={() => {
               onEventHandler(data);
             }}
           >
-            Hecho
+            Continuar de todos modos
+          </button>
+          <button
+            className="button button-outline"
+            onClick={() => {
+              onActivedModal(false);
+            }}
+          >
+            Cancelar
           </button>
         </div>
       </div>
@@ -185,7 +193,7 @@ const CheckoutAddresses = () => {
   );
 
   useEffect(() => {
-    if(order){
+    if (order) {
       (async () => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
@@ -262,11 +270,12 @@ const CheckoutAddresses = () => {
       const checkCovered = checkCityCovered();
       console.info(checkCovered);
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
-        setParamModal({ promoTitle: "Servicio Instalación" });
+        setParamModal({ promoTitle: "Advertencia" });
         setmodalChild(
           <ModalConfirm
             data={data}
             onEventHandler={sendData}
+            onActivedModal={setIsActivedModal}
           />
         );
         setIsActivedModal(false);

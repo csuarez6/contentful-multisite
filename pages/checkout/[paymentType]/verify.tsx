@@ -186,8 +186,8 @@ const CheckoutVerify = () => {
 
   const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
     const productPriceTmp = productPrice ?? 0;
-    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].unit_amount_float : 0;
-    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].unit_amount_float : 0;
+    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
+    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
     return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
   };
 
@@ -467,7 +467,7 @@ const CheckoutVerify = () => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {showProductTotal(product?.unit_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+                {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
               </div>
             </div>
           );

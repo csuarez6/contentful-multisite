@@ -36,6 +36,9 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_unit_amount",
       "quantity",
       "formatted_total_amount",
+      "total_amount_cents",
+      "total_amount_float",
+      "unit_amount_cents",
       "unit_amount_float",
       "item",
       "metadata"
@@ -68,12 +71,12 @@ export const useCommerceLayer = () => {
           const order = await getOrder(checkUpdates);
           setOrder(order);
         }
-        if(!orderId || !localOrderId) {
+        if (!orderId || !localOrderId) {
           setOrderError(true);
-        }else{
+        } else {
           setOrderError(false);
         }
-        
+
       } catch (error) {
         console.error("Error at: useCommerceLayer getOrder, setOrder", error);
       }
@@ -361,8 +364,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [order]);
 
   const getAddresses = useCallback(async () => {
     const client = await generateClient();

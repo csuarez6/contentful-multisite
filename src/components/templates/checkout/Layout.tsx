@@ -52,7 +52,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
-  
+
   const validateOrder = async () => {
     setIsLoading(true);
     setOnPayment(true);
@@ -132,8 +132,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       push("/checkout/pse/verify");
     }
     if (asPath.startsWith('/checkout/pse/summary')) {
-      setIsComplete( completed );
-    }else {
+      setIsComplete(completed);
+    } else {
       setIsComplete(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,8 +161,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
     const productPriceTmp = productPrice ?? 0;
-    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].unit_amount_float : 0;
-    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].unit_amount_float : 0;
+    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
+    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
     return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
   };
 
@@ -235,7 +235,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       <p>Cantidad: {product.quantity}</p>
                       <span className="text-right text-blue-dark">
                         {/* {product?.formatted_unit_amount} */}
-                        {showProductTotal(product?.unit_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+                        {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
                       </span>
                     </div>
                   </div>
