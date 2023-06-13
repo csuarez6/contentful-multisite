@@ -39,7 +39,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     type: "",
     title: "",
   });
-
+  const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
 
@@ -48,11 +48,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
-  const isComplete = useMemo(
+  const completed = useMemo(
     () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
-
+  
   const validateOrder = async () => {
     setIsLoading(true);
     setOnPayment(true);
@@ -130,6 +130,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     if (!order) return;
     if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length) {
       push("/checkout/pse/verify");
+    }
+    if (asPath.startsWith('/checkout/pse/summary')) {
+      setIsComplete( completed );
+    }else {
+      setIsComplete(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
