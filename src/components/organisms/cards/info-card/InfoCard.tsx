@@ -67,7 +67,7 @@ const InfoCard: React.FC<IPromoContent> = (props) => {
             </CustomLink>
           </div>
         )}
-        {(externalLink || internalLink?.urlPaths?.[0] || mediaInternalLink) &&
+        {mediaInternalLink &&
           <div className="flex justify-start mt-3">
             <CustomLink content={props} className={classNames("button !rounded-full", getButtonType(buttonType ?? 'Contorno'))} >
               {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}

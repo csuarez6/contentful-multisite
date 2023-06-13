@@ -159,19 +159,20 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           </div>
           {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
             <div className="flex flex-col gap-[6px]">
-              {!hideBeforePrice && (
-                <p className="line-through title is-4 text-blue-dark before-price">
-                  {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
+                {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceBeforeVantiListo) &&
+                  !hideBeforePrice && (
+                    <p className="line-through title is-4 text-blue-dark before-price">
+                      {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
+                    </p>
+                )}
+                <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
+                  {
+                    hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)
+                  }
                 </p>
-              )}
-              <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
-                {
-                  hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)
-                }
-              </p>
-              <div className="text-xs text-grey-30">
-                <p>* Precio IVA incluido</p>
-              </div>
+                <div className="text-xs text-grey-30">
+                  <p>* Precio IVA incluido</p>
+                </div>
             </div>
           )}
           {paymentMethods && (

@@ -76,13 +76,13 @@ export const attachLinksToRichtextContent = (jsonDocument, links) => {
 
     switch (content[kCont].nodeType) {
       case 'embedded-asset-block':
-        blockInfo = links?.assets?.block?.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+        blockInfo = links?.assets?.block?.find((itemLink) => itemLink.sys?.id === content[kCont].data.target.sys.id);
         break;
       case 'embedded-entry-block':
-        blockInfo = links?.entries?.block?.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+        blockInfo = links?.entries?.block?.find((itemLink) => itemLink.sys?.id === content[kCont].data.target.sys.id);
         break;
       case 'embedded-entry-inline':
-        blockInfo = links?.entries?.inline?.find((itemLink) => itemLink.sys.id === content[kCont].data.target.sys.id);
+        blockInfo = links?.entries?.inline?.find((itemLink) => itemLink.sys?.id === content[kCont].data.target.sys.id);
         break;
       case 'paragraph':
         content[kCont] = attachLinksToRichtextContent(content[kCont], links);
