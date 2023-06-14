@@ -22,7 +22,6 @@ const RateQuery = `
     ...on Page{
         ${DefaultQuery}
         slug
-        s
         promoTitle
     }
     ...on Product {

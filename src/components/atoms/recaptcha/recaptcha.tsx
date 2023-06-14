@@ -23,17 +23,18 @@ const ReCaptchaBox: React.FC<IReCaptcha> = ({
   useEffect(() => {
     // Component mounted
     showCaptcha("block");
-    const interval = setInterval(() => {
-      console.info("ReCaptcha");
-    }, 1000);
+    // const interval = setInterval(() => {
+    //   console.info("ReCaptcha");
+    // }, 1000);
 
-    return () => {
-      // Component Unmounted
-      clearInterval(interval);
-      if (window.grecaptcha) {
-        showCaptcha("none");
-      }
-    };
+    // return () => {
+    //   // Component Unmounted
+    //   clearInterval(interval);
+    //   window.grecaptcha = null;
+    //   if (window.grecaptcha) {
+    //     showCaptcha("none");
+    //   }
+    // };
   }, []);
 
   useEffect(() => {
