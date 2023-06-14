@@ -36,8 +36,8 @@ export interface IProductDetails {
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: IRichText;
   cta?: ILink;
-  state?: string;
-  promotion?: string;
+  isNew?: string;
+  discount?: string;
   referenceCode?: number;
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
@@ -77,9 +77,7 @@ export interface IProductOverviewDetails {
     description?: IRichText;
   };
   cta?: ILink;
-  state?: string;
   callbackURL?: string;
-  promotion?: string;
   sku?: string;
   marketId?: string;
   promoImage?: IImageAsset;

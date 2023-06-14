@@ -42,14 +42,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   features,
   promoImage,
   imagesCollection,
-  promotion,
   sku,
   marketId,
-  state,
   rating,
   warranty,
   category,
   relatedProducts,
+  isNew,
+  discount,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -244,14 +244,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </div>
                 )}
                 <div className="flex gap-3">
-                  {state && (
-                    <div className="flex px-2 py-1 uppercase rounded-lg bg-category-orange-light h-fit">
-                      <span className="title is-5">{state}</span>
+                  {isNew && (
+                    <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                      <span className="title is-5">nuevo</span>
                     </div>
                   )}
-                  {promotion && (
-                    <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-category-sky-blue h-fit">
-                      <span className="title is-5">{promotion}</span>
+                  {discount && (
+                    <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-cyan-300 h-fit">
+                      <span className="title is-5">{discount} de descuento</span>
                     </div>
                   )}
                 </div>
@@ -305,15 +305,15 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     </div>
                   )}
                   <div className="flex gap-3">
-                    {state && (
-                      <div className="flex px-2 py-1 uppercase rounded-lg bg-category-orange-light h-fit">
-                        <span className="title is-5">{state}</span>
+                    {isNew && (
+                      <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                        <span className="title is-5">nuevo</span>
                       </div>
                     )}
-                    {promotion && (
-                      <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-category-sky-blue h-fit">
+                    {discount && (
+                      <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-cyan-300 h-fit">
                         <span className="title is-5">
-                          {promotion} de descuento
+                          {discount} de descuento
                         </span>
                       </div>
                     )}
