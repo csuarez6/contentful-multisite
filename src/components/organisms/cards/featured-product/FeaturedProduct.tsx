@@ -54,9 +54,9 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
   return (
     <article className="relative">
-      <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10">
-         {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 group-[.card-mega-menu]:text-xs">nuevo</span>}
-         {discount && <span className="p-2 uppercase rounded-md bg-cyan-300 group-[.card-mega-menu]:text-xs">{discount}</span>}
+      <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10 group-[.card-mega-menu]:left-0 group-[.card-mega-menu]:top-0">
+         {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">nuevo</span>}
+         {discount && <span className="p-2 uppercase rounded-md bg-cyan-300 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">{discount}</span>}
       </div>
     <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
       {(state || promotion || imagesCollection?.items || promoImage) && (
@@ -100,13 +100,13 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
               )}
               {cta ? (
                 <Link legacyBehavior href={cta.href}>
-                  <a className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10">
+                  <a className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]">
                     {cta?.name}
                   </a>
                 </Link>
               ) : urlPaths && (
                 <CustomLink
-                  className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10"
+                  className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]"
                   content={{
                     internalLink: { urlPaths, promoTitle: "Conoce más" },
                   }}
