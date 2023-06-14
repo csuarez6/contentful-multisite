@@ -1,5 +1,4 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-// import { number, object } from 'yup';
 import { ObjectShape, OptionalObjectSchema } from 'yup/lib/object';
 import { customerSchema } from '../../src/schemas/customer';
 import { createCustomer } from '@/lib/services/commerce-layer.service';
@@ -17,9 +16,9 @@ const validate = (
                 return res.status(400).json(error);
             }
         } else {
-            return res.status(400).json({ error: "Método no existe." });
+            return res.status(400).json({ error: "Método de petición invalido." });
         }
-        await handler(req, res);
+        handler(req, res);
     };
 };
 
@@ -39,8 +38,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
             });
         }
+
         const resp = await createCustomer(req.body);
-        res.status(201).json({ ...resp, method: req.method });
+        const errorStatus = !resp.error
+            ? 201
+            : resp.error && isNaN(resp.status)
+                ? resp.status
+                : 400;
+
+        res.status(errorStatus).json({ ...resp, method: req.method });
     } catch (error) {
         res.status(400).json(error);
     }
