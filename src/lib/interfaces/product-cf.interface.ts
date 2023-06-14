@@ -36,7 +36,7 @@ export interface IProductDetails {
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: IRichText;
   cta?: ILink;
-  isNew?: string;
+  isNew?: boolean;
   discount?: string;
   referenceCode?: number;
   carouselData?: ICarousel;
