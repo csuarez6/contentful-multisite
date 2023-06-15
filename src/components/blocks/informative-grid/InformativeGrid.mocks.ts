@@ -12,7 +12,7 @@ const data: IPromoBlock = {
       {
         promoTitle: "internalLink",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]
@@ -24,7 +24,7 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Conocelós",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -38,7 +38,7 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Conocelós",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -46,7 +46,7 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Conocelós",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -60,7 +60,7 @@ const data: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Conocelós",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]

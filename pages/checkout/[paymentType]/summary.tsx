@@ -5,13 +5,12 @@ import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import { Address } from "@commercelayer/sdk";
-import { VantiOrderMetadata } from '@/constants/checkout.constants';
+import { PSE_STEPS_TO_VERIFY } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
-// import ReCAPTCHA from "react-google-recaptcha";
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 
 const CheckoutSummary = () => {
@@ -24,7 +23,7 @@ const CheckoutSummary = () => {
 
   const fullName = useMemo(() => {
     return (
-      (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
+      (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
     )(isLogged ? user : order);
 
   }, [user, order, isLogged]);
@@ -38,7 +37,7 @@ const CheckoutSummary = () => {
   }, [getAddresses, order]);
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
@@ -85,11 +84,6 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="text-blue-dark">
               Sabemos que eres un humano, pero debemos confirmarlo.
-              {/* <ReCAPTCHA
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY_V2}
-            onChange={(e) => onRecaptcha(e)}
-            className="mt-6"
-          /> */}
               <ReCaptchaBox
                 version={2}
                 handleChange={(e) => onRecaptcha(e)}
@@ -134,7 +128,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: 'Orden - Resumen',
+        name: 'Resumen de la orden',
         footerInfo,
         headerInfo,
         helpButton,

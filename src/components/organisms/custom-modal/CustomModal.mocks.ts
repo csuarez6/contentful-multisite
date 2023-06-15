@@ -10,7 +10,7 @@ const data: IModal = {
         items:[
             {
                 internalLink:{
-                    urlPath: "/test-url"
+                    urlPaths: ["/test-url"]
                 },
                 name: "link-text"
             }

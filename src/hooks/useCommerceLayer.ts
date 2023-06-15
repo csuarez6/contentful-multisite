@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CommerceLayer, { AddressCreate, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
-import { VantiOrderMetadata } from "@/constants/checkout.constants";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
+import { useRouter } from "next/router";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
@@ -36,18 +36,54 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_unit_amount",
       "quantity",
       "formatted_total_amount",
+      "total_amount_cents",
+      "total_amount_float",
+      "unit_amount_cents",
+      "unit_amount_float",
       "item",
       "metadata"
     ],
     customer: ["id"],
   },
 };
+
 // useCommercelayer - start
 export const useCommerceLayer = () => {
   const { clientLogged, user } = useContext(AuthContext);
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
+  const [orderError, setOrderError] = useState<boolean>(false);
+  const [hasShipment, setHasShipment] = useState<boolean>(false);
+  const [productUpdates, setProductUpdates] = useState([]);
+  const { asPath } = useRouter();
+  const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  const [localOrderId, setLocalOrderId] = useState<string>();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const checkUpdates = asPath.startsWith("/checkout/pse");
+        setLocalOrderId(localStorage.getItem('orderId'));
+        if (isInitialRender) setIsInitialRender(false);
+
+        if (isInitialRender || checkUpdates) {
+          const order = await getOrder(checkUpdates);
+          setOrder(order);
+        }
+        if (!orderId || !localOrderId) {
+          setOrderError(true);
+        } else {
+          setOrderError(false);
+        }
+
+      } catch (error) {
+        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asPath, orderId, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {
@@ -60,13 +96,14 @@ export const useCommerceLayer = () => {
     }
   };
 
-  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve) => {
-    let data = { status: 400, data: "Error updating order" };
+  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkUpdates = false) => {
+    let data = { status: 400, data: "Error updating order", productUpdates: [] };
     await fetch("/api/order", {
       method: "POST",
       body: JSON.stringify({
         idOrder: idOrder,
-        orderParams: params
+        orderParams: params,
+        checkUpdates
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -78,7 +115,7 @@ export const useCommerceLayer = () => {
           data = json;
         } else {
           console.error("Error get UpdateOrderAdmin");
-          data = { status: 400, data: "Error updating order - 1" };
+          data = { status: 400, data: "Error updating order - 1", productUpdates: [] };
         }
       }).catch((error) => {
         console.error({ error });
@@ -110,13 +147,16 @@ export const useCommerceLayer = () => {
     return data;
   };
 
-  const getOrder = useCallback(async () => {
+  const getOrder = useCallback(async (checkUpdates?: boolean) => {
     try {
       const idOrder = localStorage.getItem("orderId");
 
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
 
-      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS);
+      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkUpdates);
+
+      if (checkUpdates) setProductUpdates(orderResp.productUpdates);
+
       const order = orderResp.data as unknown as Order;
 
       if (!["draft", "pending"].includes(order.status)) {
@@ -133,21 +173,9 @@ export const useCommerceLayer = () => {
     }
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const order = await getOrder();
-        setOrder(order);
-      } catch (error) {
-        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const reloadOrder = useCallback(async () => {
+  const reloadOrder = useCallback(async (checkUpdates?: boolean) => {
     try {
-      const order = await getOrder();
+      const order = await getOrder(checkUpdates);
       setOrder(order);
       return { status: 200, data: 'success at reload order' };
     } catch (error) {
@@ -177,8 +205,8 @@ export const useCommerceLayer = () => {
           }
         }).catch(err => err.errors);
 
-        if (resCreate?.[0]?.status) return { status: parseInt(resCreate[0].status), data: resCreate[0].title };
         const orderRes = await reloadOrder();
+        if (resCreate?.[0]?.status) return { status: parseInt(resCreate[0].status), data: resCreate[0].title };
         if (orderRes?.[0]?.status) return { status: parseInt(orderRes[0].status), data: 'error at add to card' };
         const infoResp = {
           message: 'product add to card',
@@ -229,7 +257,6 @@ export const useCommerceLayer = () => {
         if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
           await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
         }
-        await updateMetadata({ [VantiOrderMetadata.IsVerified]: false });
       }
       await reloadOrder();
       if (response?.[0]?.status) {
@@ -260,35 +287,54 @@ export const useCommerceLayer = () => {
         } else {
           console.error("Error requestService or Null");
         }
-      }).finally(async () => { await reloadOrder(); });
+      })
+      .catch((err) => {
+        console.warn(err);
+      })
+      .finally(async () => { await reloadOrder(); });
 
   };
 
   const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number, idProductOrigin: string) => {
     try {
-      console.info(idProductOrigin);
       let response;
-      const lineItem = order.line_items.find((i) => i.id === idItemDelete);
+      const lineItem = order.line_items.find((i) => i.id === idProductOrigin);
+      const checkItem = newAdjustment.type === "warranty" ? lineItem?.["warranty_service"] : lineItem?.["installlation_service"];
       const client = await generateClient();
-      if (lineItem) {
-        response = await client.line_items.delete(idItemDelete).catch(err => err.errors);
+      if (checkItem.length > 0) {
+        response = await client.line_items.delete(checkItem[0].id).catch(err => err.errors);
         if (response?.[0]?.status) {
           return { status: parseInt(response[0].status), data: response[0].title };
         }
       }
-      await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      if (!isNaN(parseInt(newAdjustment.amount_cents))) {
+        await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
+      }
       await reloadOrder();
 
     } catch (err) {
       console.error('error', err);
-      return { status: 500, data: 'error change item' };
+      return { status: 500, data: 'Error changing item-service' };
+    }
+  };
+
+  const deleteItemService = async (idItemsDelete: Array<string>) => {
+    try {
+      const client = await generateClient();
+      idItemsDelete.forEach(async idElement => {
+        await client.line_items.delete(idElement).catch(err => err.errors);
+      });
+      await reloadOrder();
+
+    } catch (err) {
+      console.error('error', err);
+      return { status: 500, data: 'Error Deleting item-service' };
     }
   };
 
   const addLoggedCustomer = useCallback(async () => {
     if (!clientLogged) throw new Error("unauthorized");
-
-    const result = await clientLogged.orders.update(
+    await clientLogged.orders.update(
       {
         id: orderId,
         customer: {
@@ -298,14 +344,12 @@ export const useCommerceLayer = () => {
       },
       DEFAULT_ORDER_PARAMS
     );
-
-    setOrder(result);
   }, [user?.id, clientLogged, orderId]);
 
   const addCustomer = useCallback(
     async ({ email, name, lastName, cellPhone }) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           customer_email: email,
@@ -321,10 +365,8 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-      setOrder(result);
-    },
-    [order, orderId]
-  );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [order]);
 
   const getAddresses = useCallback(async () => {
     const client = await generateClient();
@@ -354,7 +396,7 @@ export const useCommerceLayer = () => {
         ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
       ]);
 
-      const orderUpdate = await client.orders.update(
+      await client.orders.update(
         {
           id: order.id,
           shipping_address: {
@@ -379,8 +421,6 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(orderUpdate);
     },
     [order]
   );
@@ -388,7 +428,7 @@ export const useCommerceLayer = () => {
   const updateMetadata = useCallback(
     async (metadata: Record<string, any>) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           metadata: {
@@ -400,8 +440,6 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(result);
     },
     [order, orderId]
   );
@@ -414,7 +452,7 @@ export const useCommerceLayer = () => {
   const setPaymentMethod = useCallback(
     async (paymentMethodId: string) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           payment_method: {
@@ -423,9 +461,7 @@ export const useCommerceLayer = () => {
           },
         },
         DEFAULT_ORDER_PARAMS
-      );
-
-      setOrder(result);
+      ).catch(err => console.error(err.errors));
     },
     [orderId]
   );
@@ -453,26 +489,37 @@ export const useCommerceLayer = () => {
         id: DEFAULT_SHIPPING_METHOD_ID,
         type: "shipping_methods",
       },
-    });
+    }).catch(err => console.error('error set default shipping method', err.errors));
   }, [order]);
 
   const placeOrder = useCallback(async () => {
-    const client = await generateClient();
-    const result = await client.orders.update(
-      {
-        id: orderId,
-        _place: true,
-      },
-      DEFAULT_ORDER_PARAMS
-    );
-
-    setOrder(result);
+    try {
+      const client = await generateClient();
+      const response = await client.orders.update(
+        {
+          id: orderId,
+          _place: true,
+        },
+        DEFAULT_ORDER_PARAMS
+      )
+        .then(() => {
+          return { status: 200, data: 'esta todo ok' };
+        })
+        .catch(err => {
+          console.error('error place order', err.errors);
+          return { status: 500, data: err.errors };
+        });
+      return response;
+    } catch (error) {
+      console.error('error place order', error);
+      return { status: 500, data: error };
+    }
   }, [orderId]);
 
   const validateExternal = useCallback(
     async (recapchaResponse: string) => {
       const client = await generateClient();
-      const result = await client.orders.update(
+      await client.orders.update(
         {
           id: orderId,
           metadata: {
@@ -484,11 +531,19 @@ export const useCommerceLayer = () => {
         },
         DEFAULT_ORDER_PARAMS
       );
-
-      setOrder(result);
     },
     [orderId, order]
   );
+
+  const checkCurrentPrices = useCallback(() => {
+    console.warn(order);
+    return [
+      {
+        sku: "Therm 1400 F 12 lt",
+        productName: "Calendator 12LT Tiro Forzado THERM1400F Bosh",
+      }
+    ];
+  }, [order]);
 
   const onRecaptcha = async (e) => {
     try {
@@ -503,10 +558,34 @@ export const useCommerceLayer = () => {
     }
   };
 
+  const onHasShipment = async (e) => {
+    try {
+      if (!e || e === "not authorized") {
+        setHasShipment(false);
+        return;
+      }
+      setHasShipment(e);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const upgradeTimePay = useCallback(
+    async (time: number) => {
+      setTimeToPay(time);
+    },
+    []
+  );
+
   return {
     order,
+    orderError,
+    productUpdates,
     tokenRecaptcha,
+    timeToPay,
     onRecaptcha,
+    onHasShipment,
+    hasShipment,
     getOrder,
     reloadOrder,
     addToCart,
@@ -524,7 +603,10 @@ export const useCommerceLayer = () => {
     setDefaultShippingMethod,
     validateExternal,
     getSkuList,
-    changeItemService
+    changeItemService,
+    checkCurrentPrices,
+    deleteItemService,
+    upgradeTimePay,
   };
 };
 

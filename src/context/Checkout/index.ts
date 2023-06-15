@@ -6,12 +6,17 @@ import { apiResponse } from "@/lib/interfaces/api-response.interface";
 
 export interface IContextCheckout {
   order: Order;
+  orderError: boolean;
+  productUpdates: any;
   flow: Flow;
   tokenRecaptcha: string;
+  timeToPay: number;
+  hasShipment: boolean;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
-  reloadOrder: () => void;
+  deleteItemService: (idItems: Array<string>) => Promise<apiResponse>;
+  reloadOrder: (checkUpdates?: boolean) => void;
   updateMetadata: (meta: Record<string, any>) => Promise<void>;
   addCustomer: (customer: VantiChekoutCustomer) => Promise<void>;
   addLoggedCustomer: () => Promise<void>;
@@ -24,23 +29,30 @@ export interface IContextCheckout {
     shippingAddress?: Address;
     billingAddress?: Address;
   }>;
-  getCustomerAddresses: () => Promise<Address[]>;
-  placeOrder: () => Promise<void>;
+  getCustomerAddresses: () => Promise<any[] | ListResponse<Address>>;
+  placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: () => Promise<void>;
   onRecaptcha: (e: any) => void;
+  onHasShipment: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
+  upgradeTimePay: (e: number) => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
   order: undefined,
+  orderError: undefined,
+  productUpdates: undefined,
   flow: undefined,
   tokenRecaptcha: "",
+  timeToPay: undefined,
+  hasShipment: undefined,
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,
+  deleteItemService: () => undefined,
   reloadOrder: () => undefined,
   updateMetadata: () => undefined,
   addCustomer: () => undefined,
@@ -55,7 +67,9 @@ const CheckoutContext = createContext<IContextCheckout>({
   addPaymentMethodSource: () => undefined,
   setDefaultShippingMethod: () => undefined,
   onRecaptcha: () => undefined,
+  onHasShipment: () => undefined,
   validateExternal: () => undefined,
+  upgradeTimePay: () => undefined,
 });
 
 export default CheckoutContext;

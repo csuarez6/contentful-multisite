@@ -20,6 +20,8 @@ import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   const { mainNavCollection, secondaryNavCollection } = props;
@@ -81,7 +83,7 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
       if (ProductName) {
         name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
       }
-      if (subItem.mainNavCollection?.items.some((el) => el.name === name)) {
+      if (subItem.mainNavCollection?.items.some((el) => el?.name === name)) {
         if (
           item.mainNavCollection.items.some(
             (itemEl) => itemEl.name === subItem.name
@@ -123,13 +125,39 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
   const {
-    order
+    order,
+    timeToPay,
+    upgradeTimePay
   } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
-  
+
   useEffect(() => {
-    setNumProducts(order?.line_items ? (order.line_items.reduce((acum, line_item) => acum + line_item.quantity, 0)) : 0);
+    if (timeToPay > 0) {
+      const interval = setInterval(() => {
+        upgradeTimePay(timeToPay - 1);
+        if (timeToPay === 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [timeToPay, upgradeTimePay]);
+
+  useEffect(() => {
+    setNumProducts(
+      order?.line_items
+        ? order.line_items.reduce(
+          (acum, line_item) =>
+            acum + line_item.quantity +
+            (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
+            (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
+          0
+        )
+        : 0
+    );
   }, [order]);
 
   useEffect(() => {
@@ -139,7 +167,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     }
   }, [session, sessionStatus]);
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [timer, setTimer] = useState(null);
 
   const handleSubmit = (e) => {
@@ -315,7 +343,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             <div className="relative flex items-center p-3 md:p-0 md:min-h-[92px] justify-between gap-2 xxs:gap-3 xs:gap-4 md:gap-6">
               <div className="relative z-10 flex md:px-2 lg:px-0 lg:mt-[10px]">
                 <CustomLink
-                  content={{ urlPath: "/" }}
+                  content={{ urlPaths: ["/"] }}
                   className="flex items-center flex-shrink-0"
                 >
                   <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
@@ -390,22 +418,28 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       ))}
                       {/* Carrito de compras */}
                       <li className="flex max-w-[75px]" key={`cart_${uuid()}`}>
-                          <Link
-                            href="/checkout/pse/verify"
-                            className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
-                          >
-                            <span className="relative flex items-center w-9 h-7 shrink-0 text-neutral-30 mb-2">
-                              <Icon
-                                icon="shopping-cart"
-                                className="w-full h-full mx-auto absolute right-1"
-                              />
-                              <span className={classNames(
+                        <Link
+                          href="/checkout/pse/verify"
+                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
+                        >
+                          <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
+                            <Icon
+                              icon="shopping-cart"
+                              className="absolute w-full h-full mx-auto right-1"
+                            />
+                            <span
+                              className={classNames(
                                 "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                                numProducts > 0 ? "bg-blue-dark text-white" : "bg-blue-100"
-                              )}>{ numProducts }</span>
+                                numProducts > 0
+                                  ? "bg-blue-dark text-white"
+                                  : "bg-blue-100"
+                              )}
+                            >
+                              {numProducts}
                             </span>
-                            Carrito
-                          </Link>
+                          </span>
+                          Carrito
+                        </Link>
                       </li>
                     </ul>
                   </nav>
@@ -449,7 +483,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
-                                      content={{ urlPath: "/dashboard/orders" }}
+                                      content={{
+                                        urlPaths: ["/dashboard/orders"],
+                                      }}
                                       className={classNames(
                                         active
                                           ? "bg-gray-100 text-gray-900"
@@ -464,7 +500,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
-                                      content={{ urlPath: "#" }}
+                                      content={{ urlPaths: ["#"] }}
                                       className={classNames(
                                         active
                                           ? "bg-gray-100 text-gray-900"
@@ -481,7 +517,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               <Menu.Item>
                                 {({ active }) => (
                                   <CustomLink
-                                    content={{ urlPath: "/dashboard" }}
+                                    content={{ urlPaths: ["/dashboard"] }}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -517,21 +553,48 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   ) : (
                     <>
                       <CustomLink
-                        content={{ urlPath: "/registro" }}
+                        content={{ urlPaths: ["/registro"] }}
                         className="flex items-center h-full text-center button button-primary"
                       >
                         Regístrate
                       </CustomLink>
                       <CustomLink
                         content={{
-                          urlPath:
+                          urlPaths: [
                             "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
+                          ],
                         }}
                         className="flex items-center h-full text-center button button-outline"
                       >
                         Inicia sesión
                       </CustomLink>
                     </>
+                  )}
+                  {timeToPay >= 0 && (
+                    <div className="flex items-center justify-center w-10 h-10 m-auto shrink-0">
+                      <CircularProgressbar
+                        value={(timeToPay / 30)}
+                        minValue={0}
+                        maxValue={1}
+                        text={`${timeToPay}`}
+                        styles={{
+                          path: {
+                            stroke: '#00182B',
+                            strokeLinecap: 'butt',
+                            transitionDuration: "0.5s"
+                          },
+                          trail: {
+                            stroke: '#ADABA580',
+                            strokeLinecap: 'butt'
+                          },
+                          text: {
+                            fill: '#113455',
+                            fontSize: '32px',
+                            fontWeight: "bold",
+                          }
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -545,17 +608,21 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   href="/checkout/pse/verify"
                   className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
                 >
-                  <span className="relative flex items-center w-9 h-8 shrink-0 text-neutral-30">
+                  <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
                     <Icon
                       icon="shopping-cart"
-                      className="w-full h-full mx-auto absolute right-1"
+                      className="absolute w-full h-full mx-auto right-1"
                     />
-                    <span className={classNames(
-                      "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                      numProducts > 0
-                        ? "bg-blue-dark text-white"
-                        : "bg-blue-100"
-                    )}>{ numProducts }</span>
+                    <span
+                      className={classNames(
+                        "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
+                        numProducts > 0
+                          ? "bg-blue-dark text-white"
+                          : "bg-blue-100"
+                      )}
+                    >
+                      {numProducts}
+                    </span>
                   </span>
                 </Link>
               </div>
@@ -580,16 +647,19 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         <>
                           <div className="flex items-center justify-between">
                             <CustomLink
-                              content={{ urlPath: "/" }}
+                              content={{ urlPaths: ["/"] }}
                               className="flex items-center flex-shrink-0"
                               onClick={close}
                             >
                               <figure className="relative h-[45px] aspect-[180/52]">
                                 <Image
                                   className="block w-auto"
-                                  src={promoImage?.url ?? "/images/vanti-logo.png"}
+                                  src={
+                                    promoImage?.url ?? "/images/vanti-logo.png"
+                                  }
                                   alt={
-                                    promoImage?.description ?? "Logo Grupo Vanti"
+                                    promoImage?.description ??
+                                    "Logo Grupo Vanti"
                                   }
                                   width={180}
                                   height={52}

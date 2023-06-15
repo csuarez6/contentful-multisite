@@ -1,23 +1,38 @@
-import { ReactElement, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+  DEFAULT_HELP_BUTTON_ID,
+} from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { defaultLayout } from "../../_app";
-import { VantiOrderMetadata } from "@/constants/checkout.constants";
+import { PSE_STEPS_TO_VERIFY, VantiOrderMetadata } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames } from "@/utils/functions";
-import { ModalIntall, ModalWarranty } from "@/components/blocks/product-details/ProductConfig";
+import { classNames, formatPrice } from "@/utils/functions";
+import {
+  ModalIntall,
+  ModalWarranty,
+} from "@/components/blocks/product-details/ProductConfig";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IAdjustments } from "@/lib/services/commerce-layer.service";
+import Link from "next/link";
 
 const CheckoutVerify = () => {
   const router = useRouter();
@@ -35,43 +50,37 @@ const CheckoutVerify = () => {
   const defaultInstallList = {
     id: "defInstall1",
     name: "Sin intalación",
-    formatted_price_amount: "$0"
+    formatted_price_amount: "$0",
   };
   const defaultWarrantyList = {
     id: "defWarranty1",
     name: "Sin garantia",
-    formatted_price_amount: "$0"
+    formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
 
   const { isLogged } = useContext(AuthContext);
-  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } =
-    useContext(CheckoutContext);
+  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
+    setIsLoading(false);
     if (!order?.line_items) return [];
-    const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
-    const productsList = (order.line_items)
-      .filter(item => item.item_type === "skus")
-      .map((item) => {
-        const installAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "installation");
-        const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem?.item?.metadata?.sku_id === item.id && adjItem?.item?.metadata?.type === "warranty");
-        item["installlation_service"] = installAdjItem;
-        item["warranty_service"] = warrantyAdjItem;
-        return item;
-      });
-    return productsList;
+    return order.line_items;
   }, [order]);
 
   const servicesHandler = async (type: string, params) => {
     const productItem = productSelected.current;
-    const itemService = (order.line_items).filter(item => item.id === productItem).map((item) => { return item; });
+    const itemService = order.line_items
+      .filter((item) => item.id === productItem)
+      .map((item) => {
+        return item;
+      });
     const dataAdjustment: IAdjustments = {
       name: params.name + " - " + itemService?.[0]?.["sku_code"],
-      amount_cents: params.price_amount_cents,
-      type: (type === "warranty") ? "warranty" : "installation",
+      amount_cents: type === "warranty" ? (Number(params["price_amount_float"]) * Number(itemService[0]["unit_amount_float"]) / 100).toString() + "00" : params.price_amount_cents,
+      type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
       sku_code: itemService?.[0]?.["sku_code"],
       sku_name: itemService?.[0]?.["name"],
@@ -81,11 +90,23 @@ const CheckoutVerify = () => {
     };
     if (fechRequestStatus.current) return;
     fechRequestStatus.current = true;
-    if (type === "warranty") await changeItemService(itemService?.[0]?.["warranty_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"], productItem);
-    if (type === "installation") await changeItemService(itemService?.[0]?.["installlation_service"]?.[0]?.["id"], dataAdjustment, itemService?.[0]?.["quantity"], productItem);
+    if (type === "warranty")
+      await changeItemService(
+        itemService?.[0]?.["warranty_service"]?.[0]?.["id"],
+        dataAdjustment,
+        itemService?.[0]?.["quantity"],
+        productItem
+      );
+    if (type === "installation")
+      await changeItemService(
+        itemService?.[0]?.["installlation_service"]?.[0]?.["id"],
+        dataAdjustment,
+        itemService?.[0]?.["quantity"],
+        productItem
+      );
     setTimeout(() => {
       fechRequestStatus.current = false;
-    }, 1500);
+    }, 1000);
     setIsActivedModal(false);
   };
 
@@ -108,7 +129,7 @@ const CheckoutVerify = () => {
   }, []);
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
@@ -117,13 +138,25 @@ const CheckoutVerify = () => {
     [router.query]
   );
 
-  const openModal = (category?: string, type?: string, idService?: string, idProduct?: string, productCategory?: string) => {
+  const openModal = (
+    category?: string,
+    type?: string,
+    idService?: string,
+    idProduct?: string,
+    productCategory?: string
+  ) => {
     productSelected.current = idProduct;
+    const productPriceItem = order?.line_items.find((i) => i.id === idProduct)?.unit_amount_float;
     const compareCategory = category ?? productCategory;
-    const skusOptions = skuOptionsGlobal.filter(item => item.reference === compareCategory);
-    const posSkuIdService = skusOptions.findIndex(x => x.id === idService);
+    const skusOptions = skuOptionsGlobal.filter(
+      (item) => item.reference === compareCategory
+    );
+    const posSkuIdService = skusOptions.findIndex((x) => x.id === idService);
     setParamModal({
-      promoTitle: (type === "installlation_service") ? "Instala tu gasodoméstico" : "Servicio Garantía",
+      promoTitle:
+        type === "installlation_service"
+          ? "Instala tu gasodoméstico"
+          : "Servicio Garantía",
     });
     if (type === "installlation_service") {
       setmodalChild(
@@ -141,6 +174,7 @@ const CheckoutVerify = () => {
           onEventHandler={servicesHandler}
           installCurrent={posSkuIdService + 1}
           upInstallCurrent={updateInstallCurrent}
+          productPrice={productPriceItem}
         />
       );
     }
@@ -148,6 +182,13 @@ const CheckoutVerify = () => {
     setTimeout(() => {
       setIsActivedModal(true);
     }, 200);
+  };
+
+  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
+    const productPriceTmp = productPrice ?? 0;
+    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
+    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
+    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
   };
 
   const handleNext = async () => {
@@ -168,9 +209,9 @@ const CheckoutVerify = () => {
 
       if (isLogged) {
         await addLoggedCustomer();
-
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
       }
+
       await updateMetadata(meta);
 
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
@@ -184,11 +225,6 @@ const CheckoutVerify = () => {
       });
     }
   };
-
-  useEffect(() => {
-    setIsLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <HeadingCard
@@ -212,188 +248,229 @@ const CheckoutVerify = () => {
         </div>
         {/* End Heading */}
 
-        {products.map((product) => {
-          return (<div
-            className="flex flex-wrap border-b sm:grid grid-template-product-details"
-            key={product.id}
-          >
-            <div className="row-start-1 row-end-4 py-3.5">
-              <figure className="relative w-16 shrink-0">
-                {product?.image_url && (
-                  <Image
-                    className="w-full h-full"
-                    src={product?.image_url}
-                    alt={product?.name}
-                    width={64}
-                    height={64}
-                    priority
-                  />
-                )}
-              </figure>
-            </div>
-            <div className="w-[calc(100%_-_70px)] flex-grow sm:w-auto text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
-              <CustomLink
-                content={{ urlPath: `/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}` }}
-              >
-                {product?.name}
-              </CustomLink>
-              <p className="text-xs text-left text-grey-60">* Precio IVA incluido</p>
-            </div>
-            <div className="inline-block py-3.5 pb-0 sm:px-3 text-blue-dark sm:mx-auto">
-              <div className="w-32 custom-number-input h-9">
-                <div className="relative flex flex-row w-full h-full bg-transparent rounded-lg">
-                  <button
-                    data-action="decrement"
-                    className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
-                    disabled={product?.quantity == 1}
-                    onClick={() => {
-                      setIsLoading(true);
-                      updateItemQuantity(
-                        product?.sku_code,
-                        product?.quantity - 1
-                      ).then(result => {
-                        if (result.status !== 200) {
-                          setError(true);
-                          setErrorMessage({
-                            icon: "alert",
-                            type: "warning",
-                            title: `Ocurrió un error con el producto seleccionado, por favor intente nuevamente.`,
-                          });
-                        }
-                      }).finally(() => setIsLoading(false));
-                    }}
-                  >
-                    <span className={classNames(
-                      "m-auto",
-                      product?.quantity == 1 ? "opacity-25" : ""
-                    )}>−</span>
-                  </button>
-                  <input
-                    type="text"
-                    className="flex items-center w-full text-center outline-none border-y focus:outline-none text-md md:text-basecursor-default"
-                    name="custom-input-number"
-                    value={product?.quantity}
-                    readOnly
-                  ></input>
-                  <button
-                    data-action="increment"
-                    className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
-                    onClick={() => {
-                      setIsLoading(true);
-                      updateItemQuantity(
-                        product?.sku_code,
-                        product.quantity + 1
-                      ).then(result => {
-                        if (result.status !== 200) {
-                          const message = result.status === 422 ? `No hay más unidades disponibles para el producto seleccionado.` : 'Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente';
-                          setError(true);
-                          setErrorMessage({
-                            icon: "alert",
-                            type: "warning",
-                            title: message,
-                          });
-                        }
-                      }).finally(() => setIsLoading(false));
-                    }}
-                  >
-                    <span className="m-auto">+</span>
-                  </button>
-                </div>
+        {products.map((product: any) => {
+          return (
+            <div
+              className="flex flex-wrap border-b sm:grid grid-template-product-details"
+              key={`cart-product-${product.id}`}
+            >
+              <div className="row-start-1 row-end-4 py-3.5">
+                <figure className="relative w-16 shrink-0">
+                  {product?.image_url && (
+                    <Image
+                      className="w-full h-full"
+                      src={product?.image_url}
+                      alt={product?.name}
+                      width={64}
+                      height={64}
+                      priority
+                    />
+                  )}
+                </figure>
               </div>
-              <button
-                className="text-xs text-blue-500 hover:text-blue-800"
-                onClick={() => {
-                  setIsLoading(true);
-                  updateItemQuantity(
-                    product?.sku_code,
-                    0
-                  ).then(result => {
-                    if (result.status !== 200) {
-                      setError(true);
-                      setErrorMessage({
-                        icon: "alert",
-                        type: "warning",
-                        title: `Ocurrió un error al eliminar el producto seleccionado, por favor intente nuevamente.`,
-                      });
-                    }
-                  }).finally(() => setIsLoading(false));
-                }}>Eliminar</button>
+              <div className="w-[calc(100%_-_70px)] flex-grow sm:w-auto text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
+                <Link href={`/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}`}>{product?.name}</Link>
+                <p className="text-xs text-left text-grey-60">
+                  * Precio IVA incluido
+                </p>
+              </div>
+              <div className="inline-block py-3.5 pb-0 sm:px-3 text-blue-dark sm:mx-auto">
+                <div className="w-32 custom-number-input h-9">
+                  <div className="relative flex flex-row w-full h-full bg-transparent rounded-lg">
+                    <button
+                      data-action="decrement"
+                      className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
+                      disabled={product?.quantity == 1}
+                      onClick={() => {
+                        setIsLoading(true);
+                        updateItemQuantity(
+                          product?.sku_code,
+                          product?.quantity - 1
+                        )
+                          .then((result) => {
+                            if (result.status !== 200) {
+                              setError(true);
+                              setErrorMessage({
+                                icon: "alert",
+                                type: "warning",
+                                title: `Ocurrió un error con el producto seleccionado, por favor intente nuevamente.`,
+                              });
+                            }
+                          })
+                          .finally(() => setIsLoading(false));
+                      }}
+                    >
+                      <span
+                        className={classNames(
+                          "m-auto",
+                          product?.quantity == 1 ? "opacity-25" : ""
+                        )}
+                      >
+                        −
+                      </span>
+                    </button>
+                    <input
+                      type="text"
+                      className="flex items-center w-full text-center outline-none border-y focus:outline-none text-md md:text-basecursor-default"
+                      name="custom-input-number"
+                      value={product?.quantity}
+                      readOnly
+                    ></input>
+                    <button
+                      data-action="increment"
+                      className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
+                      onClick={() => {
+                        setIsLoading(true);
+                        updateItemQuantity(
+                          product?.sku_code,
+                          product.quantity + 1
+                        )
+                          .then((result) => {
+                            if (result.status !== 200) {
+                              const message =
+                                result.status === 422
+                                  ? `No hay más unidades disponibles para el producto seleccionado.`
+                                  : "Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente";
+                              setError(true);
+                              setErrorMessage({
+                                icon: "alert",
+                                type: "warning",
+                                title: message,
+                              });
+                            }
+                          })
+                          .finally(() => setIsLoading(false));
+                      }}
+                    >
+                      <span className="m-auto">+</span>
+                    </button>
+                  </div>
+                </div>
+                <button
+                  className="text-xs text-blue-500 hover:text-blue-800"
+                  onClick={() => {
+                    setIsLoading(true);
+                    updateItemQuantity(product?.sku_code, 0)
+                      .then((result) => {
+                        if (result.status !== 200) {
+                          setError(true);
+                          setErrorMessage({
+                            icon: "alert",
+                            type: "warning",
+                            title: `Ocurrió un error al eliminar el producto seleccionado, por favor intente nuevamente.`,
+                          });
+                        }
+                      })
+                      .finally(() => setIsLoading(false));
+                  }}
+                >
+                  Eliminar
+                </button>
+              </div>
+              <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
+                {product.formatted_unit_amount}
+              </div>
+              <div className="w-full mt-3 sm:hidden"></div>
+              {/* ********* Services ******** */}
+              <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                Garantía extendida{" "}
+                {product["warranty_service"]?.length > 0 && (
+                  <>
+                    <br />
+                    <b>{product["warranty_service"][0]["name"]}</b>
+                  </>
+                )}
+                <button
+                  className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                  onClick={() =>
+                    openModal(
+                      product["warranty_service"]?.[0]?.["item"]?.[
+                      "metadata"
+                      ]?.["categoryReference"] ??
+                      product["clWarrantyReference"],
+                      "warranty_service",
+                      product["warranty_service"]?.[0]?.["item"]?.[
+                      "metadata"
+                      ]?.["sku_option_id"],
+                      product.id,
+                      product.metadata.clWarrantyReference
+                    )
+                  }
+                >
+                  {product["warranty_service"]?.length > 0
+                    ? "Cambiar"
+                    : "Agregar"}
+                </button>
+              </div>
+              <div className="px-3 text-right">
+                <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                  {product["warranty_service"]?.length > 0
+                    ? product["warranty_service"][0]["quantity"]
+                    : "0"}
+                  x
+                </span>
+              </div>
+              <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+                {product["warranty_service"]?.length > 0
+                  ? product["warranty_service"][0]["formatted_total_amount"]
+                  : "$0"}
+              </div>
+              <div className="w-full sm:hidden"></div>
+              <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                Servicio de instalación{" "}
+                {product["installlation_service"]?.length > 0 && (
+                  <>
+                    <br />
+                    <b>{product["installlation_service"][0]["name"]}</b>
+                  </>
+                )}
+                <button
+                  className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                  onClick={() =>
+                    openModal(
+                      product["installlation_service"]?.[0]?.["item"]?.[
+                      "metadata"
+                      ]?.["categoryReference"] ??
+                      product["clInstallationReference"],
+                      "installlation_service",
+                      product["installlation_service"]?.[0]?.["item"]?.[
+                      "metadata"
+                      ]?.["sku_option_id"],
+                      product.id,
+                      product.metadata.clInstallationReference
+                    )
+                  }
+                >
+                  {product["installlation_service"]?.length > 0
+                    ? "Cambiar"
+                    : "Agregar"}
+                </button>
+              </div>
+              <div className="px-3 text-right">
+                <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                  {product["installlation_service"]?.length > 0
+                    ? product["installlation_service"][0]["quantity"]
+                    : "0"}
+                  x
+                </span>
+              </div>
+              <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
+                {product["installlation_service"]?.length > 0
+                  ? product["installlation_service"][0][
+                  "formatted_total_amount"
+                  ]
+                  : "$0"}
+              </div>
+              {/* ********* End Services ******** */}
+              <div className="w-full col-start-1 col-end-3 mt-3 sm:w-auto bg-blue-50"></div>
+              <div className="inline-block py-1 mt-3 font-bold text-center text-blue-dark text-md bg-blue-50">
+                Total Producto
+              </div>
+              <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
+                {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+              </div>
             </div>
-            <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1 sm:m-0">
-              {product.formatted_unit_amount}
-            </div>
-            <div className="w-full mt-3 sm:hidden"></div>
-            {/* ********* Services ******** */}
-            <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-              Garantía extendida{" "}
-              {product["warranty_service"].length > 0 &&
-                <>
-                  <br /><b>{product["warranty_service"][0]["name"]}</b>
-                </>
-              }
-              <button
-                className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                onClick={
-                  () => openModal(
-                    product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clWarrantyReference"],
-                    "warranty_service",
-                    product["warranty_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
-                    product.id,
-                    product.metadata.clWarrantyReference
-                  )
-                }
-              >
-                {(product["warranty_service"].length > 0) ? "Cambiar" : "Agregar"}
-              </button>
-            </div>
-            <div className="px-3 text-right">
-              <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["quantity"] : "0"}x
-              </span>
-            </div>
-            <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
-              {(product["warranty_service"].length > 0) ? product["warranty_service"][0]["formatted_total_amount"] : "$0"}
-            </div>
-            <div className="w-full sm:hidden"></div>
-            <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-              Servicio de instalación{" "}
-              {product["installlation_service"].length > 0 &&
-                <>
-                  <br /><b>{product["installlation_service"][0]["name"]}</b>
-                </>
-              }
-              <button
-                className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                onClick={
-                  () => openModal(
-                    product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["categoryReference"] ?? product["clInstallationReference"],
-                    "installlation_service",
-                    product["installlation_service"]?.[0]?.["item"]?.["metadata"]?.["sku_option_id"],
-                    product.id,
-                    product.metadata.clInstallationReference
-                  )
-                }
-              >
-                {(product["installlation_service"].length > 0) ? "Cambiar" : "Agregar"}
-              </button>
-            </div>
-            <div className="px-3 text-right">
-              <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["quantity"] : "0"}x
-              </span>
-            </div>
-            <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-              {(product["installlation_service"].length > 0) ? product["installlation_service"][0]["formatted_total_amount"] : "$0"}
-            </div>
-            {/* ********* End Services ******** */}
-            <div className="w-full col-start-1 col-end-3 mt-3 sm:w-auto bg-blue-50"></div>
-            <div className="inline-block py-1 mt-3 font-bold text-center text-blue-dark text-md bg-blue-50">
-              Total Producto
-            </div>
-            <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-              {product.formatted_total_amount}
-            </div>
-          </div>);
+          );
         })}
       </div>
       <div className="flex items-center justify-end">
@@ -404,7 +481,7 @@ const CheckoutVerify = () => {
         )}
         {!products.length ? (
           <CustomLink
-            content={{ urlPath: "/gasodomesticos" }}
+            content={{ urlPaths: ["/gasodomesticos"] }}
             linkClassName="button button-primary mt-6"
           >
             Ir a la tienda
@@ -478,7 +555,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: "Orden - Verificar",
+        name: "Carrito de compras",
         footerInfo,
         headerInfo,
         helpButton,

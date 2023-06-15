@@ -6,11 +6,11 @@ const SearchCard: React.FC<IPromoContent> = (props) => {
     name,
     promoTitle,
     promoImage,
-    urlPath
+    urlPaths
   } = props;
 
   return (
-    <a href={urlPath} className="p-6 border rounded-xl bg-white border-neutral-70">
+    <a href={urlPaths?.[0] ?? '#'} className="p-6 border rounded-xl bg-white border-neutral-70">
       <div className="flex flex-col gap-3 h-full">
         {(promoImage) && (
           <div className="relative aspect-[336/291]">

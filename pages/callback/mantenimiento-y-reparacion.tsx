@@ -137,25 +137,25 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Otros servicios gasodomésticos",
         internalLink: {
-          urlPath: "/otros-servicios",
+          urlPaths: ["/otros-servicios"],
         },
       },
       {
         promoTitle: "Mantenimiento",
         internalLink: {
-          urlPath: "/otros-servicios/mantenimiento",
+          urlPaths: ["/otros-servicios/mantenimiento"],
         },
       },
       {
         promoTitle: "Te llamamos",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

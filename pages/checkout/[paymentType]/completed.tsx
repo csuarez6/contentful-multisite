@@ -4,7 +4,7 @@ import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { Address } from "@commercelayer/sdk";
-import { VantiOrderMetadata } from '@/constants/checkout.constants';
+import { PSE_STEPS_TO_VERIFY } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
@@ -34,7 +34,7 @@ const CheckoutCompleted = () => {
     }, [getAddresses, order]);
 
     const isCompleted = useMemo(
-        () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+        () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
         [order]
     );
 
@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return {
         props: {
             layout: {
-                name: 'Orden - Resumen',
+                name: 'Resumen de la orden',
                 footerInfo,
                 headerInfo,
                 helpButton,

@@ -16,8 +16,8 @@ const fetchs = [
 
 const data: IProductOverviewDetails = {
   promoTitle: 'Calefactor de torre',
-  state: 'nuevo',
-  promotion: '30%',
+  isNew: true,
+  discount: '30%',
   imagesCollection: {
     items: [
       {

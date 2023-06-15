@@ -95,17 +95,17 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
 
                 <figure
                   className={classNames(
-                    "relative w-full md:w-1/2 shrink-0 grow md:h-full max-md:aspect-[328/180] overflow-hidden",
-                    view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
-                    view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
+                    "relative w-full md:w-1/2 shrink-0 grow md:h-full overflow-hidden",
+                    view?.bannerWidth === "Largo" && !view?.roundedImage && "xl:w-[630px]",
+                    view?.bannerWidth !== "Largo" && !view?.roundedImage && "xl:w-[488px]",
                     view?.roundedImage && "xl:w-[630px] !h-auto",
                   )}
                   style={{
-                    clipPath:
-                      hasRoundedImage &&
-                      (view?.imageAlign === "Derecha"
+                    clipPath: hasRoundedImage && (
+                      view?.imageAlign === "Derecha"
                         ? `url(#path-img-reverse-${sysId})`
-                        : `url(#path-img-${sysId})`),
+                        : `url(#path-img-${sysId})`
+                    )
                   }}
                 >
                   <Image
@@ -113,7 +113,12 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                     alt={image?.title ?? image?.description}
                     width={image?.width}
                     height={image?.height}
-                    className="object-cover w-full h-full"
+                    className={classNames(
+                      "object-cover w-full h-full aspect-[328/180]",
+                      view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
+                      view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
+                      view?.roundedImage && "xl:w-[630px]",
+                    )}
                   />
                 </figure>
               </>

@@ -124,6 +124,10 @@ Create .env file with enviroment variables below:
 - `ALGOLIASEARCH_READ_API_KEY`: Algolia search API KEY to perform content queries
 - `NEXTAUTH_URL`: Auth url return callback
 - `NEXTAUTH_SECRET`: Auth secret key to manage auth stuffs
+- `PLACE_TO_PAY_LOGIN`: P2P login
+- `PLACE_TO_PAY_KEY`: P2P Transaction key
+- `PLACE_TO_PAY_URL`: P2P URL
+- `PLACE_TO_PAY_URL_RETURN`: P2P return URL
 
 ### TEST
 

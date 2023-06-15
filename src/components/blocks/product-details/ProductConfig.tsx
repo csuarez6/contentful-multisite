@@ -1,7 +1,7 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
 import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { useState } from "react";
 
@@ -54,23 +54,33 @@ export const options = {
   },
 };
 
-export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, installCurrent, upInstallCurrent }) => {
+export const ModalIntall: React.FC<any> = ({
+  optionsList,
+  onEventHandler,
+  installCurrent,
+  upInstallCurrent,
+}) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
   return (
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
-          <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
-            el servicio está sujeto a ubicación, si desea más información puede hacer
+          <div
+            className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
+            role="alert"
+          >
+            el servicio está sujeto a ubicación, si desea más información puede
+            hacer
             <CustomLink
               className="!inline-block ml-1 font-bold underline"
-              content={{ urlPath: "/otros-servicios/instalacion" }}
+              content={{ urlPaths: ["/otros-servicios/instalacion"] }}
             >
               clic aquí
-            </CustomLink>.
+            </CustomLink>
+            .
           </div>
-          Antes de empezar, queremos informarte que puedes adquirir la instalación
-          de tu gasodoméstico en esta compra.
+          Antes de empezar, queremos informarte que puedes adquirir la
+          instalación de tu gasodoméstico en esta compra.
           <br />
           Si aún no sabes qué incluye, puedes informarte en la landing de
           instalación.
@@ -79,38 +89,45 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
           <ul
             className={classNames(
               "px-3 py-[10px] gap-2 grid",
-              (optionsList.length > 0) ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+              optionsList.length > 0
+                ? "grid-cols-1 sm:grid-cols-2"
+                : "grid-cols-1"
             )}
           >
-            {(optionsList.length > 0) && optionsList.map((item, index) => {
-              return (
-                <li
-                  key={item.id}
-                  onClick={() => {
-                    upInstallCurrent(index);
-                    setChecked(index);
-                  }}
-                >
-                  <input
-                    type="radio"
-                    id={`installbox-${index}`}
-                    name="installbox"
-                    checked={checked === index}
-                    className="hidden peer"
-                    readOnly
-                  />
-                  <label
-                    htmlFor={`installbox-${index}`}
-                    className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+            {optionsList.length > 0 &&
+              optionsList.map((item, index) => {
+                return (
+                  <li
+                    key={item.id}
+                    onClick={() => {
+                      upInstallCurrent(index);
+                      setChecked(index);
+                    }}
                   >
-                    <div className="flex flex-col">
-                      <span className="font-bold text-size-span">{item.name}</span>
-                      <span className="text-size-small">{item.formatted_price_amount}</span>
-                    </div>
-                  </label>
-                </li>
-              );
-            })}
+                    <input
+                      type="radio"
+                      id={`installbox-${index}`}
+                      name="installbox"
+                      checked={checked === index}
+                      className="hidden peer"
+                      readOnly
+                    />
+                    <label
+                      htmlFor={`installbox-${index}`}
+                      className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-bold text-size-span">
+                          {item.name}
+                        </span>
+                        <span className="text-size-small">
+                          {item.formatted_price_amount}
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                );
+              })}
           </ul>
         </div>
         <div
@@ -119,59 +136,71 @@ export const ModalIntall: React.FC<any> = ({ optionsList, onEventHandler, instal
             onEventHandler("installation", optionsList[checked]);
           }}
         >
-          <button className="button button-primary">
-            Hecho
-          </button>
+          <button className="button button-primary">Hecho</button>
         </div>
       </div>
     </>
   );
 };
 
-export const ModalWarranty: React.FC<any> = ({ optionsList, onEventHandler, installCurrent, upInstallCurrent }) => {
+export const ModalWarranty: React.FC<any> = ({
+  optionsList,
+  onEventHandler,
+  installCurrent,
+  upInstallCurrent,
+  productPrice
+}) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="text-left">
-          Servicio de garantía para su producto.
-        </div>
+        <div className="text-left">Servicio de garantía para su producto.</div>
         <div>
           <ul
             className={classNames(
               "px-3 py-[10px] gap-2 grid",
-              (optionsList.length > 0) ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"
+              optionsList.length > 0
+                ? "grid-cols-1 sm:grid-cols-2"
+                : "grid-cols-1"
             )}
           >
-            {(optionsList.length > 0) && optionsList.map((item, index) => {
-              return (
-                <li
-                  key={item.id}
-                  onClick={() => {
-                    upInstallCurrent(index);
-                    setChecked(index);
-                  }}
-                >
-                  <input
-                    type="radio"
-                    id={`installbox-${index}`}
-                    name="installbox"
-                    checked={checked === index}
-                    className="hidden peer"
-                    readOnly
-                  />
-                  <label
-                    htmlFor={`installbox-${index}`}
-                    className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+            {optionsList.length > 0 &&
+              optionsList.map((item, index) => {
+                return (
+                  <li
+                    key={item.id}
+                    onClick={() => {
+                      upInstallCurrent(index);
+                      setChecked(index);
+                    }}
                   >
-                    <div className="flex flex-col">
-                      <span className="font-bold text-size-span">{item.name}</span>
-                      <span className="text-size-small">{item.formatted_price_amount}</span>
-                    </div>
-                  </label>
-                </li>
-              );
-            })}
+                    <input
+                      type="radio"
+                      id={`installbox-${index}`}
+                      name="installbox"
+                      checked={checked === index}
+                      className="hidden peer"
+                      readOnly
+                    />
+                    <label
+                      htmlFor={`installbox-${index}`}
+                      className="inline-flex items-center justify-center w-full p-2 cursor-pointer button button-outline peer-checked:bg-blue-dark peer-checked:text-white"
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-bold text-size-span">
+                          {item.name}
+                        </span>
+                        <span className="text-size-small">
+                          {/* {item.formatted_price_amount} */}
+                          {(index === 0)
+                            ? item.formatted_price_amount
+                            : formatPrice((Number(item.price_amount_float) * Number(productPrice)) / 100)}
+                        </span>
+                      </div>
+                    </label>
+                  </li>
+                );
+              })}
           </ul>
         </div>
         <div className="flex justify-end gap-2">

@@ -9,22 +9,22 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
-          pageCollection(where: { AND: { urlPath_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } },order: urlPath_ASC, limit: 1000, preview: false) {
+          pageCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } },order: name_ASC, limit: 1000, preview: false) {
             items {
               sys {
                 id
                 publishedAt
               }
-              urlPath
+              urlPaths
             }
           }
-          productCollection(where: { urlPath_exists: true },order: urlPath_ASC, limit: $limit, preview: $preview) {
+          productCollection(where: { urlPaths_exists: true }, order: name_ASC, limit: $limit, preview: $preview) {
             items {
               sys {
                 id
                 publishedAt
               }
-              urlPath
+              urlPaths
             }
           }
         }

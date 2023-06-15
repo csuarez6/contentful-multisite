@@ -40,7 +40,7 @@ const left: IPromoBlock = {
         promoIcon: 'dialogs',
         ctaLabel: "Card 1",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -49,7 +49,7 @@ const left: IPromoBlock = {
         promoIcon: 'experience',
         ctaLabel: "Card 2",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]

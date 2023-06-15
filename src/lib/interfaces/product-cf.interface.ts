@@ -36,8 +36,8 @@ export interface IProductDetails {
   onBuy?: (type: PaymentMethodType, skuCode: string) => void
   features?: IRichText;
   cta?: ILink;
-  state?: string;
-  promotion?: string;
+  isNew?: boolean;
+  discount?: string;
   referenceCode?: number;
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
@@ -57,8 +57,9 @@ export interface IProductOverviewDetails {
   __typename?: string;
   name?: string;
   promoTitle?: string;
-  urlPath?: string;
+  urlPaths?: [string];
   priceGasodomestico?: string;
+  _priceGasodomestico?: string;
   priceBeforeGasodomestico?: string;
   priceVantiListo?: string;
   priceBeforeVantiListo?: string;
@@ -76,9 +77,7 @@ export interface IProductOverviewDetails {
     description?: IRichText;
   };
   cta?: ILink;
-  state?: string;
   callbackURL?: string;
-  promotion?: string;
   sku?: string;
   marketId?: string;
   promoImage?: IImageAsset;
@@ -99,6 +98,8 @@ export interface IProductOverviewDetails {
     clInstallationReference?: string;
   };
   relatedProducts?: IProductOverviewDetails[];
+  isNew?: boolean;
+  discount?: string;
 }
 
 export interface IAllyOverviewDetails {

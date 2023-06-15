@@ -46,7 +46,7 @@ const ProductSmallCard: React.FC<IPromoContent> = (props) => {
         >
           <div className="grid space-y-[18px]">
             {promoTitle && <h3 className="text-blue-dark max-md:text-size-subtitle3">{promoTitle}</h3>}
-            {(externalLink || internalLink?.urlPath) && (
+            {(externalLink || internalLink?.urlPaths?.[0]) && (
               <div className="flex gap-3">
                 <CustomLink content={props} className="button button-primary">
                   {ctaLabel ?? name}

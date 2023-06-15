@@ -55,7 +55,7 @@ const InformationModal: React.FC<IModal> = ({
               >
                 <Dialog.Panel
                   className={classNames(
-                    "relative transform w-full overflow-hidden rounded-[20px] bg-white p-8 pt-12 align-middle shadow-xl transition-all flex flex-col gap-12 justify-end",
+                    "relative transform w-full overflow-hidden rounded-[20px] bg-white p-8 pt-12 align-middle shadow-xl transition-all flex flex-col gap-16 justify-end",
                     isCentered && "text-center"
                   )}
                 >
@@ -78,7 +78,7 @@ const InformationModal: React.FC<IModal> = ({
                     <Dialog.Title as="h3" className="flex gap-3 items-center">
                       <Icon
                         icon={icon ?? "check"}
-                        className={`w-1/2 h-1/2 ${
+                        className={`w-12 flex-shrink-0 ${
                           type === "warning"
                             ? "text-orange-400"
                             : "text-green-400"

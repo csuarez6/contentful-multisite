@@ -10,6 +10,10 @@ const CheckoutProvider = ({ children }) => {
 
   const {
     order,
+    orderError,
+    productUpdates,
+    timeToPay,
+    hasShipment,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -25,10 +29,13 @@ const CheckoutProvider = ({ children }) => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     onRecaptcha,
+    onHasShipment,
     validateExternal,
     tokenRecaptcha,
     getSkuList,
-    changeItemService
+    changeItemService,
+    deleteItemService,
+    upgradeTimePay,
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -36,7 +43,11 @@ const CheckoutProvider = ({ children }) => {
   const valuesProvider: IContextCheckout = {
     flow,
     order,
+    orderError,
+    productUpdates,
     tokenRecaptcha,
+    timeToPay,
+    hasShipment,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -52,9 +63,12 @@ const CheckoutProvider = ({ children }) => {
     addPaymentMethodSource,
     setDefaultShippingMethod,
     onRecaptcha,
+    onHasShipment,
     validateExternal,
     getSkuList,
-    changeItemService
+    changeItemService,
+    deleteItemService,
+    upgradeTimePay
   };
 
   return (

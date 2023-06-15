@@ -1,17 +1,17 @@
-import { GetStaticProps } from "next";
-import Image from "next/image";
 import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
 } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
+import { GetStaticProps } from "next";
+import Image from "next/image";
 
-import React, { useEffect, useState } from "react";
+import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import AcceptTerms from "@/components/blocks/callback-vantilisto/accept-terms";
 import PersonalData from "@/components/blocks/callback-vantilisto/personal-data";
 import Verify from "@/components/blocks/callback-vantilisto/verify";
-import AcceptTerms from "@/components/blocks/callback-vantilisto/accept-terms";
-import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import { useEffect, useState } from "react";
 
 const defaultValues = {
   contractAccount: "",
@@ -118,7 +118,7 @@ const CallbackPage = () => {
               priceVantiListo,
               _priceVantiListo,
               productsQuantityVantiListo,
-              urlPath,
+              urlPaths,
             } = res;
             const _product = {
               productName: promoTitle ?? name,
@@ -126,7 +126,7 @@ const CallbackPage = () => {
               _price: _priceVantiListo,
               promoImage,
               sku,
-              urlProduct: `${location.origin}${urlPath}` ?? null,
+              urlProduct: `${location.origin}${urlPaths?.[0] ?? ''}` ?? null,
               productsQuantity: productsQuantityVantiListo,
             };
             setProductData(_product);
@@ -162,19 +162,19 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Vantilisto",
         internalLink: {
-          urlPath: "/catalogo-vanti-listo",
+          urlPaths: ["/catalogo-vanti-listo"],
         },
       },
       {
         promoTitle: "Te llamamos",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

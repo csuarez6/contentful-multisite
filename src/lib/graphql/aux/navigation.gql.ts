@@ -61,13 +61,13 @@ const AuxNavigationQuery = `
     ...on Page{
       ${DefaultQuery}
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
     ...on Product {
       ${DefaultQuery}
       slug
-      urlPath
+      urlPaths
       promoTitle
     }
   }

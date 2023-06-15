@@ -179,19 +179,19 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "RPO",
         internalLink: {
-          urlPath: "/rpo",
+          urlPaths: ["/rpo"],
         },
       },
       {
         promoTitle: "Agenda tu cita",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

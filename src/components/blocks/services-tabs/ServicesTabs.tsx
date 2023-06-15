@@ -93,14 +93,14 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     key={tab?.name+'_'+tab?.sys.id}
                     className="max-w-[176px] w-[100px] xs:w-[120px] lg:w-[176px] h-full shrink-0"
                   >
-                    {(tab.urlPath || tab.internalLink?.urlPath || tab.externalLink) ? (
+                    {(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink) ? (
                       <CustomLink
                         content={tab}
                         linkClassName="flex h-full"
                         className={classNames(
                           "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
                           (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                          ([asPath].includes(tab?.urlPath || tab?.internalLink?.urlPath || tab?.externalLink)) ? "border-lucuma" : "border-transparent"
+                          ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink)) ? "border-lucuma" : "border-transparent"
                         )}
                       >
                         {<TabElement {...tab} display={view?.tabDisplay} />}
@@ -137,7 +137,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
 
           <Tab.Panels as={Fragment}>
             {featuredContentsCollection.items.map((tab, idx) => (
-              (!tab.urlPath && !tab.internalLink && !tab.externalLink) && (
+              (!tab?.urlPaths?.[0] && !tab?.internalLink && !tab?.externalLink) && (
                 <Tab.Panel
                   key={tab?.name+'_'+tab?.sys.id}
                   className="focus:outline-none"
@@ -153,7 +153,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     leaveTo="opacity-0"
                   >
                     {
-                      tab.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
+                      tab?.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
                         ? (<LeftFeatured {...tab} buttonType={view?.buttonType} />)
                         : (<div key={tab?.name+'_'+tab?.sys.id}>{jsonToReactComponent(tab)}</div>)
                     }

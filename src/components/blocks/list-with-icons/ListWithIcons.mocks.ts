@@ -21,7 +21,7 @@ const data: IPromoBlock = {
         iconSize: 'small',
         iconBackgroundColor: 'Azul Claro',
         internalLink:{
-          urlPath: '#',
+          urlPaths: ['#',]
         },
         ctaLabel: 'Consultar'
       },
@@ -33,7 +33,7 @@ const data: IPromoBlock = {
         promoIcon: 'phone',
         ctaLabel: "Ver mas",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         iconBackgroundColor: 'Azul Claro',
       },
@@ -45,7 +45,7 @@ const data: IPromoBlock = {
         promoIcon: 'linkedin',
         ctaLabel: "Ver mas",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         iconBackgroundColor: 'Azul Claro',
       },
@@ -57,7 +57,7 @@ const data: IPromoBlock = {
         promoIcon: 'whatsapp',
         ctaLabel: "Ver mas",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         iconBackgroundColor: 'Azul Claro',
       },
@@ -69,7 +69,7 @@ const data: IPromoBlock = {
         promoIcon: 'phone',
         ctaLabel: "Ver mas",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         iconBackgroundColor: 'Azul Claro',
       },
@@ -109,7 +109,7 @@ const dataLeft: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -121,7 +121,7 @@ const dataLeft: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       },
       {
@@ -133,7 +133,7 @@ const dataLeft: IPromoBlock = {
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         }
       }
     ]

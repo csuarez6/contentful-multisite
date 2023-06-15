@@ -33,7 +33,7 @@ export interface IPage {
     promoIcon?: string;
     layout?: ILayout;
     children?: React.ReactNode;
-    urlPath?: string;
+    urlPaths?: string[];
     showHeader?: boolean;
     mainNavCollection?: {
         items?: Array<IPage & INavigation & IPromoContent>;

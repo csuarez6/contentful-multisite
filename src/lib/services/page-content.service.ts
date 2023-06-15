@@ -25,12 +25,12 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getPage($urlPath: String!, $preview: Boolean!) {
-          ${typePage}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
+          ${typePage}Collection(where: { urlPaths_contains_some: [$urlPath] }, limit: 1, preview: $preview) {
             items {
               ${queryPage}
             }
           }
-          ${typeProduct}Collection(where: { OR: [{ urlPath: $urlPath }] }, limit: 1, preview: $preview) {
+          ${typeProduct}Collection(where: { urlPaths_contains_some: [$urlPath] }, limit: 1, preview: $preview) {
             items {
               ${queryProduct}
             }

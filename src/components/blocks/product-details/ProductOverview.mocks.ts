@@ -11,8 +11,8 @@ const data: IProductOverviewDetails = {
   priceBeforeVantiListo: '$350.000',
   productsQuantityGasodomestico: '20',
   productsQuantityVantiListo: '10',
-  state: 'Nuevo',
-  promotion: '30%',
+  isNew: true,
+  discount: '30%',
   sku: "18217",
   rating: 3.6,
   cta: {

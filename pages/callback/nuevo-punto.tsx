@@ -142,19 +142,19 @@ const CallbackPage = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Nuevo punto de gas",
         internalLink: {
-          urlPath: "/nuevo-punto-de-gas",
+          urlPaths: ["/nuevo-punto-de-gas"],
         },
       },
       {
         promoTitle: "Te llamamos",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],

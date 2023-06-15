@@ -18,7 +18,7 @@ const VerticalCardGrill: React.FC<IPromoContent & IPage> = (props) => {
         externalLink,
         buttonType,
         alignButton,
-        urlPath
+        urlPaths
     } = props;
 
     return (
@@ -49,7 +49,7 @@ const VerticalCardGrill: React.FC<IPromoContent & IPage> = (props) => {
                         )}
                     </div>
                 )}
-                {(internalLink?.urlPath || externalLink || urlPath) && (
+                {(internalLink?.urlPaths?.[0] || externalLink || urlPaths) && (
                     <div className={classNames("flex mt-6", getAlign(alignButton) === 'left' ? 'justify-start' : 'justify-center')}>
                         <CustomLink
                             content={props}

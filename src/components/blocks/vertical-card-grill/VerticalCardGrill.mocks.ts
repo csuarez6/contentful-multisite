@@ -17,7 +17,7 @@ const oneItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -40,7 +40,7 @@ const twoItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -55,7 +55,7 @@ const twoItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -79,7 +79,7 @@ const threeItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -94,7 +94,7 @@ const threeItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -109,7 +109,7 @@ const threeItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -133,7 +133,7 @@ const fourItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -148,7 +148,7 @@ const fourItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -163,7 +163,7 @@ const fourItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -178,7 +178,7 @@ const fourItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -202,7 +202,7 @@ const fiveItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -217,7 +217,7 @@ const fiveItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -232,7 +232,7 @@ const fiveItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -247,7 +247,7 @@ const fiveItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -262,7 +262,7 @@ const fiveItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -286,7 +286,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -301,7 +301,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -316,7 +316,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -331,7 +331,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -346,7 +346,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -361,7 +361,7 @@ const sixItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -385,7 +385,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -400,7 +400,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -415,7 +415,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -430,7 +430,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -445,7 +445,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -460,7 +460,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -475,7 +475,7 @@ const sevenItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }
@@ -499,7 +499,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -514,7 +514,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -529,7 +529,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -544,7 +544,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -559,7 +559,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -574,7 +574,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -589,7 +589,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -604,7 +604,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       },
@@ -619,7 +619,7 @@ const eightItems: IPromoBlock = {
         },
         ctaLabel: "Button",
         internalLink: {
-          urlPath: "#"
+          urlPaths: ["#"]
         },
         alignButton: "Izquierda"
       }

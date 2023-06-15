@@ -2159,17 +2159,6 @@
   "isCovered": "true"
  },
  {
-  "city": "Yarumal",
-  "lat": "7.0306",
-  "lng": "-75.5905",
-  "country": "Colombia",
-  "iso2": "CO",
-  "admin_name": "Antioquia",
-  "population": "35315",
-  "population_proper": "35315",
-  "isCovered": "false"
- },
- {
   "city": "Quimbaya",
   "lat": "4.6239",
   "lng": "-75.7631",
@@ -3403,18 +3392,6 @@
   "capital": "minor",
   "population": "23381",
   "population_proper": "23381",
-  "isCovered": "false"
- },
- {
-  "city": "San José",
-  "lat": "1.4739",
-  "lng": "-77.0808",
-  "country": "Colombia",
-  "iso2": "CO",
-  "admin_name": "Nariño",
-  "capital": "minor",
-  "population": "23279",
-  "population_proper": "23279",
   "isCovered": "false"
  },
  {

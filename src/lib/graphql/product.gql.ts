@@ -8,7 +8,7 @@ const ProductQuery = `
   sku
   marketId
   slug
-  urlPath
+  urlPaths
   parent {
     ${DefaultQuery}
   }
@@ -55,12 +55,14 @@ const ProductQuery = `
       ${RichtextQuery}
     }
   }
+  isNew
+  discount
 `;
 
 export const ProductMinimalQuery = `
   name
   promoTitle
-  urlPath
+  urlPaths
 `;
 
 export default ProductQuery;

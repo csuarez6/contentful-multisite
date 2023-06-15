@@ -18,9 +18,9 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import citiesFile from '@/utils/static/cities-co.json';
-import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 
 interface IAddress {
   id?: string;
@@ -38,11 +38,11 @@ interface IAddresses {
 
 const toAddressForm = (addr: Address): IAddress => {
   return {
-    id: addr.id,
-    address: addr.line_1,
-    cityCode: addr.city,
-    stateCode: addr.state_code,
-    phone: addr.phone
+    id: addr?.id ?? "",
+    address: addr?.line_1 ?? "",
+    cityCode: addr?.city ?? "",
+    stateCode: addr?.state_code ?? "",
+    phone: addr?.phone ?? ""
   };
 };
 
@@ -66,28 +66,34 @@ const schema = yup.object({
   })
 });
 
-const STEP_META_FIELD = "hasAddresses";
 const DEFAULT_COUNTRY = 'CO';
 const DEFAULT_ZIP_CODE = '000000';
 
-const getCitiesByState = async (state: string) =>
-  (await fetch(`/api/static/cities/${state}`)).json();
+const getCitiesByState = async (state: string) => (await fetch(`/api/static/cities/${state}`)).json();
 
-export const ModalConfirm: React.FC<any> = ({ data, onEventHandler }) => {
+export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedModal }) => {
   return (
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
-          Recuerde que si continua con el proceso, el servicio de instalación será removida por falta de cobertura en la ubicación registrada.
+          Recuerde que si continua con el proceso, el servicio de instalación será removido por falta de cobertura en la ubicación registrada.
         </div>
-        <div>
+        <div className="flex justify-end gap-2">
           <button
             className="button button-primary"
             onClick={() => {
               onEventHandler(data);
             }}
           >
-            Hecho
+            Continuar de todos modos
+          </button>
+          <button
+            className="button button-outline"
+            onClick={() => {
+              onActivedModal(false);
+            }}
+          >
+            Cancelar
           </button>
         </div>
       </div>
@@ -107,8 +113,7 @@ const CheckoutAddresses = () => {
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
 
-  const { order, flow, addAddresses, getAddresses } =
-    useContext(CheckoutContext);
+  const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
   const {
     register,
@@ -128,13 +133,6 @@ const CheckoutAddresses = () => {
     },
   });
 
-  useEffect(() => {
-    (async () => {
-      const states = await (await fetch(`/api/static/states`)).json();
-      setStates(states);
-    })();
-  }, []);
-
   const isSameAsBillingAddress = useWatch({
     control,
     name: "shippingAddress.isSameAsBillingAddress",
@@ -150,30 +148,33 @@ const CheckoutAddresses = () => {
     name: "shippingAddress.cityCode",
   });
 
+  const billingStateWatched = useWatch({
+    control,
+    name: "billingAddress.stateCode",
+  });
+
+  useEffect(() => {
+    (async () => {
+      const states = await (await fetch(`/api/static/states`)).json();
+      setStates(states);
+    })();
+  }, []);
+
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
       const cities: string[] = await getCitiesByState(shippingStateWatched);
       setShippingCities(cities);
-      setShowAlert(false);
     })();
   }, [shippingStateWatched]);
 
   useEffect(() => {
     if (!shippingCityWatched) return;
     const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
-    if (cityCheck[0]?.isCovered == "false") {
-      setShowAlert(true);
-    } else {
-      setShowAlert(false);
-    }
+    onHasShipment(cityCheck[0]?.isCovered == "false");
+    setShowAlert(cityCheck[0]?.isCovered == "false");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
-
-  const billingStateWatched = useWatch({
-    control,
-    name: "billingAddress.stateCode",
-  });
 
   useEffect(() => {
     if (!billingStateWatched) return;
@@ -188,30 +189,27 @@ const CheckoutAddresses = () => {
   }, [errors]);
 
   const isCompleted = useMemo(
-    () => !!order?.metadata?.[STEP_META_FIELD],
+    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
     [order]
   );
 
   useEffect(() => {
-    if (!isCompleted) return;
-    (async () => {
-      const { shippingAddress, billingAddress } = await getAddresses();
-
-      reset({
-        shippingAddress: {
-          ...toAddressForm(shippingAddress),
-          /**
-           * When addresses exists this field is false because Commerce layer doesn't persist this flag
-           * Anyway CommerceLayer duplicate the shipping address
-           * if the _billing_address_same_as_shipping field is true,
-           * it means billingAddress always will exist
-           */
-          isSameAsBillingAddress: false,
-        },
-        billingAddress: toAddressForm(billingAddress),
-      });
-    })();
-  }, [isCompleted, getAddresses, order, reset]);
+    if (order) {
+      (async () => {
+        const { shippingAddress, billingAddress } = await getAddresses();
+        const shippingAddressFormatted = toAddressForm(shippingAddress);
+        const billingAddressFormatted = toAddressForm(billingAddress);
+        reset({
+          shippingAddress: {
+            ...shippingAddressFormatted,
+            isSameAsBillingAddress: (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") || (shippingAddressFormatted?.address == billingAddressFormatted?.address),
+          },
+          billingAddress: billingAddressFormatted,
+        });
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order]);
 
   const toCLAddress = (addr: IAddress): Partial<AddressCreate> => ({
     country_code: DEFAULT_COUNTRY,
@@ -225,6 +223,10 @@ const CheckoutAddresses = () => {
   const sendData = async (data: IAddresses) => {
     try {
       setIsActivedModal(false);
+      const checkCovered = checkCityCovered();
+      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
+        await deleteItemService(checkCovered["idItemsIntall"]);
+      }
       const { shippingAddress, billingAddress } = data;
 
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
@@ -252,15 +254,29 @@ const CheckoutAddresses = () => {
     }
   };
 
+  const checkCityCovered = () => {
+    let status = true;
+    const adjustmentsList = (order.line_items)
+      .filter(item => item?.item_type === "skus" && item?.["installlation_service"].length > 0)
+      .map((itemInstall) => {
+        return itemInstall?.["installlation_service"]?.[0]?.id;
+      });
+    const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    if (cityCheck[0]?.isCovered == "false") status = false;
+    return { isCovered: status, idItemsIntall: adjustmentsList };
+  };
+
   const onSubmit = async (data: IAddresses) => {
     try {
-      const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
-      if (cityCheck[0]?.isCovered == "false") {
-        setParamModal({ promoTitle: "Servicio Instalación" });
+      const checkCovered = checkCityCovered();
+      console.info(checkCovered);
+      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
+        setParamModal({ promoTitle: "Advertencia" });
         setmodalChild(
           <ModalConfirm
             data={data}
             onEventHandler={sendData}
+            onActivedModal={setIsActivedModal}
           />
         );
         setIsActivedModal(false);
@@ -308,16 +324,8 @@ const CheckoutAddresses = () => {
         >
           {showAlert &&
             <div className="w-full">
-              <div className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
+              <div className="px-3 py-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
                 La ubicación que ha seleccionado no tiene cobertura para el servicio de instalación.
-                <br />
-                Si desea más información puede hacer
-                <CustomLink
-                  className="!inline-block ml-1 font-bold underline"
-                  content={{ urlPath: "/otros-servicios/instalacion" }}
-                >
-                  clic aquí
-                </CustomLink>.
                 <br />
                 <strong>Si continua con el proceso, el servicio de instalación será removido automáticamente de la compra.</strong>
               </div>
@@ -497,7 +505,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: 'Orden - Direccion',
+        name: 'Direcciones de la orden',
         footerInfo,
         headerInfo,
         helpButton,

@@ -10,6 +10,8 @@ export default function handler(
    * More info: https://simplemaps.com/data/co-cities
    */
   const citiesFilter = cities.filter(city => city.admin_name === req.query.stateName).map(i => { return { city: i.city, isCovered: i.isCovered }; });
-  // res.json(cities.filter(city => city.admin_name === req.query.stateName).map(i => i.city).sort());
+  
+  citiesFilter.sort((a: any, b: any) => a.city.localeCompare(b.city));
+
   res.json(citiesFilter);
 }

@@ -103,7 +103,7 @@ const CustomModal: React.FC<IModal> = ({
                   </div>
                   {ctaCollection?.items?.length > 0 && (
                     ctaCollection.items.map((item) =>
-                      (item.externalLink || item.internalLink?.urlPath) && (
+                      (item.externalLink || item.internalLink?.urlPaths?.[0]) && (
                         <div className="flex justify-center" key={item.name}>
                           <CustomLink content={item} className="w-fit button button-primary">
                             {item.promoTitle ?? item.name}

@@ -23,7 +23,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -41,7 +41,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -59,7 +59,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -77,7 +77,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
           ]
@@ -102,7 +102,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -120,7 +120,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -138,7 +138,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
           ]
@@ -163,7 +163,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
             {
@@ -181,7 +181,7 @@ const data: any = {
               },
               ctaLabel: "Button",
               internalLink: {
-                urlPath: "#"
+                urlPaths: ["#"]
               }
             },
           ]

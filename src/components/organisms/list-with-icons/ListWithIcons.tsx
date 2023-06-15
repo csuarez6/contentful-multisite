@@ -5,6 +5,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames, getButtonType } from "@/utils/functions";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
 const ListWithIcons: React.FC<IPromoContent> = (props) => {
   const {
@@ -49,7 +50,6 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
   }
 
   if (!iconBackgroundColor) iconSizeLocal += " text-blue-dark";
-
   return (
     <div className={
       classNames(
@@ -76,10 +76,10 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
           )}
           {promoDescription && (
             <div className="text-lg text-grey-30">
-              {documentToReactComponents(promoDescription.json)}
+              {documentToReactComponents(promoDescription.json, defaultFormatOptions)}
             </div>
           )}
-          {(internalLink?.urlPath || externalLink) && (
+          {(internalLink?.urlPaths?.[0] || externalLink) && (
             <CustomLink
               content={props}
               className={classNames("button w-fit", getButtonType(buttonType))}

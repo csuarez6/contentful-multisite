@@ -13,23 +13,31 @@ const NavItem = ({
   parentPanel,
   setParentPanel,
   close,
-  noBorder = false
+  noBorder = false,
 }) => {
   const [panel, setPanel] = useState(false);
   const { dispatch } = useContext(MenuContext);
   const refBtnCollapse = useRef(null);
-  const elements = item?.mainNavCollection?.items?.length > 0 || item?.secondaryNavCollection?.items?.length > 0;
+  const elements =
+    item?.mainNavCollection?.items?.length > 0 ||
+    item?.secondaryNavCollection?.items?.length > 0;
 
   const onPanel = () => {
     setPanel(!panel);
     if (setParentPanel) setParentPanel(!parentPanel);
-    dispatch({ type: "setLevel", value: !panel ? next : (prev - 1) });
+    dispatch({ type: "setLevel", value: !panel ? next : prev - 1 });
   };
 
   const handlerClick = (evt, item) => {
     const isLink = evt?.target?.tagName?.toLowerCase() === "a";
     if (isLink) close();
-    else if (next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel) onPanel();
+    else if (
+      next % 2 == 0 &&
+      next < 4 &&
+      item?.mainNavCollection?.items?.length > 0 &&
+      !panel
+    )
+      onPanel();
   };
 
   useEffect(() => {
@@ -44,7 +52,7 @@ const NavItem = ({
         if (current_li.classList.contains("open")) {
           current_li.classList.remove("open");
         } else {
-          all_li.forEach(li => li.classList.remove("open"));
+          all_li.forEach((li) => li.classList.remove("open"));
           current_li.classList.add("open");
         }
       };
@@ -53,35 +61,36 @@ const NavItem = ({
 
   return (
     <>
-      <li className={
-        classNames(
-          (next % 2 != 0 && elements) ? "collapse-list" : null,
-          (parentPanel && panel) ? "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open" : null,
+      <li
+        className={classNames(
+          next % 2 != 0 && elements ? "collapse-list" : null,
+          parentPanel && panel
+            ? "absolute top-0 left-0 w-full translate-x-[calc(1rem_+_100%)] open"
+            : null,
           next % 2 != 0 && !noBorder ? "border-b border-neutral-70" : null,
           next % 2 == 0 ? "item-panel" : null,
           !item?.promoTitle && "border-transparent",
           "flex flex-col font-bold text-blue-dark empty:hidden"
-        )
-      }>
-        {parentPanel && panel &&
+        )}
+      >
+        {parentPanel && panel && (
           <span
             className="font-bold cursor-pointer order-first flex gap-2 items-center h-[50px] aspect-[180/52] absolute bg-white bottom-full left-0 mb-3"
             onClick={onPanel}
           >
-            <Icon
-              icon="back"
-              className="w-[14px] h-4"
-              aria-hidden="true"
-            />
+            <Icon icon="back" className="w-[14px] h-4" aria-hidden="true" />
             Menú principal
           </span>
-        }
+        )}
         {
           <span
-            ref={(next % 2 != 0 && elements) ? refBtnCollapse : null}
+            ref={next % 2 != 0 && elements ? refBtnCollapse : null}
             className={classNames(
               panel ? "mb-4" : null,
-              (next % 2 != 0 && elements) && getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background,
+              next % 2 != 0 &&
+                elements &&
+                getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro")
+                  .background,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
             onClick={(evt: any) => handlerClick(evt, item)}
@@ -95,50 +104,45 @@ const NavItem = ({
                 />
               </span>
             )}
-            {item?.internalLink?.urlPath || item?.urlPath || item?.externalLink
-              ? (
-                <CustomLink
-                  content={{ ...item, ...{ linkView: "" } }}
-                  className="pointer-events-none"
-                  linkClassName={
-                    classNames(
-                      "py-2.5 px-3.5 -my-2.5 -mx-3.5",
-                      !elements && "flex-grow"
-                    )
-                  }
-                >
-                  {item.promoTitle ?? item.name}
-                </CustomLink>
-              )
-              : (
-                <span className="py-2.5 px-3.5 -my-2.5 -mx-3.5">
-                  {item.promoTitle ?? item.name}
-                </span>
-              )
-            }
-            {(next % 2 != 0 && elements) && (
-              <span
-                className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
+            {item?.internalLink?.urlPaths?.[0] ||
+            item?.urlPaths?.[0] ||
+            item?.externalLink ? (
+              <CustomLink
+                content={{ ...item, ...{ linkView: "" } }}
+                className="pointer-events-none"
+                linkClassName={classNames(
+                  "py-2.5 px-3.5 -my-2.5 -mx-3.5",
+                  !elements && "flex-grow"
+                )}
               >
+                {item.promoTitle ?? item.name}
+              </CustomLink>
+            ) : (
+              <span className="py-2.5 px-3.5 -my-2.5 -mx-3.5">
+                {item.promoTitle ?? item.name}
+              </span>
+            )}
+            {next % 2 != 0 && elements && (
+              <span className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2">
                 <Icon
                   icon={"arrow-down"}
                   className="w-7 h-7"
                   aria-hidden="true"
                 />
-
               </span>
             )}
-            {next % 2 == 0 && next < 4 && item?.mainNavCollection?.items?.length > 0 && !panel && (
-              <span
-                className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2"
-              >
-                <Icon
-                  icon="arrow-right"
-                  className="w-7 h-7"
-                  aria-hidden="true"
-                />
-              </span>
-            )}
+            {next % 2 == 0 &&
+              next < 4 &&
+              item?.mainNavCollection?.items?.length > 0 &&
+              !panel && (
+                <span className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2">
+                  <Icon
+                    icon="arrow-right"
+                    className="w-7 h-7"
+                    aria-hidden="true"
+                  />
+                </span>
+              )}
           </span>
         }
         {/*{(collapse || panel) && children}*/}
@@ -148,7 +152,16 @@ const NavItem = ({
   );
 };
 
-const NavList = ({ items, level, utilityNavCollection, close, currentPanel = null, hasSetCurrentPanel = null, noBorder = false, className = "" }) => {
+const NavList = ({
+  items,
+  level,
+  utilityNavCollection,
+  close,
+  currentPanel = null,
+  hasSetCurrentPanel = null,
+  noBorder = false,
+  className = "",
+}) => {
   const { state } = useContext(MenuContext);
   const [panel, setPanel] = useState(false);
   const setCurrentPanel = hasSetCurrentPanel ?? setPanel;
@@ -163,31 +176,36 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
         ref={refList}
         className={classNames(
           className,
-          lv % 2 == 0 ?
-            "collapse-panel" : null,
-          level % 2 == 0 && !noBorder ?
-            "border-t border-neutral-70 my-[-1px]" : null
+          lv % 2 == 0 ? "collapse-panel" : null,
+          level % 2 == 0 && !noBorder
+            ? "border-t border-neutral-70 my-[-1px]"
+            : null
         )}
-        style={{ transform: panel && level == 0 ? `translateX(calc(${col} * (-100% - 1rem)))` : null }}
+        style={{
+          transform:
+            panel && level == 0
+              ? `translateX(calc(${col} * (-100% - 1rem)))`
+              : null,
+        }}
       >
-        {level == 1 &&
+        {level == 1 && (
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
-              content={{ urlPath: "/registro" }}
+              content={{ urlPaths: ["/registro"] }}
               className="!block text-center button button-primary"
               onClick={() => close()}
             >
               Regístrate
             </CustomLink>
             <CustomLink
-              content={{ urlPath: "/acceso" }}
+              content={{ urlPaths: ["/acceso"] }}
               className="!block text-center button button-outline"
               onClick={() => close()}
             >
               Inicia sesión
             </CustomLink>
           </div>
-        }
+        )}
         {items?.map((item) => (
           <NavItem
             key={`${item?.sys?.id}-lv${lv}`}
@@ -221,7 +239,7 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
             )}
           </NavItem>
         ))}
-        {level == 1 && utilityNavCollection?.items?.length > 0 &&
+        {level == 1 && utilityNavCollection?.items?.length > 0 && (
           <nav
             aria-label="Utility"
             className="relative p-5 border-t border-neutral-70 mt-2"
@@ -234,9 +252,7 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
                     content={{ ...item, ...{ linkView: "" } }}
                     className={classNames(
                       "text-blue-dark group/icon hover:bg-blue-dark transition hover:text-white rounded-md bg-category-blue-light-90 flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-3",
-                      item.promoIcon
-                        ? "justify-start"
-                        : "justify-center"
+                      item.promoIcon ? "justify-start" : "justify-center"
                     )}
                   >
                     {item.promoIcon && (
@@ -253,13 +269,18 @@ const NavList = ({ items, level, utilityNavCollection, close, currentPanel = nul
               ))}
             </ul>
           </nav>
-        }
+        )}
       </ul>
     </>
   );
 };
 
-const MegaMenuMobile = ({ items, secondaryNavCollection, utilityNavCollection, close }) => {
+const MegaMenuMobile = ({
+  items,
+  secondaryNavCollection,
+  utilityNavCollection,
+  close,
+}) => {
   return (
     <MenuState>
       <MenuContext.Consumer>

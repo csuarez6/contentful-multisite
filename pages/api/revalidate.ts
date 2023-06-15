@@ -13,7 +13,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const jsonBody = typeof req.body == 'string' ? JSON.parse(req.body) : req.body;
-  const route = jsonBody.parameters.urlPath.es;
+  const route = jsonBody.parameters.urlPaths.es[0];
 
   try {
     await res.revalidate(route);

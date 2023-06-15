@@ -19,7 +19,7 @@ const data: INavigation = {
                 promoTitle: 'Lineas de atención',
                 promoIcon: 'cellphone',
                 internalLink: {
-                    urlPath: "#"
+                    urlPaths: ["#"]
                 },
                 ctaLabel: 'Consultar'
             },
@@ -28,7 +28,7 @@ const data: INavigation = {
                 promoTitle: 'Puntos de atención',
                 promoIcon: 'place',
                 internalLink: {
-                    urlPath: "#"
+                    urlPaths: ["#"]
                 },
                 ctaLabel: 'Consultar'
             },

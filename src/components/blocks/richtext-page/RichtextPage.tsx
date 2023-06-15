@@ -9,6 +9,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
 import { useEffect, useState } from "react";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import RichtextPageSkeleton from "@/components/skeletons/RichtextPageSkeleton/RichtextPageSkeleton";
 
 const fixId = (value) => {
   const newId = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -21,7 +22,13 @@ const pageFormatOptions: Options = {
       return <div className="my-5"></div>;
     },
     [BLOCKS.PARAGRAPH]: (_node, children) => {
-      return <p className="text-grey-30 text-size-p1">{children}</p>;
+      const hasLinks = _node.content.some(el => el.nodeType === "embedded-entry-inline");
+      if (hasLinks) {
+        return <div className="text-grey-30 text-size-p1">{children}</div>;
+      }
+      else {
+        return <p className="text-grey-30 text-size-p1">{children}</p>;
+      }
     },
     [BLOCKS.HEADING_1]: (_node, children) => {
       return <h1 className="text-blue-dark !mb-9">{children}</h1>;
@@ -59,6 +66,7 @@ const filterHeading = (objData) => {
 };
 
 const RichtextPage: React.FC<IPage> = (props) => {
+  const [mounted, setMounted] = useState(false);
   const { content, showHeader, promoTitle, promoImage, relatedContentCollection } = props;
   const filteredHeading = filterHeading(content?.json?.content);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,8 +88,13 @@ const RichtextPage: React.FC<IPage> = (props) => {
   };
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     window.addEventListener('scroll', () => calcScroll());
-  }, []);  
+  }, []);
+
   let contentJson = content?.json;
   if (attachLinksToRichtextContent && contentJson) {
     contentJson = attachLinksToRichtextContent(contentJson, content?.links ?? []);
@@ -106,7 +119,8 @@ const RichtextPage: React.FC<IPage> = (props) => {
             )}
           </div>
         )}
-        {contentJson && (
+        {!mounted && <RichtextPageSkeleton />}
+        {contentJson && mounted && (
           <div className="richtext-container grow">
             {documentToReactComponents(contentJson, richtextFormatOptions)}
           </div>

@@ -25,7 +25,7 @@ const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
         </p>
         <div className="flex justify-end">
           <CustomLink
-            content={{ urlPath: "/acceso" }}
+            content={{ urlPaths: ["/acceso"] }}
             linkClassName="button button-primary w-[140px] h-[42px]"
           >
             Aceptar
@@ -59,7 +59,8 @@ const SignUp = () => {
     })
       .then(async (response) => {
         const resp = await response.json();
-        let msgError = "Ha ocurrido un error o el usuario ya existe, por favor intente nuevamente.";
+        let msgError =
+          "Ha ocurrido un error o el usuario ya existe, por favor intente nuevamente.";
         if (response.status === 201) {
           setDataModal({
             children: <ModalContent statusSubmit={true} />,
@@ -70,13 +71,14 @@ const SignUp = () => {
           });
           resultBoolean = true;
         } else {
-          if (response.status === 400 && resp.error?.code == 'RE_CAPTCHA_ERROR_VALIDATION') {
+          if (
+            response.status === 400 &&
+            resp.error?.code == "RE_CAPTCHA_ERROR_VALIDATION"
+          ) {
             msgError = resp.error.message;
           }
           setDataModal({
-            children: (
-              <ModalContent modalMsg={msgError} />
-            ),
+            children: <ModalContent modalMsg={msgError} />,
             promoIcon: "cancel",
             promoTitle: "Error durante el proceso!",
           });
@@ -123,13 +125,13 @@ const SignUp = () => {
       {
         promoTitle: "Hogares",
         internalLink: {
-          urlPath: "/",
+          urlPaths: ["/"],
         },
       },
       {
         promoTitle: "Registrarme",
         internalLink: {
-          urlPath: "#",
+          urlPaths: ["#"],
         },
       },
     ],
@@ -140,7 +142,10 @@ const SignUp = () => {
       <div className="overflow-hidden">
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
-          <SignUpFormBlock sidebar={mockSidebarInformativeProps.data} form={data} />
+          <SignUpFormBlock
+            sidebar={mockSidebarInformativeProps.data}
+            form={data}
+          />
         </div>
       </div>
     </>
@@ -151,8 +156,15 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    3
+  );
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {

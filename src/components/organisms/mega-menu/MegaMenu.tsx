@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import jsonToReactComponent from "@/lib/services/render-cards.service";
-import uuid from "react-uuid";
 
 const LinkElement = ({ item, isOpen }) => {
   return (
@@ -39,7 +38,7 @@ const LinkElement = ({ item, isOpen }) => {
 };
 
 const MegaMenuItem = ({ item, name, currentMenu }) => {
-  const uniqueId = `megamenu_${uuid()}`;
+  const uniqueId = `megamenu_${item?.sys?.id}`;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const columns = 6;
   const { asPath } = useRouter();
@@ -124,7 +123,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       ref={submenu}
     >
       {/* contenido personalizado, Navegacion */}
-      {(!item.mainNavCollection?.items && (item.internalLink?.urlPath || item.externalLink)) && (
+      {(!item.mainNavCollection?.items && (item.internalLink?.urlPaths?.[0] || item.externalLink)) && (
         <CustomLink
           content={item}
           linkClassName={
@@ -140,7 +139,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       )}
 
       {/* Pagina, producto */}
-      {item.urlPath && item.__typename !== "AuxNavigation" && (
+      {item.urlPaths?.[0] && item.__typename !== "AuxNavigation" && (
         <CustomLink
           content={item}
           className={classNames(
