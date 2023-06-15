@@ -33,6 +33,7 @@ const schema = yup.object({
 
 const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
   const isRPO = simpleView === "RPO";
+  const isVantilisto = simpleView === "Vantilisto";
   const [isSending, setIsSending] = useState(false);
   const [response, setResponse] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
@@ -188,29 +189,49 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
             </div>
             <div className="rounded-xl bg-neutral-30 p-3 flex items-center justify-center">
               <p className='text-white title is-1 text-center'>
-                {showInfo && response ? (isRPO ? response.date : `${formatPrice(response.quota)}*`) : "-----"}
+                {showInfo && response ? (isRPO ? response.date : `${formatPrice(response.quotaApproved)}*`) : "-----"}
               </p>
             </div>
 
             <hr className='rounded-xl border-2 border-category-sky-blue-50 mt-[18px]' />
 
             <div className="flex flex-col gap-2">
-              <div className="grid grid-cols-2 sm:grid-cols-5">
-                <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Nombre del titular</p>
-                <p className='text-size-p1 text-blue-dark text-right col-span-3'>
-                  {showInfo && response ? response.name : "-----"}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-5">
-                <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Dirección del predio</p>
-                <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
-                  {showInfo && response?.address ? response.address : "-----"}
-                </p>
-              </div>
+              {isRPO && (
+                <>
+                  <div className="grid grid-cols-2 sm:grid-cols-5">
+                    <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Nombre del titular</p>
+                    <p className='text-size-p1 text-blue-dark text-right col-span-3'>
+                      {showInfo && response ? response.name : "-----"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5">
+                    <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Dirección del predio</p>
+                    <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
+                      {showInfo && response?.address ? response.address : "-----"}
+                    </p>
+                  </div>
+                </>
+              )}
+              {isVantilisto && (
+                <>
+                  <div className="grid grid-cols-2 sm:grid-cols-5">
+                    <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Cupo Utilizado</p>
+                    <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
+                      {showInfo && response?.quotaUsed ? `${formatPrice(response.quotaUsed)}` : "-----"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5">
+                    <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Cupo Disponible</p>
+                    <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
+                      {showInfo && response?.quotaAvailable ? `${formatPrice(response.quotaAvailable)}` : "-----"}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-        {!isRPO && (
+        {isVantilisto && (
           <div className='ml-[14px] mt-5'>
             <p className='text-size-p3 text-neutral-20'>*Puedes agrandar tu cupo consultando los términos y condiciones <a href="#" className='underline'>aquí</a></p>
           </div>
