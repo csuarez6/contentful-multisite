@@ -134,6 +134,7 @@ export const RichtextLinksQuery = `
         __typename
         sys {
           id
+          __typename
         }
       }
     }

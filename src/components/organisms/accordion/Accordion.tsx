@@ -15,7 +15,7 @@ const Accordion: React.FC<any> = ({
   return (
     <div className={classNames("grid", classColumns(columnsSize ?? "2"))}>
       {featuredContents?.items?.map((el, index) => {
-        if (!el.promoTitle && !el.name) return;
+        if (!el?.promoTitle && !el?.name) return;
         return (
           <Disclosure
             as="div"

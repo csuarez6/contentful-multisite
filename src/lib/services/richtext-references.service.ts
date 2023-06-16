@@ -9,7 +9,8 @@ import { RichtextLinksQuery } from "../graphql/shared/richtext.qql";
 
 const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    "content"
+    "content",
+    "promoDescription"
   ],
   [CONTENTFUL_TYPENAMES.PAGE]: [
     "content",

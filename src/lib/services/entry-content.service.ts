@@ -19,6 +19,12 @@ type DefaultBlockInfo = {
 
 const CACHE_CONTENT = {};
 
+const TO_MINIMAL = {
+  [CONTENTFUL_TYPENAMES.PAGE]: CONTENTFUL_TYPENAMES.PAGE_MINIMAL,
+  [CONTENTFUL_TYPENAMES.PRODUCT]: CONTENTFUL_TYPENAMES.PRODUCT_MINIMAL,
+  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT_MINIMAL,
+};
+
 const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6, minimal = false) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
@@ -78,8 +84,8 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     )
   );
 
-  if (blockInfo.__typename == CONTENTFUL_TYPENAMES.PAGE_MINIMAL) {
-    entryContent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+  if (TO_MINIMAL[blockInfo.__typename]) {
+    blockInfo.__typename = TO_MINIMAL[blockInfo.__typename];
   }
 
   const richtextReferences = await getReferencesRichtextContent({ content: entryContent, preview });

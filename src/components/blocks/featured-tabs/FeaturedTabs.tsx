@@ -106,11 +106,15 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       jsonToReactComponent(collection)
                     ) : (
                       <div className={classNames("grid grid-cols-1 gap-5 mt-6", grid[collection?.featuredContentsCollection?.items?.length])}>
-                        {collection.featuredContentsCollection.items.map((item) => (
-                            <div key={item.name} className="grid">
-                              <ListWithIcons {...item} />
-                            </div>
-                        ))}
+                        {collection.featuredContentsCollection.items.map((item) => {
+                          if(item){
+                            return (
+                              <div key={item?.name} className="grid">
+                                <ListWithIcons {...item} />
+                              </div>
+                            );
+                          }
+                        })}
                       </div>
                     )}
                   </Transition>

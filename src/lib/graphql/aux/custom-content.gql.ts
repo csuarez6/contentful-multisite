@@ -52,6 +52,7 @@ const AuxCustomContent = `
 `;
 
 export const AuxCustomContentMinimalQuery = `
+  ${DefaultQuery}
   promoTitle
   name
   internalLink {

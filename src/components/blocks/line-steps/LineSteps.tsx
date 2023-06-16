@@ -10,6 +10,8 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { classNames } from "@/utils/functions";
 import { getLinkProps } from "@/utils/link.utils";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   title,
@@ -127,7 +129,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                       {item.promoDescription && (
                         <div className="text-lg text-grey-30 hidden group-[.open]:block">
                           {documentToReactComponents(
-                            item.promoDescription.json
+                            attachLinksToRichtextContent(item?.promoDescription?.json, item?.promoDescription?.links), defaultFormatOptions
                           )}
                         </div>
                       )}
