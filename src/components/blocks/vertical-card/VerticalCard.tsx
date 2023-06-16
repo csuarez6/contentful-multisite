@@ -81,8 +81,8 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featured
                   });
                 }}
               >
-                {featuredContentsCollection?.items?.map(el => (
-                  <SwiperSlide key={el.promoTitle} className="!w-full relative">
+                {featuredContentsCollection && featuredContentsCollection?.items?.map(el => (
+                  <SwiperSlide key={el?.promoTitle} className="!w-full relative">
                     <div className='grid px-1.5 py-2 justify-items-center'>
                       <VerticalCard {...el} buttonType={view.buttonType} alignButton={view.alignButton} />
                     </div>
