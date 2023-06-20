@@ -15,7 +15,11 @@ interface IForm {
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 const schema = yup.object({
-  contractAccount: yup.string().required("Dato Requerido"),
+  contractAccount: yup
+    .number()
+    .typeError("Dato Requerido: El valor debe ser numérico")
+    .positive("Valor no valido, deben ser números positivos")
+    .required("Dato Requerido"),
   fullName: yup.string().required("Dato requerido"),
   cellPhone: yup.string().required("Dato requerido").matches(regexCellPhone, {
     message: "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####"
@@ -54,7 +58,7 @@ const PersonalData = ({ handleNext, formData, setFormData }) => {
               id="contractAccount"
               name="contractAccount"
               label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
-              placeholder="00000-000"
+              placeholder="00000000"
               {...register("contractAccount")}
             />
             {errors.contractAccount && <p className="text-red-600 mt-1">{errors.contractAccount?.message}</p>}

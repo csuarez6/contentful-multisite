@@ -18,7 +18,10 @@ const schema = object({
         .nullable()
         .required("Dato Requerido")
         .min(8, "Faltan Números"),
-    contractNumber: string().required("Dato Requerido"),
+    contractNumber: number()
+        .typeError("Dato Requerido: El valor debe ser numérico")
+        .positive("Valor no valido, deben ser números positivos")
+        .required("Dato Requerido"),
 });
 
 const validate = (

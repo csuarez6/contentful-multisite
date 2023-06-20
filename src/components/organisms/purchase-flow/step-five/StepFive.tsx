@@ -20,7 +20,7 @@ const StepFive: React.FC<IPromoContent> = () => {
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-                            <dd className="flex-1 text-grey-30 font-bold">0000000-000</dd>
+                            <dd className="flex-1 text-grey-30 font-bold">00000000</dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
