@@ -60,7 +60,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
                 getButtonType(buttonType ?? "Contorno")
               )}
             >
-              {getLinkProps(props).textLink}
+              {getLinkProps(props).textLink ?? "conoce mas"}
             </CustomLink>
           </div>
         )}
