@@ -101,7 +101,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         placeholder='Nombre'
                         className='form-input'
                         isError={!!errors.name}
-                        errorMessage={errors?.name?.message}
+                        errorMessage={errors?.name?.message} 
                         autoComplete="on"
                         {...register('name')}
                         isRequired={true}

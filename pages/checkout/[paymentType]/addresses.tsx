@@ -101,7 +101,7 @@ export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedMod
   );
 };
 
-const CheckoutAddresses = () => {
+const CheckoutAddress = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState<State[]>([]);
@@ -514,8 +514,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-CheckoutAddresses.getLayout = (page: ReactElement, pageProps: any) => {
+CheckoutAddress.getLayout = (page: ReactElement, pageProps: any) => {
   return defaultLayout(<CheckoutLayout>{page}</CheckoutLayout>, pageProps);
 };
 
-export default CheckoutAddresses;
+export default CheckoutAddress;

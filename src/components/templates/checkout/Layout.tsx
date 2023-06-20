@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
 import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
@@ -9,6 +10,9 @@ import { MocksModalSuccessProps } from "@/components/organisms/modal-success/Mod
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice } from "@/utils/functions";
+import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -40,6 +44,8 @@ const DEFAULT_PAYMENT_METHOD = "dummy";
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push, query } = useRouter();
   const stepsList = getStepsLine(query.paymentType);
+  const showStepList = stepsList.find(el => el.path === asPath);
+
   const {
     order,
     tokenRecaptcha,
@@ -66,6 +72,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
+  const asPathUrl = asPath.split("/")[3];
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -224,12 +231,48 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     }
   };
 
+  const breadcrumbsList: IPromoBlock =
+  {
+    ctaCollection: {
+      items: [
+        {
+          promoTitle: "Hogares",
+          internalLink: {
+            urlPaths: ["/"]
+          }
+        },
+        {
+          promoTitle: "Mis Compras",
+          internalLink: {
+            urlPaths: ["/dashboard/orders"]
+          }
+        },
+        {
+          promoTitle: "Estado de Orden",
+          internalLink: {
+            urlPaths: ["/checkout/pse/purchase-order"]
+          }
+        },
+      ]
+    }
+  };
+
   return (
     <>
-      <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
-        <div className="col-span-full">
-          <StepsLine {...{ items: stepsList }} />
+      {asPathUrl === "purchase-order" && (
+        <div className="hidden 2md:flex w-full main-container justify-end relative top-[17px] pt-2">
+          <div className="top-[-15px] absolute left-0 main-container">
+            <Breadcrumbs {...breadcrumbsList} />
+          </div>
+          <p className=" 2md:text-2xl text-blue-dark font-bold">Resumen de compra</p>
         </div>
+      )}
+      <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
+        {showStepList && (
+          <div className="col-span-full">
+            <StepsLine {...{ items: stepsList }} />
+          </div>
+        )}
         <div className="col-span-2">{children}</div>
         {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
@@ -248,23 +291,41 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   </div>
                 )}
                 {products?.map((product, i) => (
-                  <div key={`lateral-product-overview-${product.id}`}>
-                    <div
-                      className="grid grid-cols-1 text-sm"
-                      key={"product-name" + i}
-                    >
-                      <p className="">{product.name}</p>
-                      <p className="text-xs">* IVA incluido</p>
-                    </div>
-                    <div
-                      className="grid grid-cols-2 pb-2 mb-2 text-sm border-b border-gray-300"
-                      key={"product-count" + i}
-                    >
-                      <p>Cantidad: {product.quantity}</p>
-                      <span className="text-right text-blue-dark">
-                        {/* {product?.formatted_unit_amount} */}
-                        {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
-                      </span>
+                  <div key={`lateral-product-overview-${product.id}`} className="pb-2 mb-2 border-b border-gray-300">
+                    <div className="flex">
+                      {asPathUrl !== "verify" &&
+                        <figure className="w-16 shrink-0">
+                          {product?.image_url && (
+                            <Image
+                              className="w-full h-full object-contain"
+                              src={product?.image_url}
+                              alt={product?.name}
+                              width={64}
+                              height={64}
+                              priority
+                            />
+                          )}
+                        </figure>
+                      }
+                      <div>
+                        <div
+                          className="grid grid-cols-1 text-sm"
+                          key={"product-name" + i}
+                        >
+                          <p className="">{product.name}</p>
+                          <p className="text-xs text-gray-600">* IVA incluido</p>
+                        </div>
+                        <div
+                          className="grid grid-cols-2 text-sm"
+                          key={"product-count" + i}
+                        >
+                          <p>Cantidad: {product.quantity}</p>
+                          <span className="text-right text-blue-dark">
+                            {/* {product?.formatted_unit_amount} */}
+                            {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -315,6 +376,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               </div>
             </div>
           </article>
+        )}
+        {(products?.length === 0 && productUpdates?.length === 0) && (
+          <ProductDetailsLayoutSkeleton />
         )}
       </div>
       {openDummyPGModal && (

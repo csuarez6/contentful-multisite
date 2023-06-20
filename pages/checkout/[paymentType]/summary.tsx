@@ -51,7 +51,7 @@ const CheckoutSummary = () => {
       classes="col-span-2"
       title="4. Datos de compra"
       icon="quotation"
-      isCheck={isCompleted && tokenRecaptcha && true}
+      isCheck={isCompleted && !!tokenRecaptcha}
     >
       <div className="bg-white rounded-lg">
         <dl className="space-y-5 text-sm">
