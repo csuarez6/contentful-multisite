@@ -44,6 +44,7 @@ const InfoCard: React.FC<IPromoContent> = (props) => {
   const hasBlocks = content?.json?.content?.some(el => {
     return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
   });
+  
   let contentJson = content?.json;
   if (attachLinksToRichtextContent && contentJson) {
     contentJson = attachLinksToRichtextContent(
