@@ -50,7 +50,7 @@ const schema = yup.object({
   shippingAddress: yup.object({
     stateCode: yup.string().required("Dato Requerido"),
     cityCode: yup.string().required("Dato Requerido"),
-    address: yup.string().required("Dato Requerido"),
+    address: yup.string().trim().required("Dato Requerido"),
     phone: yup.string().required("Dato Requerido"),
     isSameAsBillingAddress: yup.boolean()
   }),
@@ -59,7 +59,7 @@ const schema = yup.object({
     then: yup.object({
       stateCode: yup.string().required("Dato Requerido"),
       cityCode: yup.string().required("Dato Requerido"),
-      address: yup.string().required("Dato Requerido"),
+      address: yup.string().trim().required("Dato Requerido"),
       phone: yup.string().required("Dato Requerido"),
     }).required('Requerido'),
     otherwise: yup.object().notRequired()
@@ -269,7 +269,6 @@ const CheckoutAddresses = () => {
   const onSubmit = async (data: IAddresses) => {
     try {
       const checkCovered = checkCityCovered();
-      console.info(checkCovered);
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Advertencia" });
         setmodalChild(
