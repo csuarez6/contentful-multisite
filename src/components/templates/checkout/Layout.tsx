@@ -1,22 +1,45 @@
-import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
-import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import uuid from "react-uuid";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import CheckoutContext from "../../../context/Checkout";
+import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
-import uuid from "react-uuid";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
+import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice } from "@/utils/functions";
-import Link from "next/link";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
 }
 
+const getStepsLine = (paymentType) => {
+  return [
+    {
+      title: "Verificar tu compra",
+      path: `/checkout/${paymentType}/verify`
+    },
+    {
+      title: "Datos personales",
+      path: `/checkout/${paymentType}/personal-info`
+    },
+    {
+      title: "Ingresar dirección",
+      path: `/checkout/${paymentType}/addresses`
+    },
+    {
+      title: "Resumen",
+      path: `/checkout/${paymentType}/summary`
+    },
+  ];
+};
+
 const DEFAULT_PAYMENT_METHOD = "dummy";
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
-  const { asPath, push } = useRouter();
+  const { asPath, push, query } = useRouter();
+  const stepsList = getStepsLine(query.paymentType);
   const {
     order,
     tokenRecaptcha,
@@ -204,6 +227,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   return (
     <>
       <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
+        <div className="col-span-full">
+          <StepsLine {...{ items: stepsList }} />
+        </div>
         <div className="col-span-2">{children}</div>
         {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">

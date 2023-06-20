@@ -49,7 +49,7 @@ const CheckoutSummary = () => {
   return (
     <HeadingCard
       classes="col-span-2"
-      title="5. Datos de compra"
+      title="4. Datos de compra"
       icon="quotation"
       isCheck={isCompleted && tokenRecaptcha && true}
     >

@@ -72,13 +72,13 @@ const CheckoutPersonalInfo = () => {
   };
 
   const handleNext = async () => {
-    router.push(
+    await router.push(
       `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
     );
   };
 
   const handlePrev = async () => {
-    router.push(
+    await router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };

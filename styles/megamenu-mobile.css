@@ -1,4 +1,4 @@
-li:not(.open) > span {
+.mega-menu-mobile li:not(.open) > span {
 	@apply hover:bg-neutral-90;
 }
 .collapse-list > .collapse-panel{
