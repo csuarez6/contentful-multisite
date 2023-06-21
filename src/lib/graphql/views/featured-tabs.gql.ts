@@ -4,6 +4,7 @@ const ViewFeaturedTabs = `
   ${DefaultQuery}
   name
   isBlock
+  alignTitle
 `;
 
 export default ViewFeaturedTabs;
