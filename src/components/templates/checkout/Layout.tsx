@@ -9,7 +9,7 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
-import { classNames, formatPrice } from "@/utils/functions";
+import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
@@ -191,13 +191,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productUpdates]);
 
-  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
-    const productPriceTmp = productPrice ?? 0;
-    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
-    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
-    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
-  };
-
   const handlePayment = async (toCancel = false) => {
     try {
       const path =
@@ -326,7 +319,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           <p>Cantidad: {product.quantity}</p>
                           <span className="text-right text-blue-dark">
                             {/* {product?.formatted_unit_amount} */}
-                            {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+                            {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
                           </span>
                         </div>
                       </div>

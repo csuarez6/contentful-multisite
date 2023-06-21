@@ -1,4 +1,5 @@
 import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
+import { LineItem } from "@commercelayer/sdk";
 
 export const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ');
@@ -11,6 +12,26 @@ export const classColumns = (columns = 1, ignoreCols = []) => {
   if (columns > 3 && !ignoreCols.includes(4)) classes.push("xl:grid-cols-4");
   if (columns > 4 && !ignoreCols.includes(5)) classes.push("2xl:grid-cols-5");
   return classes.join(" ");
+};
+
+export const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
+  const productPriceTmp = productPrice ?? 0;
+  const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
+  const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
+  return productPriceTmp + installPriceTmp + warrantyPriceTmp;
+};
+
+export const generateAmountCents = (line_items: LineItem[]) => {
+  return line_items.map((line_item: LineItem) => {
+    return {
+      ...line_item,
+      product_amount_float: showProductTotal(
+        line_item?.total_amount_float,
+        line_item?.["installlation_service"],
+        line_item?.["warranty_service"]
+      )
+    };
+  });
 };
 
 export const getBackgroundColorClass = (name) => {
