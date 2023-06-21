@@ -204,6 +204,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
+        body: JSON.stringify({
+          customer: order?.customer,
+          products: order?.line_items,
+        }),
       });
       const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
@@ -264,7 +268,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           <div className="top-[-15px] absolute left-0 main-container">
             <Breadcrumbs {...breadcrumbsList} />
           </div>
-          <p className=" 2md:text-2xl text-blue-dark font-bold">Resumen de compra</p>
+          <p className="font-bold 2md:text-2xl text-blue-dark">Resumen de compra</p>
         </div>
       )}
       <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
@@ -297,7 +301,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         <figure className="w-16 shrink-0">
                           {product?.image_url && (
                             <Image
-                              className="w-full h-full object-contain"
+                              className="object-contain w-full h-full"
                               src={product?.image_url}
                               alt={product?.name}
                               width={64}
@@ -332,7 +336,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
-                    {(hasShipment) ? "$20.000,00" : "$0"}
+                    {
+                      (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
+                        ? (hasShipment) ? "$20.000,00" : "$0"
+                        : "-"
+                    }
                   </span>
                 </div>
                 <div className="grid grid-cols-2 mt-2 rounded">

@@ -1,6 +1,6 @@
 import { SMTPClient } from 'emailjs';
 
-export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>') => {
+export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>', messageHtml?: any) => {
   const client = new SMTPClient({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT),
@@ -9,6 +9,14 @@ export const sendEmail = async (to: string, subject: string, message: string, fr
     ssl: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production',
   });
 
+  const attachmentOptions = messageHtml ?
+    [
+      {
+        data: messageHtml,
+        alternative: true
+      }
+    ] : [];
+
   try {
     await client.sendAsync(
       {
@@ -16,6 +24,7 @@ export const sendEmail = async (to: string, subject: string, message: string, fr
         from,
         to,
         subject,
+        attachment: attachmentOptions,
       },
     );
   } catch (err) {
