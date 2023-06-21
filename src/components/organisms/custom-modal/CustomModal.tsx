@@ -86,7 +86,7 @@ const CustomModal: React.FC<IModal> = ({
                       </div>
                     }
                     {(title || subtitle || children) && (
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-3 richtext-container">
                         {title && (
                           <Dialog.Title as="h3" className="text-blue-dark">
                             {title}
