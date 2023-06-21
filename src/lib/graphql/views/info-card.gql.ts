@@ -6,6 +6,7 @@ const ViewInformationCards = `
     backgroundColor
     showButton
     alignTitle
+    columnsSize
 `;
 
 export default ViewInformationCards;
