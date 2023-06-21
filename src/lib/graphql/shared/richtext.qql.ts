@@ -1,5 +1,6 @@
 import { BlockFormQuery } from "../blocks/form-content.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
+import ViewFeatured from "../views/featured.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import ViewListWithIcons from "../views/list-with-icons.gql";
 import ViewRichText from "../views/richText.gql";
@@ -81,6 +82,9 @@ const blockPromoRichText = `
     }
     ...on ViewSecondaryBanner{
       ${ViewSecondaryBanner}
+    }
+    ...on ViewFeatured{
+      ${ViewFeatured}
     }
     
   }
