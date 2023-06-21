@@ -26,7 +26,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
       {(title || description) && (
         <div
           className={classNames(
-            "grid gap-9 auto-rows-min",
+            "grid grid-cols-1 gap-9 auto-rows-min",
             view?.alignTitle === "Centrado" ? "text-center" : "text-left"
           )}
         >
