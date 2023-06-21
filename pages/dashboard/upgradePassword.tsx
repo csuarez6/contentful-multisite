@@ -255,7 +255,6 @@ const DashboardUpgradePassword = () => {
                           type="text"
                           label="Contraseña actual"
                           className="form-input"
-                          autoComplete="on"
                           isError={!!errors.password}
                           errorMessage={errors?.password?.message}
                           {...register("password")}
@@ -271,7 +270,6 @@ const DashboardUpgradePassword = () => {
                           type="password"
                           placeholder="********"
                           className="form-input"
-                          autoComplete="on"
                           isError={!!errors.newPassword}
                           errorMessage={errors?.newPassword?.message}
                           {...register("newPassword")}
@@ -284,7 +282,6 @@ const DashboardUpgradePassword = () => {
                           type="password"
                           placeholder="********"
                           className="form-input"
-                          autoComplete="on"
                           isError={!!errors.confirmNewPassword}
                           errorMessage={errors?.confirmNewPassword?.message}
                           {...register("confirmNewPassword")}
