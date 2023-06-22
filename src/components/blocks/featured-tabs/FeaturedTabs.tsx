@@ -51,7 +51,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
       {(title || description) && (
         <div className={classNames(
           "grid gap-6",
-          view?.alignTitle === "Centrado" && "text-center"
+          view?.alignTitle !== "Izquierda" && "text-center"
         )}>
           {pretitle && <p className="text-xs leading-[1.5] md:text-xl md:leading-[1.2] !font-semibold text-blue-dark uppercase">{pretitle}</p>}
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -69,13 +69,13 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
             id={`container_${_uuid}`}
             className={classNames(
               "flex overflow-x-auto custom-scrollbar",
-              isCentered && view?.alignTitle === "Centrado" ? "justify-center" : "justify-start"
+              isCentered && view?.alignTitle !== "Izquierda" ? "justify-center" : "justify-start"
             )}
           >
             <div id={`tabs_${_uuid}`} className="flex border-b border-transparent">
               <Tab.List className={classNames(
                 "flex",
-                view?.alignTitle === "Centrado" && "gap-[10px]"
+                view?.alignTitle !== "Izquierda" && "gap-[10px]"
               )}>
                 {featuredContentsCollection.items.map((tab) => (
                   <Tab
@@ -92,7 +92,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       )
                     }
                   >
-                    <span className={classNames(view.alignTitle !== "Centrado" && "whitespace-nowrap")}>
+                    <span className={classNames(view.alignTitle === "Izquierda" && "whitespace-nowrap")}>
                       {tab.title ?? tab.name}
                     </span>
                   </Tab>
