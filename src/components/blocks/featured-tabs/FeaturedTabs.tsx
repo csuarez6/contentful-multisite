@@ -116,7 +116,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                     leaveTo="opacity-0"
                   >
                     {view?.isBlock && collection.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
-                      jsonToReactComponent(collection)
+                      <p>Lorem ipsum dolor sit amet.</p>
+                      // jsonToReactComponent(collection)
+                      /* {documentToReactComponents(
+                        attachLinksToRichtextContent(item?.promoDescription?.json, item?.promoDescription?.links), defaultFormatOptions
+                      )} */
                     ) : (
                       <div className={classNames("grid grid-cols-1 gap-5 mt-6", grid[collection?.featuredContentsCollection?.items?.length])}>
                         {collection.featuredContentsCollection.items.map((item) => {
