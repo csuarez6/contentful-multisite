@@ -347,7 +347,7 @@ export const useCommerceLayer = () => {
   }, [user?.id, clientLogged, orderId]);
 
   const addCustomer = useCallback(
-    async ({ email, name, lastName, cellPhone }) => {
+    async ({ email, name, lastName, cellPhone, documentType, documentNumber  }) => {
       const client = await generateClient();
       await client.orders.update(
         {
@@ -360,6 +360,8 @@ export const useCommerceLayer = () => {
             name,
             lastName,
             cellPhone,
+            documentType,
+            documentNumber,
             hasPersonalInfo: true,
           },
         },

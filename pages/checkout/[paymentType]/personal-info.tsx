@@ -11,14 +11,21 @@ import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getMenu } from "@/lib/services/menu-content.service";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+  DEFAULT_HELP_BUTTON_ID,
+} from "@/constants/contentful-ids.constants";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import SelectInput from "@/components/atoms/selectInput/SelectInput";
 
 interface ICustomer {
   name: string;
   lastName: string;
   cellPhone: number;
   email: string;
+  documentType: string;
+  documentNumber: string;
 }
 
 const schema = yup.object({
@@ -30,6 +37,13 @@ const schema = yup.object({
     .nullable()
     .required("Dato Requerido"),
   email: yup.string().email("Email no válido").required("Dato Requerido"),
+  documentType: yup.string().required("Dato Requerido"),
+  documentNumber: yup
+  .number()
+  .required("Dato Requerido")
+  .nullable()
+  .transform((value) => (isNaN(value) ? undefined : value))
+  .positive("Solo números positivos"),
 });
 
 const CheckoutPersonalInfo = () => {
@@ -42,15 +56,70 @@ const CheckoutPersonalInfo = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<ICustomer>({
     resolver: yupResolver(schema),
   });
 
   const isCompleted = useMemo(
-    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
+    () =>
+      order &&
+      PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every(
+        (i) => i
+      ),
     [order]
   );
+
+  const selectOptions = [
+    {
+      label: "Seleccione un tipo de documento",
+      value: "",
+    },
+    {
+      label: "Nit",
+      value: "Nit",
+    },
+    {
+      label: "Registro civil de nacimiento",
+      value: "registroCivilDeNacimiento",
+    },
+    {
+      label: "Tarjeta de Identidad",
+      value: "tarjetaDeIdentidad",
+    },
+    {
+      label: "Cédula de ciudadanía",
+      value: "cedula",
+    },
+    {
+      label: "Cédula de extranjeria",
+      value: "cedulaDeExtranjeria",
+    },
+    {
+      label: "Pasaporte",
+      value: "pasaporte",
+    },
+    {
+      label: "Documento identificación extranjero",
+      value: "documentoIdentificaciónExtranjero",
+    },
+    {
+      label: "Sin identificación del exterior",
+      value: "sinIdentificaciónDelExterior",
+    },
+    {
+      label: "PEP",
+      value: "pep",
+    },
+    {
+      label: "NIF del extranjero",
+      value: "nifDelExtranjero",
+    },
+    {
+      label: "NUIP",
+      value: "nuip",
+    },
+  ];
 
   useEffect(() => {
     reset({
@@ -58,6 +127,8 @@ const CheckoutPersonalInfo = () => {
       name: order?.metadata?.name ?? "",
       lastName: order?.metadata?.lastName ?? "",
       cellPhone: order?.metadata?.cellPhone ?? "",
+      documentNumber: order?.metadata?.documentNumber ?? "",
+      documentType: order?.metadata?.documentType ?? "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
@@ -91,7 +162,10 @@ const CheckoutPersonalInfo = () => {
       isCheck={isCompleted}
     >
       <div className="bg-white rounded-lg">
-        <form className="flex flex-wrap max-w-full gap-6" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex flex-wrap max-w-full gap-6"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="w-full">
             <TextBox
               id="name"
@@ -100,9 +174,9 @@ const CheckoutPersonalInfo = () => {
               placeholder="Nombre"
               {...register("name")}
             />
-            {
-              errors.name?.message && <p className="mt-1 text-red-600">{errors.name?.message}</p>
-            }
+            {errors.name?.message && (
+              <p className="mt-1 text-red-600">{errors.name?.message}</p>
+            )}
           </div>
           <div className="w-full">
             <TextBox
@@ -112,9 +186,9 @@ const CheckoutPersonalInfo = () => {
               placeholder="Apellido"
               {...register("lastName")}
             />
-            {
-              errors.lastName?.message && <p className="mt-1 text-red-600">{errors.lastName?.message}</p>
-            }
+            {errors.lastName?.message && (
+              <p className="mt-1 text-red-600">{errors.lastName?.message}</p>
+            )}
           </div>
           <div className="w-full">
             <TextBox
@@ -125,9 +199,9 @@ const CheckoutPersonalInfo = () => {
               placeholder="000 000 0000"
               {...register("cellPhone")}
             />
-            {
-              errors.cellPhone?.message && <p className="mt-1 text-red-600">{errors.cellPhone?.message}</p>
-            }
+            {errors.cellPhone?.message && (
+              <p className="mt-1 text-red-600">{errors.cellPhone?.message}</p>
+            )}
           </div>
           <div className="w-full">
             <TextBox
@@ -138,15 +212,41 @@ const CheckoutPersonalInfo = () => {
               placeholder="Email"
               {...register("email")}
             />
-            {
-              errors.email?.message && <p className="mt-1 text-red-600">{errors.email?.message}</p>
-            }
+            {errors.email?.message && (
+              <p className="mt-1 text-red-600">{errors.email?.message}</p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-3">
+            <SelectInput
+              selectOptions={selectOptions}
+              className=""
+              label="Tipo de documento"
+              id="documentType"
+              {...register("documentType")}
+              isRequired={true}
+            />
+
+            <TextBox
+              id="documentNumber"
+              type="text"
+              label="Número de documento"
+              className="form-input"
+              autoComplete="on"
+              {...register("documentNumber")}
+              isRequired={true}
+            />
           </div>
           <div className="flex justify-end w-full gap-3">
-            <button className="button button-outline" type="button" onClick={handlePrev}>
+            <button
+              className="button button-outline"
+              type="button"
+              onClick={handlePrev}
+            >
               Volver
             </button>
-            <button className="button button-primary" type="submit">Continuar</button>
+            <button className="button button-primary" type="submit">
+              Continuar
+            </button>
           </div>
         </form>
       </div>
@@ -162,15 +262,21 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-
   const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const footerInfo = await getMenu(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false,
+    3
+  );
+  const helpButton = await getMenu(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {
       layout: {
-        name: 'Informacion personal de la orden',
+        name: "Informacion personal de la orden",
         footerInfo,
         headerInfo,
         helpButton,

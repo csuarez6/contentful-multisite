@@ -61,7 +61,7 @@ const CheckoutVerify = () => {
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
 
-  const { isLogged } = useContext(AuthContext);
+  const { isLogged, user } = useContext(AuthContext);
   const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
@@ -203,6 +203,11 @@ const CheckoutVerify = () => {
       if (isLogged) {
         await addLoggedCustomer();
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
+        meta["name"] = user.metadata?.name;
+        meta["lastName"] = user.metadata?.lastName;
+        meta["cellPhone"] = user.metadata?.cellPhone;
+        meta["documentType"] = user.metadata?.documentType;
+        meta["documentNumber"] = user.metadata?.documentNumber;
       }
 
       await updateMetadata(meta);

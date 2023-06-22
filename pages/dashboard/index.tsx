@@ -118,12 +118,48 @@ const Dashboard = () => {
       value: "",
     },
     {
-      label: "Cédula",
+      label: "Nit",
+      value: "Nit",
+    },
+    {
+      label: "Registro civil de nacimiento",
+      value: "registroCivilDeNacimiento",
+    },
+    {
+      label: "Tarjeta de Identidad",
+      value: "tarjetaDeIdentidad",
+    },
+    {
+      label: "Cédula de ciudadanía",
       value: "cedula",
+    },
+    {
+      label: "Cédula de extranjeria",
+      value: "cedulaDeExtranjeria",
     },
     {
       label: "Pasaporte",
       value: "pasaporte",
+    },
+    {
+      label: "Documento identificación extranjero",
+      value: "documentoIdentificaciónExtranjero",
+    },
+    {
+      label: "Sin identificación del exterior",
+      value: "sinIdentificaciónDelExterior",
+    },
+    {
+      label: "PEP",
+      value: "pep",
+    },
+    {
+      label: "NIF del extranjero",
+      value: "nifDelExtranjero",
+    },
+    {
+      label: "NUIP",
+      value: "nuip",
     },
   ];
 
@@ -323,7 +359,7 @@ const Dashboard = () => {
                           <SelectInput
                             selectOptions={selectOptions}
                             className=""
-                            label="Tipo Documento"
+                            label="Tipo de documento"
                             id="documentType"
                             isError={!!errors.documentType}
                             errorMessage={errors?.documentType?.message}
@@ -334,7 +370,7 @@ const Dashboard = () => {
                           <Textbox
                             id="documentNumber"
                             type="text"
-                            label="Número Documento"
+                            label="Número de documento"
                             className="form-input"
                             isError={!!errors.documentNumber}
                             errorMessage={errors?.documentNumber?.message}
