@@ -217,30 +217,3 @@ export const ModalWarranty: React.FC<any> = ({
     </>
   );
 };
-
-export const ModalShipping = () => {
-  return (
-    <div>
-      <p className="text-blue-dark">
-        Para llevar su producto, elija un tipo de envío:
-      </p>
-      <form>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Estándar (5 a 10 días hábiles)" />
-        </div>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Express (1 día hábil)" />
-        </div>
-      </form>
-      <div className="flex justify-end gap-2">
-        <CustomLink
-          className="button button-primary"
-          onClick={(e) => e.preventDefault()}
-          content={{ externalLink: "#" }}
-        >
-          Aceptar
-        </CustomLink>
-      </div>
-    </div>
-  );
-};

@@ -1,8 +1,5 @@
 import Icon from "@/components/atoms/icon/Icon";
-import {
-    ModalIntall,
-    ModalShipping,
-} from "@/components/blocks/product-details/ProductConfig";
+import { ModalIntall } from "@/components/blocks/product-details/ProductConfig";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { useState, useEffect, useContext, useRef } from "react";
 import ModalSuccess from "../modal-success/ModalSuccess";
@@ -48,35 +45,27 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         setIsActivedModal(false);
     };
 
-    const openModal = (service: string, optionsList?: any) => {
-        if (service === "shipping") {
-            setParamModal({
-                promoTitle: "Tipo de envío",
-            });
-            setmodalChild(<ModalShipping />);
-        } else {
-            setParamModal({
-                promoTitle: "Instala tu gasodoméstico",
-            });
-            setmodalChild(
-                <ModalIntall
-                    optionsList={optionsList}
-                    onEventHandler={servicesHandler}
-                    installCurrent={installCurrent}
-                    upInstallCurrent={updateInstallCurrent}
-                />
-            );
-        }
+    const openModal = (optionsList?: any) => {
+        
+        setParamModal({
+            promoTitle: "Instala tu gasodoméstico",
+        });
         setmodalChild(
-            (service === "shipping")
-                ? <ModalShipping />
-                : <ModalIntall
-                    optionsList={optionsList}
-                    onEventHandler={servicesHandler}
-                    installCurrent={installCurrent}
-                    upInstallCurrent={updateInstallCurrent}
-                />
+            <ModalIntall
+                optionsList={optionsList}
+                onEventHandler={servicesHandler}
+                installCurrent={installCurrent}
+                upInstallCurrent={updateInstallCurrent}
+            />
         );
+
+        setmodalChild(<ModalIntall
+            optionsList={optionsList}
+            onEventHandler={servicesHandler}
+            installCurrent={installCurrent}
+            upInstallCurrent={updateInstallCurrent}
+        />);
+
         setIsActivedModal(false);
         setTimeout(() => {
             setIsActivedModal(true);
@@ -117,7 +106,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                 </p>
                 <div className="px-3 py-2">
                     <p
-                        onClick={() => openModal("install", installList)}
+                        onClick={() => openModal(installList)}
                         className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
                     >
                         <span className="flex items-center w-6 h-6 shrink-0">
@@ -139,46 +128,17 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                 </div>
             </li>
             {/* End shipping section */}
-            {/* Start shipping section */}
-            <li className="flex flex-col gap-3">
-                <p className="text-size-subtitle1 text-blue-dark">
-                    Tipo de envío
-                </p>
-                <div className="px-3 py-2">
-                    <p
-                        onClick={() => openModal("shipping")}
-                        className="flex gap-[10px] flex-nowrap pb-[10px] border-b border-neutral-70 cursor-pointer"
-                    >
-                        <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                                icon="expert"
-                                className="flex items-center w-full h-full text-neutral-30"
-                            />
-                        </span>
-                        <span className="text-size-p2 leading-[1.2] text-grey-30 grow">
-                            Estándar (5 a 10 dias hábiles)
-                        </span>
-                        <span className="flex items-center w-6 h-6 shrink-0">
-                            <Icon
-                                icon="arrow-right"
-                                className="flex items-center w-full h-full text-neutral-30"
-                            />
-                        </span>
-                    </p>
-                </div>
-            </li>
-            {/* End shipping section */}
             {/* Start Warranty section */}
             {
                 warranty && (
                     <li className="flex flex-col w-full gap-3">
-                        <div className="flex items-center gap-4 text-blue-dark">
-                            <p className="flex-grow w-1 text-size-subtitle1">Garantía extendida</p>
-                            <button onClick={() => setWarrantyModal(true)}>
-                                <Icon icon="add" className="w-7 h-7" />
+                        <div className="flex items-center justify-between gap-4 text-blue-dark pr-3">
+                            <p className="text-size-subtitle1 text-blue-dark">Garantía extendida</p>
+                            <button onClick={() => setWarrantyModal(true)} className="align-right">
+                                <Icon icon="add" className="w-6 h-6" />
                             </button>
                         </div>
-                        <div className="px-3 py-[10px] gap-2 border-b border-neutral-70">
+                        <div className="gap-2 border-b border-neutral-70">
                             {(isLoading) ?
                                 <div
                                     role="status"
@@ -219,6 +179,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
                                                         setChecked(index);
                                                         onEventHandler("warranty", item);
                                                     }}
+                                                    className="flex"
                                                 >
                                                     <input
                                                         type="radio"

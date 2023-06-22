@@ -293,19 +293,13 @@ const CheckoutAddress = () => {
 
   const handleNext = async () => {
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getNextStep(
-        lastPath,
-        isLogged
-      )}`
+      `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
     );
   };
 
   const handlePrev = async () => {
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getPrevStep(
-        lastPath,
-        isLogged
-      )}`
+      `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
 

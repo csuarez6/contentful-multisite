@@ -212,7 +212,7 @@ const CheckoutVerify = () => {
 
       await updateMetadata(meta);
 
-      router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
+      router.push(`${PATH_BASE}/${flow.getNextStep(lastPath)}`);
     } catch (error) {
       console.error(error);
       setError(true);
