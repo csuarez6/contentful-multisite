@@ -290,20 +290,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 {products?.map((product, i) => (
                   <div key={`lateral-product-overview-${product.id}`} className="pb-2 mb-2 border-b border-gray-300">
                     <div className="flex">
-                      {asPathUrl !== "verify" &&
-                        <figure className="w-16 shrink-0">
-                          {product?.image_url && (
-                            <Image
-                              className="object-contain w-full h-full"
-                              src={product?.image_url}
-                              alt={product?.name}
-                              width={64}
-                              height={64}
-                              priority
-                            />
-                          )}
-                        </figure>
-                      }
+                      <figure className="w-16 shrink-0">
+                        {product?.image_url && (
+                          <Image
+                            className="object-contain w-full h-full"
+                            src={product?.image_url}
+                            alt={product?.name}
+                            width={64}
+                            height={64}
+                            priority
+                          />
+                        )}
+                      </figure>
                       <div>
                         <div
                           className="grid grid-cols-1 text-sm"
