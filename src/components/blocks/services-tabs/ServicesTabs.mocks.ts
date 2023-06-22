@@ -12,7 +12,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },
@@ -27,7 +27,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },
@@ -43,7 +43,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },
@@ -59,7 +59,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },
@@ -80,7 +80,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },
@@ -101,7 +101,7 @@ const data: IPromoBlock = {
           title: "Solicitar nuevo punto de gas",
           description: "",
           contentType: "image/png",
-          url: "https://images.ctfassets.net/3brzg7q3bvg1/7uBUtCEOdu46BS3lvSgJRm/53c1c715cc752ff79a4165b162080271/Solicitarpuntogas.png",
+          url: "https://via.placeholder.com/1280x1050.png",
           width: 1952,
           height: 1600
         },

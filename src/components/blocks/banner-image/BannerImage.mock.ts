@@ -22,7 +22,7 @@ const data: IPromoBlock = {
 
 const bannerMedium: IPromoBlock = {
     image: {
-        url: 'https://via.placeholder.com/1920x622.png?text=Large+1920x622',
+        url: 'https://via.placeholder.com/1920x218.png?text=Medium+1920x218',
         title: 'lorem ipsum',
         height: 300,
         width: 900
