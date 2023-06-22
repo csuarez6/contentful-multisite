@@ -149,7 +149,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         type='password'
                         placeholder='********'
                         className='form-input'
-                        autoComplete="on"
+                        autoComplete="off"
                         isError={!!errors.password}
                         errorMessage={errors?.password?.message}
                         {...register("password")}
@@ -161,7 +161,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         type='password'
                         placeholder='********'
                         className='form-input'
-                        autoComplete="on"
+                        autoComplete="off"
                         isError={!!errors.confirmPassword}
                         errorMessage={errors?.confirmPassword?.message}
                         {...register("confirmPassword")}
