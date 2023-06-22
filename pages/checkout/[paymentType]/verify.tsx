@@ -79,7 +79,7 @@ const CheckoutVerify = () => {
       });
     const dataAdjustment: IAdjustments = {
       name: params.name + " - " + itemService?.[0]?.["sku_code"],
-      amount_cents: type === "warranty" ? (Number(params["price_amount_float"]) * Number(itemService[0]["unit_amount_float"]) / 100).toString() + "00" : params.price_amount_cents,
+      amount_cents: type === "warranty" ? (Number(params["price_amount_float"]) * Number(itemService[0]["unit_amount_float"]) / 100).toString() : params.price_amount_cents,
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
       sku_code: itemService?.[0]?.["sku_code"],

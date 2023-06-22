@@ -171,7 +171,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 (Number(warrantyCheck["price_amount_float"]) *
                   Number(_priceGasodomestico)) /
                 100
-              ).toString() + "00",
+              ).toString(),
             type: "warranty",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,
@@ -245,7 +245,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 )}
                 <div className="flex gap-3">
                   {isNew && (
-                    <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                    <div className="flex px-2 py-1 uppercase bg-yellow-100 rounded-lg h-fit">
                       <span className="title is-5">nuevo</span>
                     </div>
                   )}
@@ -306,7 +306,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   )}
                   <div className="flex gap-3">
                     {isNew && (
-                      <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                      <div className="flex px-2 py-1 uppercase bg-yellow-100 rounded-lg h-fit">
                         <span className="title is-5">nuevo</span>
                       </div>
                     )}
