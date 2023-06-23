@@ -217,29 +217,37 @@ const CheckoutPersonalInfo = () => {
             )}
           </div>
           <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-3">
-            <SelectInput
-              selectOptions={selectOptions}
-              className=""
-              label="Tipo de documento"
-              id="documentType"
-              {...register("documentType")}
-              isRequired={true}
-            />
-            <TextBox
-              id="documentNumber"
-              type="text"
-              label="Número de documento"
-              className="form-input"
-              autoComplete="on"
-              {...register("documentNumber")}
-              isRequired={true}
-            />
-            {errors.documentType?.message && (
-              <p className="mt-1 text-red-600">{errors.documentType?.message}</p>
-            )}
-            {errors.documentNumber?.message && (
-              <p className="mt-1 text-red-600">{errors.documentNumber?.message}</p>
-            )}
+            <div>
+              <SelectInput
+                selectOptions={selectOptions}
+                className=""
+                label="Tipo de documento"
+                id="documentType"
+                {...register("documentType")}
+                isRequired={true}
+              />
+              {errors.documentType?.message && (
+                <p className="mt-1 text-red-600">
+                  {errors.documentType?.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <TextBox
+                id="documentNumber"
+                type="text"
+                label="Número de documento"
+                className="form-input"
+                autoComplete="on"
+                {...register("documentNumber")}
+                isRequired={true}
+              />
+              {errors.documentNumber?.message && (
+                <p className="mt-1 text-red-600">
+                  {errors.documentNumber?.message}
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex justify-end w-full gap-3">
             <button
