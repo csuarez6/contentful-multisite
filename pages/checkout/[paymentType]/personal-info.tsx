@@ -39,11 +39,11 @@ const schema = yup.object({
   email: yup.string().email("Email no válido").required("Dato Requerido"),
   documentType: yup.string().required("Dato Requerido"),
   documentNumber: yup
-  .number()
-  .required("Dato Requerido")
-  .nullable()
-  .transform((value) => (isNaN(value) ? undefined : value))
-  .positive("Solo números positivos"),
+    .number()
+    .required("Dato Requerido")
+    .nullable()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .positive("Solo números positivos"),
 });
 
 const CheckoutPersonalInfo = () => {
@@ -172,6 +172,7 @@ const CheckoutPersonalInfo = () => {
               className="algo"
               label="Escribe tu nombre"
               placeholder="Nombre"
+              isRequired={true}
               {...register("name")}
             />
             {errors.name?.message && (
@@ -184,6 +185,7 @@ const CheckoutPersonalInfo = () => {
               name="lastName"
               label="Escribe tu apellido"
               placeholder="Apellido"
+              isRequired={true}
               {...register("lastName")}
             />
             {errors.lastName?.message && (
@@ -197,6 +199,7 @@ const CheckoutPersonalInfo = () => {
               name="cellPhone"
               label="Escribe tu numero de celular"
               placeholder="000 000 0000"
+              isRequired={true}
               {...register("cellPhone")}
             />
             {errors.cellPhone?.message && (
@@ -210,6 +213,7 @@ const CheckoutPersonalInfo = () => {
               name="email"
               label="Escribe tu email"
               placeholder="Email"
+              isRequired={true}
               {...register("email")}
             />
             {errors.email?.message && (

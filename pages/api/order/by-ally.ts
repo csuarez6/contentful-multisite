@@ -38,31 +38,41 @@ const handler = async (
     try {
         const { idOrder } = req.body;
         const resp : any = await updateOrderAdminService(idOrder, DEFAULT_ORDER_PARAMS_ALLY, false);
-
         const allies = [];
         resp?.data?.line_items?.forEach((line_item: any) => {
-            let targetIndex = allies.findIndex((value: any) => value.id === line_item.item.shipping_category.id);
-            if(targetIndex === -1){
-                allies.push({ ...line_item.item.shipping_category });
-                targetIndex = allies.length - 1;
+            try {
+                let targetIndex = allies.findIndex((value: any) => value.id === line_item.item.shipping_category.id);
+                if(targetIndex === -1){
+                    allies.push({ ...line_item.item.shipping_category });
+                    targetIndex = allies.length - 1;
+                }
+                if(!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
+                delete line_item?.item?.shipping_category;
+                allies[targetIndex].line_items.push({ ...line_item });
+            } catch(iteration_error) {
+                console.error("An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
             }
-            if(!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
-            delete line_item?.item?.shipping_category;
-            allies[targetIndex].line_items.push({ ...line_item });
         });
 
         allies.map((ally: any) => {
-            const ally_total_amount_float = generateAmountCents(ally?.line_items).reduce((acum, current) => acum + current.product_amount_float ?? 0, 0);
-            ally.ally_total_amount_float = ally_total_amount_float;
-            ally.formatted_ally_total_amount = formatPrice(ally_total_amount_float);
+            try {
+                const ally_total_amount_float = generateAmountCents(ally?.line_items).reduce((acum, current) => acum + current.product_amount_float ?? 0, 0);
+                ally.ally_total_amount_float = ally_total_amount_float;
+                ally.formatted_ally_total_amount = formatPrice(ally_total_amount_float);
+            } catch (calculation_error) {
+                console.error("An error has ocurred with the total calculation for the ally:", ally, "the error:", calculation_error);
+                ally.ally_total_amount_float = null;
+                ally.formatted_ally_total_amount = null;
+            }
         });
 
         delete resp?.data?.line_items;
         if(resp?.data) resp.data["line_items_by_ally"] = allies;
 
         return res.status(200).json({ ...resp });
-    } catch (e) {
-        return res.status(500).json({ status: 'error', message: e.message });
+    } catch (general_error) {
+        console.error("A general error has occurred during the execution of the endpoint by-ally:", general_error);
+        return res.status(500).json({ status: 'error', message: "A general error has occurred" });
     }
 };
 
