@@ -101,7 +101,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       )}
                     >
                       <span className={classNames(view?.alignTitle === "Izquierda" && "whitespace-nowrap")}>
-                        {tab.title ?? tab.name}
+                        {tab.promoTitle ?? tab.title ?? tab.name}
                       </span>
                     </CustomLink>
                   ) : (
@@ -120,7 +120,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       }
                     >
                       <span className={classNames(view?.alignTitle === "Izquierda" && "whitespace-nowrap")}>
-                        {tab.title ?? tab.name}
+                        {tab.promoTitle ?? tab.title ?? tab.name}
                       </span>
                     </Tab>
                   )
