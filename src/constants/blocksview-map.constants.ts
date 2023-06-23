@@ -29,6 +29,7 @@ import TabsWithFeaturedImageBlock from "@/components/blocks/tabs-with-featured-i
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import VerticalCardGrill from "@/components/blocks/vertical-card-grill/VerticalCardGrill";
 import VerticalTabsBlock from '@/components/blocks/vertical-tabs/VerticalTabs';
+import ContentPageBlock from "@/components/blocks/content-page-block/ContentPageBlock";
 
 /**
  * Supports:
@@ -64,6 +65,7 @@ export const BLOCKSVIEW_MAP = {
     [CONTENTFUL_TYPENAMES.VIEW_TABS_WITH_FEATURED_IMAGE]: TabsWithFeaturedImageBlock,
     [CONTENTFUL_TYPENAMES.VIEW_VERTICAL_CARD_GRILL]: VerticalCardGrill,
     [CONTENTFUL_TYPENAMES.VIEW_TABS_VERTICAL]: VerticalTabsBlock,
+    [CONTENTFUL_TYPENAMES.VIEW_CONTENT_PAGE]: ContentPageBlock,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_FORM]: {
     [CONTENTFUL_TYPENAMES.FORM_RPO]: InquiryFormBlock,

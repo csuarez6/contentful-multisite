@@ -48,6 +48,7 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
   VIEW_VERTICAL_CARD_GRILL = "Parrilla de Tarjetas Verticales",
   VIEW_TABS_VERTICAL = "Tabs verticales",
+  VIEW_CONTENT_PAGE = "Contenido pagina informativa",
 
   FORM_RPO = "RPO",
   FORM_VANTILISTO = "Vantilisto",
