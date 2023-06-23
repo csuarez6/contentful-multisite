@@ -225,7 +225,6 @@ const CheckoutPersonalInfo = () => {
               {...register("documentType")}
               isRequired={true}
             />
-
             <TextBox
               id="documentNumber"
               type="text"
@@ -235,6 +234,12 @@ const CheckoutPersonalInfo = () => {
               {...register("documentNumber")}
               isRequired={true}
             />
+            {errors.documentType?.message && (
+              <p className="mt-1 text-red-600">{errors.documentType?.message}</p>
+            )}
+            {errors.documentNumber?.message && (
+              <p className="mt-1 text-red-600">{errors.documentNumber?.message}</p>
+            )}
           </div>
           <div className="flex justify-end w-full gap-3">
             <button
