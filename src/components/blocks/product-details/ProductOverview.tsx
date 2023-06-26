@@ -50,7 +50,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   relatedProducts,
   isNew,
   discount,
-}) => {
+  copyServices,
+}) => {  
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { addToCart, order, reloadOrder, deleteItemService } =
@@ -400,6 +401,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         category={category}
                         onEventHandler={servicesHandler}
                         _priceGasodomestico={_priceGasodomestico}
+                        copyServices={copyServices}
                       />
                     )}
                   </ul>
@@ -477,6 +479,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                             category={category}
                             onEventHandler={servicesHandler}
                             _priceGasodomestico={_priceGasodomestico}
+                            copyServices={copyServices}
                           />
                         )}
                       </form>

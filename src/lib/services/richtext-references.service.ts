@@ -115,7 +115,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   return referencesContent;
 };
 
-const getDataContent = async (blockInfo, preview = false) => {
+export const getDataContent = async (blockInfo, preview = false) => {
 
   let responseData = null;
   let responseError = null;

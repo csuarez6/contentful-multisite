@@ -100,6 +100,7 @@ export interface IProductOverviewDetails {
   relatedProducts?: IProductOverviewDetails[];
   isNew?: boolean;
   discount?: string;
+  copyServices?: any;
 }
 
 export interface IAllyOverviewDetails {

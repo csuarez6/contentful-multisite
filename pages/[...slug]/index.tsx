@@ -15,6 +15,7 @@ import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
+  DEFAULT_WARRANTY_COPY,
 } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
@@ -22,10 +23,10 @@ import ProductOverview from "@/components/blocks/product-details/ProductOverview
 import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 import getBreadcrumbs from "@/utils/breadcrumbs";
 import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
+import { getDataContent } from "@/lib/services/richtext-references.service";
 
 const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
-  const { blocksCollection, content, __typename, sys } = props;
-
+  const { blocksCollection, content, __typename, sys } = props;  
   return (
     <>
       <div className="overflow-hidden">
@@ -102,6 +103,15 @@ export const getStaticProps: GetStaticProps = async (
     context.preview ?? false
   );
 
+  const info = {
+    __typename: CONTENTFUL_TYPENAMES.COPY_SET,
+    sys: {
+      id: DEFAULT_WARRANTY_COPY,
+    } 
+  };
+  const copyRes = await getDataContent(info);
+  const copyServices = copyRes?.copiesCollection?.items;  
+
   if (pageContent?.blocksCollection?.items?.length > 0) {
     const firstBlockViewTypename =
       pageContent.blocksCollection?.items[0]?.view?.__typename;
@@ -130,8 +140,9 @@ export const getStaticProps: GetStaticProps = async (
         headerInfo,
         menuNavkey: context.params.slug[0],
         helpButton,
-        preview: context.preview ?? false
+        preview: context.preview ?? false,
       },
+      copyServices,
     },
     revalidate,
   };

@@ -7,6 +7,7 @@ export enum CONTENTFUL_TYPENAMES {
   PAGE_MINIMAL = "PageMinimal",
   PRODUCT = "Product",
   PRODUCT_MINIMAL = "ProductMinimal",
+  COPY_SET = "copySet",
 
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
   BLOCK_FORM = "BlockForm",
