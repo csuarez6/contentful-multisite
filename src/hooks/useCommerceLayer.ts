@@ -19,6 +19,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_total_tax_amount",
       "formatted_gift_card_amount",
       "formatted_total_amount_with_taxes",
+      "total_amount_with_taxes_float",
       "line_items",
       "customer",
       "metadata",
@@ -347,7 +348,7 @@ export const useCommerceLayer = () => {
   }, [user?.id, clientLogged, orderId]);
 
   const addCustomer = useCallback(
-    async ({ email, name, lastName, cellPhone, documentType, documentNumber  }) => {
+    async ({ email, name, lastName, cellPhone, documentType, documentNumber }) => {
       const client = await generateClient();
       await client.orders.update(
         {

@@ -72,11 +72,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
+  const [checkPathShipment, setCheckPathShipment] = useState(false);
+  const shipmentPrice = 20000;
+
   const asPathUrl = asPath.split("/")[3];
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    // console.log({ hasShipment });
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -168,6 +170,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     } else {
       setIsComplete(false);
     }
+    if ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))) setCheckPathShipment(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
 
@@ -328,7 +331,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
                     {
-                      (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
+                      (checkPathShipment)
                         ? (hasShipment) ? "$20.000,00" : "$0"
                         : "-"
                     }
@@ -337,7 +340,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
-                    {order?.formatted_total_amount_with_taxes}
+                    {
+                      (checkPathShipment)
+                        ? (hasShipment) ? formatPrice((order?.total_amount_with_taxes_float + shipmentPrice).toFixed(2)) : order?.formatted_total_amount_with_taxes
+                        : order?.formatted_total_amount_with_taxes
+                    }
+                    {/* {order?.formatted_total_amount_with_taxes} */}
                   </span>
                 </div>
                 {isComplete && tokenRecaptcha && (
