@@ -51,7 +51,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   isNew,
   discount,
   copyServices,
-}) => {  
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { addToCart, order, reloadOrder, deleteItemService } =
@@ -128,7 +128,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         ) {
           const dataAdjustment: IAdjustments = {
             name: installCheck["name"] + " - " + sku,
-            amount_cents: installCheck["price_amount_cents"],
+            amount_cents: installCheck["price_amount_float"],
             type: "installation",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,

@@ -90,6 +90,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   }, [order]);
 
   const servicesHandler = async (type: string, params) => {
+    console.log({ params });
     const productItem = productSelected.current;
     const itemService = order.line_items
       .filter((item) => item.id === productItem)
@@ -101,11 +102,11 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       amount_cents:
         type === "warranty"
           ? (
-              (Number(params["price_amount_float"]) *
-                Number(itemService[0]["unit_amount_float"])) /
-              100
-            ).toString()
-          : params.price_amount_cents,
+            (Number(params["price_amount_float"]) *
+              Number(itemService[0]["unit_amount_float"])) /
+            100
+          ).toString()
+          : params["price_amount_float"],
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
       sku_code: itemService?.[0]?.["sku_code"],
@@ -429,12 +430,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["warranty_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["categoryReference"] ??
-                            product["clWarrantyReference"],
+                          product["clWarrantyReference"],
                           "warranty_service",
                           product["warranty_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clWarrantyReference
@@ -478,12 +479,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["installlation_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["categoryReference"] ??
-                            product["clInstallationReference"],
+                          product["clInstallationReference"],
                           "installlation_service",
                           product["installlation_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clInstallationReference
@@ -506,8 +507,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
                       ? product["installlation_service"][0][
-                          "formatted_total_amount"
-                        ]
+                      "formatted_total_amount"
+                      ]
                       : "$0"}
                   </div>
                 </>

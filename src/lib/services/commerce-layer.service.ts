@@ -537,7 +537,9 @@ export const createAdjustmentsService = async ({
 }: IAdjustments) => {
   try {
     const cl = await getCLAdminCLient();
+    console.log({ amount_cents });
     const amount_centsFloat = (parseFloat(amount_cents).toFixed(2)).replace(".", "");
+    console.log({ amount_centsFloat });
     const adjustment = await cl.adjustments.create({
       name: name,
       currency_code: currency_code ?? "COP",
