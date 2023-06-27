@@ -59,7 +59,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setDefaultShippingMethod,
     validateExternal,
     upgradeTimePay,
-    hasShipment
+    hasShipment,
+    isFetchingOrder
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
@@ -271,7 +272,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             <StepsLine {...{ items: stepsList }} />
           </div>
         )}
-        <div className="col-span-2">{children}</div>
+        <div className="col-span-2">
+          {children}
+        </div>
         {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
@@ -456,10 +459,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             </div>
           </article>
         )}
-        {(products?.length === 0 && productUpdates?.length === 0) && (
+        {(isFetchingOrder && products?.length === 0 && productUpdates?.length === 0) && (
           <ProductDetailsLayoutSkeleton />
         )}
-      </div>
+      </div >
       {openDummyPGModal && (
         <ModalSuccess
           {...MocksModalSuccessProps.modalLayout}
@@ -484,15 +487,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             </button>
           </div>
         </ModalSuccess>
-      )}
-      {error && (
-        <InformationModal
-          icon={errorMessage.icon}
-          type={errorMessage.type}
-          title={errorMessage.title}
-          close={() => setError(false)}
-        />
-      )}
+      )
+      }
+      {
+        error && (
+          <InformationModal
+            icon={errorMessage.icon}
+            type={errorMessage.type}
+            title={errorMessage.title}
+            close={() => setError(false)}
+          />
+        )
+      }
     </>
   );
 };

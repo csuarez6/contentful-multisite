@@ -53,6 +53,7 @@ export const useCommerceLayer = () => {
   const { clientLogged, user } = useContext(AuthContext);
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
+  const [isFetchingOrder, setIsFetchingOrder] = useState<boolean>(false);
   const [orderError, setOrderError] = useState<boolean>(false);
   const [hasShipment, setHasShipment] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
@@ -149,6 +150,7 @@ export const useCommerceLayer = () => {
   };
 
   const getOrder = useCallback(async (checkUpdates?: boolean) => {
+    setIsFetchingOrder(true);
     try {
       const idOrder = localStorage.getItem("orderId");
 
@@ -164,12 +166,14 @@ export const useCommerceLayer = () => {
         throw new Error(INVALID_ORDER_ID_ERROR);
       }
 
+      setIsFetchingOrder(false);
       return order;
     } catch (error) {
       console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
       const client = await generateClient();
       const draftOrder = await client.orders.create({}).catch(err => err.errors);
       if (draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
+      setIsFetchingOrder(false);
       return draftOrder;
     }
   }, []);
@@ -589,6 +593,7 @@ export const useCommerceLayer = () => {
     onRecaptcha,
     onHasShipment,
     hasShipment,
+    isFetchingOrder,
     getOrder,
     reloadOrder,
     addToCart,
