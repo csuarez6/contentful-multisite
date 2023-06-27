@@ -102,10 +102,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       amount_cents:
         type === "warranty"
           ? (
-            (Number(params["price_amount_float"]) *
-              Number(itemService[0]["unit_amount_float"])) /
-            100
-          ).toString()
+              (Number(params["price_amount_float"]) *
+                Number(itemService[0]["unit_amount_float"])) /
+              100
+            ).toString()
           : params["price_amount_float"],
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
@@ -415,7 +415,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               </div>
               <div className="w-full mt-3 sm:hidden"></div>
               {/* ********* Services ******** */}
-              {showWarranty && (
+              {(showWarranty || product["warranty_service"]?.length >= 0) && (
                 <>
                   <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
                     Garantía extendida{" "}
@@ -425,27 +425,38 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                         <b>{product["warranty_service"][0]["name"]}</b>
                       </>
                     )}
-                    <button
-                      className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                      onClick={() =>
-                        openModal(
-                          product["warranty_service"]?.[0]?.["item"]?.[
-                          "metadata"
-                          ]?.["categoryReference"] ??
-                          product["clWarrantyReference"],
-                          "warranty_service",
-                          product["warranty_service"]?.[0]?.["item"]?.[
-                          "metadata"
-                          ]?.["sku_option_id"],
-                          product.id,
-                          product.metadata.clWarrantyReference
-                        )
-                      }
-                    >
-                      {product["warranty_service"]?.length > 0
-                        ? "Cambiar"
-                        : "Agregar"}
-                    </button>
+                    <div className="flex">
+                      <button
+                        className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                        onClick={() =>
+                          openModal(
+                            product["warranty_service"]?.[0]?.["item"]?.[
+                              "metadata"
+                            ]?.["categoryReference"] ??
+                              product["clWarrantyReference"],
+                            "warranty_service",
+                            product["warranty_service"]?.[0]?.["item"]?.[
+                              "metadata"
+                            ]?.["sku_option_id"],
+                            product.id,
+                            product.metadata.clWarrantyReference
+                          )
+                        }
+                      >
+                        {product["warranty_service"]?.length > 0
+                          ? "Cambiar"
+                          : "Agregar"}
+                      </button>
+                      <button
+                        className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                        onClick={() => {
+                          productSelected.current = product.id;
+                          servicesHandler("warranty", [defaultWarrantyList][0]);
+                        }}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                   <div className="px-3 text-right">
                     <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
@@ -464,7 +475,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               )}
 
               <div className="w-full sm:hidden"></div>
-              {showInstallation && (
+              {(showInstallation ||
+                product["installlation_service"]?.length > 0) && (
                 <>
                   <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
                     Servicio de instalación{" "}
@@ -474,27 +486,41 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                         <b>{product["installlation_service"][0]["name"]}</b>
                       </>
                     )}
-                    <button
-                      className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                      onClick={() =>
-                        openModal(
-                          product["installlation_service"]?.[0]?.["item"]?.[
-                          "metadata"
-                          ]?.["categoryReference"] ??
-                          product["clInstallationReference"],
-                          "installlation_service",
-                          product["installlation_service"]?.[0]?.["item"]?.[
-                          "metadata"
-                          ]?.["sku_option_id"],
-                          product.id,
-                          product.metadata.clInstallationReference
-                        )
-                      }
-                    >
-                      {product["installlation_service"]?.length > 0
-                        ? "Cambiar"
-                        : "Agregar"}
-                    </button>
+                    <div className="flex">
+                      <button
+                        className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                        onClick={() =>
+                          openModal(
+                            product["installlation_service"]?.[0]?.["item"]?.[
+                              "metadata"
+                            ]?.["categoryReference"] ??
+                              product["clInstallationReference"],
+                            "installlation_service",
+                            product["installlation_service"]?.[0]?.["item"]?.[
+                              "metadata"
+                            ]?.["sku_option_id"],
+                            product.id,
+                            product.metadata.clInstallationReference
+                          )
+                        }
+                      >
+                        {product["installlation_service"]?.length > 0
+                          ? "Cambiar"
+                          : "Agregar"}
+                      </button>
+                      <button
+                        className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                        onClick={() => {
+                          productSelected.current = product.id;
+                          servicesHandler(
+                            "installation",
+                            [defaultInstallList][0]
+                          );
+                        }}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                   <div className="px-3 text-right">
                     <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
@@ -507,8 +533,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
                       ? product["installlation_service"][0][
-                      "formatted_total_amount"
-                      ]
+                          "formatted_total_amount"
+                        ]
                       : "$0"}
                   </div>
                 </>
