@@ -467,7 +467,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   </div>
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
                     {product["warranty_service"]?.length > 0
-                      ? product["warranty_service"][0]["formatted_total_amount"]
+                      ? product["warranty_service"][0]["formatted_unit_amount"]
                       : "$0"}
                   </div>
                 </>
@@ -523,7 +523,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
                       ? product["installlation_service"][0][
-                          "formatted_total_amount"
+                          "formatted_unit_amount"
                         ]
                       : "$0"}
                   </div>
