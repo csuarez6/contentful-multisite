@@ -52,6 +52,7 @@ const AuxCustomContent = `
   mediaInternalLink{
     ${AssetQuery}
   }
+  iframeHeight
 `;
 
 export const AuxCustomContentMinimalQuery = `
