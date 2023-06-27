@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { updateOrderAdminService } from '@/lib/services/commerce-layer.service';
 import { QueryParamsRetrieve } from '@commercelayer/sdk';
 import { formatPrice, generateAmountCents } from '@/utils/functions';
+import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
 
 const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
     include: ["line_items", "line_items.item", "line_items.item.shipping_category", "customer"],
@@ -31,17 +32,17 @@ const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
 
 const handler = async (
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse<IAllyResponse>
 ) => {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+    if (req.method !== 'POST') return res.status(405).json({ status: 405, message:'Method not allowed' });
 
     try {
         const { idOrder } = req.body;
-        const resp : any = await updateOrderAdminService(idOrder, DEFAULT_ORDER_PARAMS_ALLY, false);
+        const resp : IAllyResponse = await updateOrderAdminService(idOrder, DEFAULT_ORDER_PARAMS_ALLY, false);
         const allies = [];
-        resp?.data?.line_items?.forEach((line_item: any) => {
+        resp?.data?.line_items?.forEach((line_item: ILineItemExtended) => {
             try {
-                let targetIndex = allies.findIndex((value: any) => value.id === line_item.item.shipping_category.id);
+                let targetIndex = allies.findIndex((value: IAlly) => value.id === line_item.item.shipping_category.id);
                 if(targetIndex === -1){
                     allies.push({ ...line_item.item.shipping_category });
                     targetIndex = allies.length - 1;
@@ -54,7 +55,7 @@ const handler = async (
             }
         });
 
-        allies.map((ally: any) => {
+        allies.map((ally: IAlly) => {
             try {
                 const ally_total_amount_float = generateAmountCents(ally?.line_items).reduce((acum, current) => acum + current.product_amount_float ?? 0, 0);
                 ally.ally_total_amount_float = ally_total_amount_float;
@@ -66,13 +67,12 @@ const handler = async (
             }
         });
 
-        delete resp?.data?.line_items;
         if(resp?.data) resp.data["line_items_by_ally"] = allies;
 
-        return res.status(200).json({ ...resp });
+        return res.status(200).json({ status: 200, data: resp?.data });
     } catch (general_error) {
         console.error("A general error has occurred during the execution of the endpoint by-ally:", general_error);
-        return res.status(500).json({ status: 'error', message: "A general error has occurred" });
+        return res.status(500).json({ status: 500, message: "A general error has occurred" });
     }
 };
 
