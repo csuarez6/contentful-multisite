@@ -90,7 +90,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   }, [order]);
 
   const servicesHandler = async (type: string, params) => {
-    console.log({ params });
     const productItem = productSelected.current;
     const itemService = order.line_items
       .filter((item) => item.id === productItem)

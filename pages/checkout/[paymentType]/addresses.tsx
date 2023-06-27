@@ -28,6 +28,9 @@ interface IAddress {
   cityCode: string;
   address: string;
   phone: string;
+  street: string;
+  residence: string;
+  receiver: string;
   isSameAsBillingAddress?: boolean
 }
 
@@ -37,12 +40,16 @@ interface IAddresses {
 }
 
 const toAddressForm = (addr: Address): IAddress => {
+  const line2Tmp = (addr.line_2) ? (addr.line_2).split(', ') : [];
   return {
     id: addr?.id ?? "",
     address: addr?.line_1 ?? "",
     cityCode: addr?.city ?? "",
     stateCode: addr?.state_code ?? "",
-    phone: addr?.phone ?? ""
+    phone: addr?.phone ?? "",
+    street: (line2Tmp.length > 0) ? line2Tmp[0] : "",
+    residence: (line2Tmp.length > 0) ? line2Tmp[1] : "",
+    receiver: addr?.notes ?? ""
   };
 };
 
@@ -51,8 +58,11 @@ const schema = yup.object({
     stateCode: yup.string().required("Dato Requerido"),
     cityCode: yup.string().required("Dato Requerido"),
     address: yup.string().trim().required("Dato Requerido"),
-    phone: yup.string().required("Dato Requerido"),
+    street: yup.string().required("Dato Requerido"),
+    residence: yup.string().nullable().notRequired(),
+    receiver: yup.string().notRequired(),
     isSameAsBillingAddress: yup.boolean()
+    // phone: yup.string().required("Dato Requerido"),
   }),
   billingAddress: yup.object().when('shippingAddress.isSameAsBillingAddress', {
     is: false,
@@ -60,7 +70,10 @@ const schema = yup.object({
       stateCode: yup.string().required("Dato Requerido"),
       cityCode: yup.string().required("Dato Requerido"),
       address: yup.string().trim().required("Dato Requerido"),
-      phone: yup.string().required("Dato Requerido"),
+      street: yup.string().required("Dato Requerido").matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
+      residence: yup.string().matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
+      receiver: yup.string().matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
+      // phone: yup.string().required("Dato Requerido"),
     }).required('Requerido'),
     otherwise: yup.object().notRequired()
   })
@@ -211,12 +224,19 @@ const CheckoutAddress = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
+  const checkAlphaNumeric = (e) => {
+    const letters = /^[aA-zZ-z0-9\s]+$/;
+    if (!(e.key).match(letters)) e.preventDefault();
+  };
+
   const toCLAddress = (addr: IAddress): Partial<AddressCreate> => ({
     country_code: DEFAULT_COUNTRY,
     state_code: addr.stateCode,
     city: addr.cityCode,
     line_1: addr.address,
-    phone: addr.phone,
+    line_2: addr.street + ", " + addr.residence,
+    notes: addr?.receiver ?? "",
+    phone: order?.metadata?.cellPhone ?? "0000",
     zip_code: DEFAULT_ZIP_CODE,
   });
 
@@ -228,7 +248,6 @@ const CheckoutAddress = () => {
         await deleteItemService(checkCovered["idItemsIntall"]);
       }
       const { shippingAddress, billingAddress } = data;
-
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
       let clBillingAddr = undefined;
 
@@ -362,6 +381,7 @@ const CheckoutAddress = () => {
             <TextBox
               id="shippingAddress.address"
               label="Escribe tu direccion"
+              isRequired={true}
               {...register("shippingAddress.address")}
               placeholder="Ejemplo carrera 00 # 0000"
             />
@@ -372,6 +392,48 @@ const CheckoutAddress = () => {
             )}
           </div>
           <div className="w-full">
+            <TextBox
+              id="shippingAddress.street"
+              label="Escribir barrio"
+              onKeyPress={(e) => checkAlphaNumeric(e)}
+              {...register("shippingAddress.street")}
+              placeholder="Nombre del barrio"
+            />
+            {errors?.shippingAddress?.street && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.street?.message}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <TextBox
+              id="shippingAddress.residence"
+              label="Información adicional"
+              onKeyPress={(e) => checkAlphaNumeric(e)}
+              {...register("shippingAddress.residence")}
+              placeholder="Apartamento / nombre de unidad"
+            />
+            {errors?.shippingAddress?.residence && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.residence?.message}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <TextBox
+              id="shippingAddress.receiver"
+              label="Destinatario"
+              onKeyPress={(e) => checkAlphaNumeric(e)}
+              {...register("shippingAddress.receiver")}
+              placeholder="Si es diferente a quien recibe"
+            />
+            {errors?.shippingAddress?.receiver && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.receiver?.message}
+              </p>
+            )}
+          </div>
+          {/* <div className="w-full">
             <TextBox
               {...register("shippingAddress.phone")}
               id="shippingAddress.phone"
@@ -384,7 +446,7 @@ const CheckoutAddress = () => {
                 {errors?.shippingAddress.phone?.message}
               </p>
             )}
-          </div>
+          </div> */}
           <div className="w-full">
             <CheckBox
               {...register("shippingAddress.isSameAsBillingAddress")}
@@ -446,6 +508,32 @@ const CheckoutAddress = () => {
               </div>
               <div className="w-full">
                 <TextBox
+                  id="billingAddress.street"
+                  label="Escribir barrio"
+                  {...register("billingAddress.street")}
+                  placeholder="Nombre del barrio"
+                />
+                {errors?.billingAddress?.street && (
+                  <p className="text-red-600">
+                    {errors?.billingAddress?.street?.message}
+                  </p>
+                )}
+              </div>
+              <div className="w-full">
+                <TextBox
+                  id="billingAddress.residence"
+                  label="Información adicional"
+                  {...register("billingAddress.residence")}
+                  placeholder="Apartamento / nombre de unidad"
+                />
+                {errors?.billingAddress?.residence && (
+                  <p className="text-red-600">
+                    {errors?.billingAddress?.residence?.message}
+                  </p>
+                )}
+              </div>
+              {/* <div className="w-full">
+                <TextBox
                   {...register("billingAddress.phone")}
                   id="billingAddress.phone"
                   label="Escribe tu telefono"
@@ -457,7 +545,7 @@ const CheckoutAddress = () => {
                     {errors?.billingAddress.phone?.message}
                   </p>
                 )}
-              </div>
+              </div> */}
             </>
           )}
           <div className="flex justify-end w-full gap-3">
