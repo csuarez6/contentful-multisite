@@ -13,6 +13,7 @@ import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
+import Icon from "@/components/atoms/icon/Icon";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -72,13 +73,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
-  const [checkPathShipment, setCheckPathShipment] = useState(false);
-  const shipmentPrice = 20000;
-
   const asPathUrl = asPath.split("/")[3];
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
+    // console.log({ hasShipment });
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -170,7 +169,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     } else {
       setIsComplete(false);
     }
-    if ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))) setCheckPathShipment(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
 
@@ -292,7 +290,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 )}
                 {products?.map((product, i) => (
                   <div key={`lateral-product-overview-${product.id}`} className="pb-2 mb-2 border-b border-gray-300">
-                    <div className="flex">
+                    <div className="flex items-start gap-2">
                       <figure className="w-16 shrink-0">
                         {product?.image_url && (
                           <Image
@@ -306,23 +304,102 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         )}
                       </figure>
                       <div>
+                        {/* Start Product Information */}
                         <div
-                          className="grid grid-cols-1 text-sm"
+                          className="grid grid-cols-1 text-sm mb-2"
                           key={"product-name" + i}
                         >
-                          <p className="">{product.name}</p>
-                          <p className="text-xs text-gray-600">* IVA incluido</p>
+                          <p className="font-bold">{product.name}</p>
+                          <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
                         </div>
+                        {/* End Product Information */}
+
+                        {/* Start Product Cost */}
                         <div
-                          className="grid grid-cols-2 text-sm"
+                          className="grid grid-cols-3 text-sm"
+                          key={"product-unit-count" + i}
+                        >
+                          <p className="col-span-1">C/U:</p>
+                          <p className="text-right text-blue-dark col-span-2">
+                            <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                              {product.quantity}
+                              x
+                            </span>
+                            <span>
+                              {product.formatted_unit_amount}
+                            </span>
+                          </p>
+                        </div>
+                        {/* End Product Cost */}
+
+                        {/* Start Product Warranty */}
+                        {(product?.["warranty_service"] && product?.["warranty_service"].length > 0) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-warranty-count" + i}
+                          >
+                            <p className="col-span-1 flex">
+                              <span>G.E:</span>
+                              <span title="Garantía extendida" className="ml-1 flex items-center cursor-help">
+                                <Icon icon="info" size={18} className="text-gray-500" />
+                              </span>
+                            </p>
+
+                            <p className="text-right text-blue-dark col-span-2">
+                              <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                                {product["warranty_service"]?.length > 0
+                                  ? product["warranty_service"][0]["quantity"]
+                                  : "0"}
+                                x
+                              </span>
+                              <span>
+                                {formatPrice(product?.["warranty_service"][0].unit_amount_float)}
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                        {/* End Product Warranty */}
+
+                        {/* Start Product Installation */}
+                        {(product?.["installlation_service"] && product?.["installlation_service"].length > 0) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-installation-count" + i}
+                          >
+                            <p className="col-span-1 flex">
+                              <span>S.I.:</span>
+                              <span title="Servicio de instalación" className="ml-1 flex items-center cursor-help">
+                                <Icon icon="info" size={18} className="text-gray-500" />
+                              </span>
+                            </p>
+
+                            <p className="text-right text-blue-dark col-span-2">
+                              <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                                {product["installlation_service"]?.length > 0
+                                  ? product["installlation_service"][0]["quantity"]
+                                  : "0"}
+                                x
+                              </span>
+                              <span>
+                                {formatPrice(product?.["installlation_service"][0].unit_amount_float)}
+                              </span>
+                            </p>
+
+                          </div>
+                        )}
+                        {/* Ent Product Installation */}
+
+                        {/* Start Product Subtotal Price */}
+                        <div
+                          className="grid grid-cols-3 text-sm"
                           key={"product-count" + i}
                         >
-                          <p>Cantidad: {product.quantity}</p>
-                          <span className="text-right text-blue-dark">
-                            {/* {product?.formatted_unit_amount} */}
+                          <p className="font-bold col-span-1">Subtotal:</p>
+                          <span className="text-right text-blue-dark col-span-2 font-bold">
                             {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
                           </span>
                         </div>
+                        {/* End Product Subtotal Price */}
                       </div>
                     </div>
                   </div>
@@ -331,7 +408,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
                     {
-                      (checkPathShipment)
+                      (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
                         ? (hasShipment) ? "$20.000,00" : "$0"
                         : "-"
                     }
@@ -340,12 +417,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
-                    {
-                      (checkPathShipment)
-                        ? (hasShipment) ? formatPrice((order?.total_amount_with_taxes_float + shipmentPrice).toFixed(2)) : order?.formatted_total_amount_with_taxes
-                        : order?.formatted_total_amount_with_taxes
-                    }
-                    {/* {order?.formatted_total_amount_with_taxes} */}
+                    {order?.formatted_total_amount_with_taxes}
                   </span>
                 </div>
                 {isComplete && tokenRecaptcha && (
