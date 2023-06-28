@@ -60,7 +60,7 @@ const schema = yup.object({
     address: yup.string().trim().required("Dato Requerido"),
     street: yup.string().required("Dato Requerido"),
     residence: yup.string().nullable().notRequired(),
-    receiver: yup.string().notRequired(),
+    receiver: yup.string().nullable().notRequired(),
     isSameAsBillingAddress: yup.boolean()
     // phone: yup.string().required("Dato Requerido"),
   }),
@@ -70,9 +70,9 @@ const schema = yup.object({
       stateCode: yup.string().required("Dato Requerido"),
       cityCode: yup.string().required("Dato Requerido"),
       address: yup.string().trim().required("Dato Requerido"),
-      street: yup.string().required("Dato Requerido").matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
-      residence: yup.string().matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
-      receiver: yup.string().matches(/^[aA-zZ-z0-9\s]+$/, "Solo carácteres alfanuméricos."),
+      street: yup.string().required("Dato Requerido"),
+      residence: yup.string().nullable().notRequired(),
+      receiver: yup.string().nullable().notRequired(),
       // phone: yup.string().required("Dato Requerido"),
     }).required('Requerido'),
     otherwise: yup.object().notRequired()
@@ -395,6 +395,7 @@ const CheckoutAddress = () => {
             <TextBox
               id="shippingAddress.street"
               label="Escribir barrio"
+              isRequired={true}
               onKeyPress={(e) => checkAlphaNumeric(e)}
               {...register("shippingAddress.street")}
               placeholder="Nombre del barrio"
@@ -423,7 +424,6 @@ const CheckoutAddress = () => {
             <TextBox
               id="shippingAddress.receiver"
               label="Destinatario"
-              onKeyPress={(e) => checkAlphaNumeric(e)}
               {...register("shippingAddress.receiver")}
               placeholder="Si es diferente a quien recibe"
             />
@@ -497,6 +497,7 @@ const CheckoutAddress = () => {
                 <TextBox
                   id="billingAddress.address"
                   label="Escribe tu direccion"
+                  isRequired={true}
                   {...register("billingAddress.address")}
                   placeholder="Ejemplo carrera 00 # 0000"
                 />
@@ -510,6 +511,8 @@ const CheckoutAddress = () => {
                 <TextBox
                   id="billingAddress.street"
                   label="Escribir barrio"
+                  isRequired={true}
+                  onKeyPress={(e) => checkAlphaNumeric(e)}
                   {...register("billingAddress.street")}
                   placeholder="Nombre del barrio"
                 />
@@ -523,6 +526,7 @@ const CheckoutAddress = () => {
                 <TextBox
                   id="billingAddress.residence"
                   label="Información adicional"
+                  onKeyPress={(e) => checkAlphaNumeric(e)}
                   {...register("billingAddress.residence")}
                   placeholder="Apartamento / nombre de unidad"
                 />
