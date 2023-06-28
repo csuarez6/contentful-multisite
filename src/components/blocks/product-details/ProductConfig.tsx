@@ -1,6 +1,5 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
-import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 import { classNames, formatPrice } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { useState } from "react";

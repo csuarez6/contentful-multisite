@@ -6,7 +6,7 @@ const jsonToReactComponent = (jsonItem, attachProps = {}) => {
   if (!jsonItem?.__typename) return;
   
   let view = BLOCKSVIEW_MAP[jsonItem?.__typename];
-  
+
   if (jsonItem?.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
     view = BLOCKSVIEW_MAP[jsonItem.__typename];
 

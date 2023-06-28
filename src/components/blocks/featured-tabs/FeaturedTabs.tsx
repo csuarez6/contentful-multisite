@@ -5,8 +5,6 @@ import { Tab, Transition } from "@headlessui/react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import jsonToReactComponent from "@/lib/services/render-cards.service";
-import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
-import defaultFormatOptions from "@/lib/richtext/default.formatter";
 import ListWithIcons from "@/components/organisms/list-with-icons/ListWithIcons";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
