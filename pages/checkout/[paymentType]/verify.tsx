@@ -478,9 +478,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               ) : (
                 <>
                   {dropServices(product)}
-                  <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-red-500 col-span-3">
-                    Este producto no se encuentra con grantia disponible
-                  </div>
                 </>
               )}
               <div className="w-full sm:hidden"></div>
@@ -535,9 +532,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               ) : (
                 <>
                   {dropServices(product)}
-                  <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-red-500 col-span-3">
-                    Este producto no se encuentra con instalación disponible
-                  </div>
                 </>
               )}
               {/* ********* End Services ******** */}
