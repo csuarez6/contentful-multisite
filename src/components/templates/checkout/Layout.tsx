@@ -306,7 +306,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           />
                         )}
                       </figure>
-                      <div>
+                      <div className="flex-1">
                         {/* Start Product Information */}
                         <div
                           className="grid grid-cols-1 text-sm mb-2"
