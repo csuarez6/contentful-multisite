@@ -13,7 +13,7 @@ import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
-import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
+// import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
@@ -21,6 +21,7 @@ import citiesFile from '@/utils/static/cities-co.json';
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import SelectInput from "@/components/atoms/selectInput/SelectInput";
 
 interface IAddress {
   id?: string;
@@ -225,7 +226,7 @@ const CheckoutAddress = () => {
   }, [order]);
 
   const checkAlphaNumeric = (e) => {
-    const letters = /^[aA-zZ-z0-9\s]+$/;
+    const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
     if (!(e.key).match(letters)) e.preventDefault();
   };
 
@@ -347,12 +348,13 @@ const CheckoutAddress = () => {
             <SelectInput
               label="Escoge tu departamento"
               id="shipping-state-code"
-              options={states.map((state) => ({
+              selectOptions={states.map((state) => ({
                 label: state.name,
                 value: state.name,
               }))}
               {...register("shippingAddress.stateCode")}
               placeholder="Seleccionar"
+              isRequired={true}
             />
             {errors.shippingAddress?.stateCode && (
               <p className="text-red-600">
@@ -364,12 +366,13 @@ const CheckoutAddress = () => {
             <SelectInput
               id="shipping-city-code"
               label="Escoge tu municipio"
-              options={shippingCities.map((city) => ({
+              selectOptions={shippingCities.map((city) => ({
                 label: city.city,
                 value: city.city,
               }))}
               {...register("shippingAddress.cityCode")}
               placeholder="Seleccionar"
+              isRequired={true}
             />
             {errors?.shippingAddress?.cityCode && (
               <p className="text-red-600">
@@ -463,12 +466,13 @@ const CheckoutAddress = () => {
                 <SelectInput
                   label="Escoge tu departamento"
                   id="billingAddress-state-code"
-                  options={states.map((state) => ({
+                  selectOptions={states.map((state) => ({
                     label: state.name,
                     value: state.name,
                   }))}
                   {...register("billingAddress.stateCode")}
                   placeholder="Seleccionar"
+                  isRequired={true}
                 />
                 {errors.billingAddress?.stateCode && (
                   <p className="text-red-600">
@@ -480,12 +484,13 @@ const CheckoutAddress = () => {
                 <SelectInput
                   id="billingCities-city-code"
                   label="Escoge tu municipio"
-                  options={billingCities.map((city) => ({
+                  selectOptions={billingCities.map((city) => ({
                     label: city.city,
                     value: city.city,
                   }))}
                   {...register("billingAddress.cityCode")}
                   placeholder="Seleccionar"
+                  isRequired={true}
                 />
                 {errors?.billingAddress?.cityCode && (
                   <p className="text-red-600">
