@@ -65,30 +65,19 @@ export const ModalIntall: React.FC<any> = ({
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
+          <p className="mb-4">Seleccione el servicio de instalación que desee para su producto.</p>
           <div
-            className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
+            className="px-2 py-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
             role="alert"
           >
-            el servicio está sujeto a ubicación, si desea más información puede
-            hacer
-            <CustomLink
-              className="!inline-block ml-1 font-bold underline"
-              content={{ urlPaths: ["/otros-servicios/instalacion"] }}
-            >
-              clic aquí
-            </CustomLink>
-            .
+            El servicio de instalación está sujeto a una ubicación, si desea más información puede
+            hacer {" "} <CustomLink className="!inline-block font-bold underline" content={{ urlPaths: ["/otros-servicios/instalacion"] }}>clic aquí</CustomLink>.
           </div>
-          Antes de empezar, queremos informarte que puedes adquirir la
-          instalación de tu gasodoméstico en esta compra.
-          <br />
-          Si aún no sabes qué incluye, puedes informarte en la landing de
-          instalación.
         </div>
         <div>
           <ul
             className={classNames(
-              "px-3 py-[10px] gap-2 grid",
+              "gap-2 grid",
               optionsList.length > 0
                 ? "grid-cols-1 sm:grid-cols-2"
                 : "grid-cols-1"
@@ -154,11 +143,11 @@ export const ModalWarranty: React.FC<any> = ({
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="text-left">Servicio de garantía para su producto.</div>
+        <div className="text-left">Seleccione el tipo de garantía extendida que desee para su producto.</div>
         <div>
           <ul
             className={classNames(
-              "px-3 py-[10px] gap-2 grid",
+              "gap-2 grid",
               optionsList.length > 0
                 ? "grid-cols-1 sm:grid-cols-2"
                 : "grid-cols-1"

@@ -22,12 +22,12 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
   const [warrantyModal, setWarrantyModal] = useState<boolean>();
   const defaultInstallList = {
     id: "defInstall1",
-    name: "Sin intalación",
+    name: "Sin servicio de instalación",
     formatted_price_amount: "$0",
   };
   const defaultWarrantyList = {
     id: "defWarranty1",
-    name: "Sin garantia",
+    name: "Sin garantía extendida",
     formatted_price_amount: "$0",
   };
   const [installList, setInstallList] = useState<any>([
@@ -96,7 +96,7 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
         if (category.clWarrantyReference) {
           const infoSkuWarra = await getSkuList(category.clWarrantyReference);
           if (infoSkuWarra && infoSkuWarra.status == 200) {
-            setWarrantyList([defaultInstallList, ...infoSkuWarra.data]);
+            setWarrantyList([defaultWarrantyList, ...infoSkuWarra.data]);
           }
         }
       } catch (error) {

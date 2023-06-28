@@ -74,12 +74,22 @@ const WarrantyModal: React.FC<IModal> = ({
                       <Dialog.Title as="h3" className="text-blue-dark text-left">
                         Garantía extendida
                       </Dialog.Title>
-                      <ul className="list-disc">
-                        <li className="list-item" >Cobertura del producto prolongando la garantía hasta por 3 años.</li>
-                        <li className="list-item" >100% del gasto en reparación y repuestos, sin límite.</li>
-                        <li className="list-item" >Servicio técnico a domicilio, retiramos tu producto gratis.</li>
-                        <li className="list-item" >Soporte y asistencia técnica, sin gastos adicionales.</li>
-                      </ul>
+                      <div className="w-full text-left pl-4">
+                        <ul className="list-disc">
+                          <li className="list-item">Cobertura del producto prolongando la garantía hasta por 3 años.</li>
+                          <li className="list-item">100% del gasto en reparación y repuestos, sin límite.</li>
+                          <li className="list-item">Servicio técnico a domicilio, retiramos tu producto gratis.</li>
+                          <li className="list-item">Soporte y asistencia técnica, sin gastos adicionales.</li>
+                        </ul>
+                      </div>
+                      <div className="flex justify-end gap-4 mt-2 item">
+                        <div
+                          className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
+                          onClick={close}
+                        >
+                          Entendido
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>

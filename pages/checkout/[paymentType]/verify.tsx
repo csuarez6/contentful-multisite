@@ -58,12 +58,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const [modalChild, setmodalChild] = useState<any>();
   const defaultInstallList = {
     id: "defInstall1",
-    name: "Sin intalación",
+    name: "Sin servicio de instalación",
     formatted_price_amount: "$0",
   };
   const defaultWarrantyList = {
     id: "defWarranty1",
-    name: "Sin garantia",
+    name: "Sin garantía extendida",
     formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
