@@ -57,7 +57,7 @@ const toAddressForm = (addr: Address): IAddress => {
 const schema = yup.object({
   shippingAddress: yup.object({
     stateCode: yup.string().required("Dato Requerido"),
-    cityCode: yup.string().required("Dato Requerido"),
+    cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
     address: yup.string().trim().required("Dato Requerido"),
     street: yup.string().required("Dato Requerido"),
     residence: yup.string().nullable().notRequired(),
@@ -69,7 +69,7 @@ const schema = yup.object({
     is: false,
     then: yup.object({
       stateCode: yup.string().required("Dato Requerido"),
-      cityCode: yup.string().required("Dato Requerido"),
+      cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
       address: yup.string().trim().required("Dato Requerido"),
       street: yup.string().required("Dato Requerido"),
       residence: yup.string().nullable().notRequired(),
@@ -177,9 +177,10 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const cities: string[] = await getCitiesByState(shippingStateWatched);
-      setShippingCities(cities);
-    })();    
+      const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
+      const cities: string[] = await getCitiesByState(shippingStateWatched);       
+      setShippingCities(citiesFinal.concat(cities));
+    })();
     setShowAlert(false);
   }, [shippingStateWatched]);
 
