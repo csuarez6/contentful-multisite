@@ -41,7 +41,7 @@ interface IAddresses {
 }
 
 const toAddressForm = (addr: Address): IAddress => {
-  const line2Tmp = (addr.line_2) ? (addr.line_2).split(', ') : [];
+  const line2Tmp = (addr?.line_2) ? (addr.line_2).split(', ') : [];
   return {
     id: addr?.id ?? "",
     address: addr?.line_1 ?? "",
@@ -179,7 +179,8 @@ const CheckoutAddress = () => {
     (async () => {
       const cities: string[] = await getCitiesByState(shippingStateWatched);
       setShippingCities(cities);
-    })();
+    })();    
+    setShowAlert(false);
   }, [shippingStateWatched]);
 
   useEffect(() => {

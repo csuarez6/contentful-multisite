@@ -264,14 +264,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const dropServices = (product) => {
     if (product) {
       if (!showWarranty && product["warranty_service"]?.length > 0) {
-        console.log('entra garantia');
-        
         productSelected.current = product.id;
         servicesHandler("warranty", [defaultWarrantyList][0]);
       }
-      if (!showInstallation && product["installlation_service"]?.length > 0) {
-        console.log('entra instalacion');
-        
+      if (!showInstallation && product["installlation_service"]?.length > 0) {        
         productSelected.current = product.id;
         servicesHandler("installation", [defaultInstallList][0]);
       }
