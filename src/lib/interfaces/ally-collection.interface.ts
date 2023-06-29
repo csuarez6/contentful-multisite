@@ -1,8 +1,8 @@
 import { LineItem, Order, ShippingCategory } from "@commercelayer/sdk";
 
 export interface ILineItemExtended extends LineItem {
-    installlation_service?: LineItem;
-    warranty_service?: LineItem;
+    installlation_service?: LineItem[];
+    warranty_service?: LineItem[];
     item?: any
 };
 
@@ -13,19 +13,30 @@ export interface IAlly extends ShippingCategory {
 }
 
 export interface IOrderExtended extends Order {
-    metadata: {
-        name: string;
-        lastName: string;
-        cellPhone: number;
-        isVerified: boolean;
-        documentType: string;
-        hasAddresses: boolean;
-        documentNumber: number;
-        hasPersonalInfo: boolean;
-        recapchaResponse: string;
-    };
+    metadata: IMetadataOrder;
     line_items: ILineItemExtended[];
     line_items_by_ally: IAlly[]
+}
+
+export interface IMetadataOrder {
+    name: string;
+    lastName: string;
+    cellPhone: number;
+    isVerified: boolean;
+    documentType: string;
+    hasAddresses: boolean;
+    documentNumber: number;
+    hasPersonalInfo: boolean;
+    recapchaResponse: string;
+}
+
+export interface IMetadataCustomer {
+    name: string;
+    lastName: string;
+    cellPhone: string;
+    documentType: string;
+    contractNumber: string;
+    documentNumber: string;
 }
 
 export interface IAllyResponse {

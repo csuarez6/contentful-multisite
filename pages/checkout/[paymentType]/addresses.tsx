@@ -42,7 +42,7 @@ interface IAddresses {
 }
 
 const toAddressForm = (addr: Address): IAddress => {
-  const line2Tmp = (addr?.line_2) ? (addr.line_2).split(', ') : [];
+  const line2Tmp = (addr && addr.line_2) ? (addr.line_2).split(', ') : [];
   return {
     id: addr?.id ?? "",
     address: addr?.line_1 ?? "",
