@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useMemo } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,6 +18,7 @@ import {
 } from "@/constants/contentful-ids.constants";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 interface ICustomer {
   name: string;
@@ -51,6 +52,8 @@ const CheckoutPersonalInfo = () => {
   const lastPath = useLastPath();
 
   const { order, flow, addCustomer } = useContext(CheckoutContext);
+  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
 
   const {
     register,
@@ -135,10 +138,13 @@ const CheckoutPersonalInfo = () => {
 
   const onSubmit = async (data: ICustomer) => {
     try {
+      setIsLoadingNext(true);
       await addCustomer(data);
       await handleNext();
     } catch (error) {
       alert(error.message);
+    }finally {
+      setIsLoadingNext(false);
     }
   };
 
@@ -149,6 +155,7 @@ const CheckoutPersonalInfo = () => {
   };
 
   const handlePrev = async () => {
+    setIsLoadingPrev(true);
     await router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
@@ -255,14 +262,17 @@ const CheckoutPersonalInfo = () => {
           </div>
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline"
+              className="button button-outline relative"
               type="button"
               onClick={handlePrev}
+              disabled={isLoadingPrev || isLoadingNext}
             >
               Volver
+              {isLoadingPrev && <Spinner position="absolute"/> }
             </button>
-            <button className="button button-primary" type="submit">
+            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
               Continuar
+              {isLoadingNext && <Spinner position="absolute"/> }
             </button>
           </div>
         </form>

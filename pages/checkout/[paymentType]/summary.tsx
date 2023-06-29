@@ -12,6 +12,7 @@ import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -20,6 +21,7 @@ const CheckoutSummary = () => {
   const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
+  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
 
   const fullName = useMemo(() => {
     return (
@@ -42,6 +44,7 @@ const CheckoutSummary = () => {
   );
 
   const handlePrev = async () => {
+    setIsLoadingPrev(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
@@ -100,11 +103,13 @@ const CheckoutSummary = () => {
         </dl>
         <div className="flex justify-end w-full mt-5">
           <button
-            className="button button-outline"
+            className="button button-outline relative"
             type="button"
             onClick={handlePrev}
+            disabled={isLoadingPrev}
           >
             Volver
+            {isLoadingPrev && <Spinner position="absolute" />}
           </button>
         </div>
       </div>

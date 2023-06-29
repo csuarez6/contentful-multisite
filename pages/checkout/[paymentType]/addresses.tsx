@@ -22,6 +22,7 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 interface IAddress {
   id?: string;
@@ -126,6 +127,8 @@ const CheckoutAddress = () => {
   const [isActivedModal, setIsActivedModal] = useState(false);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
+  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
 
   const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
@@ -290,6 +293,7 @@ const CheckoutAddress = () => {
 
   const onSubmit = async (data: IAddresses) => {
     try {
+      setIsLoadingNext(true);
       const checkCovered = checkCityCovered();
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Advertencia" });
@@ -308,8 +312,11 @@ const CheckoutAddress = () => {
         await sendData(data);
       }
     } catch (error) {
+      setIsLoadingNext(true);
       console.error(error);
       alert(error.message);
+    }finally {
+      setIsLoadingNext(false);
     }
   };
 
@@ -320,6 +327,7 @@ const CheckoutAddress = () => {
   };
 
   const handlePrev = async () => {
+    setIsLoadingPrev(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
@@ -561,14 +569,17 @@ const CheckoutAddress = () => {
           )}
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline"
+              className="button button-outline relative"
               type="button"
               onClick={handlePrev}
+              disabled={isLoadingPrev || isLoadingNext}
             >
               Volver
+              {isLoadingPrev && <Spinner position="absolute"/> }
             </button>
-            <button className="button button-primary" type="submit">
+            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
               Continuar
+              {isLoadingNext && <Spinner position="absolute"/> }
             </button>
           </div>
         </form>

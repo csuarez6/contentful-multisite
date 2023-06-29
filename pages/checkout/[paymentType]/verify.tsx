@@ -41,6 +41,7 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import { getDataContent } from "@/lib/services/richtext-references.service";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const { copyServices } = props;
@@ -101,10 +102,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       amount_cents:
         type === "warranty"
           ? (
-              (Number(params["price_amount_float"]) *
-                Number(itemService[0]["unit_amount_float"])) /
-              100
-            ).toString()
+            (Number(params["price_amount_float"]) *
+              Number(itemService[0]["unit_amount_float"])) /
+            100
+          ).toString()
           : params["price_amount_float"],
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
@@ -224,6 +225,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
   const handleNext = async () => {
     try {
+      setIsLoading(true);
       if (!products.length) {
         setError(true);
         setErrorMessage({
@@ -252,6 +254,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath)}`);
     } catch (error) {
+      setIsLoading(true);
       console.error(error);
       setError(true);
       setErrorMessage({
@@ -259,6 +262,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
         type: "warning",
         title: "Algo a salido mal",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   const dropServices = (product) => {
@@ -440,12 +445,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["warranty_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["categoryReference"] ??
-                            product["clWarrantyReference"],
+                          product["clWarrantyReference"],
                           "warranty_service",
                           product["warranty_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clWarrantyReference
@@ -492,12 +497,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["installlation_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["categoryReference"] ??
-                            product["clInstallationReference"],
+                          product["clInstallationReference"],
                           "installlation_service",
                           product["installlation_service"]?.[0]?.["item"]?.[
-                            "metadata"
+                          "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clInstallationReference
@@ -520,8 +525,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
                       ? product["installlation_service"][0][
-                          "formatted_unit_amount"
-                        ]
+                      "formatted_unit_amount"
+                      ]
                       : "$0"}
                   </div>
                 </>
@@ -562,8 +567,9 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
             Ir a la tienda
           </CustomLink>
         ) : (
-          <button onClick={handleNext} className="mt-6 button button-primary">
+          <button onClick={handleNext} className={classNames("mt-6 button button-primary relative flex items-center")} disabled={isLoading}>
             Continuar
+            {isLoading && <Spinner position="absolute" />}
           </button>
         )}
       </div>
