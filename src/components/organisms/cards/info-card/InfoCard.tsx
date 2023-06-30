@@ -97,7 +97,7 @@ const InfoCard: React.FC<IPromoContent> = (props) => {
           </div>
         )}
         {mediaInternalLink && (
-          <div className="flex justify-start mt-3">
+          <div className="flex items-end mt-3 flex-grow">
             <CustomLink
               content={props}
               className={classNames(
