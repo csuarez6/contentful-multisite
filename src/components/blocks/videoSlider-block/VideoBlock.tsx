@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, } from "swiper";
 import Image from 'next/image';
 import { classNames } from '@/utils/functions';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
 const BASE_URL = "https://www.youtube.com/embed";
 const iconLeft: IIcon = {
@@ -20,7 +21,7 @@ const iconRight: IIcon = {
     className: 'z-10'
 };
 
-const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCollection, view, blockId, sysId }) => {
+const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, description, featuredContentsCollection, view, blockId, sysId }) => {
     if (!featuredContentsCollection) return;
     const uui = uuid();
     const allowTouchMove = view?.isSlider ?? true;
@@ -36,10 +37,15 @@ const VideoBlock: React.FC<IPromoBlock> = ({ title, subtitle, featuredContentsCo
 
     return (
         <section id={blockId ? blockId : sysId} className='section grid grid-cols-1 gap-7 md:gap-9'>
-            {(title || subtitle) && (
+            {(title || subtitle || description) && (
                 <div className='flex flex-col gap-[22px] lg:gap-6 mb-5 text-center'>
                     {title && <h2 className="text-blue-dark text-size-subtitle1 md:text-2xl lg:text-4xl">{title}</h2>}
                     {subtitle && <div className="text-blue-dark text-sm lg:text-base"><p>{subtitle}</p></div>}
+                    {description && (
+                        <div className="text-blue-dark">
+                            {documentToReactComponents(description.json)}
+                        </div>
+                    )}
                 </div>
             )}
             {featuredContentsCollection?.items?.length > 0 && (
