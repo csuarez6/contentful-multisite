@@ -38,9 +38,9 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
         </figure>
       )}
 
-      <div className="w-full p-6 flex flex-col justify-end">
+      <div className="w-full p-6 flex flex-col flex-grow justify-between">
         {(promoTitle || promoDescription || name) && (
-          <div className="grid">
+          <div className="grid gap-2">
             {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle || name}</h3>}
             {promoDescription?.json && (
               <div className="text-blue-dark-8 text-size-p1">
