@@ -60,32 +60,23 @@ export const useCommerceLayer = () => {
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
-  const [isInitialRender, setIsInitialRender] = useState(true);
+  const [isInitialRender, setIsInitialRender] = useState<boolean>();
   const [localOrderId, setLocalOrderId] = useState<string>();
 
+  /**
+   * Set localStorage and State Order ID
+   */
   useEffect(() => {
     (async () => {
       try {
-        const checkUpdates = asPath.startsWith("/checkout/pse");
         setLocalOrderId(localStorage.getItem('orderId'));
-        if (isInitialRender) setIsInitialRender(false);
-
-        if (isInitialRender || checkUpdates) {
-          const order = await getOrder(checkUpdates);
-          setOrder(order);
-        }
-        if (!orderId || !localOrderId) {
-          setOrderError(true);
-        } else {
-          setOrderError(false);
-        }
-
+        setOrderError(!orderId || !localOrderId);
       } catch (error) {
-        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+        console.error("Error at: useCommerceLayer setLocalOrderID", error);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath, orderId, orderError, localOrderId]);
+  }, [orderId, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {
@@ -189,6 +180,39 @@ export const useCommerceLayer = () => {
     }
 
   }, [getOrder]);
+
+  /**
+   * Function to SetUP the Order on the Context 
+   */
+  const setUpOrder = useCallback(async (checkUpdates: boolean) => {
+    try {
+      const order = await getOrder(checkUpdates);
+      setOrder(order);
+    } catch (error) {
+      console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+    }
+  }, [getOrder]);
+
+  /**
+   * Set the order only once for performance (in the initial render of the context)
+   */
+  useEffect(() => {
+    (async () => {
+      if(typeof isInitialRender == "undefined") setIsInitialRender(true);
+      if(isInitialRender) {
+        await setUpOrder(false);
+        setIsInitialRender(false);
+      }
+    })();
+  }, [isInitialRender, setUpOrder]);
+
+  /**
+   * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
+   */
+  useEffect(() => {
+    const checkUpdates = asPath.startsWith("/checkout/pse");
+    if(checkUpdates && isInitialRender === false) setUpOrder(true);
+  }, [asPath, isInitialRender, setUpOrder]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string, category?: object) => {
