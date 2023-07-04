@@ -38,7 +38,7 @@ const handler = async (
     return;
   }
 
-  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees, tokenReCaptcha } = req.body;
+  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, priceGasodomestico, priceVantiListo, quantity, amountOfFees, tokenReCaptcha } = req.body;
   const typeName = getType(type);
   const data = {
     body: []
@@ -50,7 +50,7 @@ const handler = async (
       `Producto: ${productName}`,
       `URL: ${urlProduct}`,
       `SKU: ${sku}`,
-      `Precio: ${price}${type === "gasodomesticos" ? "\n" : ""}`,
+      `Precio: ${type === "vantilisto" ? priceVantiListo : priceGasodomestico}${type === "gasodomesticos" ? "\n" : ""}`,
     ].forEach(element => data["body"].push(element));
 
     if (type === "vantilisto") {
