@@ -43,7 +43,7 @@ const CheckoutCompleted = () => {
             classes="col-span-2"
             title="6. Resumen"
             icon="quotation"
-            isCheck={isCompleted && true}
+            isCheck={isCompleted}
         >
             <div className="bg-white rounded-lg">
                 <dl className="space-y-5 text-sm">

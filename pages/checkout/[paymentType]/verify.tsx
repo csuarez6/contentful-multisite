@@ -15,16 +15,20 @@ import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
+  DEFAULT_WARRANTY_COPY,
 } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { defaultLayout } from "../../_app";
-import { PSE_STEPS_TO_VERIFY, VantiOrderMetadata } from "@/constants/checkout.constants";
+import {
+  PSE_STEPS_TO_VERIFY,
+  VantiOrderMetadata,
+} from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames, formatPrice } from "@/utils/functions";
+import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import {
   ModalIntall,
   ModalWarranty,
@@ -33,8 +37,14 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IAdjustments } from "@/lib/services/commerce-layer.service";
 import Link from "next/link";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import { getDataContent } from "@/lib/services/richtext-references.service";
+import { IPage } from "@/lib/interfaces/page-cf.interface";
+import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
-const CheckoutVerify = () => {
+const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
+  const { copyServices } = props;
   const router = useRouter();
   const lastPath = useLastPath();
   const [error, setError] = useState(false);
@@ -49,20 +59,30 @@ const CheckoutVerify = () => {
   const [modalChild, setmodalChild] = useState<any>();
   const defaultInstallList = {
     id: "defInstall1",
-    name: "Sin intalación",
+    name: "Sin servicio de instalación",
     formatted_price_amount: "$0",
   };
   const defaultWarrantyList = {
     id: "defWarranty1",
-    name: "Sin garantia",
+    name: "Sin garantía extendida",
     formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
+  const [showWarranty, setShowWarranty] = useState<boolean>(true);
+  const [showInstallation, setShowInstallation] = useState<boolean>(true);
 
-  const { isLogged } = useContext(AuthContext);
-  const { order, flow, updateMetadata, updateItemQuantity, addLoggedCustomer, getSkuList, changeItemService } = useContext(CheckoutContext);
+  const { isLogged, user } = useContext(AuthContext);
+  const {
+    order,
+    flow,
+    updateMetadata,
+    updateItemQuantity,
+    addLoggedCustomer,
+    getSkuList,
+    changeItemService,
+  } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
     setIsLoading(false);
@@ -79,7 +99,14 @@ const CheckoutVerify = () => {
       });
     const dataAdjustment: IAdjustments = {
       name: params.name + " - " + itemService?.[0]?.["sku_code"],
-      amount_cents: type === "warranty" ? (Number(params["price_amount_float"]) * Number(itemService[0]["unit_amount_float"]) / 100).toString() + "00" : params.price_amount_cents,
+      amount_cents:
+        type === "warranty"
+          ? (
+            (Number(params["price_amount_float"]) *
+              Number(itemService[0]["unit_amount_float"])) /
+            100
+          ).toString()
+          : params["price_amount_float"],
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
       sku_code: itemService?.[0]?.["sku_code"],
@@ -125,11 +152,21 @@ const CheckoutVerify = () => {
         console.error("Error at: ProductService", error);
       }
     })();
+    setShowWarranty(
+      !!copyServices.find((i) => i.key === "show.warranty")?.active
+    );
+    setShowInstallation(
+      !!copyServices.find((i) => i.key === "show.installation")?.active
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isCompleted = useMemo(
-    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
+    () =>
+      order &&
+      PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every(
+        (i) => i
+      ),
     [order]
   );
 
@@ -146,7 +183,9 @@ const CheckoutVerify = () => {
     productCategory?: string
   ) => {
     productSelected.current = idProduct;
-    const productPriceItem = order?.line_items.find((i) => i.id === idProduct)?.unit_amount_float;
+    const productPriceItem = order?.line_items.find(
+      (i) => i.id === idProduct
+    )?.unit_amount_float;
     const compareCategory = category ?? productCategory;
     const skusOptions = skuOptionsGlobal.filter(
       (item) => item.reference === compareCategory
@@ -184,15 +223,9 @@ const CheckoutVerify = () => {
     }, 200);
   };
 
-  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
-    const productPriceTmp = productPrice ?? 0;
-    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
-    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
-    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
-  };
-
   const handleNext = async () => {
     try {
+      setIsLoading(true);
       if (!products.length) {
         setError(true);
         setErrorMessage({
@@ -210,12 +243,18 @@ const CheckoutVerify = () => {
       if (isLogged) {
         await addLoggedCustomer();
         meta[VantiOrderMetadata.HasPersonalInfo] = true;
+        meta["name"] = user.metadata?.name;
+        meta["lastName"] = user.metadata?.lastName;
+        meta["cellPhone"] = user.metadata?.cellPhone;
+        meta["documentType"] = user.metadata?.documentType;
+        meta["documentNumber"] = user.metadata?.documentNumber;
       }
 
       await updateMetadata(meta);
 
-      router.push(`${PATH_BASE}/${flow.getNextStep(lastPath, isLogged)}`);
+      router.push(`${PATH_BASE}/${flow.getNextStep(lastPath)}`);
     } catch (error) {
+      setIsLoading(true);
       console.error(error);
       setError(true);
       setErrorMessage({
@@ -223,9 +262,22 @@ const CheckoutVerify = () => {
         type: "warning",
         title: "Algo a salido mal",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  const dropServices = (product) => {
+    if (product) {
+      if (!showWarranty && product["warranty_service"]?.length > 0) {
+        productSelected.current = product.id;
+        servicesHandler("warranty", [defaultWarrantyList][0]);
+      }
+      if (!showInstallation && product["installlation_service"]?.length > 0) {        
+        productSelected.current = product.id;
+        servicesHandler("installation", [defaultInstallList][0]);
+      }
+    }
+  };
   return (
     <HeadingCard
       classes="col-span-2"
@@ -269,7 +321,13 @@ const CheckoutVerify = () => {
                 </figure>
               </div>
               <div className="w-[calc(100%_-_70px)] flex-grow sm:w-auto text-left py-3.5 pl-4 text-grey-30 text-md font-bold">
-                <Link href={`/api/showproduct/${encodeURIComponent(product?.sku_code ?? "")}`}>{product?.name}</Link>
+                <Link
+                  href={`/api/showproduct/${encodeURIComponent(
+                    product?.sku_code ?? ""
+                  )}`}
+                >
+                  {product?.name}
+                </Link>
                 <p className="text-xs text-left text-grey-60">
                   * Precio IVA incluido
                 </p>
@@ -372,102 +430,124 @@ const CheckoutVerify = () => {
               </div>
               <div className="w-full mt-3 sm:hidden"></div>
               {/* ********* Services ******** */}
-              <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                Garantía extendida{" "}
-                {product["warranty_service"]?.length > 0 && (
-                  <>
-                    <br />
-                    <b>{product["warranty_service"][0]["name"]}</b>
-                  </>
-                )}
-                <button
-                  className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                  onClick={() =>
-                    openModal(
-                      product["warranty_service"]?.[0]?.["item"]?.[
-                      "metadata"
-                      ]?.["categoryReference"] ??
-                      product["clWarrantyReference"],
-                      "warranty_service",
-                      product["warranty_service"]?.[0]?.["item"]?.[
-                      "metadata"
-                      ]?.["sku_option_id"],
-                      product.id,
-                      product.metadata.clWarrantyReference
-                    )
-                  }
-                >
-                  {product["warranty_service"]?.length > 0
-                    ? "Cambiar"
-                    : "Agregar"}
-                </button>
-              </div>
-              <div className="px-3 text-right">
-                <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                  {product["warranty_service"]?.length > 0
-                    ? product["warranty_service"][0]["quantity"]
-                    : "0"}
-                  x
-                </span>
-              </div>
-              <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
-                {product["warranty_service"]?.length > 0
-                  ? product["warranty_service"][0]["formatted_total_amount"]
-                  : "$0"}
-              </div>
+              {showWarranty ? (
+                <>
+                  <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                    Garantía extendida{" "}
+                    {product["warranty_service"]?.length > 0 && (
+                      <>
+                        <br />
+                        <b>{product["warranty_service"][0]["name"]}</b>
+                      </>
+                    )}
+                    <button
+                      className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                      onClick={() =>
+                        openModal(
+                          product["warranty_service"]?.[0]?.["item"]?.[
+                          "metadata"
+                          ]?.["categoryReference"] ??
+                          product["clWarrantyReference"],
+                          "warranty_service",
+                          product["warranty_service"]?.[0]?.["item"]?.[
+                          "metadata"
+                          ]?.["sku_option_id"],
+                          product.id,
+                          product.metadata.clWarrantyReference
+                        )
+                      }
+                    >
+                      {product["warranty_service"]?.length > 0
+                        ? "Cambiar"
+                        : "Agregar"}
+                    </button>
+                  </div>
+                  <div className="px-3 text-right">
+                    <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                      {product["warranty_service"]?.length > 0
+                        ? product["warranty_service"][0]["quantity"]
+                        : "0"}
+                      x
+                    </span>
+                  </div>
+                  <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
+                    {product["warranty_service"]?.length > 0
+                      ? product["warranty_service"][0]["formatted_unit_amount"]
+                      : "$0"}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {dropServices(product)}
+                </>
+              )}
               <div className="w-full sm:hidden"></div>
-              <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                Servicio de instalación{" "}
-                {product["installlation_service"]?.length > 0 && (
-                  <>
-                    <br />
-                    <b>{product["installlation_service"][0]["name"]}</b>
-                  </>
-                )}
-                <button
-                  className="ml-2 text-xs text-blue-500 hover:text-blue-800"
-                  onClick={() =>
-                    openModal(
-                      product["installlation_service"]?.[0]?.["item"]?.[
-                      "metadata"
-                      ]?.["categoryReference"] ??
-                      product["clInstallationReference"],
-                      "installlation_service",
-                      product["installlation_service"]?.[0]?.["item"]?.[
-                      "metadata"
-                      ]?.["sku_option_id"],
-                      product.id,
-                      product.metadata.clInstallationReference
-                    )
-                  }
-                >
-                  {product["installlation_service"]?.length > 0
-                    ? "Cambiar"
-                    : "Agregar"}
-                </button>
-              </div>
-              <div className="px-3 text-right">
-                <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                  {product["installlation_service"]?.length > 0
-                    ? product["installlation_service"][0]["quantity"]
-                    : "0"}
-                  x
-                </span>
-              </div>
-              <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-                {product["installlation_service"]?.length > 0
-                  ? product["installlation_service"][0][
-                  "formatted_total_amount"
-                  ]
-                  : "$0"}
-              </div>
+              {showInstallation ? (
+                <>
+                  <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                    Servicio de instalación{" "}
+                    {product["installlation_service"]?.length > 0 && (
+                      <>
+                        <br />
+                        <b>{product["installlation_service"][0]["name"]}</b>
+                      </>
+                    )}
+                    <button
+                      className="ml-2 text-xs text-blue-500 hover:text-blue-800"
+                      onClick={() =>
+                        openModal(
+                          product["installlation_service"]?.[0]?.["item"]?.[
+                          "metadata"
+                          ]?.["categoryReference"] ??
+                          product["clInstallationReference"],
+                          "installlation_service",
+                          product["installlation_service"]?.[0]?.["item"]?.[
+                          "metadata"
+                          ]?.["sku_option_id"],
+                          product.id,
+                          product.metadata.clInstallationReference
+                        )
+                      }
+                    >
+                      {product["installlation_service"]?.length > 0
+                        ? "Cambiar"
+                        : "Agregar"}
+                    </button>
+                  </div>
+                  <div className="px-3 text-right">
+                    <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                      {product["installlation_service"]?.length > 0
+                        ? product["installlation_service"][0]["quantity"]
+                        : "0"}
+                      x
+                    </span>
+                  </div>
+                  <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
+                    {product["installlation_service"]?.length > 0
+                      ? product["installlation_service"][0][
+                      "formatted_unit_amount"
+                      ]
+                      : "$0"}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {dropServices(product)}
+                </>
+              )}
               {/* ********* End Services ******** */}
               <div className="w-full col-start-1 col-end-3 mt-3 sm:w-auto bg-blue-50"></div>
               <div className="inline-block py-1 mt-3 font-bold text-center text-blue-dark text-md bg-blue-50">
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
+                {formatPrice(
+                  showProductTotal(
+                    product?.total_amount_float,
+                    product?.["installlation_service"],
+                    product?.["warranty_service"]
+                  )
+                )}
               </div>
             </div>
           );
@@ -487,8 +567,9 @@ const CheckoutVerify = () => {
             Ir a la tienda
           </CustomLink>
         ) : (
-          <button onClick={handleNext} className="mt-6 button button-primary">
+          <button onClick={handleNext} className={classNames("mt-6 button button-primary relative flex items-center")} disabled={isLoading}>
             Continuar
+            {isLoading && <Spinner position="absolute" />}
           </button>
         )}
       </div>
@@ -552,6 +633,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     context.preview ?? false
   );
 
+  const info = {
+    __typename: CONTENTFUL_TYPENAMES.COPY_SET,
+    sys: {
+      id: DEFAULT_WARRANTY_COPY,
+    },
+  };
+  const copyRes = await getDataContent(info);
+  const copyServices = copyRes?.copiesCollection?.items;
+
   return {
     props: {
       layout: {
@@ -560,6 +650,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         headerInfo,
         helpButton,
       },
+      copyServices,
     },
     revalidate,
   };

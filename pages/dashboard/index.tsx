@@ -75,7 +75,11 @@ const schema = yup.object({
     .nullable()
     .required("Dato Requerido")
     .min(8, "Faltan Números"),
-  contractNumber: yup.string().required("Dato Requerido"),
+  contractNumber: yup
+    .number()
+    .typeError("Dato Requerido: El valor debe ser numérico")
+    .positive("Valor no valido, deben ser números positivos")
+    .required("Dato Requerido"),
 });
 
 const Dashboard = () => {
@@ -114,12 +118,48 @@ const Dashboard = () => {
       value: "",
     },
     {
-      label: "Cédula",
+      label: "Nit",
+      value: "Nit",
+    },
+    {
+      label: "Registro civil de nacimiento",
+      value: "registroCivilDeNacimiento",
+    },
+    {
+      label: "Tarjeta de Identidad",
+      value: "tarjetaDeIdentidad",
+    },
+    {
+      label: "Cédula de ciudadanía",
       value: "cedula",
+    },
+    {
+      label: "Cédula de extranjeria",
+      value: "cedulaDeExtranjeria",
     },
     {
       label: "Pasaporte",
       value: "pasaporte",
+    },
+    {
+      label: "Documento identificación extranjero",
+      value: "documentoIdentificaciónExtranjero",
+    },
+    {
+      label: "Sin identificación del exterior",
+      value: "sinIdentificaciónDelExterior",
+    },
+    {
+      label: "PEP",
+      value: "pep",
+    },
+    {
+      label: "NIF del extranjero",
+      value: "nifDelExtranjero",
+    },
+    {
+      label: "NUIP",
+      value: "nuip",
     },
   ];
 
@@ -198,32 +238,6 @@ const Dashboard = () => {
       });
   };
 
-  const formatToPhone = (event) => {
-    if (
-      (event.keyCode < 48 || event.keyCode > 57) &&
-      (event.keyCode < 96 || event.keyCode > 105) &&
-      event.keyCode !== 190 &&
-      event.keyCode !== 110 &&
-      event.keyCode !== 8 &&
-      event.keyCode !== 9
-    ) {
-      event.preventDefault();
-      return false;
-    }
-    setTimeout(() => {
-      const target = event.target;
-      const input = event.target.value.replace(/\D/g, "").substring(0, 10); // First ten digits
-      const first = input.substring(0, 4);
-      const middle = input.substring(4, 6);
-      if (input.length > 4) {
-        target.value = `${first}-${middle}`;
-      } else if (input.length > 0) {
-        target.value = `${first}`;
-      }
-      return true;
-    }, 200);
-  };
-
   return (
     <>
       <div className="overflow-hidden">
@@ -267,7 +281,7 @@ const Dashboard = () => {
                     {errorMessage && showAlert.show && (
                       <div
                         className={classNames(
-                          "p-4 rounded-md border",
+                          "mb-4 p-4 rounded-md border",
                           showAlert.bgcolor
                         )}
                       >
@@ -345,7 +359,7 @@ const Dashboard = () => {
                           <SelectInput
                             selectOptions={selectOptions}
                             className=""
-                            label="Tipo Documento"
+                            label="Tipo de documento"
                             id="documentType"
                             isError={!!errors.documentType}
                             errorMessage={errors?.documentType?.message}
@@ -356,7 +370,7 @@ const Dashboard = () => {
                           <Textbox
                             id="documentNumber"
                             type="text"
-                            label="Número Documento"
+                            label="Número de documento"
                             className="form-input"
                             isError={!!errors.documentNumber}
                             errorMessage={errors?.documentNumber?.message}
@@ -397,7 +411,7 @@ const Dashboard = () => {
                           <Textbox
                             id="contractNumber"
                             type="text"
-                            placeholder="0000-00"
+                            placeholder="00000000"
                             label="Número de Cuenta Contrato"
                             className="form-input"
                             isError={!!errors.contractNumber}
@@ -405,7 +419,6 @@ const Dashboard = () => {
                             autoComplete="on"
                             {...register("contractNumber")}
                             isRequired={true}
-                            onKeyDown={(event) => formatToPhone(event)}
                           />
                         </div>
                       </div>

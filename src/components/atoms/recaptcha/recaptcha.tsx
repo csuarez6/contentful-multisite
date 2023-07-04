@@ -21,20 +21,24 @@ const ReCaptchaBox: React.FC<IReCaptcha> = ({
   const [token, setToken] = useState<string>("");
 
   useEffect(() => {
+    if (version == "2") return;
     // Component mounted
     showCaptcha("block");
-    // const interval = setInterval(() => {
-    //   console.info("ReCaptcha");
-    // }, 1000);
+    const interval = setInterval(() => {
+      console.info("ReCaptcha");
+    }, 1000);
 
-    // return () => {
-    //   // Component Unmounted
-    //   clearInterval(interval);
-    //   window.grecaptcha = null;
-    //   if (window.grecaptcha) {
-    //     showCaptcha("none");
-    //   }
-    // };
+    return () => {
+      // Component Unmounted
+      clearInterval(interval);
+      showCaptcha("none");
+
+      // window.grecaptcha = null;
+      // if (window.grecaptcha) {
+      //   showCaptcha("none");
+      // }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

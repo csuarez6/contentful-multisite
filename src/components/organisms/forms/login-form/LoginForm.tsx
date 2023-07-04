@@ -77,8 +77,8 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
             type="password"
             placeholder="********"
             className="form-input"
-            autoComplete="on"
             isError={!!errors.password}
+            autoComplete="off"
             errorMessage={errors?.password?.message}
             {...register("password")}
           />

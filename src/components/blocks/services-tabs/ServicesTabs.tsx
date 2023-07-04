@@ -90,7 +90,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
               >
                 {featuredContentsCollection.items.map((tab) => (
                   <SwiperSlide
-                    key={tab?.name+'_'+tab?.sys.id}
+                    key={tab?.name+'_'+tab?.sys?.id}
                     className="max-w-[176px] w-[100px] xs:w-[120px] lg:w-[176px] h-full shrink-0"
                   >
                     {(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink) ? (
@@ -139,7 +139,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
             {featuredContentsCollection.items.map((tab, idx) => (
               (!tab?.urlPaths?.[0] && !tab?.internalLink && !tab?.externalLink) && (
                 <Tab.Panel
-                  key={tab?.name+'_'+tab?.sys.id}
+                  key={tab?.name+'_'+tab?.sys?.id}
                   className="focus:outline-none"
                 >
                   <Transition
@@ -155,7 +155,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     {
                       tab?.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
                         ? (<LeftFeatured {...tab} buttonType={view?.buttonType} />)
-                        : (<div key={tab?.name+'_'+tab?.sys.id}>{jsonToReactComponent(tab)}</div>)
+                        : (<div key={tab?.name+'_'+tab?.sys?.id}>{jsonToReactComponent(tab)}</div>)
                     }
                   </Transition>
                 </Tab.Panel>

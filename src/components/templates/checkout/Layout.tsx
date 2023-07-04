@@ -1,22 +1,52 @@
-import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
-import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import uuid from "react-uuid";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
+import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
-import uuid from "react-uuid";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
-import { classNames, formatPrice } from "@/utils/functions";
-import Link from "next/link";
+import StepsLine from "@/components/organisms/line-step/StepsLine";
+import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
+import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
+import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
+import Icon from "@/components/atoms/icon/Icon";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
 }
 
+const getStepsLine = (paymentType) => {
+  return [
+    {
+      title: "Verificar tu compra",
+      path: `/checkout/${paymentType}/verify`
+    },
+    {
+      title: "Datos personales",
+      path: `/checkout/${paymentType}/personal-info`
+    },
+    {
+      title: "Ingresar dirección",
+      path: `/checkout/${paymentType}/addresses`
+    },
+    {
+      title: "Resumen",
+      path: `/checkout/${paymentType}/summary`
+    },
+  ];
+};
+
 const DEFAULT_PAYMENT_METHOD = "dummy";
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
-  const { asPath, push } = useRouter();
+  const { asPath, push, query } = useRouter();
+  const stepsList = getStepsLine(query.paymentType);
+  const showStepList = stepsList.find(el => el.path === asPath);
+
   const {
     order,
     tokenRecaptcha,
@@ -29,7 +59,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setDefaultShippingMethod,
     validateExternal,
     upgradeTimePay,
-    hasShipment
+    hasShipment,
+    isFetchingOrder
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
@@ -43,6 +74,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
+  const asPathUrl = asPath.split("/")[3];
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -161,19 +193,16 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productUpdates]);
 
-  const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
-    const productPriceTmp = productPrice ?? 0;
-    const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
-    const warrantyPriceTmp = (warrantyPrice && warrantyPrice.length > 0) ? warrantyPrice[0].total_amount_float : 0;
-    return formatPrice(productPriceTmp + installPriceTmp + warrantyPriceTmp);
-  };
-
   const handlePayment = async (toCancel = false) => {
     try {
       const path =
         `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
+        body: JSON.stringify({
+          customer: order?.customer,
+          products: order?.line_items,
+        }),
       });
       const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
@@ -201,10 +230,51 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     }
   };
 
+  const breadcrumbsList: IPromoBlock =
+  {
+    ctaCollection: {
+      items: [
+        {
+          promoTitle: "Hogares",
+          internalLink: {
+            urlPaths: ["/"]
+          }
+        },
+        {
+          promoTitle: "Mis Compras",
+          internalLink: {
+            urlPaths: ["/dashboard/orders"]
+          }
+        },
+        {
+          promoTitle: "Estado de Orden",
+          internalLink: {
+            urlPaths: ["/checkout/pse/purchase-order"]
+          }
+        },
+      ]
+    }
+  };
+
   return (
     <>
+      {asPathUrl === "purchase-order" && (
+        <div className="hidden 2md:flex w-full main-container justify-end relative top-[17px] pt-2">
+          <div className="top-[-15px] absolute left-0 main-container">
+            <Breadcrumbs {...breadcrumbsList} />
+          </div>
+          <p className="font-bold 2md:text-2xl text-blue-dark">Resumen de compra</p>
+        </div>
+      )}
       <div className="main-container grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 mt-[84px] mb-[180px]">
-        <div className="col-span-2">{children}</div>
+        {showStepList && (
+          <div className="col-span-full">
+            <StepsLine {...{ items: stepsList }} />
+          </div>
+        )}
+        <div className="col-span-2">
+          {children}
+        </div>
         {(products?.length > 0 || productUpdates?.length > 0) && (
           <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
             <div className="flex flex-col gap-[17px] w-full h-full text-justify">
@@ -222,30 +292,129 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   </div>
                 )}
                 {products?.map((product, i) => (
-                  <div key={`lateral-product-overview-${product.id}`}>
-                    <div
-                      className="grid grid-cols-1 text-sm"
-                      key={"product-name" + i}
-                    >
-                      <p className="">{product.name}</p>
-                      <p className="text-xs">* IVA incluido</p>
-                    </div>
-                    <div
-                      className="grid grid-cols-2 pb-2 mb-2 text-sm border-b border-gray-300"
-                      key={"product-count" + i}
-                    >
-                      <p>Cantidad: {product.quantity}</p>
-                      <span className="text-right text-blue-dark">
-                        {/* {product?.formatted_unit_amount} */}
-                        {showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"])}
-                      </span>
+                  <div key={`lateral-product-overview-${product.id}`} className="pb-2 mb-2 border-b border-gray-300">
+                    <div className="flex items-start gap-2">
+                      <figure className="w-16 shrink-0">
+                        {product?.image_url && (
+                          <Image
+                            className="object-contain w-full h-full"
+                            src={product?.image_url}
+                            alt={product?.name}
+                            width={64}
+                            height={64}
+                            priority
+                          />
+                        )}
+                      </figure>
+                      <div className="flex-1">
+                        {/* Start Product Information */}
+                        <div
+                          className="grid grid-cols-1 text-sm mb-2"
+                          key={"product-name" + i}
+                        >
+                          <p className="font-bold">{product.name}</p>
+                          <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
+                        </div>
+                        {/* End Product Information */}
+
+                        {/* Start Product Cost */}
+                        <div
+                          className="grid grid-cols-3 text-sm"
+                          key={"product-unit-count" + i}
+                        >
+                          <p className="col-span-1">C/U:</p>
+                          <p className="text-right text-blue-dark col-span-2">
+                            <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                              {product.quantity}
+                              x
+                            </span>
+                            <span>
+                              {product.formatted_unit_amount}
+                            </span>
+                          </p>
+                        </div>
+                        {/* End Product Cost */}
+
+                        {/* Start Product Warranty */}
+                        {(product?.["warranty_service"] && product?.["warranty_service"].length > 0) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-warranty-count" + i}
+                          >
+                            <p className="col-span-1 flex">
+                              <span>G.E:</span>
+                              <span title="Garantía extendida" className="ml-1 flex items-center cursor-help">
+                                <Icon icon="info" size={18} className="text-gray-500" />
+                              </span>
+                            </p>
+
+                            <p className="text-right text-blue-dark col-span-2">
+                              <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                                {product["warranty_service"]?.length > 0
+                                  ? product["warranty_service"][0]["quantity"]
+                                  : "0"}
+                                x
+                              </span>
+                              <span>
+                                {formatPrice(product?.["warranty_service"][0].unit_amount_float)}
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                        {/* End Product Warranty */}
+
+                        {/* Start Product Installation */}
+                        {(product?.["installlation_service"] && product?.["installlation_service"].length > 0) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-installation-count" + i}
+                          >
+                            <p className="col-span-1 flex">
+                              <span>S.I.:</span>
+                              <span title="Servicio de instalación" className="ml-1 flex items-center cursor-help">
+                                <Icon icon="info" size={18} className="text-gray-500" />
+                              </span>
+                            </p>
+
+                            <p className="text-right text-blue-dark col-span-2">
+                              <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                                {product["installlation_service"]?.length > 0
+                                  ? product["installlation_service"][0]["quantity"]
+                                  : "0"}
+                                x
+                              </span>
+                              <span>
+                                {formatPrice(product?.["installlation_service"][0].unit_amount_float)}
+                              </span>
+                            </p>
+
+                          </div>
+                        )}
+                        {/* Ent Product Installation */}
+
+                        {/* Start Product Subtotal Price */}
+                        <div
+                          className="grid grid-cols-3 text-sm"
+                          key={"product-count" + i}
+                        >
+                          <p className="font-bold col-span-1">Subtotal:</p>
+                          <span className="text-right text-blue-dark col-span-2 font-bold">
+                            {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
+                          </span>
+                        </div>
+                        {/* End Product Subtotal Price */}
+                      </div>
                     </div>
                   </div>
                 ))}
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
-                    {(hasShipment) ? "$20.000,00" : "$0"}
+                    {
+                      (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
+                        ? (hasShipment) ? "$20.000,00" : "$0"
+                        : "-"
+                    }
                   </span>
                 </div>
                 <div className="grid grid-cols-2 mt-2 rounded">
@@ -290,7 +459,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             </div>
           </article>
         )}
-      </div>
+        {(isFetchingOrder && products?.length === 0 && productUpdates?.length === 0) && (
+          <ProductDetailsLayoutSkeleton />
+        )}
+      </div >
       {openDummyPGModal && (
         <ModalSuccess
           {...MocksModalSuccessProps.modalLayout}
@@ -315,15 +487,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             </button>
           </div>
         </ModalSuccess>
-      )}
-      {error && (
-        <InformationModal
-          icon={errorMessage.icon}
-          type={errorMessage.type}
-          title={errorMessage.title}
-          close={() => setError(false)}
-        />
-      )}
+      )
+      }
+      {
+        error && (
+          <InformationModal
+            icon={errorMessage.icon}
+            type={errorMessage.type}
+            title={errorMessage.title}
+            close={() => setError(false)}
+          />
+        )
+      }
     </>
   );
 };

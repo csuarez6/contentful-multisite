@@ -1,6 +1,5 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
-import RadioBox from "@/components/atoms/input/radiobox/RadioBox";
 import { classNames, formatPrice } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { useState } from "react";
@@ -65,30 +64,19 @@ export const ModalIntall: React.FC<any> = ({
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
+          <p className="mb-4">Seleccione el servicio de instalación que desee para su producto.</p>
           <div
-            className="p-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
+            className="px-2 py-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
             role="alert"
           >
-            el servicio está sujeto a ubicación, si desea más información puede
-            hacer
-            <CustomLink
-              className="!inline-block ml-1 font-bold underline"
-              content={{ urlPaths: ["/otros-servicios/instalacion"] }}
-            >
-              clic aquí
-            </CustomLink>
-            .
+            El servicio de instalación está sujeto a una ubicación, si desea más información puede
+            hacer {" "} <CustomLink className="!inline-block font-bold underline" content={{ urlPaths: ["/otros-servicios/instalacion"] }}>clic aquí</CustomLink>.
           </div>
-          Antes de empezar, queremos informarte que puedes adquirir la
-          instalación de tu gasodoméstico en esta compra.
-          <br />
-          Si aún no sabes qué incluye, puedes informarte en la landing de
-          instalación.
         </div>
         <div>
           <ul
             className={classNames(
-              "px-3 py-[10px] gap-2 grid",
+              "gap-2 grid",
               optionsList.length > 0
                 ? "grid-cols-1 sm:grid-cols-2"
                 : "grid-cols-1"
@@ -154,11 +142,11 @@ export const ModalWarranty: React.FC<any> = ({
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="text-left">Servicio de garantía para su producto.</div>
+        <div className="text-left">Seleccione el tipo de garantía extendida que desee para su producto.</div>
         <div>
           <ul
             className={classNames(
-              "px-3 py-[10px] gap-2 grid",
+              "gap-2 grid",
               optionsList.length > 0
                 ? "grid-cols-1 sm:grid-cols-2"
                 : "grid-cols-1"
@@ -215,32 +203,5 @@ export const ModalWarranty: React.FC<any> = ({
         </div>
       </div>
     </>
-  );
-};
-
-export const ModalShipping = () => {
-  return (
-    <div>
-      <p className="text-blue-dark">
-        Para llevar su producto, elija un tipo de envío:
-      </p>
-      <form>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Estándar (5 a 10 días hábiles)" />
-        </div>
-        <div className="w-full">
-          <RadioBox name="servicio" label="Express (1 día hábil)" />
-        </div>
-      </form>
-      <div className="flex justify-end gap-2">
-        <CustomLink
-          className="button button-primary"
-          onClick={(e) => e.preventDefault()}
-          content={{ externalLink: "#" }}
-        >
-          Aceptar
-        </CustomLink>
-      </div>
-    </div>
   );
 };

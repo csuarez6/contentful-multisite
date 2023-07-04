@@ -53,20 +53,18 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
         >
           {image?.url && (
             <div aria-hidden="true" className={imageAlignLocal}>
-              <figure
-                className={classNames(
-                  "relative overflow-hidden rounded-lg",
-                  view?.columnsSize > 2
-                    ? "aspect-[384/624]"
-                    : "aspect-[612/569]"
-                )}
-              >
+              <figure className="relative">
                 <Image
-                  className="block w-auto object-cover"
                   src={image.url}
                   alt={image.title}
                   width={view?.columnsSize > 2 ? 384 : 612}
                   height={view?.columnsSize > 2 ? 624 : 569}
+                  className={classNames(
+                    "block w-auto object-cover rounded-lg",
+                    view?.columnsSize > 2
+                      ? "aspect-[384/624]"
+                      : "aspect-[612/569]"
+                  )}
                 />
               </figure>
             </div>

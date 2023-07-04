@@ -12,6 +12,7 @@ export interface IContextCheckout {
   tokenRecaptcha: string;
   timeToPay: number;
   hasShipment: boolean;
+  isFetchingOrder: boolean;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
@@ -49,6 +50,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   tokenRecaptcha: "",
   timeToPay: undefined,
   hasShipment: undefined,
+  isFetchingOrder: undefined,
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,

@@ -19,6 +19,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_total_tax_amount",
       "formatted_gift_card_amount",
       "formatted_total_amount_with_taxes",
+      "total_amount_with_taxes_float",
       "line_items",
       "customer",
       "metadata",
@@ -52,38 +53,30 @@ export const useCommerceLayer = () => {
   const { clientLogged, user } = useContext(AuthContext);
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
+  const [isFetchingOrder, setIsFetchingOrder] = useState<boolean>(false);
   const [orderError, setOrderError] = useState<boolean>(false);
   const [hasShipment, setHasShipment] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
-  const [isInitialRender, setIsInitialRender] = useState(true);
+  const [isInitialRender, setIsInitialRender] = useState<boolean>();
   const [localOrderId, setLocalOrderId] = useState<string>();
 
+  /**
+   * Set localStorage and State Order ID
+   */
   useEffect(() => {
     (async () => {
       try {
-        const checkUpdates = asPath.startsWith("/checkout/pse");
         setLocalOrderId(localStorage.getItem('orderId'));
-        if (isInitialRender) setIsInitialRender(false);
-
-        if (isInitialRender || checkUpdates) {
-          const order = await getOrder(checkUpdates);
-          setOrder(order);
-        }
-        if (!orderId || !localOrderId) {
-          setOrderError(true);
-        } else {
-          setOrderError(false);
-        }
-
+        setOrderError(!orderId || !localOrderId);
       } catch (error) {
-        console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+        console.error("Error at: useCommerceLayer setLocalOrderID", error);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath, orderId, orderError, localOrderId]);
+  }, [orderId, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {
@@ -148,6 +141,7 @@ export const useCommerceLayer = () => {
   };
 
   const getOrder = useCallback(async (checkUpdates?: boolean) => {
+    setIsFetchingOrder(true);
     try {
       const idOrder = localStorage.getItem("orderId");
 
@@ -163,12 +157,14 @@ export const useCommerceLayer = () => {
         throw new Error(INVALID_ORDER_ID_ERROR);
       }
 
+      setIsFetchingOrder(false);
       return order;
     } catch (error) {
       console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
       const client = await generateClient();
       const draftOrder = await client.orders.create({}).catch(err => err.errors);
       if (draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
+      setIsFetchingOrder(false);
       return draftOrder;
     }
   }, []);
@@ -184,6 +180,39 @@ export const useCommerceLayer = () => {
     }
 
   }, [getOrder]);
+
+  /**
+   * Function to SetUP the Order on the Context 
+   */
+  const setUpOrder = useCallback(async (checkUpdates: boolean) => {
+    try {
+      const order = await getOrder(checkUpdates);
+      setOrder(order);
+    } catch (error) {
+      console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+    }
+  }, [getOrder]);
+
+  /**
+   * Set the order only once for performance (in the initial render of the context)
+   */
+  useEffect(() => {
+    (async () => {
+      if(typeof isInitialRender == "undefined") setIsInitialRender(true);
+      if(isInitialRender) {
+        await setUpOrder(false);
+        setIsInitialRender(false);
+      }
+    })();
+  }, [isInitialRender, setUpOrder]);
+
+  /**
+   * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
+   */
+  useEffect(() => {
+    const checkUpdates = asPath.startsWith("/checkout/pse");
+    if(checkUpdates && isInitialRender === false) setUpOrder(true);
+  }, [asPath, isInitialRender, setUpOrder]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string, category?: object) => {
@@ -347,7 +376,7 @@ export const useCommerceLayer = () => {
   }, [user?.id, clientLogged, orderId]);
 
   const addCustomer = useCallback(
-    async ({ email, name, lastName, cellPhone }) => {
+    async ({ email, name, lastName, cellPhone, documentType, documentNumber }) => {
       const client = await generateClient();
       await client.orders.update(
         {
@@ -360,6 +389,8 @@ export const useCommerceLayer = () => {
             name,
             lastName,
             cellPhone,
+            documentType,
+            documentNumber,
             hasPersonalInfo: true,
           },
         },
@@ -371,8 +402,8 @@ export const useCommerceLayer = () => {
   const getAddresses = useCallback(async () => {
     const client = await generateClient();
     const [shippingAddress, billingAddress] = await Promise.all([
-      client.orders.shipping_address(orderId),
-      client.orders.billing_address(orderId),
+      client.orders?.shipping_address(orderId),
+      client.orders?.billing_address(orderId),
     ]);
 
     return {
@@ -586,6 +617,7 @@ export const useCommerceLayer = () => {
     onRecaptcha,
     onHasShipment,
     hasShipment,
+    isFetchingOrder,
     getOrder,
     reloadOrder,
     addToCart,

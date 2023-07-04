@@ -9,6 +9,7 @@ export interface IHeadingCard {
   headClasses?: string;
   isCheck?: boolean;
   hideCheck?: boolean;
+  rightIcon?: string
 }
 
 /**
@@ -23,7 +24,7 @@ export interface IHeadingCard {
   * @param {string} headClasses clases CSS para head card.
   * @param {boolean} isCheck Verifica estado check ícono a la derecha de cabecera card.
   * @param {boolean} hideCheck deshabilitar ícono check de la derecha de cabecera card.
-  *
+  * @param {boolean} rightIcon ícono a la derecha del título de cabecera card.
   */
 
 const HeadingCard: React.FC<IHeadingCard> = ({
@@ -33,7 +34,8 @@ const HeadingCard: React.FC<IHeadingCard> = ({
   classes,
   headClasses,
   isCheck,
-  hideCheck
+  hideCheck,
+  rightIcon = "check",
 }) => {
   return (
     <div className={classNames("w-full rounded-xl shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)]", classes)}>
@@ -52,7 +54,7 @@ const HeadingCard: React.FC<IHeadingCard> = ({
         </div>
         {!hideCheck &&
           <span className="flex text-neutral-30 items-center shrink-0 w-[34px] h-[34px]">
-            <Icon icon={isCheck ? 'check' : 'loader'} className="w-full h-full text-blue-dark" aria-hidden="true" />
+            <Icon icon={isCheck ? rightIcon : 'loader'} className="w-full h-full text-blue-dark" aria-hidden="true" />
           </span>
         }
       </div>

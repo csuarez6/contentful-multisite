@@ -55,6 +55,8 @@ export interface IPromoContent {
     content?: IRichText;
     mediaInternalLink?: IAsset;
     urlPaths?: string[];
+    simpleView?: string;
+    iframeHeight?: number;
 }
 
 export interface IPromoBlock extends IBlockProps {

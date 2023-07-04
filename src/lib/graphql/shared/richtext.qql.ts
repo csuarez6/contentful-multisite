@@ -1,5 +1,6 @@
 import { BlockFormQuery } from "../blocks/form-content.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
+import ViewFeatured from "../views/featured.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import ViewListWithIcons from "../views/list-with-icons.gql";
 import ViewRichText from "../views/richText.gql";
@@ -34,35 +35,15 @@ const blockPromoRichText = `
     items {
       ...on Page {
         ${DefaultQuery}
-        promoTitle
-        promoDescription {
-          json
-        }
       }
       ...on Product {
         ${DefaultQuery}
       }
       ...on AuxCustomContent {
         ${DefaultQuery}
-        name
-        promoTitle
-        promoDescription {
-          json
-        }
-        promoImage {
-          ${AssetImageQuery}
-        }
-        promoIcon
       }
       ...on BlockPromoContent{
         ${DefaultQuery}
-        name
-        title
-        pretitle
-        subtitle
-        description {
-          json
-        }
       } 
     }
   }
@@ -102,6 +83,9 @@ const blockPromoRichText = `
     ...on ViewSecondaryBanner{
       ${ViewSecondaryBanner}
     }
+    ...on ViewFeatured{
+      ${ViewFeatured}
+    }
     
   }
   blockId
@@ -134,6 +118,7 @@ export const RichtextLinksQuery = `
         __typename
         sys {
           id
+          __typename
         }
       }
     }

@@ -163,9 +163,11 @@ const CustomTable = ({ children }) => {
           </li>
         </ul>
       }
-      <table ref={tableEl} className={`${touchStart ? 'touchOn' : null} group table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6`}>
-        <tbody className="flex flex-col w-full md:table-row-group">{children}</tbody>
-      </table>
+      <div className="overflow-auto mb-4">
+        <table ref={tableEl} className={`${touchStart ? 'touchOn' : null} group table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-2`}>
+          <tbody className="flex flex-col w-full md:table-row-group">{children}</tbody>
+        </table>
+      </div>
     </>
   );
 };

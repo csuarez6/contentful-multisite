@@ -231,7 +231,7 @@ const CallbackPage = () => {
                       id="contractAccount"
                       name="contractAccount"
                       label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
-                      placeholder="00000-000"
+                      placeholder="00000000"
                       {...register("contractAccount")}
                     />
                     {errors.contractAccount && (

@@ -1,17 +1,14 @@
 import NextErrorComponent from "next/error";
-
+import { mocksErrorBlockprops } from "@/components/blocks/error-block/ErrorBlock.mock";
 // import * as Sentry from "@sentry/nextjs";
 
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
+import ErrorBlock from "@/components/blocks/error-block/ErrorBlock";
 
-const CustomErrorComponent = (props: any) => {
+const CustomErrorComponent = () => {
   return (
-    <div className="overflow-hidden">
-      <div className="main-container">
-        <NextErrorComponent statusCode={props.statusCode} />;
-      </div>
-    </div>
+      <ErrorBlock {...mocksErrorBlockprops.data}/>
   );
 };
 

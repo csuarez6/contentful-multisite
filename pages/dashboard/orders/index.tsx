@@ -25,6 +25,7 @@ import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 type OrderStatus =
     | "draft"
@@ -117,7 +118,7 @@ const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
     { name: "Compras", href: "#", icon: ShoppingCartIcon, current: true },
     { name: "Direcciones", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
-    { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false},
+    { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false },
 ];
 
 const DashboardOrders = () => {
@@ -200,8 +201,21 @@ const DashboardOrders = () => {
                                                     if (!order) return <></>;
                                                     return <>{cell?.map((cell) => {
                                                         return (
-                                                            <td key={order.number} {...p} {...cell.getCellProps()} className="py-2 border-b">
-                                                                <p className="text-sm font-bold text-blue-dark"># {cell.render('Cell')}</p>
+                                                            <td
+                                                                key={order.number}
+                                                                {...p}
+                                                                {...cell.getCellProps()}
+                                                                className="py-2 border-b"
+                                                            >
+                                                                <CustomLink
+                                                                    content={{
+                                                                        urlPaths: [`/dashboard/orders/${order.id}`],
+                                                                    }}
+                                                                    className="text-sm font-bold text-blue-dark"
+                                                                >
+                                                                    # {cell.render('Cell')}
+                                                                </CustomLink>
+                                                                {/* <p className="text-sm font-bold text-blue-dark"># {cell.render('Cell')}</p> */}
                                                                 <p className="text-xs text-gray-500">
                                                                     contiene {order.skus_count} artículo(s)
                                                                 </p>

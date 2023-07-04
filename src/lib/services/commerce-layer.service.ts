@@ -106,7 +106,11 @@ export const getMerchantToken = async () => {
     return accessToken;
   } catch (error) {
     console.error("Error on «getMerchantToken»", error);
-    return "";
+    return {
+      error: true,
+      data: error,
+      message: "Error on «getMerchantToken»"
+    };
   }
 };
 
@@ -137,11 +141,12 @@ export const getCustomerTokenCl = async ({ email, password }) => {
   }
 };
 
-const getCommerlayerClient = async (accessToken: string) =>
+const getCommerlayerClient = async (accessToken: string) => (
   CommerceLayer({
     organization: "vanti-poc",
     accessToken,
-  });
+  })
+);
 
 export const getCLAdminCLient = async () => {
   try {
@@ -168,6 +173,13 @@ export const createCustomer = async ({
 }: ICustomer) => {
   try {
     const merchantToken = await getMerchantToken();
+    if (merchantToken.error) {
+      return {
+        status: 400,
+        error: merchantToken.data,
+        message: merchantToken.message
+      };
+    }
     const cl = await getCommerlayerClient(merchantToken);
 
     const createCustomer = await cl.customers.create({
@@ -187,7 +199,7 @@ export const createCustomer = async ({
     return { status: 201, ...createCustomer }; // this will return the created resource object
   } catch (error) {
     console.error("Error - Customer Service: ", error);
-    return { status: error.response.status };
+    return { status: error.status, error };
   }
 };
 
@@ -346,7 +358,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     reservation = sku?.stock_items?.find(
       (p) => p.stock_location.reference === "gasodomesticos"
     )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
-      
+
     if (sku) {
       product = {
         priceGasodomestico:
@@ -525,10 +537,11 @@ export const createAdjustmentsService = async ({
 }: IAdjustments) => {
   try {
     const cl = await getCLAdminCLient();
+    const amount_centsFloat = (parseFloat(amount_cents).toFixed(2)).replace(".", "");
     const adjustment = await cl.adjustments.create({
       name: name,
       currency_code: currency_code ?? "COP",
-      amount_cents: parseInt(amount_cents),
+      amount_cents: parseInt(amount_centsFloat),
       metadata: {
         type: type,
         sku_id: sku_id,

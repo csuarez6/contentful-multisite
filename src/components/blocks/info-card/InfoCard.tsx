@@ -19,15 +19,15 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
     <section
       id={blockId ? blockId : sysId}
       className={classNames(
-        view?.alignTitle !== "Centrado" ? "lg:grid-cols-3" : null,
-        "grid grid-cols-1 section gap-9"
+        "grid grid-cols-1 section gap-9",
+        view?.alignTitle !== "Centrado" && "lg:grid-cols-3",
       )}
     >
       {(title || description) && (
         <div
           className={classNames(
-            "grid gap-9 auto-rows-min",
-            view?.alignTitle !== "Centrado" ? "text-left" : "text-center"
+            "grid grid-cols-1 gap-9 auto-rows-min",
+            view?.alignTitle === "Centrado" ? "text-center" : "text-left"
           )}
         >
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -41,10 +41,10 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
       {featuredContentsCollection?.items?.length > 0 && (
         <div
           className={classNames(
-            view.alignTitle !== "Centrado"
-              ? "lg:col-span-2 lg:grid-cols-2"
-              : "lg:grid-cols-3",
-            "grid grid-cols-1 gap-5 md:grid-cols-2"
+            "grid grid-cols-1 gap-5 md:grid-cols-2",
+            view?.alignTitle !== "Centrado" && "lg:col-span-2 lg:grid-cols-2",
+            view?.alignTitle === "Centrado" && "lg:grid-cols-3",
+            view?.alignTitle === "Centrado" && view?.columnsSize === 4 && "xl:grid-cols-4",
           )}
         >
           {featuredContentsCollection.items.map((content) => (
@@ -62,7 +62,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
       {listedContentsCollection?.items?.length > 0 && (
         <div className="grid lg:grid-cols-4 col-span-3 gap-4">
           {listedContentsCollection.items.map(content => (
-            <InfoCard 
+            <InfoCard
               key={content?.promoTitle?.es ?? content?.name}
               {...content}
             />

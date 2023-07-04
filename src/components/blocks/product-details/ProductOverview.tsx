@@ -50,6 +50,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   relatedProducts,
   isNew,
   discount,
+  copyServices,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -127,7 +128,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         ) {
           const dataAdjustment: IAdjustments = {
             name: installCheck["name"] + " - " + sku,
-            amount_cents: installCheck["price_amount_cents"],
+            amount_cents: installCheck["price_amount_float"],
             type: "installation",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,
@@ -171,7 +172,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 (Number(warrantyCheck["price_amount_float"]) *
                   Number(_priceGasodomestico)) /
                 100
-              ).toString() + "00",
+              ).toString(),
             type: "warranty",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,
@@ -245,7 +246,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 )}
                 <div className="flex gap-3">
                   {isNew && (
-                    <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                    <div className="flex px-2 py-1 uppercase bg-yellow-100 rounded-lg h-fit">
                       <span className="title is-5">nuevo</span>
                     </div>
                   )}
@@ -306,7 +307,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   )}
                   <div className="flex gap-3">
                     {isNew && (
-                      <div className="flex px-2 py-1 uppercase rounded-lg bg-yellow-100 h-fit">
+                      <div className="flex px-2 py-1 uppercase bg-yellow-100 rounded-lg h-fit">
                         <span className="title is-5">nuevo</span>
                       </div>
                     )}
@@ -400,6 +401,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         category={category}
                         onEventHandler={servicesHandler}
                         _priceGasodomestico={_priceGasodomestico}
+                        copyServices={copyServices}
                       />
                     )}
                   </ul>
@@ -477,6 +479,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                             category={category}
                             onEventHandler={servicesHandler}
                             _priceGasodomestico={_priceGasodomestico}
+                            copyServices={copyServices}
                           />
                         )}
                       </form>

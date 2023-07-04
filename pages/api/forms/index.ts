@@ -75,13 +75,13 @@ const handler = async (
       const response = await consultQuotaVantilisto(req.body);
 
       if (response.result) {
-        const { account, clientName, creditAvailable } = response.data;
+        const { account, cupoAprobado, cupoUtilizado, cupoDisponible } = response.data;
         res.status(200).json({
           result: {
             success: true,
-            quota: creditAvailable,
-            name: clientName,
-            address: "",
+            quotaApproved: cupoAprobado,
+            quotaUsed: cupoUtilizado,
+            quotaAvailable: cupoDisponible,
             account,
           }
         });

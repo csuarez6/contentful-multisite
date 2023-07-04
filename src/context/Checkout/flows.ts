@@ -27,42 +27,32 @@ export type VantiCheckoutFlow = {
 export class Flow implements VantiCheckoutFlow {
   name: VantiCheckoutFlowType;
   steps: string[];
-  loggedSteps: string[];
 
   constructor(
     name: VantiCheckoutFlowType,
-    steps: string[],
-    loggedSteps?: string[]
+    steps: string[]
   ) {
     this.name = name;
     this.steps = steps;
-    this.loggedSteps = loggedSteps || steps;
   }
 
-  public getNextStep(step: string, isLogged = false) {
-    const steps = isLogged ? this.loggedSteps : this.steps;
+  public getNextStep(step: string) {
+    const steps = this.steps;
     const i = steps.findIndex((item) => item === step);
-
     return steps.at(i + 1);
   }
 
-  public getPrevStep(step: string, isLogged = false) {
-    const steps = isLogged ? this.loggedSteps : this.steps;
+  public getPrevStep(step: string) {
+    const steps = this.steps;
     const i = steps.findIndex((item) => item === step);
-
     return steps.at(i - 1);
-  }
-
-  public getAddressesStep() {
-    return this.steps.find((i) => i === "addresses");
   }
 };
 
 const flows = [
   new Flow(
     VantiCheckoutFlowType.pse,
-    ["verify", "personal-info", "addresses", "summary"],
-    ["verify", "addresses", "summary"],
+    ["verify", "personal-info", "addresses", "summary"]
   )
 ];
 export default flows;

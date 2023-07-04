@@ -13,7 +13,7 @@ import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
-import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
+// import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
@@ -21,6 +21,8 @@ import citiesFile from '@/utils/static/cities-co.json';
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import SelectInput from "@/components/atoms/selectInput/SelectInput";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 interface IAddress {
   id?: string;
@@ -28,6 +30,9 @@ interface IAddress {
   cityCode: string;
   address: string;
   phone: string;
+  street: string;
+  residence: string;
+  receiver: string;
   isSameAsBillingAddress?: boolean
 }
 
@@ -37,30 +42,40 @@ interface IAddresses {
 }
 
 const toAddressForm = (addr: Address): IAddress => {
+  const line2Tmp = (addr && addr.line_2) ? (addr.line_2).split(', ') : [];
   return {
     id: addr?.id ?? "",
     address: addr?.line_1 ?? "",
     cityCode: addr?.city ?? "",
     stateCode: addr?.state_code ?? "",
-    phone: addr?.phone ?? ""
+    phone: addr?.phone ?? "",
+    street: (line2Tmp.length > 0) ? line2Tmp[0] : "",
+    residence: (line2Tmp.length > 0) ? line2Tmp[1] : "",
+    receiver: addr?.notes ?? ""
   };
 };
 
 const schema = yup.object({
   shippingAddress: yup.object({
     stateCode: yup.string().required("Dato Requerido"),
-    cityCode: yup.string().required("Dato Requerido"),
-    address: yup.string().required("Dato Requerido"),
-    phone: yup.string().required("Dato Requerido"),
+    cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
+    address: yup.string().trim().required("Dato Requerido"),
+    street: yup.string().required("Dato Requerido"),
+    residence: yup.string().nullable().notRequired(),
+    receiver: yup.string().nullable().notRequired(),
     isSameAsBillingAddress: yup.boolean()
+    // phone: yup.string().required("Dato Requerido"),
   }),
   billingAddress: yup.object().when('shippingAddress.isSameAsBillingAddress', {
     is: false,
     then: yup.object({
       stateCode: yup.string().required("Dato Requerido"),
-      cityCode: yup.string().required("Dato Requerido"),
-      address: yup.string().required("Dato Requerido"),
-      phone: yup.string().required("Dato Requerido"),
+      cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
+      address: yup.string().trim().required("Dato Requerido"),
+      street: yup.string().required("Dato Requerido"),
+      residence: yup.string().nullable().notRequired(),
+      receiver: yup.string().nullable().notRequired(),
+      // phone: yup.string().required("Dato Requerido"),
     }).required('Requerido'),
     otherwise: yup.object().notRequired()
   })
@@ -101,7 +116,7 @@ export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedMod
   );
 };
 
-const CheckoutAddresses = () => {
+const CheckoutAddress = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState<State[]>([]);
@@ -112,6 +127,8 @@ const CheckoutAddresses = () => {
   const [isActivedModal, setIsActivedModal] = useState(false);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
+  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
 
   const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
@@ -163,9 +180,11 @@ const CheckoutAddresses = () => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const cities: string[] = await getCitiesByState(shippingStateWatched);
-      setShippingCities(cities);
+      const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
+      const cities: string[] = await getCitiesByState(shippingStateWatched);       
+      setShippingCities(citiesFinal.concat(cities));
     })();
+    setShowAlert(false);
   }, [shippingStateWatched]);
 
   useEffect(() => {
@@ -211,12 +230,19 @@ const CheckoutAddresses = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
+  const checkAlphaNumeric = (e) => {
+    const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+    if (!(e.key).match(letters)) e.preventDefault();
+  };
+
   const toCLAddress = (addr: IAddress): Partial<AddressCreate> => ({
     country_code: DEFAULT_COUNTRY,
     state_code: addr.stateCode,
     city: addr.cityCode,
     line_1: addr.address,
-    phone: addr.phone,
+    line_2: addr.street + ", " + addr.residence,
+    notes: addr?.receiver ?? "",
+    phone: order?.metadata?.cellPhone ?? "0000",
     zip_code: DEFAULT_ZIP_CODE,
   });
 
@@ -228,7 +254,6 @@ const CheckoutAddresses = () => {
         await deleteItemService(checkCovered["idItemsIntall"]);
       }
       const { shippingAddress, billingAddress } = data;
-
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
       let clBillingAddr = undefined;
 
@@ -268,8 +293,8 @@ const CheckoutAddresses = () => {
 
   const onSubmit = async (data: IAddresses) => {
     try {
+      setIsLoadingNext(true);
       const checkCovered = checkCityCovered();
-      console.info(checkCovered);
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Advertencia" });
         setmodalChild(
@@ -287,26 +312,24 @@ const CheckoutAddresses = () => {
         await sendData(data);
       }
     } catch (error) {
+      setIsLoadingNext(true);
       console.error(error);
       alert(error.message);
+    }finally {
+      setIsLoadingNext(false);
     }
   };
 
   const handleNext = async () => {
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getNextStep(
-        lastPath,
-        isLogged
-      )}`
+      `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
     );
   };
 
   const handlePrev = async () => {
+    setIsLoadingPrev(true);
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getPrevStep(
-        lastPath,
-        isLogged
-      )}`
+      `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
 
@@ -335,12 +358,13 @@ const CheckoutAddresses = () => {
             <SelectInput
               label="Escoge tu departamento"
               id="shipping-state-code"
-              options={states.map((state) => ({
+              selectOptions={states.map((state) => ({
                 label: state.name,
                 value: state.name,
               }))}
               {...register("shippingAddress.stateCode")}
               placeholder="Seleccionar"
+              isRequired={true}
             />
             {errors.shippingAddress?.stateCode && (
               <p className="text-red-600">
@@ -352,12 +376,13 @@ const CheckoutAddresses = () => {
             <SelectInput
               id="shipping-city-code"
               label="Escoge tu municipio"
-              options={shippingCities.map((city) => ({
+              selectOptions={shippingCities.map((city) => ({
                 label: city.city,
                 value: city.city,
               }))}
               {...register("shippingAddress.cityCode")}
               placeholder="Seleccionar"
+              isRequired={true}
             />
             {errors?.shippingAddress?.cityCode && (
               <p className="text-red-600">
@@ -369,6 +394,7 @@ const CheckoutAddresses = () => {
             <TextBox
               id="shippingAddress.address"
               label="Escribe tu direccion"
+              isRequired={true}
               {...register("shippingAddress.address")}
               placeholder="Ejemplo carrera 00 # 0000"
             />
@@ -379,6 +405,48 @@ const CheckoutAddresses = () => {
             )}
           </div>
           <div className="w-full">
+            <TextBox
+              id="shippingAddress.street"
+              label="Escribir barrio"
+              isRequired={true}
+              onKeyPress={(e) => checkAlphaNumeric(e)}
+              {...register("shippingAddress.street")}
+              placeholder="Nombre del barrio"
+            />
+            {errors?.shippingAddress?.street && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.street?.message}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <TextBox
+              id="shippingAddress.residence"
+              label="Información adicional"
+              onKeyPress={(e) => checkAlphaNumeric(e)}
+              {...register("shippingAddress.residence")}
+              placeholder="Apartamento / nombre de unidad"
+            />
+            {errors?.shippingAddress?.residence && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.residence?.message}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <TextBox
+              id="shippingAddress.receiver"
+              label="Destinatario"
+              {...register("shippingAddress.receiver")}
+              placeholder="Si es diferente a quien recibe"
+            />
+            {errors?.shippingAddress?.receiver && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.receiver?.message}
+              </p>
+            )}
+          </div>
+          {/* <div className="w-full">
             <TextBox
               {...register("shippingAddress.phone")}
               id="shippingAddress.phone"
@@ -391,7 +459,7 @@ const CheckoutAddresses = () => {
                 {errors?.shippingAddress.phone?.message}
               </p>
             )}
-          </div>
+          </div> */}
           <div className="w-full">
             <CheckBox
               {...register("shippingAddress.isSameAsBillingAddress")}
@@ -408,12 +476,13 @@ const CheckoutAddresses = () => {
                 <SelectInput
                   label="Escoge tu departamento"
                   id="billingAddress-state-code"
-                  options={states.map((state) => ({
+                  selectOptions={states.map((state) => ({
                     label: state.name,
                     value: state.name,
                   }))}
                   {...register("billingAddress.stateCode")}
                   placeholder="Seleccionar"
+                  isRequired={true}
                 />
                 {errors.billingAddress?.stateCode && (
                   <p className="text-red-600">
@@ -425,12 +494,13 @@ const CheckoutAddresses = () => {
                 <SelectInput
                   id="billingCities-city-code"
                   label="Escoge tu municipio"
-                  options={billingCities.map((city) => ({
+                  selectOptions={billingCities.map((city) => ({
                     label: city.city,
                     value: city.city,
                   }))}
                   {...register("billingAddress.cityCode")}
                   placeholder="Seleccionar"
+                  isRequired={true}
                 />
                 {errors?.billingAddress?.cityCode && (
                   <p className="text-red-600">
@@ -442,6 +512,7 @@ const CheckoutAddresses = () => {
                 <TextBox
                   id="billingAddress.address"
                   label="Escribe tu direccion"
+                  isRequired={true}
                   {...register("billingAddress.address")}
                   placeholder="Ejemplo carrera 00 # 0000"
                 />
@@ -452,6 +523,35 @@ const CheckoutAddresses = () => {
                 )}
               </div>
               <div className="w-full">
+                <TextBox
+                  id="billingAddress.street"
+                  label="Escribir barrio"
+                  isRequired={true}
+                  onKeyPress={(e) => checkAlphaNumeric(e)}
+                  {...register("billingAddress.street")}
+                  placeholder="Nombre del barrio"
+                />
+                {errors?.billingAddress?.street && (
+                  <p className="text-red-600">
+                    {errors?.billingAddress?.street?.message}
+                  </p>
+                )}
+              </div>
+              <div className="w-full">
+                <TextBox
+                  id="billingAddress.residence"
+                  label="Información adicional"
+                  onKeyPress={(e) => checkAlphaNumeric(e)}
+                  {...register("billingAddress.residence")}
+                  placeholder="Apartamento / nombre de unidad"
+                />
+                {errors?.billingAddress?.residence && (
+                  <p className="text-red-600">
+                    {errors?.billingAddress?.residence?.message}
+                  </p>
+                )}
+              </div>
+              {/* <div className="w-full">
                 <TextBox
                   {...register("billingAddress.phone")}
                   id="billingAddress.phone"
@@ -464,19 +564,22 @@ const CheckoutAddresses = () => {
                     {errors?.billingAddress.phone?.message}
                   </p>
                 )}
-              </div>
+              </div> */}
             </>
           )}
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline"
+              className="button button-outline relative"
               type="button"
               onClick={handlePrev}
+              disabled={isLoadingPrev || isLoadingNext}
             >
               Volver
+              {isLoadingPrev && <Spinner position="absolute"/> }
             </button>
-            <button className="button button-primary" type="submit">
+            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
               Continuar
+              {isLoadingNext && <Spinner position="absolute"/> }
             </button>
           </div>
         </form>
@@ -515,8 +618,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-CheckoutAddresses.getLayout = (page: ReactElement, pageProps: any) => {
+CheckoutAddress.getLayout = (page: ReactElement, pageProps: any) => {
   return defaultLayout(<CheckoutLayout>{page}</CheckoutLayout>, pageProps);
 };
 
-export default CheckoutAddresses;
+export default CheckoutAddress;

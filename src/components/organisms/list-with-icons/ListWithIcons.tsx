@@ -6,6 +6,8 @@ import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames, getButtonType } from "@/utils/functions";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const ListWithIcons: React.FC<IPromoContent> = (props) => {
   const {
@@ -20,8 +22,19 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
     ctaLabel,
     externalLink,
     internalLink,
+    linkView,
+    content,
   } = props;
-
+  const hasBlocks = content?.json?.content?.some(el => {
+    return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
+  });
+  let contentJson = content?.json;
+  if (attachLinksToRichtextContent && contentJson) {
+    contentJson = attachLinksToRichtextContent(
+      contentJson,
+      content?.links ?? []
+    );
+  }
   const iconBackgroundClasses = () => {
     switch (iconBackgroundColor) {
       case "Azul Claro":
@@ -51,32 +64,35 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
 
   if (!iconBackgroundColor) iconSizeLocal += " text-blue-dark";
   return (
-    <div className={
-      classNames(
+    <div
+      className={classNames(
         "flex",
         iconPosition && iconPosition === "Izquierda"
           ? "flex-row gap-5"
           : "flex-col text-center gap-3 items-center"
-      )
-    }>
+      )}
+    >
       {promoIcon && (
         <div className={`flow-root shrink-0 ${iconSizeLocal}`}>
           <Icon icon={promoIcon} className="mx-auto w-full h-full" />
         </div>
       )}
       {(promoTitle || promoDescription || ctaLabel) && (
-        <div className={
-          classNames(
+        <div
+          className={classNames(
             "flex flex-col gap-6",
             iconPosition !== "Izquierda" ? "items-center" : "items-start"
-          )
-        }>
+          )}
+        >
           {promoTitle && (
             <h3 className="title is-4 pt-1 text-blue-dark">{promoTitle}</h3>
           )}
           {promoDescription && (
             <div className="text-lg text-grey-30">
-              {documentToReactComponents(promoDescription.json, defaultFormatOptions)}
+              {documentToReactComponents(
+                promoDescription.json,
+                defaultFormatOptions
+              )}
             </div>
           )}
           {(internalLink?.urlPaths?.[0] || externalLink) && (
@@ -87,6 +103,21 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
               {ctaLabel ?? name}
             </CustomLink>
           )}
+          {linkView === "Modal" && (
+          <ButtonAtom
+            key={name}
+            type="Modal"
+            classes={classNames("button w-fit !rounded-full", getButtonType(buttonType ?? "Secundario"))}
+            modalClass={hasBlocks ? "main-container" : null}
+            text={ctaLabel ?? promoTitle ?? name}
+          >
+            {promoDescription?.json && (
+              <div>
+                {documentToReactComponents(contentJson, defaultFormatOptions)}
+              </div>
+            )}
+          </ButtonAtom>
+        )}
         </div>
       )}
     </div>

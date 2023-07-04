@@ -33,8 +33,68 @@ const data: IPromoBlock = {
     ]
   },
   view: {
-    buttonType: "",
-    backgroundColor: ""
+    alignTitle: "Centrado",
+  }
+};
+
+const fourColums: IPromoBlock = {
+  title: 'Lorem ipsum dolor',
+  description: RICHTEXT_SHORT_SIMPLE,
+  featuredContentsCollection: {
+    items: [
+      {
+        promoTitle: 'Título',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'dialogs',
+        sys: {
+          id: '70947823727800'
+        }
+      },
+      {
+        promoTitle: 'Título 1',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'experience',
+        sys: {
+          id: '70937823727804'
+        }
+      },
+      {
+        promoTitle: 'Título 2',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'assists',
+        sys: {
+          id: '70947823997804'
+        }
+      },
+      {
+        promoTitle: 'Título 3',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'dialogs',
+        sys: {
+          id: '70947823727800'
+        }
+      },
+      {
+        promoTitle: 'Título 4',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'experience',
+        sys: {
+          id: '70937823727804'
+        }
+      },
+      {
+        promoTitle: 'Título 5',
+        promoDescription: RICHTEXT_SHORT_SIMPLE,
+        promoIcon: 'assists',
+        sys: {
+          id: '70947823997804'
+        }
+      },
+    ]
+  },
+  view: {
+    alignTitle: "Centrado",
+    columnsSize: 4
   }
 };
 
@@ -70,7 +130,7 @@ const left: IPromoBlock = {
     ]
   },
   view: {
-    alignTitle: "left",
+    alignTitle: "Izquierda",
     backgroundColor: "Azul Claro",
     showButton: true
   }
@@ -78,5 +138,6 @@ const left: IPromoBlock = {
 
 export const mockInfoCardProps = {
   data,
+  fourColums,
   left
 };

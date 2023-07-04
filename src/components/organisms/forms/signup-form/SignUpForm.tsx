@@ -68,25 +68,6 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         }
     };
 
-    const formatToPhone = (event) => {
-        if ((event.keyCode < 48 || event.keyCode > 57) &&
-            (event.keyCode < 96 || event.keyCode > 105) &&
-            event.keyCode !== 190 && event.keyCode !== 110 &&
-            event.keyCode !== 8 && event.keyCode !== 9) {
-            event.preventDefault();
-            return false;
-        }
-        setTimeout(() => {
-            const target = event.target;
-            const input = event.target.value.replace(/\D/g, '').substring(0, 10); // First ten digits
-            const first = input.substring(0, 4);
-            const middle = input.substring(4, 6);
-            if (input.length > 4) { target.value = `${first}-${middle}`; }
-            else if (input.length > 0) { target.value = `${first}`; }
-            return true;
-        }, 200);
-    };
-
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <p className="pb-5 font-bold">
@@ -101,7 +82,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         placeholder='Nombre'
                         className='form-input'
                         isError={!!errors.name}
-                        errorMessage={errors?.name?.message}
+                        errorMessage={errors?.name?.message} 
                         autoComplete="on"
                         {...register('name')}
                         isRequired={true}
@@ -168,7 +149,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         type='password'
                         placeholder='********'
                         className='form-input'
-                        autoComplete="on"
+                        autoComplete="off"
                         isError={!!errors.password}
                         errorMessage={errors?.password?.message}
                         {...register("password")}
@@ -180,7 +161,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         type='password'
                         placeholder='********'
                         className='form-input'
-                        autoComplete="on"
+                        autoComplete="off"
                         isError={!!errors.confirmPassword}
                         errorMessage={errors?.confirmPassword?.message}
                         {...register("confirmPassword")}
@@ -191,14 +172,13 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                     <Textbox
                         id='contractNumber'
                         label='Escribe tu numero de cuenta contrato (lo encuentras en la parte superior izquierda de tu factura)'
-                        placeholder='0000-00'
+                        placeholder='00000000'
                         className='form-input'
                         isError={!!errors.contractNumber}
                         errorMessage={errors?.contractNumber?.message}
                         autoComplete="on"
                         {...register("contractNumber")}
                         isRequired={true}
-                        onKeyDown={(event) => formatToPhone(event)}
                     />
                     <div className='-mt-[6px]'>
                         <CheckBox

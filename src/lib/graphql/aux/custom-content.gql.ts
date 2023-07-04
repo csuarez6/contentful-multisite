@@ -1,4 +1,4 @@
-import { AssetImageQuery } from "../shared/asset.gql";
+import AssetQuery, { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery from "../shared/default.gql";
 import RichtextQuery from "../shared/richtext.qql";
 
@@ -49,9 +49,14 @@ const AuxCustomContent = `
   content{
     ${RichtextQuery}
   }
+  mediaInternalLink{
+    ${AssetQuery}
+  }
+  iframeHeight
 `;
 
 export const AuxCustomContentMinimalQuery = `
+  ${DefaultQuery}
   promoTitle
   name
   internalLink {

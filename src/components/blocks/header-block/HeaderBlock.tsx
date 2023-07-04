@@ -634,7 +634,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <Bars3Icon className="block w-8 h-8" aria-hidden="true" />
                   </Popover.Button>
                   <Transition
-                    className="fixed inset-0 p-4 overflow-auto bg-white"
+                    className="fixed inset-0 p-4 overflow-auto bg-white mega-menu-mobile"
                     enter="transition duration-[400ms] ease-out"
                     enterFrom="transform -translate-x-full"
                     enterTo="transform translate-x-0"

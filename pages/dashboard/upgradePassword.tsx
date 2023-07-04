@@ -23,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ref, string } from "yup";
 
 const subNavigation = [
-  { name: "Perfíl", href: "#", icon: UserCircleIcon, current: false },
+  { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
   {
     name: "Compras",
     href: "/dashboard/orders",
@@ -252,14 +252,14 @@ const DashboardUpgradePassword = () => {
                         <Textbox
                           id="password"
                           name="password"
-                          type="text"
+                          type="password"
                           label="Contraseña actual"
                           className="form-input"
-                          autoComplete="on"
                           isError={!!errors.password}
                           errorMessage={errors?.password?.message}
                           {...register("password")}
                           isRequired={true}
+                          autoComplete="off"
                         />
                       </div>
 
@@ -271,7 +271,7 @@ const DashboardUpgradePassword = () => {
                           type="password"
                           placeholder="********"
                           className="form-input"
-                          autoComplete="on"
+                          autoComplete="off"
                           isError={!!errors.newPassword}
                           errorMessage={errors?.newPassword?.message}
                           {...register("newPassword")}
@@ -284,7 +284,7 @@ const DashboardUpgradePassword = () => {
                           type="password"
                           placeholder="********"
                           className="form-input"
-                          autoComplete="on"
+                          autoComplete="off"
                           isError={!!errors.confirmNewPassword}
                           errorMessage={errors?.confirmNewPassword?.message}
                           {...register("confirmNewPassword")}

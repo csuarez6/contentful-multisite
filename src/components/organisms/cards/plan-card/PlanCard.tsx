@@ -156,6 +156,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
                                   type={cta?.linkView}
                                   text={cta?.ctaLabel ?? cta?.name}
                                   classes={getButtonType("Contorno")}
+                                  modalClass="w-auto max-w-7xl"
                                 >
                                   {documentToReactComponents(attachLinksToRichtextContent(cta?.content?.json, cta?.content?.links), defaultFormatOptions)}
                                 </ButtonAtom>

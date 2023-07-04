@@ -1,15 +1,14 @@
-import { Options } from "@contentful/rich-text-react-renderer";
+import { useEffect, useState } from "react";
+import { documentToReactComponents, Options } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 import Image from "next/image";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
-import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import Icon from "@/components/atoms/icon/Icon";
-import { classNames } from "@/utils/functions";
-import { useEffect, useState } from "react";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import Icon from "@/components/atoms/icon/Icon";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import RichtextPageSkeleton from "@/components/skeletons/RichtextPageSkeleton/RichtextPageSkeleton";
+import { classNames } from "@/utils/functions";
 
 const fixId = (value) => {
   const newId = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

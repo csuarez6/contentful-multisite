@@ -7,6 +7,7 @@ export enum CONTENTFUL_TYPENAMES {
   PAGE_MINIMAL = "PageMinimal",
   PRODUCT = "Product",
   PRODUCT_MINIMAL = "ProductMinimal",
+  COPY_SET = "copySet",
 
   BLOCK_PROMO_CONTENT = "BlockPromoContent",
   BLOCK_FORM = "BlockForm",
@@ -48,6 +49,7 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
   VIEW_VERTICAL_CARD_GRILL = "Parrilla de Tarjetas Verticales",
   VIEW_TABS_VERTICAL = "Tabs verticales",
+  VIEW_CONTENT_PAGE = "Contenido pagina informativa",
 
   FORM_RPO = "RPO",
   FORM_VANTILISTO = "Vantilisto",

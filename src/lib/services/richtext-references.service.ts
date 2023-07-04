@@ -9,10 +9,14 @@ import { RichtextLinksQuery } from "../graphql/shared/richtext.qql";
 
 const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    "content"
+    "content",
+    "promoDescription"
   ],
   [CONTENTFUL_TYPENAMES.PAGE]: [
     "content",
+  ],
+  [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
+    "description",
   ]
 };
 
@@ -87,11 +91,76 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
         inlineIndex++;
       }
     }
-
+    if(richTextContent?.links?.entries?.block?.length > 0){
+      for (const block of richTextContent.links.entries.block) {
+        if(block?.featuredContentsCollection?.items.length > 0){
+          let featuredContentsCollectionIndex = 0;
+          for (const featuredContentsCollection of block.featuredContentsCollection.items) {
+            const content = await getDataContent(featuredContentsCollection);
+            _.merge(block.featuredContentsCollection.items[featuredContentsCollectionIndex], content);
+            featuredContentsCollectionIndex++;
+          }
+        }
+        if(block?.listedContentsCollection?.items.length > 0){
+          let listedContentsCollectionIndex = 0;
+          for (const listedContentsCollection of block.listedContentsCollection.items) {
+            const content = await getDataContent(listedContentsCollection);
+            _.merge(block.listedContentsCollection.items[listedContentsCollectionIndex], content);
+            listedContentsCollectionIndex++;
+          }
+        }
+      }
+    }
+    
     referencesContent[ref] = richTextContent;
   }
 
   return referencesContent;
+};
+
+export const getDataContent = async (blockInfo, preview = false) => {
+
+  let responseData = null;
+  let responseError = null;
+
+  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+
+  try {
+    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+      query: gql`
+        query getEntry($id: String!, $preview: Boolean!) {
+          ${type}(id: $id, preview: $preview) {
+            ${query}
+          }
+        }
+      `,
+      variables: {
+        id: blockInfo.sys.id,
+        preview
+      },
+      errorPolicy: 'all'
+    }));
+  } catch (e) {
+    responseError = e;
+    responseData = {};
+  }
+
+  if (responseError) {
+    console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+  }
+
+  if (!responseData?.[type]) {
+    return null;
+  }
+
+  const entryContent = JSON.parse(
+    JSON.stringify(
+      responseData?.[type]
+    )
+  );
+
+  return entryContent;
+  
 };
 
 export default getReferencesRichtextContent;

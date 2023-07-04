@@ -11,6 +11,7 @@ import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 import { BlockFormQuery } from "@/lib/graphql/blocks/form-content.gql";
 import RateQuery from "@/lib/graphql/rate.gql";
 import AllyQuery from "@/lib/graphql/ally.gql";
+import copySetQuery from "@/lib/graphql/copy/copySet.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -70,6 +71,10 @@ const CONTENTFUL_QUERY_MAPS = {
     queryName: 'auxAlly',
     algoliaType: 'aux_Ally',
     query: AllyQuery,
+  },
+  [CONTENTFUL_TYPENAMES.COPY_SET]: {
+    queryName: 'copySet',
+    query: copySetQuery,
   },
 };
 
