@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -129,6 +129,7 @@ const CheckoutAddress = () => {
   const [modalChild, setmodalChild] = useState<any>();
   const [isLoadingPrev, setIsLoadingPrev] = useState(false);
   const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const attempts = useRef(0);
 
   const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
@@ -183,6 +184,8 @@ const CheckoutAddress = () => {
       const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
       const cities: string[] = await getCitiesByState(shippingStateWatched);       
       setShippingCities(citiesFinal.concat(cities));
+      if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "" } });
+      attempts.current = 1;
     })();
     setShowAlert(false);
   }, [shippingStateWatched]);
@@ -376,9 +379,9 @@ const CheckoutAddress = () => {
             <SelectInput
               id="shipping-city-code"
               label="Escoge tu municipio"
-              selectOptions={shippingCities.map((city) => ({
+              selectOptions={shippingCities.map((city, index) => ({
                 label: city.city,
-                value: city.city,
+                value: (index == 0) ? "" : city.city,
               }))}
               {...register("shippingAddress.cityCode")}
               placeholder="Seleccionar"
