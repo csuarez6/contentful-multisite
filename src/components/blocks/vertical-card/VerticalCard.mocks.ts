@@ -63,7 +63,7 @@ const dataPortrait: IPromoBlock = {
         promoTitle: 'Título 1',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
-          url: 'https://via.placeholder.com/1220x2030.png',
+          url: 'https://via.placeholder.com/1120x1020.png',
           title: 'Card image',
           height: 400,
           width: 500
@@ -77,7 +77,7 @@ const dataPortrait: IPromoBlock = {
         promoTitle: 'Título 2',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
-          url: 'https://via.placeholder.com/1220x2030.png',
+          url: 'https://via.placeholder.com/1120x1020.png',
           title: 'Card image',
           height: 400,
           width: 500
@@ -91,7 +91,7 @@ const dataPortrait: IPromoBlock = {
         promoTitle: 'Título 3',
         promoDescription: RICHTEXT_SHORT_SIMPLE,
         promoImage: {
-          url: 'https://via.placeholder.com/1220x2030.png',
+          url: 'https://via.placeholder.com/1120x1020.png',
           title: 'Card image',
           height: 400,
           width: 500
