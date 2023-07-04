@@ -417,6 +417,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     }
                   </span>
                 </div>
+                <div className="grid grid-cols-1 rounded">
+                  <p className="text-xs text-gray-600">
+                    El costo de envío depende de la cobertura de Vanti y de acuerdo a esto se realiza el cálculo del envío
+                  </p>
+                </div>
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
