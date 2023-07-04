@@ -119,6 +119,8 @@ const CallbackPage = () => {
               _price,
               productsQuantity,
               urlPaths,
+              priceVantiListo,
+              priceGasodomestico
             } = res;
             const _product = {
               productName: promoTitle ?? name,
@@ -128,6 +130,8 @@ const CallbackPage = () => {
               sku,
               urlProduct: `${location.origin}${urlPaths?.[0] ?? ''}` ?? null,
               productsQuantity,
+              priceVantiListo,
+              priceGasodomestico
             };
             setProductData(_product);
             updateFormData(_product);
@@ -211,8 +215,8 @@ const CallbackPage = () => {
               </div>
             )}
             {sku && productData && !isLoading && (
-              <>
-                <div className="relative">
+              <div className="grid grid-cols-1 gap-6 2md:grid-cols-3">
+                <div className="relative 2md:col-span-2">
                   {getStepContent(
                     currentStep,
                     handleNext,
@@ -224,48 +228,52 @@ const CallbackPage = () => {
                     setCurrentStep
                   )}
                 </div>
-                <div className="relative">
-                  <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
-                    <p className="title is-4 text-blue-dark !font-semibold">
-                      Detalle de tu pedido
-                    </p>
-                    <div className="flex gap-3 flex-col items-start min-w-full">
-                      <figure className="aspect-square w-[214px] self-center">
-                        <Image
-                          className="w-full h-full"
-                          src={productData.promoImage.url}
-                          alt={productData.promoImage.title}
-                          width={214}
-                          height={214}
-                        />
-                      </figure>
-                      <div className="grid grid-cols-2 gap-3 w-full">
-                        <p className="text-size-subtitle1 text-neutral-20 col-span-2">
-                          Productos
-                        </p>
-                        <p className="text-size-p2 text-grey-30 leading-[1.2]">
-                          {productData.productName}
-                        </p>
-                        <p className="text-size-subtitle2 text-blue-dark">
-                          {productData.price}
-                        </p>
-                        <p className="text-size-p2 text-grey-30">Cantidad</p>
-                        <p className="text-size-subtitle2 text-blue-dark">
-                          {quantity}
-                        </p>
+                <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit col-span-1">
+                  <div className="flex flex-col gap-[17px] w-full h-full text-justify">
+                    <h4 className="pb-3 border-b text-blue-dark border-blue-dark">Detalle de tu pedido</h4>
+                    <div className="flex flex-col gap-3">
+                      <div className="pb-2 mb-2 border-b border-gray-300">
+                        <div className="flex items-start gap-2">
+                          <figure className="w-16 shrink-0">
+                            <Image
+                              className="object-contain w-full h-full"
+                              src={productData?.promoImage?.url}
+                              alt={productData.promoImage.title}
+                              width={64}
+                              height={64}
+                              priority
+                            />
+                          </figure>
+                          <div className="flex-1">
+                            <div className="grid grid-cols-1 text-sm mb-2">
+                              <p className="font-bold">{productData?.productName}</p>
+                              <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
+                            </div>
+                            <div className="grid grid-cols-2 text-sm">
+                              <p>C/U:</p>
+                              <p className="text-right text-blue-dark py-0.5 rounded-lg mr-2">1x</p>
+                            </div>
+                            <div className="grid grid-cols-3 text-sm">
+                              <p className="font-bold col-span-1">Subtotal:</p>
+                              <span className="text-right text-blue-dark col-span-2 font-bold">
+                                {productData?.priceVantiListo ?? productData?.priceGasodomestico}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 xxs:gap-3 w-full items-center bg-neutral-90 p-1 rounded">
-                        <p className="font-semibold md:text-size-subtitle2 text-black text-right pr-3 xxs:p-0">
-                          TOTAL
-                        </p>
-                        <p className="font-semibold md:text-size-subtitle1 text-black">
-                          {amount}
-                        </p>
+                      <div className="grid grid-cols-2 mt-2 rounded">
+                        <p className="font-semibold text-left">Costo de envío</p>
+                        <span className="font-semibold text-right">-</span>
+                      </div>
+                      <div className="grid grid-cols-2 mt-2 rounded">
+                        <p className="font-bold text-left">TOTAL A PAGAR</p>
+                        <span className="font-bold text-right">{productData?.priceVantiListo ?? productData?.priceGasodomestico ?? amount}</span>
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
+                </article>
+              </div>
             )}
             {!sku && !isLoading && (
               <div
