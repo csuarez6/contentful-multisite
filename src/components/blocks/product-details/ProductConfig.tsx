@@ -3,6 +3,7 @@ import { IIcon } from "@/components/atoms/icon/Icon";
 import { classNames, formatPrice } from "@/utils/functions";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { useState } from "react";
+import Spinner from "@/components/atoms/spinner/Spinner";
 
 export const iconInvoice: IIcon = {
   icon: "invoice",
@@ -60,6 +61,7 @@ export const ModalIntall: React.FC<any> = ({
   upInstallCurrent,
 }) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -118,13 +120,18 @@ export const ModalIntall: React.FC<any> = ({
               })}
           </ul>
         </div>
-        <div
-          className="flex justify-end gap-2"
-          onClick={() => {
-            onEventHandler("installation", optionsList[checked]);
-          }}
-        >
-          <button className="button button-primary">Hecho</button>
+        <div className="flex justify-end gap-2">
+          <button
+            disabled={isLoadingNext}
+            className="relative button button-primary"
+            onClick={() => {
+              onEventHandler("installation", optionsList[checked]);
+              setIsLoadingNext(true);
+            }}
+          >
+            Hecho
+            {isLoadingNext && <Spinner position="absolute" />}
+          </button>
         </div>
       </div>
     </>
@@ -139,6 +146,7 @@ export const ModalWarranty: React.FC<any> = ({
   productPrice
 }) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
+  const [isLoadingNext, setIsLoadingNext] = useState(false);
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -193,12 +201,15 @@ export const ModalWarranty: React.FC<any> = ({
         </div>
         <div className="flex justify-end gap-2">
           <button
-            className="button button-primary"
+            className="relative button button-primary"
+            disabled={isLoadingNext}
             onClick={() => {
               onEventHandler("warranty", optionsList[checked]);
+              setIsLoadingNext(true);
             }}
           >
             Hecho
+            {isLoadingNext && <Spinner position="absolute" />}
           </button>
         </div>
       </div>
