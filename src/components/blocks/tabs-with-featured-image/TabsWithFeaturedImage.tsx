@@ -5,6 +5,7 @@ import { classNames } from "@/utils/functions";
 import { IPromoBlock, IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Image from "next/image";
 import Icon from "@/components/atoms/icon/Icon";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
 const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description, image, featuredContentsCollection, blockId, sysId }) => {
   return (
@@ -84,8 +85,8 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                                 </figure>
                               </div>
                             )}
-                            <div className="text-grey-30 text-size-p3 2md:text-size-p1">
-                              {documentToReactComponents(content.promoDescription?.json)}
+                            <div className="richtext-container text-grey-30 text-size-p3 2md:text-size-p1">
+                              {documentToReactComponents(content.promoDescription?.json, defaultFormatOptions)}
                             </div>
                           </div>
                         </Transition>
