@@ -381,10 +381,6 @@ const CallbackPage = () => {
                         </div>
                       </div>
                       <div className="grid grid-cols-2 mt-2 rounded">
-                        <p className="font-semibold text-left">Costo de envío</p>
-                        <span className="font-semibold text-right">-</span>
-                      </div>
-                      <div className="grid grid-cols-2 mt-2 rounded">
                         <p className="font-bold text-left">TOTAL A PAGAR</p>
                         <span className="font-bold text-right">{productData?.priceVantiListo ?? productData?.priceGasodomestico}</span>
                       </div>
