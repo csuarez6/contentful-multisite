@@ -58,7 +58,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           {discount && <span className="p-2 uppercase rounded-md bg-cyan-300 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">{discount} de descuento</span>}
         </div>
       )}
-      <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
+      <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full h-full">
         {(imagesCollection?.items || promoImage) && (
           <div className="flex flex-col gap-2">
             {(imagesCollection?.items || cta || promoImage) && (
@@ -103,7 +103,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           </div>
         )}
         {promoTitle && (
-          <div className="flex flex-col gap-[25px]">
+          <div className="flex flex-col gap-[25px] grow justify-between">
             <div className="flex flex-col gap-[7px]">
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <h3 className="group-[.card-mega-menu]:text-lg text-blue-dark title is-4">{promoTitle}</h3>
