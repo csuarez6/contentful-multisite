@@ -272,11 +272,49 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
         productSelected.current = product.id;
         servicesHandler("warranty", [defaultWarrantyList][0]);
       }
-      if (!showInstallation && product["installlation_service"]?.length > 0) {        
+      if (!showInstallation && product["installlation_service"]?.length > 0) {
         productSelected.current = product.id;
         servicesHandler("installation", [defaultInstallList][0]);
       }
     }
+  };
+
+  const increDecreQuantity = (product, operator) => {
+    const quantityTemp = (operator == "plus") ? product?.quantity + 1 : product?.quantity - 1;
+    setIsLoading(true);
+    if (quantityTemp > 90) {
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Cantidad de productos no permitida.",
+      });
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+      return;
+    }
+    updateItemQuantity(
+      product?.sku_code,
+      quantityTemp
+    )
+      .then((result) => {
+        if (result.status !== 200) {
+          const messageMinus = "Ocurrió un error con el producto seleccionado, por favor intente nuevamente.";
+          const messagePlus =
+            result.status === 422
+              ? `No hay más unidades disponibles para el producto seleccionado.`
+              : "Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente";
+          setError(true);
+          setErrorMessage({
+            icon: "alert",
+            type: "warning",
+            title: (operator == "plus") ? messagePlus : messageMinus,
+          });
+        }
+      })
+      .catch((err) => console.error({ err }))
+      .finally(() => setIsLoading(false));
   };
   return (
     <HeadingCard
@@ -340,22 +378,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
                       disabled={product?.quantity == 1}
                       onClick={() => {
-                        setIsLoading(true);
-                        updateItemQuantity(
-                          product?.sku_code,
-                          product?.quantity - 1
-                        )
-                          .then((result) => {
-                            if (result.status !== 200) {
-                              setError(true);
-                              setErrorMessage({
-                                icon: "alert",
-                                type: "warning",
-                                title: `Ocurrió un error con el producto seleccionado, por favor intente nuevamente.`,
-                              });
-                            }
-                          })
-                          .finally(() => setIsLoading(false));
+                        increDecreQuantity(product, "minus");
                       }}
                     >
                       <span
@@ -378,26 +401,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       data-action="increment"
                       className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
                       onClick={() => {
-                        setIsLoading(true);
-                        updateItemQuantity(
-                          product?.sku_code,
-                          product.quantity + 1
-                        )
-                          .then((result) => {
-                            if (result.status !== 200) {
-                              const message =
-                                result.status === 422
-                                  ? `No hay más unidades disponibles para el producto seleccionado.`
-                                  : "Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente";
-                              setError(true);
-                              setErrorMessage({
-                                icon: "alert",
-                                type: "warning",
-                                title: message,
-                              });
-                            }
-                          })
-                          .finally(() => setIsLoading(false));
+                        increDecreQuantity(product, "plus");
                       }}
                     >
                       <span className="m-auto">+</span>

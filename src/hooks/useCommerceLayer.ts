@@ -198,8 +198,8 @@ export const useCommerceLayer = () => {
    */
   useEffect(() => {
     (async () => {
-      if(typeof isInitialRender == "undefined") setIsInitialRender(true);
-      if(isInitialRender) {
+      if (typeof isInitialRender == "undefined") setIsInitialRender(true);
+      if (isInitialRender) {
         await setUpOrder(false);
         setIsInitialRender(false);
       }
@@ -211,7 +211,7 @@ export const useCommerceLayer = () => {
    */
   useEffect(() => {
     const checkUpdates = asPath.startsWith("/checkout/pse");
-    if(checkUpdates && isInitialRender === false) setUpOrder(true);
+    if (checkUpdates && isInitialRender === false) setUpOrder(true);
   }, [asPath, isInitialRender, setUpOrder]);
 
   const addToCart = useCallback(
@@ -264,7 +264,7 @@ export const useCommerceLayer = () => {
           id: lineItem.id,
           quantity,
         }).catch(err => err.errors);
-        if (!response?.[0]?.status) {
+        if (!response?.[0]?.status && response) {
           if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
             await client.line_items.update({
               id: lineItem["installlation_service"][0].id,
