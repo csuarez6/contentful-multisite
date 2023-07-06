@@ -7,21 +7,30 @@ const handler = async (
     req: NextApiRequest,
     res: NextApiResponse<IAllyResponse>
 ) => {
-  if (req.method !== "POST")
-    return res.status(405).json({ status: 405, message: "Method not allowed" });
+    if (req.method !== "POST") return res.status(405).json({ status: 405, message: "Method not allowed" });
 
     const orderId = req.body.orderId;
     const resp: IAllyResponse = await getOrderByAlly(orderId);
 
-    if (resp.status === 200) {
-      sendClientEmail(resp.data);
-      if (resp.data?.status === "approved") {
-        sendVantiEmail(resp.data);
-        sendAllyEmail(resp.data);
-      }
-    }
+    try {
+        let count = 0;
 
-    return res.status(200).json({ status: 200, data: resp?.data });
+        if (resp.status === 200) {
+            const orderData = resp.data;
+            count += await sendClientEmail(orderData);
+
+            if (orderData?.status === "approved") {
+                count += await sendVantiEmail(orderData);
+                count += await sendAllyEmail(orderData);
+            }
+        }
+
+        console.log(count + " emails sent");
+        return res.status(200).json({ status: 200, message: count + " emails sent", data: resp?.data });
+    } catch (error) {
+        console.error("An error occurred during the execution of the endpoint email-test:", error);
+        return res.status(500).json({ status: 500, message: "A general error has occurred" });
+    }
 };
 
 export default handler;

@@ -461,9 +461,9 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
   return header + body + footer;
 };
 
-export const sendClientEmail = async (orderByAlly: IOrderExtended) => {
+export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
     const jsonBody = orderByAlly;
-    const status = orderByAlly.status == "approved" ? "aprobada" : "cancelada";
+    const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
     const email = clientEmailTemplate(status, jsonBody);
 
     const clientEmail = {
@@ -481,10 +481,12 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended) => {
         clientEmail.from,
         clientEmail.messageHtml
     );
-    console.info({ isMailSended });
+
+    console.info('sendClientEmail ' + isMailSended);
+    return isMailSended ? 1 : 0;
 };
 
-export const sendVantiEmail = async (orderByAlly: IOrderExtended) => {
+export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
     const jsonBody = orderByAlly;
     const email = vantiEmailTemplate(jsonBody);
 
@@ -503,16 +505,21 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended) => {
         clientEmail.from,
         clientEmail.messageHtml
     );
-    console.info({ isMailSended });
+
+    console.info('sendVantiEmail ' + isMailSended);
+    return isMailSended ? 1 : 0;
 };
 
-export const sendAllyEmail = async (orderByAlly: IOrderExtended) => {
-    orderByAlly.line_items_by_ally.forEach(async (allyItems) => {
-        const productsData = allyItems;
-        const email = allyEmailTemplate(orderByAlly, productsData);
-        const emaiilAddresses = String(allyItems.metadata?.email).split(',');
+export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+    const allyItems = orderByAlly.line_items_by_ally;
+    const emailPromises: Promise<boolean>[] = [];
 
-        emaiilAddresses.forEach(async emailAddress => {
+    allyItems.forEach((allyItem) => {
+        const productsData = allyItem;
+        const email = allyEmailTemplate(orderByAlly, productsData);
+        const emailAddresses = String(allyItem.metadata?.email).split(',');
+
+        emailAddresses.forEach((emailAddress) => {
             const clientEmail = {
                 to: emailAddress,
                 subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
@@ -521,15 +528,23 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended) => {
                 messageHtml: email,
             };
 
-            const isMailSended = await sendEmail(
-            clientEmail.to,
-            clientEmail.subject,
-            clientEmail.message,
-            clientEmail.from,
-            clientEmail.messageHtml
+            const emailPromise = sendEmail(
+                clientEmail.to,
+                clientEmail.subject,
+                clientEmail.message,
+                clientEmail.from,
+                clientEmail.messageHtml
             );
 
-            console.info({ isMailSended });
+            emailPromises.push(emailPromise);
+
+            emailPromise.then((isMailSended) => {
+                console.info('sendAllyEmail ' + emailAddress + ': ' + isMailSended);
+            });
         });
     });
+
+    const emailResults = await Promise.all(emailPromises);
+    const count = emailResults.filter((result) => result).length;
+    return count;
 };
