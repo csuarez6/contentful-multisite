@@ -60,7 +60,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
         {(internalLink?.urlPaths?.[0] || externalLink || urlPaths) && (
           <div
             className={classNames(
-              "flex mt-6",
+              "flex mt-6 grow items-end",
               getAlign(alignButton) === "left"
                 ? "justify-start"
                 : "justify-center"
