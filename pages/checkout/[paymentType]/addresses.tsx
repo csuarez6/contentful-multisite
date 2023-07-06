@@ -184,10 +184,11 @@ const CheckoutAddress = () => {
       const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
       const cities: string[] = await getCitiesByState(shippingStateWatched);       
       setShippingCities(citiesFinal.concat(cities));
-      if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "" } });
+      if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });
       attempts.current = 1;
     })();
     setShowAlert(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingStateWatched]);
 
   useEffect(() => {
