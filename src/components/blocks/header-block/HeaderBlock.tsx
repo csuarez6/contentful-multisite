@@ -365,7 +365,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 </CustomLink>
               </div>
 
-              <div className="flex items-center justify-end flex-grow divide-x md:py-5 divide-neutral-70">
+              <div className="flex items-center justify-end flex-grow md:py-5">
                 <form
                   onSubmit={handleSubmit}
                   className="w-full h-10 lg:max-w-xs lg:pr-6"
@@ -390,7 +390,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 {utilityNavCollection?.items?.length > 0 && (
                   <nav
                     aria-label="Utility"
-                    className="relative hidden px-6 lg:block"
+                    className="relative hidden px-6 lg:block border-x border-neutral-70"
                   >
                     <ul className="flex gap-1 flex-nowrap">
                       {utilityNavCollection.items.map((item) => (
@@ -398,7 +398,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           <CustomLink
                             content={item}
                             className={classNames(
-                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1",
+                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 h-full",
                               item.promoIcon
                                 ? "justify-start"
                                 : "justify-center"
@@ -444,7 +444,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden gap-6 px-6 lg:flex">
+                <div className="hidden gap-6 px-6 lg:flex lg:h-full">
                   {session?.user ? (
                     <>
                       <Menu
