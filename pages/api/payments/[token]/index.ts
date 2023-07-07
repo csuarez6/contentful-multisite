@@ -31,9 +31,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
     if (orderByAlly.status === 200) {
       sendClientEmail(orderByAlly.data);
-      if (orderByAlly.data?.status === 'approved') {
-       sendVantiEmail(orderByAlly.data);
-       sendAllyEmail(orderByAlly.data); 
+
+      if (orderByAlly.data?.status === "approved") {
+        sendVantiEmail(orderByAlly.data);
+        sendAllyEmail(orderByAlly.data);
       }
     }
 

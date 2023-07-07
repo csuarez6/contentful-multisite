@@ -481,8 +481,8 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
         clientEmail.from,
         clientEmail.messageHtml
     );
-
-    console.info('sendClientEmail ' + isMailSended);
+    
+    console.info('sendClientEmail ' + clientEmail.to + ': ' + isMailSended);
     return isMailSended ? 1 : 0;
 };
 
@@ -506,7 +506,7 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<numbe
         clientEmail.messageHtml
     );
 
-    console.info('sendVantiEmail ' + isMailSended);
+    console.info('sendVantiEmail ' + clientEmail.to + ': ' + isMailSended);
     return isMailSended ? 1 : 0;
 };
 
