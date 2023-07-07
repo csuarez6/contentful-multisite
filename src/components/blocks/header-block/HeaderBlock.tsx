@@ -111,12 +111,6 @@ const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   }
   return { firstLevelMenu, secondLevelMenu, menuKey, isFolder, currentMenu };
 };
-const grid = {
-  0: "2lg:grid-cols-1",
-  1: "2lg:grid-cols-2",
-  2: "2lg:grid-cols-3",
-  3: "2lg:grid-cols-4"
-}
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
   const {
@@ -398,9 +392,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     aria-label="Utility"
                     className="relative hidden px-6 lg:block border-x border-neutral-70"
                   >
-                    <ul className={classNames("flex gap-1 flex-nowrap 2lg:grid 2lg:gap-0", grid[utilityNavCollection?.items?.length])}>
+                    <ul className={classNames("flex 2lg:gap-1 flex-nowrap")}>
                       {utilityNavCollection.items.map((item) => (
-                        <li className="flex max-w-[75px]" key={item.sys.id}>
+                        <li className="flex 2lg:w-[75px] w-[68px]" key={item.sys.id}>
                           <CustomLink
                             content={item}
                             className={classNames(
@@ -409,7 +403,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 ? "justify-start"
                                 : "justify-center"
                             )}
-                            linkClassName="2lg:w-full"
+                            linkClassName="w-full"
                           >
                             {item.promoIcon && (
                               <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
@@ -424,10 +418,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         </li>
                       ))}
                       {/* Carrito de compras */}
-                      <li className="flex max-w-[75px]" key={`cart_${uuid()}`}>
+                      <li className="flex 2lg:w-[75px] w-[68px]" key={`cart_${uuid()}`}>
                         <Link
                           href="/checkout/pse/verify"
-                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start 2lg:w-full"
+                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
                         >
                           <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
                             <Icon
