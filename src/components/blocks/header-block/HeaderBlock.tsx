@@ -129,9 +129,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const [numProducts, setNumProducts] = useState(0);
 
-  useEffect(() => {
-    console.log('orden', order);
-    
+  useEffect(() => {    
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(

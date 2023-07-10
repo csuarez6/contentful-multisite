@@ -7,7 +7,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 
 const rawMarkup = (rawMarkup) => {
   return { __html: rawMarkup };
-}
+};
 
 const defaultFormatOptions: Options = {
   renderNode: {
@@ -131,7 +131,7 @@ const defaultFormatOptions: Options = {
         <div className="modal-body">
              <span dangerouslySetInnerHTML={rawMarkup(node)} />
         </div>
-    )
+    );
     },
   },
 };
