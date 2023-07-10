@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       sendClientEmail(orderByAlly.data);
 
       if (orderByAlly.data?.status === "approved") {
-        sendVantiEmail(orderByAlly.data);
+        //sendVantiEmail(orderByAlly.data);
         sendAllyEmail(orderByAlly.data);
       }
     }
