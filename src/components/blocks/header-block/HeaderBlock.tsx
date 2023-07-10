@@ -20,7 +20,6 @@ import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
-import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
@@ -126,27 +125,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const router = useRouter();
   const {
     order,
-    timeToPay,
-    upgradeTimePay
   } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
 
   useEffect(() => {
-    if (timeToPay > 0) {
-      const interval = setInterval(() => {
-        upgradeTimePay(timeToPay - 1);
-        if (timeToPay === 0) {
-          clearInterval(interval);
-        }
-      }, 1000);
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [timeToPay, upgradeTimePay]);
-
-  useEffect(() => {
+    console.log('orden', order);
+    
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
@@ -569,32 +554,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         Inicia sesión
                       </CustomLink>
                     </>
-                  )}
-                  {timeToPay >= 0 && (
-                    <div className="flex items-center justify-center w-10 h-10 m-auto shrink-0">
-                      <CircularProgressbar
-                        value={(timeToPay / 30)}
-                        minValue={0}
-                        maxValue={1}
-                        text={`${timeToPay}`}
-                        styles={{
-                          path: {
-                            stroke: '#00182B',
-                            strokeLinecap: 'butt',
-                            transitionDuration: "0.5s"
-                          },
-                          trail: {
-                            stroke: '#ADABA580',
-                            strokeLinecap: 'butt'
-                          },
-                          text: {
-                            fill: '#113455',
-                            fontSize: '32px',
-                            fontWeight: "bold",
-                          }
-                        }}
-                      />
-                    </div>
                   )}
                 </div>
               </div>
