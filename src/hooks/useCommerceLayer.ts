@@ -5,9 +5,9 @@ import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.se
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
+const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "available_payment_methods", "shipments", "customer"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer"],
   fields: {
     orders: [
       "number",
@@ -28,7 +28,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "shipments",
     ],
     addresses: ["state_code", "city", "line_1", "phone"],
-    shipments: ["available_shipping_methods"],
+    shipments: ["available_shipping_methods", "stock_location"],
     line_items: [
       "item_type",
       "image_url",
@@ -42,7 +42,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "unit_amount_cents",
       "unit_amount_float",
       "item",
-      "metadata"
+      "metadata",
+      "shipment_line_items"
     ],
     customer: ["id"],
   },
@@ -513,6 +514,8 @@ export const useCommerceLayer = () => {
 
   const setDefaultShippingMethod = useCallback(async () => {
     const shipmentId = order.shipments.at(0)?.id;
+    console.log({ shipmentId });
+    console.log({ order });
     const client = await generateClient();
     await client.shipments.update({
       id: shipmentId,
