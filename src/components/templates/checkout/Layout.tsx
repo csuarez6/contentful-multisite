@@ -112,6 +112,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       )?.id;
 
       await setDefaultShippingMethod();
+      console.log("ssssssssssssssssssssssssss");
+      // return;
       await setPaymentMethod(paymentMethodId);
       await addPaymentMethodSource(token);
       await placeOrder()
@@ -309,11 +311,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       <div className="flex-1">
                         {/* Start Product Information */}
                         <div
-                          className="grid grid-cols-1 text-sm mb-2"
+                          className="grid grid-cols-1 mb-2 text-sm"
                           key={"product-name" + i}
                         >
                           <p className="font-bold">{product.name}</p>
-                          <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
+                          <p className="text-xs text-right text-gray-600">* IVA incluido</p>
                         </div>
                         {/* End Product Information */}
 
@@ -323,7 +325,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           key={"product-unit-count" + i}
                         >
                           <p className="col-span-1">C/U:</p>
-                          <p className="text-right text-blue-dark col-span-2">
+                          <p className="col-span-2 text-right text-blue-dark">
                             <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
                               {product.quantity}
                               x
@@ -341,14 +343,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-3 text-sm"
                             key={"product-warranty-count" + i}
                           >
-                            <p className="col-span-1 flex">
+                            <p className="flex col-span-1">
                               <span>G.E:</span>
-                              <span title="Garantía extendida" className="ml-1 flex items-center cursor-help">
+                              <span title="Garantía extendida" className="flex items-center ml-1 cursor-help">
                                 <Icon icon="info" size={18} className="text-gray-500" />
                               </span>
                             </p>
 
-                            <p className="text-right text-blue-dark col-span-2">
+                            <p className="col-span-2 text-right text-blue-dark">
                               <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
                                 {product["warranty_service"]?.length > 0
                                   ? product["warranty_service"][0]["quantity"]
@@ -369,14 +371,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-3 text-sm"
                             key={"product-installation-count" + i}
                           >
-                            <p className="col-span-1 flex">
+                            <p className="flex col-span-1">
                               <span>S.I.:</span>
-                              <span title="Servicio de instalación" className="ml-1 flex items-center cursor-help">
+                              <span title="Servicio de instalación" className="flex items-center ml-1 cursor-help">
                                 <Icon icon="info" size={18} className="text-gray-500" />
                               </span>
                             </p>
 
-                            <p className="text-right text-blue-dark col-span-2">
+                            <p className="col-span-2 text-right text-blue-dark">
                               <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
                                 {product["installlation_service"]?.length > 0
                                   ? product["installlation_service"][0]["quantity"]
@@ -397,8 +399,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           className="grid grid-cols-3 text-sm"
                           key={"product-count" + i}
                         >
-                          <p className="font-bold col-span-1">Subtotal:</p>
-                          <span className="text-right text-blue-dark col-span-2 font-bold">
+                          <p className="col-span-1 font-bold">Subtotal:</p>
+                          <span className="col-span-2 font-bold text-right text-blue-dark">
                             {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
                           </span>
                         </div>
