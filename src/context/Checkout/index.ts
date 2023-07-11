@@ -1,4 +1,4 @@
-import { Address, AddressCreate, Order, PaymentMethod } from "@commercelayer/sdk";
+import { Address, AddressCreate, Order, PaymentMethod, ShippingMethod } from "@commercelayer/sdk";
 import { ListResponse } from "@commercelayer/sdk/lib/cjs/resource";
 import { createContext } from "react";
 import { Flow, VantiChekoutCustomer } from "./flows";
@@ -36,6 +36,7 @@ export interface IContextCheckout {
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: () => Promise<void>;
+  getShippingMethods: () => Promise<ListResponse<ShippingMethod>>;
   onRecaptcha: (e: any) => void;
   onHasShipment: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
@@ -68,6 +69,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   setPaymentMethod: () => undefined,
   addPaymentMethodSource: () => undefined,
   setDefaultShippingMethod: () => undefined,
+  getShippingMethods: () => undefined,
   onRecaptcha: () => undefined,
   onHasShipment: () => undefined,
   validateExternal: () => undefined,

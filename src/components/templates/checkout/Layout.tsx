@@ -57,6 +57,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     addPaymentMethodSource,
     placeOrder,
     setDefaultShippingMethod,
+    getShippingMethods,
     validateExternal,
     upgradeTimePay,
     hasShipment,
@@ -75,10 +76,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
   const asPathUrl = asPath.split("/")[3];
+  const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    // console.log({ hasShipment });
+    console.log(order.line_items.filter((i) => i.sku_code));
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -112,7 +114,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       )?.id;
 
       await setDefaultShippingMethod();
-      console.log("ssssssssssssssssssssssssss");
+      // console.log("ssssssssssssssssssssssssss");
       // return;
       await setPaymentMethod(paymentMethodId);
       await addPaymentMethodSource(token);
@@ -194,6 +196,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productUpdates]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const shippingMethod = await getShippingMethods();
+        if (shippingMethod) setShippingMethodGlobal(shippingMethod);
+      } catch (error) {
+        console.error("Error at: ProductService", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePayment = async (toCancel = false) => {
     try {
@@ -337,6 +351,26 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         </div>
                         {/* End Product Cost */}
 
+                        {/* Start Product Cost */}
+                        <div
+                          className="grid grid-cols-3 text-sm"
+                          key={"product-unit-shipcost" + i}
+                        >
+                          <p className="col-span-1">C.E:</p>
+                          <p className="col-span-2 text-right text-blue-dark">
+                            <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
+                              {Object.entries(product.item["shipping_category"]).length > 0 ? "1x" : "0x"}
+                            </span>
+                            <span>
+                              {Object.entries(product.item["shipping_category"]).length > 0
+                                ? (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name)).formatted_price_amount
+                                : "$0"
+                              }
+                            </span>
+                          </p>
+                        </div>
+                        {/* End Product Cost */}
+
                         {/* Start Product Warranty */}
                         {(product?.["warranty_service"] && product?.["warranty_service"].length > 0) && (
                           <div
@@ -401,7 +435,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         >
                           <p className="col-span-1 font-bold">Subtotal:</p>
                           <span className="col-span-2 font-bold text-right text-blue-dark">
-                            {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
+                            {Object.entries(product.item["shipping_category"]).length > 0
+                              ? formatPrice(
+                                showProductTotal(
+                                  product?.total_amount_float,
+                                  product?.["installlation_service"],
+                                  product?.["warranty_service"]
+                                ) +
+                                (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.price_amount_float
+                              )
+                              : formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))
+                            }
+                            {/* {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))} */}
                           </span>
                         </div>
                         {/* End Product Subtotal Price */}
