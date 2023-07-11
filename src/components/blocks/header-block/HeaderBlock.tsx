@@ -286,7 +286,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 ))}
               </ul>
 
-              <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] -mr-4">
+              <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px]">
                 <p className="flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
                   <span className="w-8 h-8 shrink-0">
                     <Icon icon="emergency" className="w-full h-full mx-auto" />
