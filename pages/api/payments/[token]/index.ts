@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     });
 
     const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
-    console.info(orderByAlly.status);
+    console.info('getOrderByAlly status: ' + orderByAlly.status);
     if (orderByAlly.status === 200) {
       sendClientEmail(orderByAlly.data);
 

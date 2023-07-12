@@ -3,13 +3,25 @@ import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-col
 import { sendEmail } from "./mailer.service";
 
 const customerSection = (data: IOrderExtended) => {
-    const billing_address = (data.billing_address?.city === data.billing_address?.state_code) ? data.billing_address?.line_1 + ', ' + data.billing_address?.city : data.billing_address?.line_1 + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
-    const shipping_address = (data.shipping_address?.city === data.shipping_address?.state_code) ? data.shipping_address?.line_1 + ', ' + data.shipping_address?.city : data.shipping_address?.line_1 + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
-    const shipping_methods = data.shipments.map((shipment) => {
-        return shipment.shipping_method.name;
-    }).join(", ");
-    
-    const section = `
+  console.info(data.billing_address);
+  const billing_address = (data.billing_address?.city === data.billing_address?.state_code) ?
+    data.billing_address?.line_1 + ' ' + data.billing_address?.line_2 + ', ' + data.billing_address?.city :
+    data.billing_address?.line_1 + ' ' + data.billing_address?.line_2 + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
+  const shipping_address = (data.shipping_address?.city === data.shipping_address?.state_code) ?
+    data.shipping_address?.line_1 + ', ' + data.shipping_address?.city :
+    data.shipping_address?.line_1 + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
+  const shipping_methods = data.shipments.map((shipment) => {
+    return shipment.shipping_method.name;
+  }).join(", ");
+
+  const addresseeSection = data.shipping_address?.notes ? 
+    `<tr>
+      <td class="sm-inline-block sm-w-full" style = "width: 50%; padding-top: 8px; padding-bottom: 8px">Destinatario: </td>
+      <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style = "width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500" >` + data.shipping_address?.notes + `</td>
+    </tr>`
+    : '';
+
+  const section = `
     <tr>
       <td style="padding: 24px">
       <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
@@ -40,10 +52,11 @@ const customerSection = (data: IOrderExtended) => {
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">` + shipping_address + `</td>
-      </tr>
-      <tr>
+      </tr>`
+       + addresseeSection +
+      `<tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de facturación:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">` + billing_address + `</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">` + billing_address  + `</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de envío:</td>
@@ -52,49 +65,49 @@ const customerSection = (data: IOrderExtended) => {
       </table>
       </td>
     </tr>`;
-    return section;
+  return section;
 };
 
 const productAdjustments = (item: ILineItemExtended) => {
-    let section = "";   
+  let section = "";
 
-    const { installlation_service, warranty_service } = item;
+  const { installlation_service, warranty_service } = item;
 
-    const installationService = installlation_service
-      .reduce((accumulator, installation) => {
-        accumulator.push(installation.formatted_total_amount);
-        return accumulator;
-      }, [])
-      .join(", ");
+  const installationService = installlation_service
+    .reduce((accumulator, installation) => {
+      accumulator.push(installation.formatted_total_amount);
+      return accumulator;
+    }, [])
+    .join(", ");
 
-    const { warrantyServiceName, warrantyService } = warranty_service.reduce(
-      (accumulator, warranty) => {
-        accumulator.warrantyServiceName.push(warranty.name);
-        accumulator.warrantyService.push(warranty.formatted_total_amount);
-        return accumulator;
-      },
-      { warrantyServiceName: [], warrantyService: [] }
-    );
+  const { warrantyServiceName, warrantyService } = warranty_service.reduce(
+    (accumulator, warranty) => {
+      accumulator.warrantyServiceName.push(warranty.name);
+      accumulator.warrantyService.push(warranty.formatted_total_amount);
+      return accumulator;
+    },
+    { warrantyServiceName: [], warrantyService: [] }
+  );
 
-    const formattedWarrantyServiceName = warrantyServiceName.join(", ");
-    const formattedWarrantyService = warrantyService.join(", ");
+  const formattedWarrantyServiceName = warrantyServiceName.join(", ");
+  const formattedWarrantyService = warrantyService.join(", ");
 
-    if (item.installlation_service.length > 0) {
-        section += `<li>Servicio de instalación: <b>${installationService}</b></li>`;
-    }
+  if (item.installlation_service.length > 0) {
+    section += `<li>Servicio de instalación: <b>${installationService}</b></li>`;
+  }
 
-    if (item.warranty_service.length > 0) {
-      section += `<li>${formattedWarrantyServiceName}: <b>${formattedWarrantyService}</b></li>`;
-    }
+  if (item.warranty_service.length > 0) {
+    section += `<li>${formattedWarrantyServiceName}: <b>${formattedWarrantyService}</b></li>`;
+  }
 
-    return section;
-  };
+  return section;
+};
 
 const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
-    let section = "";
-    items.forEach((item) => {
-      section +=
-        `<tr>
+  let section = "";
+  items.forEach((item) => {
+    section +=
+      `<tr>
         <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top">
           <img src="` + item.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
@@ -110,11 +123,11 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
           <b style="font-weight: 700; color: #113455">` + item.formatted_total_amount + `</b>
         </td>
       </tr>`;
-    });
+  });
 
-    shipments.forEach((shipment) => {
-        section +=
-            `<tr>
+  shipments.forEach((shipment) => {
+    section +=
+      `<tr>
             <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
             <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
             <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ` + shipment.shipping_method.name.toLowerCase() + `</p>
@@ -125,10 +138,10 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
             <b style="font-weight: 700; color: #113455">` + shipment.shipping_method.formatted_price_amount + `</b>
             </td>
         </tr>`;
-    });
+  });
 
-    return section;
-  };
+  return section;
+};
 
 const header = `
     <!DOCTYPE html>
@@ -462,95 +475,95 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
 };
 
 export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-    const jsonBody = orderByAlly;
-    const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
-    const email = clientEmailTemplate(status, jsonBody);
+  const jsonBody = orderByAlly;
+  const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
+  const email = clientEmailTemplate(status, jsonBody);
 
-    const clientEmail = {
-        to: jsonBody.customer.email,
-        subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
-        message: "Body-email",
-        from: "Vanti info <dev@aplyca.com>",
-        messageHtml: email,
-    };
+  const clientEmail = {
+    to: jsonBody.customer.email,
+    subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
+    message: "Body-email",
+    from: "Vanti info <dev@aplyca.com>",
+    messageHtml: email,
+  };
 
-    const isMailSended = await sendEmail(
-        clientEmail.to,
-        clientEmail.subject,
-        clientEmail.message,
-        clientEmail.from,
-        clientEmail.messageHtml
-    );
-    
-    console.info('sendClientEmail ' + clientEmail.to + ': ' + isMailSended);
-    return isMailSended ? 1 : 0;
+  const isMailSended = await sendEmail(
+    clientEmail.to,
+    clientEmail.subject,
+    clientEmail.message,
+    clientEmail.from,
+    clientEmail.messageHtml
+  );
+
+  console.info('sendClientEmail ' + clientEmail.to + ': ' + isMailSended);
+  return isMailSended ? 1 : 0;
 };
 
 export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-    const jsonBody = orderByAlly;
-    const email = vantiEmailTemplate(jsonBody);
-    const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
+  const jsonBody = orderByAlly;
+  const email = vantiEmailTemplate(jsonBody);
+  const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
 
-    if (!vantiEmailAddress) {
-      console.info('sendVantiEmail environment variable not defined');
-      return 0;
-    }
+  if (!vantiEmailAddress) {
+    console.info('sendVantiEmail environment variable not defined');
+    return 0;
+  }
 
-    const clientEmail = {
-        to: "vanti@aplyca.com",
+  const clientEmail = {
+    to: "vanti@aplyca.com",
+    subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
+    message: "Body-email",
+    from: "Vanti info <dev@aplyca.com>",
+    messageHtml: email,
+  };
+
+  const isMailSended = await sendEmail(
+    clientEmail.to,
+    clientEmail.subject,
+    clientEmail.message,
+    clientEmail.from,
+    clientEmail.messageHtml
+  );
+
+  console.info('sendVantiEmail ' + clientEmail.to + ': ' + isMailSended);
+  return isMailSended ? 1 : 0;
+};
+
+export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  const allyItems = orderByAlly.line_items_by_ally;
+  const emailPromises: Promise<boolean>[] = [];
+
+  allyItems.forEach((allyItem) => {
+    const productsData = allyItem;
+    const email = allyEmailTemplate(orderByAlly, productsData);
+    const emailAddresses = String(allyItem.metadata?.email).split(',');
+
+    emailAddresses.forEach((emailAddress) => {
+      const clientEmail = {
+        to: emailAddress,
         subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
         message: "Body-email",
         from: "Vanti info <dev@aplyca.com>",
         messageHtml: email,
-    };
+      };
 
-    const isMailSended = await sendEmail(
+      const emailPromise = sendEmail(
         clientEmail.to,
         clientEmail.subject,
         clientEmail.message,
         clientEmail.from,
         clientEmail.messageHtml
-    );
+      );
 
-    console.info('sendVantiEmail ' + clientEmail.to + ': ' + isMailSended);
-    return isMailSended ? 1 : 0;
-};
+      emailPromises.push(emailPromise);
 
-export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-    const allyItems = orderByAlly.line_items_by_ally;
-    const emailPromises: Promise<boolean>[] = [];
-
-    allyItems.forEach((allyItem) => {
-        const productsData = allyItem;
-        const email = allyEmailTemplate(orderByAlly, productsData);
-        const emailAddresses = String(allyItem.metadata?.email).split(',');
-
-        emailAddresses.forEach((emailAddress) => {
-            const clientEmail = {
-                to: emailAddress,
-                subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
-                message: "Body-email",
-                from: "Vanti info <dev@aplyca.com>",
-                messageHtml: email,
-            };
-
-            const emailPromise = sendEmail(
-                clientEmail.to,
-                clientEmail.subject,
-                clientEmail.message,
-                clientEmail.from,
-                clientEmail.messageHtml
-            );
-
-            emailPromises.push(emailPromise);
-
-            emailPromise.then((isMailSended) => {
-                console.info('sendAllyEmail ' + emailAddress + ': ' + isMailSended);
-            });
-        });
+      emailPromise.then((isMailSended) => {
+        console.info('sendAllyEmail ' + emailAddress + ': ' + isMailSended);
+      });
     });
+  });
 
-    const emailResults = await Promise.all(emailPromises);
-    const count = emailResults.filter((result) => result).length;
-    return count;
+  const emailResults = await Promise.all(emailPromises);
+  const count = emailResults.filter((result) => result).length;
+  return count;
 };
