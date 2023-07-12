@@ -25,7 +25,7 @@ const handler = async (
             }
         }
 
-        console.log(count + " emails sent");
+        console.info(count + " emails sent");
         return res.status(200).json({ status: 200, message: count + " emails sent", data: resp?.data });
     } catch (error) {
         console.error("An error occurred during the execution of the endpoint email-test:", error);
