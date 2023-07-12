@@ -3,13 +3,8 @@ import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-col
 import { sendEmail } from "./mailer.service";
 
 const customerSection = (data: IOrderExtended) => {
-  console.info(data.billing_address);
-  const billing_address = (data.billing_address?.city === data.billing_address?.state_code) ?
-    data.billing_address?.line_1 + ' ' + data.billing_address?.line_2 + ', ' + data.billing_address?.city :
-    data.billing_address?.line_1 + ' ' + data.billing_address?.line_2 + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
-  const shipping_address = (data.shipping_address?.city === data.shipping_address?.state_code) ?
-    data.shipping_address?.line_1 + ', ' + data.shipping_address?.city :
-    data.shipping_address?.line_1 + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
+  const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
+  const shipping_address = data.shipping_address?.line_1 + (data.shipping_address?.line_2 ? ', ' + data.shipping_address?.line_2 : '') + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
   const shipping_methods = data.shipments.map((shipment) => {
     return shipment.shipping_method.name;
   }).join(", ");
@@ -475,6 +470,7 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
 };
 
 export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  console.info('sendClientEmail start');
   const jsonBody = orderByAlly;
   const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
   const email = clientEmailTemplate(status, jsonBody);
@@ -487,6 +483,7 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
     messageHtml: email,
   };
 
+  console.info('sendClientEmail sendEmail');
   const isMailSended = await sendEmail(
     clientEmail.to,
     clientEmail.subject,
@@ -500,23 +497,26 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
 };
 
 export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  console.info('sendVantiEmail start');
   const jsonBody = orderByAlly;
   const email = vantiEmailTemplate(jsonBody);
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!vantiEmailAddress) {
-    console.info('sendVantiEmail environment variable not defined');
+  if (!vantiEmailAddress || !emailRegex.test(email)) {
+    console.info('sendVantiEmail environment variable not defined or is not a valid mail');
     return 0;
   }
 
   const clientEmail = {
-    to: "vanti@aplyca.com",
+    to: vantiEmailAddress,
     subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
     message: "Body-email",
     from: "Vanti info <dev@aplyca.com>",
     messageHtml: email,
   };
 
+  console.info('sendVantiEmail sendEmail');
   const isMailSended = await sendEmail(
     clientEmail.to,
     clientEmail.subject,
@@ -530,6 +530,7 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<numbe
 };
 
 export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  console.info('sendAllyEmail start');
   const allyItems = orderByAlly.line_items_by_ally;
   const emailPromises: Promise<boolean>[] = [];
 
@@ -547,6 +548,7 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number
         messageHtml: email,
       };
 
+      console.info('sendAllyEmail sendEmail');
       const emailPromise = sendEmail(
         clientEmail.to,
         clientEmail.subject,

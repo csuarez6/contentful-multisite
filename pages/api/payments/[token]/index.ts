@@ -30,14 +30,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
     console.info('getOrderByAlly status: ' + orderByAlly.status);
-    if (orderByAlly.status === 200) {
+    //if (orderByAlly.status === 200) {
+      console.info('Sending client email');
       sendClientEmail(orderByAlly.data);
 
+      console.info('Verify data status');
       if (orderByAlly.data?.status === "approved") {
+        console.info('Sending Vanti email');
         sendVantiEmail(orderByAlly.data);
+        console.info('Sending ally email');
         sendAllyEmail(orderByAlly.data);
       }
-    }
+    //}
 
     res.json({
       success: true,
