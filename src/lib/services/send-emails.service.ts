@@ -489,6 +489,12 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
 export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
     const jsonBody = orderByAlly;
     const email = vantiEmailTemplate(jsonBody);
+    const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
+
+    if (!vantiEmailAddress) {
+      console.info('sendVantiEmail environment variable not defined');
+      return 0;
+    }
 
     const clientEmail = {
         to: "vanti@aplyca.com",
