@@ -181,8 +181,8 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
-      const cities: string[] = await getCitiesByState(shippingStateWatched);       
+      const citiesFinal: any[] = [{ city: "Seleccione un Municipio", isCovered: "false" }];
+      const cities: string[] = await getCitiesByState(shippingStateWatched);
       setShippingCities(citiesFinal.concat(cities));
       if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });
       attempts.current = 1;
@@ -319,7 +319,7 @@ const CheckoutAddress = () => {
       setIsLoadingNext(true);
       console.error(error);
       alert(error.message);
-    }finally {
+    } finally {
       setIsLoadingNext(false);
     }
   };
@@ -573,17 +573,17 @@ const CheckoutAddress = () => {
           )}
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline relative"
+              className="relative button button-outline"
               type="button"
               onClick={handlePrev}
               disabled={isLoadingPrev || isLoadingNext}
             >
               Volver
-              {isLoadingPrev && <Spinner position="absolute"/> }
+              {isLoadingPrev && <Spinner position="absolute" />}
             </button>
-            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
+            <button className="relative button button-primary" type="submit" disabled={isLoadingPrev || isLoadingNext}>
               Continuar
-              {isLoadingNext && <Spinner position="absolute"/> }
+              {isLoadingNext && <Spinner position="absolute" />}
             </button>
           </div>
         </form>

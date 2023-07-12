@@ -83,13 +83,13 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     addLoggedCustomer,
     getSkuList,
     changeItemService,
-    getShippingMethods
+    getShippingMethods,
+    hasShipment
   } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
     setIsLoading(false);
     if (!order?.line_items) return [];
-    console.log({ order });
     return order.line_items;
   }, [order]);
 
@@ -149,7 +149,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       try {
         const infoSkus = await getSkuList();
         const shippingMethod = await getShippingMethods();
-        console.log(shippingMethod);
         if (shippingMethod) setShippingMethodGlobal(shippingMethod);
         if (infoSkus) {
           setSkuOptionsGlobal(infoSkus.data);
@@ -452,13 +451,13 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 </div>
                 <div className="px-3 text-right">
                   <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                    {Object.entries(product.item.shipping_category).length > 0 ? "1x" : "0x"}
+                    {Object.entries(product.item.shipping_category).length > 0 && hasShipment ? "1x" : "-"}
                   </span>
                 </div>
                 <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-                  {Object.entries(product.item.shipping_category).length > 0
+                  {Object.entries(product.item.shipping_category).length > 0 && hasShipment
                     ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
-                    : "$0"
+                    : "-"
                   }
                 </div>
               </>

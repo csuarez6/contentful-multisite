@@ -31,7 +31,6 @@ const CheckoutSummary = () => {
   }, [user, order, isLogged]);
 
   useEffect(() => {
-    console.log({ order });
     if (!order) return;
     (async () => {
       const { billingAddress } = await getAddresses();

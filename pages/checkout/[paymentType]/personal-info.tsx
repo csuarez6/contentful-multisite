@@ -143,7 +143,7 @@ const CheckoutPersonalInfo = () => {
       await handleNext();
     } catch (error) {
       alert(error.message);
-    }finally {
+    } finally {
       setIsLoadingNext(false);
     }
   };
@@ -227,7 +227,7 @@ const CheckoutPersonalInfo = () => {
               <p className="mt-1 text-red-600">{errors.email?.message}</p>
             )}
           </div>
-          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-3">
+          <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-x-3">
             <div>
               <SelectInput
                 selectOptions={selectOptions}
@@ -262,17 +262,17 @@ const CheckoutPersonalInfo = () => {
           </div>
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline relative"
+              className="relative button button-outline"
               type="button"
               onClick={handlePrev}
               disabled={isLoadingPrev || isLoadingNext}
             >
               Volver
-              {isLoadingPrev && <Spinner position="absolute"/> }
+              {isLoadingPrev && <Spinner position="absolute" />}
             </button>
-            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
+            <button className="relative button button-primary" type="submit" disabled={isLoadingPrev || isLoadingNext}>
               Continuar
-              {isLoadingNext && <Spinner position="absolute"/> }
+              {isLoadingNext && <Spinner position="absolute" />}
             </button>
           </div>
         </form>
