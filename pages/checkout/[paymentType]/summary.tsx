@@ -103,7 +103,7 @@ const CheckoutSummary = () => {
         </dl>
         <div className="flex justify-end w-full mt-5">
           <button
-            className="button button-outline relative"
+            className="relative button button-outline"
             type="button"
             onClick={handlePrev}
             disabled={isLoadingPrev}

@@ -422,7 +422,6 @@ export const useCommerceLayer = () => {
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
 
       const client = await generateClient();
-
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
         ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
@@ -512,10 +511,14 @@ export const useCommerceLayer = () => {
     [orderId]
   );
 
+  const getShippingMethods = useCallback(async () => {
+    const client = await generateClient();
+    // return client.orders.available_payment_methods(orderId);
+    return client.shipping_methods.list();
+  }, [orderId]);
+
   const setDefaultShippingMethod = useCallback(async () => {
     const shipmentId = order.shipments.at(0)?.id;
-    console.log({ shipmentId });
-    console.log({ order });
     const client = await generateClient();
     await client.shipments.update({
       id: shipmentId,
@@ -636,6 +639,7 @@ export const useCommerceLayer = () => {
     setPaymentMethod,
     addPaymentMethodSource,
     setDefaultShippingMethod,
+    getShippingMethods,
     validateExternal,
     getSkuList,
     changeItemService,

@@ -68,6 +68,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
+  const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
   const [showWarranty, setShowWarranty] = useState<boolean>(true);
@@ -82,6 +83,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     addLoggedCustomer,
     getSkuList,
     changeItemService,
+    getShippingMethods,
+    hasShipment
   } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
@@ -145,6 +148,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     (async () => {
       try {
         const infoSkus = await getSkuList();
+        const shippingMethod = await getShippingMethods();
+        if (shippingMethod) setShippingMethodGlobal(shippingMethod);
         if (infoSkus) {
           setSkuOptionsGlobal(infoSkus.data);
         }
@@ -344,7 +349,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               className="flex flex-wrap border-b sm:grid grid-template-product-details"
               key={`cart-product-${product.id}`}
             >
-              <div className="row-start-1 row-end-4 py-3.5">
+              <div className="row-start-1 row-end-5 py-3.5">
                 <figure className="relative w-16 shrink-0">
                   {product?.image_url && (
                     <Image
@@ -432,8 +437,32 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
                 {product.formatted_unit_amount}
               </div>
-              <div className="w-full mt-3 sm:hidden"></div>
+              {/* Shipping */}
+              <div className="w-full sm:hidden"></div>
+              <>
+                <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                  Costo Envío{" "}
+                  {Object.entries(product.item.shipping_category).length > 0 && (
+                    <>
+                      <br />
+                      <b>{product.item.shipping_category.name}</b>
+                    </>
+                  )}
+                </div>
+                <div className="px-3 text-right">
+                  <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                    {Object.entries(product.item.shipping_category).length > 0 && hasShipment ? "1x" : "-"}
+                  </span>
+                </div>
+                <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
+                  {Object.entries(product.item.shipping_category).length > 0 && hasShipment
+                    ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
+                    : "-"
+                  }
+                </div>
+              </>
               {/* ********* Services ******** */}
+              <div className="w-full mt-3 sm:hidden"></div>
               {showWarranty ? (
                 <>
                   <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
@@ -545,13 +574,30 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {formatPrice(
+                {/* {formatPrice(
                   showProductTotal(
                     product?.total_amount_float,
                     product?.["installlation_service"],
                     product?.["warranty_service"]
                   )
-                )}
+                )} */}
+                {Object.entries(product.item["shipping_category"]).length > 0
+                  ? formatPrice(
+                    showProductTotal(
+                      product?.total_amount_float,
+                      product?.["installlation_service"],
+                      product?.["warranty_service"]
+                    ) +
+                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.price_amount_float
+                  )
+                  : formatPrice(
+                    showProductTotal(
+                      product?.total_amount_float,
+                      product?.["installlation_service"],
+                      product?.["warranty_service"]
+                    )
+                  )
+                }
               </div>
             </div>
           );
