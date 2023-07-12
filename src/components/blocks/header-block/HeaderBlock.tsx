@@ -427,7 +427,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden gap-6 px-6 lg:flex lg:h-full">
+                <div className="hidden gap-6 pl-6 lg:flex lg:h-full">
                   {session?.user ? (
                     <>
                       <Menu
