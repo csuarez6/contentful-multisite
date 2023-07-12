@@ -6,8 +6,10 @@ export const sendEmail = async (to: string, subject: string, message: string, fr
     port: parseInt(process.env.SMTP_PORT),
     user: process.env.SMTP_USER,
     password: process.env.SMTP_PASSWORD,
-    ssl: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production',
+    ssl: false
   });
+
+  // ssl: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production',
 
   const attachmentOptions = messageHtml ?
     [
