@@ -477,7 +477,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     {order?.formatted_total_amount_with_taxes}
                   </span>
                 </div>
-                {isComplete /*&& tokenRecaptcha */&& (
+                {isComplete && tokenRecaptcha && (
                   <button
                     onClick={validateOrder}
                     disabled={isLoading || isPlacing}

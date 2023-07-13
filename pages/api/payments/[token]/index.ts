@@ -29,9 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     });
 
     const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
-    console.info('orderByAlly typeof: ' + typeof orderByAlly.status);
     if (orderByAlly.status === 200) {
-      console.info('entra if');
       await sendClientEmail(orderByAlly.data);
 
       if (orderByAlly.data?.status === "approved") {
