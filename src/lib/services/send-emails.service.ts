@@ -470,7 +470,6 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
 };
 
 export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  console.info('sendClientEmail start');
   const jsonBody = orderByAlly;
   const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
   const email = clientEmailTemplate(status, jsonBody);
@@ -483,7 +482,6 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
     messageHtml: email,
   };
 
-  console.info('sendClientEmail sendEmail');
   const isMailSended = await sendEmail(
     clientEmail.to,
     clientEmail.subject,
@@ -497,14 +495,13 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
 };
 
 export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  console.info('sendVantiEmail start');
   const jsonBody = orderByAlly;
   const email = vantiEmailTemplate(jsonBody);
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!vantiEmailAddress || !emailRegex.test(email)) {
-    console.info('sendVantiEmail environment variable not defined or is not a valid mail');
+    console.info('sendVantiEmail environment variable not defined or is not a valid email');
     return 0;
   }
 
@@ -516,7 +513,6 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<numbe
     messageHtml: email,
   };
 
-  console.info('sendVantiEmail sendEmail');
   const isMailSended = await sendEmail(
     clientEmail.to,
     clientEmail.subject,
@@ -530,7 +526,6 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<numbe
 };
 
 export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  console.info('sendAllyEmail start');
   const allyItems = orderByAlly.line_items_by_ally;
   const emailPromises: Promise<boolean>[] = [];
 
@@ -548,7 +543,6 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number
         messageHtml: email,
       };
 
-      console.info('sendAllyEmail sendEmail');
       const emailPromise = sendEmail(
         clientEmail.to,
         clientEmail.subject,
