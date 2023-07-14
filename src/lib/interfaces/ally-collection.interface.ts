@@ -1,15 +1,18 @@
-import { LineItem, Order, ShippingCategory } from "@commercelayer/sdk";
+import { LineItem, Order, Shipment, ShippingCategory, Sku } from "@commercelayer/sdk";
 
 export interface ILineItemExtended extends LineItem {
     installlation_service?: LineItem[];
     warranty_service?: LineItem[];
-    item?: any
+    item?: Sku;
 };
 
 export interface IAlly extends ShippingCategory {
     line_items: ILineItemExtended[];
     ally_total_amount_float: number | null;
+    ally_total_shipping_amount_float: number | null;
     formatted_ally_total_amount: string | null;
+    formatted_ally_shipping_total_amount: string | null;
+    shipments: Shipment[];
 }
 
 export interface IOrderExtended extends Order {
