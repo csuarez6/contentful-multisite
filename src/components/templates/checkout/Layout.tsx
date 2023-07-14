@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -77,6 +77,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isPlacing, setIsPlacing] = useState(false);
   const asPathUrl = asPath.split("/")[3];
   const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
+  const shippingCostTotal = useRef([]);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -245,7 +246,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   };
 
   const getShippingPrice = (product) => {
-    return shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+    const price = shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+    if (!shippingCostTotal.current.find((el) => el.product === product.id)) shippingCostTotal.current.push({ product: product.id, shippingCost: price });
+    return price;
   };
 
   const breadcrumbsList: IPromoBlock =
@@ -478,7 +481,16 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
-                    {order?.formatted_total_amount_with_taxes}
+                    {/* {order?.formatted_total_amount_with_taxes} */}
+                    {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                      ?
+                      formatPrice(
+                        order?.total_amount_with_taxes_float +
+                        shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
+                      )
+                      :
+                      order?.formatted_total_amount_with_taxes
+                    }
                   </span>
                 </div>
                 {isComplete && tokenRecaptcha && (
