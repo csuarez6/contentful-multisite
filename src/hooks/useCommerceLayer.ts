@@ -4,6 +4,7 @@ import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
+import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
@@ -517,16 +518,49 @@ export const useCommerceLayer = () => {
     return client.shipping_methods.list();
   }, [orderId]);
 
-  const setDefaultShippingMethod = useCallback(async () => {
-    const shipmentId = order.shipments.at(0)?.id;
+  const setDefaultShippingMethod = useCallback(async (hasShipment) => {
+    // ************** CODE PREV
+    // const shipmentId = order.shipments.at(0)?.id;
+    // const client = await generateClient();
+    // await client.shipments.update({
+    //   id: shipmentId,
+    //   shipping_method: {
+    //     id: DEFAULT_SHIPPING_METHOD_ID,
+    //     type: "shipping_methods",
+    //   },
+    // }).catch(err => console.error('error set default shipping method', err.errors));
+    // ************** END CODE PREV
+    console.log({ hasShipment });
     const client = await generateClient();
-    await client.shipments.update({
-      id: shipmentId,
-      shipping_method: {
-        id: DEFAULT_SHIPPING_METHOD_ID,
-        type: "shipping_methods",
-      },
-    }).catch(err => console.error('error set default shipping method', err.errors));
+    const shipments = order.shipments;
+    const allies = [];
+    order?.line_items?.forEach((line_item: ILineItemExtended) => {
+      try {
+        let targetIndex = allies.findIndex((value: IAlly) => value.id === line_item.item.shipping_category.id);
+        if (targetIndex === -1) {
+          allies.push({ ...line_item.item.shipping_category });
+          targetIndex = allies.length - 1;
+        }
+        if (!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
+        delete line_item?.item?.shipping_category;
+        allies[targetIndex].line_items.push({ ...line_item });
+      } catch (iteration_error) {
+        console.error("ShippingMethod: An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
+      }
+    });
+    console.log({ allies });
+    shipments.forEach(async (el, index) => {
+      const availableMethods = el.available_shipping_methods;
+      const methodID = availableMethods.find((item) => item.name === allies[index].name);
+      const methodIdCheck = (methodID) ? methodID.id : DEFAULT_SHIPPING_METHOD_ID;
+      await client.shipments.update({
+        id: el.id,
+        shipping_method: {
+          id: (hasShipment) ? methodIdCheck : DEFAULT_SHIPPING_METHOD_ID,
+          type: "shipping_methods",
+        },
+      }).catch(err => console.error('error set default shipping method', err.errors));
+    });
   }, [order]);
 
   const placeOrder = useCallback(async () => {
