@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -77,6 +77,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isPlacing, setIsPlacing] = useState(false);
   const asPathUrl = asPath.split("/")[3];
   const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
+  const shippingCostTotal = useRef([]);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -112,7 +113,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
 
-      await setDefaultShippingMethod();
+      await setDefaultShippingMethod(hasShipment);
       // return;
       await setPaymentMethod(paymentMethodId);
       await addPaymentMethodSource(token);
@@ -244,6 +245,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     }
   };
 
+  const getShippingPrice = (product) => {
+    const price = shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+    if (!shippingCostTotal.current.find((el) => el.product === product.id)) shippingCostTotal.current.push({ product: product.id, shippingCost: price });
+    return price;
+  };
+
   const breadcrumbsList: IPromoBlock =
   {
     ctaCollection: {
@@ -357,13 +364,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-3 text-sm"
                             key={"product-unit-shipcost" + i}
                           >
-                            <p className="col-span-1">C.E:</p>
+                            <p className="col-span-1">Envío:</p>
                             <p className="col-span-2 text-right text-blue-dark">
                               <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
-                                {Object.entries(product.item["shipping_category"]).length > 0 ? "1x" : "0x"}
+                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 ? "1x" : "0x"}
                               </span>
                               <span>
-                                {Object.entries(product.item["shipping_category"]).length > 0
+                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
                                   ? (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount
                                   : "$0"
                                 }
@@ -437,14 +444,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         >
                           <p className="col-span-1 font-bold">Subtotal:</p>
                           <span className="col-span-2 font-bold text-right text-blue-dark">
-                            {Object.entries(product.item["shipping_category"]).length > 0 && ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                            {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
                               ? formatPrice(
                                 showProductTotal(
                                   product?.total_amount_float,
                                   product?.["installlation_service"],
                                   product?.["warranty_service"]
                                 ) +
-                                (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.price_amount_float
+                                getShippingPrice(product)
                               )
                               : formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))
                             }
@@ -456,7 +463,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   </div>
                 ))}
-                <div className="grid grid-cols-2 mt-2 rounded">
+                {/* <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
                     {
@@ -465,7 +472,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         : "-"
                     }
                   </span>
-                </div>
+                </div> */}
                 <div className="grid grid-cols-1 rounded">
                   <p className="text-xs text-gray-600">
                     El costo de envío depende de la cobertura de Vanti y de acuerdo a esto se realiza el cálculo del envío
@@ -474,7 +481,16 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
-                    {order?.formatted_total_amount_with_taxes}
+                    {/* {order?.formatted_total_amount_with_taxes} */}
+                    {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                      ?
+                      formatPrice(
+                        order?.total_amount_with_taxes_float +
+                        shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
+                      )
+                      :
+                      order?.formatted_total_amount_with_taxes
+                    }
                   </span>
                 </div>
                 {isComplete && tokenRecaptcha && (

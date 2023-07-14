@@ -90,6 +90,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const products = useMemo(() => {
     setIsLoading(false);
     if (!order?.line_items) return [];
+    console.log({ order });
     return order.line_items;
   }, [order]);
 
@@ -142,6 +143,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
   const updateInstallCurrent = (value) => {
     console.info(value);
+  };
+
+  const getShippingPrice = (product) => {
+    return shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
   };
 
   useEffect(() => {
@@ -441,24 +446,25 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               <div className="w-full sm:hidden"></div>
               <>
                 <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                  Costo Envío{" "}
+                  Envío{" "}
                   {Object.entries(product.item.shipping_category).length > 0 && (
                     <>
-                      <br />
                       <b>{product.item.shipping_category.name}</b>
                     </>
                   )}
                 </div>
                 <div className="px-3 text-right">
-                  <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                  {" "}
+                  {/* <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
                     {Object.entries(product.item.shipping_category).length > 0 && hasShipment ? "1x" : "-"}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-                  {Object.entries(product.item.shipping_category).length > 0 && hasShipment
+                  {" "}
+                  {/* {(Object.entries(product.item.shipping_category).length > 0 && hasShipment)
                     ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
                     : "-"
-                  }
+                  } */}
                 </div>
               </>
               {/* ********* Services ******** */}
@@ -588,7 +594,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       product?.["installlation_service"],
                       product?.["warranty_service"]
                     ) +
-                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.price_amount_float
+                    getShippingPrice(product)
                   )
                   : formatPrice(
                     showProductTotal(

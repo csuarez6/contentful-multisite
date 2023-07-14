@@ -35,7 +35,7 @@ export interface IContextCheckout {
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
-  setDefaultShippingMethod: () => Promise<void>;
+  setDefaultShippingMethod: (hasShipment: boolean) => Promise<void>;
   getShippingMethods: () => Promise<ListResponse<ShippingMethod>>;
   onRecaptcha: (e: any) => void;
   onHasShipment: (e: any) => void;
