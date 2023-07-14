@@ -73,12 +73,12 @@ const CheckoutSummary = () => {
               {router.query.paymentType?.toString().toUpperCase()}
             </dd>
           </div>
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
             <dd className="flex-1 font-bold text-grey-30">
               Banco Davivienda
             </dd>
-          </div>
+          </div> */}
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
