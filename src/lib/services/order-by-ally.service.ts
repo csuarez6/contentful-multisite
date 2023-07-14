@@ -4,7 +4,7 @@ import { formatPrice, generateAmountCents } from '@/utils/functions';
 import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
 
 const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "line_items.item.shipping_category", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address"],
+  include: ["line_items", "market", "line_items.item", "line_items.item.shipping_category", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address"],
   fields: {
     orders: [
       "number",
@@ -16,7 +16,9 @@ const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
       "shipments",
       "billing_address",
       "shipping_address",
-      "formatted_total_amount"
+      "formatted_total_amount",
+      "approved_at",
+      "market"
     ],
     addresses: [
       "state_code",
@@ -39,7 +41,13 @@ const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
       "total_amount_cents",
       "total_amount_float",
       "item"
-    ]
+    ],
+    markets: [
+      "name",
+    ],
+    shipments: [
+      "shipping_method",
+    ],
   }
 };
 
@@ -55,7 +63,6 @@ export const getOrderByAlly = async (orderId: string): Promise<IAllyResponse> =>
           targetIndex = allies.length - 1;
         }
         if (!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
-        delete line_item?.item?.shipping_category;
         allies[targetIndex].line_items.push({ ...line_item });
       } catch (iteration_error) {
         console.error("An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
@@ -64,9 +71,20 @@ export const getOrderByAlly = async (orderId: string): Promise<IAllyResponse> =>
 
     allies.map((ally: IAlly) => {
       try {
+        let shippingPrice = 0;
+        const shipments = resp.data.shipments.filter((shipment) => {
+          if (shipment.shipping_method?.name === ally.name || shipment.shipping_method?.name === 'Estándar') {
+            shippingPrice += shipment.shipping_method.price_amount_float;
+          }
+          return shipment.shipping_method?.name === ally.name || shipment.shipping_method?.name === 'Estándar';
+        });
+
         const ally_total_amount_float = generateAmountCents(ally?.line_items).reduce((acum, current) => acum + current.product_amount_float ?? 0, 0);
         ally.ally_total_amount_float = ally_total_amount_float;
+        ally.ally_total_shipping_amount_float = ally_total_amount_float + shippingPrice;
         ally.formatted_ally_total_amount = formatPrice(ally_total_amount_float);
+        ally.formatted_ally_shipping_total_amount = formatPrice(ally.ally_total_shipping_amount_float);
+        ally.shipments = shipments;
       } catch (calculation_error) {
         console.error("An error has ocurred with the total calculation for the ally:", ally, "the error:", calculation_error);
         ally.ally_total_amount_float = null;
