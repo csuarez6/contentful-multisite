@@ -115,6 +115,13 @@ const productAdjustments = (item: ILineItemExtended) => {
   return section;
 };
 
+const productPrices = (formatted_compare_at_amount: string, formatted_unit_amount: string) => {
+  console.info(formatted_compare_at_amount);
+  console.info(formatted_unit_amount);
+  const price = formatted_compare_at_amount === formatted_unit_amount ? formatted_unit_amount : `<strike>${ formatted_compare_at_amount }</strike> ${ formatted_unit_amount }`;
+  return price;
+};
+
 const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   let section = "";
   items.forEach((lineItem) => {
@@ -133,7 +140,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
           </ul>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${ lineItem.formatted_unit_amount}</b>
+          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price.formatted_compare_at_amount, lineItem.formatted_unit_amount) }</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
           <b style="font-weight: 700; color: #113455">${ lineItem.formatted_total_amount }</b>
