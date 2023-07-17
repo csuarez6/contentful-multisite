@@ -84,13 +84,11 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     getSkuList,
     changeItemService,
     getShippingMethods,
-    hasShipment
   } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
     setIsLoading(false);
     if (!order?.line_items) return [];
-    console.log({ order });
     return order.line_items;
   }, [order]);
 

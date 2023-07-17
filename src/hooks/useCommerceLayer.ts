@@ -516,6 +516,7 @@ export const useCommerceLayer = () => {
     const client = await generateClient();
     // return client.orders.available_payment_methods(orderId);
     return client.shipping_methods.list();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
   const setDefaultShippingMethod = useCallback(async (hasShipment) => {
@@ -530,7 +531,6 @@ export const useCommerceLayer = () => {
     //   },
     // }).catch(err => console.error('error set default shipping method', err.errors));
     // ************** END CODE PREV
-    console.log({ hasShipment });
     const client = await generateClient();
     const shipments = order.shipments;
     const allies = [];
@@ -548,7 +548,6 @@ export const useCommerceLayer = () => {
         console.error("ShippingMethod: An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
       }
     });
-    console.log({ allies });
     shipments.forEach(async (el, index) => {
       const availableMethods = el.available_shipping_methods;
       const methodID = availableMethods.find((item) => item.name === allies[index].name);
