@@ -53,7 +53,7 @@ const modalBody = (isSuccess, errorMessage, closeModal, productData) => {
 
       <div className="mt-4 text-right">
         {isSuccess && (
-          <a href={productData?.urlProduct} className="button button-primary">
+          <a href={productData?.urlProduct ?? "#"} className="button button-primary">
             Aceptar
           </a>
         )}
@@ -135,15 +135,16 @@ const CallbackPage = () => {
               priceGasodomestico,
               _priceGasodomestico,
               productsQuantityGasodomestico,
-              urlPath,
+              urlPaths,
             } = res;
+            console.log(res)
             setProductData({
               productName: promoTitle ?? name,
               price: priceGasodomestico,
               _price: _priceGasodomestico,
               promoImage,
               sku,
-              urlProduct: `${location.origin}${urlPath}` ?? null,
+              urlProduct: urlPaths.length > 0 ? `${location.origin}${urlPaths[0]}` : "",
               productsQuantity: productsQuantityGasodomestico,
             });
           }

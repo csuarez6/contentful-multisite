@@ -11,7 +11,7 @@ export const CALLBACK_TYPES: object = {
   "nuevo-punto": "Nuevo Punto",
   "rpo": "Revisión Periódica Obligatoria",
   "producto": "Producto",
-  "instalacion-gasodomésticos": "Instalación Gasodomésticos",
+  "instalacion-gasodomesticos": "Instalación Gasodomésticos",
   "gasodomesticos": "Productos Gasodomésticos",
   "vantilisto": "Catálogo Vantilisto"
 };

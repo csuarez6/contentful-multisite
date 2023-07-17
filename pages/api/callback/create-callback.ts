@@ -101,7 +101,7 @@ const createCallback = async (body) => {
       if (result.status === 401 || result.errors) {
         return {
           error: true,
-          message: result.message ?? "¡Error al crear el Callback!"
+          message: result.message ?? "¡Error al crear el Callback! Intente de nuevo más tarde por favor."
         };
       }
       return result;

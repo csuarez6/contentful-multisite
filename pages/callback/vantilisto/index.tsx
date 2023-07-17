@@ -126,7 +126,7 @@ const CallbackPage = () => {
               _price: _priceVantiListo,
               promoImage,
               sku,
-              urlProduct: `${location.origin}${urlPaths?.[0] ?? ''}` ?? null,
+              urlProduct: urlPaths.length > 0 ? `${location.origin}${urlPaths[0]}` : "",
               productsQuantity: productsQuantityVantiListo,
             };
             setProductData(_product);
