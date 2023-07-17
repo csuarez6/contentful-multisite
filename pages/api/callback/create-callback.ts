@@ -60,9 +60,9 @@ const createCallback = async (body) => {
     const raw = {
       "scriptId": "90968378-7f4a-4973-ad25-665feb88f8ca",
       "routingData": {
-        "queueId": "314fb622-75ab-4d4c-b253-ba7ddc9521a0",
+        // "queueId": "314fb622-75ab-4d4c-b253-ba7ddc9521a0",
         // Queue GNS_TEST
-        // "queueId": "64e1990e-ddb3-4833-8d69-ef30a31e19c9",
+        "queueId": "64e1990e-ddb3-4833-8d69-ef30a31e19c9",
         "preferredAgentIds": [
           ""
         ]
