@@ -1,4 +1,4 @@
-import CommerceLayer, { CommerceLayerClient, LineItem, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { CommerceLayerClient, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
@@ -402,6 +402,37 @@ export const getCommercelayerProduct = async (skuCode: string) => {
   }
 
   return product;
+};
+
+export const getCommercelayerProductPrice = async (skuCode: string, market: Market) => {
+  let prices = null;
+  try {
+    const clientGasodomesticos = await getCLAdminCLient();
+
+    const sku = (
+      await clientGasodomesticos.skus.list({
+        filters: { code_eq: decodeURI(skuCode) },
+        include: [
+          "prices",
+          "prices.price_list"
+        ],
+        fields: {
+          skus: ["id", "prices"],
+          prices: ["formatted_compare_at_amount", "price_list"]
+        }
+
+      })
+    ).first();
+
+    prices = sku.prices.find((price) => {
+      return price.price_list?.name === market.price_list.name;
+    });
+
+  } catch (error) {
+    console.error("Error retrieving SKU: ", error);
+  }
+
+  return prices;
 };
 
 export const updatePassWord = async (

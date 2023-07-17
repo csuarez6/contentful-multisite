@@ -1,8 +1,9 @@
-import { LineItem, Order, Shipment, ShippingCategory, Sku } from "@commercelayer/sdk";
+import { LineItem, Order, Price, Shipment, ShippingCategory, Sku } from "@commercelayer/sdk";
 
 export interface ILineItemExtended extends LineItem {
     installlation_service?: LineItem[];
     warranty_service?: LineItem[];
+    price?: Price,
     item?: Sku;
 };
 
