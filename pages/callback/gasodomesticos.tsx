@@ -137,7 +137,7 @@ const CallbackPage = () => {
               productsQuantityGasodomestico,
               urlPaths,
             } = res;
-            console.log(res)
+
             setProductData({
               productName: promoTitle ?? name,
               price: priceGasodomestico,

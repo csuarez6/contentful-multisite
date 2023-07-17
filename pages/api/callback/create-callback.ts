@@ -36,7 +36,7 @@ const getToken = async () => {
 };
 
 const createCallback = async (body) => {
-  const { type, contractAccount, email, fullName, hour, cellPhone, productName, urlProduct, sku, price, quantity, amountOfFees, tokenReCaptcha } = body;
+  const { type, contractAccount, email, fullName, cellPhone, productName, urlProduct } = body;
   const typeName = getType(type);
   const response = await getToken();
   const { access_token, error } = response;
@@ -79,7 +79,7 @@ const createCallback = async (body) => {
         "cuenta_contrato": contractAccount ?? "",
         "sociedad": "",
         "ticket": "",
-        "oportunidad": "",
+        "oportunidad": productName ?? "",
         "mercado": "",
         "servicio": typeName ?? "",
       }
