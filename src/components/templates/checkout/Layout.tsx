@@ -152,6 +152,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       });
     }
     setIsPlacing(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addPaymentMethodSource,
     placeOrder,
@@ -231,6 +232,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           upgradeTimePay(30);
         }
       }
+      await reloadOrder(true);
       push("/");
     } catch (error) {
       console.error(error);
