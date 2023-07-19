@@ -373,20 +373,20 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 {utilityNavCollection?.items?.length > 0 && (
                   <nav
                     aria-label="Utility"
-                    className="relative hidden px-6 lg:block border-x border-neutral-70"
+                    className="relative hidden px-5 2lg:px-6 lg:block border-x border-neutral-70"
                   >
                     <ul className={classNames("flex 2lg:gap-1 flex-nowrap")}>
                       {utilityNavCollection.items.map((item) => (
-                        <li className="flex 2lg:w-[75px] w-[68px]" key={item.sys.id}>
+                        <li className="flex w-[68px] 2lg:w-[75px] justify-center" key={item.sys.id}>
                           <CustomLink
                             content={item}
                             className={classNames(
-                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 h-full",
+                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
                               item.promoIcon
                                 ? "justify-start"
                                 : "justify-center"
                             )}
-                            linkClassName="w-full"
+                            linkClassName="w-full block"
                           >
                             {item.promoIcon && (
                               <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
@@ -401,7 +401,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         </li>
                       ))}
                       {/* Carrito de compras */}
-                      <li className="flex 2lg:w-[75px] w-[68px]" key={`cart_${uuid()}`}>
+                      <li className="flex w-[68px] 2lg:w-[75px]" key={`cart_${uuid()}`}>
                         <Link
                           href="/checkout/pse/verify"
                           className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
@@ -428,7 +428,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden gap-6 pl-6 lg:flex lg:h-full">
+                <div className="hidden gap-5 2lg:gap-6 pl-5 2lg:pl-6 lg:flex lg:h-full">
                   {session?.user ? (
                     <>
                       <Menu
