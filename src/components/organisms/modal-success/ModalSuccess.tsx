@@ -15,7 +15,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
     const [open, setOpen] = useState(isActive);
     return (
         <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={setOpen}>
+            <Dialog as="div" className="relative z-50" onClose={setOpen}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -39,7 +39,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <Dialog.Panel className="relative transform overflow-hidden rounded-[20px] bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[500px] sm:p-6 flex flex-col justify-end">
-                                <div className='overflow-auto max-h-[50vh] sm:max-h-none'>
+                                <div className='overflow-x-hidden custom-scrollbar custom-scrollbar--dark max-h-[50vh] sm:max-h-none'>
                                     <div className="absolute top-[-1px] right-0 hidden pt-4 pr-[22px] sm:block">
                                         <button
                                             type="button"
