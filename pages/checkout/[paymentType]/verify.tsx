@@ -334,7 +334,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     // unsubscribe on component destroy in useEffect return function
     return () => {
       router.events.off('routeChangeStart', onRouteChangeStart);
-    }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
 
   return (

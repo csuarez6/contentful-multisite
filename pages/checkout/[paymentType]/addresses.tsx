@@ -13,7 +13,6 @@ import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
-// import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
@@ -344,7 +343,8 @@ const CheckoutAddress = () => {
     // unsubscribe on component destroy in useEffect return function
     return () => {
       router.events.off('routeChangeStart', onRouteChangeStart);
-    }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
