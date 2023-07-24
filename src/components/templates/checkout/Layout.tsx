@@ -61,7 +61,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     validateExternal,
     upgradeTimePay,
     hasShipment,
-    isFetchingOrder
+    isFetchingOrder,
+    updateIsPaymentProcess
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
@@ -75,6 +76,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
   const asPathUrl = asPath.split("/")[3];
   const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
   const shippingCostTotal = useRef([]);
@@ -92,6 +95,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const validateOrder = async () => {
     setIsLoading(true);
     setOnPayment(true);
+    updateIsPaymentProcess(true);
     await reloadOrder(true);
     setIsLoading(false);
   };
@@ -209,7 +213,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    updateIsPaymentProcess(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handlePayment = async (toCancel = false) => {
+    setIsPaying(true);
     try {
       const path =
         `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
@@ -244,6 +254,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       });
     } finally {
       setOpenDummyPGModal(false);
+      setIsPaying(false);
+      updateIsPaymentProcess(false);
     }
   };
 
@@ -411,9 +423,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="flex col-span-1">
                               Envío:
-                              <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
-                                <Icon icon="info" size={18} className="text-gray-500" />
-                              </span>
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (
+                                <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
+                                  <Icon icon="info" size={18} className="text-gray-500" />
+                                </span>
+                              )}
                             </p>
                             <p className="col-span-2 text-right text-blue-dark">
                               <span>
@@ -530,9 +544,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         <ModalSuccess
           {...MocksModalSuccessProps.modalLayout}
           isActive={openDummyPGModal}
+          isClosable={false}
         >
           <div className="flex justify-end w-full gap-5">
             <button
+              disabled={isPaying}
               className="button button-outline"
               onClick={() => {
                 handlePayment(true);
@@ -541,6 +557,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               Cancelar pago
             </button>
             <button
+              disabled={isPaying}
               className="button button-primary"
               onClick={() => {
                 handlePayment();

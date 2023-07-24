@@ -10,6 +10,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
     promoIcon,
     children,
     subtitle,
+    isClosable = true,
     isActive = true
 }) => {
     const [open, setOpen] = useState(isActive);
@@ -40,16 +41,18 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                         >
                             <Dialog.Panel className="relative transform overflow-hidden rounded-[20px] bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[500px] sm:p-6 flex flex-col justify-end">
                                 <div className='overflow-x-hidden custom-scrollbar custom-scrollbar--dark max-h-[50vh] sm:max-h-none'>
-                                    <div className="absolute top-[-1px] right-0 hidden pt-4 pr-[22px] sm:block">
-                                        <button
-                                            type="button"
-                                            className="rounded-md bg-white text-neutral-30 hover:text-gray-500 focus:outline-none focus:ring-offset-2"
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            <span className="sr-only">Close</span>
-                                            <XMarkIcon className="h-4 w-4" aria-hidden="true" />
-                                        </button>
-                                    </div>
+                                    {isClosable && (
+                                        <div className="absolute top-[-1px] right-0 hidden pt-4 pr-[22px] sm:block">
+                                            <button
+                                                type="button"
+                                                className="rounded-md bg-white text-neutral-30 hover:text-gray-500 focus:outline-none focus:ring-offset-2"
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <span className="sr-only">Close</span>
+                                                <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+                                            </button>
+                                        </div>
+                                    )}
                                     {promoIcon &&
                                         <div className="mx-auto flex items-center justify-center rounded-full">
                                             <Icon icon={promoIcon} size={76} className="text-category-sky-blue-50" />
