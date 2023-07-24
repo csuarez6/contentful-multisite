@@ -15,6 +15,7 @@ const CheckoutProvider = ({ children }) => {
     timeToPay,
     hasShipment,
     isFetchingOrder,
+    isPaymentProcess,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -38,6 +39,7 @@ const CheckoutProvider = ({ children }) => {
     changeItemService,
     deleteItemService,
     upgradeTimePay,
+    updateIsPaymentProcess,
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -51,6 +53,7 @@ const CheckoutProvider = ({ children }) => {
     timeToPay,
     hasShipment,
     isFetchingOrder,
+    isPaymentProcess,
     addToCart,
     reloadOrder,
     updateMetadata,
@@ -72,7 +75,8 @@ const CheckoutProvider = ({ children }) => {
     getSkuList,
     changeItemService,
     deleteItemService,
-    upgradeTimePay
+    upgradeTimePay,
+    updateIsPaymentProcess
   };
 
   return (

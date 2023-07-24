@@ -18,14 +18,14 @@ const CheckoutSummary = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const { isLogged, user } = useContext(AuthContext);
-  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
+  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha, isPaymentProcess } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [isLoading, setIsLoading] = useState(false);
 
   const fullName = useMemo(() => {
     return (
-      (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
+      (resource) => `${resource?.metadata?.name ?? "*****"} ${resource?.metadata?.lastName ?? "*****"}`
     )(isLogged ? user : order);
 
   }, [user, order, isLogged]);
@@ -94,7 +94,7 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {billingAddress?.full_address}
+              {billingAddress?.full_address ?? "-----"}
             </dd>
           </div>
           <div className="flex justify-between">
@@ -119,7 +119,7 @@ const CheckoutSummary = () => {
             className="relative button button-outline"
             type="button"
             onClick={handlePrev}
-            disabled={isLoading}
+            disabled={isLoading || isPaymentProcess}
           >
             Volver
           </button>

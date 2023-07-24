@@ -64,6 +64,7 @@ export const useCommerceLayer = () => {
   const orderId = useMemo(() => order?.id, [order]);
   const [isInitialRender, setIsInitialRender] = useState<boolean>();
   const [localOrderId, setLocalOrderId] = useState<string>();
+  const [isPaymentProcess, setisPaymentProcess] = useState(false);
 
   /**
    * Set localStorage and State Order ID
@@ -643,8 +644,13 @@ export const useCommerceLayer = () => {
   const upgradeTimePay = useCallback(
     async (time: number) => {
       setTimeToPay(time);
-    },
-    []
+    }, []
+  );
+
+  const updateIsPaymentProcess = useCallback(
+    async (value: boolean) => {
+      setisPaymentProcess(value);
+    }, []
   );
 
   return {
@@ -660,6 +666,7 @@ export const useCommerceLayer = () => {
     getOrder,
     reloadOrder,
     addToCart,
+    isPaymentProcess,
     updateItemQuantity,
     addCustomer,
     addLoggedCustomer,
@@ -679,6 +686,7 @@ export const useCommerceLayer = () => {
     checkCurrentPrices,
     deleteItemService,
     upgradeTimePay,
+    updateIsPaymentProcess
   };
 };
 

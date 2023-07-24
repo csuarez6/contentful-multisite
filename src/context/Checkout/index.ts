@@ -13,6 +13,7 @@ export interface IContextCheckout {
   timeToPay: number;
   hasShipment: boolean;
   isFetchingOrder: boolean;
+  isPaymentProcess: boolean;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
@@ -41,6 +42,7 @@ export interface IContextCheckout {
   onHasShipment: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
   upgradeTimePay: (e: number) => Promise<void>;
+  updateIsPaymentProcess: (e: boolean) => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -52,6 +54,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   timeToPay: undefined,
   hasShipment: undefined,
   isFetchingOrder: undefined,
+  isPaymentProcess: undefined,
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,
@@ -74,6 +77,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   onHasShipment: () => undefined,
   validateExternal: () => undefined,
   upgradeTimePay: () => undefined,
+  updateIsPaymentProcess: () => undefined,
 });
 
 export default CheckoutContext;
