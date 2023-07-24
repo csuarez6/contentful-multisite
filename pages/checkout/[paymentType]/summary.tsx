@@ -21,7 +21,7 @@ const CheckoutSummary = () => {
   const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
 
   const [billingAddress, setBillingAddress] = useState<Address>();
-  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fullName = useMemo(() => {
     return (
@@ -44,11 +44,24 @@ const CheckoutSummary = () => {
   );
 
   const handlePrev = async () => {
-    setIsLoadingPrev(true);
+    setIsLoading(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => setIsLoading(true);
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -106,12 +119,12 @@ const CheckoutSummary = () => {
             className="relative button button-outline"
             type="button"
             onClick={handlePrev}
-            disabled={isLoadingPrev}
+            disabled={isLoading}
           >
             Volver
-            {isLoadingPrev && <Spinner position="absolute" />}
           </button>
         </div>
+        {isLoading && <Spinner position="absolute" size="large" />}
       </div>
     </HeadingCard>
   );

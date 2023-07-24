@@ -26,7 +26,7 @@ const FeaturedProductBlock: React.FC<IPromoBlock> = ({
       {listedContentsCollection?.items?.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 2lg:grid-cols-3 gap-6">
           {listedContentsCollection.items.map((el) => (
-            <FeaturedProduct {...el} key={el.objectID} />
+            <FeaturedProduct {...el} key={el.sys.id} />
           ))}
         </div>
       )}

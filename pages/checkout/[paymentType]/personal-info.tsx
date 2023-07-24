@@ -52,8 +52,7 @@ const CheckoutPersonalInfo = () => {
   const lastPath = useLastPath();
 
   const { order, flow, addCustomer } = useContext(CheckoutContext);
-  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
-  const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -138,13 +137,13 @@ const CheckoutPersonalInfo = () => {
 
   const onSubmit = async (data: ICustomer) => {
     try {
-      setIsLoadingNext(true);
+      setIsLoading(true);
       await addCustomer(data);
       await handleNext();
     } catch (error) {
       alert(error.message);
     } finally {
-      setIsLoadingNext(false);
+      setIsLoading(false);
     }
   };
 
@@ -155,11 +154,23 @@ const CheckoutPersonalInfo = () => {
   };
 
   const handlePrev = async () => {
-    setIsLoadingPrev(true);
+    setIsLoading(true);
     await router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => setIsLoading(true);
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <HeadingCard
@@ -265,17 +276,16 @@ const CheckoutPersonalInfo = () => {
               className="relative button button-outline"
               type="button"
               onClick={handlePrev}
-              disabled={isLoadingPrev || isLoadingNext}
+              disabled={isLoading}
             >
               Volver
-              {isLoadingPrev && <Spinner position="absolute" />}
             </button>
-            <button className="relative button button-primary" type="submit" disabled={isLoadingPrev || isLoadingNext}>
+            <button className="relative button button-primary" type="submit" disabled={isLoading}>
               Continuar
-              {isLoadingNext && <Spinner position="absolute" />}
             </button>
           </div>
         </form>
+        {isLoading && <Spinner position="absolute" size="large" />}
       </div>
     </HeadingCard>
   );

@@ -123,7 +123,7 @@ export const ModalIntall: React.FC<any> = ({
         <div className="flex justify-end gap-2">
           <button
             disabled={isLoadingNext}
-            className="relative button button-primary"
+            className="relative button button-primary mb-2"
             onClick={() => {
               onEventHandler("installation", optionsList[checked]);
               setIsLoadingNext(true);
@@ -201,7 +201,7 @@ export const ModalWarranty: React.FC<any> = ({
         </div>
         <div className="flex justify-end gap-2">
           <button
-            className="relative button button-primary"
+            className="relative button button-primary mb-2"
             disabled={isLoadingNext}
             onClick={() => {
               onEventHandler("warranty", optionsList[checked]);

@@ -335,52 +335,16 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           className="grid grid-cols-1 mb-2 text-sm"
                           key={"product-name" + i}
                         >
-                          <p className="font-bold">{product.name}</p>
-                          <p className="text-xs text-right text-gray-600">* IVA incluido</p>
-                        </div>
-                        {/* End Product Information */}
-
-                        {/* Start Product Cost */}
-                        <div
-                          className="grid grid-cols-3 text-sm"
-                          key={"product-unit-count" + i}
-                        >
-                          <p className="col-span-1">C/U:</p>
-                          <p className="col-span-2 text-right text-blue-dark">
-                            <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
-                              {product.quantity}
-                              x
-                            </span>
-                            <span>
-                              {product.formatted_unit_amount}
-                            </span>
+                          <p className="font-bold flex justify-between gap-3 mb-1">
+                            <span className="text-left">{product.name}</span>
+                            <span className="text-blue-dark text-base">{product.formatted_unit_amount}</span>
+                          </p>
+                          <p className="text-xs text-gray-600">* IVA incluido</p>
+                          <p className="text-sm text-gray-600">
+                            Cantidad: {" "} {product.quantity}
                           </p>
                         </div>
-                        {/* End Product Cost */}
-
-                        {/* Start Shipping Cost */}
-                        {
-                          ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
-                          &&
-                          <div
-                            className="grid grid-cols-3 text-sm"
-                            key={"product-unit-shipcost" + i}
-                          >
-                            <p className="col-span-1">Envío:</p>
-                            <p className="col-span-2 text-right text-blue-dark">
-                              <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
-                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 ? "1x" : "0x"}
-                              </span>
-                              <span>
-                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
-                                  ? (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount
-                                  : "$0"
-                                }
-                              </span>
-                            </p>
-                          </div>
-                        }
-                        {/* End Shipping Cost */}
+                        {/* End Product Information */}
 
                         {/* Start Product Warranty */}
                         {(product?.["warranty_service"] && product?.["warranty_service"].length > 0) && (
@@ -439,10 +403,37 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         )}
                         {/* Ent Product Installation */}
 
+                        {/* Start Shipping Cost */}
+                        {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-unit-shipcost" + i}
+                          >
+                            <p className="flex col-span-1">
+                              Envío:
+                              <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
+                                <Icon icon="info" size={18} className="text-gray-500" />
+                              </span>
+                            </p>
+                            <p className="col-span-2 text-right text-blue-dark">
+                              <span>
+                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
+                                  ? (
+                                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount
+                                    ?? product.item["shipping_category"].name
+                                  )
+                                  : "$0"
+                                }
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                        {/* End Shipping Cost */}
+
                         {/* Start Product Subtotal Price */}
                         <div
                           className="grid grid-cols-3 text-sm"
-                          key={"product-count" + i}
+                          key={"product-shipping" + i}
                         >
                           <p className="col-span-1 font-bold">Subtotal:</p>
                           <span className="col-span-2 font-bold text-right text-blue-dark">
@@ -477,7 +468,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                 </div> */}
                 <div className="grid grid-cols-1 rounded">
                   <p className="text-xs text-gray-600">
-                    El costo de envío depende de la cobertura de Vanti y de acuerdo a esto se realiza el cálculo del envío
+                    El costo de envío depende de la cobertura de Vanti y la marca de cada producto, de acuerdo a esto se realiza el cálculo del envío
                   </p>
                 </div>
                 <div className="grid grid-cols-2 mt-2 rounded">
