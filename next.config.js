@@ -67,10 +67,10 @@ const nextConfig = {
               key: 'x-frame-options',
               value: 'SAMEORIGIN',
             },
-            {
-              key: 'content-security-policy',
-              value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
-            },
+            // {
+            //   key: 'content-security-policy',
+            //   value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
+            // },
         ],
       }
     ];
