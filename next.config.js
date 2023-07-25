@@ -5,6 +5,12 @@ const { withSentryConfig } = require('@sentry/nextjs');
 // const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 const isProduction = false;
 
+const ContentSecurityPolicy = `
+  frame-ancestors 'self';
+  img-src 'self';
+  data: https;
+`
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -43,6 +49,31 @@ const nextConfig = {
   i18n: {
     locales: ['es'],
     defaultLocale: 'es',
+  },
+  async headers () {
+    return [
+      {
+        source: '/',
+        headers: [
+            {
+              key: 'strict-transport-security',
+              value: 'max-age=31557600; includeSubDomains; preload',
+            },
+            {
+              key: 'x-xss-protection',
+              value: '1; mode=block',
+            },
+            {
+              key: 'x-frame-options',
+              value: 'SAMEORIGIN',
+            },
+            {
+              key: 'content-security-policy',
+              value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
+            },
+        ],
+      }
+    ];
   },
 };
 
