@@ -129,7 +129,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const [numProducts, setNumProducts] = useState(0);
 
-  useEffect(() => {    
+  useEffect(() => {
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
@@ -376,7 +376,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     className="relative hidden px-5 2lg:px-6 lg:block border-x border-neutral-70"
                   >
                     <ul className={classNames("flex 2lg:gap-1 flex-nowrap")}>
-                      {utilityNavCollection.items.map((item) => (
+                      {utilityNavCollection.items.map(item => (
                         <li className="flex w-[68px] 2lg:w-[75px] justify-center" key={item.sys.id}>
                           <CustomLink
                             content={item}
@@ -391,7 +391,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             {item.promoIcon && (
                               <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
                                 <Icon
-                                  icon={item.promoIcon}
+                                  icon={item?.promoIcon}
                                   className="w-full h-full mx-auto"
                                 />
                               </span>
