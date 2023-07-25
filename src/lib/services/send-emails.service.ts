@@ -18,8 +18,8 @@ const customerSection = (data: IOrderExtended) => {
 
   const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
   const shipping_address = data.shipping_address?.line_1 + (data.shipping_address?.line_2 ? ', ' + data.shipping_address?.line_2 : '') + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
-  const shipping_methods = data.shipments.map((shipment) => {
-    return shipment.shipping_method.name;
+  const shipping_methods = data.shipments?.map((shipment) => {
+    return shipment.shipping_method?.name;
   }).join(", ");
 
   const addresseeSection = data.shipping_address?.notes ? 
@@ -51,11 +51,11 @@ const customerSection = (data: IOrderExtended) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de pago:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">PSE</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500"></td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Entidad Bancaria:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">Banco Davivienda</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500"></td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
@@ -80,9 +80,8 @@ const customerSection = (data: IOrderExtended) => {
   return section;
 };
 
-const productAdjustments = (item: ILineItemExtended) => {
+const productAdjustments = (item: ILineItemExtended, border: string, padding: number) => {
   let section = "";
-
   const { installlation_service, warranty_service } = item;
 
   const installationService = installlation_service
@@ -104,63 +103,89 @@ const productAdjustments = (item: ILineItemExtended) => {
   const formattedWarrantyServiceName = warrantyServiceName.join(", ");
   const formattedWarrantyService = warrantyService.join(", ");
 
-  if (item.installlation_service.length > 0) {
-    section += `<li>Servicio de instalación: <b>${installationService}</b></li>`;
+  if (item.installlation_service?.length > 0) {
+    const warranty = item.warranty_service?.length > 0;
+    section +=
+      `<tr>
+        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; ${warranty ? border : 'border: solid #e9e9e9; border-width: 0px 0px 1px;'} padding-top: ${padding}px; padding-bottom: ${warranty ? padding : 20}px; vertical-align: top"></td>
+        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="${warranty ? border : 'border: solid #e9e9e9; border-width: 0px 0px 1px;'} padding: ${warranty ? padding : 20}px 20px ${warranty ? padding : 20}px 20px; vertical-align: top; font-weight: 500">
+          <p>Servicio de instalación</p>
+        </td>
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${warranty ? border : 'border: solid #e9e9e9; border-width: 0px 0px 1px;'} padding-top: ${padding}px; padding-bottom: ${warranty ? padding : 20}px; text-align: right; vertical-align: top"></td>
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${warranty ? border : 'border: solid #e9e9e9; border-width: 0px 0px 1px;'} padding-top: ${padding}px; padding-bottom: ${warranty ? padding : 20}px; text-align: right; vertical-align: top">
+          <b style="font-weight: 700; color: #113455">${installationService}</b>
+        </td>
+      </tr>`;
   }
 
-  if (item.warranty_service.length > 0) {
-    section += `<li>${formattedWarrantyServiceName}: <b>${formattedWarrantyService}</b></li>`;
+  if (item.warranty_service?.length > 0) {
+    section +=
+      `<tr>
+        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: ${padding}px; padding-bottom: 20px; vertical-align: top"></td>
+        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: ${padding}px 20px 20px 20px; vertical-align: top; font-weight: 500">
+          <p>${formattedWarrantyServiceName}</p>
+        </td>
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: ${padding}px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: ${padding}px; padding-bottom: 20px; text-align: right; vertical-align: top">
+          <b style="font-weight: 700; color: #113455">${formattedWarrantyService}</b>
+        </td>
+      </tr>`;
   }
 
   return section;
 };
 
 const productPrices = (formatted_compare_at_amount: string, formatted_unit_amount: string) => {
-  console.info(formatted_compare_at_amount);
-  console.info(formatted_unit_amount);
   const price = formatted_compare_at_amount === formatted_unit_amount ? formatted_unit_amount : `<strike>${ formatted_compare_at_amount }</strike> ${ formatted_unit_amount }`;
   return price;
 };
 
 const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   let section = "";
+  const shippingMethodNames = [];
   items.forEach((lineItem) => {
+    const hasAdjustents = lineItem.installlation_service?.length > 0 || lineItem.warranty_service?.length > 0;
+    const padding = hasAdjustents ? 5 : 20;
+    const border = !hasAdjustents ? 'border: solid #e9e9e9; border-width: 0px 0px 1px;' : 'border: dotted #e9e9e9; border-width: 0px 0px 0.5px;';
     section +=
       `<tr>
-        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top">
+        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
-        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
+        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="${border} padding: 20px 20px ${padding}px 20px; vertical-align: top; font-weight: 500">
           <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${ lineItem.name } ( ${ lineItem.sku_code })</p>
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${ lineItem.item.shipping_category.name }</p>
+          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${ lineItem.item?.shipping_category?.name }</p>
           <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
-            ${ productAdjustments(lineItem) }
             <li>* IVA incluido</li>
             <li>Cantidad: ${ lineItem.quantity }</li>
           </ul>
         </td>
-        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price.formatted_compare_at_amount, lineItem.formatted_unit_amount) }</b>
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
+          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price?.formatted_compare_at_amount, lineItem.formatted_unit_amount) }</b>
         </td>
-        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
+        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b style="font-weight: 700; color: #113455">${ lineItem.formatted_total_amount }</b>
         </td>
-      </tr>`;
+      </tr>
+      ${ productAdjustments(lineItem, border, padding) }`;
   });
 
   shipments.forEach((shipment) => {
-    section +=
-      `<tr>
-        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
-        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${ shipment.shipping_method.name }</p>
-          <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px"></ul>
-        </td>
-        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
-        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${ shipment.shipping_method.formatted_price_amount }</b>
-        </td>
-      </tr>`;
+    if (!shippingMethodNames.includes(shipment.shipping_method?.name)) {
+      shippingMethodNames.push(shipment.shipping_method?.name);
+      section +=
+        `<tr>
+          <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
+          <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
+            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${ shipment.shipping_method?.name }</p>
+            <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px"></ul>
+          </td>
+          <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
+          <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
+            <b style="font-weight: 700; color: #113455">${ shipment.shipping_method?.formatted_price_amount }</b>
+          </td>
+        </tr>`;
+    }
   });
 
   return section;
@@ -561,6 +586,10 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number
     const productsData = allyItem;
     const email = allyEmailTemplate(orderByAlly, productsData);
     const emailAddresses = String(allyItem.metadata?.email).split(',');
+
+    if (!emailAddresses) {
+      console.info('sendAllyEmail no email for ' + allyItem.name);
+    }
 
     emailAddresses.forEach((emailAddress) => {
       const clientEmail = {
