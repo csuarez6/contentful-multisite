@@ -8,7 +8,7 @@ const isProduction = false;
 const ContentSecurityPolicy = `
   frame-ancestors 'self';
   img-src 'self';
-  data: https;
+  data https;
 `
 
 const nextConfig = {
