@@ -289,18 +289,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const increDecreQuantity = (product, operator) => {
     const quantityTemp = (operator == "plus") ? product?.quantity + 1 : product?.quantity - 1;
     setIsLoading(true);
-    if (quantityTemp > 90) {
-      setError(true);
-      setErrorMessage({
-        icon: "alert",
-        type: "warning",
-        title: "Cantidad de productos no permitida.",
-      });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-      return;
-    }
     updateItemQuantity(
       product?.sku_code,
       quantityTemp
@@ -311,7 +299,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           const messagePlus =
             result.status === 422
               ? `No hay más unidades disponibles para el producto seleccionado.`
-              : "Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente";
+              : "Ocurrió un error al agregar más unidades, por favor valide e intente nuevamente.";
           setError(true);
           setErrorMessage({
             icon: "alert",

@@ -1,10 +1,11 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import CommerceLayer, { AddressCreate, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
+import CommerceLayer, { AddressCreate, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
 import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
+import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
@@ -259,45 +260,75 @@ export const useCommerceLayer = () => {
 
   const updateItemQuantity = async (skuCode: string, quantity: number) => {
     try {
-      const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
-      let response;
       const client = await generateClient();
+      const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
+      let response : Promise<LineItem> | ILoggedErrorCollection;
+      
       if (quantity > 0) {
-        response = await client.line_items.update({
-          id: lineItem.id,
-          quantity,
-        }).catch(err => err.errors);
-        if (!response?.[0]?.status && response) {
-          if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
-            await client.line_items.update({
-              id: lineItem["installlation_service"][0].id,
-              quantity
-            });
-          }
-          if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
-            await client.line_items.update({
-              id: lineItem["warranty_service"][0].id,
-              quantity
-            });
+        response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
+        
+        if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
+          console.info("error in sku line item", response.errors);
+          return { status: parseInt(response.errors[0].status), data: response.errors[0].title };
+        } else {
+          try {
+            const warrantyServicePromise = lineItem["warranty_service"] && lineItem["warranty_service"].length > 0
+              ? client.line_items.update({ id: lineItem["warranty_service"][0].id, quantity })
+              : Promise.resolve();
+
+            const installationServicePromise = lineItem["installlation_service"] && lineItem["installlation_service"].length > 0
+              ? client.line_items.update({ id: lineItem["installlation_service"][0].id, quantity })
+              : Promise.resolve();
+
+            // Send all of requests at the same time
+            const [warrantyResult, installationResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise]);
+
+            // Validate if happened any errors with the requests 
+            if (warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
+              console.error('Error with any update promise, see:', warrantyResult, installationResult);
+              throw new Error("Error with any service update promise");
+            }
+
+          } catch (nestedErr) {
+            console.error("General error in the update", nestedErr);
+            return { status: 500, data: nestedErr.message };
+          } finally {
+            await reloadOrder();
           }
         }
       } else {
-        response = await client.line_items.delete(lineItem.id).catch(err => err.errors);
-        if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
-          await client.line_items.delete(lineItem["installlation_service"][0].id).catch(err => err.errors);
-        }
-        if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
-          await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
+        try {
+          const warrantyServicePromise = lineItem["warranty_service"] && lineItem["warranty_service"].length > 0
+              ? client.line_items.delete(lineItem["warranty_service"][0].id)
+              : Promise.resolve();
+
+          const installationServicePromise = lineItem["installlation_service"] && lineItem["installlation_service"].length > 0
+              ? client.line_items.delete(lineItem["installlation_service"][0].id)
+              : Promise.resolve();
+
+          const skuPromise = client.line_items.delete(lineItem.id).catch(err => err);
+          
+          // Send all of requests at the same time
+          const [warrantyResult, installationResult, skuResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise, skuPromise]);
+
+          // Validate if happened any errors with the requests 
+          if (skuResult.status === 'rejected' || warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
+            console.error('Error with any delete promise, see:', warrantyResult, installationResult, skuResult);
+            throw new Error("Error in the quantity updating process");
+          }
+        } catch (nestedErr) {
+          console.error("Error deleting product and services", nestedErr);
+          return { status: 500, data: nestedErr.message };
+        } finally {
+          await reloadOrder();
         }
       }
-      await reloadOrder();
-      if (response?.[0]?.status) {
-        return { status: parseInt(response[0].status), data: response[0].title };
-      }
+
       return { status: 200, data: 'success update item' };
+
     } catch (err) {
-      console.error('error', err);
-      return { status: 500, data: 'error update item' };
+      console.error('An general error has ocurred when updateItemQuantity was running:', err);
+      return { status: 500, data: "General error, please see the system logs" };
     }
   };
 
