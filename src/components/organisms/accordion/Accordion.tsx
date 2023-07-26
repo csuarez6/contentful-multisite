@@ -15,6 +15,7 @@ const Accordion: React.FC<any> = ({
   return (
     <div className={classNames("grid", classColumns(columnsSize ?? "2"))}>
       {featuredContents?.items?.map((el, index) => {
+        console.log(el.promoDescription)
         if (!el?.promoTitle && !el?.name) return;
         return (
           <Disclosure
@@ -79,7 +80,7 @@ const Accordion: React.FC<any> = ({
                         el.promoIcon && displayIcon ? "px-10" : ""
                       }`}
                     >
-                      <div className="text-base text-gray-500 px-7">
+                      <div className="text-base text-gray-500 px-7 custom-text">
                         {documentToReactComponents(
                           el?.promoDescription?.json,
                           defaultFormatOptions

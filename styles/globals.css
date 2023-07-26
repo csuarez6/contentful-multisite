@@ -209,3 +209,11 @@ h6 {
 .grid-template-product-details {
   grid-template-columns: 64px 1fr 160px 120px;
 }
+
+.custom-text p {
+  @apply mb-4
+}
+
+.custom-text a {
+  @apply mt-2
+}
