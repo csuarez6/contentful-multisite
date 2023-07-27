@@ -127,7 +127,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative tabs-styles">
             <Tab.Panels as={Fragment}>
               {featuredContentsCollection.items.map((collection) => (
                 !isCustomLink(collection) && (
