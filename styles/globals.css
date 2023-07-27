@@ -217,3 +217,11 @@ h6 {
 .custom-text a {
   @apply mt-2
 }
+
+.tabs-styles h3 {
+  @apply mb-7 
+}
+
+.tabs-styles table {
+  @apply mb-6
+}
