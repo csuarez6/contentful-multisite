@@ -30,6 +30,7 @@ const getTotalAmount = (elements) => {
 export const gaEventBeginCheckout = (products) => {
   const elements = getElements(products);
   const totalAmount = getTotalAmount(elements);
+
   gTagEvent("begin_checkout", {
     coupon: '',
     currency: 'COP',
@@ -41,6 +42,7 @@ export const gaEventBeginCheckout = (products) => {
 export const gaEventPaymentInfo = (products) => {
   const elements = getElements(products);
   const totalAmount = getTotalAmount(elements);
+
   gTagEvent("add_payment_info", {
     coupon: '',
     currency: 'COP',
