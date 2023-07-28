@@ -109,45 +109,41 @@ const CallbackPage = () => {
         .then((res) => res.json())
         .then((res) => {
           if (res.code === 404) {
-            setErrorMessage(`Producto con SKU ${sku} no encontrado.`);
+            setErrorMessage(`Producto con SKU: ${sku} no encontrado.`);
+            console.warn(`Producto con SKU: ${sku} no encontrado.`);
           } else {
             const {
               name,
               promoTitle,
               promoImage,
-              price,
-              _price,
-              productsQuantity,
-              urlPaths,
               priceVantiListo,
-              priceGasodomestico
+              _priceVantiListo,
+              productsQuantityVantiListo,
+              priceGasodomestico,
+              urlPaths,
             } = res;
             const _product = {
               productName: promoTitle ?? name,
-              price,
-              _price,
+              price: priceVantiListo,
+              _price: _priceVantiListo,
               promoImage,
               sku,
-              urlProduct: `${location.origin}${urlPaths?.[0] ?? ''}` ?? null,
-              productsQuantity,
+              urlProduct: urlPaths.length > 0 ? `${location.origin}${urlPaths[0]}` : "",
+              productsQuantity: productsQuantityVantiListo,
               priceVantiListo,
-              priceGasodomestico
+              priceGasodomestico,
             };
             setProductData(_product);
             updateFormData(_product);
-            updateAmount(_price);
+            updateAmount(_priceVantiListo);
           }
         })
         .catch((err) => {
           console.warn(err);
-          if (!navigator.onLine)
-            setErrorMessage(
-              "Comprueba tu conexión a internet e intenta de nuevo por favor."
-            );
-          else
-            setErrorMessage(
-              `Ocurrió un error al obtener información del Producto con SKU ${sku}.`
-            );
+          const _errorMessage = !navigator.onLine
+            ? "Comprueba tu conexión a internet e intenta de nuevo por favor."
+            : `Ocurrió un error al obtener información del Producto con SKU: ${sku}.`;
+          setErrorMessage(_errorMessage);
         })
         .finally(() => setIsLoading(false));
     } else if (!sku && isFetchingSKU) {
@@ -246,25 +242,21 @@ const CallbackPage = () => {
                           </figure>
                           <div className="flex-1">
                             <div className="grid grid-cols-1 text-sm mb-2">
-                              <p className="font-bold">{productData?.productName}</p>
-                              <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
-                            </div>
-                            <div className="grid grid-cols-2 text-sm">
-                              <p>C/U:</p>
-                              <p className="text-right text-blue-dark py-0.5 rounded-lg mr-2">1x</p>
-                            </div>
-                            <div className="grid grid-cols-3 text-sm">
-                              <p className="font-bold col-span-1">Subtotal:</p>
-                              <span className="text-right text-blue-dark col-span-2 font-bold">
-                                {productData?.priceVantiListo ?? productData?.priceGasodomestico}
-                              </span>
+                              <p className="font-bold flex justify-between gap-3 mb-1">
+                                <span className="text-left">{productData?.productName}</span>
+                                <span className="text-blue-dark text-base">{productData?.priceVantiListo ?? productData?.priceGasodomestico}</span>
+                              </p>
+                              <p className="text-xs text-gray-600">* IVA incluido</p>
+                              <p className="text-sm text-gray-600">
+                                Cantidad: {" "} {quantity}
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 mt-2 rounded">
                         <p className="font-bold text-left">TOTAL A PAGAR</p>
-                        <span className="font-bold text-right">{productData?.priceVantiListo ?? productData?.priceGasodomestico ?? amount}</span>
+                        <span className="font-bold text-right">{amount}</span>
                       </div>
                     </div>
                   </div>
