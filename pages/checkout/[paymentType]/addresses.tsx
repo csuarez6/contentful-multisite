@@ -22,6 +22,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 
 interface IAddress {
   id?: string;
@@ -295,6 +296,8 @@ const CheckoutAddress = () => {
 
   const onSubmit = async (data: IAddresses) => {
     setIsLoading(true);
+    gaEventPaymentInfo(order?.line_items);
+
     try {
       const checkCovered = checkCityCovered();
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {

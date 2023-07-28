@@ -14,7 +14,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   const domain = process.env.DEFAULT_DOMAIN ?? "https://www.grupovanti.com/";
   const title = `${layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json ? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención.Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
-  const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";  
+  const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
   const canonicalUrl = domain + asPath.split("?")[0];
 
   const addProductJsonLd = () => {
@@ -47,6 +47,23 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   return (
     <>
       <Head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3S4QR5WBJ9" />
+        <script
+          id="google-analytics"
+          dangerouslySetInnerHTML={
+            {
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){
+                  dataLayer.push(arguments);
+                }
+                gtag('js', new Date()); 
+                gtag('config', 'G-3S4QR5WBJ9');
+              `
+            }
+          }
+        />
+
         <title>{title}</title>
         <meta charSet="utf-8" />
         <link rel="shortcut icon" href="/favicon.ico" />

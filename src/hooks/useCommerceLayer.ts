@@ -117,6 +117,7 @@ export const useCommerceLayer = () => {
       }).catch((error) => {
         console.error({ error });
       });
+
     return data;
   };
 

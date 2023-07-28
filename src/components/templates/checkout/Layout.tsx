@@ -14,6 +14,7 @@ import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
 import Icon from "@/components/atoms/icon/Icon";
+import { gaEventPurchase } from "@/utils/ga-events--checkout";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -94,6 +95,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const validateOrder = async () => {
     setIsLoading(true);
+    gaEventPurchase(order, shippingMethodGlobal);
     setOnPayment(true);
     updateIsPaymentProcess(true);
     await reloadOrder(true);
@@ -500,10 +502,10 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     }
                   </span>
                 </div>
-                {isComplete && tokenRecaptcha && (
+                {isComplete && (
                   <button
                     onClick={validateOrder}
-                    disabled={isLoading || isPlacing}
+                    disabled={isLoading || isPlacing || !tokenRecaptcha}
                     className={classNames(
                       "button button-primary w-full mt-[17px]",
                       (isLoading || isPlacing)
