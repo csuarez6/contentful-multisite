@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { event as gTagEvent } from "nextjs-google-analytics";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { iconCallback } from "@/components/blocks/product-details/ProductConfig";
@@ -11,11 +12,17 @@ import { classNames, isAvailableGasAppliance } from "@/utils/functions";
 import CheckoutContext from "@/context/Checkout";
 
 const ProductActions: React.FC<IProductOverviewDetails> = ({
+  _priceGasodomestico,
   priceGasodomestico,
   productsQuantityGasodomestico,
   marketId,
   callbackURL,
   onBuyHandler,
+  name,
+  promoTitle,
+  discount,
+  trademark,
+  sku
 }) => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
@@ -26,14 +33,56 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { orderError } = useContext(CheckoutContext);
 
+  const gaEvent = () => {
+    gTagEvent("add_to_cart", {
+      currency: 'COP',
+      items: [{
+        item_id: `SKU_${sku}`,
+        item_name: promoTitle ?? name,
+        coupon: '',
+        discount: discount ?? 0,
+        affiliation: trademark ? `Marketplace: ${trademark.name}` : 'Marketplace',
+        item_brand: trademark?.name ?? '',
+        item_category: '',
+        item_variant: '',
+        price: priceGasodomestico,
+        currency: 'COP',
+        quantity: 1
+      }],
+      value: parseInt(_priceGasodomestico)
+    });
+  };
+
+  const addToCart = () => {
+    setIsLoading(true);
+    gaEvent();
+    onBuyHandler(PaymentMethodType.pse)
+      .then((result) => {
+        if (result.status !== 200) {
+          setError(true);
+          setErrorMessage({
+            icon: "alert",
+            type: "warning",
+            title:
+              result.status === 422
+                ? `No hay más unidades disponibles para este producto.`
+                : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
+          });
+        }
+      })
+      .catch((err) => { console.error("err", err); })
+      .finally(() => setIsLoading(false));
+  };
+
   return (
     <>
       <div className="flex flex-row sm:flex-col gap-4 sm:gap-[22px] sm:pt-[5px] sm:my-5">
-        {isAvailableGasAppliance(
-          marketId,
-          priceGasodomestico,
-          productsQuantityGasodomestico
-        ) && (
+        {
+          isAvailableGasAppliance(
+            marketId,
+            priceGasodomestico,
+            productsQuantityGasodomestico
+          ) && (
             <button
               className={classNames(
                 "button button-primary justify-center w-1/2 sm:w-full text-[13px] sm:text-size-p2",
@@ -41,25 +90,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
               )}
               disabled={(isLoading || orderError)}
               type="button"
-              onClick={async () => {
-                setIsLoading(true);
-                onBuyHandler(PaymentMethodType.pse)
-                  .then((result) => {
-                    if (result.status !== 200) {
-                      setError(true);
-                      setErrorMessage({
-                        icon: "alert",
-                        type: "warning",
-                        title:
-                          result.status === 422
-                            ? `No hay más unidades disponibles para este producto.`
-                            : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
-                      });
-                    }
-                  })
-                  .catch((err) => { console.error(err); })
-                  .finally(() => setIsLoading(false));
-              }}
+              onClick={addToCart}
             >
               {isLoading && (
                 <svg
@@ -81,7 +112,8 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
               )}
               {isLoading ? "Agregando" : "Agregar al carro"}
             </button>
-          )}
+          )
+        }
         <CustomLink
           linkClassName="button button-outline w-1/2 sm:w-full flex justify-center items-center gap-1 text-[13px] sm:text-size-p2"
           content={{ urlPaths: [callbackURL] }}

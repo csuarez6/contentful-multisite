@@ -19,6 +19,7 @@ import {
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 
 interface ICustomer {
   name: string;
@@ -136,6 +137,8 @@ const CheckoutPersonalInfo = () => {
   }, [order]);
 
   const onSubmit = async (data: ICustomer) => {
+    gaEventPaymentInfo(order?.line_items);
+
     try {
       setIsLoading(true);
       await addCustomer(data);

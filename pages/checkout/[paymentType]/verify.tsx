@@ -42,6 +42,7 @@ import { getDataContent } from "@/lib/services/richtext-references.service";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventBeginCheckout } from "@/utils/ga-events--checkout";
 
 const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const { copyServices } = props;
@@ -233,6 +234,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
   const handleNext = async () => {
     setIsLoading(true);
+    gaEventBeginCheckout(products);
+
     try {
       if (!products.length) {
         setError(true);

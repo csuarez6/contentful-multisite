@@ -465,6 +465,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         className="hidden sm:flex flex-col gap-[15px]"
                       >
                         <ProductActions
+                          sku={sku}
+                          _priceGasodomestico={_priceGasodomestico}
                           priceGasodomestico={priceGasodomestico}
                           productsQuantityGasodomestico={
                             productsQuantityGasodomestico
@@ -612,6 +614,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             </div>
             <ProductActions
               sku={sku}
+              _priceGasodomestico={_priceGasodomestico}
               priceGasodomestico={priceGasodomestico}
               priceVantiListo={priceVantiListo}
               productsQuantityGasodomestico={productsQuantityGasodomestico}

@@ -1,10 +1,11 @@
-import Icon from "@/components/atoms/icon/Icon";
-import { classNames } from "@/utils/functions";
-import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
-import { INavigation } from "@/lib/interfaces/menu-cf.interface";
+import { useRouter } from "next/router";
+import { event as gTagEvent } from "nextjs-google-analytics";
+import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import jsonToReactComponent from "@/lib/services/render-cards.service";
+import { classNames } from "@/utils/functions";
 
 const LinkElement = ({ item, isOpen }) => {
   return (
@@ -102,17 +103,67 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     if (!isTouchDevice && !isClickedInside) setIsOpenMenu(!isOpenMenu);
   };
 
+  const handleMouseOver = (item) => {
+    if (item.name === "Tienda Virtual") {
+      gTagEvent("view_item_list", {
+        items: [{
+          item_id: '',
+          item_name: 'Tienda Virtual',
+          coupon: '',
+          discount: 0,
+          index: 0,
+          item_list_name: '',
+          item_list_id: '',
+          affiliation: 'Marketplace',
+          item_brand: '',
+          item_category: '',
+          item_variant: '',
+          price: 0,
+          currency: 'COP',
+          quantity: 0
+        }],
+        item_list_name: '',
+        item_list_id: ''
+      });
+    }
+    setIsOpenMenu(true);
+  };
+
+  const handleClicked = (item) => {
+    const isProduct = item.internalLink?.slug?.toLowerCase() === "productos";
+    if (isProduct) {
+      gTagEvent("view_item", {
+        currency: 'COP',
+        items: [{
+          item_id: '',
+          item_name: item.promoTitle ?? item.name,
+          coupon: '',
+          discount: 0,
+          affiliation: 'Marketplace',
+          item_brand: '',
+          item_category: item.promoTitle ?? item.name,
+          item_variant: '',
+          price: 0,
+          currency: 'COP',
+          quantity: 0
+        }],
+        value: 0
+      });
+    }
+    setIsOpenMenu(false);
+  };
+
   useEffect(() => {
     if (isOpenMenu) openSubmenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenMenu]);
-  
+
   // console.info({ item, name, currentMenu});
   return (
     <div
-      onMouseOver={() => setIsOpenMenu(true)}
+      onMouseOver={() => handleMouseOver(item)}
       onMouseOut={() => setIsOpenMenu(false)}
-      onFocus={() => setIsOpenMenu(true)}
+      onFocus={() => handleMouseOver(item)}
       onBlur={() => setIsOpenMenu(false)}
       onClick={handlerClick}
       className={classNames(
@@ -198,7 +249,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                 >
                                   <CustomLink
                                     content={{ ...itemList, ...{ linkView: "" } }}
-                                    onClick={() => setIsOpenMenu(false)}
+                                    onClick={() => handleClicked(itemList)}
                                     className={classNames("flex items-center text-base text-blue-dark hover:text-lucuma-60",
                                       itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
                                     )}
