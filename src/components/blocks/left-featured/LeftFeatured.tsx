@@ -220,45 +220,61 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                         !image && "justify-center"
                       )}
                     >
-                      {ctaCollection.items.map((cta, idx) => (
-                        <div key={cta.name+'+'+idx}>
-                          {(cta.externalLink ||
-                            cta.internalLink ||
-                            cta.__typename == CONTENTFUL_TYPENAMES.PAGE) && (
-                            <CustomLink
-                              content={cta}
-                              className={classNames(
-                                "button w-full sm:w-auto flex justify-center text-center",
-                                view?.buttonType
-                                  ? getButtonType(view?.buttonType)
-                                  : idx === 0
-                                  ? "button-primary"
-                                  : "button-outline"
-                              )}
-                            >
-                              {getLinkProps(cta).textLink}
-                            </CustomLink>
-                          )}
-                          {cta?.linkView === "Modal" && cta?.content?.json && (
-                            <div className="flex gap-2">
-                              <ButtonAtom
-                                type={cta?.linkView}
-                                text={cta?.ctaLabel ?? cta?.name}
-                                classes={getButtonType("Contorno")}
-                                modalClass="w-auto max-w-7xl"
-                              >
-                                {documentToReactComponents(
-                                  attachLinksToRichtextContent(
-                                    cta?.content?.json,
-                                    cta?.content?.links
-                                  ),
-                                  defaultFormatOptions
+                      {ctaCollection.items.map((cta, idx) => {
+                        return (
+                          <div key={cta.name + "+" + idx}>
+                            {(cta.externalLink ||
+                              cta.internalLink ||
+                              cta.__typename == CONTENTFUL_TYPENAMES.PAGE) && (
+                              <CustomLink
+                                content={cta}
+                                className={classNames(
+                                  "button w-full sm:w-auto flex justify-center text-center",
+                                  view?.buttonType
+                                    ? getButtonType(view?.buttonType)
+                                    : idx === 0
+                                    ? "button-primary"
+                                    : "button-outline"
                                 )}
-                              </ButtonAtom>
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                              >
+                                {getLinkProps(cta).textLink}
+                              </CustomLink>
+                            )}
+                            {cta?.linkView === "Modal" &&
+                              cta?.content?.json && (
+                                <div className="flex gap-2">
+                                  <ButtonAtom
+                                    type={cta?.linkView}
+                                    text={cta?.ctaLabel ?? cta?.name}
+                                    classes={getButtonType("Contorno")}
+                                    modalClass="w-auto max-w-7xl"
+                                  >
+                                    {documentToReactComponents(
+                                      attachLinksToRichtextContent(
+                                        cta?.content?.json,
+                                        cta?.content?.links
+                                      ),
+                                      defaultFormatOptions
+                                    )}
+                                  </ButtonAtom>
+                                </div>
+                              )}
+                            {cta?.mediaInternalLink && (
+                              <div className="flex items-end mt-3 flex-grow">
+                                <CustomLink
+                                  content={cta}
+                                  className={classNames(
+                                    "button !rounded-full",
+                                    getButtonType("Contorno")
+                                  )}
+                                >
+                                  { cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name }
+                                </CustomLink>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
