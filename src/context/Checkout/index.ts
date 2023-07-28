@@ -1,4 +1,4 @@
-import { Address, AddressCreate, Order, PaymentMethod } from "@commercelayer/sdk";
+import { Address, AddressCreate, Order, PaymentMethod, ShippingMethod } from "@commercelayer/sdk";
 import { ListResponse } from "@commercelayer/sdk/lib/cjs/resource";
 import { createContext } from "react";
 import { Flow, VantiChekoutCustomer } from "./flows";
@@ -13,6 +13,7 @@ export interface IContextCheckout {
   timeToPay: number;
   hasShipment: boolean;
   isFetchingOrder: boolean;
+  isPaymentProcess: boolean;
   addToCart: (sku: string, productImage?: string, productName?: string, category?: object) => Promise<apiResponse>;
   getSkuList: (filter?: string) => Promise<apiResponse>;
   changeItemService: (idItem?: string, dataAdjustment?: object, quantity?: number, idProductOrigin?: string) => Promise<apiResponse>;
@@ -35,11 +36,13 @@ export interface IContextCheckout {
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
-  setDefaultShippingMethod: () => Promise<void>;
+  setDefaultShippingMethod: (hasShipment: boolean) => Promise<void>;
+  getShippingMethods: () => Promise<ListResponse<ShippingMethod>>;
   onRecaptcha: (e: any) => void;
   onHasShipment: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
   upgradeTimePay: (e: number) => Promise<void>;
+  updateIsPaymentProcess: (e: boolean) => Promise<void>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -51,6 +54,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   timeToPay: undefined,
   hasShipment: undefined,
   isFetchingOrder: undefined,
+  isPaymentProcess: undefined,
   addToCart: () => undefined,
   getSkuList: () => undefined,
   changeItemService: () => undefined,
@@ -68,10 +72,12 @@ const CheckoutContext = createContext<IContextCheckout>({
   setPaymentMethod: () => undefined,
   addPaymentMethodSource: () => undefined,
   setDefaultShippingMethod: () => undefined,
+  getShippingMethods: () => undefined,
   onRecaptcha: () => undefined,
   onHasShipment: () => undefined,
   validateExternal: () => undefined,
   upgradeTimePay: () => undefined,
+  updateIsPaymentProcess: () => undefined,
 });
 
 export default CheckoutContext;

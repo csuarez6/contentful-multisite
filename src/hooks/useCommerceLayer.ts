@@ -1,13 +1,15 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import CommerceLayer, { AddressCreate, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
+import CommerceLayer, { AddressCreate, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
+import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
+import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE";
+const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "available_payment_methods", "shipments", "customer"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer"],
   fields: {
     orders: [
       "number",
@@ -28,7 +30,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "shipments",
     ],
     addresses: ["state_code", "city", "line_1", "phone"],
-    shipments: ["available_shipping_methods"],
+    shipments: ["available_shipping_methods", "stock_location"],
     line_items: [
       "item_type",
       "image_url",
@@ -42,7 +44,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "unit_amount_cents",
       "unit_amount_float",
       "item",
-      "metadata"
+      "metadata",
+      "shipment_line_items"
     ],
     customer: ["id"],
   },
@@ -62,6 +65,7 @@ export const useCommerceLayer = () => {
   const orderId = useMemo(() => order?.id, [order]);
   const [isInitialRender, setIsInitialRender] = useState<boolean>();
   const [localOrderId, setLocalOrderId] = useState<string>();
+  const [isPaymentProcess, setisPaymentProcess] = useState(false);
 
   /**
    * Set localStorage and State Order ID
@@ -113,6 +117,7 @@ export const useCommerceLayer = () => {
       }).catch((error) => {
         console.error({ error });
       });
+
     return data;
   };
 
@@ -198,8 +203,8 @@ export const useCommerceLayer = () => {
    */
   useEffect(() => {
     (async () => {
-      if(typeof isInitialRender == "undefined") setIsInitialRender(true);
-      if(isInitialRender) {
+      if (typeof isInitialRender == "undefined") setIsInitialRender(true);
+      if (isInitialRender) {
         await setUpOrder(false);
         setIsInitialRender(false);
       }
@@ -211,7 +216,7 @@ export const useCommerceLayer = () => {
    */
   useEffect(() => {
     const checkUpdates = asPath.startsWith("/checkout/pse");
-    if(checkUpdates && isInitialRender === false) setUpOrder(true);
+    if (checkUpdates && isInitialRender === false) setUpOrder(true);
   }, [asPath, isInitialRender, setUpOrder]);
 
   const addToCart = useCallback(
@@ -256,45 +261,75 @@ export const useCommerceLayer = () => {
 
   const updateItemQuantity = async (skuCode: string, quantity: number) => {
     try {
-      const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
-      let response;
       const client = await generateClient();
+      const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
+      let response : Promise<LineItem> | ILoggedErrorCollection;
+      
       if (quantity > 0) {
-        response = await client.line_items.update({
-          id: lineItem.id,
-          quantity,
-        }).catch(err => err.errors);
-        if (!response?.[0]?.status) {
-          if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
-            await client.line_items.update({
-              id: lineItem["installlation_service"][0].id,
-              quantity
-            });
-          }
-          if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
-            await client.line_items.update({
-              id: lineItem["warranty_service"][0].id,
-              quantity
-            });
+        response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
+        
+        if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
+          console.info("error in sku line item", response.errors);
+          return { status: parseInt(response.errors[0].status), data: response.errors[0].title };
+        } else {
+          try {
+            const warrantyServicePromise = lineItem["warranty_service"] && lineItem["warranty_service"].length > 0
+              ? client.line_items.update({ id: lineItem["warranty_service"][0].id, quantity })
+              : Promise.resolve();
+
+            const installationServicePromise = lineItem["installlation_service"] && lineItem["installlation_service"].length > 0
+              ? client.line_items.update({ id: lineItem["installlation_service"][0].id, quantity })
+              : Promise.resolve();
+
+            // Send all of requests at the same time
+            const [warrantyResult, installationResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise]);
+
+            // Validate if happened any errors with the requests 
+            if (warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
+              console.error('Error with any update promise, see:', warrantyResult, installationResult);
+              throw new Error("Error with any service update promise");
+            }
+
+          } catch (nestedErr) {
+            console.error("General error in the update", nestedErr);
+            return { status: 500, data: nestedErr.message };
+          } finally {
+            await reloadOrder();
           }
         }
       } else {
-        response = await client.line_items.delete(lineItem.id).catch(err => err.errors);
-        if (lineItem["installlation_service"] && lineItem["installlation_service"].length > 0) {
-          await client.line_items.delete(lineItem["installlation_service"][0].id).catch(err => err.errors);
-        }
-        if (lineItem["warranty_service"] && lineItem["warranty_service"].length > 0) {
-          await client.line_items.delete(lineItem["warranty_service"][0].id).catch(err => err.errors);
+        try {
+          const warrantyServicePromise = lineItem["warranty_service"] && lineItem["warranty_service"].length > 0
+              ? client.line_items.delete(lineItem["warranty_service"][0].id)
+              : Promise.resolve();
+
+          const installationServicePromise = lineItem["installlation_service"] && lineItem["installlation_service"].length > 0
+              ? client.line_items.delete(lineItem["installlation_service"][0].id)
+              : Promise.resolve();
+
+          const skuPromise = client.line_items.delete(lineItem.id).catch(err => err);
+          
+          // Send all of requests at the same time
+          const [warrantyResult, installationResult, skuResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise, skuPromise]);
+
+          // Validate if happened any errors with the requests 
+          if (skuResult.status === 'rejected' || warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
+            console.error('Error with any delete promise, see:', warrantyResult, installationResult, skuResult);
+            throw new Error("Error in the quantity updating process");
+          }
+        } catch (nestedErr) {
+          console.error("Error deleting product and services", nestedErr);
+          return { status: 500, data: nestedErr.message };
+        } finally {
+          await reloadOrder();
         }
       }
-      await reloadOrder();
-      if (response?.[0]?.status) {
-        return { status: parseInt(response[0].status), data: response[0].title };
-      }
+
       return { status: 200, data: 'success update item' };
+
     } catch (err) {
-      console.error('error', err);
-      return { status: 500, data: 'error update item' };
+      console.error('An general error has ocurred when updateItemQuantity was running:', err);
+      return { status: 500, data: "General error, please see the system logs" };
     }
   };
 
@@ -421,7 +456,6 @@ export const useCommerceLayer = () => {
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
 
       const client = await generateClient();
-
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
         ...(billingAddress ? [client.addresses.create(billingAddress)] : []),
@@ -511,16 +545,54 @@ export const useCommerceLayer = () => {
     [orderId]
   );
 
-  const setDefaultShippingMethod = useCallback(async () => {
-    const shipmentId = order.shipments.at(0)?.id;
+  const getShippingMethods = useCallback(async () => {
     const client = await generateClient();
-    await client.shipments.update({
-      id: shipmentId,
-      shipping_method: {
-        id: DEFAULT_SHIPPING_METHOD_ID,
-        type: "shipping_methods",
-      },
-    }).catch(err => console.error('error set default shipping method', err.errors));
+    // return client.orders.available_payment_methods(orderId);
+    return client.shipping_methods.list();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId]);
+
+  const setDefaultShippingMethod = useCallback(async (hasShipment) => {
+    // ************** CODE PREV
+    // const shipmentId = order.shipments.at(0)?.id;
+    // const client = await generateClient();
+    // await client.shipments.update({
+    //   id: shipmentId,
+    //   shipping_method: {
+    //     id: DEFAULT_SHIPPING_METHOD_ID,
+    //     type: "shipping_methods",
+    //   },
+    // }).catch(err => console.error('error set default shipping method', err.errors));
+    // ************** END CODE PREV
+    const client = await generateClient();
+    const shipments = order.shipments;
+    const allies = [];
+    order?.line_items?.forEach((line_item: ILineItemExtended) => {
+      try {
+        let targetIndex = allies.findIndex((value: IAlly) => value.id === line_item.item.shipping_category.id);
+        if (targetIndex === -1) {
+          allies.push({ ...line_item.item.shipping_category });
+          targetIndex = allies.length - 1;
+        }
+        if (!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
+        delete line_item?.item?.shipping_category;
+        allies[targetIndex].line_items.push({ ...line_item });
+      } catch (iteration_error) {
+        console.error("ShippingMethod: An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
+      }
+    });
+    shipments.forEach(async (el, index) => {
+      const availableMethods = el.available_shipping_methods;
+      const methodID = availableMethods.find((item) => item.name === allies[index].name);
+      const methodIdCheck = (methodID) ? methodID.id : DEFAULT_SHIPPING_METHOD_ID;
+      await client.shipments.update({
+        id: el.id,
+        shipping_method: {
+          id: (hasShipment) ? methodIdCheck : DEFAULT_SHIPPING_METHOD_ID,
+          type: "shipping_methods",
+        },
+      }).catch(err => console.error('error set default shipping method', err.errors));
+    });
   }, [order]);
 
   const placeOrder = useCallback(async () => {
@@ -604,8 +676,13 @@ export const useCommerceLayer = () => {
   const upgradeTimePay = useCallback(
     async (time: number) => {
       setTimeToPay(time);
-    },
-    []
+    }, []
+  );
+
+  const updateIsPaymentProcess = useCallback(
+    async (value: boolean) => {
+      setisPaymentProcess(value);
+    }, []
   );
 
   return {
@@ -621,6 +698,7 @@ export const useCommerceLayer = () => {
     getOrder,
     reloadOrder,
     addToCart,
+    isPaymentProcess,
     updateItemQuantity,
     addCustomer,
     addLoggedCustomer,
@@ -633,12 +711,14 @@ export const useCommerceLayer = () => {
     setPaymentMethod,
     addPaymentMethodSource,
     setDefaultShippingMethod,
+    getShippingMethods,
     validateExternal,
     getSkuList,
     changeItemService,
     checkCurrentPrices,
     deleteItemService,
     upgradeTimePay,
+    updateIsPaymentProcess
   };
 };
 

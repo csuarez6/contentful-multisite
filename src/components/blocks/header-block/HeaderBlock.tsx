@@ -20,7 +20,6 @@ import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
-import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
@@ -126,25 +125,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const router = useRouter();
   const {
     order,
-    timeToPay,
-    upgradeTimePay
   } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
-
-  useEffect(() => {
-    if (timeToPay > 0) {
-      const interval = setInterval(() => {
-        upgradeTimePay(timeToPay - 1);
-        if (timeToPay === 0) {
-          clearInterval(interval);
-        }
-      }, 1000);
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [timeToPay, upgradeTimePay]);
 
   useEffect(() => {
     setNumProducts(
@@ -303,7 +286,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 ))}
               </ul>
 
-              <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] -mr-4">
+              <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px]">
                 <p className="flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
                   <span className="w-8 h-8 shrink-0">
                     <Icon icon="emergency" className="w-full h-full mx-auto" />
@@ -365,7 +348,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 </CustomLink>
               </div>
 
-              <div className="flex items-center justify-end flex-grow divide-x md:py-5 divide-neutral-70">
+              <div className="flex items-center justify-end flex-grow md:py-5">
                 <form
                   onSubmit={handleSubmit}
                   className="w-full h-10 lg:max-w-xs lg:pr-6"
@@ -390,24 +373,25 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 {utilityNavCollection?.items?.length > 0 && (
                   <nav
                     aria-label="Utility"
-                    className="relative hidden px-6 lg:block"
+                    className="relative hidden px-5 2lg:px-6 lg:block border-x border-neutral-70"
                   >
-                    <ul className="flex gap-1 flex-nowrap">
-                      {utilityNavCollection.items.map((item) => (
-                        <li className="flex max-w-[75px]" key={item.sys.id}>
+                    <ul className={classNames("flex 2lg:gap-1 flex-nowrap")}>
+                      {utilityNavCollection.items.map(item => (
+                        <li className="flex w-[68px] 2lg:w-[75px] justify-center" key={item.sys.id}>
                           <CustomLink
                             content={item}
                             className={classNames(
-                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1",
+                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
                               item.promoIcon
                                 ? "justify-start"
                                 : "justify-center"
                             )}
+                            linkClassName="w-full block"
                           >
                             {item.promoIcon && (
                               <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
                                 <Icon
-                                  icon={item.promoIcon}
+                                  icon={item?.promoIcon}
                                   className="w-full h-full mx-auto"
                                 />
                               </span>
@@ -417,10 +401,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         </li>
                       ))}
                       {/* Carrito de compras */}
-                      <li className="flex max-w-[75px]" key={`cart_${uuid()}`}>
+                      <li className="flex w-[68px] 2lg:w-[75px]" key={`cart_${uuid()}`}>
                         <Link
                           href="/checkout/pse/verify"
-                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
+                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
                         >
                           <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
                             <Icon
@@ -444,7 +428,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden gap-6 px-6 lg:flex">
+                <div className="hidden gap-5 2lg:gap-6 pl-5 2lg:pl-6 lg:flex lg:h-full">
                   {session?.user ? (
                     <>
                       <Menu
@@ -569,32 +553,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         Inicia sesión
                       </CustomLink>
                     </>
-                  )}
-                  {timeToPay >= 0 && (
-                    <div className="flex items-center justify-center w-10 h-10 m-auto shrink-0">
-                      <CircularProgressbar
-                        value={(timeToPay / 30)}
-                        minValue={0}
-                        maxValue={1}
-                        text={`${timeToPay}`}
-                        styles={{
-                          path: {
-                            stroke: '#00182B',
-                            strokeLinecap: 'butt',
-                            transitionDuration: "0.5s"
-                          },
-                          trail: {
-                            stroke: '#ADABA580',
-                            strokeLinecap: 'butt'
-                          },
-                          text: {
-                            fill: '#113455',
-                            fontSize: '32px',
-                            fontWeight: "bold",
-                          }
-                        }}
-                      />
-                    </div>
                   )}
                 </div>
               </div>

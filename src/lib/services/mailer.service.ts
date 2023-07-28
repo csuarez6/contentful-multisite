@@ -1,6 +1,6 @@
 import { SMTPClient } from 'emailjs';
 
-export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>', messageHtml?: any) => {
+export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>', messageHtml?: any): Promise<boolean> => {
   const client = new SMTPClient({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT),

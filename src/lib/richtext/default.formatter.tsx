@@ -1,9 +1,13 @@
 import { Options } from "@contentful/rich-text-react-renderer";
-import { BLOCKS, INLINES } from "@contentful/rich-text-types";
+import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
 import Image from "next/image";
 import CustomTable from "@/components/organisms/custom-table/CustomTable";
 import jsonToReactComponent from "../services/render-cards.service";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+
+const rawMarkup = (rawMarkup) => {
+  return { __html: rawMarkup };
+};
 
 const defaultFormatOptions: Options = {
   renderNode: {
@@ -35,7 +39,7 @@ const defaultFormatOptions: Options = {
       return <ul>{children}</ul>;
     },
     [BLOCKS.OL_LIST]: (_node: any, children: any) => {
-      return <ol>{children}</ol>;
+      return <ol className="list-decimal">{children}</ol>;
     },
     [BLOCKS.LIST_ITEM]: (_node: any, children: any) => {
       return (
@@ -119,6 +123,15 @@ const defaultFormatOptions: Options = {
           {node.data.target.promoTitle ?? node.data.target.name}
         </CustomLink>
       );
+    },
+  },
+  renderMark: {
+    [MARKS.CODE]: (node) => {
+      return(
+        <div className="modal-body">
+             <span dangerouslySetInnerHTML={rawMarkup(node)} />
+        </div>
+    );
     },
   },
 };

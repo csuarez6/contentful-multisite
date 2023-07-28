@@ -136,6 +136,7 @@ const CallbackPage = () => {
               _priceGasodomestico,
               productsQuantityGasodomestico,
               urlPaths,
+              priceVantiListo,
             } = res;
 
             setProductData({
@@ -146,19 +147,17 @@ const CallbackPage = () => {
               sku,
               urlProduct: urlPaths.length > 0 ? `${location.origin}${urlPaths[0]}` : "",
               productsQuantity: productsQuantityGasodomestico,
+              priceVantiListo,
+              priceGasodomestico
             });
           }
         })
         .catch((err) => {
           console.error(err);
-          if (!navigator.onLine)
-            setErrorMessage(
-              "Comprueba tu conexión a internet e intenta de nuevo por favor."
-            );
-          else
-            setErrorMessage(
-              `Ocurrió un error al obtener información del Producto con SKU ${sku}.`
-            );
+          const _errorMessage = !navigator.onLine
+            ? "Comprueba tu conexión a internet e intenta de nuevo por favor."
+            : `Ocurrió un error al obtener información del Producto con SKU ${sku}.`
+          setErrorMessage(_errorMessage);
         })
         .finally(() => setIsLoading(false));
     } else if (!sku && isFetchingSKU) {
@@ -234,7 +233,7 @@ const CallbackPage = () => {
       <div className="overflow-hidden">
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
-          <section className="flex flex-col gap-6 section md:flex-row">
+          <section className="flex section">
             {isLoading && (
               <div
                 role="status"
@@ -260,126 +259,131 @@ const CallbackPage = () => {
               </div>
             )}
             {sku && productData && !isLoading && (
-              <>
-                <HeadingCard
-                  title="1. Diligencia tus datos para llamarte"
-                  isCheck={isValid}
-                  icon="personal-data"
-                  classes="grow"
-                >
-                  <div className="bg-white rounded-lg">
-                    <form
-                      ref={refForm}
-                      className="flex flex-wrap max-w-full gap-6"
-                      onSubmit={handleSubmit(onSubmit)}
-                    >
-                      <div className="w-full">
-                        <TextBox
-                          id="cellPhone"
-                          name="cellPhone"
-                          label="Escribe tu número de celular"
-                          placeholder="300 0000000"
-                          disabled={isSending}
-                          {...register("cellPhone")}
-                        />
-                        {errors.cellPhone && (
-                          <p className="mt-1 text-red-600">
-                            {errors.cellPhone?.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="w-full -mt-6">
-                        <CheckBox
-                          id="agreeHD"
-                          name="agreeHD"
-                          label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
-                          disabled={isSending}
-                          {...register("agreeHD")}
-                        />
-                        {errors.agreeHD && (
-                          <p className="mt-1 text-red-600">
-                            {errors.agreeHD?.message}
-                          </p>
-                        )}
-                      </div>
-                      <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
-
-                      <div className="w-full">
-                        <p className="font-medium text-black text-size-p2">
-                          NOTA: Al hacer click en “Enviar datos” serás contactado
-                          por un agente de Vanti
-                        </p>
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <button
-                          type="submit"
-                          className="w-fit button button-primary"
-                          disabled={isSending}
-                        >
-                          Enviar datos
-                        </button>
-                      </div>
-                    </form>
-
-                    {isOpen && (
-                      <CustomModal
-                        close={closeModal}
-                        icon={isSuccess ? "callback" : "close"}
-                        title={
-                          isSuccess
-                            ? "Espera atento nuestra llamada"
-                            : "Intenta en otro momento"
-                        }
+              <div className="grid grid-cols-1 gap-6 2md:grid-cols-3">
+                <div className="2md:col-span-2">
+                  <HeadingCard
+                    title="1. Diligencia tus datos para llamarte"
+                    isCheck={isValid}
+                    icon="personal-data"
+                    classes="grow"
+                  >
+                    <div className="bg-white rounded-lg">
+                      <form
+                        ref={refForm}
+                        className="flex flex-wrap max-w-full gap-6"
+                        onSubmit={handleSubmit(onSubmit)}
                       >
-                        {modalBody(
-                          isSuccess,
-                          errorMessage,
-                          closeModal,
-                          productData
-                        )}
-                      </CustomModal>
-                    )}
-                  </div>
-                </HeadingCard>
-                <div className="grid gap-3 shrink-0 w-full md:w-96 p-6 rounded-[20px] shadow-[-2px_-2px_0px_rgba(0,0,0,0.04),2px_2px_4px_rgba(0,0,0,0.08)]">
-                  <p className="title is-4 text-blue-dark !font-semibold">
-                    Detalle de tu pedido
-                  </p>
-                  <div className="flex flex-col items-start min-w-full gap-3">
-                    <figure className="aspect-square w-[214px] self-center">
-                      <Image
-                        className="w-full h-full"
-                        src={productData.promoImage.url}
-                        alt={productData.promoImage.title}
-                        width={214}
-                        height={214}
-                      />
-                    </figure>
-                    <div className="grid w-full grid-cols-2 gap-3">
-                      <p className="col-span-2 text-size-subtitle1 text-neutral-20">
-                        Productos
-                      </p>
-                      <p className="text-size-p2 text-grey-30 leading-[1.2]">
-                        {productData.productName}
-                      </p>
-                      <p className="text-size-subtitle2 text-blue-dark">
-                        {productData.price}
-                      </p>
-                      <p className="text-size-p2 text-grey-30">Cantidad</p>
-                      <p className="text-size-subtitle2 text-blue-dark">1</p>
+                        <div className="w-full">
+                          <TextBox
+                            id="cellPhone"
+                            name="cellPhone"
+                            label="Escribe tu número de celular"
+                            placeholder="300 0000000"
+                            disabled={isSending}
+                            {...register("cellPhone")}
+                          />
+                          {errors.cellPhone && (
+                            <p className="mt-1 text-red-600">
+                              {errors.cellPhone?.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="w-full -mt-6">
+                          <CheckBox
+                            id="agreeHD"
+                            name="agreeHD"
+                            label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
+                            disabled={isSending}
+                            {...register("agreeHD")}
+                          />
+                          {errors.agreeHD && (
+                            <p className="mt-1 text-red-600">
+                              {errors.agreeHD?.message}
+                            </p>
+                          )}
+                        </div>
+                        <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
+
+                        <div className="w-full">
+                          <p className="font-medium text-black text-size-p2">
+                            NOTA: Al hacer click en “Enviar datos” serás contactado
+                            por un agente de Vanti
+                          </p>
+                        </div>
+                        <div className="flex justify-end w-full">
+                          <button
+                            type="submit"
+                            className="w-fit button button-primary"
+                            disabled={isSending}
+                          >
+                            Enviar datos
+                          </button>
+                        </div>
+                      </form>
+
+                      {isOpen && (
+                        <CustomModal
+                          close={closeModal}
+                          icon={isSuccess ? "callback" : "close"}
+                          title={
+                            isSuccess
+                              ? "Espera atento nuestra llamada"
+                              : "Intenta en otro momento"
+                          }
+                        >
+                          {modalBody(
+                            isSuccess,
+                            errorMessage,
+                            closeModal,
+                            productData
+                          )}
+                        </CustomModal>
+                      )}
                     </div>
-                    <div className="grid items-center w-full grid-cols-2 p-1 rounded xxs:gap-3 bg-neutral-90">
-                      <p className="pr-3 font-semibold text-right text-black md:text-size-subtitle2 xxs:p-0">
-                        TOTAL
-                      </p>
-                      <p className="font-semibold text-black md:text-size-subtitle1">
-                        {productData.price}
-                      </p>
-                    </div>
-                  </div>
+                  </HeadingCard>
                 </div>
-              </>
+                <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit col-span-1">
+                  <div className="flex flex-col gap-[17px] w-full h-full text-justify">
+                    <h4 className="pb-3 border-b text-blue-dark border-blue-dark">Detalle de tu pedido</h4>
+                    <div className="flex flex-col gap-3">
+                      <div className="pb-2 mb-2 border-b border-gray-300">
+                        <div className="flex items-start gap-2">
+                          <figure className="w-16 shrink-0">
+                            <Image
+                              className="object-contain w-full h-full"
+                              src={productData?.promoImage?.url}
+                              alt={productData.promoImage.title}
+                              width={64}
+                              height={64}
+                              priority
+                            />
+                          </figure>
+                          <div className="flex-1">
+                            <div className="grid grid-cols-1 text-sm mb-2">
+                              <p className="font-bold">{productData?.productName}</p>
+                              <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
+                            </div>
+                            <div className="grid grid-cols-2 text-sm">
+                              <p>C/U:</p>
+                              <p className="text-right text-blue-dark py-0.5 rounded-lg mr-2">1x</p>
+                            </div>
+                            <div className="grid grid-cols-3 text-sm">
+                              <p className="font-bold col-span-1">Subtotal:</p>
+                              <span className="text-right text-blue-dark col-span-2 font-bold">
+                                {productData?.priceVantiListo ?? productData?.priceGasodomestico}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 mt-2 rounded">
+                        <p className="font-bold text-left">TOTAL A PAGAR</p>
+                        <span className="font-bold text-right">{productData?.priceVantiListo ?? productData?.priceGasodomestico}</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
             )}
             {!sku && !isLoading && (
               <div

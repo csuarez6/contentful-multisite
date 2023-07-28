@@ -4,8 +4,8 @@ import React from 'react';
 export interface ISpinner {
     color?: string;
     position?: "relative" | "absolute";
-    size?: string;
-    classes?: "small" | "medium" | "large";
+    size?: "small" | "medium" | "large";
+    classes?: string;
 }
 
 const measures = {
@@ -14,20 +14,22 @@ const measures = {
     large: "w-20 h-20"
 };
 
-const Spinner: React.FC<ISpinner> = ({ color, position, size, classes }) => {
+const Spinner: React.FC<ISpinner> = ({ color = "fill-blue-dark", classes = "", size = "small", position = "relative" }) => {
     return (
         <div className={
             classNames(
-                position === "absolute" ? `${position} inset-0 flex justify-center items-center`: `${position} inline-block ml-1`,
-                `${classes}`, "bg-gray-100 bg-opacity-25"
+                position === "absolute"
+                    ? `${position} inset-0 flex justify-center items-center -m-1 bg-white bg-opacity-50`
+                    : `${position} inline-block mx-1`,
+                classes
             )}>
             <svg
                 aria-hidden="true"
                 className={
                     classNames(
-                        "text-gray-200 animate-spin",
-                        size ? measures[size] : "w-5 h-5",
-                        color ? color : "fill-blue-dark"
+                        "text-gray-100 animate-spin",
+                        measures[size] ?? measures["small"],
+                        color
                     )
                 }
                 viewBox="0 0 100 101"
@@ -43,6 +45,7 @@ const Spinner: React.FC<ISpinner> = ({ color, position, size, classes }) => {
                     fill="currentFill"
                 />
             </svg>
+            <span className="sr-only">Loading...</span>
         </div>
     );
 };

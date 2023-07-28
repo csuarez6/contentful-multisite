@@ -4,7 +4,6 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { classNames } from "@/utils/functions";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import { dataPlans } from "./FuneralPlans.data";
-import Icon from "@/components/atoms/icon/Icon";
 
 const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description, blockId, sysId }) => {
   return (
@@ -78,68 +77,6 @@ const FuneralPlansBlock: React.FC<IPromoBlock> = ({ title, description, blockId,
                     </tbody>
                   </table>
                 </div>
-              )}
-              {tab.tabs?.length > 0 && (
-                <>
-                  <div className="mt-2">
-                    <h4 className="text-grey-10 !font-semibold">Todos los planes incluyen</h4>
-                  </div>
-                  <Tab.Group>
-                    <div className="flex overflow-x-auto bg-blue-dark-90">
-                      <div className="flex">
-                        <Tab.List className="flex">
-                          {tab.tabs.map((tab) =>
-                            <Tab
-                              key={tab.title}
-                              className={({ selected }) =>
-                                classNames(
-                                  selected
-                                    ? "bg-lucuma-80"
-                                    : "bg-transparent hover:bg-lucuma-80 hover:bg-opacity-50",
-                                  "flex items-center gap-[10px] shrink-0 grow focus:outline-none rounded-lg p-3"
-                                )
-                              }
-                            >
-                              {tab.icon && (
-                                <span className="w-6 h-6 text-neutral-30 shrink-0 flex items-center">
-                                  <Icon
-                                    icon={tab.icon}
-                                    className="w-full h-full"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              )}
-                              <span className="text-size-p1 font-normal text-blue-dark">{tab.title}</span>
-                            </Tab>
-                          )}
-                        </Tab.List>
-                      </div>
-                    </div>
-
-                    <Tab.Panels as={Fragment}>
-                      {tab.tabs.map((tab) => (
-                        <Tab.Panel key={tab.title}>
-                          {tab.items?.length > 0 && (
-                            <div className="grid md:grid-cols-2 gap-x-2 gap-y-4">
-                              {tab.items.map(el => (
-                                <div className="flex gap-1" key={el.title}>
-                                  <span className="w-8 h-8 text-neutral-30 shrink-0 flex items-center">
-                                    <Icon
-                                      icon="check"
-                                      className="w-full h-full"
-                                    />
-                                  </span>
-                                  <p className="text-grey-30">{el.title}</p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {tab.helpText && (<p className="mt-4 text-size-p2 text-grey-30">{tab.helpText}</p>)}
-                        </Tab.Panel>
-                      ))}
-                    </Tab.Panels>
-                  </Tab.Group>
-                </>
               )}
             </Tab.Panel>
           ))}

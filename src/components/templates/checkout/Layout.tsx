@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
 import Icon from "@/components/atoms/icon/Icon";
+import { gaEventPurchase } from "@/utils/ga-events--checkout";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -57,10 +58,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     addPaymentMethodSource,
     placeOrder,
     setDefaultShippingMethod,
+    getShippingMethods,
     validateExternal,
     upgradeTimePay,
     hasShipment,
-    isFetchingOrder
+    isFetchingOrder,
+    updateIsPaymentProcess
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
@@ -74,11 +77,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPlacing, setIsPlacing] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
   const asPathUrl = asPath.split("/")[3];
+  const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
+  const shippingCostTotal = useRef([]);
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    // console.log({ hasShipment });
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -89,7 +95,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const validateOrder = async () => {
     setIsLoading(true);
+    gaEventPurchase(order, shippingMethodGlobal);
     setOnPayment(true);
+    updateIsPaymentProcess(true);
     await reloadOrder(true);
     setIsLoading(false);
   };
@@ -111,7 +119,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
 
-      await setDefaultShippingMethod();
+      await setDefaultShippingMethod(hasShipment);
+      // return;
       await setPaymentMethod(paymentMethodId);
       await addPaymentMethodSource(token);
       await placeOrder()
@@ -149,6 +158,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       });
     }
     setIsPlacing(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addPaymentMethodSource,
     placeOrder,
@@ -193,7 +203,25 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productUpdates]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const shippingMethod = await getShippingMethods();
+        if (shippingMethod) setShippingMethodGlobal(shippingMethod);
+      } catch (error) {
+        console.error("Error at: ProductService", error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    updateIsPaymentProcess(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handlePayment = async (toCancel = false) => {
+    setIsPaying(true);
     try {
       const path =
         `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
@@ -216,6 +244,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           upgradeTimePay(30);
         }
       }
+      await reloadOrder(true);
       push("/");
     } catch (error) {
       console.error(error);
@@ -227,7 +256,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       });
     } finally {
       setOpenDummyPGModal(false);
+      setIsPaying(false);
+      updateIsPaymentProcess(false);
     }
+  };
+
+  const getShippingPrice = (product) => {
+    const price = shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+    if (!shippingCostTotal.current.find((el) => el.product === product.id)) shippingCostTotal.current.push({ product: product.id, shippingCost: price });
+    return price;
   };
 
   const breadcrumbsList: IPromoBlock =
@@ -309,31 +346,19 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       <div className="flex-1">
                         {/* Start Product Information */}
                         <div
-                          className="grid grid-cols-1 text-sm mb-2"
+                          className="grid grid-cols-1 mb-2 text-sm"
                           key={"product-name" + i}
                         >
-                          <p className="font-bold">{product.name}</p>
-                          <p className="text-xs text-gray-600 text-right">* IVA incluido</p>
-                        </div>
-                        {/* End Product Information */}
-
-                        {/* Start Product Cost */}
-                        <div
-                          className="grid grid-cols-3 text-sm"
-                          key={"product-unit-count" + i}
-                        >
-                          <p className="col-span-1">C/U:</p>
-                          <p className="text-right text-blue-dark col-span-2">
-                            <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
-                              {product.quantity}
-                              x
-                            </span>
-                            <span>
-                              {product.formatted_unit_amount}
-                            </span>
+                          <p className="font-bold flex justify-between gap-3 mb-1">
+                            <span className="text-left">{product.name}</span>
+                            <span className="text-blue-dark text-base">{product.formatted_unit_amount}</span>
+                          </p>
+                          <p className="text-xs text-gray-600">* IVA incluido</p>
+                          <p className="text-sm text-gray-600">
+                            Cantidad: {" "} {product.quantity}
                           </p>
                         </div>
-                        {/* End Product Cost */}
+                        {/* End Product Information */}
 
                         {/* Start Product Warranty */}
                         {(product?.["warranty_service"] && product?.["warranty_service"].length > 0) && (
@@ -341,14 +366,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-3 text-sm"
                             key={"product-warranty-count" + i}
                           >
-                            <p className="col-span-1 flex">
+                            <p className="flex col-span-1">
                               <span>G.E:</span>
-                              <span title="Garantía extendida" className="ml-1 flex items-center cursor-help">
+                              <span title="Garantía extendida" className="flex items-center ml-1 cursor-help">
                                 <Icon icon="info" size={18} className="text-gray-500" />
                               </span>
                             </p>
 
-                            <p className="text-right text-blue-dark col-span-2">
+                            <p className="col-span-2 text-right text-blue-dark">
                               <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
                                 {product["warranty_service"]?.length > 0
                                   ? product["warranty_service"][0]["quantity"]
@@ -369,14 +394,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-3 text-sm"
                             key={"product-installation-count" + i}
                           >
-                            <p className="col-span-1 flex">
+                            <p className="flex col-span-1">
                               <span>S.I.:</span>
-                              <span title="Servicio de instalación" className="ml-1 flex items-center cursor-help">
+                              <span title="Servicio de instalación" className="flex items-center ml-1 cursor-help">
                                 <Icon icon="info" size={18} className="text-gray-500" />
                               </span>
                             </p>
 
-                            <p className="text-right text-blue-dark col-span-2">
+                            <p className="col-span-2 text-right text-blue-dark">
                               <span className="inline-block py-0.5 px-1 mx-auto rounded-lg bg-blue-100 font-bold text-size-span mr-2">
                                 {product["installlation_service"]?.length > 0
                                   ? product["installlation_service"][0]["quantity"]
@@ -392,14 +417,54 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         )}
                         {/* Ent Product Installation */}
 
+                        {/* Start Shipping Cost */}
+                        {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) && (
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-unit-shipcost" + i}
+                          >
+                            <p className="flex col-span-1">
+                              Envío:
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (
+                                <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
+                                  <Icon icon="info" size={18} className="text-gray-500" />
+                                </span>
+                              )}
+                            </p>
+                            <p className="col-span-2 text-right text-blue-dark">
+                              <span>
+                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
+                                  ? (
+                                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount
+                                    ?? product.item["shipping_category"].name
+                                  )
+                                  : "$0"
+                                }
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                        {/* End Shipping Cost */}
+
                         {/* Start Product Subtotal Price */}
                         <div
                           className="grid grid-cols-3 text-sm"
-                          key={"product-count" + i}
+                          key={"product-shipping" + i}
                         >
-                          <p className="font-bold col-span-1">Subtotal:</p>
-                          <span className="text-right text-blue-dark col-span-2 font-bold">
-                            {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))}
+                          <p className="col-span-1 font-bold">Subtotal:</p>
+                          <span className="col-span-2 font-bold text-right text-blue-dark">
+                            {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                              ? formatPrice(
+                                showProductTotal(
+                                  product?.total_amount_float,
+                                  product?.["installlation_service"],
+                                  product?.["warranty_service"]
+                                ) +
+                                getShippingPrice(product)
+                              )
+                              : formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))
+                            }
+                            {/* {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))} */}
                           </span>
                         </div>
                         {/* End Product Subtotal Price */}
@@ -407,7 +472,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   </div>
                 ))}
-                <div className="grid grid-cols-2 mt-2 rounded">
+                {/* <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-semibold text-left">Costo de envío</p>
                   <span className="font-semibold text-right">
                     {
@@ -416,17 +481,31 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                         : "-"
                     }
                   </span>
+                </div> */}
+                <div className="grid grid-cols-1 rounded">
+                  <p className="text-xs text-gray-600">
+                    El costo de envío depende de la cobertura de Vanti y la marca de cada producto, de acuerdo a esto se realiza el cálculo del envío
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 mt-2 rounded">
                   <p className="font-bold text-left">TOTAL A PAGAR</p>
                   <span className="font-bold text-right">
-                    {order?.formatted_total_amount_with_taxes}
+                    {/* {order?.formatted_total_amount_with_taxes} */}
+                    {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                      ?
+                      formatPrice(
+                        order?.total_amount_with_taxes_float +
+                        shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
+                      )
+                      :
+                      order?.formatted_total_amount_with_taxes
+                    }
                   </span>
                 </div>
-                {isComplete && tokenRecaptcha && (
+                {isComplete && (
                   <button
                     onClick={validateOrder}
-                    disabled={isLoading || isPlacing}
+                    disabled={isLoading || isPlacing || !tokenRecaptcha}
                     className={classNames(
                       "button button-primary w-full mt-[17px]",
                       (isLoading || isPlacing)
@@ -467,9 +546,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         <ModalSuccess
           {...MocksModalSuccessProps.modalLayout}
           isActive={openDummyPGModal}
+          isClosable={false}
         >
           <div className="flex justify-end w-full gap-5">
             <button
+              disabled={isPaying}
               className="button button-outline"
               onClick={() => {
                 handlePayment(true);
@@ -478,6 +559,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               Cancelar pago
             </button>
             <button
+              disabled={isPaying}
               className="button button-primary"
               onClick={() => {
                 handlePayment();

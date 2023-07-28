@@ -57,6 +57,7 @@ export interface IPromoContent {
     urlPaths?: string[];
     simpleView?: string;
     iframeHeight?: number;
+    isClosable?: boolean;
 }
 
 export interface IPromoBlock extends IBlockProps {

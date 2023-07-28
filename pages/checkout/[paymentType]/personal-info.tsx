@@ -19,6 +19,7 @@ import {
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 
 interface ICustomer {
   name: string;
@@ -52,8 +53,7 @@ const CheckoutPersonalInfo = () => {
   const lastPath = useLastPath();
 
   const { order, flow, addCustomer } = useContext(CheckoutContext);
-  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
-  const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -137,14 +137,16 @@ const CheckoutPersonalInfo = () => {
   }, [order]);
 
   const onSubmit = async (data: ICustomer) => {
+    gaEventPaymentInfo(order?.line_items);
+
     try {
-      setIsLoadingNext(true);
+      setIsLoading(true);
       await addCustomer(data);
       await handleNext();
     } catch (error) {
       alert(error.message);
-    }finally {
-      setIsLoadingNext(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,11 +157,23 @@ const CheckoutPersonalInfo = () => {
   };
 
   const handlePrev = async () => {
-    setIsLoadingPrev(true);
+    setIsLoading(true);
     await router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => setIsLoading(true);
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <HeadingCard
@@ -227,7 +241,7 @@ const CheckoutPersonalInfo = () => {
               <p className="mt-1 text-red-600">{errors.email?.message}</p>
             )}
           </div>
-          <div className="grid grid-cols-1 w-full md:grid-cols-2 gap-x-3">
+          <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-x-3">
             <div>
               <SelectInput
                 selectOptions={selectOptions}
@@ -262,20 +276,19 @@ const CheckoutPersonalInfo = () => {
           </div>
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline relative"
+              className="relative button button-outline"
               type="button"
               onClick={handlePrev}
-              disabled={isLoadingPrev || isLoadingNext}
+              disabled={isLoading}
             >
               Volver
-              {isLoadingPrev && <Spinner position="absolute"/> }
             </button>
-            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
+            <button className="relative button button-primary" type="submit" disabled={isLoading}>
               Continuar
-              {isLoadingNext && <Spinner position="absolute"/> }
             </button>
           </div>
         </form>
+        {isLoading && <Spinner position="absolute" size="large" />}
       </div>
     </HeadingCard>
   );

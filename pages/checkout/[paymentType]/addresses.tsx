@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,7 +13,6 @@ import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
-// import SelectInput from "@/components/atoms/input/selectInput/SelectInput";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
@@ -23,6 +22,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 
 interface IAddress {
   id?: string;
@@ -127,8 +127,8 @@ const CheckoutAddress = () => {
   const [isActivedModal, setIsActivedModal] = useState(false);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
-  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
-  const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const attempts = useRef(0);
 
   const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
 
@@ -180,11 +180,14 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const citiesFinal: any[] = [{city: "Seleccione un Municipio", isCovered: "false"}];
-      const cities: string[] = await getCitiesByState(shippingStateWatched);       
+      const citiesFinal: any[] = [{ city: "Seleccione un Municipio", isCovered: "false" }];
+      const cities: string[] = await getCitiesByState(shippingStateWatched);
       setShippingCities(citiesFinal.concat(cities));
+      if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });
+      attempts.current = 1;
     })();
     setShowAlert(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingStateWatched]);
 
   useEffect(() => {
@@ -292,8 +295,10 @@ const CheckoutAddress = () => {
   };
 
   const onSubmit = async (data: IAddresses) => {
+    setIsLoading(true);
+    gaEventPaymentInfo(order?.line_items);
+
     try {
-      setIsLoadingNext(true);
       const checkCovered = checkCityCovered();
       if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
         setParamModal({ promoTitle: "Advertencia" });
@@ -312,26 +317,38 @@ const CheckoutAddress = () => {
         await sendData(data);
       }
     } catch (error) {
-      setIsLoadingNext(true);
       console.error(error);
       alert(error.message);
-    }finally {
-      setIsLoadingNext(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleNext = async () => {
+    setIsLoading(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
     );
   };
 
   const handlePrev = async () => {
-    setIsLoadingPrev(true);
+    setIsLoading(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => setIsLoading(true);
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <HeadingCard
@@ -376,9 +393,9 @@ const CheckoutAddress = () => {
             <SelectInput
               id="shipping-city-code"
               label="Escoge tu municipio"
-              selectOptions={shippingCities.map((city) => ({
+              selectOptions={shippingCities.map((city, index) => ({
                 label: city.city,
-                value: city.city,
+                value: (index == 0) ? "" : city.city,
               }))}
               {...register("shippingAddress.cityCode")}
               placeholder="Seleccionar"
@@ -569,20 +586,19 @@ const CheckoutAddress = () => {
           )}
           <div className="flex justify-end w-full gap-3">
             <button
-              className="button button-outline relative"
+              className="relative button button-outline"
               type="button"
               onClick={handlePrev}
-              disabled={isLoadingPrev || isLoadingNext}
+              disabled={isLoading}
             >
               Volver
-              {isLoadingPrev && <Spinner position="absolute"/> }
             </button>
-            <button className="button button-primary relative" type="submit" disabled={isLoadingPrev || isLoadingNext}>
+            <button className="relative button button-primary" type="submit" disabled={isLoading}>
               Continuar
-              {isLoadingNext && <Spinner position="absolute"/> }
             </button>
           </div>
         </form>
+        {isLoading && <Spinner position="absolute" size="large" />}
       </div >
       {isActivedModal && (
         <ModalSuccess {...paramModal} isActive={isActivedModal}>

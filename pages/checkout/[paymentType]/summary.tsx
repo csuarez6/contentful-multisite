@@ -18,16 +18,14 @@ const CheckoutSummary = () => {
   const router = useRouter();
   const lastPath = useLastPath();
   const { isLogged, user } = useContext(AuthContext);
-  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha } = useContext(CheckoutContext);
-
+  const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha, isPaymentProcess } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
-  const [isLoadingPrev, setIsLoadingPrev] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fullName = useMemo(() => {
     return (
-      (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
+      (resource) => `${resource?.metadata?.name ?? "*****"} ${resource?.metadata?.lastName ?? "*****"}`
     )(isLogged ? user : order);
-
   }, [user, order, isLogged]);
 
   useEffect(() => {
@@ -44,11 +42,24 @@ const CheckoutSummary = () => {
   );
 
   const handlePrev = async () => {
-    setIsLoadingPrev(true);
+    setIsLoading(true);
     router.push(
       `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => setIsLoading(true);
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -72,16 +83,16 @@ const CheckoutSummary = () => {
               {router.query.paymentType?.toString().toUpperCase()}
             </dd>
           </div>
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
             <dd className="flex-1 font-bold text-grey-30">
               Banco Davivienda
             </dd>
-          </div>
+          </div> */}
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {billingAddress?.full_address}
+              {billingAddress?.full_address ?? "-----"}
             </dd>
           </div>
           <div className="flex justify-between">
@@ -103,15 +114,15 @@ const CheckoutSummary = () => {
         </dl>
         <div className="flex justify-end w-full mt-5">
           <button
-            className="button button-outline relative"
+            className="relative button button-outline"
             type="button"
             onClick={handlePrev}
-            disabled={isLoadingPrev}
+            disabled={isLoading || isPaymentProcess}
           >
             Volver
-            {isLoadingPrev && <Spinner position="absolute" />}
           </button>
         </div>
+        {isLoading && <Spinner position="absolute" size="large" />}
       </div>
     </HeadingCard>
   );

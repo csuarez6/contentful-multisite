@@ -7,6 +7,9 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames, getAlign, getButtonType } from "@/utils/functions";
 import { getLinkProps } from "@/utils/link.utils";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
 const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
   const {
@@ -18,7 +21,10 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
     externalLink,
     buttonType,
     alignButton,
-    urlPaths
+    urlPaths,
+    content,
+    ctaLabel,
+    linkView,
   } = props;
 
   return (
@@ -41,7 +47,9 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
       <div className="w-full p-6 flex flex-col flex-grow justify-between">
         {(promoTitle || promoDescription || name) && (
           <div className="grid gap-2">
-            {(promoTitle || name) && <h3 className="text-blue-dark">{promoTitle || name}</h3>}
+            {(promoTitle || name) && (
+              <h3 className="text-blue-dark">{promoTitle || name}</h3>
+            )}
             {promoDescription?.json && (
               <div className="text-blue-dark-8 text-size-p1">
                 {documentToReactComponents(promoDescription.json)}
@@ -50,7 +58,14 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
           </div>
         )}
         {(internalLink?.urlPaths?.[0] || externalLink || urlPaths) && (
-          <div className={classNames("flex mt-6", getAlign(alignButton) === 'left' ? 'justify-start' : 'justify-center')}>
+          <div
+            className={classNames(
+              "flex mt-6 grow items-end",
+              getAlign(alignButton) === "left"
+                ? "justify-start"
+                : "justify-center"
+            )}
+          >
             <CustomLink
               content={props}
               className={classNames(
@@ -62,8 +77,21 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
             </CustomLink>
           </div>
         )}
+        {linkView === "Modal" && content.json && (
+          <div className="flex gap-2">
+            <ButtonAtom
+              type={linkView}
+              text={ctaLabel ?? name}
+              classes={getButtonType("Contorno")}
+            >
+              {documentToReactComponents(
+                attachLinksToRichtextContent(content?.json, content?.links),
+                defaultFormatOptions
+              )}
+            </ButtonAtom>
+          </div>
+        )}
       </div>
-
     </article>
   );
 };

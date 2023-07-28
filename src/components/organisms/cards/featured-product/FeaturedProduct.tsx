@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { event as gTagEvent } from "nextjs-google-analytics";
 
 import { IAllyOverviewDetails, IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
@@ -48,7 +49,31 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   marketId,
   isNew,
   discount,
+  sku
 }) => {
+  const onClick = () => {
+    gTagEvent("select_item", {
+      items: [{
+        item_id: `SKU_${sku}`,
+        item_name: promoTitle,
+        coupon: '',
+        discount: discount,
+        index: 0,
+        item_list_name: isGasAppliance(marketId) ? "Gasodoméstico" : "Catálogo VantiListo",
+        item_list_id: isGasAppliance(marketId) ? "Lista_Gasodomésticos" : "Catálogo_VantiListo",
+        affiliation: trademark ? `Marketplace: ${trademark.name}` : 'Marketplace',
+        item_brand: trademark?.name ?? '',
+        item_category: '',
+        item_variant: '',
+        price: isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo,
+        currency: 'COP',
+        quantity: 1
+      }],
+      item_list_name: isGasAppliance(marketId) ? "Gasodoméstico" : "Catálogo VantiListo",
+      item_list_id: isGasAppliance(marketId) ? "Lista_Gasodomésticos" : "Catálogo_VantiListo"
+    });
+  };
+
   const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
   return (
     <article className="relative">
@@ -58,7 +83,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           {discount && <span className="p-2 uppercase rounded-md bg-cyan-300 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">{discount} de descuento</span>}
         </div>
       )}
-      <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full">
+      <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full h-full">
         {(imagesCollection?.items || promoImage) && (
           <div className="flex flex-col gap-2">
             {(imagesCollection?.items || cta || promoImage) && (
@@ -92,6 +117,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                   </Link>
                 ) : urlPaths && (
                   <CustomLink
+                    onClick={onClick}
                     className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]"
                     content={{
                       internalLink: { urlPaths, promoTitle: "Conoce más" },
@@ -103,7 +129,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
           </div>
         )}
         {promoTitle && (
-          <div className="flex flex-col gap-[25px]">
+          <div className="flex flex-col gap-[25px] grow justify-between">
             <div className="flex flex-col gap-[7px]">
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <h3 className="group-[.card-mega-menu]:text-lg text-blue-dark title is-4">{promoTitle}</h3>

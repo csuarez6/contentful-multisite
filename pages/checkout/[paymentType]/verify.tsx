@@ -42,6 +42,7 @@ import { getDataContent } from "@/lib/services/richtext-references.service";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { gaEventBeginCheckout } from "@/utils/ga-events--checkout";
 
 const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const { copyServices } = props;
@@ -68,6 +69,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
+  const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
   const [showWarranty, setShowWarranty] = useState<boolean>(true);
@@ -82,6 +84,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     addLoggedCustomer,
     getSkuList,
     changeItemService,
+    getShippingMethods,
   } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
@@ -141,10 +144,16 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     console.info(value);
   };
 
+  const getShippingPrice = (product) => {
+    return shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+  };
+
   useEffect(() => {
     (async () => {
       try {
         const infoSkus = await getSkuList();
+        const shippingMethod = await getShippingMethods();
+        if (shippingMethod) setShippingMethodGlobal(shippingMethod);
         if (infoSkus) {
           setSkuOptionsGlobal(infoSkus.data);
         }
@@ -224,8 +233,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   };
 
   const handleNext = async () => {
+    setIsLoading(true);
+    gaEventBeginCheckout(products);
+
     try {
-      setIsLoading(true);
       if (!products.length) {
         setError(true);
         setErrorMessage({
@@ -254,7 +265,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
       router.push(`${PATH_BASE}/${flow.getNextStep(lastPath)}`);
     } catch (error) {
-      setIsLoading(true);
       console.error(error);
       setError(true);
       setErrorMessage({
@@ -266,18 +276,60 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       setIsLoading(false);
     }
   };
+  
   const dropServices = (product) => {
     if (product) {
       if (!showWarranty && product["warranty_service"]?.length > 0) {
         productSelected.current = product.id;
         servicesHandler("warranty", [defaultWarrantyList][0]);
       }
-      if (!showInstallation && product["installlation_service"]?.length > 0) {        
+      if (!showInstallation && product["installlation_service"]?.length > 0) {
         productSelected.current = product.id;
         servicesHandler("installation", [defaultInstallList][0]);
       }
     }
   };
+
+  const increDecreQuantity = (product, operator) => {
+    const quantityTemp = (operator == "plus") ? product?.quantity + 1 : product?.quantity - 1;
+    setIsLoading(true);
+    updateItemQuantity(
+      product?.sku_code,
+      quantityTemp
+    )
+      .then((result) => {
+        if (result.status !== 200) {
+          const messageMinus = "Ocurrió un error con el producto seleccionado, por favor intente nuevamente.";
+          const messagePlus =
+            result.status === 422
+              ? `No hay más unidades disponibles para el producto seleccionado.`
+              : "Ocurrió un error al agregar más unidades, por favor valide e intente nuevamente.";
+          setError(true);
+          setErrorMessage({
+            icon: "alert",
+            type: "warning",
+            title: (operator == "plus") ? messagePlus : messageMinus,
+          });
+        }
+      })
+      .catch((err) => console.error({ err }))
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    // subscribe to routeChangeStart event
+    const onRouteChangeStart = () => {
+      if (products.length > 0) setIsLoading(true);
+    };
+    router.events.on('routeChangeStart', onRouteChangeStart);
+
+    // unsubscribe on component destroy in useEffect return function
+    return () => {
+      router.events.off('routeChangeStart', onRouteChangeStart);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products]);
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -306,7 +358,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               className="flex flex-wrap border-b sm:grid grid-template-product-details"
               key={`cart-product-${product.id}`}
             >
-              <div className="row-start-1 row-end-4 py-3.5">
+              <div className="row-start-1 row-end-5 py-3.5">
                 <figure className="relative w-16 shrink-0">
                   {product?.image_url && (
                     <Image
@@ -340,22 +392,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
                       disabled={product?.quantity == 1}
                       onClick={() => {
-                        setIsLoading(true);
-                        updateItemQuantity(
-                          product?.sku_code,
-                          product?.quantity - 1
-                        )
-                          .then((result) => {
-                            if (result.status !== 200) {
-                              setError(true);
-                              setErrorMessage({
-                                icon: "alert",
-                                type: "warning",
-                                title: `Ocurrió un error con el producto seleccionado, por favor intente nuevamente.`,
-                              });
-                            }
-                          })
-                          .finally(() => setIsLoading(false));
+                        increDecreQuantity(product, "minus");
                       }}
                     >
                       <span
@@ -378,26 +415,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       data-action="increment"
                       className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
                       onClick={() => {
-                        setIsLoading(true);
-                        updateItemQuantity(
-                          product?.sku_code,
-                          product.quantity + 1
-                        )
-                          .then((result) => {
-                            if (result.status !== 200) {
-                              const message =
-                                result.status === 422
-                                  ? `No hay más unidades disponibles para el producto seleccionado.`
-                                  : "Ocurrió un error al agregar más unidades al producto, por favor intente nuevamente";
-                              setError(true);
-                              setErrorMessage({
-                                icon: "alert",
-                                type: "warning",
-                                title: message,
-                              });
-                            }
-                          })
-                          .finally(() => setIsLoading(false));
+                        increDecreQuantity(product, "plus");
                       }}
                     >
                       <span className="m-auto">+</span>
@@ -428,8 +446,33 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
                 {product.formatted_unit_amount}
               </div>
-              <div className="w-full mt-3 sm:hidden"></div>
+              {/* Shipping */}
+              <div className="w-full sm:hidden"></div>
+              <>
+                <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
+                  Envío{" "}
+                  {Object.entries(product.item.shipping_category).length > 0 && (
+                    <>
+                      <b>{product.item.shipping_category.name}</b>
+                    </>
+                  )}
+                </div>
+                <div className="px-3 text-right">
+                  {" "}
+                  {/* <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
+                    {Object.entries(product.item.shipping_category).length > 0 && hasShipment ? "1x" : "-"}
+                  </span> */}
+                </div>
+                <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
+                  {" "}
+                  {/* {(Object.entries(product.item.shipping_category).length > 0 && hasShipment)
+                    ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
+                    : "-"
+                  } */}
+                </div>
+              </>
               {/* ********* Services ******** */}
+              <div className="w-full mt-3 sm:hidden"></div>
               {showWarranty ? (
                 <>
                   <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
@@ -541,13 +584,30 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {formatPrice(
+                {/* {formatPrice(
                   showProductTotal(
                     product?.total_amount_float,
                     product?.["installlation_service"],
                     product?.["warranty_service"]
                   )
-                )}
+                )} */}
+                {Object.entries(product.item["shipping_category"]).length > 0
+                  ? formatPrice(
+                    showProductTotal(
+                      product?.total_amount_float,
+                      product?.["installlation_service"],
+                      product?.["warranty_service"]
+                    ) +
+                    getShippingPrice(product)
+                  )
+                  : formatPrice(
+                    showProductTotal(
+                      product?.total_amount_float,
+                      product?.["installlation_service"],
+                      product?.["warranty_service"]
+                    )
+                  )
+                }
               </div>
             </div>
           );
@@ -567,9 +627,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
             Ir a la tienda
           </CustomLink>
         ) : (
-          <button onClick={handleNext} className={classNames("mt-6 button button-primary relative flex items-center")} disabled={isLoading}>
+          <button onClick={handleNext} className={classNames("mt-6 button button-primary relative flex gap-2 items-center")} disabled={isLoading}>
             Continuar
-            {isLoading && <Spinner position="absolute" />}
           </button>
         )}
       </div>
@@ -581,30 +640,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           close={() => setError(false)}
         />
       )}
-      {isLoading && (
-        <div
-          role="status"
-          className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-gray-100 bg-opacity-25"
-        >
-          <svg
-            aria-hidden="true"
-            className="w-20 h-20 text-gray-200 animate-spin fill-blue-dark"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
-            />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
-          <span className="sr-only">Loading...</span>
-        </div>
-      )}
+      {isLoading && <Spinner position="absolute" size="large" />}
       {isActivedModal && (
         <ModalSuccess {...paramModal} isActive={isActivedModal}>
           {modalChild}

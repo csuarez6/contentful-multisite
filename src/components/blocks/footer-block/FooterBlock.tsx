@@ -24,7 +24,7 @@ const FooterBlock: React.FC<INavigation> = ({
         {name ?? "Footer"}
       </h2>
       <div className="xl:container mx-auto">
-        <div className="pb-[25px] pt-6 px-2 sm:px-4 lg:px-8 2xl:px-[46px] lg:pt-10 lg:pb-[62px]">
+        <div className="pb-[25px] pt-6 px-2 sm:px-4 lg:px-8 2xl:px-[70px] lg:pt-10 lg:pb-[62px]">
           <div className="xl:flex-row md:gap-x-32 pb-3 items-center flex flex-col md:items-start">
 
             {/* Desktop  Navigation*/}
@@ -55,6 +55,27 @@ const FooterBlock: React.FC<INavigation> = ({
                   </div>
                 ))}
               </div>
+              <ul className="hidden md:flex flex-wrap justify-center pt-4 pb-2 gap-2 md:gap-16 xl:justify-start relative xl:-left-3">
+                {secondaryNavCollection?.items?.map((item, i) => (
+                  <li key={item.sys.id + i}>
+                    <CustomLink
+                      className="text-white hover:text-neutral-90"
+                      content={item}
+                    >
+                      <span className="sr-only">
+                        {item.promoTitle ?? item.name}
+                      </span>
+                      {item.promoIcon && (
+                        <Icon
+                          icon={item.promoIcon}
+                          className="h-[46px] w-[46px] p-[7px]"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </CustomLink>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Mobile navigation */}
@@ -115,7 +136,7 @@ const FooterBlock: React.FC<INavigation> = ({
             </div>
 
           </div>
-          <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-2 md:gap-16">
+          <ul className="flex flex-wrap justify-center pt-4 pb-2 gap-2 md:gap-16 xl:justify-start relative md:hidden">
             {secondaryNavCollection?.items?.map((item, i) => (
               <li key={item.sys.id + i}>
                 <CustomLink
