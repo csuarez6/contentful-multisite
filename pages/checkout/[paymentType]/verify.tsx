@@ -276,6 +276,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       setIsLoading(false);
     }
   };
+  
   const dropServices = (product) => {
     if (product) {
       if (!showWarranty && product["warranty_service"]?.length > 0) {
