@@ -39,7 +39,7 @@ const defaultFormatOptions: Options = {
       return <ul>{children}</ul>;
     },
     [BLOCKS.OL_LIST]: (_node: any, children: any) => {
-      return <ol>{children}</ol>;
+      return <ol className="list-decimal">{children}</ol>;
     },
     [BLOCKS.LIST_ITEM]: (_node: any, children: any) => {
       return (
