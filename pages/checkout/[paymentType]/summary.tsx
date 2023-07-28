@@ -19,7 +19,6 @@ const CheckoutSummary = () => {
   const lastPath = useLastPath();
   const { isLogged, user } = useContext(AuthContext);
   const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha, isPaymentProcess } = useContext(CheckoutContext);
-
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +26,6 @@ const CheckoutSummary = () => {
     return (
       (resource) => `${resource?.metadata?.name ?? "*****"} ${resource?.metadata?.lastName ?? "*****"}`
     )(isLogged ? user : order);
-
   }, [user, order, isLogged]);
 
   useEffect(() => {
