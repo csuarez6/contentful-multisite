@@ -142,7 +142,7 @@ const CallbackPage = () => {
           console.warn(err);
           const _errorMessage = !navigator.onLine
             ? "Comprueba tu conexión a internet e intenta de nuevo por favor."
-            : `Ocurrió un error al obtener información del Producto con SKU: ${sku}.`
+            : `Ocurrió un error al obtener información del Producto con SKU: ${sku}.`;
           setErrorMessage(_errorMessage);
         })
         .finally(() => setIsLoading(false));
