@@ -129,8 +129,8 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
 
           <div className="relative tabs-styles">
             <Tab.Panels as={Fragment}>
-              {featuredContentsCollection.items.map((collection) => (
-                !isCustomLink(collection) && (
+              {featuredContentsCollection.items.map((collection) => {
+                return !isCustomLink(collection) && (
                   <Tab.Panel key={`${collection.name}_content`} className="focus:outline-none">
                     <Transition
                       appear
@@ -159,8 +159,8 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       )}
                     </Transition>
                   </Tab.Panel>
-                )
-              ))}
+                );
+              })}
             </Tab.Panels>
           </div>
         </Tab.Group>
