@@ -217,11 +217,25 @@ h6 {
 .custom-text a {
   @apply mt-2
 }
-.custom-text ol ol{
+/* .custom-text ol ol{
   list-style-type: lower-alpha;
+  list-style-position: inside;
   margin: 0 0 0 20px;
+} */
+
+/* ol li div{
+  display: inline-grid
+} */
+ol {
+  @apply list-decimal list-inside
+}
+ol li div {
+  @apply inline-grid
 }
 
+ol ol {
+  @apply ml-5 list-[lower-alpha]
+}
 .tabs-styles h3 {
   @apply mb-7 
 }
