@@ -58,7 +58,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
       setHasRoundedImage(checkMediaQuery() && view?.roundedImage)
     );
   }, [view?.roundedImage]);
-
+    console.log(view?.bannerWidth)
   return (
     <section
       id={blockId ? blockId : sysId}
@@ -76,6 +76,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
         <div
           className={
             view?.bannerWidth === "Largo" ? "w-screen mx-auto" : "relative"
+
           }
         >
           <article
@@ -165,7 +166,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                   !image && "justify-center"
                 )}
               >
-                <div className="grid space-y-3 w-full">
+                <div className={classNames("grid space-y-3 w-full md:p-0",view?.bannerWidth === "Largo" && "px-[18px] sm:px-6 md:p-0")}>
                   {pretitle && (
                     <p
                       className={classNames(
