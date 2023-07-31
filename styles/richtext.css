@@ -16,7 +16,7 @@
 }
 
 .richtext-container table tr td {
-  @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none;
+  @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-left first:text-left text-grey-30 first:text-grey-10 leading-none align-top;
 }
 
 .richtext-container ul {
