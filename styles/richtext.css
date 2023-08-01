@@ -32,6 +32,10 @@
   @apply list-decimal;
 }
 
+.richtext-container ol ol {
+  list-style-type: upper-alpha;
+}
+
 .richtext-container :is(ol, ul) li div {
   @apply inline-block w-fit max-w-[calc(100%-50px)] align-top;
 }
