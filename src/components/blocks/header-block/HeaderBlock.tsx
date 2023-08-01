@@ -208,7 +208,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
-      <div className="relative hidden lg:block">
+      <div className="relative hidden lg:block overflow-x-hidden">
         <div
           className={classNames(
             "absolute inset-x-0 h-full",
@@ -286,8 +286,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 ))}
               </ul>
 
-              <div className="bg-category-orange-light justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px]">
-                <p className="flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
+              <div className={classNames(
+                "bg-category-orange-light relative justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px]",
+                "before:absolute before:w-[50vw] before:h-full before:bg-category-orange-light"
+              )}>
+                <p className="relative flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
                   <span className="w-8 h-8 shrink-0">
                     <Icon icon="emergency" className="w-full h-full mx-auto" />
                   </span>
@@ -351,7 +354,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               <div className="flex items-center justify-end flex-grow md:py-5">
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full h-10 lg:max-w-xs lg:pr-6"
+                  className="w-full h-10 lg:max-w-xs pr-4 2lg:pr-5 xl:pr-6"
                 >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
                     <label htmlFor="search" className="flex items-center">
@@ -373,9 +376,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 {utilityNavCollection?.items?.length > 0 && (
                   <nav
                     aria-label="Utility"
-                    className="relative hidden px-5 2lg:px-6 lg:block border-x border-neutral-70"
+                    className="relative hidden px-4 2lg:px-5 xl:px-6 lg:block border-x border-neutral-70"
                   >
-                    <ul className={classNames("flex 2lg:gap-1 flex-nowrap")}>
+                    <ul className={classNames("flex 2lg:gap-0.5 xl:gap-1 flex-nowrap")}>
                       {utilityNavCollection.items.map(item => (
                         <li className="flex w-[68px] 2lg:w-[75px] justify-center" key={item.sys.id}>
                           <CustomLink
@@ -428,7 +431,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     </ul>
                   </nav>
                 )}
-                <div className="hidden gap-5 2lg:gap-6 pl-5 2lg:pl-6 lg:flex lg:h-full">
+                <div className="hidden gap-4 2lg:gap-5 xl:gap-6 pl-4 2lg:pl-5 xl:pl-6 lg:flex lg:h-full">
                   {session?.user ? (
                     <>
                       <Menu
@@ -538,7 +541,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     <>
                       <CustomLink
                         content={{ urlPaths: ["/registro"] }}
-                        className="flex items-center h-full text-center button button-primary"
+                        className="flex items-center h-full text-center button button-primary whitespace-nowrap"
                       >
                         Regístrate
                       </CustomLink>
@@ -548,7 +551,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
                           ],
                         }}
-                        className="flex items-center h-full text-center button button-outline"
+                        className="flex items-center h-full text-center button button-outline whitespace-nowrap"
                       >
                         Inicia sesión
                       </CustomLink>
