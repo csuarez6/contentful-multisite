@@ -211,35 +211,21 @@ h6 {
 }
 
 .custom-text p {
-  @apply mb-4
+  @apply mb-4;
 }
 
 .custom-text a {
-  @apply mt-2
-}
-/* .custom-text ol ol{
-  list-style-type: lower-alpha;
-  list-style-position: inside;
-  margin: 0 0 0 20px;
-} */
-
-/* ol li div{
-  display: inline-grid
-} */
-ol {
-  @apply list-decimal list-inside
-}
-ol li div {
-  @apply inline-grid
+  @apply mt-2;
 }
 
 ol ol {
-  @apply ml-5 list-[lower-alpha]
-}
-.tabs-styles h3 {
-  @apply mb-7 
+  @apply list-[lower-alpha];
 }
 
-.tabs-styles table { 
-  @apply mb-6
+.tabs-styles h3 {
+  @apply mb-7;
+}
+
+.tabs-styles table {
+  @apply mb-6;
 }
