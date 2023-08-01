@@ -81,9 +81,9 @@ export const getIntegrationAppToken = async (): Promise<string> => {
 };
 
 /* For CRUD in the order, items and similars (4 hours) */
-export const getMerchantToken = async () => {
+export const getMerchantToken = async (cache=true) => {
   try {
-    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN)
+    if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN && cache)
       return CACHE_TOKENS.MERCHANT_TOKEN;
 
     let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
@@ -98,11 +98,12 @@ export const getMerchantToken = async () => {
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
     });
-
-    CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
-    setTimeout(() => {
-      CACHE_TOKENS.MERCHANT_TOKEN = null;
-    }, 1000 * parseInt(expires_in));
+    if(cache){
+      CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
+      setTimeout(() => {
+        CACHE_TOKENS.MERCHANT_TOKEN = null;
+      }, 1000 * parseInt(expires_in));
+    }
     return accessToken;
   } catch (error) {
     console.error("Error on «getMerchantToken»", error);
