@@ -7,6 +7,7 @@ import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 import HelpButton from "@/components/organisms/help-button/HelpButton";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import Link from "next/link";
+import Script from "next/script";
 
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection, __typename }) => {
   const { preview } = layout;
@@ -47,25 +48,9 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   return (
     <>
       <Head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3S4QR5WBJ9" />
-        <script
-          id="google-analytics"
-          dangerouslySetInnerHTML={
-            {
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){
-                  dataLayer.push(arguments);
-                }
-                gtag('js', new Date()); 
-                gtag('config', 'G-3S4QR5WBJ9');
-              `
-            }
-          }
-        />
-
         <title>{title}</title>
         <meta charSet="utf-8" />
+
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -104,15 +89,31 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
           </>
         )}
         <meta name="robots" content="noindex, nofollow" />
-
-        {domain &&
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={addProductJsonLd()}
-            key="product-jsonld"
-          />
-        }
       </Head>
+      <Script
+        id="google-analytics"
+        dangerouslySetInnerHTML={
+          {
+            __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){
+                  dataLayer.push(arguments);
+                }
+                gtag('js', new Date()); 
+                gtag('config', 'G-3S4QR5WBJ9');
+              `
+          }
+        }
+      />
+      {domain &&
+        <Script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={addProductJsonLd()}
+          key="product-jsonld"
+          id="product-jsonld"
+        />
+      }
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-3S4QR5WBJ9" />
 
       {preview && (
         <div className="z-30 fixed bottom-0 left-0 w-full h-8 flex justify-between items-center py-2 px-4 bg-category-orange-light-40 text-white font-semibold">
