@@ -23,8 +23,8 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
               )}
               {featuredContentsCollection?.items?.length > 0 && (
                 <Tab.Group as="div" className="grid items-baseline px-3 2md:p-0 gap-6 2md:gap-12">
-                  <div className="flex justify-center 2md:justify-start overflow-x-auto">
-                    <div className="flex 2md:border-b border-transparent">
+                  <div className="flex overflow-x-auto">
+                    <div className="flex 2md:border-b border-transparent max-2md:mx-auto">
                       <Tab.List className="flex">
                         {featuredContentsCollection.items.map((tab: IPromoContent) =>
                           <Tab
