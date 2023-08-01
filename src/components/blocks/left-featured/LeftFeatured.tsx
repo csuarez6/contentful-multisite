@@ -58,7 +58,6 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
       setHasRoundedImage(checkMediaQuery() && view?.roundedImage)
     );
   }, [view?.roundedImage]);
-    console.log(view?.bannerWidth)
   return (
     <section
       id={blockId ? blockId : sysId}
