@@ -19,12 +19,17 @@
   @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none align-top;
 }
 
+.richtext-container ul,
+.richtext-container ol {
+  @apply list-inside mb-3 ml-2;
+}
+
 .richtext-container ul {
-  @apply list-disc list-inside mb-3;
+  @apply list-disc;
 }
 
 .richtext-container ol {
-  @apply list-decimal list-inside mb-3;
+  @apply list-decimal;
 }
 
 .richtext-container :is(ol, ul) li div {

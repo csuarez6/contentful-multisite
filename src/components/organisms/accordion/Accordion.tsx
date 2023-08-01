@@ -79,7 +79,7 @@ const Accordion: React.FC<any> = ({
                         el.promoIcon && displayIcon ? "px-10" : ""
                       }`}
                     >
-                      <div className="text-base text-gray-500 px-7 custom-text">
+                      <div className="text-base text-gray-500 px-7 richtext-container custom-text">
                         {documentToReactComponents(
                           el?.promoDescription?.json,
                           defaultFormatOptions

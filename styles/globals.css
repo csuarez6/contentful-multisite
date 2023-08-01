@@ -211,21 +211,21 @@ h6 {
 }
 
 .custom-text p {
-  @apply mb-4
+  @apply mb-4;
 }
 
 .custom-text a {
-  @apply mt-2
+  @apply mt-2;
 }
-.custom-text ol ol{
-  list-style-type: lower-alpha;
-  margin: 0 0 0 20px;
+
+ol ol {
+  @apply list-[lower-alpha];
 }
 
 .tabs-styles h3 {
-  @apply mb-7 
+  @apply mb-7;
 }
 
-.tabs-styles table { 
-  @apply mb-6
+.tabs-styles table {
+  @apply mb-6;
 }
