@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { LegacyRef, createRef, useState } from 'react';
 import Textbox from '@/components/atoms/input/textbox/TextBox';
 import CheckBox from '@/components/atoms/input/checkbox/CheckBox';
-import SelectInput from '@/components/atoms/selectInput/SelectInput';
 import { IForm } from './SignUpForm.mocks';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +8,7 @@ import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
 import { customerSchema } from '@/schemas/customer';
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
+import SelectAtom from '@/components/atoms/select-atom/SelectAtom';
 
 export interface ITemsForm {
     name: string;
@@ -42,11 +42,17 @@ const defaultValues: ITemsForm = {
 const schema = customerSchema;
 
 const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }) => {
-
+    const refForm: LegacyRef<HTMLFormElement> = createRef();
     const [tokenReCaptcha, setTokenReCaptcha] = useState<string>('');
     const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
     const [activeModal, setActiveModal] = useState<boolean>(false);
-    const { register, handleSubmit, formState: { errors, isValid, submitCount }, reset
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        clearErrors,
+        formState: { errors, isValid, submitCount },
+        reset
     } = useForm<ITemsForm>({
         mode: 'onChange',
         resolver: yupResolver(schema),
@@ -54,7 +60,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         defaultValues
     });
 
-    const onSubmit = async (data: ITemsForm) => {
+    const onSubmit = (data: ITemsForm) => {
         setActiveModal(false);
         setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
         if (onSubmitForm) {
@@ -68,12 +74,24 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         }
     };
 
+    const onError = (errors) => {
+        const errorsKey = Object.keys(errors);
+        if (errorsKey.length > 0) {
+            const errorInput: HTMLElement = refForm.current?.querySelector(`.${errorsKey[0]}`);
+            if (errorInput) {
+                const header = document.getElementById('header');
+                const scrollTop = errorInput.getBoundingClientRect().top + window.scrollY - header.offsetHeight - 16;
+                window.requestAnimationFrame(() => window.scrollTo({ top: scrollTop }));
+            }
+        }
+    };
+
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <p className="pb-5 font-bold">
                 Todos los campos marcados con <span className='text-red-700'>*</span> son obligatorios.
             </p>
-            <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+            <form ref={refForm} className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit, onError)}>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-10'>
                     <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
                     <Textbox
@@ -82,7 +100,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         placeholder='Nombre'
                         className='form-input'
                         isError={!!errors.name}
-                        errorMessage={errors?.name?.message} 
+                        errorMessage={errors?.name?.message}
                         autoComplete="on"
                         {...register('name')}
                         isRequired={true}
@@ -98,14 +116,18 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         {...register("lastName")}
                         isRequired={true}
                     />
-                    <SelectInput
-                        selectOptions={selectOptions}
-                        label='Elige el tipo de documento de identidad'
+                    <SelectAtom
                         id='documentType'
+                        labelSelect='Elige el tipo de documento de identidad'
+                        listedContents={selectOptions}
                         isError={!!errors.documentType}
                         errorMessage={errors?.documentType?.message}
-                        {...register('documentType')}
                         isRequired={true}
+                        handleChange={(value) => {
+                            setValue("documentType", value);
+                            clearErrors('documentType');
+                        }}
+                        {...register('documentType')}
                     />
                     <Textbox
                         id='documentNumber'
@@ -212,7 +234,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                     </div>
                     <div className='self-end mt-[25px]'>
                         {cta &&
-                            <button type="submit" disabled={!isValid} className={`button ${cta?.className}`}>
+                            <button type="submit" disabled={!isValid || Object.keys(errors).length > 0} className={`button ${cta?.className}`}>
                                 {cta?.text}
                             </button>
                         }

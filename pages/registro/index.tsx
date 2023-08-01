@@ -106,15 +106,15 @@ const SignUp = () => {
     modal: dataModal,
     selectOptions: [
       {
-        label: "Seleccione un tipo de documento",
+        text: "Seleccione un tipo de documento",
         value: "",
       },
       {
-        label: "Cedula",
+        text: "Cedula",
         value: "cedula",
       },
       {
-        label: "Pasaporte",
+        text: "Pasaporte",
         value: "pasaporte",
       },
     ],

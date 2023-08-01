@@ -17,11 +17,10 @@ export interface IListContent {
   text: string;
 }
 
-export interface ISelect
-  extends DetailedHTMLProps<
-    SelectHTMLAttributes<HTMLSelectElement>,
-    HTMLSelectElement
-  > {
+export interface ISelect extends DetailedHTMLProps<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  HTMLSelectElement
+> {
   name?: string;
   listedContents: Array<IListContent & IProductCategory>;
   labelSelect?: string;
@@ -29,20 +28,26 @@ export interface ISelect
   handleChange?: (evt) => void;
   image?: IImageAsset;
   firstOptionSelected?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+  isRequired?: boolean;
 }
 
 const SelectAtom: React.FC<ISelect> = forwardRef(
   (
     {
+      id,
       name,
       listedContents,
       labelSelect,
       handleChange,
       placeholder = "Seleccionar",
       firstOptionSelected,
+      isError,
+      errorMessage,
+      isRequired,
       ...rest
-    },
-    ref
+    }, ref
   ) => {
     const defaultOption = firstOptionSelected ? JSON.parse(JSON.stringify(listedContents[0])) : { value: "", text: placeholder };
     const [selectedOption, setSelectedOption] = useState(defaultOption);
@@ -58,14 +63,14 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       const input = getInput();
       input.value = evt.value;
       setSelectedOption(evt);
-      handleChange(evt.value);
+      if (handleChange) handleChange(evt.value);
     };
 
     const onChangeInput = (evt) => {
       const { value } = evt.target;
       const currentOption = listedContents.find((el) => el.value === value);
       setSelectedOption(currentOption ?? defaultOption);
-      handleChange(value);
+      if (handleChange) handleChange(value);
     };
 
     if (listedContents.length === 0) return;
@@ -74,6 +79,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       <>
         {/* <div className="sr-only"> */}
         <select
+          {...id && { id }}
           name={name}
           data-testid="select"
           ref={ref}
@@ -95,16 +101,25 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
         <Listbox value={selectedOption} onChange={onChange}>
           {({ open }) => (
-            <div className="flex flex-col gap-1">
+            <div className={classNames(
+              "flex flex-col gap-1",
+              id,
+              isError && "has-error"
+            )}>
               {labelSelect && (
-                <Listbox.Label className="text-lg leading-none text-grey-30 font-medium">
-                  {labelSelect}
+                <Listbox.Label
+                  className={classNames(
+                    "block text-lg text-grey-30 font-medium",
+                    isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'
+                  )}
+                >
+                  {labelSelect}{isRequired && <span className='text-red-700'>*</span>}
                 </Listbox.Label>
               )}
-              <div className="grid gap-2 mt-1 relative">
+              <div className="grid gap-2 relative">
                 <Listbox.Button
                   className={classNames(
-                    "flex gap-[10px] flex-nowrap p-3 bg-white border border-grey-60 rounded hover:border-grey-30 group",
+                    "flex gap-[10px] flex-nowrap px-3 py-[6px] bg-white border border-grey-60 rounded hover:border-grey-30 group",
                     open && "border-lucuma-60"
                   )}
                 >
@@ -152,6 +167,9 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   </div>
                 </Transition>
               </div>
+              {isError &&
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errorMessage}</p>
+              }
             </div>
           )}
         </Listbox>

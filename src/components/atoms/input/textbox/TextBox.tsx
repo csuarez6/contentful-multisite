@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import Icon from '../../icon/Icon';
 import { ITextBox } from './TextBox.mocks';
+import { classNames } from '@/utils/functions';
 
 const Textbox: React.FC<ITextBox> = forwardRef(({
     label,
@@ -14,10 +15,14 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
 }, ref) => {
     const [viewPassword, setViewPassword] = React.useState(false);
     return (
-        <div className="w-full flex-col flex gap-1">
+        <div className={classNames(
+            "w-full flex-col flex gap-1",
+            id,
+            isError && "has-error"
+        )}>
             {label && (
                 <label className={`block text-lg ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'}`} {...id && { htmlFor: id }}>
-                    {label}{ isRequired && <span className='text-red-700'>*</span> }
+                    {label}{isRequired && <span className='text-red-700'>*</span>}
                 </label>
             )}
             <div className='relative'>
