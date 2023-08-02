@@ -9,7 +9,6 @@ import CheckoutContext from "@/context/Checkout";
 import AuthContext from "@/context/Auth";
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import { Address, AddressCreate } from "@commercelayer/sdk";
-import { State } from "@/pages/api/static/states";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
@@ -20,9 +19,9 @@ import citiesFile from '@/utils/static/cities-co.json';
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
-import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
+import SelectAtom, { IListContent } from "@/components/atoms/select-atom/SelectAtom";
 
 interface IAddress {
   id?: string;
@@ -119,7 +118,7 @@ export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedMod
 const CheckoutAddress = () => {
   const router = useRouter();
   const lastPath = useLastPath();
-  const [states, setStates] = useState<State[]>([]);
+  const [states, setStates] = useState([]);
   const [shippingCities, setShippingCities] = useState([]);
   const [billingCities, setBillingCities] = useState([]);
   const { isLogged, user } = useContext(AuthContext);
@@ -136,6 +135,9 @@ const CheckoutAddress = () => {
     register,
     handleSubmit,
     control,
+    setValue,
+    getValues,
+    clearErrors,
     formState: { errors },
     reset,
   } = useForm<IAddresses>({
@@ -173,7 +175,11 @@ const CheckoutAddress = () => {
   useEffect(() => {
     (async () => {
       const states = await (await fetch(`/api/static/states`)).json();
-      setStates(states);
+      const mappedStates: IListContent[] = states.map((state) => ({
+        text: state.name,
+        value: state.name,
+      }));
+      setStates(mappedStates);
     })();
   }, []);
 
@@ -181,8 +187,12 @@ const CheckoutAddress = () => {
     if (!shippingStateWatched) return;
     (async () => {
       const citiesFinal: any[] = [{ city: "Seleccione un Municipio", isCovered: "false" }];
-      const cities: string[] = await getCitiesByState(shippingStateWatched);
-      setShippingCities(citiesFinal.concat(cities));
+      const cities: any[] = await getCitiesByState(shippingStateWatched);
+      const mappedCities = cities.map((city, index) => ({
+        text: city.city,
+        value: (index == 0) ? "" : city.city,
+      }));
+      setShippingCities(citiesFinal.concat(mappedCities));
       if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });
       attempts.current = 1;
     })();
@@ -201,8 +211,12 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (!billingStateWatched) return;
     (async () => {
-      const cities: string[] = await getCitiesByState(billingStateWatched);
-      setBillingCities(cities);
+      const cities: any[] = await getCitiesByState(billingStateWatched);
+      const mappedCities = cities.map((city) => ({
+        text: city.city,
+        value: city.city,
+      }));
+      setBillingCities(mappedCities);
     })();
   }, [billingStateWatched]);
 
@@ -372,16 +386,17 @@ const CheckoutAddress = () => {
             </div>
           }
           <div className="w-full">
-            <SelectInput
-              label="Escoge tu departamento"
-              id="shipping-state-code"
-              selectOptions={states.map((state) => ({
-                label: state.name,
-                value: state.name,
-              }))}
-              {...register("shippingAddress.stateCode")}
-              placeholder="Seleccionar"
+            <SelectAtom
+              id='shipping-state-code'
+              labelSelect='Escoge tu departamento'
+              listedContents={states}
               isRequired={true}
+              currentValue={getValues("shippingAddress.stateCode")}
+              handleChange={(value) => {
+                setValue("shippingAddress.stateCode", value);
+                clearErrors('shippingAddress.stateCode');
+              }}
+              {...register('shippingAddress.stateCode')}
             />
             {errors.shippingAddress?.stateCode && (
               <p className="text-red-600">
@@ -390,16 +405,18 @@ const CheckoutAddress = () => {
             )}
           </div>
           <div className="w-full">
-            <SelectInput
-              id="shipping-city-code"
-              label="Escoge tu municipio"
-              selectOptions={shippingCities.map((city, index) => ({
-                label: city.city,
-                value: (index == 0) ? "" : city.city,
-              }))}
-              {...register("shippingAddress.cityCode")}
-              placeholder="Seleccionar"
+            <SelectAtom
+              key={getValues("shippingAddress.cityCode")}
+              id='shipping-city-code'
+              labelSelect='Escoge tu municipio'
+              listedContents={shippingCities}
               isRequired={true}
+              currentValue={getValues("shippingAddress.cityCode")}
+              handleChange={(value) => {
+                setValue("shippingAddress.cityCode", value);
+                clearErrors('shippingAddress.cityCode');
+              }}
+              {...register('shippingAddress.cityCode')}
             />
             {errors?.shippingAddress?.cityCode && (
               <p className="text-red-600">
@@ -490,16 +507,17 @@ const CheckoutAddress = () => {
                 Direccion de facturación
               </h4>
               <div className="w-full">
-                <SelectInput
-                  label="Escoge tu departamento"
-                  id="billingAddress-state-code"
-                  selectOptions={states.map((state) => ({
-                    label: state.name,
-                    value: state.name,
-                  }))}
-                  {...register("billingAddress.stateCode")}
-                  placeholder="Seleccionar"
+                <SelectAtom
+                  id='billingAddress-state-code'
+                  labelSelect='Escoge tu departamento'
+                  listedContents={states}
                   isRequired={true}
+                  currentValue={getValues("billingAddress.stateCode")}
+                  handleChange={(value) => {
+                    setValue("billingAddress.stateCode", value);
+                    clearErrors('billingAddress.stateCode');
+                  }}
+                  {...register('billingAddress.stateCode')}
                 />
                 {errors.billingAddress?.stateCode && (
                   <p className="text-red-600">
@@ -508,16 +526,17 @@ const CheckoutAddress = () => {
                 )}
               </div>
               <div className="w-full">
-                <SelectInput
-                  id="billingCities-city-code"
-                  label="Escoge tu municipio"
-                  selectOptions={billingCities.map((city) => ({
-                    label: city.city,
-                    value: city.city,
-                  }))}
-                  {...register("billingAddress.cityCode")}
-                  placeholder="Seleccionar"
+                <SelectAtom
+                  id='billingCities-city-code'
+                  labelSelect='Escoge tu municipio'
+                  listedContents={billingCities}
                   isRequired={true}
+                  currentValue={getValues("billingAddress.cityCode")}
+                  handleChange={(value) => {
+                    setValue("billingAddress.cityCode", value);
+                    clearErrors('billingAddress.cityCode');
+                  }}
+                  {...register('billingAddress.cityCode')}
                 />
                 {errors?.billingAddress?.cityCode && (
                   <p className="text-red-600">

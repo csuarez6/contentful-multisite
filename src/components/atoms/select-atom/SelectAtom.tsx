@@ -31,6 +31,7 @@ export interface ISelect extends DetailedHTMLProps<
   isError?: boolean;
   errorMessage?: string;
   isRequired?: boolean;
+  currentValue?: string;
 }
 
 const SelectAtom: React.FC<ISelect> = forwardRef(
@@ -46,18 +47,27 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       isError,
       errorMessage,
       isRequired,
+      currentValue,
       ...rest
     }, ref
   ) => {
     const defaultOption = firstOptionSelected ? JSON.parse(JSON.stringify(listedContents[0])) : { value: "", text: placeholder };
     const [selectedOption, setSelectedOption] = useState(defaultOption);
-    const getInput = (): HTMLSelectElement => document.querySelector(`select[name=${name}]`);
+    const getInput = (): HTMLSelectElement => document.querySelector(`select[name="${name}"]`);
 
     useEffect(() => {
       const input = getInput();
       input?.addEventListener("change", onChangeInput, false);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {     
+      if (currentValue !== selectedOption?.value) {
+        const currentOption = listedContents?.find(el => el.value === currentValue);
+        if (currentOption) setSelectedOption(currentOption);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentValue, listedContents]);
 
     const onChange = (evt) => {
       const input = getInput();
@@ -92,7 +102,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
             {placeholder}
           </option>
           {listedContents?.map((content) => (
-            <option key={content.value} value={content.value}>
+            <option key={content.value + "-src"} value={content.value}>
               {content.text}
             </option>
           ))}
@@ -148,10 +158,10 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   leaveTo="opacity-0"
                 >
                   <div className="absolute z-20 min-w-full top-full mt-2">
-                    <Listbox.Options className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4">
+                    <Listbox.Options className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 max-h-[420px] overflow-auto">
                       {listedContents?.map((content) => (
                         <Listbox.Option
-                          key={content.value}
+                          key={content.value + "-list"}
                           value={content}
                           className={classNames(
                             "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90",
