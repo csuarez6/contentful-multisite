@@ -1,4 +1,5 @@
 import { FC, ForwardedRef, forwardRef } from 'react';
+import { classNames } from '@/utils/functions';
 
 export interface ICheckBox {
     id?: string,
@@ -13,7 +14,11 @@ export interface ICheckBox {
 
 const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
     return (
-        <div className="relative">
+        <div className={classNames(
+            "relative",
+            id,
+            isError && "has-error"
+        )}>
             <div className="mt-6 flex items-center space-x-2">
                 <div className="flex h-5 items-center">
                     <input
@@ -25,7 +30,6 @@ const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMes
                         type="checkbox"
                         className="h-5 w-5 accent-neutral-30 rounded-lg border-blue-dark"
                         {...rest}
-                        
                     />
                 </div>
                 <label {...id && { htmlFor: id }} className={`text-base font-medium ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'} `}>

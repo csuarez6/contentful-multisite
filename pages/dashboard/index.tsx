@@ -21,8 +21,8 @@ import Textbox from "@/components/atoms/input/textbox/TextBox";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SelectInput from "@/components/atoms/selectInput/SelectInput";
 import Icon from "@/components/atoms/icon/Icon";
+import SelectAtom from "@/components/atoms/select-atom/SelectAtom";
 
 const subNavigation = [
   { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
@@ -104,6 +104,8 @@ const Dashboard = () => {
     register,
     handleSubmit,
     setValue,
+    getValues,
+    clearErrors,
     formState: { errors, isValid },
   } = useForm<ITemsForm>({
     mode: "onChange",
@@ -114,51 +116,51 @@ const Dashboard = () => {
 
   const selectOptions = [
     {
-      label: "Seleccione un tipo de documento",
+      text: "Seleccione un tipo de documento",
       value: "",
     },
     {
-      label: "Nit",
+      text: "Nit",
       value: "Nit",
     },
     {
-      label: "Registro civil de nacimiento",
+      text: "Registro civil de nacimiento",
       value: "registroCivilDeNacimiento",
     },
     {
-      label: "Tarjeta de Identidad",
+      text: "Tarjeta de Identidad",
       value: "tarjetaDeIdentidad",
     },
     {
-      label: "Cédula de ciudadanía",
+      text: "Cédula de ciudadanía",
       value: "cedula",
     },
     {
-      label: "Cédula de extranjeria",
+      text: "Cédula de extranjeria",
       value: "cedulaDeExtranjeria",
     },
     {
-      label: "Pasaporte",
+      text: "Pasaporte",
       value: "pasaporte",
     },
     {
-      label: "Documento identificación extranjero",
+      text: "Documento identificación extranjero",
       value: "documentoIdentificaciónExtranjero",
     },
     {
-      label: "Sin identificación del exterior",
+      text: "Sin identificación del exterior",
       value: "sinIdentificaciónDelExterior",
     },
     {
-      label: "PEP",
+      text: "PEP",
       value: "pep",
     },
     {
-      label: "NIF del extranjero",
+      text: "NIF del extranjero",
       value: "nifDelExtranjero",
     },
     {
-      label: "NUIP",
+      text: "NUIP",
       value: "nuip",
     },
   ];
@@ -356,15 +358,19 @@ const Dashboard = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
-                          <SelectInput
-                            selectOptions={selectOptions}
-                            className=""
-                            label="Tipo de documento"
-                            id="documentType"
+                          <SelectAtom
+                            id='documentType'
+                            labelSelect='Tipo de documento'
+                            listedContents={selectOptions}
+                            isRequired={true}
+                            currentValue={getValues("documentType")}
                             isError={!!errors.documentType}
                             errorMessage={errors?.documentType?.message}
-                            {...register("documentType")}
-                            isRequired={true}
+                            handleChange={(value) => {
+                              setValue("documentType", value);
+                              clearErrors('documentType');
+                            }}
+                            {...register('documentType')}
                           />
 
                           <Textbox

@@ -6,9 +6,10 @@ import React, {
   DetailedHTMLProps,
   SelectHTMLAttributes,
 } from "react";
+import uuid from "react-uuid";
 import { Listbox, Transition } from "@headlessui/react";
 import Icon from "../icon/Icon";
-import { classNames } from "@/utils/functions";
+import { classNames, getElementOffset } from "@/utils/functions";
 import { IProductCategory } from "@/lib/interfaces/content-filter-cf.interface";
 import { IImageAsset } from "@/lib/interfaces/assets-cf.interface";
 
@@ -17,11 +18,10 @@ export interface IListContent {
   text: string;
 }
 
-export interface ISelect
-  extends DetailedHTMLProps<
-    SelectHTMLAttributes<HTMLSelectElement>,
-    HTMLSelectElement
-  > {
+export interface ISelect extends DetailedHTMLProps<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  HTMLSelectElement
+> {
   name?: string;
   listedContents: Array<IListContent & IProductCategory>;
   labelSelect?: string;
@@ -29,44 +29,105 @@ export interface ISelect
   handleChange?: (evt) => void;
   image?: IImageAsset;
   firstOptionSelected?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+  isRequired?: boolean;
+  currentValue?: string;
 }
 
 const SelectAtom: React.FC<ISelect> = forwardRef(
   (
     {
+      id,
       name,
       listedContents,
       labelSelect,
       handleChange,
       placeholder = "Seleccionar",
       firstOptionSelected,
+      isError,
+      errorMessage,
+      isRequired,
+      currentValue = undefined,
       ...rest
-    },
-    ref
+    }, ref
   ) => {
+    const defaultMinHeight = 50;
+    const defaultMaxHeight = 420;
+    const [parentId, setParentId] = useState(null);
+    const [maxHeight, setMaxHeight] = useState(defaultMaxHeight);
     const defaultOption = firstOptionSelected ? JSON.parse(JSON.stringify(listedContents[0])) : { value: "", text: placeholder };
     const [selectedOption, setSelectedOption] = useState(defaultOption);
-    const getInput = (): HTMLSelectElement => document.querySelector(`select[name=${name}]`);
+    const getInput = (): HTMLSelectElement => document.querySelector(`select[name="${name}"]`);
 
-    useEffect(() => {
-      const input = getInput();
-      input?.addEventListener("change", onChangeInput, false);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const calculateHeight = () => {
+      const parentElement = document.getElementById(parentId);
+      if (parentElement) {
+        const mainContainer: HTMLElement = parentElement.closest('.main-container');
+
+        if (mainContainer) {
+          const offsetParent = getElementOffset(parentElement);
+          const totalContainerTop = offsetParent.top - mainContainer.offsetTop;
+          const totalContainerBottom = mainContainer.offsetHeight - (totalContainerTop + parentElement.offsetHeight);
+
+          const newMaxHeight = totalContainerBottom >= defaultMinHeight && totalContainerBottom <= defaultMaxHeight
+            ? totalContainerBottom
+            : totalContainerBottom > defaultMaxHeight
+              ? defaultMaxHeight
+              : defaultMinHeight;
+          setMaxHeight(newMaxHeight - 20);
+        } else {
+          setMaxHeight(defaultMaxHeight - 20);
+        }
+      }
+    };
 
     const onChange = (evt) => {
       const input = getInput();
       input.value = evt.value;
       setSelectedOption(evt);
-      handleChange(evt.value);
+      if (handleChange) handleChange(evt.value);
     };
 
     const onChangeInput = (evt) => {
       const { value } = evt.target;
       const currentOption = listedContents.find((el) => el.value === value);
       setSelectedOption(currentOption ?? defaultOption);
-      handleChange(value);
+      if (handleChange) handleChange(value);
     };
+
+    useEffect(() => {
+      if (currentValue !== selectedOption?.value) {
+        const currentOption = listedContents?.find(el => el.value === currentValue);
+        if (currentOption) setSelectedOption(currentOption);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentValue, listedContents]);
+
+    useEffect(() => {
+      if (!parentId) {
+        const _uuid = uuid();
+        setParentId(`select-${_uuid}`);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      calculateHeight();
+      window.addEventListener("resize", calculateHeight);
+      return () => window.removeEventListener("resize", calculateHeight);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parentId]);
+
+    useEffect(() => {
+      const input = getInput();
+      input?.addEventListener("change", onChangeInput, false);
+
+      return () => {
+        input?.removeEventListener("change", onChangeInput, false);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (listedContents.length === 0) return;
 
@@ -74,6 +135,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       <>
         {/* <div className="sr-only"> */}
         <select
+          {...id && { id }}
           name={name}
           data-testid="select"
           ref={ref}
@@ -86,7 +148,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
             {placeholder}
           </option>
           {listedContents?.map((content) => (
-            <option key={content.value} value={content.value}>
+            <option key={content.value + "-src"} value={content.value}>
               {content.text}
             </option>
           ))}
@@ -95,16 +157,28 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
         <Listbox value={selectedOption} onChange={onChange}>
           {({ open }) => (
-            <div className="flex flex-col gap-1">
+            <div
+              id={parentId}
+              className={classNames(
+                "flex flex-col gap-1",
+                id,
+                isError && "has-error"
+              )}
+            >
               {labelSelect && (
-                <Listbox.Label className="text-lg leading-none text-grey-30 font-medium">
-                  {labelSelect}
+                <Listbox.Label
+                  className={classNames(
+                    "block text-lg text-grey-30 font-medium",
+                    isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'
+                  )}
+                >
+                  {labelSelect}{isRequired && <span className='text-red-700'>*</span>}
                 </Listbox.Label>
               )}
-              <div className="grid gap-2 mt-1 relative">
+              <div className="grid gap-2 relative">
                 <Listbox.Button
                   className={classNames(
-                    "flex gap-[10px] flex-nowrap p-3 bg-white border border-grey-60 rounded hover:border-grey-30 group",
+                    "flex gap-[10px] flex-nowrap px-3 py-[6px] bg-white border border-grey-60 rounded hover:border-grey-30 group",
                     open && "border-lucuma-60"
                   )}
                 >
@@ -133,10 +207,16 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   leaveTo="opacity-0"
                 >
                   <div className="absolute z-20 min-w-full top-full mt-2">
-                    <Listbox.Options className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4">
+                    <Listbox.Options
+                      className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 overflow-auto"
+                      style={{
+                        minHeight: `${defaultMinHeight}px`,
+                        maxHeight: `${maxHeight}px`
+                      }}
+                    >
                       {listedContents?.map((content) => (
                         <Listbox.Option
-                          key={content.value}
+                          key={content.value + "-list"}
                           value={content}
                           className={classNames(
                             "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90",
@@ -152,6 +232,9 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   </div>
                 </Transition>
               </div>
+              {isError &&
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errorMessage}</p>
+              }
             </div>
           )}
         </Listbox>

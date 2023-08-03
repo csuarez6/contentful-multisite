@@ -227,3 +227,16 @@ export const isAvailableVantilisto = (marketId: string, priceVantiListo: string,
 export const formatPrice = (value) => {
   return "$" + new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2 }).format(value);
 };
+
+export const getElementOffset = (el) => {
+  let top = 0;
+  let left = 0;
+
+  do {
+    if (!isNaN(el.offsetTop)) top += el.offsetTop;
+    if (!isNaN(el.offsetLeft)) left += el.offsetLeft;
+    el = el.offsetParent;
+  } while (el);
+
+  return { top, left };
+};

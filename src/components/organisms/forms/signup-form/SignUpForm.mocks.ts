@@ -1,7 +1,7 @@
-import { ISelectInputOption } from "@/components/atoms/selectInput/SelectInput";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { MocksModalSuccessProps } from "../../modal-success/ModalSuccess.mocks";
 import { ITemsForm } from "./SignUpForm";
+import { IListContent } from "@/components/atoms/select-atom/SelectAtom";
 
 interface IButtonForm {
     text: string;
@@ -11,7 +11,7 @@ export interface IForm {
     onSubmitForm?: (e: ITemsForm) => any
     cta: IButtonForm;
     modal?: IPromoContent,
-    selectOptions?: ISelectInputOption[]
+    selectOptions?: IListContent[]
 }
 
 const data: IForm = {
@@ -23,15 +23,15 @@ const data: IForm = {
     modal: MocksModalSuccessProps.data,
     selectOptions: [
         {
-            label: 'Seleccione un tipo de documento',
+            text: 'Seleccione un tipo de documento',
             value: ''
         },
         {
-            label: 'Cedula',
+            text: 'Cedula',
             value: 'cedula'
         },
         {
-            label: 'Pasaporte',
+            text: 'Pasaporte',
             value: 'pasaporte'
         },
     ]
