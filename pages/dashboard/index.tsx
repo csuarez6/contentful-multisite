@@ -359,18 +359,18 @@ const Dashboard = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
                           <SelectAtom
-                              id='documentType'
-                              labelSelect='Tipo de documento'
-                              listedContents={selectOptions}
-                              isRequired={true}
-                              currentValue={getValues("documentType")}
-                              isError={!!errors.documentType}
-                              errorMessage={errors?.documentType?.message}
-                              handleChange={(value) => {
-                                  setValue("documentType", value);
-                                  clearErrors('documentType');
-                              }}
-                              {...register('documentType')}
+                            id='documentType'
+                            labelSelect='Tipo de documento'
+                            listedContents={selectOptions}
+                            isRequired={true}
+                            currentValue={getValues("documentType")}
+                            isError={!!errors.documentType}
+                            errorMessage={errors?.documentType?.message}
+                            handleChange={(value) => {
+                              setValue("documentType", value);
+                              clearErrors('documentType');
+                            }}
+                            {...register('documentType')}
                           />
 
                           <Textbox

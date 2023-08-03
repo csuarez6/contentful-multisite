@@ -6,9 +6,10 @@ import React, {
   DetailedHTMLProps,
   SelectHTMLAttributes,
 } from "react";
+import uuid from "react-uuid";
 import { Listbox, Transition } from "@headlessui/react";
 import Icon from "../icon/Icon";
-import { classNames } from "@/utils/functions";
+import { classNames, getElementOffset } from "@/utils/functions";
 import { IProductCategory } from "@/lib/interfaces/content-filter-cf.interface";
 import { IImageAsset } from "@/lib/interfaces/assets-cf.interface";
 
@@ -47,27 +48,39 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       isError,
       errorMessage,
       isRequired,
-      currentValue,
+      currentValue = undefined,
       ...rest
     }, ref
   ) => {
+    const defaultMinHeight = 50;
+    const defaultMaxHeight = 420;
+    const [parentId, setParentId] = useState(null);
+    const [maxHeight, setMaxHeight] = useState(defaultMaxHeight);
     const defaultOption = firstOptionSelected ? JSON.parse(JSON.stringify(listedContents[0])) : { value: "", text: placeholder };
     const [selectedOption, setSelectedOption] = useState(defaultOption);
     const getInput = (): HTMLSelectElement => document.querySelector(`select[name="${name}"]`);
 
-    useEffect(() => {
-      const input = getInput();
-      input?.addEventListener("change", onChangeInput, false);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const calculateHeight = () => {
+      const parentElement = document.getElementById(parentId);
+      if (parentElement) {
+        const mainContainer: HTMLElement = parentElement.closest('.main-container');
 
-    useEffect(() => {     
-      if (currentValue !== selectedOption?.value) {
-        const currentOption = listedContents?.find(el => el.value === currentValue);
-        if (currentOption) setSelectedOption(currentOption);
+        if (mainContainer) {
+          const offsetParent = getElementOffset(parentElement);
+          const totalContainerTop = offsetParent.top - mainContainer.offsetTop;
+          const totalContainerBottom = mainContainer.offsetHeight - (totalContainerTop + parentElement.offsetHeight);
+
+          const newMaxHeight = totalContainerBottom >= defaultMinHeight && totalContainerBottom <= defaultMaxHeight
+            ? totalContainerBottom
+            : totalContainerBottom > defaultMaxHeight
+              ? defaultMaxHeight
+              : defaultMinHeight;
+          setMaxHeight(newMaxHeight - 20);
+        } else {
+          setMaxHeight(defaultMaxHeight - 20);
+        }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentValue, listedContents]);
+    };
 
     const onChange = (evt) => {
       const input = getInput();
@@ -82,6 +95,39 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       setSelectedOption(currentOption ?? defaultOption);
       if (handleChange) handleChange(value);
     };
+
+    useEffect(() => {
+      if (currentValue !== selectedOption?.value) {
+        const currentOption = listedContents?.find(el => el.value === currentValue);
+        if (currentOption) setSelectedOption(currentOption);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentValue, listedContents]);
+
+    useEffect(() => {
+      if (!parentId) {
+        const _uuid = uuid();
+        setParentId(`select-${_uuid}`);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      calculateHeight();
+      window.addEventListener("resize", calculateHeight);
+      return () => window.removeEventListener("resize", calculateHeight);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parentId]);
+
+    useEffect(() => {
+      const input = getInput();
+      input?.addEventListener("change", onChangeInput, false);
+
+      return () => {
+        input?.removeEventListener("change", onChangeInput, false);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (listedContents.length === 0) return;
 
@@ -111,11 +157,14 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
         <Listbox value={selectedOption} onChange={onChange}>
           {({ open }) => (
-            <div className={classNames(
-              "flex flex-col gap-1",
-              id,
-              isError && "has-error"
-            )}>
+            <div
+              id={parentId}
+              className={classNames(
+                "flex flex-col gap-1",
+                id,
+                isError && "has-error"
+              )}
+            >
               {labelSelect && (
                 <Listbox.Label
                   className={classNames(
@@ -158,7 +207,13 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   leaveTo="opacity-0"
                 >
                   <div className="absolute z-20 min-w-full top-full mt-2">
-                    <Listbox.Options className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 max-h-[420px] overflow-auto">
+                    <Listbox.Options
+                      className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 overflow-auto"
+                      style={{
+                        minHeight: `${defaultMinHeight}px`,
+                        maxHeight: `${maxHeight}px`
+                      }}
+                    >
                       {listedContents?.map((content) => (
                         <Listbox.Option
                           key={content.value + "-list"}
