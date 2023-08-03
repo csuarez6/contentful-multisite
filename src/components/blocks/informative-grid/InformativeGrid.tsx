@@ -24,18 +24,19 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
   title,
   description,
   featuredContentsCollection,
+  footerText,
   view,
   ctaCollection,
   blockId,
   sysId
 }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
-  let descriptionJson = description?.json ;
-  if(attachLinksToRichtextContent && descriptionJson){
+  let descriptionJson = description?.json;
+  if (attachLinksToRichtextContent && descriptionJson) {
     descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? []);
   }
   return (
-    <section id={blockId ? blockId : sysId} className="section grid gap-9">
+    <section id={blockId ?? sysId} className="section grid gap-9">
       {view?.backgroundColor && (
         <div className="absolute inset-0 -mx-[50vw] -z-10">
           <div className={classNames("w-screen h-full mx-auto", backgroundColor.background)}></div>
@@ -71,20 +72,24 @@ const InformativeGridBlock: React.FC<IPromoBlock> = ({
           ))}
         </div>
       )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
+      )}
       {ctaCollection?.items?.length > 0 &&
         <div className="flex justify-center">
-          {ctaCollection.items.map(
-            (item) =>
-              (item.externalLink || item.internalLink?.urlPaths?.[0]) && (
-                <div className="ml-2" key={item.name}>
-                  <CustomLink
-                    content={item}
-                    className={classNames("w-fit button", getButtonType(view.buttonType ?? "Contorno"))}
-                  >
-                    {item.promoTitle ?? item.name}
-                  </CustomLink>
-                </div>
-              )
+          {ctaCollection.items.map((item) =>
+            (item.externalLink || item.internalLink?.urlPaths?.[0]) && (
+              <div className="ml-2" key={item.name}>
+                <CustomLink
+                  content={item}
+                  className={classNames("w-fit button", getButtonType(view.buttonType ?? "Contorno"))}
+                >
+                  {item.promoTitle ?? item.name}
+                </CustomLink>
+              </div>
+            )
           )}
         </div>
       }

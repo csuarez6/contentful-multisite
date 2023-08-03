@@ -24,6 +24,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   pretitle,
   description,
   featuredContentsCollection,
+  footerText,
   view,
   blockId,
   sysId,
@@ -52,7 +53,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   });
 
   return (
-    <section id={blockId ? blockId : sysId} className="section grid gap-9">
+    <section id={blockId ?? sysId} className="section grid gap-9">
       {(title || description) && (
         <div className={classNames(
           "grid gap-6",
@@ -164,6 +165,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
             </Tab.Panels>
           </div>
         </Tab.Group>
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
       )}
     </section>
   );

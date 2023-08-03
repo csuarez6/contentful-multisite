@@ -10,6 +10,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
     description,
     featuredContentsCollection,
     listedContentsCollection,
+    footerText,
     blockId,
     sysId,
     view,
@@ -17,7 +18,7 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
 
   return (
     <section
-      id={blockId ? blockId : sysId}
+      id={blockId ?? sysId}
       className={classNames(
         "grid grid-cols-1 section gap-9",
         view?.alignTitle !== "Centrado" && "lg:grid-cols-3",
@@ -70,6 +71,11 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
         </div>
       )}
 
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container col-span-full">
+          {documentToReactComponents(footerText.json)}
+        </div>
+      )}
     </section>
   );
 };

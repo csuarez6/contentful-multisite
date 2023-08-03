@@ -8,12 +8,13 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
   title,
   description,
   featuredContentsCollection,
+  footerText,
   blockId,
   sysId,
   view,
 }) => {
   return (
-    <section id={blockId? blockId: sysId} className="section flex flex-col gap-8">
+    <section id={blockId ?? sysId} className="section flex flex-col gap-8">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark title is-1">{title}</h2>}
@@ -24,7 +25,18 @@ const AccordionBlock: React.FC<IAccordionBlock> = ({
           )}
         </div>
       )}
-      {featuredContentsCollection?.items?.length > 0 && <Accordion featuredContents={featuredContentsCollection}  columnsSize={view?.columnsSize} displayIcon={view?.displayIcon}/>}
+      {featuredContentsCollection?.items?.length > 0 && (
+        <Accordion
+          featuredContents={featuredContentsCollection}
+          columnsSize={view?.columnsSize}
+          displayIcon={view?.displayIcon}
+        />
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
+      )}
     </section>
   );
 };

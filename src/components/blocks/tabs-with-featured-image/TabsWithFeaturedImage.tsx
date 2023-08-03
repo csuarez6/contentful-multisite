@@ -7,9 +7,9 @@ import Image from "next/image";
 import Icon from "@/components/atoms/icon/Icon";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
-const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description, image, featuredContentsCollection, blockId, sysId }) => {
+const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description, image, featuredContentsCollection, footerText, blockId, sysId }) => {
   return (
-    <section id={blockId ? blockId : sysId} className="grid section gap-7 md:gap-9">
+    <section id={blockId ?? sysId} className="grid section gap-7 md:gap-9">
       <div className="flex flex-col">
         <hr className="min-w-[100vw] -mx-[50vw] border-t-2 pb-6 border-[#F3F3F3] hidden 2md:block" />
         <div className="flex flex-col 2md:flex-row items-start gap-6 lg:gap-[62px] 2md:mb-6">
@@ -112,6 +112,11 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
             </div>
           )}
         </div>
+        {footerText && (
+          <div className="text-neutral-30 text-size-p2 richtext-container">
+            {documentToReactComponents(footerText.json)}
+          </div>
+        )}
       </div>
     </section>
   );

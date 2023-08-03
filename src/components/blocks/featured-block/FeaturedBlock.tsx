@@ -9,41 +9,42 @@ import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
+const options = {
+  renderNode: {
+    [BLOCKS.EMBEDDED_ASSET]: (node) => {
+      const { url, title, description, width, height } = node.data.target;
+      return url ? (
+        <>
+          <figure className="w-full mt-10 block text-center">
+            <Image
+              src={url}
+              className="w-auto h-auto max-w-full"
+              alt={title ?? description}
+              width={width}
+              height={height}
+            />
+          </figure>
+        </>
+      ) : null;
+    },
+  },
+};
+
 const FeaturedBlock: React.FC<IPromoBlock> = ({
   title,
   description,
   image,
   view,
   featuredContentsCollection,
+  footerText,
   ctaCollection,
   blockId,
   sysId
 }) => {
-  const options = {
-    renderNode: {
-      [BLOCKS.EMBEDDED_ASSET]: (node) => {
-        const { url, title, description, width, height } = node.data.target;
-        return url ? (
-          <>
-            <figure className="w-full mt-10 block text-center">
-              <Image
-                src={url}
-                className="w-auto h-auto max-w-full"
-                alt={title ?? description}
-                width={width}
-                height={height}
-              />
-            </figure>
-          </>
-        ) : null;
-      },
-    },
-  };
-
   const imageAlignLocal = view?.imageAlign === "Derecha" ? "order-last" : "";
 
   return (
-    <section id={blockId ? blockId : sysId} className="section grid">
+    <section id={blockId ?? sysId} className="section grid">
       <div className="relative">
         <div
           className={classNames(
@@ -138,6 +139,11 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                       ))}
                     </div>
                   )}
+                  {footerText && (
+                    <div className="text-neutral-30 text-size-p2 richtext-container">
+                      {documentToReactComponents(footerText.json)}
+                    </div>
+                  )}
                   {ctaCollection?.items?.length > 0 && (
                     <div className="flex my-6 gap-2">
                       {ctaCollection.items.map(
@@ -167,7 +173,8 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                   )}
                 </div>
               </div>
-            )}
+            )
+          }
         </div>
       </div>
     </section>

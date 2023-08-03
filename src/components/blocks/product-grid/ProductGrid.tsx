@@ -9,22 +9,27 @@ const classColumns = (columns = 1) => {
   return classes.join(" ");
 };
 
-const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, view, blockId, sysId }) => {
+const ProductGrid: React.FC<IPromoBlock> = ({ featuredContentsCollection, description, title, footerText, view, blockId, sysId }) => {
   return (
-    <section id={blockId? blockId: sysId} className='section grid gap-7 md:gap-9'>
-      {(title || description) &&
+    <section id={blockId ?? sysId} className='section grid gap-7 md:gap-9'>
+      {(title || description) && (
         <div className='flex flex-col gap-10'>
           {title && <h2 className='text-center text-blue-dark'>{title}</h2>}
           {description && <div className='title is-4 text-center text-blue-dark'>{documentToReactComponents(description.json)}</div>}
         </div>
-      }
-      {featuredContentsCollection?.items?.length > 0 &&
+      )}
+      {featuredContentsCollection?.items?.length > 0 && (
         <div className={classNames("w-full grid gap-9", classColumns(view?.columnsSize))}>
           {featuredContentsCollection.items.map((el) => (
             <PlanCard {...el} key={`${title}-${el.promoTitle}`} isReverse={view?.isReverse} buttonType={view.buttonType} />
           ))}
         </div>
-      }
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
+      )}
     </section>
   );
 };

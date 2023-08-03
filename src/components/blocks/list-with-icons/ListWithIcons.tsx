@@ -15,10 +15,10 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { iconLeft, iconRight } from "@/components/atoms/icons-indicators-slider";
 
-const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, ctaCollection, blockId, sysId }) => {
+const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, footerText, ctaCollection, blockId, sysId }) => {
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
-  const _blockId = blockId ? blockId : sysId;
+  const _blockId = blockId ?? sysId;
   const [isRichtext, setIsRichtext] = useState(false);
 
   useEffect(() => {
@@ -126,6 +126,12 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             </div>
           </div>
         </>
+      )}
+
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
       )}
 
       {ctaCollection?.items?.length > 0 && (
