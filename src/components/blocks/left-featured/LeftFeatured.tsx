@@ -43,6 +43,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   description,
   image,
   ctaCollection,
+  footerText,
   blockId,
   sysId,
   view,
@@ -60,7 +61,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
   }, [view?.roundedImage]);
   return (
     <section
-      id={blockId ? blockId : sysId}
+      id={blockId ?? sysId}
       className="grid section gap-7 md:gap-9"
     >
       {title && (
@@ -123,12 +124,8 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                 <figure
                   className={classNames(
                     "relative w-full md:w-1/2 shrink-0 grow md:h-full overflow-hidden",
-                    view?.bannerWidth === "Largo" &&
-                      !view?.roundedImage &&
-                      "xl:w-[630px]",
-                    view?.bannerWidth !== "Largo" &&
-                      !view?.roundedImage &&
-                      "xl:w-[488px]",
+                    view?.bannerWidth === "Largo" && !view?.roundedImage && "xl:w-[630px]",
+                    view?.bannerWidth !== "Largo" && !view?.roundedImage && "xl:w-[488px]",
                     view?.roundedImage && "xl:w-[630px] !h-auto"
                   )}
                   style={{
@@ -146,12 +143,8 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                     height={image?.height}
                     className={classNames(
                       "object-cover w-full h-full aspect-[328/180]",
-                      view?.bannerWidth === "Largo" &&
-                        !view?.roundedImage &&
-                        "md:aspect-[630/428] xl:w-[630px]",
-                      view?.bannerWidth !== "Largo" &&
-                        !view?.roundedImage &&
-                        "md:aspect-[488/400] xl:w-[488px]",
+                      view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
+                      view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
                       view?.roundedImage && "xl:w-[630px]"
                     )}
                   />
@@ -165,7 +158,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                   !image && "justify-center"
                 )}
               >
-                <div className={classNames("grid space-y-3 w-full md:p-0",view?.bannerWidth === "Largo" && "px-[18px] sm:px-6 md:p-0")}>
+                <div className={classNames("grid space-y-3 w-full md:p-0", view?.bannerWidth === "Largo" && "px-[18px] sm:px-6 md:p-0")}>
                   {pretitle && (
                     <p
                       className={classNames(
@@ -226,20 +219,21 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                             {(cta.externalLink ||
                               cta.internalLink ||
                               cta.__typename == CONTENTFUL_TYPENAMES.PAGE) && (
-                              <CustomLink
-                                content={cta}
-                                className={classNames(
-                                  "button w-full sm:w-auto flex justify-center text-center",
-                                  view?.buttonType
-                                    ? getButtonType(view?.buttonType)
-                                    : idx === 0
-                                    ? "button-primary"
-                                    : "button-outline"
-                                )}
-                              >
-                                {getLinkProps(cta).textLink}
-                              </CustomLink>
-                            )}
+                                <CustomLink
+                                  content={cta}
+                                  className={classNames(
+                                    "button w-full sm:w-auto flex justify-center text-center",
+                                    view?.buttonType
+                                      ? getButtonType(view?.buttonType)
+                                      : idx === 0
+                                        ? "button-primary"
+                                        : "button-outline"
+                                  )}
+                                >
+                                  {getLinkProps(cta).textLink}
+                                </CustomLink>
+                              )
+                            }
                             {cta?.linkView === "Modal" &&
                               cta?.content?.json && (
                                 <div className="flex gap-2">
@@ -268,7 +262,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                                     getButtonType("Contorno")
                                   )}
                                 >
-                                  { cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name }
+                                  {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
                                 </CustomLink>
                               </div>
                             )}
@@ -283,6 +277,11 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
           </article>
         </div>
       </div>
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
+      )}
     </section>
   );
 };

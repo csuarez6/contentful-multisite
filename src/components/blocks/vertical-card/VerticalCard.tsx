@@ -10,15 +10,23 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { iconLeft, iconRight } from '@/components/atoms/icons-indicators-slider';
 
-const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featuredContentsCollection, view, blockId, sysId }) => {
+const VerticalCardBlock: React.FC<IPromoBlock> = ({
+  title,
+  description,
+  featuredContentsCollection,
+  view,
+  footerText,
+  blockId,
+  sysId
+}) => {
   return (
-    <section id={blockId ? blockId : sysId} className="section grid gap-9">
-      {(title || description) &&
+    <section id={blockId ?? sysId} className="section grid gap-9">
+      {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}
           {description && <div className="text-blue-dark text-size-p1">{documentToReactComponents(description.json)}</div>}
         </div>
-      }
+      )}
       {featuredContentsCollection?.items?.length > 0 && (
         <>
           <div className={classNames("justify-center gap-9 hidden md:grid", classColumns(view?.columnsSize))}>
@@ -92,6 +100,11 @@ const VerticalCardBlock: React.FC<IPromoBlock> = ({ title, description, featured
             </div>
           </div>
         </>
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
       )}
     </section>
   );

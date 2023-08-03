@@ -167,7 +167,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
                       })}
                     </div>
                   )}
-                  {linkView === "Modal" && content.json && (
+                  {linkView === "Modal" && content?.json && (
                     <div className="flex gap-2">
                       <ButtonAtom
                         type={linkView}

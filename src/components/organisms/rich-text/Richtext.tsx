@@ -12,7 +12,7 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, su
     descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? promoDescription?.links);
   }
   return (
-    <section id={blockId ? blockId : sysId} className="section">
+    <section id={blockId ?? sysId} className="section">
       <div className="grid gap-2 mb-6">
         {(promoTitle || title) && (
           <h2 className="text-4xl text-blue-dark text-center font-bold">{promoTitle ?? title}</h2>)

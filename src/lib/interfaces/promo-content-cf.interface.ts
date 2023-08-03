@@ -80,8 +80,9 @@ export interface IPromoBlock extends IBlockProps {
     listedForm?: IInquiryForm;
     ctaCollection?: {
         items?: IPromoContent[]
-    }
-    links?: ILink[]
+    };
+    links?: ILink[];
+    footerText?: IRichText;
 }
 
 export interface IFormBlock extends IBlockProps {

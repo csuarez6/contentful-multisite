@@ -54,7 +54,7 @@ const CarouselCategoriesBlock: React.FC<
 
     return (
       <section
-        id={blockId ? blockId : sysId}
+        id={blockId ?? sysId}
         className={classNames(
           "section gap-9 flex flex-col",
           view?.alignTitle === "Left" && "md:flex-row md:gap-0"

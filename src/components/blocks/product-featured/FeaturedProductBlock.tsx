@@ -7,12 +7,13 @@ const FeaturedProductBlock: React.FC<IPromoBlock> = ({
   title,
   description,
   listedContentsCollection,
+  footerText,
   blockId,
   sysId,
 }) => {
   return (
     (listedContentsCollection?.items?.length > 0 || title || description) && (
-    <section id={blockId ? blockId : sysId} className="section grid gap-9">
+    <section id={blockId ?? sysId} className="section grid gap-9">
       {(title || description) && (
         <div className="grid gap-9 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -26,8 +27,13 @@ const FeaturedProductBlock: React.FC<IPromoBlock> = ({
       {listedContentsCollection?.items?.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 2lg:grid-cols-3 gap-6">
           {listedContentsCollection.items.map((el) => (
-            <FeaturedProduct {...el} key={el.sys.id} />
+            <FeaturedProduct {...el} key={el?.sys?.id} />
           ))}
+        </div>
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
         </div>
       )}
     </section>

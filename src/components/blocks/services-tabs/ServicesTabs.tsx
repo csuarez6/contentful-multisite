@@ -58,7 +58,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
   const prevSlideId = `prevSlide_${sysId}`;
 
   return (
-    <section id={blockId ? blockId : sysId} className="section grid gap-9">
+    <section id={blockId ?? sysId} className="section grid gap-9">
       {(pretitle || title || description) && (
         <div className="grid gap-3">
           {pretitle && <p className="title is-4 !font-semibold text-category-blue-dark text-center">{pretitle}</p>}

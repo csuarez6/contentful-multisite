@@ -51,6 +51,7 @@ const VerticalCardGrillBlock: React.FC<IPromoBlock> = ({
   title,
   description,
   featuredContentsCollection,
+  footerText,
   blockId,
   sysId
 }) => {
@@ -70,7 +71,7 @@ const VerticalCardGrillBlock: React.FC<IPromoBlock> = ({
   };
 
   return (
-    <section id={blockId ? blockId : sysId} className="section grid grid-cols-1 gap-5 md:gap-9">
+    <section id={blockId ?? sysId} className="section grid grid-cols-1 gap-5 md:gap-9">
       {(title || description) && (
         <div className='flex flex-col gap-6'>
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -154,6 +155,11 @@ const VerticalCardGrillBlock: React.FC<IPromoBlock> = ({
             </div>
           </div>
         </>
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
+        </div>
       )}
     </section>
   );

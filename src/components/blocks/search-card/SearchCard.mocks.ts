@@ -25,7 +25,8 @@ const data: IPromoBlock = {
   },
   view: {
     buttonType: "",
-    backgroundColor: ""
+    backgroundColor: "",
+    alignTitle: "Centrado"
   }
 };
 

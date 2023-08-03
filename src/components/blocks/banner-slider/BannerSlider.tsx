@@ -43,7 +43,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
   const prevSlideId = `prevSlide_${sysId}`;
 
   return (
-    <section id={blockId ? blockId : sysId} className="grid">
+    <section id={blockId ?? sysId} className="grid">
       {featuredContentsCollection?.items?.length > 0 && (
         <div className="container px-28 mx-auto relative">
           <div className="-mx-[50vw]">

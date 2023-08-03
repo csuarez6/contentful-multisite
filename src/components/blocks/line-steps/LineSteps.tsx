@@ -19,6 +19,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   featuredContentsCollection,
   ctaCollection,
   image,
+  footerText,
   blockId,
   sysId,
 }) => {
@@ -49,7 +50,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
 
   return (
     <section
-      id={blockId ? blockId : sysId}
+      id={blockId ?? sysId}
       className="section grid gap-7 md:gap-9"
     >
       {(title || description) && (
@@ -150,6 +151,11 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
               </div>
             </div>
           )}
+        </div>
+      )}
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
         </div>
       )}
       {ctaCollection?.items?.length > 0 && (

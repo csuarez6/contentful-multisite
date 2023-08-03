@@ -10,10 +10,10 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
   title,
   description,
   featuredContentsCollection,
+  footerText,
   blockId,
   sysId,
 }) => {
-
   const [tabIndex, setTabIndex] = useState(0);
   const updateTabIndex = (evt) => {
     setTabIndex(evt);
@@ -47,7 +47,7 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
   };
 
   return (
-    <section id={blockId ? blockId : sysId} className="grid px-0 section gap-7 md:gap-9 md:px-8">
+    <section id={blockId ?? sysId} className="grid px-0 section gap-7 md:gap-9 md:px-8">
       {title && <h2 className="text-center text-blue-dark">{title}</h2>}
       {description && <div className="text-blue-dark text-size-p1">{documentToReactComponents(description.json)}</div>}
 
@@ -158,6 +158,12 @@ const VerticalTabsBlock: React.FC<IPromoBlock> = ({
               )}
             </Disclosure>
           ))}
+        </div>
+      )}
+
+      {footerText && (
+        <div className="text-neutral-30 text-size-p2 richtext-container">
+          {documentToReactComponents(footerText.json)}
         </div>
       )}
     </section>

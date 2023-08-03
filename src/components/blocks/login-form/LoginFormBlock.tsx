@@ -16,7 +16,7 @@ export interface IForm extends IPromoBlock {
 
 const LoginFormBlock: React.FC<IForm> = ({ formData, blockId, sysId }) => {
     return (
-        <section id={blockId ? blockId : sysId} className="section grid gap-9 my-[53px] lg:w-[544px] mx-auto">
+        <section id={blockId ?? sysId} className="section grid gap-9 my-[53px] lg:w-[544px] mx-auto">
             <LoginForm {...formData} />
         </section>
     );

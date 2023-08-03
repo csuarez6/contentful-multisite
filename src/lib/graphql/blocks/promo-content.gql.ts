@@ -136,6 +136,9 @@ const BlockPromoContentQuery = `
   }
   blockId
   promoIcon
+  footerText {
+    json
+  }
 `;
 
 export default BlockPromoContentQuery;
