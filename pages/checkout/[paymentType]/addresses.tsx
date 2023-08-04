@@ -23,7 +23,7 @@ import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import SelectAtom, { IListContent } from "@/components/atoms/select-atom/SelectAtom";
 
-interface IAddress {
+export interface IAddress {
   id?: string;
   stateCode: string;
   cityCode: string;
@@ -35,7 +35,7 @@ interface IAddress {
   isSameAsBillingAddress?: boolean
 }
 
-interface IAddresses {
+export interface IAddresses {
   shippingAddress: IAddress,
   billingAddress?: IAddress
 }
