@@ -25,6 +25,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
     content,
     ctaLabel,
     linkView,
+    mediaInternalLink,
   } = props;
 
   return (
@@ -89,6 +90,19 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
                 defaultFormatOptions
               )}
             </ButtonAtom>
+          </div>
+        )}
+        {mediaInternalLink && (
+          <div className="flex items-end mt-3 flex-grow">
+            <CustomLink
+              content={props}
+              className={classNames(
+                "button !rounded-full",
+                getButtonType(buttonType ?? "Contorno")
+              )}
+            >
+              {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
+            </CustomLink>
           </div>
         )}
       </div>
