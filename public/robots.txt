@@ -1,9 +1,10 @@
-# Block all crawlers for /pruebas-de-contenidos
+# Block all Agents to all content
 User-agent: *
-# Disallow: /pruebas-de-contenidos
 Disallow: /
+# Disallow: /pruebas-de-contenidos
 
-# Allow all crawlers
-# User-agent: *
-# Allow: /
+# Allow for Vanti Spider
+User-agent: Screaming Frog SEO Spider
+Disallow:
+
 # Sitemap: https://www.grupovanti.com/sitemap.xml
