@@ -253,17 +253,15 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                               </div>
                             )}
                             {cta?.mediaInternalLink && (
-                              <div className="flex items-end flex-grow">
-                                <CustomLink
-                                  content={cta}
-                                  className={classNames(
-                                    "button",
-                                    getButtonType("Contorno")
-                                  )}
-                                >
-                                  {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
-                                </CustomLink>
-                              </div>
+                              <CustomLink
+                                content={cta}
+                                className={classNames(
+                                  "button w-full sm:w-auto flex justify-center text-center",
+                                  getButtonType("Contorno")
+                                )}
+                              >
+                                {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
+                              </CustomLink>
                             )}
                           </div>
                         );
