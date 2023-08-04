@@ -31,6 +31,7 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
   view,
   linkView,
   content,
+  linkParameters,
 }) => {
   const propsLink = {
     name,
@@ -38,7 +39,8 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
     internalLink,
     externalLink,
     ctaLabel,
-    linkView
+    linkView,
+    linkParameters,
   };
 
   return (
