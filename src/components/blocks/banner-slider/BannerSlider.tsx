@@ -101,7 +101,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 className="relative w-full h-[472px] sm:h-[394px] banner-slider"
               >
                 {featuredContentsCollection.items.map((content) => (
-                  content && content.promoImage?.url && (
+                  content?.promoImage?.url && (
                     <SwiperSlide className="flex flex-col sm:flex-row gap-4 md:gap-0 items-center !h-auto sm:h-full bg-white" key={content.promoTitle}>
                       <figure className="md:w-screen h-[472px] sm:h-[394px]">
                         <Image
