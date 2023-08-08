@@ -148,6 +148,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       console.warn("not authorized");
       // router.push('/acceso');
     }
+    console.warn('session',session);
+    console.warn('sessionStatus', sessionStatus);
   }, [session, sessionStatus]);
 
   const [searchText, setSearchText] = useState("");
