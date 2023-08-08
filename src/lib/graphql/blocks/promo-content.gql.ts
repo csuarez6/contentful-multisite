@@ -1,7 +1,6 @@
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery from "../shared/default.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
-import ViewBannerCarousel from "../views/banner-carousel.gql";
 import ViewBannerImage from "../views/banner-image.gql";
 import ViewFeatured from "../views/featured.gql";
 import ViewProductFinancing from "../views/product-financing.gql";
@@ -12,7 +11,6 @@ import ViewProductGrid from "../views/product-grid.gql";
 import ViewServicesTabs from "../views/services-tabs.gql";
 import ViewFeaturedTabs from "../views/featured-tabs.gql";
 import ViewServicesCard from "../views/services-card.gql";
-import ViewLineOfSteps from "../views/lineOfSteps.gql";
 import ViewInformationCards from "../views/info-card.gql";
 import ViewCarouselCategories from "../views/carousel-categories.gql";
 import ViewFeaturedProducts from "../views/featured-products.gql";
@@ -79,9 +77,6 @@ const BlockPromoContentQuery = `
     ...on ViewAccordion {
       ${ViewAccordionQuery}
     }
-    ...on ViewBannerCarousel {
-      ${ViewBannerCarousel}
-    }
     ...on ViewBannerImage { 
       ${ViewBannerImage}
     }
@@ -111,9 +106,6 @@ const BlockPromoContentQuery = `
     }
     ...on ViewServicesCard {
       ${ViewServicesCard}
-    }
-    ...on ViewLineOfSteps{
-      ${ViewLineOfSteps}
     }
     ...on ViewInformationCards{
       ${ViewInformationCards}

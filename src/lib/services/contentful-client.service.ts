@@ -40,9 +40,7 @@ const contentfulClient = (preview = false) => {
 
   return new ApolloClient({
     link: appLink,
-    cache: new InMemoryCache({
-      resultCaching: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production'
-    }),
+    cache: new InMemoryCache({}),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'no-cache',

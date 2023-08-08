@@ -113,8 +113,7 @@ export const getStaticProps: GetStaticProps = async (
   const copyServices = copyRes?.copiesCollection?.items;  
 
   if (pageContent?.blocksCollection?.items?.length > 0) {
-    const firstBlockViewTypename =
-      pageContent.blocksCollection?.items[0]?.view?.__typename;
+    const firstBlockViewTypename = pageContent.blocksCollection?.items[0]?.view?.__typename;
     const firstItemsTypes: string[] = [
       CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE,
       CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL,

@@ -5,12 +5,6 @@ const { withSentryConfig } = require('@sentry/nextjs');
 // const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 const isProduction = false;
 
-const ContentSecurityPolicy = `
-  frame-ancestors 'self';
-  img-src 'self';
-  data https;
-`
-
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -21,7 +15,7 @@ const nextConfig = {
     'plugin:@next/next/recommended',
   ],
   images: {
-    domains: ['images.ctfassets.net', 'picsum.photos','placeholder', 'via.placeholder.com', 'data.commercelayer.app','tienda.grupovanti.com'],
+    domains: ['images.ctfassets.net', 'picsum.photos', 'placeholder', 'via.placeholder.com', 'data.commercelayer.app', 'tienda.grupovanti.com'],
   },
   async redirects() {
     return [
@@ -50,29 +44,51 @@ const nextConfig = {
     locales: ['es'],
     defaultLocale: 'es',
   },
-  async headers () {
+  async headers() {
     return [
       {
-        source: '/',
+        source: '/(.*)',
         headers: [
-            {
-              key: 'strict-transport-security',
-              value: 'max-age=31557600; includeSubDomains; preload',
-            },
-            {
-              key: 'x-xss-protection',
-              value: '1; mode=block',
-            },
-            {
-              key: 'x-frame-options',
-              value: 'SAMEORIGIN',
-            },
-            // {
-            //   key: 'content-security-policy',
-            //   value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
-            // },
+          {
+            key: 'strict-transport-security',
+            value: 'max-age=31557600; includeSubDomains; preload',
+          },
+          {
+            key: 'x-xss-protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'x-frame-options',
+            value: 'SAMEORIGIN',
+          },
         ],
-      }
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Vercel-CDN-Cache-Control',
+            value: 'max-age=900', // 15 minutes of general cache
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'max-age=0',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'max-age=0',
+          },
+        ],
+      },
+      {
+        source: '/api/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+        ],
+      },
     ];
   },
 };

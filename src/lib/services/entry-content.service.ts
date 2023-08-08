@@ -17,8 +17,6 @@ type DefaultBlockInfo = {
   }
 };
 
-const CACHE_CONTENT = {};
-
 const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6, minimal = false) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
@@ -27,19 +25,10 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
   let responseData = null;
   let responseError = null;
-  let cacheIndex = blockInfo.sys.id;
-
+  
   if (!blockInfo?.sys?.id) {
     console.error(`Error on entry query, sys.id not defined => `, blockInfo);
     return null;
-  }
-
-  if (blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL || minimal) {
-    cacheIndex += '_minimal';
-  }
-
-  if (CACHE_CONTENT[cacheIndex]) {
-    return { ...CACHE_CONTENT[cacheIndex] };
   }
 
   const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
@@ -118,7 +107,6 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     _.merge(entryContent, commercelayerProduct);
   }
 
-  CACHE_CONTENT[cacheIndex] = { ...entryContent };
   return entryContent;
 };
 
