@@ -28,6 +28,7 @@ export interface IPage {
         items?: Array<IPromoBlock>
     }
     promoTitle?: string;
+    subtitle?: string;
     promoImage?: IImageAsset;
     promoDescription?: IRichText;
     promoIcon?: string;
@@ -41,4 +42,5 @@ export interface IPage {
     relatedContentCollection?: {
         items?: Array<IPage & INavigation & IPromoContent>;
     };
+    enableHeaderPrecedence?: boolean;
 }

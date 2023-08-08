@@ -26,7 +26,7 @@ const convertParentsToBreadcrumb = (parentItem): any => {
 const getBreadcrumbs = ({ sys, name, promoTitle, parent }) => {
   const breadCrumbContent = {
     sys: {
-      id: `breadcrumb:${sys.id}`,
+      id: `breadcrumb:${sys?.id}`,
     },
     __typename: CONTENTFUL_TYPENAMES.BLOCK_BREADCRUMB,
     ctaCollection: {

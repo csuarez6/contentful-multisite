@@ -9,7 +9,7 @@ const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
       <nav>
         <ul className='flex gap-0.5 flex-wrap'>
           {
-            ctaCollection.items.map((el, i) => (
+            ctaCollection?.items.map((el, i) => (
               <li key={`${el.name ?? el.promoTitle}-${i}`} className="flex items-center gap-0.5">
                 {
                   i + 1 !== ctaCollection.items.length
@@ -24,7 +24,7 @@ const Breadcrumbs: React.FC<IPromoBlock> = ({ ctaCollection }) => {
                       </p>
                     )
                 }
-                {(i + 1 !== ctaCollection?.items?.length) && (<Icon icon='arrow-right' className="h-6 w-6" />)}
+                {(i + 1 !== ctaCollection.items.length) && (<Icon icon='arrow-right' className="h-6 w-6" />)}
               </li>
             ))
           }

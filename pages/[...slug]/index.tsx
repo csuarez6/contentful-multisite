@@ -7,7 +7,6 @@ import {
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
@@ -24,25 +23,33 @@ import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 import getBreadcrumbs from "@/utils/breadcrumbs";
 import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
 import { getDataContent } from "@/lib/services/richtext-references.service";
+import { classNames } from "@/utils/functions";
 
-const CustomPage: NextPageWithLayout = (props: IPage & IProductOverviewDetails) => {
-  const { blocksCollection, content, __typename, sys } = props;  
+const CustomPage: NextPageWithLayout = (props: any) => {
+  const { blocksCollection, content, enableHeaderPrecedence, showHeader, __typename, sys } = props;
+  const __Breadcrumbs = getBreadcrumbs(props);
   return (
-    <>
-      <div className="overflow-hidden">
-        <div className="main-container">
-          {jsonToReactComponents(blocksCollection.items)}
-          {__typename == CONTENTFUL_TYPENAMES.PRODUCT && (
-            <ProductOverview {...props} />
-          )}
-        </div>
-      </div>
-      {content?.json && (
-        <div className="main-container">
-          <RichtextPage {...props} key={sys?.id}/>
+    <div className={classNames(
+      "flex",
+      enableHeaderPrecedence && showHeader ? "flex-col-reverse" : "flex-col"
+    )}>
+      {blocksCollection?.items?.length > 0 && (
+        <div className="overflow-hidden">
+          <div className="main-container">
+            {jsonToReactComponents(blocksCollection.items)}
+            {__typename == CONTENTFUL_TYPENAMES.PRODUCT && (
+              <ProductOverview {...props} />
+            )}
+          </div>
         </div>
       )}
-    </>
+      {content?.json && (
+        <div className="main-container">
+          {enableHeaderPrecedence && showHeader && (jsonToReactComponents([{ ...__Breadcrumbs }]))}
+          <RichtextPage {...props} key={sys?.id} />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -107,27 +114,31 @@ export const getStaticProps: GetStaticProps = async (
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
     sys: {
       id: DEFAULT_WARRANTY_COPY,
-    } 
+    }
   };
   const copyRes = await getDataContent(info);
-  const copyServices = copyRes?.copiesCollection?.items;  
+  const copyServices = copyRes?.copiesCollection?.items;
 
-  if (pageContent?.blocksCollection?.items?.length > 0) {
-    const firstBlockViewTypename = pageContent.blocksCollection?.items[0]?.view?.__typename;
-    const firstItemsTypes: string[] = [
-      CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE,
-      CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL,
-    ];
+  const { content, enableHeaderPrecedence, showHeader, } = pageContent;
+  const isInfoPageHeader = content?.json && enableHeaderPrecedence && showHeader;
+  if (!isInfoPageHeader) {
+    if (pageContent?.blocksCollection?.items?.length > 0) {
+      const firstBlockViewTypename = pageContent.blocksCollection?.items[0]?.view?.__typename;
+      const firstItemsTypes: string[] = [
+        CONTENTFUL_TYPENAMES.VIEW_BANNER_IMAGE,
+        CONTENTFUL_TYPENAMES.VIEW_BANNER_CAROUSEL,
+      ];
 
-    if (firstItemsTypes.indexOf(firstBlockViewTypename) >= 0) {
-      pageContent.blocksCollection.items.splice(1, 0, breadCrumbContent);
-    } else {
-      pageContent.blocksCollection.items.unshift(breadCrumbContent);
+      if (firstItemsTypes.indexOf(firstBlockViewTypename) >= 0) {
+        pageContent.blocksCollection.items.splice(1, 0, breadCrumbContent);
+      } else {
+        pageContent.blocksCollection.items.unshift(breadCrumbContent);
+      }
+    } else if (!pageContent?.blocksCollection?.items?.length) {
+      pageContent["blocksCollection"] = {
+        items: [breadCrumbContent],
+      };
     }
-  } else if (!pageContent?.blocksCollection?.items?.length) {
-    pageContent["blocksCollection"] = {
-      items: [breadCrumbContent],
-    };
   }
 
   return {

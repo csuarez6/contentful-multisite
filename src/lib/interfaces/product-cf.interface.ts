@@ -101,6 +101,10 @@ export interface IProductOverviewDetails {
   isNew?: boolean;
   discount?: string;
   copyServices?: any;
+  sys?: {
+    __typename?: string;
+    id?: string;
+  }
 }
 
 export interface IAllyOverviewDetails {

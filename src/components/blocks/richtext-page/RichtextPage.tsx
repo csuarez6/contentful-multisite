@@ -66,7 +66,7 @@ const filterHeading = (objData) => {
 
 const RichtextPage: React.FC<IPage> = (props) => {
   const [mounted, setMounted] = useState(false);
-  const { content, showHeader, promoTitle, promoImage, relatedContentCollection } = props;
+  const { content, showHeader, promoTitle, subtitle, promoImage, relatedContentCollection } = props;
   const filteredHeading = filterHeading(content?.json?.content);
   const [currentIndex, setCurrentIndex] = useState(0);
   const calcScroll = () => {
@@ -105,6 +105,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
         {showHeader && (promoTitle || promoImage) && (
           <div className="flex flex-col gap-8">
             {promoTitle && <h1 className="text-blue-dark">{promoTitle}</h1>}
+            {subtitle && <h2 className="text-blue-dark">{subtitle}</h2>}
             {promoImage && (
               <figure className="relative">
                 <Image
@@ -120,7 +121,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
         )}
         {!mounted && <RichtextPageSkeleton />}
         {contentJson && mounted && (
-          <div className="richtext-container grow">
+          <div className="richtext-container grow px-2 -mx-1">
             {documentToReactComponents(contentJson, richtextFormatOptions)}
           </div>
         )}

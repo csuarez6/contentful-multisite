@@ -26,6 +26,7 @@ const PageQuery = `
     }
   }
   promoTitle
+  subtitle
   promoImage {
     ${AssetImageQuery}
   }
@@ -51,6 +52,7 @@ const PageQuery = `
     }
   }
   showHeader
+  enableHeaderPrecedence
   relatedContentCollection{
     items {
       ...on Page {
