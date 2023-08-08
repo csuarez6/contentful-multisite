@@ -132,3 +132,4 @@ Create .env file with enviroment variables below:
 ### TEST
 
 - `CONTENTFUL_PREVIEW_API_TOKEN`: (optional) ONLY for exporting data from contentful space.
+

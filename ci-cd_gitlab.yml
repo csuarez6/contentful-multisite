@@ -61,6 +61,44 @@ Deploy_To_QA:
     changes: *changes
   needs: ["Test_Linter"]
 
+Deploy_To_Sandbox:
+  stage: Deploy
+  variables:
+    PREVIEW_URL: $VERCEL_PROJECT_NAME-sandbox.vercel.app
+    CF_TOKEN_DELIVERY: $CONTENTFUL_DELIVERY_API_TOKEN_SANDBOX
+    CF_TOKEN_PREVIEW: $CONTENTFUL_PREVIEW_API_TOKEN_SANDBOX
+    VERCEL_SCOPE: $VERCEL_SCOPE
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    VERCEL_TOKEN: $VERCEL_TOKEN
+  before_script:
+    - npm i -g vercel
+  script:
+    - |
+      DEPLOYMENT_URL=$(\
+      VERCEL_ORG_ID=$VERCEL_ORG_ID \
+      VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID \
+      vercel --yes --token $VERCEL_TOKEN --scope $VERCEL_SCOPE \
+      --build-env CONTENTFUL_ENVIRONMENT=sandbox \
+      --build-env CONTENTFUL_DELIVERY_API_TOKEN=$CF_TOKEN_DELIVERY \
+      --build-env CONTENTFUL_PREVIEW_API_TOKEN=$CF_TOKEN_PREVIEW \
+      --env CONTENTFUL_ENVIRONMENT=sandbox \
+      --env CONTENTFUL_DELIVERY_API_TOKEN=$CF_TOKEN_DELIVERY \
+      --env CONTENTFUL_PREVIEW_API_TOKEN=$CF_TOKEN_PREVIEW \
+      )
+    - vercel alias set $DEPLOYMENT_URL $PREVIEW_URL -t $VERCEL_TOKEN --scope $VERCEL_SCOPE
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$VERCEL_PROJECT_NAME-sandbox.vercel.app
+  when: manual
+  only:
+    refs:
+      - merge_requests
+    variables:
+      - $CI_COMMIT_REF_NAME =~ /sandbox/
+    changes: *changes
+  needs: ["Test_Linter"]
+
 Stop_QA_Deployment:
   stage: Stop
   variables:
