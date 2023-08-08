@@ -274,7 +274,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                         <div
                           className={classNames(
                             "group card-mega-menu flex overflow-hidden",
-                            !block.promoImage && "not-image"
+                            !block?.promoImage && "not-image"
                           )}
                           key={`card_${block?.sys.id}-megamenu`}
                           style={{

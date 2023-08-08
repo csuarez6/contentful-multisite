@@ -8,9 +8,10 @@ import Icon from "@/components/atoms/icon/Icon";
 
 const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, subtitle, description, promoDescription, sysId, blockId, ctaCollection }) => {
   let descriptionJson = description?.json ?? promoDescription?.json;
-  if (attachLinksToRichtextContent) {
+  if (descriptionJson && attachLinksToRichtextContent) {
     descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? promoDescription?.links);
   }
+
   return (
     <section id={blockId ?? sysId} className="section">
       <div className="grid gap-2 mb-6">
@@ -21,7 +22,7 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, su
           <p className="text-center text-lg text-grey-30">{subtitle}</p>
         )}
       </div>
-      {(promoDescription?.json || description?.json) && (
+      {descriptionJson && (
         <div className="richtext-container text-lg text-grey-10">
           {documentToReactComponents(descriptionJson, defaultFormatOptions)}
         </div>
