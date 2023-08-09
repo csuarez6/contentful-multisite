@@ -19,6 +19,7 @@ import { useLastPath } from "@/hooks/utils/useLastPath";
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const modalBody = (isSuccess, errorMessage, closeModal) => {
   return (
@@ -126,6 +127,14 @@ const CallbackPage = () => {
       .then((json) => {
         const { result } = json;
         setIsSuccess(result.success);
+
+        if (result.success) {
+          gaEventForm({
+            category: "Callback",
+            label: "Servihogar",
+            contractAccount: data.contractAccount
+          });
+        }
 
         if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();

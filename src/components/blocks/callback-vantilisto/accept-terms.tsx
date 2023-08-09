@@ -9,6 +9,7 @@ import React, { useState, createRef, LegacyRef } from 'react';
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const modalBody = (isSuccess, errorMessage, isSuccessEvent, isFailedEvent) => {
   return (
@@ -106,6 +107,16 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
       .then((json) => {
         const { result } = json;
         setIsSuccess(result.success);
+
+        if (result.success) {
+          gaEventForm({
+            category: "Callback",
+            label: "Catálogo VantiListo",
+            contractAccount: formData.contractAccount,
+            product: productData.productName,
+            sku: productData.sku
+          });
+        }
 
         if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();

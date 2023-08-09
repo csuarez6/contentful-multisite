@@ -20,6 +20,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const modalBody = (data, isSuccess, errorMessage, closeModal) => {
   return (
@@ -156,6 +157,14 @@ const CallbackPage = () => {
         setIsSuccess(result.success);
         setDateValue(getValues("date"));
         setHourValue(getValues("hour"));
+
+        if (result.success) {
+          gaEventForm({
+            category: "Callback",
+            label: "Reparación Obligatoria Periódica",
+            contractAccount: data.contractAccount
+          });
+        }
 
         if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();

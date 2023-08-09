@@ -26,14 +26,14 @@ type AppPropsWithLayout = AppProps<IPage> & {
 export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
   <AuthProvider session={pageProps.session}>
     <CheckoutProvider>
-      <PageLayout {...(pageProps ? pageProps : null)}>{page}</PageLayout>
+      <PageLayout {...(pageProps ?? null)}>{page}</PageLayout>
     </CheckoutProvider>
   </AuthProvider>
 );
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
-    TagManager.initialize({ gtmId: "GTM-WNVXFRQ" });
+    TagManager.initialize({ gtmId: "GTM-P26VHQQT" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -21,6 +21,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 
 import { useLastPath } from "@/hooks/utils/useLastPath";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const modalBody = (isSuccess, errorMessage, closeModal, productData) => {
   return (
@@ -186,6 +187,15 @@ const CallbackPage = () => {
       .then((json) => {
         const { result } = json;
         setIsSuccess(result.success);
+
+        if (result.success) {
+          gaEventForm({
+            category: "Callback",
+            label: "Gasodomésticos",
+            product: productData.productName,
+            sku: sku,
+          });
+        }
 
         if (result.errors > 0 || !result.success) setErrorMessage(result.message);
         else reset();
