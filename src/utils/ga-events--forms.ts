@@ -5,9 +5,7 @@ export const gaEventForm = ({
   category = null,
   label = null,
   contractAccount = null,
-  product = null,
-  productsList = null,
-  sku = null
+  productsList = null
 }) => {
   const eventId = uuid();
   gTagEvent("trackEventForm", {
@@ -15,8 +13,6 @@ export const gaEventForm = ({
     category: category ?? "",
     label: label ?? "",
     contractAccount: contractAccount ?? "",
-    product: product ?? "",
-    sku: sku ?? "",
     productsList: productsList ?? [],
     "gtm.uniqueEventId": eventId,
   });
