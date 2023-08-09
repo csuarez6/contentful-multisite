@@ -7,4 +7,4 @@ Disallow: /
 User-agent: Screaming Frog SEO Spider
 Disallow:
 
-# Sitemap: https://www.grupovanti.com/sitemap.xml
+Sitemap: https://vanti-marketplace.vercel.app/sitemap.xml
