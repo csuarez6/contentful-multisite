@@ -15,6 +15,7 @@ import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsLayoutSkeleton/ProductDetailsLayoutSkeleton";
 import Icon from "@/components/atoms/icon/Icon";
 import { gaEventPurchase } from "@/utils/ga-events--checkout";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -245,6 +246,19 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         }
       }
       await reloadOrder(true);
+
+      const productsData = products.map(el => {
+        return {
+          product: el.name,
+          sku: el.sku_code
+        };
+      });
+
+      gaEventForm({
+        category: "Checkout",
+        label: "Compra de Productos",
+        productsList: productsData,
+      });
       push("/");
     } catch (error) {
       console.error(error);

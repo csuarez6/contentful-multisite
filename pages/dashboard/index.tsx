@@ -23,6 +23,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Icon from "@/components/atoms/icon/Icon";
 import SelectAtom from "@/components/atoms/select-atom/SelectAtom";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const subNavigation = [
   { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
@@ -212,6 +213,10 @@ const Dashboard = () => {
             show: true,
             bgcolor: "bg-green-50 border-green-950",
             color: "text-green-800",
+          });
+          gaEventForm({
+            category: "Profile",
+            label: "Actualización de datos personales",
           });
         } else {
           setErrorMessage({ error });

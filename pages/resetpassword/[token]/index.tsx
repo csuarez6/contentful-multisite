@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 export interface ITemsForm {
   password: string;
@@ -132,6 +133,10 @@ const ResetPassword = () => {
               promoIcon: "check",
               promoTitle: "Recuperación Exitosa!",
               subtitle: "Estimado usuario, su contraseña ha sido actualizada!.",
+            });
+            gaEventForm({
+              category: "Password",
+              label: "Contraseña recuperada",
             });
             setTimeout(() => {
               router.push("/acceso");

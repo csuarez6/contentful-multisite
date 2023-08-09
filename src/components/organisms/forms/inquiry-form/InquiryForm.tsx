@@ -10,6 +10,7 @@ import RadioBox from '@/components/atoms/input/radiobox/RadioBox';
 import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import { classNames } from '@/utils/functions';
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
+import { gaEventForm } from '@/utils/ga-events--forms';
 
 interface IForm {
   contractAccount: string;
@@ -100,6 +101,11 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
         if (result.success) {
           setResponse(result);
           setShowInfo(true);
+          gaEventForm({
+            category: isRPO ? "CheckNextRPO" : "ConsultVantilistoQuota",
+            label: isRPO ? "Comprobar próxima RPO" : "Consultar cupo Vantilisto",
+            contractAccount: data.contractAccount,
+          });
         } else {
           setErrorMessage(result.message);
           openModal();

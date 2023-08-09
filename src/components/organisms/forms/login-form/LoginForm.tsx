@@ -10,6 +10,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 export interface ITemsForm {
   email: string;
@@ -47,7 +48,13 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
   });
 
   const onSubmit = (data: ITemsForm) => {
-    if (onSubmitForm) onSubmitForm({ ...data, tokenReCaptcha });
+    if (onSubmitForm) {
+      onSubmitForm({ ...data, tokenReCaptcha });
+      gaEventForm({
+        category: "LoginForm",
+        label: "Inicio de sesión",
+      });
+    }
     reset();
     setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
   };

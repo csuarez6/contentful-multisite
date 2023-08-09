@@ -29,6 +29,7 @@ import AuthContext from "@/context/Auth";
 import SelectAtom, {
   IListContent,
 } from "@/components/atoms/select-atom/SelectAtom";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -321,6 +322,10 @@ const DashboardAddresses = () => {
     gaEventPaymentInfo(order?.line_items);
     try {
       await sendData(data);
+      gaEventForm({
+        category: "Profile",
+        label: "Actualización de direcciones",
+      });
     } catch (error) {
       console.error(error);
       alert(error.message);

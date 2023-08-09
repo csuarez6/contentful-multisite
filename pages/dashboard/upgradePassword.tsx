@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ref, string } from "yup";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -128,6 +129,10 @@ const DashboardUpgradePassword = () => {
             show: true,
             bgcolor: "bg-green-50 border-green-950",
             color: "text-green-800",
+          });
+          gaEventForm({
+            category: "Profile",
+            label: "Actualización de contraseña",
           });
         } else {
           setErrorMessage("Contraseña invalida");

@@ -9,6 +9,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import { IFormBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import Image from 'next/image';
 import { classNames } from '@/utils/functions';
+import { gaEventForm } from '@/utils/ga-events--forms';
 
 interface IForm {
   qrCode: string;
@@ -79,6 +80,10 @@ const IdentityForm: React.FC<IFormBlock> = () => {
         if (result.success) {
           setIsAuthorized(result.isAuthorized);
           setShowInfo(true);
+          gaEventForm({
+            category: "VerifyIdentityTech",
+            label: "Verificar identidad del técnico",
+          });
         } else {
           setErrorMessage(result.message);
           openModal();

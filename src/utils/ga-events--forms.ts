@@ -6,6 +6,7 @@ export const gaEventForm = ({
   label = null,
   contractAccount = null,
   product = null,
+  productsList = null,
   sku = null
 }) => {
   const eventId = uuid();
@@ -16,6 +17,7 @@ export const gaEventForm = ({
     contractAccount: contractAccount ?? "",
     product: product ?? "",
     sku: sku ?? "",
+    productsList: productsList ?? [],
     "gtm.uniqueEventId": eventId,
   });
 };

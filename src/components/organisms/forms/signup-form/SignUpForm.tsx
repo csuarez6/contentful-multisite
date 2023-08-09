@@ -9,6 +9,7 @@ import ModalSuccess from '../../modal-success/ModalSuccess';
 import { customerSchema } from '@/schemas/customer';
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 import SelectAtom from '@/components/atoms/select-atom/SelectAtom';
+import { gaEventForm } from '@/utils/ga-events--forms';
 
 export interface ITemsForm {
     name: string;
@@ -67,7 +68,13 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
             setActiveModal(true);
             const result = onSubmitForm({ ...data, tokenReCaptcha });
             result.then((result) => {
-                if (result) reset();
+                if (result) {
+                    reset();
+                    gaEventForm({
+                        category: "SignUpForm",
+                        label: "Registro de usuario",
+                    });
+                }
             }).catch((err) => {
                 console.error(err);
             });

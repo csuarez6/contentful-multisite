@@ -15,6 +15,7 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { useEffect, useState } from "react";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
+import { gaEventForm } from "@/utils/ga-events--forms";
 
 export interface ITemsForm {
   email: string;
@@ -85,6 +86,10 @@ const ForgotPassword = () => {
             promoTitle: "Recuperar contraseña",
             subtitle:
               "Estimado usuario, se han enviado las instrucciones a su correo electrónico para recuperar la contraseña.",
+          });
+          gaEventForm({
+            category: "Password",
+            label: "Recuperación de contraseña",
           });
         } else {
           setDataModal({
