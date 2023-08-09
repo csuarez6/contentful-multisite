@@ -5,7 +5,6 @@ import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, useWatch } from "react-hook-form";
-import { State } from "@/pages/api/static/states";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import citiesFile from "@/utils/static/cities-co.json";
 import {
