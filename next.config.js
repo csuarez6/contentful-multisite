@@ -84,6 +84,14 @@ const nextConfig = {
         source: '/api/(.*)',
         headers: [
           {
+            key: 'Vercel-CDN-Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+          {
+            key: 'CDN-Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+          {
             key: 'Cache-Control',
             value: 'no-store, must-revalidate',
           },
