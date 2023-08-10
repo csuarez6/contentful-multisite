@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import {
   IProductOverviewDetails,
   PaymentMethodType,
@@ -16,6 +15,7 @@ import {
   isAvailableGasAppliance,
   isAvailableVantilisto,
   isGasAppliance,
+  isVantilisto,
   scrollContent,
 } from "@/utils/functions";
 import { iconInvoice, iconPSE, options } from "./ProductConfig";
@@ -53,13 +53,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   copyServices,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-  const { addToCart, order, reloadOrder, deleteItemService } =
-    useContext(CheckoutContext);
-  const currentSlug =
-    router.query?.slug?.length > 0 ? router.query.slug[0] : "/";
-  const baseCallback =
-    currentSlug === "catalogo-vanti-listo" ? "vantilisto" : "gasodomesticos";
+  const { addToCart, order, reloadOrder, deleteItemService } = useContext(CheckoutContext);
+  const baseCallback = isVantilisto(marketId) ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
   const closeModal = () => setIsOpen(false);
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
