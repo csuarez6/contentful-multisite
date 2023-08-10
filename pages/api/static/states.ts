@@ -38,7 +38,7 @@ export default function handler(
     { code: "CO-PUT", name: "Putumayo" },
     { code: "CO-QUI", name: "Quindío" },
     { code: "CO-RIS", name: "Risaralda" },
-    { code: "CO-SAP", name: "San Andrés y Providencia" },
+    { code: "CO-SAP", name: "San Andrés" },
     { code: "CO-SAN", name: "Santander" },
     { code: "CO-SUC", name: "Sucre" },
     { code: "CO-TOL", name: "Tolima" },

@@ -356,7 +356,6 @@ export const useCommerceLayer = () => {
         console.warn(err);
       })
       .finally(async () => { await reloadOrder(); });
-
   };
 
   const changeItemService = async (idItemDelete: string, newAdjustment: IAdjustments, quantity: number, idProductOrigin: string) => {
