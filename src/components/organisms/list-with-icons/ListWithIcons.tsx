@@ -88,7 +88,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
             <h3 className="title is-4 pt-1 text-blue-dark">{promoTitle}</h3>
           )}
           {promoDescription && (
-            <div className="text-lg text-grey-30">
+            <div className="text-lg text-grey-30 richtext-container">
               {documentToReactComponents(
                 promoDescription.json,
                 defaultFormatOptions
@@ -112,7 +112,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
             text={ctaLabel ?? promoTitle ?? name}
           >
             {promoDescription?.json && (
-              <div>
+              <div className="richtext-container">
                 {documentToReactComponents(contentJson, defaultFormatOptions)}
               </div>
             )}

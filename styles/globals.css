@@ -221,11 +221,3 @@ h6 {
 ol ol {
   @apply list-[lower-alpha];
 }
-
-.tabs-styles h3 {
-  @apply mb-7;
-}
-
-.tabs-styles table {
-  @apply mb-6;
-}

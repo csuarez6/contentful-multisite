@@ -3,6 +3,10 @@
   @apply mb-4;
 }
 
+.richtext-container table {
+  @apply table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden my-6;
+}
+
 .richtext-container table :is(th, td) p:nth-child(n+2) {
   @apply mt-3;
 }
@@ -38,10 +42,6 @@
 
 .richtext-container :is(ol, ul) li div {
   @apply inline-block w-fit max-w-[calc(100%-50px)] align-top;
-}
-
-.richtext-container table {
-  @apply table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden mb-6;
 }
 
 .richtext-container blockquote {
