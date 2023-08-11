@@ -109,6 +109,15 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
             listedContentsCollectionIndex++;
           }
         }
+        if(block?.ctaCollection?.items.length  > 0){
+          let ctaCollectionIndex = 0;
+          for (const ctaCollection of block.ctaCollection.items) {
+            const content = await getDataContent(ctaCollection);
+            _.merge(block.ctaCollection.items[ctaCollectionIndex], content);
+            ctaCollectionIndex++;
+          }
+        }
+
       }
     }
     
