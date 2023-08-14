@@ -400,6 +400,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     }
   } catch (error) {
     console.error("Error retrieving SKU: ", error);
+    throw new Error(error);
   }
 
   return product;
