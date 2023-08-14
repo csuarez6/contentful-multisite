@@ -8,10 +8,11 @@ import {
 import Image from "next/image";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
-import { classNames } from "@/utils/functions";
+import { classNames, getButtonType } from "@/utils/functions";
 import { getLinkProps } from "@/utils/link.utils";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 
 const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   title,
@@ -49,10 +50,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
   }, [featuredContentsCollection?.items]);
 
   return (
-    <section
-      id={blockId ?? sysId}
-      className="section grid gap-7 md:gap-9"
-    >
+    <section id={blockId ?? sysId} className="section grid gap-7 md:gap-9">
       {(title || description) && (
         <div className="flex flex-col gap-2 text-center">
           {title && <h2 className="text-blue-dark">{title}</h2>}
@@ -130,11 +128,16 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                       {item.promoDescription && (
                         <div className="text-lg text-grey-30 hidden group-[.open]:block">
                           {documentToReactComponents(
-                            attachLinksToRichtextContent(item?.promoDescription?.json, item?.promoDescription?.links), defaultFormatOptions
+                            attachLinksToRichtextContent(
+                              item?.promoDescription?.json,
+                              item?.promoDescription?.links
+                            ),
+                            defaultFormatOptions
                           )}
                         </div>
                       )}
-                      {(item?.internalLink?.urlPaths?.[0] || item?.externalLink) && (
+                      {(item?.internalLink?.urlPaths?.[0] ||
+                        item?.externalLink) && (
                         <div className="hidden gap-3 mt-3 group-[.open]:block self-start">
                           <CustomLink
                             content={item}
@@ -143,6 +146,24 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                           >
                             {getLinkProps(item).textLink}
                           </CustomLink>
+                        </div>
+                      )}
+                      {item?.linkView === "Modal" && item?.content?.json && (
+                        <div className="flex gap-2">
+                          <ButtonAtom
+                            type={item?.linkView}
+                            text={item?.ctaLabel ?? item?.name}
+                            classes={getButtonType("Contorno")}
+                            modalClass="w-auto max-w-7xl"
+                          >
+                            {documentToReactComponents(
+                              attachLinksToRichtextContent(
+                                item?.content?.json,
+                                item?.content?.links
+                              ),
+                              defaultFormatOptions
+                            )}
+                          </ButtonAtom>
                         </div>
                       )}
                     </div>
