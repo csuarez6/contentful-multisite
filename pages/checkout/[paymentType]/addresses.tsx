@@ -247,6 +247,52 @@ const CheckoutAddress = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
+  useEffect(() => {
+    if (order) {
+      (async () => {
+        const { shippingAddress, billingAddress } = await getAddresses();
+        const shippingAddressFormatted = toAddressForm(shippingAddress);
+        const billingAddressFormatted = toAddressForm(billingAddress);
+        console.log('shippingAddressFormatted', shippingAddressFormatted);
+        if (shippingAddressFormatted) {
+          setValue(
+            "shippingAddress.stateCode",
+            shippingAddressFormatted.stateCode
+          );
+          setValue(
+            "shippingAddress.cityCode",
+            shippingAddressFormatted.cityCode
+          );
+          setValue("shippingAddress.street", shippingAddressFormatted.street);
+          setValue("shippingAddress.address", shippingAddressFormatted.address);
+          setValue(
+            "shippingAddress.residence",
+            shippingAddressFormatted.residence
+          );
+          setValue(
+            "shippingAddress.receiver",
+            shippingAddressFormatted.receiver
+          );
+        }
+        if (billingAddressFormatted) {
+          setValue("shippingAddress.isSameAsBillingAddress", false);
+          setValue(
+            "billingAddress.stateCode",
+            billingAddressFormatted.stateCode
+          );
+          setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
+          setValue("billingAddress.address", billingAddressFormatted.address);
+          setValue("billingAddress.street", billingAddressFormatted.street);
+          setValue(
+            "billingAddress.residence",
+            billingAddressFormatted.residence
+          );
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order]);
+
   const checkAlphaNumeric = (e) => {
     const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
     if (!(e.key).match(letters)) e.preventDefault();

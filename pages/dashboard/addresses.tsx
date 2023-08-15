@@ -182,6 +182,8 @@ const DashboardAddresses = () => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
+        console.log('shippingAddressFormatted', shippingAddressFormatted);
+        
         if (shippingAddressFormatted) {
           setValue(
             "shippingAddress.stateCode",
@@ -216,13 +218,13 @@ const DashboardAddresses = () => {
             billingAddressFormatted.residence
           );
         }
-        // reset({
-        //   shippingAddress: {
-        //     ...shippingAddressFormatted,
-        //     isSameAsBillingAddress: (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") || (shippingAddressFormatted?.address == billingAddressFormatted?.address),
-        //   },
-        //   billingAddress: billingAddressFormatted,
-        // });
+        reset({
+          shippingAddress: {
+            ...shippingAddressFormatted,
+            isSameAsBillingAddress: (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") || (shippingAddressFormatted?.address == billingAddressFormatted?.address),
+          },
+          billingAddress: billingAddressFormatted,
+        });
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
