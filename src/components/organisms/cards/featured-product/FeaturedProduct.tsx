@@ -45,7 +45,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   address,
   city,
   hideBeforePrice,
-  hideDecimalPrice,
+  hideDecimalPrice = true,
   marketId,
   isNew,
   discount,
