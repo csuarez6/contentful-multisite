@@ -513,7 +513,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
                         )
                         :
-                        (order?.formatted_total_amount_with_taxes).split(',')[0]
+                        (order?.formatted_total_amount_with_taxes)?.split(',')[0]
                       }
                     </span>
                   </div>
