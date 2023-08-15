@@ -366,7 +366,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="font-bold flex justify-between gap-3 mb-1">
                               <span className="text-left">{product.name}</span>
-                              <span className="text-blue-dark text-base">{product.formatted_unit_amount}</span>
+                              <span className="text-blue-dark text-base">{(product.formatted_unit_amount).split(',')[0]}</span>
                             </p>
                             <p className="text-xs text-gray-600">* IVA incluido</p>
                             <p className="text-sm text-gray-600">
@@ -513,7 +513,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
                         )
                         :
-                        order?.formatted_total_amount_with_taxes
+                        (order?.formatted_total_amount_with_taxes).split(',')[0]
                       }
                     </span>
                   </div>
