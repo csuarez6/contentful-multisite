@@ -69,7 +69,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
       className={classNames(
         "flex",
         iconPosition && iconPosition === "Izquierda"
-          ? "flex-row gap-5"
+          ? "flex-row gap-5 group"
           : "flex-col text-center gap-3 items-center"
       )}
     >

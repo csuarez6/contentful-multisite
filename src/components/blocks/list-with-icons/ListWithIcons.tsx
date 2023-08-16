@@ -5,7 +5,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import defaultFormatOptions from '@/lib/richtext/default.formatter';
 import { attachLinksToRichtextContent } from '@/lib/services/render-blocks.service';
-import { classColumns, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
+import { classColumns, classColumnsFlex, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper";
@@ -54,7 +54,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
       {featuredContentsCollection?.items?.length > 0 && (
         <>
           <div className='hidden px-3 md:block'>
-            <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumns(view.columnsSize))}>
+            <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumnsFlex[view?.columnsSize])}>
               {featuredContentsCollection.items.map((item) => (
                 <ListWithIcon key={`${item.sys.id}`} {...{ ...item, ...view }} />
               ))}
@@ -168,17 +168,6 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                     )}
                     {!cta.promoDescription && (cta.promoTitle ?? cta.name)}
                   </ButtonAtom>
-                )}
-                {cta?.mediaInternalLink && (
-                  <CustomLink
-                    content={cta}
-                    className={classNames(
-                      "button w-full sm:w-auto flex justify-center text-center",
-                      getButtonType("Contorno")
-                    )}
-                  >
-                    {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
-                  </CustomLink>
                 )}
               </>
             );

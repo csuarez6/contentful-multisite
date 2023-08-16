@@ -10,6 +10,7 @@ import "../styles/button.css";
 import "../public/fonts/mulish/mulish.css";
 import "../styles/megamenu-mobile.css";
 import "../styles/richtext.css";
+import "../styles/grills.css";
 import CheckoutProvider from "@/context/Checkout/Provider";
 import AuthProvider from "@/context/Auth/Provider";
 import TagManager from "react-gtm-module";
