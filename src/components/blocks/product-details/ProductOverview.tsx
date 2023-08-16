@@ -416,9 +416,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <div className="flex items-center justify-between gap-2">
                         {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
                           <p className="line-through text-[#035177] text-sm md:text-xl">
-                            {isGasAppliance(marketId)
+                            {(isGasAppliance(marketId)
                               ? priceBeforeGasodomestico
-                              : priceBeforeVantiListo}{" "}
+                              : priceBeforeVantiListo).split(',')[0]}{" "}
                             Antes
                           </p>
                         )}
@@ -429,14 +429,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </div>
                       {/* Main price */}
                       <p className="text-[#035177] max-md:text-2xl title is-3">
-                        {isGasAppliance(marketId)
+                        {(isGasAppliance(marketId)
                           ? priceGasodomestico
-                          : priceVantiListo}
+                          : priceVantiListo).split(',')[0]}
                       </p>
                       {/* Secondary text */}
                       {isGasAppliance(marketId) && priceVantiListo && (
                         <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                          <span>{priceVantiListo}</span>
+                          <span>{(priceVantiListo).split(',')[0]}</span>
                           <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
                             Vanti Listo
                           </span>
@@ -572,16 +572,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               <div className="flex flex-col-reverse gap-x-[10px]">
                 {/* Main price */}
                 <p className="text-[#035177] title is-4">
-                  {isGasAppliance(marketId)
+                  {(isGasAppliance(marketId)
                     ? priceGasodomestico
-                    : priceVantiListo}
+                    : priceVantiListo).split(',')[0]}
                 </p>
                 {/* Before price */}
                 {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
                   <p className="line-through text-[#035177] text-size-small flex items-center">
-                    {isGasAppliance(marketId)
+                    {(isGasAppliance(marketId)
                       ? priceBeforeGasodomestico
-                      : priceBeforeVantiListo}{" "}
+                      : priceBeforeVantiListo).split(',')[0]}{" "}
                     Antes
                   </p>
                 )}
@@ -590,7 +590,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {/* Secondary price */}
                 {isGasAppliance(marketId) && priceVantiListo && (
                   <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
-                    <span>{priceVantiListo}</span>
+                    <span>{(priceVantiListo).split(',')[0]}</span>
                     <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
                       Vanti Listo
                     </span>
