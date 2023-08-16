@@ -83,7 +83,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                 "flex",
                 view?.alignTitle !== "Izquierda" && "gap-[10px]"
               )}>
-                {featuredContentsCollection.items.map((tab) => (
+                {featuredContentsCollection?.items?.map((tab) => (
                   isCustomLink(tab) ? (
                     <CustomLink
                       key={`${tab.name}_tab`}
@@ -130,7 +130,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
 
           <div className="relative">
             <Tab.Panels as={Fragment}>
-              {featuredContentsCollection.items.map((collection) => {
+              {featuredContentsCollection?.items?.map((collection) => {
                 return !isCustomLink(collection) && (
                   <Tab.Panel key={`${collection.name}_content`} className="focus:outline-none">
                     <Transition
@@ -147,7 +147,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                         jsonToReactComponent(collection)
                       ) : (
                         <div className={classNames("grid grid-cols-1 gap-5 mt-6", grid[collection?.featuredContentsCollection?.items?.length])}>
-                          {collection.featuredContentsCollection.items.map((item) => {
+                          {collection?.featuredContentsCollection?.items?.map((item) => {
                             if (item) {
                               return (
                                 <div key={item?.name} className="grid">
