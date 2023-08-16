@@ -24,6 +24,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
     internalLink,
     linkView,
     content,
+    mediaInternalLink,
   } = props;
   const hasBlocks = content?.json?.content?.some(el => {
     return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
@@ -117,6 +118,19 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
               </div>
             )}
           </ButtonAtom>
+        )}
+        {mediaInternalLink && (
+          <div className="flex items-end mt-3 flex-grow">
+            <CustomLink
+              content={props}
+              className={classNames(
+                "button !rounded-full",
+                getButtonType(buttonType ?? "Contorno")
+              )}
+            >
+              {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
+            </CustomLink>
+          </div>
         )}
         </div>
       )}

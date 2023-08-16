@@ -169,6 +169,17 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                     {!cta.promoDescription && (cta.promoTitle ?? cta.name)}
                   </ButtonAtom>
                 )}
+                {cta?.mediaInternalLink && (
+                  <CustomLink
+                    content={cta}
+                    className={classNames(
+                      "button w-full sm:w-auto flex justify-center text-center",
+                      getButtonType("Contorno")
+                    )}
+                  >
+                    {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
+                  </CustomLink>
+                )}
               </>
             );
           })}
