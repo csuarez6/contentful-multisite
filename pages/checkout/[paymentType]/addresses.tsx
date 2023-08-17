@@ -253,7 +253,6 @@ const CheckoutAddress = () => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
-        console.log('shippingAddressFormatted', shippingAddressFormatted);
         if (shippingAddressFormatted) {
           setValue(
             "shippingAddress.stateCode",

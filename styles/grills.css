@@ -1,0 +1,35 @@
+/* 1 item */
+.listIcons-grill-1 {
+    @apply  flex justify-center flex-wrap !important
+}
+.listIcons-grill-1 .group {
+    @apply w-full
+}
+/* 2 items */
+.listIcons-grill-2 {
+    @apply  flex justify-center flex-wrap !important
+}
+.listIcons-grill-2 .group {
+    @apply w-[calc(50%_-_16px)]
+}
+/* 3 items */
+.listIcons-grill-3 {
+    @apply  flex justify-center flex-wrap !important
+}
+.listIcons-grill-3 .group {
+    @apply w-[calc(50%_-_16px)] lg:w-[calc((100%_/_3)_-_22px)]
+}
+/* 4 items */
+.listIcons-grill-4 {
+    @apply  flex justify-center flex-wrap !important
+}
+.listIcons-grill-4 .group {
+    @apply w-[calc(50%_-_16px)] lg:w-[calc((100%_/_3)_-_22px)] xl:w-[calc(25%_-_24px)] 
+}
+/* 5 items */
+.listIcons-grill-5 {
+    @apply  flex justify-center flex-wrap !important
+}
+.listIcons-grill-5 .group {
+    @apply w-[calc(50%_-_16px)] lg:w-[calc((100%_/_3)_-_22px)] xl:w-[calc(25%_-_24px)] 2xl:w-[calc(20%_-_26px)] 
+}
