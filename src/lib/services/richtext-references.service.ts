@@ -5,7 +5,7 @@ import getEntryContent from "./entry-content.service";
 
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
-import { RichtextLinksQuery } from "../graphql/shared/richtext.qql";
+import { RichtextLinksQuery } from "../graphql/shared/richtext.gql";
 
 const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [

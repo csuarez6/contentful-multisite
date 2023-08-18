@@ -1,6 +1,5 @@
 import AssetQuery, { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery from "../shared/default.gql";
-import RichtextQuery from "../shared/richtext.qql";
+import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
 
 const AuxCustomContent = `
   ${DefaultQuery}
@@ -57,7 +56,6 @@ const AuxCustomContent = `
 
 export const AuxCustomContentMinimalQuery = `
   ${DefaultQuery}
-  promoTitle
   name
   internalLink {
     ... on Page {
@@ -73,7 +71,25 @@ export const AuxCustomContentMinimalQuery = `
   }
   externalLink
   linkParameters
+  ctaLabel
+  pretitle
+  promoTitle
+  subtitle
+  promoDescription {
+    ${RichtextQuery}
+  }
+  promoImage {
+    ${AssetImageQuery}
+  }
+  promoIcon
   linkView
+  content{
+    ${RichtextQuery}
+  }
+  mediaInternalLink{
+    ${AssetQuery}
+  }
+  iframeHeight
 `;
 
 export default AuxCustomContent;

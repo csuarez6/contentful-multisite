@@ -1,8 +1,12 @@
 const DefaultQuery = `
-  __typename,
+  __typename
   sys {
     id
   }
+`;
+
+export const RichtextQuery = `
+  json
 `;
 
 export default DefaultQuery;

@@ -1,6 +1,18 @@
+import { AuxCustomContentMinimalQuery } from "./aux/custom-content.gql";
+import { AuxNavigationMinimalQuery } from "./aux/navigation.gql";
+import { ProductMinimalQuery } from "./product.gql";
 import { AssetImageQuery } from "./shared/asset.gql";
-import DefaultQuery from "./shared/default.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
+
+export const PageMinimalQuery = `
+  ${DefaultQuery}
+  name
+  promoTitle
+  urlPaths
+  parent {
+    ${DefaultQuery}
+  }
+`;
 
 const PageQuery = `
   ${DefaultQuery}
@@ -38,46 +50,36 @@ const PageQuery = `
   mainNavCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
       ...on AuxNavigation {
-        ${DefaultQuery}
+        ${AuxNavigationMinimalQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContentMinimalQuery}
       }
       ...on Product {
-        ${DefaultQuery}
+        ${ProductMinimalQuery}
       }
     }
   }
   showHeader
   enableHeaderPrecedence
-  relatedContentCollection{
+  relatedContentCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
       ...on AuxNavigation {
-        ${DefaultQuery}
+        ${AuxNavigationMinimalQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContentMinimalQuery}
       }
       ...on Product {
-        ${DefaultQuery}
+        ${ProductMinimalQuery}
       }
     }
-  }
-`;
-
-export const PageMinimalQuery = `
-  ${DefaultQuery}
-  name
-  promoTitle
-  urlPaths
-  parent {
-    ${DefaultQuery}
   }
 `;
 

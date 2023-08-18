@@ -1,5 +1,5 @@
-import DefaultQuery from "../shared/default.gql";
-import RichtextQuery from "../shared/richtext.qql";
+import { PageMinimalQuery } from "../page.gql";
+import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
 
 const BlockContentFilterQuery = `
   ${DefaultQuery}
@@ -11,7 +11,7 @@ const BlockContentFilterQuery = `
   parentsCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
     }
   }

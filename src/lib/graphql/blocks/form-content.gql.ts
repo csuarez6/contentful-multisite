@@ -1,15 +1,17 @@
-import DefaultQuery from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
 
-export const BlockFormQuery = `
+const BlockFormQuery = `
   ${DefaultQuery}
   name
   title
   subtitle
   description{
-    json
+    ${RichtextQuery}
   }
   simpleView
-  view{
+  view {
     ${DefaultQuery}
   }
 `;
+
+export default BlockFormQuery;

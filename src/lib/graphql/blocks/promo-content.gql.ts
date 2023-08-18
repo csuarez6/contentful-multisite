@@ -1,5 +1,5 @@
 import { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
 import ViewBannerImage from "../views/banner-image.gql";
 import ViewFeatured from "../views/featured.gql";
@@ -17,6 +17,9 @@ import ViewFeaturedProducts from "../views/featured-products.gql";
 import ViewVideoSlider from "../views/videoSlider.gql";
 import ViewSecondaryBanner from "../views/secondaryBanner.gql";
 import ViewRichText from "../views/richText.gql";
+import { PageMinimalQuery } from "../page.gql";
+import { ProductMinimalQuery } from "../product.gql";
+import { AuxCustomContentMinimalQuery } from "../aux/custom-content.gql";
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -25,31 +28,31 @@ const BlockPromoContentQuery = `
   pretitle
   subtitle
   description {
-    json
+    ${RichtextQuery}
   }
   ctaCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
       ...on Product {
-        ${DefaultQuery}
+        ${ProductMinimalQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContentMinimalQuery}
       }
     }
   }
   featuredContentsCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
       ...on Product {
-        ${DefaultQuery}
+        ${ProductMinimalQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContentMinimalQuery}
       }
       ...on BlockPromoContent{
         ${DefaultQuery}
@@ -59,13 +62,13 @@ const BlockPromoContentQuery = `
   listedContentsCollection {
     items {
       ...on Page {
-        ${DefaultQuery}
+        ${PageMinimalQuery}
       }
       ...on Product {
-        ${DefaultQuery}
+        ${ProductMinimalQuery}
       }
       ...on AuxCustomContent {
-        ${DefaultQuery}
+        ${AuxCustomContentMinimalQuery}
       }
     }
   }
@@ -129,7 +132,7 @@ const BlockPromoContentQuery = `
   blockId
   promoIcon
   footerText {
-    json
+    ${RichtextQuery}
   }
 `;
 

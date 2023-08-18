@@ -1,4 +1,4 @@
-import { BlockFormQuery } from "../blocks/form-content.gql";
+import BlockFormQuery from "../blocks/form-content.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
 import ViewFeatured from "../views/featured.gql";
 import ViewInformationCards from "../views/info-card.gql";
@@ -134,9 +134,3 @@ export const RichtextLinksQuery = `
     }
   }
 `;
-
-const RichtextQuery = `
-  json
-`;
-
-export default RichtextQuery;

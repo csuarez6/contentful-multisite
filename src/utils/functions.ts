@@ -240,3 +240,7 @@ export const getElementOffset = (el) => {
 
   return { top, left };
 };
+
+export const hasItems = (object: any) => {
+  return !!(object?.items?.[0]);
+};

@@ -1,8 +1,12 @@
 import _ from "lodash";
-
 import getEntryContent from "./entry-content.service";
-
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
+import contentfulClient from "./contentful-client.service";
+import { gql } from "@apollo/client";
+import getReferencesRichtextContent from "./richtext-references.service";
+import { getCommercelayerProduct } from "./commerce-layer.service";
+import getFilteredContent from "./content-filter.service";
 
 const REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
@@ -75,6 +79,77 @@ const getReferencesContent = async ({ content, preview = false, actualDepth = 1,
   }
 
   return referencesContent;
+};
+
+export const getBlocksContent = async ({ content, preview = false, getSubBlocks = false }) => {
+  if(!(content?.sys?.id) || !(content?.blocksCollection?.items?.[0])) return content;
+  
+  const newBlocksCollection: any = { items: [] }; 
+
+  for (const blockInfo of content.blocksCollection.items) {
+    const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+    let responseData = null, responseError = null;
+    try {
+      ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+        query: gql`
+          query getEntry($id: String!, $preview: Boolean!) {
+            ${type}(id: $id, preview: $preview) {
+              ${query}
+            }
+          }
+        `,
+        variables: {
+          id: blockInfo.sys.id,
+          preview
+        },
+        errorPolicy: 'all'
+      }));
+    } catch (e) {
+      responseError = e, responseData = {};
+    }
+
+    if (responseError) console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+    
+    const blockEntryContent = JSON.parse(
+      JSON.stringify(
+        responseData?.[type]
+      )
+    );
+
+    const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
+    if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+      _.merge(blockEntryContent, richtextReferences);
+    }
+
+    if (getSubBlocks) {
+      // const subBlocks = await getBlocksContent({
+      //   content: blockInfo,
+      //   preview,
+      // });
+  
+      // _.merge(blockEntryContent, subBlocks);
+    }
+
+    if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
+      const preloadContent = await getFilteredContent({
+        contentTypesFilter: blockEntryContent.contentTypesFilter ?? [],
+        parentIds: blockEntryContent.parentsCollection?.items?.map((p) => p.sys.id) ?? [],
+        availableFacets: blockEntryContent.availableFacets ?? [],
+        fullTextSearch: blockEntryContent.fullTextSearch ?? '',
+        pageResults: blockEntryContent.pageResults ?? 9,
+      });
+      _.merge(blockEntryContent, { preloadContent });
+    }
+
+    if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && blockEntryContent?.sku) {
+      const commercelayerProduct = await getCommercelayerProduct(blockEntryContent.sku);
+      _.merge(blockEntryContent, commercelayerProduct);
+    }
+
+    newBlocksCollection.items.push(blockEntryContent);
+  };
+
+  return newBlocksCollection;
 };
 
 export default getReferencesContent;

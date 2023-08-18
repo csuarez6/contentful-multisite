@@ -1,6 +1,5 @@
 import { AssetImageQuery, AssetQuery  } from "./shared/asset.gql";
-import DefaultQuery from "./shared/default.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
 
 const RateQuery = `
     name
