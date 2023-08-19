@@ -42,9 +42,8 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
     responseError = e, responseData = {};
   }
 
-  console.log("El responseData[`${typePage}Collection`] es:", responseData[`${typePage}Collection`]);
-
   if (responseError) console.error('Error on page content service, query => ', responseError.message);
+
   if (!hasItems(responseData[`${typePage}Collection`]) && !hasItems(responseData[`${typeProduct}Collection`])) return null;
 
   if (hasItems(responseData[`${typeProduct}Collection`])) { // Get related products (with the same category)
@@ -84,20 +83,14 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
 
   const pageContent = JSON.parse(
     JSON.stringify(
-      hasItems(responseData[`${typeProduct}Collection`]) ?? responseData[`${typePage}Collection`]?.items?.[0]
+      responseData[`${typeProduct}Collection`]?.items?.[0] ?? responseData[`${typePage}Collection`]?.items?.[0]
     )
   );
 
   if (pageContent?.parent?.__typename) pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
 
   if (fullContent) {
-    const referencesContent = await getBlocksContent({ content: pageContent, preview, getSubBlocks: true });
-
-    console.info(referencesContent);
-
-    if (referencesContent) {
-      _.merge(pageContent, referencesContent);
-    }
+    pageContent.blocksCollection = await getBlocksContent({ content: pageContent, preview, getSubBlocks: true });
 
     if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
       const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
