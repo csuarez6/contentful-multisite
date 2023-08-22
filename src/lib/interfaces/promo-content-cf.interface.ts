@@ -122,4 +122,5 @@ export interface IView {
     tabDisplay?: string;
     isBlock?: boolean;
     headerAlignment?: string;
+    isLink?: boolean;
 }

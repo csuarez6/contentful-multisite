@@ -13,6 +13,7 @@ export interface IProductCategory {
 export interface ICarouselCategoryBlock {
   queryParamName?: string;
   filterName?:string;
+  isLink?: boolean;
 }
 
 export interface IContentFilter {
