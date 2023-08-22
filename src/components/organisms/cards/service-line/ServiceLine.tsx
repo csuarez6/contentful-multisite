@@ -16,7 +16,7 @@ const ServiceLine: React.FC<IPromoContent> = (props) => {
     promoIcon,
     internalLink,
     externalLink,
-    iconPosition = "top"
+    iconPosition = "left"
   } = props;
   return (
     <article className="bg-cyan-50 shadow rounded-xl overflow-hidden w-full max-w-[588px]">
