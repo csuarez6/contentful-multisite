@@ -44,9 +44,11 @@ const CustomPage: NextPageWithLayout = (props: any) => {
         </div>
       )}
       {content?.json && (
-        <div className="main-container">
-          {enableHeaderPrecedence && showHeader && (jsonToReactComponents([{ ...__Breadcrumbs }]))}
-          <RichtextPage {...props} key={sys?.id} />
+        <div className="overflow-hidden">
+          <div className="main-container">
+            {enableHeaderPrecedence && showHeader && (jsonToReactComponents([{ ...__Breadcrumbs }]))}
+            <RichtextPage {...props} key={sys?.id} />
+          </div>
         </div>
       )}
     </div>
