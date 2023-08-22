@@ -78,9 +78,9 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
               isCentered && view?.alignTitle !== "Izquierda" ? "justify-center" : "justify-start"
             )}
           >
-            <div id={`tabs_${_uuid}`} className="flex border-b border-transparent">
+            <div id={`tabs_${_uuid}`} className="flex w-full border-b border-transparent">
               <Tab.List className={classNames(
-                "flex",
+                "flex w-full justify-start md:justify-center",
                 view?.alignTitle !== "Izquierda" && "gap-[10px]"
               )}>
                 {featuredContentsCollection?.items?.map((tab) => (
@@ -90,7 +90,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       content={tab}
                       linkClassName="flex h-full"
                       className={classNames(
-                        "flex flex-col flex-1 items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                        "flex flex-col flex-shrink-0 flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                         ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink))
                           ? "border-lucuma text-blue-dark"
                           : "border-transparent hover:border-lucuma text-category-sky-blue-50",
@@ -108,7 +108,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       key={`${tab.name}_tab`}
                       className={({ selected }) =>
                         classNames(
-                          "flex flex-col flex-1 items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                          "flex flex-col flex-shrink-0 flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                           selected
                             ? "border-lucuma text-blue-dark"
                             : "border-transparent hover:border-lucuma text-category-sky-blue-50",
