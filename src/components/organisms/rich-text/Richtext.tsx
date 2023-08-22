@@ -6,10 +6,19 @@ import defaultFormatOptions from "@/lib/richtext/default.formatter";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 
-const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, subtitle, description, promoDescription, sysId, blockId, ctaCollection }) => {
+const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, subtitle, description, promoDescription, sysId, blockId, ctaCollection, view: {textAlign} }) => {
   let descriptionJson = description?.json ?? promoDescription?.json;
   if (descriptionJson && attachLinksToRichtextContent) {
     descriptionJson = attachLinksToRichtextContent(descriptionJson, description?.links ?? promoDescription?.links);
+  }
+
+  const onTextAlign = () => {
+    switch(textAlign){
+      case "Centrado":
+        return "text-center"
+      default:
+        return "text-left"
+    }
   }
 
   return (
@@ -23,7 +32,7 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, su
         )}
       </div>
       {descriptionJson && (
-        <div className="richtext-container text-lg text-grey-10">
+        <div className={`richtext-container text-lg text-grey-10 ${onTextAlign()}`}>
           {documentToReactComponents(descriptionJson, defaultFormatOptions)}
         </div>
       )}
