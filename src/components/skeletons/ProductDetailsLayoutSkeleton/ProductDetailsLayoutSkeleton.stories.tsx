@@ -2,14 +2,14 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ProductDetailsLayoutSkeleton from './ProductDetailsLayoutSkeleton';
 
 export default {
-  title: 'skeletons/FeaturedProductSkeleton',
+  title: 'skeletons/ProductDetailsLayoutSkeleton',
   component: ProductDetailsLayoutSkeleton,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
   parameters: {
     docs: {
       description: {
-        component: 'This is an skeleton component for FeaturedProductBlock',
+        component: 'This is an skeleton component for ProductDetailsBlock',
       },
     },
   },

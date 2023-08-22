@@ -4,7 +4,7 @@
 }
 
 .richtext-container table {
-  @apply table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden my-6;
+  @apply block md:table table-auto w-full border-separate rounded-lg border-spacing-0 border border-neutral-80 overflow-hidden my-6;
 }
 
 .richtext-container table :is(th, td) p:nth-child(n+2) {
@@ -20,7 +20,7 @@
 }
 
 .richtext-container table tr td {
-  @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-none align-top;
+  @apply px-6 py-4 first:bg-grey-90 bg-white border-t border-neutral-80 text-center first:text-left text-grey-30 first:text-grey-10 leading-tight align-top;
 }
 
 .richtext-container ul,
