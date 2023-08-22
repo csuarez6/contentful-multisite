@@ -72,11 +72,10 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
   const columnCard = (items) => {
     const col = columns - items;
     return {
-      gridTemplateColumns: `repeat(${col}, 1fr)`,
+      gridTemplateColumns: `repeat(${col}, minmax(0, 1fr))`,
       gridColumn: `span ${col} / span ${col}`,
     };
   };
-
   const openSubmenu = () => {
     const _submenu = submenu.current;
     const subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
@@ -267,7 +266,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                   </div>
                   {item?.secondaryNavCollection.items.length > 0 && (
                     <div
-                      className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
+                      className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70 grid-col-2"
                       style={columnCard(item.mainNavCollection.items.length)}
                     >
                       {item.secondaryNavCollection.items.map((block) => (
