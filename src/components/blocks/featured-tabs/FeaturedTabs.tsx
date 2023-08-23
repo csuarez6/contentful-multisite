@@ -90,7 +90,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       content={tab}
                       linkClassName="flex h-full"
                       className={classNames(
-                        "flex flex-col flex-shrink-0 flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                        "flex flex-col flex-shrink-0 max-w-[60vw] md:max-w-none md:flex-shrink flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                         ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink))
                           ? "border-lucuma text-blue-dark"
                           : "border-transparent hover:border-lucuma text-category-sky-blue-50",
@@ -108,7 +108,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       key={`${tab.name}_tab`}
                       className={({ selected }) =>
                         classNames(
-                          "flex flex-col flex-shrink-0 flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                          "flex flex-col flex-shrink-0 max-w-[60vw] md:max-w-none md:flex-shrink flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                           selected
                             ? "border-lucuma text-blue-dark"
                             : "border-transparent hover:border-lucuma text-category-sky-blue-50",
