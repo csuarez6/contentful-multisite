@@ -2,7 +2,8 @@ import DefaultQuery from "../shared/default.gql";
 
 const ViewRichText = `
     ${DefaultQuery}
-    name
+    name,
+    textAlign
 `;
 
 export default ViewRichText;

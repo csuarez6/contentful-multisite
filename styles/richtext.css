@@ -1,6 +1,13 @@
+.richtext-container :is(p, span, li){
+  @apply text-neutral-30;
+}
 .richtext-container > p,
 .richtext-container :is(h1, h2, h3, h4, h5, h6) {
   @apply mb-4;
+}
+
+.richtext-container :is(h1, h2, h3, h4, h5, h6) {
+  @apply text-blue-dark
 }
 
 .richtext-container table {

@@ -150,7 +150,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                           {collection?.featuredContentsCollection?.items?.map((item) => {
                             if (item) {
                               return (
-                                <div key={item?.name} className="grid">
+                                <div key={item?.name} className="grid grid-cols-1">
                                   <ListWithIcons {...item} />
                                 </div>
                               );

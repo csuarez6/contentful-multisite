@@ -126,7 +126,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                         </figure>
                       )}
                       {item.promoDescription && (
-                        <div className="text-lg text-grey-30 hidden group-[.open]:block">
+                        <div className="text-lg text-grey-30 hidden group-[.open]:block richtext-container">
                           {documentToReactComponents(
                             attachLinksToRichtextContent(
                               item?.promoDescription?.json,
