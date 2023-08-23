@@ -61,7 +61,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                   width={view?.columnsSize > 2 ? 384 : 612}
                   height={view?.columnsSize > 2 ? 624 : 569}
                   className={classNames(
-                    "block w-auto object-cover rounded-lg",
+                    "block object-cover rounded-lg w-full",
                     view?.columnsSize > 2
                       ? "aspect-[384/624]"
                       : "aspect-[612/569]"
@@ -69,7 +69,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                 />
               </figure>
             </div>
-          )}
+          )} 
           {(title ||
             description ||
             featuredContentsCollection?.items?.length > 0 ||
