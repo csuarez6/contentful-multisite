@@ -70,7 +70,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
         "flex group",
         iconPosition && iconPosition === "Izquierda"
           ? "flex-row gap-5"
-          : "flex-col text-center gap-3 items-center"
+          : "w-full flex-col text-center gap-3 items-center"
       )}
     >
       {promoIcon && (
@@ -81,7 +81,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
       {(promoTitle || promoDescription || ctaLabel) && (
         <div
           className={classNames(
-            "flex flex-col gap-6",
+            "flex flex-col gap-6 w-full",
             iconPosition !== "Izquierda" ? "items-center" : "items-start"
           )}
         >
@@ -89,7 +89,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
             <h3 className="title is-4 pt-1 text-blue-dark">{promoTitle}</h3>
           )}
           {promoDescription && (
-            <div className="text-lg text-grey-30 richtext-container">
+            <div className="text-lg text-grey-30 richtext-container w-full">
               {documentToReactComponents(
                 promoDescription.json,
                 defaultFormatOptions
