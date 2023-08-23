@@ -15,11 +15,11 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({ title, promoTitle, su
   const onTextAlign = () => {
     switch(textAlign){
       case "Centrado":
-        return "text-center"
+        return "text-center";
       default:
-        return "text-left"
+        return "text-left";
     }
-  }
+  };
 
   return (
     <section id={blockId ?? sysId} className="section">
