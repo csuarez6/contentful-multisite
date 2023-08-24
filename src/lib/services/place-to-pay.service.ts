@@ -104,7 +104,6 @@ export const getRequestInformation = async (requestId: string): Promise<IRequest
       body: JSON.stringify(bodyRequest)
     });
     const data = await response.json() as IRequestInformation;
-    console.info(data);
     return data;
   } catch (error) {
     console.error(error);

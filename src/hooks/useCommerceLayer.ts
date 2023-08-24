@@ -269,7 +269,7 @@ export const useCommerceLayer = () => {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
         
         if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
-          console.info("error in sku line item", response.errors);
+          console.error("error in sku line item", response.errors);
           return { status: parseInt(response.errors[0].status), data: response.errors[0].title };
         } else {
           try {
@@ -346,11 +346,7 @@ export const useCommerceLayer = () => {
       },
     }).then((response) => response.json())
       .then(async (json) => {
-        if (json.status === 200 && json.data != null) {
-          console.info(json);
-        } else {
-          console.error("Error requestService or Null");
-        }
+        if (!(json.status === 200 && json.data != null)) console.error("Error requestService or Null");
       })
       .catch((err) => {
         console.warn(err);

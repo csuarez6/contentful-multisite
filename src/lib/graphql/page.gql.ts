@@ -14,6 +14,24 @@ export const PageMinimalQuery = `
   }
 `;
 
+export const PageFragments = `
+  fragment PageMinimalFragment on Page {
+    ${PageMinimalQuery}
+  }
+
+  fragment AuxNavigationMinimalFragment on AuxNavigation {
+    ${AuxNavigationMinimalQuery}
+  }
+  
+  fragment AuxCustomContentMinimalFragment on AuxCustomContent {
+    ${AuxCustomContentMinimalQuery}
+  }
+
+  fragment ProductMinimalFragment on Product {
+    ${ProductMinimalQuery}
+  }
+`;
+
 const PageQuery = `
   ${DefaultQuery}
   name
@@ -32,7 +50,7 @@ const PageQuery = `
       ...on BlockContentFilter {
         ${DefaultQuery}
       }
-      ...on BlockForm{
+      ...on BlockForm {
         ${DefaultQuery}
       }
     }
@@ -49,36 +67,20 @@ const PageQuery = `
   urlPaths
   mainNavCollection {
     items {
-      ...on Page {
-        ${PageMinimalQuery}
-      }
-      ...on AuxNavigation {
-        ${AuxNavigationMinimalQuery}
-      }
-      ...on AuxCustomContent {
-        ${AuxCustomContentMinimalQuery}
-      }
-      ...on Product {
-        ${ProductMinimalQuery}
-      }
+      ...PageMinimalFragment
+      ...AuxNavigationMinimalFragment
+      ...AuxCustomContentMinimalFragment
+      ...ProductMinimalFragment
     }
   }
   showHeader
   enableHeaderPrecedence
   relatedContentCollection {
     items {
-      ...on Page {
-        ${PageMinimalQuery}
-      }
-      ...on AuxNavigation {
-        ${AuxNavigationMinimalQuery}
-      }
-      ...on AuxCustomContent {
-        ${AuxCustomContentMinimalQuery}
-      }
-      ...on Product {
-        ${ProductMinimalQuery}
-      }
+      ...PageMinimalFragment
+      ...AuxNavigationMinimalFragment
+      ...AuxCustomContentMinimalFragment
+      ...ProductMinimalFragment
     }
   }
 `;

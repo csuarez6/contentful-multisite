@@ -18,7 +18,7 @@ const handler = async (
       req.headers['x-algolia-application-id'],
       req.headers['x-algolia-api-key']
     );
-    // console.log('index', req.body);
+
     let entryData = typeof req.body == 'string' ? JSON.parse(req.body) : { ...req.body };
     const indexType = _.upperFirst(entryData.sys.contentType.sys.id).replaceAll('_', '');
     

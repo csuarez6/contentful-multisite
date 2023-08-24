@@ -1,7 +1,7 @@
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
-import PageQuery, { PageMinimalQuery } from "@/lib/graphql/page.gql";
-import BlockPromoContentQuery from "@/lib/graphql/blocks/promo-content.gql";
+import PageQuery, { PageFragments, PageMinimalQuery } from "@/lib/graphql/page.gql";
+import BlockPromoContentQuery, { BlockPromoContentFragments } from "@/lib/graphql/blocks/promo-content.gql";
 import AuxNavigationQuery from "@/lib/graphql/aux/navigation.gql";
 import AuxCustomContent, { AuxCustomContentMinimalQuery } from "@/lib/graphql/aux/custom-content.gql";
 import ProductQuery, { ProductMinimalQuery } from '../lib/graphql/product.gql';
@@ -12,68 +12,71 @@ import BlockFormQuery from "@/lib/graphql/blocks/form-content.gql";
 import RateQuery from "@/lib/graphql/rate.gql";
 import AllyQuery from "@/lib/graphql/ally.gql";
 import copySetQuery from "@/lib/graphql/copy/copySet.gql";
+import { QN_AUXALLY, QN_AUXCUSTOMCONTENT, QN_AUXNAVIGATION, QN_AUXRATE, QN_BLOCKFORM, QN_BLOCKPROMOCONTENT, QN_CONTENTFILTER, QN_COPYSET, QN_PAGE, QN_PRODUCT, QN_PRODUCTCATEGORY, QN_TRADEMARK } from "./contentful-querynames.constants";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
-    queryName: 'page',
+    queryName: QN_PAGE,
     query: PageQuery,
+    fragments: PageFragments
   },
   [CONTENTFUL_TYPENAMES.PAGE_MINIMAL]: {
-    queryName: 'page',
+    queryName: QN_PAGE,
     query: PageMinimalQuery,
   },
   [CONTENTFUL_TYPENAMES.PRODUCT]: {
-    queryName: 'product',
+    queryName: QN_PRODUCT,
     query: ProductQuery,
   },
   [CONTENTFUL_TYPENAMES.PRODUCT_MINIMAL]: {
-    queryName: 'product',
+    queryName: QN_PRODUCT,
     query: ProductMinimalQuery,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: {
-    queryName: 'blockPromoContent',
+    queryName: QN_BLOCKPROMOCONTENT,
     query: BlockPromoContentQuery,
+    fragments: BlockPromoContentFragments
   },
   [CONTENTFUL_TYPENAMES.BLOCK_FORM]: {
-    queryName: 'blockForm',
+    queryName: QN_BLOCKFORM,
     query: BlockFormQuery,
   },
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: {
-    queryName: 'blockContentFilter',
+    queryName: QN_CONTENTFILTER,
     query: BlockContentFilterQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: {
-    queryName: 'auxNavigation',
+    queryName: QN_AUXNAVIGATION,
     query: AuxNavigationQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: {
-    queryName: 'auxCustomContent',
+    queryName: QN_AUXCUSTOMCONTENT,
     query: AuxCustomContent,
   },
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT_MINIMAL]: {
-    queryName: 'auxCustomContent',
+    queryName: QN_AUXCUSTOMCONTENT,
     query: AuxCustomContentMinimalQuery,
   },
   [CONTENTFUL_TYPENAMES.PRODUCT_CATEGORY]: {
-    queryName: 'productCategory',
+    queryName: QN_PRODUCTCATEGORY,
     query: ProductCategoryQuery,
   },
   [CONTENTFUL_TYPENAMES.TRADEMARK]: {
-    queryName: 'trademark',
+    queryName: QN_TRADEMARK,
     query: TrademarkQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_RATE]: {
-    queryName: 'auxRate',
+    queryName: QN_AUXRATE,
     algoliaType: 'aux_Rate',
     query: RateQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_ALLY]: {
-    queryName: 'auxAlly',
+    queryName: QN_AUXALLY,
     algoliaType: 'aux_Ally',
     query: AllyQuery,
   },
   [CONTENTFUL_TYPENAMES.COPY_SET]: {
-    queryName: 'copySet',
+    queryName: QN_COPYSET,
     query: copySetQuery,
   },
 };

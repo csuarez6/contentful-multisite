@@ -158,7 +158,6 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpenMenu]);
 
-  // console.info({ item, name, currentMenu});
   return (
     <div
       onMouseOver={() => handleMouseOver(item)}

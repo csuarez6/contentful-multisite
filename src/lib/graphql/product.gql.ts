@@ -62,6 +62,9 @@ export const ProductMinimalQuery = `
   name
   promoTitle
   urlPaths
+  promoImage {
+    ${AssetImageQuery}
+  }
 `;
 
 export default ProductQuery;

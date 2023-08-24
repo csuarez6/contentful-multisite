@@ -28,15 +28,10 @@ const TO_MINIMAL = {
 
 const getReferencesRichtextContent = async ({ content, preview }) => {
   const referencesContent: any = {};
-  if (!content?.sys?.id && RICHTEXT_REFERENCES[content.__typename] !== undefined) {
-    return null;
-  }
-
+  if (!content?.sys?.id && RICHTEXT_REFERENCES[content.__typename] !== undefined) return null;
   const { queryName: type } = CONTENTFUL_QUERY_MAPS[content.__typename];
   const references = RICHTEXT_REFERENCES[content.__typename];
-  if (!Array.isArray(references)) {
-    return null;
-  }
+  if (!Array.isArray(references)) return null;
   for (const ref of references) {
     let responseData = null;
     let responseError = null;

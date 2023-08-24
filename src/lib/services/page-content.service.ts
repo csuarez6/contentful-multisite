@@ -16,12 +16,13 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
 
   let responseData = null, responseError = null;
 
-  const { queryName: typePage, query: queryPage } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
+  const { queryName: typePage, query: queryPage, fragments = "" } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
   const { queryName: typeProduct, query: queryProduct } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PRODUCT];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getPage($urlPath: String!, $preview: Boolean!) {
           ${typePage}Collection(where: { urlPaths_contains_some: [$urlPath] }, limit: 1, preview: $preview) {
             items {

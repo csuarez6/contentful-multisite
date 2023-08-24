@@ -87,11 +87,12 @@ export const getBlocksContent = async ({ content, preview = false, getSubBlocks 
   const newBlocksCollection: any = { items: [] }; 
 
   for (const blockInfo of content.blocksCollection.items) {
-    const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+    const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
     let responseData = null, responseError = null;
     try {
       ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
         query: gql`
+          ${fragments}
           query getEntry($id: String!, $preview: Boolean!) {
             ${type}(id: $id, preview: $preview) {
               ${query}

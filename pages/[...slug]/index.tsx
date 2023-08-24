@@ -99,9 +99,9 @@ export const getStaticProps: GetStaticProps = async (
 
   const breadCrumbContent = getBreadcrumbs(pageContent);
   // const headerID = breadCrumbContent?.ctaCollection?.items[0]?.sys?.id ?? DEFAULT_HEADER_ID;
-  const headerInfo = false // await getMenu( DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = false // await getMenu( DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = false // await getMenu( DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = false; // await getMenu( DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = false; // await getMenu( DEFAULT_FOOTER_ID, context.preview ?? false, 3);
+  const helpButton = false; // await getMenu( DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,

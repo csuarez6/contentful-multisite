@@ -21,6 +21,20 @@ import { PageMinimalQuery } from "../page.gql";
 import { ProductMinimalQuery } from "../product.gql";
 import { AuxCustomContentMinimalQuery } from "../aux/custom-content.gql";
 
+export const BlockPromoContentFragments = `
+  fragment PageMinimalFragment on Page {
+    ${PageMinimalQuery}
+  }
+  
+  fragment ProductMinimalFragment on Product {
+    ${ProductMinimalQuery}
+  }
+  
+  fragment AuxCustomContentMinimalFragment on AuxCustomContent {
+    ${AuxCustomContentMinimalQuery}
+  }
+`;
+
 const BlockPromoContentQuery = `
   ${DefaultQuery}
   name
@@ -32,28 +46,16 @@ const BlockPromoContentQuery = `
   }
   ctaCollection {
     items {
-      ...on Page {
-        ${PageMinimalQuery}
-      }
-      ...on Product {
-        ${ProductMinimalQuery}
-      }
-      ...on AuxCustomContent {
-        ${AuxCustomContentMinimalQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
     }
   }
   featuredContentsCollection {
     items {
-      ...on Page {
-        ${PageMinimalQuery}
-      }
-      ...on Product {
-        ${ProductMinimalQuery}
-      }
-      ...on AuxCustomContent {
-        ${AuxCustomContentMinimalQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
       ...on BlockPromoContent{
         ${DefaultQuery}
       } 
@@ -61,15 +63,9 @@ const BlockPromoContentQuery = `
   }
   listedContentsCollection {
     items {
-      ...on Page {
-        ${PageMinimalQuery}
-      }
-      ...on Product {
-        ${ProductMinimalQuery}
-      }
-      ...on AuxCustomContent {
-        ${AuxCustomContentMinimalQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
     }
   }
   image {
