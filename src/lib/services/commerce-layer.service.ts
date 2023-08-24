@@ -81,7 +81,7 @@ export const getIntegrationAppToken = async (): Promise<string> => {
 };
 
 /* For CRUD in the order, items and similars (4 hours) */
-export const getMerchantToken = async (cache=true) => {
+export const getMerchantToken = async (cache = true) => {
   try {
     if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN && cache)
       return CACHE_TOKENS.MERCHANT_TOKEN;
@@ -98,7 +98,7 @@ export const getMerchantToken = async (cache=true) => {
       clientId: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
       scope: commercelayerScope,
     });
-    if(cache){
+    if (cache) {
       CACHE_TOKENS.MERCHANT_TOKEN = accessToken;
       setTimeout(() => {
         CACHE_TOKENS.MERCHANT_TOKEN = null;
@@ -619,6 +619,22 @@ export const createServiceAditional = async (
     return { status: 200, data: null };
   } catch (error) {
     console.error("Error create-adjustments: ", error);
+    return { status: 401, error: error };
+  }
+};
+
+/*** Get orders status on commercelayer  ***/
+export const getOrderStatusCl = async (status?: string) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const orderList = await cl.orders.list({
+      filters: { status_eq: status ?? "placed" },
+      sort: { created_at: "desc" },
+      pageSize: 25, // The maximum page size allowed is 25 - Commercelayer
+    });
+    return { status: 200, data: orderList };
+  } catch (error) {
+    console.error("Error getOrderStatusCl: ", error);
     return { status: 401, error: error };
   }
 };
