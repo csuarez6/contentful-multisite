@@ -10,10 +10,6 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-      - name: Use Node js 16
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
 
       - name: Merge dev -> storybook-deploy 🚀
         uses: devmasx/merge-branch@1.4.0
