@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Image from "next/image";
 import { Disclosure, Transition } from "@headlessui/react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
@@ -152,7 +152,7 @@ const FooterBlock: React.FC<INavigation> = ({
                           </Disclosure.Panel>
                         </Transition>
                       </>
-                    )
+                    );
                   }}
                 </Disclosure>
               ))}
