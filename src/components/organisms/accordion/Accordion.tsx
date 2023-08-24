@@ -12,6 +12,20 @@ const Accordion: React.FC<any> = ({
   columnsSize,
   displayIcon,
 }) => {
+  const [activeDisclosurePanel, setActiveDisclosurePanel] = React.useState(null);
+
+  const togglePanels = (newPanel) => {
+    if (activeDisclosurePanel) {
+      if (activeDisclosurePanel.key !== newPanel.key && activeDisclosurePanel.open) {
+        activeDisclosurePanel.close();
+      }
+    }
+    setActiveDisclosurePanel({
+      ...newPanel,
+      open: !newPanel.open
+    });
+  };
+
   return (
     <div className={classNames("grid", classColumns(columnsSize ?? "2"))}>
       {featuredContents?.items?.map((el, index) => {
@@ -22,7 +36,8 @@ const Accordion: React.FC<any> = ({
             key={`${el.name}-${index}`}
             className="first:border-0 border-t border-neutral-80"
           >
-            {({ open }) => {
+            {(panel) => {
+              const { open, close } = panel;
               let contentJson = el?.content?.json;
               if (attachLinksToRichtextContent && contentJson) {
                 contentJson = attachLinksToRichtextContent(
@@ -37,6 +52,12 @@ const Accordion: React.FC<any> = ({
                       as="div"
                       role="button"
                       className={`flex w-full items-center justify-between px-7 text-left text-gray-400 py-6`}
+                      onClick={ () => {                        
+                        if (!open) {
+                          close(); 
+                        }
+                        togglePanels({ ...panel, key: index });
+                      }}
                     >
                       <div className="flex items-center gap-3">
                         {el.promoIcon && displayIcon && (
@@ -75,9 +96,8 @@ const Accordion: React.FC<any> = ({
                   >
                     <Disclosure.Panel
                       as="div"
-                      className={`pb-6 ${
-                        el.promoIcon && displayIcon ? "px-10" : ""
-                      }`}
+                      className={`pb-6 ${el.promoIcon && displayIcon ? "px-10" : ""
+                        }`}
                     >
                       <div className="text-base text-gray-500 px-7 richtext-container custom-text">
                         {documentToReactComponents(
@@ -97,7 +117,7 @@ const Accordion: React.FC<any> = ({
           </Disclosure>
         );
       })}
-    </div>
+    </div >
   );
 };
 
