@@ -181,8 +181,7 @@ const DashboardAddresses = () => {
       (async () => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
-        const billingAddressFormatted = toAddressForm(billingAddress);
-        
+        const billingAddressFormatted = toAddressForm(billingAddress);        
         if (shippingAddressFormatted) {
           setValue(
             "shippingAddress.stateCode",

@@ -6,6 +6,7 @@ const ViewCarouselCategories = `
     alignTitle
     columnsSize
     isSlider
+    isLink
 `;
 
 export default ViewCarouselCategories;

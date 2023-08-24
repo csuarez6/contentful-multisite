@@ -52,6 +52,8 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
   sku
 }) => {
   const onClick = () => {
+    const isGasodomestico = isGasAppliance(marketId);
+
     gTagEvent("select_item", {
       items: [{
         item_id: `SKU_${sku}`,
@@ -59,18 +61,18 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
         coupon: '',
         discount: discount,
         index: 0,
-        item_list_name: isGasAppliance(marketId) ? "Gasodoméstico" : "Catálogo VantiListo",
-        item_list_id: isGasAppliance(marketId) ? "Lista_Gasodomésticos" : "Catálogo_VantiListo",
-        affiliation: trademark ? `Marketplace: ${trademark.name}` : 'Marketplace',
+        item_list_name: isGasodomestico ? "Gasodoméstico" : "Catálogo VantiListo",
+        item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo",
+        affiliation: isGasodomestico ? 'Marketplace Gasodoméstico' : 'Marketplace VantiListo',
         item_brand: trademark?.name ?? '',
         item_category: '',
         item_variant: '',
-        price: isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo,
+        price: isGasodomestico ? priceGasodomestico : priceVantiListo,
         currency: 'COP',
         quantity: 1
       }],
-      item_list_name: isGasAppliance(marketId) ? "Gasodoméstico" : "Catálogo VantiListo",
-      item_list_id: isGasAppliance(marketId) ? "Lista_Gasodomésticos" : "Catálogo_VantiListo"
+      item_list_name: isGasodomestico ? "Gasodoméstico" : "Catálogo VantiListo",
+      item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo"
     });
   };
 

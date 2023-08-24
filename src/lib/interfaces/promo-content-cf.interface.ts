@@ -102,6 +102,7 @@ export interface ITag {
 export interface IView {
     __typename?: string;
     name?: string;
+    textAlign?: string;
     backgroundColor?: string;
     bannerHeight?: string;
     bannerWidth?: string;
@@ -122,4 +123,5 @@ export interface IView {
     tabDisplay?: string;
     isBlock?: boolean;
     headerAlignment?: string;
+    isLink?: boolean;
 }

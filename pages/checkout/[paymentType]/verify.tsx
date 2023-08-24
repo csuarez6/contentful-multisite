@@ -444,7 +444,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 </button>
               </div>
               <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
-                {product.formatted_unit_amount}
+                {(product.formatted_unit_amount).split(',')[0]}
               </div>
               {/* Shipping */}
               <div className="w-full sm:hidden"></div>
@@ -515,7 +515,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   </div>
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
                     {product["warranty_service"]?.length > 0
-                      ? product["warranty_service"][0]["formatted_unit_amount"]
+                      ? (product["warranty_service"][0]["formatted_unit_amount"]).split(',')[0]
                       : "$0"}
                   </div>
                 </>
@@ -567,9 +567,9 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   </div>
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
-                      ? product["installlation_service"][0][
+                      ? (product["installlation_service"][0][
                       "formatted_unit_amount"
-                      ]
+                      ]).split(',')[0]
                       : "$0"}
                   </div>
                 </>

@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import FeaturedProductBlockSkeleton from './FeaturedProductSkeleton';
 
 export default {
-  title: 'skeletons/FeaturedProductSkeleton',
+  title: 'skeletons/FeaturedProductBlockSkeleton',
   component: FeaturedProductBlockSkeleton,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

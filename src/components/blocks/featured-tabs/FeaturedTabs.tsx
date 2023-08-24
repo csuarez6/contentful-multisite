@@ -78,19 +78,19 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
               isCentered && view?.alignTitle !== "Izquierda" ? "justify-center" : "justify-start"
             )}
           >
-            <div id={`tabs_${_uuid}`} className="flex border-b border-transparent">
+            <div id={`tabs_${_uuid}`} className="flex w-full border-b border-transparent">
               <Tab.List className={classNames(
-                "flex",
+                "flex w-full justify-start md:justify-center",
                 view?.alignTitle !== "Izquierda" && "gap-[10px]"
               )}>
-                {featuredContentsCollection.items.map((tab) => (
+                {featuredContentsCollection?.items?.map((tab) => (
                   isCustomLink(tab) ? (
                     <CustomLink
                       key={`${tab.name}_tab`}
                       content={tab}
                       linkClassName="flex h-full"
                       className={classNames(
-                        "flex flex-col flex-1 items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                        "flex flex-col flex-shrink-0 max-w-[60vw] md:max-w-none md:flex-shrink flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                         ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink))
                           ? "border-lucuma text-blue-dark"
                           : "border-transparent hover:border-lucuma text-category-sky-blue-50",
@@ -108,7 +108,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       key={`${tab.name}_tab`}
                       className={({ selected }) =>
                         classNames(
-                          "flex flex-col flex-1 items-center title is-3 gap-[10px] focus:outline-none border-b-2",
+                          "flex flex-col flex-shrink-0 max-w-[60vw] md:max-w-none md:flex-shrink flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
                           selected
                             ? "border-lucuma text-blue-dark"
                             : "border-transparent hover:border-lucuma text-category-sky-blue-50",
@@ -130,7 +130,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
 
           <div className="relative">
             <Tab.Panels as={Fragment}>
-              {featuredContentsCollection.items.map((collection) => {
+              {featuredContentsCollection?.items?.map((collection) => {
                 return !isCustomLink(collection) && (
                   <Tab.Panel key={`${collection.name}_content`} className="focus:outline-none">
                     <Transition
@@ -147,10 +147,10 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                         jsonToReactComponent(collection)
                       ) : (
                         <div className={classNames("grid grid-cols-1 gap-5 mt-6", grid[collection?.featuredContentsCollection?.items?.length])}>
-                          {collection.featuredContentsCollection.items.map((item) => {
+                          {collection?.featuredContentsCollection?.items?.map((item) => {
                             if (item) {
                               return (
-                                <div key={item?.name} className="grid">
+                                <div key={item?.name} className="grid grid-cols-1">
                                   <ListWithIcons {...item} />
                                 </div>
                               );

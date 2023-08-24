@@ -14,6 +14,14 @@ export const classColumns = (columns = 1, ignoreCols = []) => {
   return classes.join(" ");
 };
 
+export const classColumnsFlex =  {
+  1: "listIcons-grill-1",
+  2: "listIcons-grill-2",
+  3: "listIcons-grill-3",
+  4: "listIcons-grill-4",
+  5: "listIcons-grill-5"
+};
+
 export const showProductTotal = (productPrice, installPrice, warrantyPrice) => {
   const productPriceTmp = productPrice ?? 0;
   const installPriceTmp = (installPrice && installPrice.length > 0) ? installPrice[0].total_amount_float : 0;
@@ -225,7 +233,7 @@ export const isAvailableVantilisto = (marketId: string, priceVantiListo: string,
 };
 
 export const formatPrice = (value) => {
-  return "$" + new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2 }).format(value);
+  return "$" + new Intl.NumberFormat('de-DE', { minimumFractionDigits: 0 }).format(value);
 };
 
 export const getElementOffset = (el) => {

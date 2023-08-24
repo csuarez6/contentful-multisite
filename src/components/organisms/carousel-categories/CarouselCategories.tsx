@@ -20,6 +20,7 @@ const CarouselCategories: React.FC<
     queryParamName = "categoria",
     value = null,
     filterName,
+    isLink
   } = props;
   const { asPath } = useRouter();
   const fullPath = asPath.split("?")[0];  
@@ -32,7 +33,7 @@ const CarouselCategories: React.FC<
   link = linkParameters ? link + linkParameters : link;
   return (
     <article className="flex justify-center h-full">
-      {link ? (
+      {(link && !!isLink) ? (
         <Link href={link} className="h-full">
           <div
             className={classNames(
@@ -100,11 +101,7 @@ const CarouselCategories: React.FC<
           {(promoTitle || name) && (
             <h3
               className={classNames(
-                "text-center text-slate-600 !font-semibold group-hover:underline text-base",
-                filterName !== null &&
-                  (filterName?.toLowerCase() === promoTitle?.toLowerCase() ||
-                    filterName?.toLowerCase() === name?.toLowerCase()) &&
-                  "underline"
+                "text-center text-slate-600 !font-semibold text-base",
               )}
             >
               {promoTitle ?? name}

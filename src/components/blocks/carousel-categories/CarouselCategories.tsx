@@ -140,6 +140,7 @@ const CarouselCategoriesBlock: React.FC<
                     {...content}
                     queryParamName={queryParamName}
                     filterName={filterName}
+                    isLink={view?.isLink}
                   />
                 </SwiperSlide>
               ))}
