@@ -25,11 +25,9 @@ export const BlockPromoContentFragments = `
   fragment PageMinimalFragment on Page {
     ${PageMinimalQuery}
   }
-  
   fragment ProductMinimalFragment on Product {
     ${ProductMinimalQuery}
   }
-  
   fragment AuxCustomContentMinimalFragment on AuxCustomContent {
     ${AuxCustomContentMinimalQuery}
   }

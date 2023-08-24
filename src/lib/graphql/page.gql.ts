@@ -12,21 +12,24 @@ export const PageMinimalQuery = `
   parent {
     ${DefaultQuery}
   }
+  content {
+    ${RichtextQuery}
+  }
+  promoDescription {
+    ${RichtextQuery}
+  }
 `;
 
 export const PageFragments = `
   fragment PageMinimalFragment on Page {
     ${PageMinimalQuery}
   }
-
   fragment AuxNavigationMinimalFragment on AuxNavigation {
     ${AuxNavigationMinimalQuery}
   }
-  
   fragment AuxCustomContentMinimalFragment on AuxCustomContent {
     ${AuxCustomContentMinimalQuery}
   }
-
   fragment ProductMinimalFragment on Product {
     ${ProductMinimalQuery}
   }

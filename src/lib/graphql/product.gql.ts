@@ -59,12 +59,20 @@ const ProductQuery = `
 `;
 
 export const ProductMinimalQuery = `
+  ${DefaultQuery}
   name
-  promoTitle
+  sku
+  marketId
+  slug
   urlPaths
+  promoTitle
   promoImage {
     ${AssetImageQuery}
   }
+  size
+  capacity
+  isNew
+  discount
 `;
 
 export default ProductQuery;

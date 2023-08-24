@@ -131,7 +131,24 @@ export const getBlocksContent = async ({ content, preview = false, getSubBlocks 
       // _.merge(blockEntryContent, subBlocks);
     }
 
-    if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
+    if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
+      for (const ref of REFERENCES[blockEntryContent.__typename]) {
+        if (blockEntryContent?.[ref]?.items?.length) {
+          for(const refItem of blockEntryContent[ref].items){
+            const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
+            if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
+              _.merge(refItem, richtextItemReferences);
+            }
+
+            if(refItem.__typename === CONTENTFUL_TYPENAMES.PRODUCT && refItem?.sku){
+              console.log("Se buscará el producto: ", refItem?.sku);
+              const commercelayerProduct = await getCommercelayerProduct(refItem.sku);
+              _.merge(refItem, commercelayerProduct);
+            }
+          }
+        }
+      }
+    } else if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
       const preloadContent = await getFilteredContent({
         contentTypesFilter: blockEntryContent.contentTypesFilter ?? [],
         parentIds: blockEntryContent.parentsCollection?.items?.map((p) => p.sys.id) ?? [],
@@ -140,11 +157,6 @@ export const getBlocksContent = async ({ content, preview = false, getSubBlocks 
         pageResults: blockEntryContent.pageResults ?? 9,
       });
       _.merge(blockEntryContent, { preloadContent });
-    }
-
-    if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && blockEntryContent?.sku) {
-      const commercelayerProduct = await getCommercelayerProduct(blockEntryContent.sku);
-      _.merge(blockEntryContent, commercelayerProduct);
     }
 
     newBlocksCollection.items.push(blockEntryContent);
