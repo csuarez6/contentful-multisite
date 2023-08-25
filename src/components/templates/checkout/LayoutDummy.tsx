@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
 import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
+import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
@@ -13,7 +16,6 @@ import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsL
 import Icon from "@/components/atoms/icon/Icon";
 import { gaEventPurchase } from "@/utils/ga-events--checkout";
 import { gaEventForm } from "@/utils/ga-events--forms";
-import { IP2PRequest } from "@/lib/interfaces/p2p-cf-interface";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -44,7 +46,6 @@ const DEFAULT_PAYMENT_METHOD = "dummy";
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push, query } = useRouter();
-  const router = useRouter();
   const stepsList = getStepsLine(query.paymentType);
   const showStepList = stepsList.find(el => el.path === asPath);
 
@@ -113,17 +114,21 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     try {
       await validateExternal(tokenRecaptcha);
 
+      const token = uuid();
+
       const paymentMethodId = order.available_payment_methods.find(
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
 
       await setDefaultShippingMethod(hasShipment);
+      // return;
       await setPaymentMethod(paymentMethodId);
-      await addPaymentMethodSource(uuid());
+      await addPaymentMethodSource(token);
       await placeOrder()
         .then((res) => {
           if (res.status === 200) {
-            handlePayment();
+            setOpenDummyPGModal(true);
+            setTransactionToken(token);
           }
         })
         .catch((err) => {
@@ -220,35 +225,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setIsPaying(true);
     try {
       const path =
-        `/api/p2p` + (toCancel ? `/cancel` : "");
+        `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
         body: JSON.stringify({
-          orderId: order?.id
+          customer: order?.customer,
+          products: order?.line_items,
         }),
-      }).then((response) => response.json())
-        .then((json) => {
-          if (json.status === 200) {
-            console.info(json.data);
-            const data: IP2PRequest = json.data;
-            addPaymentMethodSource(data.requestId);
-            setIsPaying(false);
-            updateIsPaymentProcess(false);
-            router.push(data.processUrl);
-          } else {
-            console.error("Error create p2p session");
-          }
-        }).catch((error) => {
-          console.error({ error });
-        });
-      
-      /* console.info(response.json);
-      const data = response.json;
-      console.info({ data }); */
-      //await addPaymentMethodSource(token);
-      //setIsPaying(false);
-
-      /*const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
+      });
+      const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
       setError(true);
       setErrorMessage({
         icon: !toCancel ? "check" : "alert",
@@ -274,7 +259,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         label: "Compra de Productos",
         productsList: productsData,
       });
-      push("/");*/
+      push("/");
     } catch (error) {
       console.error(error);
       setError(true);
@@ -283,10 +268,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         type: "warning",
         title: "Error en la pasarela de pago.",
       });
-    } /*finally {
+    } finally {
+      setOpenDummyPGModal(false);
       setIsPaying(false);
       updateIsPaymentProcess(false);
-    }*/
+    }
   };
 
   const getShippingPrice = (product) => {
@@ -572,6 +558,45 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           )}
         </div>
       </div>
+      {openDummyPGModal && (
+        <ModalSuccess
+          {...MocksModalSuccessProps.modalLayout}
+          isActive={openDummyPGModal}
+          isClosable={false}
+        >
+          <div className="flex justify-end w-full gap-5">
+            <button
+              disabled={isPaying}
+              className="button button-outline"
+              onClick={() => {
+                handlePayment(true);
+              }}
+            >
+              Cancelar pago
+            </button>
+            <button
+              disabled={isPaying}
+              className="button button-primary"
+              onClick={() => {
+                handlePayment();
+              }}
+            >
+              Pagar
+            </button>
+          </div>
+        </ModalSuccess>
+      )
+      }
+      {
+        error && (
+          <InformationModal
+            icon={errorMessage.icon}
+            type={errorMessage.type}
+            title={errorMessage.title}
+            close={() => setError(false)}
+          />
+        )
+      }
     </>
   );
 };

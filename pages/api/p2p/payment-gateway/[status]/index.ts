@@ -1,20 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
 import type { NextApiRequest, NextApiResponse } from "next";
-import CryptoJS from "crypto-js";
-import hmacSHA256 from "crypto-js/hmac-sha256";
-
-const paymentGWValidation = (
-  req: NextApiRequest,
-) => {
-  if (req.method !== "POST") throw new Error("NOT_FOUND");
-
-  const signature = req.headers["x-commercelayer-signature"];
-  const rawBody = JSON.stringify(req.body);
-  const hash = hmacSHA256(rawBody, process.env.CL_SHARED_SECRET);
-  const encode = hash.toString(CryptoJS.enc.Base64);
-
-  if (signature !== encode) throw new Error("INVALID_SIGNATURE");
-};
 
 type AuthorizationBody = {
   data: any;
@@ -26,7 +12,7 @@ const handler = async (
   res: NextApiResponse<any>
 ) => {
   try {
-    paymentGWValidation(req);
+    paymentGatewayValidation(req);
 
     const { data }: AuthorizationBody = req.body;
     const status = <string> req.query.status;

@@ -17,6 +17,7 @@ const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
       "billing_address",
       "shipping_address",
       "formatted_total_amount",
+      "total_amount_float",
       "approved_at",
       "market"
     ],

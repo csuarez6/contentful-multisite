@@ -1,96 +1,72 @@
-import { base64 } from 'base-64';
-import { randomBytes } from 'crypto';
-import { sha1 } from 'sha1';
-import { IPerson } from '../interfaces/IPerson-p2p-cf.interface';
-import { IPayment } from '../interfaces/IPayment-p2p-cf.interface';
-import { IFields } from '../interfaces/IExtraFields-p2p-cf.interface';
-import { IRequestInformation } from '../interfaces/IRequestInformation-p2p-cf.interface';
-import { IRequest } from '../interfaces/IRequest-p2p-cf.interface';
-import { ICreateRequest } from '../interfaces/ICreateRequest-p2p-cf.interface';
-import { IAuth } from '../interfaces/IAuth-p2p-cf.interface';
-import { INotification } from '../interfaces/INotification-p2p-cf.interface';
+import { createHash } from 'crypto';
+import { IP2PAuth, IP2PCreateRequest, IP2PFields, IP2PNotification, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation } from '../interfaces/p2p-cf-interface';
 
-const PLACE_TO_PAY_ENDPOINT = process.env.PLACE_TO_PAY_URL;
+const PLACE_TO_PAY_ENDPOINT = process.env.PLACE_TO_PAY_ENDPOINT + '/api/session';
 const PLACE_TO_PAY_LOGIN = process.env.PLACE_TO_PAY_LOGIN;
 const PLACE_TO_PAY_SECRET_KEY = process.env.PLACE_TO_PAY_SECRET_KEY;
 const RETURN_URL = process.env.PLACE_TO_PAY_RETURN_URL;
 
-const generateNonce = () => {
-  try {
-    const nonceBuffer = randomBytes(16);
-    return nonceBuffer.toString('hex');
-  } catch (error) {
-    console.error('Error generating nonce:', error);
-    return Math.random().toString();
-  }
-};
-
-const generateSeed = () => {
-  const current = new Date().toISOString();
-  const currentDate = new Date(current);
-  currentDate.setMinutes(currentDate.getMinutes() + 2);
-  const seed = currentDate.toISOString();
-  return seed;
-};
-
-const generateTranKey = (nonce: string, seed: string, tranKey: string) => {
-  const tranKeyBase64 = base64.encode(sha1(nonce + seed + tranKey, { encoding: 'binary' }));
+const generateTranKey = (rawNonce: number, seed: string, secretKey: string) => {
+  const tranKeyBase64 = Buffer.from(createHash('sha256').update(rawNonce + seed + secretKey).digest('binary'), 'binary').toString('base64');
   return tranKeyBase64;
 };
 
 export const getAuth = () => {
-  const seed = generateSeed();
-  const nonce = generateNonce();
-  const tranKeyBase64 = generateTranKey(nonce, seed, PLACE_TO_PAY_SECRET_KEY);
-  const nonceBase64 = base64.encode(nonce);
+  const seed = new Date().toISOString();
+  const rawNonce = Math.floor(Math.random() * 1000000);
+  const tranKey = generateTranKey(rawNonce, seed, PLACE_TO_PAY_SECRET_KEY);
+  const nonce = Buffer.from(rawNonce.toString()).toString('base64');
 
-  const authOptions: IAuth = {
+  const authOptions: IP2PAuth = {
     login: PLACE_TO_PAY_LOGIN,
     seed: seed,
-    tranKey: tranKeyBase64,
-    nonce: nonceBase64,
+    tranKey: tranKey,
+    nonce: nonce,
   };
 
   return authOptions;
 };
 
-export const createRequest = async (buyer: IPerson, payment: IPayment, ipAddress: string, userAgent: string, extraFields?: IFields): Promise<IRequest|string> => {
+export const createP2PRequest = async (payment: IP2PPayment, ipAddress: string, userAgent: string, extraFields?: IP2PFields[], buyer?: IP2PPerson): Promise<IP2PRequest|string> => {
   const authOptions = getAuth();
 
-  const bodyRequest: ICreateRequest = {
-    locale: "es_CO",
+  const bodyRequest: IP2PCreateRequest = {
     auth: authOptions,
-    buyer: buyer,
     payment: payment,
-    expiration: new Date(Date.now() + 600 * 1000).toISOString(),
-    returnUrl: RETURN_URL,
+    expiration: new Date(Date.now() + 600 * 1000).toISOString(), // 10 minutes
     ipAddress: ipAddress,
     userAgent: userAgent,
-    type: "checkin"
+    returnUrl: RETURN_URL,
+    locale: "es_CO"
   };
 
-  if (extraFields) {
-    bodyRequest.fields = extraFields;
+  if (buyer) {
+    bodyRequest.buyer = buyer; // Si se envía este dato, el usuario tendrá sus datos personales pre-diligenciados pero no podrá cambiarlos.
   }
 
+  if (extraFields) {
+    bodyRequest.fields = extraFields; // La propiedad fields se usa para almacenar datos estructurados que pueden visualizarse en la interfaz de Checkout según las condiciones indicadas.
+  }
+
+  console.info('body', bodyRequest);
+
   try {
+    
     const response = await fetch(PLACE_TO_PAY_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(bodyRequest)
     });
-    const data = await response.json() as IRequest;
+    const data = await response.json() as IP2PRequest;
+    console.info({ data });
     return data;
   } catch (error) {
     console.error(error);
-    if (!navigator.onLine)
-      return "Comprueba tu conexión a internet e intenta de nuevo por favor.";
-    else
-      return `Ocurrió un error al crear la transacción en P2P`;
+    return `Ocurrió un error al crear la transacción en P2P`;
   }
 };
 
-export const getRequestInformation = async (requestId: string): Promise<IRequestInformation|string> => {
+export const getP2PRequestInformation = async (requestId: string): Promise<IP2PRequestInformation|string> => {
   const authOptions = getAuth();
 
   const bodyRequest = {
@@ -103,25 +79,22 @@ export const getRequestInformation = async (requestId: string): Promise<IRequest
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(bodyRequest)
     });
-    const data = await response.json() as IRequestInformation;
-    console.info(data);
+    const data = await response.json() as IP2PRequestInformation;
+    console.info({ data });
     return data;
   } catch (error) {
     console.error(error);
-    if (!navigator.onLine)
-      return "Comprueba tu conexión a internet e intenta de nuevo por favor.";
-    else
-      return `Ocurrió un error al consultar la transacción ${requestId} en P2P`;
+    return `Ocurrió un error al consultar la transacción ${requestId} en P2P`;
   }
 };
 
-export const validateSignature = (params: INotification): boolean => {
-  const createSignature = sha1(
-    params.requestId +
-    params.status.status +
-    params.status.date +
+export const validateP2PSignature = (data: IP2PNotification): boolean => {
+  const createSignature = createHash('sha1').update(
+    data.requestId +
+    data.status.status +
+    data.status.date +
     PLACE_TO_PAY_SECRET_KEY
-  );
+  ).digest('hex');
   
-  return (createSignature === params.signature);
+  return (createSignature === data.signature);
 };
