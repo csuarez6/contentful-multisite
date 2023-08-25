@@ -9,9 +9,4 @@ const BlockFormQuery = `
     ${RichtextQuery}
   }
   simpleView
-  view {
-    ${DefaultQuery}
-  }
 `;
-
-export default BlockFormQuery;
