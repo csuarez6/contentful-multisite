@@ -10,3 +10,5 @@ const BlockFormQuery = `
   }
   simpleView
 `;
+
+export default BlockFormQuery;

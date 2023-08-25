@@ -104,23 +104,29 @@ const BlockPromoContentQuery = `
     ...on ViewServicesCard {
       ${ViewServicesCard}
     }
-    ...on ViewInformationCards{
+    ...on ViewInformationCards {
       ${ViewInformationCards}
     }
-    ...on ViewCarousel{ 
+    ...on ViewCarousel { 
       ${ViewCarouselCategories}
     }
-    ...on ViewFeaturedProducts{
+    ...on ViewFeaturedProducts {
       ${ViewFeaturedProducts}
     }
-    ...on ViewVideoSlider{
+    ...on ViewVideoSlider {
       ${ViewVideoSlider}
     }
-    ...on ViewSecondaryBanner{
+    ...on ViewSecondaryBanner {
       ${ViewSecondaryBanner}
     }
-    ...on ViewRichText{
+    ...on ViewRichText {
       ${ViewRichText}
+    }
+    ...on ViewFuneralPlans {
+      ${DefaultQuery}
+    }
+    ...on ViewTabsWithFeaturedImage {
+      ${DefaultQuery}
     }
   }
   blockId

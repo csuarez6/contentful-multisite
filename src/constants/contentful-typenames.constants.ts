@@ -21,9 +21,10 @@ export enum CONTENTFUL_TYPENAMES {
   TRADEMARK = 'Trademark',
   AUX_RATE = 'AuxRate',
   AUX_ALLY = 'AuxAlly',
-/**
- * In simple view the string is mapped and in the block view the identifier of the associated view
- */
+
+  /**
+   * In simple view the string is mapped and in the block view the identifier of the associated view
+   */
 
   VIEW_ACCORDION = "ViewAccordion",
   VIEW_BANNER_IMAGE = "ViewBannerImage",
@@ -32,9 +33,7 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_INFORMATION_GRID = "ViewInformationGrid",
   VIEW_FEATURED = "ViewFeatured",
   VIEW_LIST_WITH_ICONS = "ViewListWithIcons",
-  VIEW_BANNER_CAROUSEL = "Banner slider",
   VIEW_PRODUCT_GRID = "ViewProductGrid",
-  VIEW_LINE_OF_STEPS = "Linea de pasos",
   VIEW_INFORMATION_CARDS = "ViewInformationCards",
   VIEW_PRODUCT_GRILL = "ViewProductGrill",
   VIEW_SERVICES_TABS = "ViewServicesTabs",
@@ -43,10 +42,12 @@ export enum CONTENTFUL_TYPENAMES {
   VIEW_CAROUSEL = "ViewCarousel",
   VIEW_FEATURED_TABS = "ViewFeaturedTabs",
   VIEW_FEATURED_PRODUCTS = "ViewFeaturedProducts",
-  VIEW_QUERY_FORM = "ViewQueryForm",
   VIEW_VIDEO_SLIDER = "ViewVideoSlider",
   VIEW_RICH_TEXT = "ViewRichText",
   VIEW_TABS_WITH_FEATURED_IMAGE = "ViewTabsWithFeaturedImage",
+  
+  VIEW_BANNER_CAROUSEL = "Banner slider",
+  VIEW_LINE_OF_STEPS = "Linea de pasos",
   VIEW_VERTICAL_CARD_GRILL = "Parrilla de Tarjetas Verticales",
   VIEW_TABS_VERTICAL = "Tabs verticales",
   VIEW_CONTENT_PAGE = "Contenido pagina informativa",
