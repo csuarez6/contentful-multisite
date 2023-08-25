@@ -81,67 +81,74 @@ const getReferencesContent = async ({ content, preview = false, actualDepth = 1,
   return referencesContent;
 };
 
-export const getBlocksContent = async ({ content, preview = false, getSubBlocks = false }) => {
+const getBlockEntry = async (blockInfo: any, preview: boolean) => {
+  const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  let responseData = null;
+  try {
+    ({ data: responseData } = await contentfulClient(preview).query({
+      query: gql`
+        ${fragments}
+        query getEntry($id: String!, $preview: Boolean!) {
+          ${type}(id: $id, preview: $preview) {
+            ${query}
+          }
+        }
+      `,
+      variables: {
+        id: blockInfo.sys.id,
+        preview
+      },
+      errorPolicy: 'all'
+    }));
+  } catch (e) {
+    return { responseError: e, responseData };
+  }    
+  
+  const blockEntryContent = JSON.parse(
+    JSON.stringify(
+      responseData?.[type]
+    )
+  );
+
+  const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
+  if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+    _.merge(blockEntryContent, richtextReferences);
+  }
+
+  return { responseData: blockEntryContent, type };
+};
+
+export const getBlocksContent = async ({ content, preview = false }) => {
   if(!(content?.sys?.id) || !(content?.blocksCollection?.items?.[0])) return content;
   
   const newBlocksCollection: any = { items: [] }; 
 
   for (const blockInfo of content.blocksCollection.items) {
-    const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
-    let responseData = null, responseError = null;
-    try {
-      ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
-        query: gql`
-          ${fragments}
-          query getEntry($id: String!, $preview: Boolean!) {
-            ${type}(id: $id, preview: $preview) {
-              ${query}
-            }
-          }
-        `,
-        variables: {
-          id: blockInfo.sys.id,
-          preview
-        },
-        errorPolicy: 'all'
-      }));
-    } catch (e) {
-      responseError = e, responseData = {};
-    }
+    const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);
 
     if (responseError) console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
-    
-    const blockEntryContent = JSON.parse(
-      JSON.stringify(
-        responseData?.[type]
-      )
-    );
-
-    const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
-    if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-      _.merge(blockEntryContent, richtextReferences);
-    }
-
-    if (getSubBlocks) {
-      // const subBlocks = await getBlocksContent({
-      //   content: blockInfo,
-      //   preview,
-      // });
-  
-      // _.merge(blockEntryContent, subBlocks);
-    }
 
     if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
       for (const ref of REFERENCES[blockEntryContent.__typename]) {
         if (blockEntryContent?.[ref]?.items?.length) {
-          for(const refItem of blockEntryContent[ref].items){
+          for (let i = 0; i < blockEntryContent[ref].items.length; i++) {
+            const refItem = blockEntryContent[ref].items[i];
+
+            if(ref === "featuredContentsCollection" && refItem.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
+              const { responseData: subBlockEntryContent, responseError: subResponseError = "" } = await getBlockEntry(refItem, preview);
+              if (subResponseError) {
+                console.error(`Error on entry query (${type}) => `, subResponseError.message, refItem);
+              } else {
+                blockEntryContent[ref].items[i] = subBlockEntryContent;
+              }
+            }
+
             const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
             if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
               _.merge(refItem, richtextItemReferences);
             }
 
             if(refItem.__typename === CONTENTFUL_TYPENAMES.PRODUCT && refItem?.sku){
-              console.log("Se buscará el producto: ", refItem?.sku);
               const commercelayerProduct = await getCommercelayerProduct(refItem.sku);
               _.merge(refItem, commercelayerProduct);
             }

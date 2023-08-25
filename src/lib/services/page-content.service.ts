@@ -91,7 +91,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (pageContent?.parent?.__typename) pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
 
   if (fullContent) {
-    pageContent.blocksCollection = await getBlocksContent({ content: pageContent, preview, getSubBlocks: true });
+    pageContent.blocksCollection = await getBlocksContent({ content: pageContent, preview });
 
     if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
       const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
