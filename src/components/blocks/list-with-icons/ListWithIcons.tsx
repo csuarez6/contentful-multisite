@@ -143,7 +143,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             let contentJson = cta?.content?.json;
             if (attachLinksToRichtextContent && contentJson) {
               contentJson = attachLinksToRichtextContent(contentJson, cta?.content?.links ?? []);
-            }
+            }            
             return (
               <>
                 {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
@@ -163,10 +163,9 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                     modalClass={hasBlocks ? "main-container" : null}
                     text={cta.promoTitle ?? cta.name}
                   >
-                    {cta.promoDescription?.json && (
+                    {cta?.content?.json && (
                       <div>{documentToReactComponents(contentJson, defaultFormatOptions)}</div>
                     )}
-                    {!cta.promoDescription && (cta.promoTitle ?? cta.name)}
                   </ButtonAtom>
                 )}
                 {cta?.mediaInternalLink && (
