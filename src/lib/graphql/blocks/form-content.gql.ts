@@ -9,7 +9,4 @@ export const BlockFormQuery = `
     json
   }
   simpleView
-  view{
-    ${DefaultQuery}
-  }
 `;
