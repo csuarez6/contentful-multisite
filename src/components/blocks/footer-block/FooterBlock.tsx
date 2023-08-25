@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from "next/image";
 import { Disclosure, Transition } from "@headlessui/react";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
@@ -14,6 +15,19 @@ const FooterBlock: React.FC<INavigation> = ({
   mainNavCollection,
   secondaryNavCollection,
 }) => {
+  const [activeDisclosurePanel, setActiveDisclosurePanel] = React.useState(null);
+
+  const togglePanels = (newPanel) => {
+    if (activeDisclosurePanel) {
+      if (activeDisclosurePanel.key !== newPanel.key && activeDisclosurePanel.open) {
+        activeDisclosurePanel.close();
+      }
+    }
+    setActiveDisclosurePanel({
+      ...newPanel,
+      open: !newPanel.open
+    });
+  };
   return (
     <footer
       id="footer"
@@ -85,52 +99,61 @@ const FooterBlock: React.FC<INavigation> = ({
             <div className="md:hidden border-b-[0.5px] border-white border-opacity-75 mt-[33px] w-[105%]">
               {mainNavCollection?.items?.map((menuItem, i) => (
                 <Disclosure as="div" className='border-t-[0.5px] border-white border-opacity-75' key={menuItem.sys.id + i}>
-                  {({ open }) => (
-                    <>
-                      <div className="text-lg cursor-pointer">
-                        <Disclosure.Button
-                          as="div"
-                          role="button"
-                          className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}
+                  {(panel) => {
+                    const { open, close } = panel;
+                    return (
+                      <>
+                        <div className="text-lg cursor-pointer">
+                          <Disclosure.Button
+                            as="div"
+                            role="button"
+                            className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}
+                            onClick={ () => {                        
+                              if (!open) {
+                                close(); 
+                              }
+                              togglePanels({ ...panel, key: i });
+                            }}
+                          >
+                            <div className="flex">
+                              <h3 className="text-white text-sm">
+                                {menuItem.promoTitle ?? menuItem.name}
+                              </h3>
+                            </div>
+                            <span className={`flow-root shrink-0 w-7 h-7 mr-[6px]`}>
+                              <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26} />
+                            </span>
+                          </Disclosure.Button>
+                        </div>
+                        <Transition
+                          className="overflow-hidden"
+                          enter='transition transition-[max-height] duration-300 ease-in'
+                          enterFrom='transform max-h-0 opacity-0'
+                          enterTo='transform max-h-screen opacity-100'
+                          leave='transition transition-[max-height] duration-300 ease-out'
+                          leaveFrom='transform max-h-screen opacity-100'
+                          leaveTo='transform max-h-0 opacity-0'
                         >
-                          <div className="flex">
-                            <h3 className="text-white text-sm">
-                              {menuItem.promoTitle ?? menuItem.name}
-                            </h3>
-                          </div>
-                          <span className={`flow-root shrink-0 w-7 h-7 mr-[6px]`}>
-                            <Icon icon={open ? 'substract' : 'add'} className="text-white relative top-[-2px]" size={26} />
-                          </span>
-                        </Disclosure.Button>
-                      </div>
-                      <Transition
-                        className="overflow-hidden"
-                        enter='transition transition-[max-height] duration-300 ease-in'
-                        enterFrom='transform max-h-0 opacity-0'
-                        enterTo='transform max-h-screen opacity-100'
-                        leave='transition transition-[max-height] duration-300 ease-out'
-                        leaveFrom='transform max-h-screen opacity-100'
-                        leaveTo='transform max-h-0 opacity-0'
-                      >
-                        <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
-                          {menuItem?.mainNavCollection?.items?.length > 0 && (
-                            <ul className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
-                              {menuItem.mainNavCollection.items.map((listItem, j) => (
-                                <li key={listItem.sys.id + i + j} className="py-2">
-                                  <CustomLink
-                                    content={listItem}
-                                    className="text-sm text-white hover:underline"
-                                  >
-                                    {listItem.promoTitle ?? listItem.name}
-                                  </CustomLink>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </Disclosure.Panel>
-                      </Transition>
-                    </>
-                  )}
+                          <Disclosure.Panel as="dd" className='w-[105%] bg-navegation'>
+                            {menuItem?.mainNavCollection?.items?.length > 0 && (
+                              <ul className="border-t-[0.5px] border-white border-opacity-75 pl-[10px] pr-[30px]">
+                                {menuItem.mainNavCollection.items.map((listItem, j) => (
+                                  <li key={listItem.sys.id + i + j} className="py-2">
+                                    <CustomLink
+                                      content={listItem}
+                                      className="text-sm text-white hover:underline"
+                                    >
+                                      {listItem.promoTitle ?? listItem.name}
+                                    </CustomLink>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </Disclosure.Panel>
+                        </Transition>
+                      </>
+                    );
+                  }}
                 </Disclosure>
               ))}
             </div>
