@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
+import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 
 type AuthorizationBody = {
   data: any;
@@ -14,16 +15,23 @@ const handler = async (
   try {
     paymentGatewayValidation(req);
 
+    console.info('authorize');
+
     const { data }: AuthorizationBody = req.body;
 
-    // petición a P2P validando el estado y obteniendo la info
+    const paymentInfo = await getP2PRequestInformation(data.attributes.payment_source_token);
+
+    if (typeof paymentInfo === 'string') {
+      throw new Error(paymentInfo);
+    }
 
     res.json({
       success: true,
       data: {
-        transaction_token: data.attributes.payment_source_token,
+        transaction_token: paymentInfo.requestId,
+        amount_cents: paymentInfo.request.payment.amount.total,
         metadata: {
-          foo: "bar",
+          paymentInfo: paymentInfo
         },
       },
     });

@@ -642,7 +642,7 @@ export const getOrderStatusCl = async (status?: string) => {
 export const getNameQuantityOrderItems = (order: Order): string => {
   try {
     let itemNames = '';
-    order.line_items.forEach(item => {
+    order.line_items?.forEach(item => {
       if (itemNames !== '') {
         itemNames += ', ';
       }
