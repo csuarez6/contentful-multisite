@@ -15,6 +15,14 @@ export enum P2PDisplayOnFields {
     approved = 'approved',
 }
 
+export enum P2PDocumentTypes {
+    cc = 'CC',
+    ce = 'CE',
+    ti = 'TI',
+    nit = 'NIT',
+    rut = 'RUT',
+}
+
 export interface IP2PAddress {
     street: string,
     city: string,
@@ -25,14 +33,14 @@ export interface IP2PAddress {
 }
 
 export interface IP2PPerson {
-    document: string,
-    documentType: string,
-    name: string,
-    surname: string,
-    company: string,
+    document?: string,
+    documentType?: P2PDocumentTypes,
+    name?: string,
+    surname?: string,
+    company?: string,
     email: string,
-    mobile: string,
-    address: IP2PAddress,
+    mobile?: string,
+    address?: IP2PAddress,
 }
 
 export interface IP2PPayment {

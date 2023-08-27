@@ -1,5 +1,5 @@
 import { IAllyResponse } from '@/lib/interfaces/ally-collection.interface';
-import { IP2PFields, IP2PPayment, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields } from '@/lib/interfaces/p2p-cf-interface';
+import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields } from '@/lib/interfaces/p2p-cf-interface';
 import { getNameQuantityOrderItems } from '@/lib/services/commerce-layer.service';
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
@@ -45,9 +45,13 @@ const handler = async (
                 }
             ];
 
+            const buyer: IP2PPerson = {
+                'email': order.customer_email
+            };
+
             const ipAddress = req.socket.remoteAddress;
             const userAgent = req.headers['user-agent'];
-            const response: IP2PRequest | string = await createP2PRequest(payment, ipAddress, userAgent, extraFields);
+            const response: IP2PRequest | string = await createP2PRequest(payment, ipAddress, userAgent, extraFields, buyer);
       
             console.info(response);
 
