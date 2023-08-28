@@ -10,6 +10,10 @@ const ContentSecurityPolicy = `
   style-src 'self';
   font-src 'self';
 `;
+// {
+//   key: "Content-Security-Policy",
+//   value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+// },
 
 const nextConfig = {
   reactStrictMode: true,
@@ -94,10 +98,6 @@ const nextConfig = {
           {
             key: "X-Content-Type-Options",
             value: "nosniff",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
           },
         ],
       },
