@@ -37,11 +37,6 @@ const handler = async (
                     'keyword': 'Número de orden',
                     'value': order.number,
                     'displayOn': P2PDisplayOnFields.both
-                },
-                {
-                    'keyword': 'Descripción',
-                    'value': description,
-                    'displayOn': P2PDisplayOnFields.both
                 }
             ];
 

@@ -29,11 +29,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         'keyword': 'Número de orden',
         'value': order.number,
         'displayOn': P2PDisplayOnFields.both
-      },
-      {
-        'keyword': 'Descripción',
-        'value': description,
-        'displayOn': P2PDisplayOnFields.both
       }
     ];
 
