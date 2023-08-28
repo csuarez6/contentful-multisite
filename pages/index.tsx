@@ -31,9 +31,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     context.preview ?? false
   );
 
-  const headerInfo = false; // await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = false; // await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = false; // await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false, 3);
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
+  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false, 3);
 
   return {
     props: {

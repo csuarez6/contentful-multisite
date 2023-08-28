@@ -69,6 +69,9 @@ export const ProductMinimalQuery = `
   promoImage {
     ${AssetImageQuery}
   }
+  promoDescription {
+    ${RichtextQuery}
+  }
   size
   capacity
   isNew

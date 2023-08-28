@@ -150,7 +150,7 @@ export const getDataContent = async (blockInfo, preview = false) => {
   }
 
   if (responseError) {
-    console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+    console.error(`Error on entry query 5 (${type}) => `, responseError.message, blockInfo);
   }
 
   if (!responseData?.[type]) {

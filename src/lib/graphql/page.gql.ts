@@ -9,6 +9,7 @@ export const PageMinimalQuery = `
   name
   promoTitle
   urlPaths
+  promoIcon
   parent {
     ${DefaultQuery}
   }
@@ -17,6 +18,9 @@ export const PageMinimalQuery = `
   }
   promoDescription {
     ${RichtextQuery}
+  }
+  promoImage {
+    ${AssetImageQuery}
   }
 `;
 

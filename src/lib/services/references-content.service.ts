@@ -126,19 +126,42 @@ export const getBlocksContent = async ({ content, preview = false }) => {
   for (const blockInfo of content.blocksCollection.items) {
     const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);
 
-    if (responseError) console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+    if (responseError) console.error(`Error on entry query 3 (${type}) => `, responseError.message, blockInfo);
 
     if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
+      // Obtener los campos con referencias del bloque contenidos promo
       for (const ref of REFERENCES[blockEntryContent.__typename]) {
         if (blockEntryContent?.[ref]?.items?.length) {
           for (let i = 0; i < blockEntryContent[ref].items.length; i++) {
             const refItem = blockEntryContent[ref].items[i];
 
+            // Para obtener los bloques dentro de los bloques
             if(ref === "featuredContentsCollection" && refItem.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
               const { responseData: subBlockEntryContent, responseError: subResponseError = "" } = await getBlockEntry(refItem, preview);
-              if (subResponseError) {
-                console.error(`Error on entry query (${type}) => `, subResponseError.message, refItem);
-              } else {
+              if (subResponseError) console.error(`Error on entry query 4 (${type}) => `, subResponseError.message, refItem);
+              else {                
+                // Si es una vista TABS, obtener un nivel más de referencias. (Esto quiere decir, obtener los bloques y richtext dentro de los bloques de los bloques)
+                if (blockEntryContent?.view?.__typename === CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS) {
+                  for (const subRef of REFERENCES[subBlockEntryContent.__typename]) {
+                    if (subBlockEntryContent?.[subRef]?.items?.length) {
+                      for (let j = 0; j < subBlockEntryContent[subRef].items.length; j++) {
+                        const subRefItem = subBlockEntryContent[subRef].items[j];
+
+                        // Agregar un bloque promo a un subbloque promo
+                        if(subRef === "featuredContentsCollection" && subRefItem.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
+                          const { responseData: subsubBlockEntryContent, responseError: subsubResponseError = "" } = await getBlockEntry(subRefItem, preview);
+                          if(subsubResponseError) console.error(`Error on sub entry query => `, subsubResponseError.message, subRef);
+                          else subBlockEntryContent[subRef].items[j] = subsubBlockEntryContent;
+                        }
+
+                        const richtextSubSubBlockItemReferences = await getReferencesRichtextContent({ content: subRefItem, preview });
+                        if (richtextSubSubBlockItemReferences && typeof richtextSubSubBlockItemReferences === 'object' && Object.keys(richtextSubSubBlockItemReferences).length > 0) {
+                          _.merge(subBlockEntryContent[subRef].items[j], richtextSubSubBlockItemReferences);
+                        }
+                      }
+                    }
+                  }
+                }
                 blockEntryContent[ref].items[i] = subBlockEntryContent;
               }
             }

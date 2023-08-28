@@ -40,11 +40,12 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
   if (CACHE_CONTENT[cacheIndex]) return { ...CACHE_CONTENT[cacheIndex] };
 
-  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getEntry($id: String!, $preview: Boolean!) {
           ${type}(id: $id, preview: $preview) {
             ${query}
@@ -63,7 +64,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   }
 
   if (responseError) {
-    console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+    console.error(`Error on entry query 1 (${type}) => `, responseError.message, blockInfo);
   }
 
   if (!responseData?.[type]) {
