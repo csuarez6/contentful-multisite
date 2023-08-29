@@ -654,3 +654,20 @@ export const getNameQuantityOrderItems = (order: Order): string => {
     return '';
   }
 };
+
+export const getOrderByPaymentSourceToken = async (transactionToken: string): Promise<Order> => {
+  try {
+    const cl = await getCLAdminCLient();
+    const externalPayment = await cl.external_payments.list({
+      filters: {
+        payment_source_token_eq: transactionToken
+      },
+      include: ["order"],
+    });
+    console.info('externalPayment', { externalPayment });
+    return null;
+  } catch (error) {
+    console.error("Error getOrderByPaymentSourceToken", error);
+    return null;
+  }
+};
