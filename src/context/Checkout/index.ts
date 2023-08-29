@@ -31,7 +31,9 @@ export interface IContextCheckout {
     shippingAddress?: Address;
     billingAddress?: Address;
   }>;
-  getCustomerAddresses: () => Promise<any[] | ListResponse<Address>>;
+  getCustomerAddresses: (token: string ) => Promise<any>;
+  addCustomerAddress: (token: string, address: any) => Promise<void>;
+  updateCustomerAddress: (token:string, id: string, address: any) => Promise<void>;
   placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId: string) => Promise<void>;
@@ -69,6 +71,8 @@ const CheckoutContext = createContext<IContextCheckout>({
   getCustomerAddresses: () => undefined,
   placeOrder: () => undefined,
   getPaymentMethods: () => undefined,
+  addCustomerAddress: () => undefined,
+  updateCustomerAddress: () => undefined,
   setPaymentMethod: () => undefined,
   addPaymentMethodSource: () => undefined,
   setDefaultShippingMethod: () => undefined,
