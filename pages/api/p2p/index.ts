@@ -7,6 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
     const data = JSON.parse(req.body);
+    const transactionToken = data.transactionToken;
     const order = await client.orders.retrieve(data.orderId);
     const description = getNameQuantityOrderItems(order);
 
@@ -20,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       'description': description,
       'amount': {
         'currency': 'COP',
-        'total': 100000//order.total_amount_float
+        'total': order.total_amount_float
       }
     };
 
@@ -39,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const ipAddress = req.socket.remoteAddress;
     const userAgent = req.headers['user-agent'];
 
-    const response: IP2PRequest | string = await createP2PRequest(payment, ipAddress, userAgent, extraFields, buyer);
+    const response: IP2PRequest | string = await createP2PRequest(transactionToken, payment, ipAddress, userAgent, extraFields, buyer);
 
     if (typeof response === 'string') {
       throw new Error(response);

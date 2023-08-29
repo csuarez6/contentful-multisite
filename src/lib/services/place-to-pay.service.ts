@@ -27,7 +27,7 @@ export const getAuth = () => {
   return authOptions;
 };
 
-export const createP2PRequest = async (payment: IP2PPayment, ipAddress: string, userAgent: string, extraFields?: IP2PFields[], buyer?: IP2PPerson): Promise<IP2PRequest|string> => {
+export const createP2PRequest = async (transactionToken: string, payment: IP2PPayment, ipAddress: string, userAgent: string, extraFields?: IP2PFields[], buyer?: IP2PPerson): Promise<IP2PRequest|string> => {
   const authOptions = getAuth();
 
   const bodyRequest: IP2PCreateRequest = {
@@ -36,7 +36,8 @@ export const createP2PRequest = async (payment: IP2PPayment, ipAddress: string, 
     expiration: new Date(Date.now() + 600 * 1000).toISOString(), // 10 minutes
     ipAddress: ipAddress,
     userAgent: userAgent,
-    returnUrl: RETURN_URL,
+    returnUrl: `${ RETURN_URL }/?id=${transactionToken}`,
+    cancelUrl: `${ RETURN_URL }/?id=${transactionToken}`,
     locale: "es_CO"
   };
 
@@ -52,7 +53,7 @@ export const createP2PRequest = async (payment: IP2PPayment, ipAddress: string, 
 
   try {
     
-    const response = await fetch(PLACE_TO_PAY_ENDPOINT, {
+    const response = await fetch(`${ PLACE_TO_PAY_ENDPOINT }`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(bodyRequest)
@@ -74,7 +75,7 @@ export const getP2PRequestInformation = async (requestId: string): Promise<IP2PR
   };
 
   try {
-    const response = await fetch(PLACE_TO_PAY_ENDPOINT + '/' + requestId, {
+    const response = await fetch(`${ PLACE_TO_PAY_ENDPOINT }/${ requestId }`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(bodyRequest)

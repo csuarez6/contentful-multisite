@@ -4,7 +4,7 @@ import { formatPrice, generateAmountCents } from '@/utils/functions';
 import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
 
 const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
-  include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address"],
+  include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_source"],
   fields: {
     orders: [
       "number",
@@ -21,7 +21,8 @@ const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
       "total_amount_float",
       "approved_at",
       "market",
-      "available_payment_methods"
+      "available_payment_methods",
+      "payment_source"
     ],
     addresses: [
       "state_code",

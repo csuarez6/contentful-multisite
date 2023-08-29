@@ -64,6 +64,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     updateIsPaymentProcess
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
+  const [transactionToken, setTransactionToken] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     icon: "",
@@ -108,17 +109,18 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setIsPlacing(true);
     try {
       await validateExternal(tokenRecaptcha);
-
+      const token = uuid();
       const paymentMethodId = order.available_payment_methods.find(
         (i) => i.reference === DEFAULT_PAYMENT_METHOD
       )?.id;
 
       await setDefaultShippingMethod(hasShipment);
       await setPaymentMethod(paymentMethodId);
-      await addPaymentMethodSource(uuid());
+      await addPaymentMethodSource(token);
       await placeOrder()
         .then((res) => {
           if (res.status === 200) {
+            setTransactionToken(token);
             handlePayment();
           }
         })
@@ -220,13 +222,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       await fetch(path, {
         method: "POST",
         body: JSON.stringify({
-          orderId: order?.id
+          orderId: order?.id,
+          transactionToken: transactionToken
         }),
       }).then((response) => response.json())
         .then((json) => {
           if (json.data.status.status === 'OK') {
             const data: IP2PRequest = json.data;
-            addPaymentMethodSource(data.requestId);
 
             const productsData = products.map(el => {
               return {
