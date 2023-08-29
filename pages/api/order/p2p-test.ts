@@ -61,7 +61,7 @@ const handler = async (
             const ipAddress = req.socket.remoteAddress;
             const userAgent = req.headers['user-agent'];
             const response: IP2PRequest | string = await createP2PRequest(transactionToken, payment, ipAddress, userAgent, extraFields, buyer);
-      
+
             console.info(response);
 
             /* const response: IP2PRequestInformation | string = await getP2PRequestInformation('2392457');
