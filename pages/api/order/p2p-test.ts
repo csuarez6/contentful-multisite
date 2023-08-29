@@ -26,7 +26,6 @@ const handler = async (
             const paymentSource = order.payment_source;
             const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
 
-
             const auxOrder = await getOrderByPaymentSourceToken(transactionToken);
             console.info(auxOrder);
 
