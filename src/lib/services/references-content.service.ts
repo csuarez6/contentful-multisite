@@ -88,7 +88,7 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
     ({ data: responseData } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
-        query getEntry($id: String!, $preview: Boolean!) {
+        query getBlock($id: String!, $preview: Boolean!) {
           ${type}(id: $id, preview: $preview) {
             ${query}
           }
@@ -110,10 +110,10 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
     )
   );
 
-  const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
-  if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-    _.merge(blockEntryContent, richtextReferences);
-  }
+  // const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
+  // if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+  //   _.merge(blockEntryContent, richtextReferences);
+  // }
 
   return { responseData: blockEntryContent, type };
 };
@@ -154,10 +154,10 @@ export const getBlocksContent = async ({ content, preview = false }) => {
                           else subBlockEntryContent[subRef].items[j] = subsubBlockEntryContent;
                         }
 
-                        const richtextSubSubBlockItemReferences = await getReferencesRichtextContent({ content: subRefItem, preview });
-                        if (richtextSubSubBlockItemReferences && typeof richtextSubSubBlockItemReferences === 'object' && Object.keys(richtextSubSubBlockItemReferences).length > 0) {
-                          _.merge(subBlockEntryContent[subRef].items[j], richtextSubSubBlockItemReferences);
-                        }
+                        // const richtextSubSubBlockItemReferences = await getReferencesRichtextContent({ content: subRefItem, preview });
+                        // if (richtextSubSubBlockItemReferences && typeof richtextSubSubBlockItemReferences === 'object' && Object.keys(richtextSubSubBlockItemReferences).length > 0) {
+                        //   _.merge(subBlockEntryContent[subRef].items[j], richtextSubSubBlockItemReferences);
+                        // }
                       }
                     }
                   }
@@ -166,10 +166,10 @@ export const getBlocksContent = async ({ content, preview = false }) => {
               }
             }
 
-            const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
-            if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
-              _.merge(refItem, richtextItemReferences);
-            }
+            // const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
+            // if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
+            //   _.merge(refItem, richtextItemReferences);
+            // }
 
             if(refItem.__typename === CONTENTFUL_TYPENAMES.PRODUCT && refItem?.sku){
               const commercelayerProduct = await getCommercelayerProduct(refItem.sku);

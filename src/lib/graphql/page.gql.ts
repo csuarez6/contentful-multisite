@@ -2,7 +2,7 @@ import { AuxCustomContentMinimalQuery } from "./aux/custom-content.gql";
 import { AuxNavigationMinimalQuery } from "./aux/navigation.gql";
 import { ProductMinimalQuery } from "./product.gql";
 import { AssetImageQuery } from "./shared/asset.gql";
-import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
+import DefaultQuery, { ParentQuery, RichtextQuery } from "./shared/default.gql";
 
 export const PageMinimalQuery = `
   ${DefaultQuery}
@@ -25,6 +25,9 @@ export const PageMinimalQuery = `
 `;
 
 export const PageFragments = `
+  fragment ParentFields on Page {
+    ${ParentQuery}
+  }  
   fragment PageMinimalFragment on Page {
     ${PageMinimalQuery}
   }
@@ -47,7 +50,19 @@ const PageQuery = `
     ${RichtextQuery}
   }
   parent {
-    ${DefaultQuery}
+    ...ParentFields
+    parent {
+      ...ParentFields
+      parent {
+        ...ParentFields
+        parent {
+          ...ParentFields
+          parent {
+            ...ParentFields
+          }
+        }
+      }
+    }
   }
   blocksCollection {
     items {

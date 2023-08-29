@@ -8,6 +8,16 @@ import {
   gql
 } from '@apollo/client';
 import compress from "graphql-query-compress";
+import { InvalidationPolicyCache, RenewalPolicy } from '@nerdwallet/apollo-cache-policies';
+
+// const cache = new InvalidationPolicyCache({
+//   invalidationPolicies: {
+//     timeToLive: 300 * 1000, // 5 min TTL on all types in the cache
+//     renewalPolicy: RenewalPolicy.WriteOnly
+//   }
+// });
+
+const cache = new InMemoryCache({});
 
 const errorLink  = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) console.error(graphQLErrors);
@@ -17,6 +27,7 @@ const errorLink  = onError(({ graphQLErrors, networkError }) => {
 const generalLink = new ApolloLink((operation, forward) => {
   const minifiedQuery = compress(operation.query.loc.source.body);
   operation.query = gql`${minifiedQuery}`;
+  console.log("Se realizará una petición a GraphQL");
   return forward(operation);
 });
 
@@ -42,7 +53,7 @@ const contentfulClient = (preview = false) => {
     link: from([
       combinedLink, httpLink(preview)
     ]),
-    cache: new InMemoryCache({}),
+    cache,
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'no-cache',

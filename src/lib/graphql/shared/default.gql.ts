@@ -5,6 +5,15 @@ const DefaultQuery = `
   }
 `;
 
+export const ParentQuery = `
+  __typename
+  sys {
+    id
+  }
+  name
+  urlPaths
+`;
+
 export const RichtextQuery = `
   json
 `;

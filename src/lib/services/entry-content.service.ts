@@ -81,10 +81,10 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     entryContent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
   }
 
-  const richtextReferences = await getReferencesRichtextContent({ content: entryContent, preview });
-  if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-    _.merge(entryContent, richtextReferences);
-  }
+  // const richtextReferences = await getReferencesRichtextContent({ content: entryContent, preview });
+  // if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+  //   _.merge(entryContent, richtextReferences);
+  // }
 
   if (recursive) {
     if (entryContent?.parent?.__typename) {
