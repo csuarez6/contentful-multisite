@@ -10,6 +10,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
+import { getOrderByPaymentSourceToken } from "@/lib/services/commerce-layer.service";
 
 const orderStatus = (value) => {
     switch (value) {
@@ -39,6 +40,9 @@ const CheckoutPurchase = () => {
     const { isLogged, user } = useContext(AuthContext);
     const { order, getAddresses } = useContext(CheckoutContext);
     const [billingAddress, setBillingAddress] = useState<Address>();
+    const transactionToken = router.query.id?.toString();
+
+    console.info('transactionToken', transactionToken);
 
     const fullName = useMemo(() => {
         return (

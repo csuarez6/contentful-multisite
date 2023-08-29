@@ -525,7 +525,7 @@ export const useCommerceLayer = () => {
           },
         },
         DEFAULT_ORDER_PARAMS
-      ).catch(err => console.error(err.errors));
+      ).catch(err => console.error('setPaymentMethod', err));
     },
     [orderId]
   );

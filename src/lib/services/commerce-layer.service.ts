@@ -638,3 +638,19 @@ export const getOrderStatusCl = async (status?: string) => {
     return { status: 401, error: error };
   }
 };
+
+export const getNameQuantityOrderItems = (order: Order): string => {
+  try {
+    let itemNames = '';
+    order.line_items?.forEach(item => {
+      if (itemNames !== '') {
+        itemNames += ', ';
+      }
+      itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
+    });
+    return itemNames;
+  } catch (error) {
+    console.error("Error getNameQuantityOrderItems", error);
+    return '';
+  }
+};
