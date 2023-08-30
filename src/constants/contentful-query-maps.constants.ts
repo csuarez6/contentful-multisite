@@ -2,8 +2,8 @@ import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
 import PageQuery, { PageFragments } from "@/lib/graphql/page.gql";
 import BlockPromoContentQuery, { BlockPromoContentFragments } from "@/lib/graphql/blocks/promo-content.gql";
-import AuxCustomContent, { AuxCustomContentMinimalQuery } from "@/lib/graphql/aux/custom-content.gql";
-import ProductQuery, { ProductMinimalQuery } from '../lib/graphql/product.gql';
+import AuxCustomContent from "@/lib/graphql/aux/custom-content.gql";
+import ProductQuery from '../lib/graphql/product.gql';
 import BlockContentFilterQuery from "@/lib/graphql/blocks/content-filter.gql";
 import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
 import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
@@ -13,6 +13,8 @@ import AllyQuery from "@/lib/graphql/ally.gql";
 import copySetQuery from "@/lib/graphql/copy/copySet.gql";
 import { QN_AUXALLY, QN_AUXCUSTOMCONTENT, QN_AUXRATE, QN_BLOCKFORM, QN_BLOCKPROMOCONTENT, QN_CONTENTFILTER, QN_COPYSET, QN_PAGE, QN_PRODUCT, QN_PRODUCTCATEGORY, QN_TRADEMARK } from "./contentful-querynames.constants";
 import PageMinimalQuery from "@/lib/graphql/views/page-minimal.gql";
+import ProductMinimalQuery from "@/lib/graphql/product-minimal.gql";
+import AuxCustomContentMinimalQuery from "@/lib/graphql/aux/custom-content-minimal.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {

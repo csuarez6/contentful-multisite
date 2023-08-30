@@ -1,4 +1,4 @@
-import { AuxCustomContentMinimalQuery } from "../aux/custom-content.gql";
+import AuxCustomContentMinimalQuery from "../aux/custom-content-minimal.gql";
 
 const AuxCustomContentMinimalFragment = `
     fragment AuxCustomContentMinimalFragment on AuxCustomContent {

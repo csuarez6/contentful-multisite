@@ -88,10 +88,7 @@ export const getMenu = async (navigationId: string = null, preview = false) => {
       if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
         const { responseData, responseError = "" } = await getReferenceItem(mainItem, preview);
         if(responseError) console.error(`Error on get reference item => `, responseError.message, mainItem);
-        else { 
-          menu.mainNavCollection.items[i] = responseData;
-          // console.log("El responseData es: ", responseData);
-        }
+        else menu.mainNavCollection.items[i] = responseData;
       }
     }
   }
