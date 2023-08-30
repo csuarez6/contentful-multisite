@@ -36,8 +36,7 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
               En unos minutos te estaremos contactando.
               <br />
               <br />
-              Si quieres otros productos y servicios, pídelo a nuestros
-              asesores.
+              Si quieres otros productos y servicios, pídelo a nuestros asesores.
             </p>
           ) : (
             <p className="lg:text-size-p1 text-grey-30">
@@ -119,7 +118,7 @@ const CallbackPage = () => {
         if (result.success) {
           gaEventForm({
             category: "Callback",
-            label: "Mantenimiento y Reparación",
+            label: "Reparación Gasodomésticos",
           });
         }
 
@@ -155,9 +154,9 @@ const CallbackPage = () => {
         },
       },
       {
-        promoTitle: "Mantenimiento",
+        promoTitle: "Reparación",
         internalLink: {
-          urlPaths: ["/otros-servicios/mantenimiento"],
+          urlPaths: ["/otros-servicios/reparacion"],
         },
       },
       {
@@ -259,7 +258,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       layout: {
-        name: "Callback Mantenimiento y Reparación",
+        name: "Callback Reparación",
         footerInfo,
         headerInfo,
         helpButton,
