@@ -6,7 +6,8 @@ export const GENESYS_CONSTANTS = {
 };
 
 export const CALLBACK_TYPES: object = {
-  "mantenimiento-y-reparacion": "Mantenimiento y reparación",
+  "mantenimiento-gasodomesticos": "Mantenimiento Gasodomésticos",
+  "reparacion-gasodomesticos": "Reparación Gasodomésticos",
   "servihogar": "Servihogar",
   "nuevo-punto": "Nuevo Punto",
   "rpo": "Revisión Periódica Obligatoria",

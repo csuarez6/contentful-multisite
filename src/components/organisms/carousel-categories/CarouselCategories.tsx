@@ -20,7 +20,7 @@ const CarouselCategories: React.FC<
     queryParamName = "categoria",
     value = null,
     filterName,
-    isLink
+    isLink = true,
   } = props;
   const { asPath } = useRouter();
   const fullPath = asPath.split("?")[0];  
