@@ -1,4 +1,4 @@
-import CommerceLayer, { CommerceLayerClient, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
@@ -6,6 +6,7 @@ import {
   getSalesChannelToken,
 } from "@commercelayer/js-auth";
 import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from '@/constants/checkout.constants';
+import { ExternalPayments } from '@commercelayer/sdk/lib/cjs/api';
 
 export interface ICustomer {
   name: string;
@@ -655,19 +656,6 @@ export const getNameQuantityOrderItems = (order: Order): string => {
   }
 };
 
-export const getOrderByPaymentSourceToken = async (transactionToken: string): Promise<Order> => {
-  try {
-    const cl = await getCLAdminCLient();
-    const externalPayment = await cl.external_payments.list({
-      filters: {
-        payment_source_token_eq: transactionToken
-      },
-      include: ["order"],
-    });
-    console.info('externalPayment', { externalPayment });
-    return null;
-  } catch (error) {
-    console.error("Error getOrderByPaymentSourceToken", error);
-    return null;
-  }
+export const isExternalPayment = (paymentSource: any): paymentSource is ExternalPayment => {
+  return paymentSource.type === ExternalPayments.TYPE;
 };
