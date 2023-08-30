@@ -1,8 +1,7 @@
 import { CONTENTFUL_TYPENAMES } from "./contentful-typenames.constants";
 
-import PageQuery, { PageFragments, PageMinimalQuery } from "@/lib/graphql/page.gql";
+import PageQuery, { PageFragments } from "@/lib/graphql/page.gql";
 import BlockPromoContentQuery, { BlockPromoContentFragments } from "@/lib/graphql/blocks/promo-content.gql";
-import AuxNavigationQuery from "@/lib/graphql/aux/navigation.gql";
 import AuxCustomContent, { AuxCustomContentMinimalQuery } from "@/lib/graphql/aux/custom-content.gql";
 import ProductQuery, { ProductMinimalQuery } from '../lib/graphql/product.gql';
 import BlockContentFilterQuery from "@/lib/graphql/blocks/content-filter.gql";
@@ -12,7 +11,8 @@ import BlockFormQuery from "@/lib/graphql/blocks/form-content.gql";
 import RateQuery from "@/lib/graphql/rate.gql";
 import AllyQuery from "@/lib/graphql/ally.gql";
 import copySetQuery from "@/lib/graphql/copy/copySet.gql";
-import { QN_AUXALLY, QN_AUXCUSTOMCONTENT, QN_AUXNAVIGATION, QN_AUXRATE, QN_BLOCKFORM, QN_BLOCKPROMOCONTENT, QN_CONTENTFILTER, QN_COPYSET, QN_PAGE, QN_PRODUCT, QN_PRODUCTCATEGORY, QN_TRADEMARK } from "./contentful-querynames.constants";
+import { QN_AUXALLY, QN_AUXCUSTOMCONTENT, QN_AUXRATE, QN_BLOCKFORM, QN_BLOCKPROMOCONTENT, QN_CONTENTFILTER, QN_COPYSET, QN_PAGE, QN_PRODUCT, QN_PRODUCTCATEGORY, QN_TRADEMARK } from "./contentful-querynames.constants";
+import PageMinimalQuery from "@/lib/graphql/views/page-minimal.gql";
 
 const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.PAGE]: {
@@ -44,10 +44,6 @@ const CONTENTFUL_QUERY_MAPS = {
   [CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER]: {
     queryName: QN_CONTENTFILTER,
     query: BlockContentFilterQuery,
-  },
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: {
-    queryName: QN_AUXNAVIGATION,
-    query: AuxNavigationQuery,
   },
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: {
     queryName: QN_AUXCUSTOMCONTENT,

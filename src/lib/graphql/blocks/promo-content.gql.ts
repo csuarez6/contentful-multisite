@@ -17,20 +17,14 @@ import ViewFeaturedProducts from "../views/featured-products.gql";
 import ViewVideoSlider from "../views/videoSlider.gql";
 import ViewSecondaryBanner from "../views/secondaryBanner.gql";
 import ViewRichText from "../views/richText.gql";
-import { PageMinimalQuery } from "../page.gql";
-import { ProductMinimalQuery } from "../product.gql";
-import { AuxCustomContentMinimalQuery } from "../aux/custom-content.gql";
+import PageMinimalFragment from "../fragments/page-minimal.fragment";
+import ProductMinimalFragment from "../fragments/product-minimal.fragment";
+import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-minimal.fragment";
 
 export const BlockPromoContentFragments = `
-  fragment PageMinimalFragment on Page {
-    ${PageMinimalQuery}
-  }
-  fragment ProductMinimalFragment on Product {
-    ${ProductMinimalQuery}
-  }
-  fragment AuxCustomContentMinimalFragment on AuxCustomContent {
-    ${AuxCustomContentMinimalQuery}
-  }
+  ${PageMinimalFragment}
+  ${ProductMinimalFragment}
+  ${AuxCustomContentMinimalFragment}
 `;
 
 const BlockPromoContentQuery = `

@@ -4,7 +4,6 @@ import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import contentfulClient from "./contentful-client.service";
 import { gql } from "@apollo/client";
-import getReferencesRichtextContent from "./richtext-references.service";
 import { getCommercelayerProduct } from "./commerce-layer.service";
 import getFilteredContent from "./content-filter.service";
 

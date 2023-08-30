@@ -1,27 +1,12 @@
 import { gql } from '@apollo/client';
 
 import contentfulClient from './contentful-client.service';
-import _ from 'lodash';
 
 import { DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
-import AuxNavigationQuery, { AuxNavigationFragments, AuxNavigationReferenceFragments, AuxNavigationReferenceQuery } from '../graphql/aux/navigation.gql';
-import getReferencesContent from './references-content.service';
-
-const REFERENCES = {
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
-    'mainNavCollection',
-    'secondaryNavCollection',
-    'utilityNavCollection'
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    'mainNavCollection',
-  ],
-  [CONTENTFUL_TYPENAMES.PAGE]: [
-    'mainNavCollection',
-  ],
-};
+import HeaderMainQuery, { HeaderMainFragments } from '../graphql/aux/header-main.gql';
+import { HeaderSecondaryFragments, HeaderSecondaryQuery } from '../graphql/aux/header-secondary.gql';
 
 const getInitialMenu = async (navigationId: string = null, preview = false) => {
   if (!navigationId) return null;
@@ -31,10 +16,10 @@ const getInitialMenu = async (navigationId: string = null, preview = false) => {
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
-        ${AuxNavigationFragments}
+        ${HeaderMainFragments}
         query getInitialNavigation($id: String!, $preview: Boolean!) {
           auxNavigation(id: $id, preview: $preview) {
-            ${AuxNavigationQuery}
+            ${HeaderMainQuery}
           }
         }
       `,
@@ -66,10 +51,10 @@ const getReferenceItem = async (mainItemInfo: any, preview: boolean) => {
   try {
     ({ data: responseData } = await contentfulClient(preview).query({
       query: gql`
-      ${AuxNavigationReferenceFragments}
+      ${HeaderSecondaryFragments}
       query getNavigationReferences($id: String!, $preview: Boolean!) {
         auxNavigation(id: $id, preview: $preview) {
-          ${AuxNavigationReferenceQuery}
+          ${HeaderSecondaryQuery}
         }
       }`,
       variables: {
@@ -88,9 +73,9 @@ const getReferenceItem = async (mainItemInfo: any, preview: boolean) => {
     )
   );
   return { responseData: blockEntryContent };
-}
+};
 
-export const getMenu = async (navigationId: string = null, preview = false, depth = 6) => {
+export const getMenu = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_HEADER_ID;
 
   const menu = await getInitialMenu(navigationId, preview);
@@ -103,19 +88,13 @@ export const getMenu = async (navigationId: string = null, preview = false, dept
       if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
         const { responseData, responseError = "" } = await getReferenceItem(mainItem, preview);
         if(responseError) console.error(`Error on get reference item => `, responseError.message, mainItem);
-        else menu.mainNavCollection.items[i] = responseData;
+        else { 
+          menu.mainNavCollection.items[i] = responseData;
+          // console.log("El responseData es: ", responseData);
+        }
       }
     }
   }
-
-  // const referencesContent = await getReferencesContent({
-  //   content: menu,
-  //   preview,
-  //   referenceOverride: REFERENCES,
-  //   maxDepthRecursion: depth
-  // });
-
-  // if (referencesContent) _.merge(menu, referencesContent);
 
   return menu;
 };

@@ -1,45 +1,17 @@
-import { AuxCustomContentMinimalQuery } from "./aux/custom-content.gql";
-import { AuxNavigationMinimalQuery } from "./aux/navigation.gql";
-import { ProductMinimalQuery } from "./product.gql";
+import AuxCustomContentMinimalFragment from "./fragments/aux-custom-content-minimal.fragment";
+import AuxNavigationMinimalFragment from "./fragments/aux-navigation-minimal.fragment";
+import PageMinimalFragment from "./fragments/page-minimal.fragment";
+import ParentFieldsFragment from "./fragments/parent-fields.fragment";
+import ProductMinimalFragment from "./fragments/product-minimal.fragment";
 import { AssetImageQuery } from "./shared/asset.gql";
-import DefaultQuery, { ParentQuery, RichtextQuery } from "./shared/default.gql";
-
-export const PageMinimalQuery = `
-  ${DefaultQuery}
-  name
-  promoTitle
-  urlPaths
-  promoIcon
-  parent {
-    ${DefaultQuery}
-  }
-  content {
-    ${RichtextQuery}
-  }
-  promoDescription {
-    ${RichtextQuery}
-  }
-  promoImage {
-    ${AssetImageQuery}
-  }
-`;
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
 
 export const PageFragments = `
-  fragment ParentFields on Page {
-    ${ParentQuery}
-  }  
-  fragment PageMinimalFragment on Page {
-    ${PageMinimalQuery}
-  }
-  fragment AuxNavigationMinimalFragment on AuxNavigation {
-    ${AuxNavigationMinimalQuery}
-  }
-  fragment AuxCustomContentMinimalFragment on AuxCustomContent {
-    ${AuxCustomContentMinimalQuery}
-  }
-  fragment ProductMinimalFragment on Product {
-    ${ProductMinimalQuery}
-  }
+  ${ParentFieldsFragment}
+  ${PageMinimalFragment}  
+  ${AuxNavigationMinimalFragment}
+  ${AuxCustomContentMinimalFragment}
+  ${ProductMinimalFragment}
 `;
 
 const PageQuery = `

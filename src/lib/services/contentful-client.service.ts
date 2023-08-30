@@ -27,7 +27,7 @@ const errorLink  = onError(({ graphQLErrors, networkError }) => {
 const generalLink = new ApolloLink((operation, forward) => {
   const minifiedQuery = compress(operation.query.loc.source.body);
   operation.query = gql`${minifiedQuery}`;
-  console.log("Se realizará una petición a GraphQL");
+  console.info("Se realizará una petición a GraphQL");
   return forward(operation);
 });
 

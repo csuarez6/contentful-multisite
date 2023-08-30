@@ -1,5 +1,5 @@
-import { PageMinimalQuery } from "../page.gql";
 import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
+import PageMinimalQuery from "../views/page-minimal.gql";
 
 const BlockContentFilterQuery = `
   ${DefaultQuery}

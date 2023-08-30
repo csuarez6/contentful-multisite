@@ -8,7 +8,6 @@ import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 import getFilteredContent from './content-filter.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
-import getReferencesRichtextContent from './richtext-references.service';
 
 type DefaultBlockInfo = {
   __typename: string;

@@ -8,7 +8,6 @@ import contentfulClient from './contentful-client.service';
 import { getBlocksContent } from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
-import getReferencesRichtextContent from './richtext-references.service';
 import { hasItems } from '@/utils/functions';
 
 const getPageContent = async (urlPath, preview = false, fullContent = true) => {
