@@ -31,6 +31,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
       if (data.status.status === P2PRequestStatus.approved) {
         console.info('approved');
+
+        await client.orders.update({
+          id: order.id,
+          _approve: true,
+        });
+
         await client.authorizations.update({
           id: authorization.id,
           _capture: true,
@@ -38,10 +44,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             notificationInfo: data
           }
         });
-      }
+      } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
+        console.info('failed or rejected');
 
+        await client.orders.update({
+          id: order.id,
+          _cancel: true,
+        });
+
+        const metadata = authorization.metadata.push(data);
+        await client.authorizations.update({
+          id: authorization.id,
+          _void: true,
+          metadata: metadata
+        });
+      }
+      
       console.info('emails');
-      const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
+      const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
       if (orderByAlly.status === 200) {
         await sendClientEmail(orderByAlly.data);
 

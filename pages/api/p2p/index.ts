@@ -9,13 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const client = await getCLAdminCLient();
     const data = JSON.parse(req.body);
     const order = (await getOrderByAlly(data.orderId)).data;
-    const authorization = order.authorizations[0];
     const description = getNameQuantityOrderItems(order);
-
-    await client.orders.update({
-      id: order.id,
-      _place: true,
-    });
 
     const payment: IP2PPayment = {
       'reference': order.id,
@@ -47,15 +41,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       throw new Error(response);
     }
 
-    await client.orders.update({
-      id: order.id,
-      _approve: true,
+    const token = response.requestId;
+
+    await client.external_payments.create({
+      payment_source_token: token,
+      order: {
+        id: order.id,
+        type: "orders",
+      },
     });
 
-    await client.authorizations.update({
-      id: authorization.id,
-      reference: response.requestId,
-      reference_origin: 'p2p'
+    await client.orders.update({
+      id: order.id,
+      _place: true,
     });
 
     res.json({

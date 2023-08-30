@@ -53,7 +53,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     reloadOrder,
     productUpdates,
     setPaymentMethod,
-    addPaymentMethodSource,
     setDefaultShippingMethod,
     getShippingMethods,
     validateExternal,
@@ -196,9 +195,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         .then(async (json) => {
           if (json.data.status.status === 'OK') {
             const data: IP2PRequest = json.data;
-
-            await addPaymentMethodSource(data.requestId);
-
             const productsData = products.map(el => {
               return {
                 product: el.name,

@@ -85,12 +85,11 @@ const handler = async (
                     }
                 });
             } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
+                const metadata = authorization.metadata.push(response);
                 await cl.authorizations.update({
                     id: authorization.id,
                     _void: true,
-                    metadata: {
-                        notificationInfo: response
-                    }
+                    metadata: metadata
                 });
             }
 
