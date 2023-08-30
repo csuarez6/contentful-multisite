@@ -1,5 +1,5 @@
 import { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery from "../shared/default.gql";
+import DefaultQuery, { internalLink } from "../shared/default.gql";
 
 const AuxNavigationMinimalQuery = `
   ${DefaultQuery}
@@ -9,20 +9,7 @@ const AuxNavigationMinimalQuery = `
     ${AssetImageQuery}
   }
   promoIcon
-  internalLink {
-    ...on Page {
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-    ...on Product {
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-  }
+  ${internalLink}
 `;
 
 export default AuxNavigationMinimalQuery;

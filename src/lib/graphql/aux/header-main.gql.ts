@@ -2,7 +2,7 @@ import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-min
 import AuxNavigationMinimalFragment from "../fragments/aux-navigation-minimal.fragment";
 import PageMinimalFragment from "../fragments/page-minimal.fragment";
 import { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
 
 export const HeaderMainFragments = `
   ${PageMinimalFragment}
@@ -44,20 +44,7 @@ const HeaderMainQuery = `
     ${RichtextQuery}
   }
   backgroundColor
-  internalLink {
-    ...on Page{
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-    ...on Product {
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-  }
+  ${internalLink}
 `;
 
 export default HeaderMainQuery;

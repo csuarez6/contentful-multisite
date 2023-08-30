@@ -17,7 +17,7 @@ import {
   DEFAULT_HELP_BUTTON_ID,
   DEFAULT_WARRANTY_COPY,
 } from "@/constants/contentful-ids.constants";
-import { getMenu } from "@/lib/services/menu-content.service";
+import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
@@ -658,16 +658,9 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getMenu(
-    DEFAULT_FOOTER_ID,
-    context.preview ?? false,
-    3
-  );
-  const helpButton = await getMenu(
-    DEFAULT_HELP_BUTTON_ID,
-    context.preview ?? false
-  );
+  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
+  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,

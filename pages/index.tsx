@@ -9,7 +9,7 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 
 import getPageContent from "@/lib/services/page-content.service";
-import { getMenu } from "@/lib/services/menu-content.service";
+import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 
 const Home: NextPageWithLayout = ({ blocksCollection }: IPage) => {
   return (
@@ -31,9 +31,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     context.preview ?? false
   );
 
-  const headerInfo = false; // await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = false; // await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
-  const helpButton = false; // await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false, 3);
+  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
+  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   return {
     props: {

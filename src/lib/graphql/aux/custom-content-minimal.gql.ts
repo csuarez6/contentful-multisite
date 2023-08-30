@@ -1,21 +1,10 @@
 import AssetQuery, { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
 
 const AuxCustomContentMinimalQuery = `
   ${DefaultQuery}
   name
-  internalLink {
-    ... on Page {
-      slug
-      urlPaths
-      promoTitle
-    }
-    ... on Product {
-      slug
-      urlPaths
-      promoTitle
-    }
-  }
+  ${internalLink}
   externalLink
   linkParameters
   ctaLabel

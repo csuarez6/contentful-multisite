@@ -1,5 +1,5 @@
 import AuxNavigationMainFragment from "../fragments/aux-navigation-main.fragment";
-import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
 
 export const HeaderSecondaryFragments = `
   ${AuxNavigationMainFragment}
@@ -31,36 +31,10 @@ export const HeaderSecondaryQuery = `
         secondaryText {
           ${RichtextQuery}
         }
-        internalLink {
-          ...on Page{
-            ${DefaultQuery}
-            slug
-            urlPaths
-            promoTitle
-          }
-          ...on Product {
-            ${DefaultQuery}
-            slug
-            urlPaths
-            promoTitle
-          }
-        }
+        ${internalLink}
       }
     }
   }
   backgroundColor
-  internalLink {
-    ...on Page{
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-    ...on Product {
-      ${DefaultQuery}
-      slug
-      urlPaths
-      promoTitle
-    }
-  }
+  ${internalLink}
 `;
