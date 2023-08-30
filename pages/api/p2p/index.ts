@@ -9,7 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const client = await getCLAdminCLient();
     const data = JSON.parse(req.body);
     const order = (await getOrderByAlly(data.orderId)).data;
-    const authorization = order.authorizations[0];
     const description = getNameQuantityOrderItems(order);
 
     const payment: IP2PPayment = {
@@ -43,7 +42,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     }
 
     const token = response.requestId;
-    const metadata = authorization.metadata.p2pRequestResponse = response;
 
     await client.external_payments.create({
       payment_source_token: token,
@@ -57,6 +55,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       id: order.id,
       _place: true,
     });
+
+    const authorization = (await client.orders.retrieve(order.id)).authorizations.at(0);
+    const metadata = authorization.metadata.p2pRequestResponse = response;
+    console.info(authorization);
 
     await client.authorizations.update({
       id: authorization.id,

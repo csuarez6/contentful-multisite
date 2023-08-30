@@ -12,23 +12,11 @@ const handler = async (
     try {
         const orderId = req.body.orderId;
         const type = req.body.type;
-        const cl = await getCLAdminCLient();
+        const client = await getCLAdminCLient();
         const order = (await getOrderByAlly(orderId)).data;
-        const authorization = order.authorizations[0];
-        const paymentSource = order.payment_source;
-        const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
 
         if (type === 'create') {
             const description = getNameQuantityOrderItems(order);
-
-            if (!paymentSource) {
-                throw new Error("Tipo de pago no soportado");
-            }
-
-            console.info(order);
-            console.info(transactionToken);
-            console.info(description);
-            console.info(authorization);
 
             const payment: IP2PPayment = {
                 'reference': order.id,
@@ -54,23 +42,43 @@ const handler = async (
             const ipAddress = req.socket.remoteAddress;
             const userAgent = req.headers['user-agent'];
             const response: IP2PRequest | string = await createP2PRequest(order.id, payment, ipAddress, userAgent, extraFields, buyer);
+            console.info(response);
 
             if (typeof response === 'string') {
                 throw new Error(response);
             }
 
-            console.info(response);
+            const token = response.requestId;
 
-            await cl.authorizations.update({
+            await client.external_payments.create({
+                payment_source_token: token,
+                order: {
+                    id: order.id,
+                    type: "orders",
+                },
+            });
+
+            await client.orders.update({
+                id: order.id,
+                _place: true,
+            });
+
+            const authorization = (await client.orders.retrieve(order.id)).authorizations.at(0);
+            const metadata = authorization.metadata.p2pRequestResponse = response;
+
+            await client.authorizations.update({
                 id: authorization.id,
-                reference: response.requestId,
-                reference_origin: 'p2p'
+                _capture: true,
+                metadata: metadata
             });
 
             return res.status(200).json({ status: 200, data: response });
         } else {
+            const authorization = order.authorizations.at(0);
+            const paymentSource = order.payment_source;
+            const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
+
             const response: IP2PRequestInformation | string = await getP2PRequestInformation(transactionToken);
-            console.info(response);
 
             if (typeof response === 'string') {
                 throw new Error(response);
@@ -79,30 +87,28 @@ const handler = async (
             const metadata = authorization.metadata.p2pNotificationResponse = response;
 
             if (response.status.status === P2PRequestStatus.approved) {
-                await cl.orders.update({
+                await client.orders.update({
                     id: order.id,
                     _approve: true,
                 });
 
-                await cl.authorizations.update({
+                await client.authorizations.update({
                     id: authorization.id,
                     _capture: true,
                     metadata: metadata
                 });
             } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
-                await cl.orders.update({
+                await client.orders.update({
                     id: order.id,
                     _approve: true,
                 });
 
-                await cl.authorizations.update({
+                await client.authorizations.update({
                     id: authorization.id,
                     _void: true,
                     metadata: metadata
                 });
             }
-
-            console.info(authorization);
 
             return res.status(200).json({ status: 200, data: response });
         }
