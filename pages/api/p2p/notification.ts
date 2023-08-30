@@ -28,6 +28,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }
 
       console.info('ok order search');
+      
+      const metadata = authorization.metadata.p2pNotificationResponse = data;
 
       if (data.status.status === P2PRequestStatus.approved) {
         console.info('approved');
@@ -40,9 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await client.authorizations.update({
           id: authorization.id,
           _capture: true,
-          metadata: {
-            notificationInfo: data
-          }
+          metadata: metadata
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
         console.info('failed or rejected');
@@ -52,7 +52,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           _cancel: true,
         });
 
-        const metadata = authorization.metadata.push(data);
         await client.authorizations.update({
           id: authorization.id,
           _void: true,

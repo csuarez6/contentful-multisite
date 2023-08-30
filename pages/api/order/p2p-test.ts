@@ -69,23 +69,32 @@ const handler = async (
 
             return res.status(200).json({ status: 200, data: response });
         } else {
-            const response: IP2PRequestInformation | string = await getP2PRequestInformation('2455861');
+            const response: IP2PRequestInformation | string = await getP2PRequestInformation(transactionToken);
             console.info(response);
 
             if (typeof response === 'string') {
                 throw new Error(response);
             }
 
+            const metadata = authorization.metadata.p2pNotificationResponse = response;
+
             if (response.status.status === P2PRequestStatus.approved) {
+                await cl.orders.update({
+                    id: order.id,
+                    _approve: true,
+                });
+
                 await cl.authorizations.update({
                     id: authorization.id,
                     _capture: true,
-                    metadata: {
-                        notificationInfo: response
-                    }
+                    metadata: metadata
                 });
             } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
-                const metadata = authorization.metadata.push(response);
+                await cl.orders.update({
+                    id: order.id,
+                    _approve: true,
+                });
+
                 await cl.authorizations.update({
                     id: authorization.id,
                     _void: true,
