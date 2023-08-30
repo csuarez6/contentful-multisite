@@ -1,42 +1,37 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
-import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-type AuthorizationBody = {
-  data: any;
-  included: any[];
-};
 
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
+  const { data }: IExternalPaymentGWRequest = req.body;
+
   try {
     paymentGatewayValidation(req);
-
-    console.info('token');
-
-    const { data }: AuthorizationBody = req.body;
-
-    const paymentInfo = await getP2PRequestInformation(data.attributes.payment_source_token);
-
-    if (typeof paymentInfo === 'string') {
-      throw new Error(paymentInfo);
-    }
+    const status = <string>req.query.status;
+    console.info('token', status);
 
     res.json({
       success: true,
       data: {
-        payment_source_token: paymentInfo.requestId
-      },
+        payment_source_token: data.attributes.payment_source_token
+      }
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      error: error.message,
+    res.json({
+      success: false,
+      data: {
+        error: {
+          code: 500,
+          message: error
+        }
+      }
     });
   }
 };
 
-  export default handler;
+export default handler;

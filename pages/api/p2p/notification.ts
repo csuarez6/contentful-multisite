@@ -19,24 +19,48 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       console.info('ok validation');
       //Buscar la orden en Commercelayer y actualizar su estado
       const order = await client.orders.retrieve(data.requestId);
-      if (!order) throw new Error("INVALID_TRANSACTION");
+      if (!order) throw new Error("INVALID_ORDER");
       const authorization = order.authorizations.at(0);
+      if (!authorization) throw new Error("INVALID_TRANSACTION");
+
+      if (authorization.captures || authorization.voids) {
+        throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
+      }
 
       console.info('ok order search');
+      
+      const metadata = authorization.metadata.p2pNotificationResponse = data;
 
       if (data.status.status === P2PRequestStatus.approved) {
         console.info('approved');
+
+        await client.orders.update({
+          id: order.id,
+          _approve: true,
+        });
+
         await client.authorizations.update({
           id: authorization.id,
           _capture: true,
-          metadata: {
-            notificationInfo: data
-          }
+          metadata: metadata
+        });
+      } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
+        console.info('failed or rejected');
+
+        await client.orders.update({
+          id: order.id,
+          _cancel: true,
+        });
+
+        await client.authorizations.update({
+          id: authorization.id,
+          _void: true,
+          metadata: metadata
         });
       }
-
+      
       console.info('emails');
-      const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
+      const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
       if (orderByAlly.status === 200) {
         await sendClientEmail(orderByAlly.data);
 
@@ -47,17 +71,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }
 
       return res.json({
-        status: 'ok',
+        status: 200,
+        messsage: validation
       });
     }
 
     res.json({
-      status: validation,
+      status: 200,
+      message: validation
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      status: error.message,
+      status: 500,
+      message: error.message,
     });
   }
 };

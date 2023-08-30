@@ -1,5 +1,4 @@
 import { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
-import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -54,8 +53,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     reloadOrder,
     productUpdates,
     setPaymentMethod,
-    addPaymentMethodSource,
-    placeOrder,
     setDefaultShippingMethod,
     getShippingMethods,
     validateExternal,
@@ -64,7 +61,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     updateIsPaymentProcess
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
-  const [transactionToken, setTransactionToken] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     icon: "",
@@ -73,7 +69,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   });
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
-  const [isPlacing, setIsPlacing] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
   const asPathUrl = asPath.split("/")[3];
@@ -99,70 +94,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setIsLoading(false);
   };
 
-  /**
-   * Before of place a order we've had to:
-   * 1. Have Setted a shipping method
-   * 2. Have Setted a payment method
-   * 3. Have Added a payment method source
-   */
-  const onPlaceOrder = useCallback(async () => {
-    setIsPlacing(true);
-    try {
-      await validateExternal(tokenRecaptcha);
-      const token = uuid();
-      const paymentMethodId = order.available_payment_methods.find(
-        (i) => i.reference === DEFAULT_PAYMENT_METHOD
-      )?.id;
-
-      await setDefaultShippingMethod(hasShipment);
-      await setPaymentMethod(paymentMethodId);
-      await addPaymentMethodSource(token);
-      await placeOrder()
-        .then((res) => {
-          if (res.status === 200) {
-            setTransactionToken(token);
-            handlePayment();
-          }
-        })
-        .catch((err) => {
-          console.error("error on place order", err);
-          setError(true);
-          if (!navigator.onLine)
-            setErrorMessage({
-              icon: "alert",
-              type: "warning",
-              title:
-                "Comprueba tu conexión a internet e intenta de nuevo por favor.",
-            });
-          else
-            setErrorMessage({
-              icon: "alert",
-              type: "warning",
-              title: `Ocurrió un error al continuar con la pasarela de pagos.`,
-            });
-        })
-        .finally();
-    } catch (error) {
-      console.error(error);
-      setError(true);
-      setErrorMessage({
-        icon: "alert",
-        type: "warning",
-        title: "Error al Realizar la orden",
-      });
-    }
-    setIsPlacing(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    addPaymentMethodSource,
-    placeOrder,
-    setDefaultShippingMethod,
-    setPaymentMethod,
-    tokenRecaptcha,
-    validateExternal,
-    order?.available_payment_methods,
-  ]);
-
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
     if (!order) return;
@@ -182,7 +113,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       if (onPayment) {
         setOnPayment(false);
         if (productUpdates?.length === 0) {
-          await onPlaceOrder();
+          await onPayOrder();
         } else {
           setError(true);
           setErrorMessage({
@@ -214,22 +145,56 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handlePayment = async (toCancel = false) => {
+  /**
+   * Before of place a order we've had to:
+   * 1. Have Setted a shipping method
+   * 2. Have Setted a payment method
+   * 3. Have Added a payment method source
+   */
+  const onPayOrder = useCallback(async () => {
     setIsPaying(true);
+    try {
+      await validateExternal(tokenRecaptcha);
+      const paymentMethodId = order.available_payment_methods.find(
+        (i) => i.reference === DEFAULT_PAYMENT_METHOD
+      )?.id;
+
+      await setDefaultShippingMethod(hasShipment);
+      await setPaymentMethod(paymentMethodId);
+      await handlePayment();
+    } catch (error) {
+      console.error(error);
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Error al realizar la orden",
+      });
+    }
+    updateIsPaymentProcess(false);
+    setIsPaying(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    setDefaultShippingMethod,
+    setPaymentMethod,
+    tokenRecaptcha,
+    validateExternal,
+    order?.available_payment_methods,
+  ]);
+
+  const handlePayment = async (toCancel = false) => {
     try {
       const path =
         `/api/p2p` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
         body: JSON.stringify({
-          orderId: order?.id,
-          transactionToken: transactionToken
+          orderId: order?.id
         }),
       }).then((response) => response.json())
-        .then((json) => {
+        .then(async (json) => {
           if (json.data.status.status === 'OK') {
             const data: IP2PRequest = json.data;
-
             const productsData = products.map(el => {
               return {
                 product: el.name,
@@ -242,24 +207,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               label: "Compra de Productos",
               productsList: productsData,
             });
+            
             push(data.processUrl);
           } else {
             throw new Error("Error create p2p session");
           }
-        }).catch((error) => {
-          throw new Error(error);
         });
     } catch (error) {
-      console.error(error);
-      setError(true);
-      setErrorMessage({
-        icon: "alert",
-        type: "warning",
-        title: "Error en la pasarela de pago.",
-      });
-    } finally {
-      updateIsPaymentProcess(false);
-      setIsPaying(false);
+      throw new Error(error);
     }
   };
 
@@ -508,15 +463,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   {isComplete && (
                     <button
                       onClick={validateOrder}
-                      disabled={isLoading || isPlacing || isPaying || !tokenRecaptcha}
+                      disabled={isLoading || isPaying || !tokenRecaptcha}
                       className={classNames(
                         "button button-primary w-full mt-[17px]",
-                        (isLoading || isPlacing || isPaying)
+                        (isLoading || isPaying)
                           ? "disabled flex items-center justify-center gap-3"
                           : ""
                       )}
                     >
-                      {(isLoading || isPlacing || isPaying) && (
+                      {(isLoading || isPaying) && (
                         <svg
                           aria-hidden="true"
                           className="inline-block w-5 h-5 text-gray-200 animate-spin fill-blue-dark"
@@ -534,7 +489,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           />
                         </svg>
                       )}
-                      {isLoading ? "Validando" : (isPlacing || isPaying ? "Procesando" : "Comprar")}
+                      {isLoading ? "Validando" : (isPaying ? "Procesando" : "Comprar")}
                     </button>
                   )}
                 </div>
@@ -547,13 +502,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         </div>
       </div>
       {error && (
-          <InformationModal
-            icon={errorMessage.icon}
-            type={errorMessage.type}
-            title={errorMessage.title}
-            close={() => setError(false)}
-          />
-        )
+        <InformationModal
+          icon={errorMessage.icon}
+          type={errorMessage.type}
+          title={errorMessage.title}
+          close={() => setError(false)}
+        />
+      )
       }
     </>
   );
