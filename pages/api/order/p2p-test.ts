@@ -1,4 +1,4 @@
-import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields } from '@/lib/interfaces/p2p-cf-interface';
+import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
 import { getCLAdminCLient, getNameQuantityOrderItems, isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
@@ -15,11 +15,11 @@ const handler = async (
         const cl = await getCLAdminCLient();
         const order = (await getOrderByAlly(orderId)).data;
         const authorization = order.authorizations[0];
+        const paymentSource = order.payment_source;
+        const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
 
         if (type === 'create') {
             const description = getNameQuantityOrderItems(order);
-            const paymentSource = order.payment_source;
-            const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
 
             if (!paymentSource) {
                 throw new Error("Tipo de pago no soportado");
@@ -69,9 +69,33 @@ const handler = async (
 
             return res.status(200).json({ status: 200, data: response });
         } else {
-
-            const response: IP2PRequestInformation | string = await getP2PRequestInformation('2392457');
+            const response: IP2PRequestInformation | string = await getP2PRequestInformation('2455861');
             console.info(response);
+
+            if (typeof response === 'string') {
+                throw new Error(response);
+            }
+
+            if (response.status.status === P2PRequestStatus.approved) {
+                await cl.authorizations.update({
+                    id: authorization.id,
+                    _capture: true,
+                    metadata: {
+                        notificationInfo: response
+                    }
+                });
+            } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
+                await cl.authorizations.update({
+                    id: authorization.id,
+                    _void: true,
+                    metadata: {
+                        notificationInfo: response
+                    }
+                });
+            }
+
+            console.info(authorization);
+
             return res.status(200).json({ status: 200, data: response });
         }
     } catch (error) {

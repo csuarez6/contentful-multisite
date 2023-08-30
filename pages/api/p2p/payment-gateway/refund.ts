@@ -18,6 +18,10 @@ const handler = async (
     console.info('refund', status);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
+
+    if (!externalPayment) {
+      throw new Error("Payment not found");
+    }
     const paymentInfo = await getP2PRequestInformation(externalPayment.payment_source_token);
 
     if (typeof paymentInfo === 'string') {
