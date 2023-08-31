@@ -84,7 +84,9 @@ const handler = async (
                 throw new Error(response);
             }
 
-            if (!authorization.succeeded) {
+            console.info('autho', authorization);
+
+            if (authorization.captures.length === 0 && authorization.voids.length === 0) {
                 const metadata = authorization.metadata.p2pNotificationResponse = response;
     
                 if (response.status.status === P2PRequestStatus.approved) {
@@ -110,9 +112,6 @@ const handler = async (
                         metadata: metadata
                     });
                 }
-            } else {
-                console.info('order', order);
-                console.info('authorization', authorization);
             }
 
             return res.status(200).json({ status: 200, data: response });
