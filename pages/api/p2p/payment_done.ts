@@ -67,7 +67,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 if (orderByAlly.status === 200) {
                     await sendClientEmail(orderByAlly.data);
 
-                    if (data.status.status === P2PRequestStatus.approved) {
+                    if (infoP2P.status.status === P2PRequestStatus.approved) {
                         await sendVantiEmail(orderByAlly.data);
                         await sendAllyEmail(orderByAlly.data);
                     }
