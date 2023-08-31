@@ -18,7 +18,7 @@ const Accordion: React.FC<any> = ({
     
     const $content = $panelAccordion.current.querySelectorAll("[data-content-accordion]");
     const $accordion = [];
-    console.log({$content })
+    console.info({$content });
     $content.forEach((item, index) => {
       item.style.height = item.firstChild.clientHeight + "px";
       $accordion[index] = false;
@@ -28,9 +28,9 @@ const Accordion: React.FC<any> = ({
       $content.forEach((item, index) => {
         item.style.height = item.firstChild.clientHeight + "px";
         if(index == 1)
-          console.log(item.scrollHeight)
+          console.info(item.scrollHeight);
       });
-    }
+    };
 
     setAccordions($accordion);
   }, []);
