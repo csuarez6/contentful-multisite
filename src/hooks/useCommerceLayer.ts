@@ -458,7 +458,7 @@ export const useCommerceLayer = () => {
     try {
       const cl = await getCommerlayerClient(token);
       const res = await cl.customer_addresses.list({include: ['address']});
-      return res?.[0].address;
+      return res?.[0]?.address ?? [];
     } catch (error) {
       console.error('error getCustomerAddresses', error);
       return [];
@@ -469,8 +469,15 @@ export const useCommerceLayer = () => {
     if (token) {
       try {
         const cl = await getCommerlayerClient(token);
-        const client = await cl.customers.retrieve(user.id);
-        await cl.customer_addresses.create({customer: {id: client.id,type: 'customers',}, address});
+        const client = await cl.customers.retrieve(user?.id);
+        const createAddress = await cl.addresses.create({first_name: client?.metadata?.name, last_name: client?.metadata?.lastName, ...address}); 
+        if(client?.id){
+          await cl.customer_addresses.create({
+            customer: {id: client.id,type: 'customers',}, 
+            address: {id: createAddress.id, type: 'addresses'},
+          });
+        }else console.error('error CLient id = ', client?.id);
+        
       } catch (error) {
         console.error('error addCustomerAddress', error);  
       }
