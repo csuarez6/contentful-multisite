@@ -11,6 +11,5 @@ export const dataModal = {
             "Como cada informe de una fuga de gas es una situación potencialmente peligrosa, te recomendamos que evacúes las instalaciones junto con los miembros de la familia, las mascotas y esperar a que llegue nuestro técnico."
         ]
     },
-    urlVideo: "https://www.youtube.com/embed/UAp-K29-b74",
     button_text: "Entendido!!"
 };

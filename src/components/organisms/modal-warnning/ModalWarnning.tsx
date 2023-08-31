@@ -54,16 +54,6 @@ const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
                         {dataModal?.description}
                       </p>
                     </div>
-                    <div className='relative pb-[56.25%] h-0 overflow-hidden max-w-full'>
-                      <iframe
-                        className="absolute top-0 left-0 w-full h-full"
-                        src={dataModal?.urlVideo}
-                        title="Video: Lineas de emergencia"
-                        frameBorder="0"
-                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        height="400"
-                        width="300" />
-                    </div>
                     <div className='text-sm text-gray-500 flex flex-col gap-3'>
                       <p>
                         {dataModal?.descriptionFooter.title}
