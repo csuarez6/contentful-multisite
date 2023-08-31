@@ -9,7 +9,7 @@ import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.in
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address"],
   fields: {
     orders: [
       "number",
@@ -28,8 +28,9 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "customer_email",
       "available_payment_methods",
       "shipments",
+      "billing_address"
     ],
-    addresses: ["state_code", "city", "line_1", "phone"],
+    addresses: ["state_code", "city", "line_1", "phone", "full_address"],
     shipments: ["available_shipping_methods", "stock_location"],
     line_items: [
       "item_type",
@@ -174,6 +175,19 @@ export const useCommerceLayer = () => {
     }
   }, []);
 
+  const getOrderById = useCallback(async (orderId?: string) => {
+    try {
+      if (!orderId) throw new Error(INVALID_ORDER_ID_ERROR);
+
+      const orderResp = await getUpdateOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
+      const order = orderResp.data as unknown as Order;
+
+      return { status: 200, data: order };
+    } catch (error) {
+      return { status: 400, data: 'error get order by ID' };
+    }
+  }, []);
+
   const reloadOrder = useCallback(async (checkUpdates?: boolean) => {
     try {
       const order = await getOrder(checkUpdates);
@@ -263,7 +277,7 @@ export const useCommerceLayer = () => {
     try {
       const client = await generateClient();
       const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
-      let response : Promise<LineItem> | ILoggedErrorCollection;
+      let response: Promise<LineItem> | ILoggedErrorCollection;
 
       if (quantity > 0) {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
@@ -300,12 +314,12 @@ export const useCommerceLayer = () => {
       } else {
         try {
           const warrantyServicePromise = lineItem["warranty_service"] && lineItem["warranty_service"].length > 0
-              ? client.line_items.delete(lineItem["warranty_service"][0].id)
-              : Promise.resolve();
+            ? client.line_items.delete(lineItem["warranty_service"][0].id)
+            : Promise.resolve();
 
           const installationServicePromise = lineItem["installlation_service"] && lineItem["installlation_service"].length > 0
-              ? client.line_items.delete(lineItem["installlation_service"][0].id)
-              : Promise.resolve();
+            ? client.line_items.delete(lineItem["installlation_service"][0].id)
+            : Promise.resolve();
 
           const skuPromise = client.line_items.delete(lineItem.id).catch(err => err);
 
@@ -454,10 +468,10 @@ export const useCommerceLayer = () => {
   );
 
   const getCustomerAddresses = useCallback(async (token) => {
-    if(!token) return [];
+    if (!token) return [];
     try {
       const cl = await getCommerlayerClient(token);
-      const res = await cl.customer_addresses.list({include: ['address']});
+      const res = await cl.customer_addresses.list({ include: ['address'] });
       return res?.[0]?.address ?? [];
     } catch (error) {
       console.error('error getCustomerAddresses', error);
@@ -470,29 +484,29 @@ export const useCommerceLayer = () => {
       try {
         const cl = await getCommerlayerClient(token);
         const client = await cl.customers.retrieve(user?.id);
-        const createAddress = await cl.addresses.create({first_name: client?.metadata?.name, last_name: client?.metadata?.lastName, ...address}); 
-        if(client?.id){
+        const createAddress = await cl.addresses.create({ first_name: client?.metadata?.name, last_name: client?.metadata?.lastName, ...address });
+        if (client?.id) {
           await cl.customer_addresses.create({
-            customer: {id: client.id,type: 'customers',}, 
-            address: {id: createAddress.id, type: 'addresses'},
+            customer: { id: client.id, type: 'customers', },
+            address: { id: createAddress.id, type: 'addresses' },
           });
-        }else console.error('error CLient id = ', client?.id);
-        
+        } else console.error('error CLient id = ', client?.id);
+
       } catch (error) {
-        console.error('error addCustomerAddress', error);  
+        console.error('error addCustomerAddress', error);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
 
   const updateCustomerAddress = useCallback(async (token, id, address) => {
-    if (token && id){
+    if (token && id) {
       try {
         const cl = await getCommerlayerClient(token);
-        await cl.addresses.update({id: id, ...address});
+        await cl.addresses.update({ id: id, ...address });
       } catch (error) {
-        console.error('error updateCustomerAddress', error );
-      }      
+        console.error('error updateCustomerAddress', error);
+      }
     }
   }, []);
 
@@ -764,7 +778,8 @@ export const useCommerceLayer = () => {
     checkCurrentPrices,
     deleteItemService,
     upgradeTimePay,
-    updateIsPaymentProcess
+    updateIsPaymentProcess,
+    getOrderById
   };
 };
 

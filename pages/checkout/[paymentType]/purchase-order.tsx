@@ -3,13 +3,17 @@ import { useRouter } from "next/router";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
-import { Address } from "@commercelayer/sdk";
+import { Address, Order } from '@commercelayer/sdk';
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
 import { getMenu } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
+import Icon from "@/components/atoms/icon/Icon";
+import CustomLink from "@/components/atoms/custom-link/CustomLink";
+import Spinner from "@/components/atoms/spinner/Spinner";
+const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
 const orderStatus = (value) => {
     switch (value) {
@@ -37,88 +41,135 @@ const orderStatus = (value) => {
 const CheckoutPurchase = () => {
     const router = useRouter();
     const { isLogged, user } = useContext(AuthContext);
-    const { order, getAddresses } = useContext(CheckoutContext);
+    const { getOrderById } = useContext(CheckoutContext);
     const [billingAddress, setBillingAddress] = useState<Address>();
     const orderId = router.query.id?.toString();
+    const [orderInfoById, setOrderInfoById] = useState<Order>();
+    const [statusError, setStatusError] = useState(false);
 
     console.info('orderId', orderId);
 
     const fullName = useMemo(() => {
         return (
             (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
-        )(isLogged ? user : order);
+        )(isLogged ? user : orderInfoById);
 
-    }, [user, order, isLogged]);
+    }, [user, orderInfoById, isLogged]);
 
     useEffect(() => {
-        if (!order) return;
         (async () => {
-            const { billingAddress } = await getAddresses();
-            setBillingAddress(billingAddress);
+            if (!orderId) { setStatusError(true); return; }
+            const orderData = await getOrderById(orderId);
+            if (orderData["status"] === 200) {
+                setOrderInfoById(orderData.data);
+                setBillingAddress(orderData.data["billing_address"]);
+                console.info({ orderData });
+            } else {
+                setStatusError(true);
+            }
         })();
-    }, [getAddresses, order]);
+    }, []);
 
     const isCompleted = useMemo(
-        () => !!order?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
-        [order]
+        () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
+        [orderInfoById]
     );
+
+    const Shipments = () => {
+        const shipments = orderInfoById.shipments;
+        const shipmentItems = [];
+        shipments.forEach(async (el) => {
+            const availableMethods = el.available_shipping_methods;
+            const methods = availableMethods.map((item) => { if (item.id != DEFAULT_SHIPPING_METHOD_ID) return item.name; });
+            shipmentItems.push(methods);
+        });
+        return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
+    };
 
     return (
         <HeadingCard
             classes="col-span-2"
-            title={orderStatus(order?.status).text}
-            icon={orderStatus(order?.status).leftIcon}
+            title={!statusError ? orderStatus(orderInfoById?.status).text : "Comprobación..."}
+            icon={orderStatus(orderInfoById?.status).leftIcon}
             isCheck={isCompleted}
-            rightIcon={orderStatus(order?.status).rightIcon}
+            rightIcon={orderStatus(orderInfoById?.status).rightIcon}
         >
-            <div className="bg-white rounded-lg">
-                <dl className="space-y-5 text-sm">
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">{order?.number ?? "-----"}</dd>
+
+            {/* Display spinner if statusError and orderInfoById are undefined  */}
+            {!statusError && !orderInfoById && <Spinner position="absolute" size="large" />}
+
+            {/* Display notification if Error */}
+            {statusError &&
+                <div className="bg-white rounded-lg">
+                    <div className="text-center">
+                        <span className="block w-12 h-12 m-auto shrink-0 text-lucuma">
+                            <Icon icon="alert" className="w-full h-full" />
+                        </span>
+                        <h3 className="mt-2 text-sm font-semibold text-gray-900">Comprobación de orden</h3>
+                        <p className="mt-1 text-sm text-gray-500">Ha ocurrido un error al consultar o no existe la orden.</p>
+                        <div className="flex justify-center mt-6">
+                            <CustomLink
+                                content={{ urlPaths: ["/"] }}
+                                linkClassName="relative button button-primary"
+                            >
+                                Ir a la tienda
+                            </CustomLink>
+                        </div>
                     </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">{fullName ?? "-----"}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Cedula de ciudadania:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            0000 000 000
-                        </dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Método de pago:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            {router.query.paymentType?.toString().toUpperCase() ?? "-----"}
-                        </dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            Banco Davivienda
-                        </dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            {billingAddress?.line_1} {billingAddress?.city ?? "-----"}
-                        </dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            {billingAddress?.full_address ?? "-----"}
-                        </dd>
-                    </div>
-                    <div className="flex justify-between">
-                        <dt className="flex-1 text-grey-30">Método de envio:</dt>
-                        <dd className="flex-1 font-bold text-grey-30">
-                            Estandar
-                        </dd>
-                    </div>
-                </dl>
-            </div>
+                </div>
+            }
+
+            {/* Display order content if no Error and order data no empty*/}
+            {!statusError && orderInfoById &&
+                <div className="bg-white rounded-lg">
+                    <dl className="space-y-5 text-sm">
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "-----"}</dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{fullName ?? "-----"}</dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Cedula de ciudadania:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {orderInfoById?.metadata?.documentNumber}
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Método de pago:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {router.query.paymentType?.toString().toUpperCase() ?? "-----"}
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                -------------
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {billingAddress?.line_1} {billingAddress?.city ?? "-----"}
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {billingAddress?.full_address ?? "-----"}
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Método de envio:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {Shipments() ?? "-----"}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            }
         </HeadingCard>
     );
 };
