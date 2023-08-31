@@ -135,39 +135,3 @@ const sentryWebpackPluginOptions = {
 module.exports = isProduction
   ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
   : nextConfig;
-
-/* Header prev */
-// {
-//   source: '/(.*)',
-//   headers: [
-//     {
-//       key: 'strict-transport-security',
-//       value: 'max-age=31557600; includeSubDomains; preload',
-//     },
-//     {
-//       key: 'x-xss-protection',
-//       value: '1; mode=block',
-//     },
-//     {
-//       key: 'x-frame-options',
-//       value: 'SAMEORIGIN',
-//     },
-//   ],
-// },
-// {
-//   source: '/(.*)',
-//   headers: [
-//     {
-//       key: 'Vercel-CDN-Cache-Control',
-//       value: 'max-age=900',
-//     },
-//     {
-//       key: 'CDN-Cache-Control',
-//       value: 'max-age=0',
-//     },
-//     {
-//       key: 'Cache-Control',
-//       value: 'max-age=0',
-//     },
-//   ],
-// },

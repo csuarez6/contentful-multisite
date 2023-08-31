@@ -8,16 +8,6 @@ import {
   gql
 } from '@apollo/client';
 import compress from "graphql-query-compress";
-import { InvalidationPolicyCache, RenewalPolicy } from '@nerdwallet/apollo-cache-policies';
-
-// const cache = new InvalidationPolicyCache({
-//   invalidationPolicies: {
-//     timeToLive: 300 * 1000, // 5 min TTL on all types in the cache
-//     renewalPolicy: RenewalPolicy.WriteOnly
-//   }
-// });
-
-const cache = new InMemoryCache({});
 
 const errorLink  = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) console.error(graphQLErrors);
@@ -53,7 +43,7 @@ const contentfulClient = (preview = false) => {
     link: from([
       combinedLink, httpLink(preview)
     ]),
-    cache,
+    cache: new InMemoryCache({}),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'no-cache',

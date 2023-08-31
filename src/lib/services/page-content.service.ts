@@ -9,6 +9,7 @@ import { getBlocksContent } from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
 import { hasItems } from '@/utils/functions';
+import getReferencesRichtextContent from './richtext-references.service';
 
 const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (!urlPath || urlPath === '') throw new Error(`«urlPath» is required`);
@@ -97,10 +98,10 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
       _.merge(pageContent, commercelayerProduct);
     }
 
-    // const richtextReferences = await getReferencesRichtextContent({ content: pageContent, preview });
-    // if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-    //   _.merge(pageContent, richtextReferences);
-    // }
+    const richtextReferences = await getReferencesRichtextContent({ content: pageContent, preview });
+    if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+      _.merge(pageContent, richtextReferences);
+    }
   }
 
   return pageContent;
