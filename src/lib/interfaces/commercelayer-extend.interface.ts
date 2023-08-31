@@ -12,3 +12,24 @@ export interface ILoggedError {
 export interface ILoggedErrorCollection {
     errors?: ILoggedError[];
 };
+
+export interface IExternalPaymentGWRequest {
+    data: {
+        id: string;
+        type: string;
+        links: any;
+        attributes: any;
+        relationships: any;
+        meta: any;
+    };
+    included: IncludedItem[];
+}
+
+interface IncludedItem {
+    id: string;
+    type: string;
+    links: any;
+    attributes: any;
+    relationships: any;
+    meta: any;
+}

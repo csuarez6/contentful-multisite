@@ -1,64 +1,11 @@
 import { getCommercelayerProductPrice, updateOrderAdminService } from '@/lib/services/commerce-layer.service';
-import { QueryParamsRetrieve } from '@commercelayer/sdk';
 import { formatPrice, generateAmountCents } from '@/utils/functions';
 import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
-
-const DEFAULT_ORDER_PARAMS_ALLY: QueryParamsRetrieve = {
-  include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_source"],
-  fields: {
-    orders: [
-      "number",
-      "status",
-      "line_items",
-      "customer",
-      "authorizations",
-      "metadata",
-      "customer_email",
-      "shipments",
-      "billing_address",
-      "shipping_address",
-      "formatted_total_amount",
-      "total_amount_float",
-      "approved_at",
-      "market",
-      "available_payment_methods",
-      "payment_source"
-    ],
-    addresses: [
-      "state_code",
-      "city",
-      "line_1",
-      "line_2",
-      "notes",
-      "phone",
-      "state_code"
-    ],
-    line_items: [
-      "item_type",
-      "image_url",
-      "name",
-      "sku_code",
-      "quantity",
-      "formatted_unit_amount",
-      "formatted_total_amount",
-      "unit_amount_cents",
-      "total_amount_cents",
-      "total_amount_float",
-      "item"
-    ],
-    markets: [
-      "name",
-      "price_list"
-    ],
-    shipments: [
-      "shipping_method",
-    ],
-  }
-};
+import { DEFAULT_ORDER_PARAMS } from '../graphql/order.gql';
 
 export const getOrderByAlly = async (orderId: string): Promise<IAllyResponse> => {
   try {
-    const resp: IAllyResponse = await updateOrderAdminService(orderId, DEFAULT_ORDER_PARAMS_ALLY, false);
+    const resp: IAllyResponse = await updateOrderAdminService(orderId, DEFAULT_ORDER_PARAMS, false);
     const allies = [];
     const promises = [];
     resp?.data?.line_items?.forEach(async (line_item: ILineItemExtended) => {

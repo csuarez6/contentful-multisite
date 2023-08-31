@@ -74,6 +74,7 @@ const DashboardAddresses = () => {
   const { status, data: session } = useSession();
   const idAddress = useRef("");
   const attempts2 = useRef(0);
+  const [newAddress, setNewAddress] = useState(true);
   useEffect(() => {
     if (status === "authenticated" && session) {
       // setConfig({
@@ -94,7 +95,9 @@ const DashboardAddresses = () => {
             setValue("shippingAddress.residence", addressesForm.residence);
             setValue("shippingAddress.receiver", addressesForm.receiver);
             idAddress.current = addressesForm.id;
-            setNewAddress(false);
+            if(addressesForm?.id){
+              setNewAddress(false);
+            }
           }
         }
         attempts2.current = 1;
@@ -106,7 +109,6 @@ const DashboardAddresses = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [states, setStates] = useState([]);
   const [shippingCities, setShippingCities] = useState([]);
-  const [newAddress, setNewAddress] = useState(true);
   const attempts = useRef(0);
 
   const {
