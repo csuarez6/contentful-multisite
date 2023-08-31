@@ -68,13 +68,13 @@ const defaultFormatOptions: Options = {
       return <blockquote>{children}</blockquote>;
     },
     [BLOCKS.EMBEDDED_ASSET]: (node) => {
-      const { url, title, description, width, height } = node.data.target;
+      const { url, title, description, width, height, ...data } = node.data.target;
       return url ? (
         <>
           <figure className="w-full mt-10 mb-4 block text-center">
             <Image
               src={url}
-              className="w-auto h-auto max-w-full"
+              className="w-auto h-auto max-w-full inline-block"
               alt={title ?? description}
               width={width}
               height={height}

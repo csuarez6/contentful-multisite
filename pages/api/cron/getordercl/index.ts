@@ -11,7 +11,7 @@ const handler = async (
     try {
         const resp = await getOrderStatusCl();
         const orderData = resp.data ?? [];
-        orderData.forEach(function (data) {
+        orderData.forEach(function () {
             const infoP2P = getP2PRequestInformation("2392499");
             console.info({ infoP2P });
         });
