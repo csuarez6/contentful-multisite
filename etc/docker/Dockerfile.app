@@ -1,6 +1,10 @@
 ##### Building Base image #####
 FROM node:16-alpine as base
 
+# Set timezone
+RUN apk add --no-cache tzdata
+ENV TZ=America/Bogota
+
 ## Install util packages
 RUN apk add --update --no-cache vim
 
