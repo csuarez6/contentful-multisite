@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
-import { Address, Order, Shipment } from '@commercelayer/sdk';
+import { Address, Order } from '@commercelayer/sdk';
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -63,7 +63,7 @@ const CheckoutPurchase = () => {
             if (orderData["status"] === 200) {
                 setOrderInfoById(orderData.data);
                 setBillingAddress(orderData.data["billing_address"]);
-                console.log({ orderData });
+                console.info({ orderData });
             } else {
                 setStatusError(true);
             }
