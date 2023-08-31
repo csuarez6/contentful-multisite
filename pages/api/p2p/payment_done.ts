@@ -10,7 +10,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data = req.query;
-    const orderId = data.id;
+    const orderId = <string>data.id;
 
     try {
         const client = await getCLAdminCLient();
@@ -47,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         _capture: true,
                         metadata: metadata
                     });
-                } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
+                } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
                     console.info('failed or rejected');
 
                     await client.orders.update({
