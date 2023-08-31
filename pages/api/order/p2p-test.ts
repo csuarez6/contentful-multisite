@@ -1,8 +1,8 @@
 import { IAllyResponse } from '@/lib/interfaces/ally-collection.interface';
-import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields } from '@/lib/interfaces/p2p-cf-interface';
+import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, P2PDisplayOnFields } from '@/lib/interfaces/p2p-cf-interface';
 import { getNameQuantityOrderItems, getOrderByPaymentSourceToken } from '@/lib/services/commerce-layer.service';
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
-import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
+import { createP2PRequest } from '@/lib/services/place-to-pay.service';
 import { ExternalPayment } from '@commercelayer/sdk';
 import { ExternalPayments } from '@commercelayer/sdk/lib/cjs/api';
 import type { NextApiRequest, NextApiResponse } from 'next';

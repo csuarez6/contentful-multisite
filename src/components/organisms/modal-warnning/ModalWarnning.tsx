@@ -1,7 +1,7 @@
-import { classNames } from '@/utils/functions'
-import { Dialog, Transition } from '@headlessui/react'
-import { Dispatch, Fragment, SetStateAction } from 'react'
-import { dataModal } from "./ModalWarnning.mock"
+import { classNames } from '@/utils/functions';
+import { Dialog, Transition } from '@headlessui/react';
+import { Dispatch, Fragment, SetStateAction } from 'react';
+import { dataModal } from "./ModalWarnning.mock";
 
 interface IModal {
   open: boolean,
@@ -10,7 +10,7 @@ interface IModal {
 const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
 
   function closeModal() {
-    setOpen(!open)
+    setOpen(!open);
   }
 
   return (
@@ -31,7 +31,7 @@ const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
             </Transition.Child>
 
             <div className="fixed inset-0 overflow-y-auto">
-              <div className="min-h-full  p-4 text-center grid grid-cols-1 gap-7 md:gap-9">
+              <div className="min-h-full  p-4 flex justify-center items-center">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -41,7 +41,8 @@ const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
                   leaveFrom="opacity-100 scale-100"
                   leaveTo="opacity-0 scale-95"
                 >
-                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Panel className="w-[90%] lg:max-w-[60%] relative overflow-hidden gap-5 flex-col flex rounded-2xl bg-white p-6 h-fit shadow-xl transition-all">
+                    <button className='absolute right-5 top-2' onClick={closeModal}>x</button>
                     <Dialog.Title
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
@@ -53,31 +54,33 @@ const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
                         {dataModal?.description}
                       </p>
                     </div>
-                    <iframe
-                      className="w-full"
-                      src={dataModal?.urlVideo}
-                      title="Video: Lineas de emergencia"
-                      frameBorder="0"
-                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      height="560"
-                      width="349" />
-                    <div>
+                    <div className='relative pb-[56.25%] h-0 overflow-hidden max-w-full'>
+                      <iframe
+                        className="absolute top-0 left-0 w-full h-full"
+                        src={dataModal?.urlVideo}
+                        title="Video: Lineas de emergencia"
+                        frameBorder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        height="400"
+                        width="300" />
+                    </div>
+                    <div className='text-sm text-gray-500 flex flex-col gap-3'>
                       <p>
-                        {dataModal.descriptionFooter.title}
+                        {dataModal?.descriptionFooter.title}
                       </p>
-                        <ul>
-                          {dataModal.descriptionFooter.listDescription.map((el, i) => (
+                        <ul className='list-[disclosure-closed] list-inside pl-3'>
+                          {dataModal?.descriptionFooter?.listDescription.map((el, i) => (
                             <li key={i}>{el}</li>
                           ))}
                         </ul>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <button
                         type="button"
                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         onClick={closeModal}
                       >
-                        Got it, thanks!
+                        {dataModal?.button_text}
                       </button>
                     </div>
                   </Dialog.Panel>
@@ -88,7 +91,7 @@ const ModalWarnning: React.FC<IModal> = ({ open, setOpen }) => {
         </Transition>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ModalWarnning
+export default ModalWarnning;

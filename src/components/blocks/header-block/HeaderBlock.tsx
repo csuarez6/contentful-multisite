@@ -7,7 +7,7 @@ import {
   XMarkIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import ModalWarnning from "@/components/organisms/modal-warnning/ModalWarnning"
+import ModalWarnning from "@/components/organisms/modal-warnning/ModalWarnning";
 import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
@@ -128,7 +128,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
-  const [openModal, setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     setNumProducts(
@@ -207,7 +207,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     color = secondaryNavCollectionColor;
   }
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
-console.log(openModal)
+
   return (
     <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
       {/* Top */}
@@ -567,7 +567,7 @@ console.log(openModal)
                   )}
                 </div>
               </div>
-              <div className="relative z-10 flex items-center lg:hidden">
+              <div className="relative z-10 flex items-center lg:hidden cursor-pointer" onClick={() => setOpenModal(!openModal)}>
                 <span className="block w-10 h-10 rounded-full shrink-0 bg-category-orange-light text-blue-dark">
                   <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
