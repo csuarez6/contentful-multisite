@@ -38,13 +38,9 @@ const REFERENCES = {
 
 const getReferencesContent = async ({ content, preview = false, actualDepth = 1, referenceOverride = null, maxDepthRecursion = 6 }) => {
   let referencesContent: any = {};
-  if (actualDepth > maxDepthRecursion) {
-    return content;
-  }
+  if (actualDepth > maxDepthRecursion) return content;
 
-  if (!Array.isArray(content) && !content?.sys?.id) {
-    return null;
-  }
+  if (!Array.isArray(content) && !content?.sys?.id) return null;
 
   if (Array.isArray(content)) {
     referencesContent = [];
