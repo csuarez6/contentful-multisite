@@ -640,6 +640,18 @@ export const getOrderStatusCl = async (status?: string) => {
   }
 };
 
+/*** Get orders by ID on commercelayer  ***/
+export const getOrderByIdCl = async (orderId?: string) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const orderInfo = await cl.orders.retrieve(orderId);
+    return { status: 200, data: orderInfo };
+  } catch (error) {
+    console.error("Error getOrderByIdCl: ", error);
+    return { status: 401, error: error };
+  }
+};
+
 export const getNameQuantityOrderItems = (order: Order): string => {
   try {
     let itemNames = '';

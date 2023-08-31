@@ -7,7 +7,8 @@ import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
-    const data = JSON.parse(req.body);
+    // const data = JSON.parse(req.body);
+    const data = req.body;
     const order = await client.orders.retrieve(data.orderId, DEFAULT_ORDER_PARAMS);
     const description = getNameQuantityOrderItems(order);
 
