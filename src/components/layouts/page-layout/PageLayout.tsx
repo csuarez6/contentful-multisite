@@ -88,7 +88,9 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
             <meta name="twitter:image" content={`${image}`} />
           </>
         )}
-        <meta name="robots" content="noindex, nofollow" />
+        {/* remove meta - Vanti security requirement  */}
+        {/* <meta name="robots" content="noindex, nofollow" /> */}
+        {/* ************************ */}
       </Head>
       <Script async src="https://www.googletagmanager.com/gtag/js?id=G-9T5PX5P83V" />
       <Script
@@ -117,7 +119,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
       }
 
       {preview && (
-        <div className="z-30 fixed bottom-0 left-0 w-full h-8 flex justify-between items-center py-2 px-4 bg-category-orange-light-40 text-white font-semibold">
+        <div className="fixed bottom-0 left-0 z-30 flex items-center justify-between w-full h-8 px-4 py-2 font-semibold text-white bg-category-orange-light-40">
           <span>Estás en modo previsualización (contenido en borrador no publicado)</span>
           <Link href="/api/preview/exit" className="underline hover:text-red-800">
             Exit
@@ -125,7 +127,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         </div>
       )}
 
-      <div className="min-h-screen flex flex-col">
+      <div className="flex flex-col min-h-screen">
         <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name} />
         <HelpButton {...layout.helpButton} />
         <main className="flex-grow">

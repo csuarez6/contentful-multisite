@@ -8,7 +8,10 @@ import jsonToReactComponent from "@/lib/services/render-cards.service";
 import ListWithIcons from "@/components/organisms/list-with-icons/ListWithIcons";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
-import { classNames } from "@/utils/functions";
+import { classNames, getButtonType } from "@/utils/functions";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
 const grid = {
   1: "",
@@ -27,6 +30,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
   footerText,
   view,
   blockId,
+  ctaCollection,
   sysId,
 }) => {
   const { asPath } = useRouter();
@@ -165,6 +169,56 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
             </Tab.Panels>
           </div>
         </Tab.Group>
+      )}
+      {ctaCollection?.items?.length > 0 && (
+        <div className="flex justify-center gap-3">
+          {ctaCollection.items.map((cta) => {
+            const hasBlocks = cta?.content?.json?.content?.some(el => {
+              return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
+            });
+            let contentJson = cta?.content?.json;
+            if (attachLinksToRichtextContent && contentJson) {
+              contentJson = attachLinksToRichtextContent(contentJson, cta?.content?.links ?? []);
+            }            
+            return (
+              <>
+                {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
+                  <CustomLink
+                    content={cta}
+                    key={cta.name}
+                    className={classNames("button w-fit", getButtonType(view.buttonType ?? 'Primario'))}
+                  >
+                    {cta.promoTitle ?? cta.name}
+                  </CustomLink>
+                )}
+                {cta.linkView === "Modal" && (
+                  <ButtonAtom
+                    key={cta.name}
+                    type="Modal"
+                    classes={classNames("button w-fit", getButtonType(view.buttonType ?? 'Primario'))}
+                    modalClass={hasBlocks ? "main-container" : null}
+                    text={cta.promoTitle ?? cta.name}
+                  >
+                    {cta?.content?.json && (
+                      <div>{documentToReactComponents(contentJson, defaultFormatOptions)}</div>
+                    )}
+                  </ButtonAtom>
+                )}
+                {cta?.mediaInternalLink && (
+                  <CustomLink
+                    content={cta}
+                    className={classNames(
+                      "button w-full sm:w-auto flex justify-center text-center",
+                      getButtonType("Contorno")
+                    )}
+                  >
+                    {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
+                  </CustomLink>
+                )}
+              </>
+            );
+          })}
+        </div>
       )}
       {footerText && (
         <div className="text-neutral-30 text-size-p2 richtext-container">

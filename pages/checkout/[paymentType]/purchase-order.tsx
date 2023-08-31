@@ -39,6 +39,9 @@ const CheckoutPurchase = () => {
     const { isLogged, user } = useContext(AuthContext);
     const { order, getAddresses } = useContext(CheckoutContext);
     const [billingAddress, setBillingAddress] = useState<Address>();
+    const orderId = router.query.id?.toString();
+
+    console.info('orderId', orderId);
 
     const fullName = useMemo(() => {
         return (

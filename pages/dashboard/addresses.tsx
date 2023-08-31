@@ -1,7 +1,6 @@
 import { GetStaticProps } from "next";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import TextBox from "@/components/atoms/input/textbox/TextBox";
-import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, useWatch } from "react-hook-form";
@@ -25,7 +24,6 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { IAddress, IAddresses } from "../checkout/[paymentType]/addresses";
 import CheckoutContext from "@/context/Checkout";
 import { Address, AddressCreate } from "@commercelayer/sdk";
-import AuthContext from "@/context/Auth";
 import SelectAtom, {
   IListContent,
 } from "@/components/atoms/select-atom/SelectAtom";
@@ -73,26 +71,54 @@ const DashboardAddresses = () => {
   //   accessToken: "",
   //   endpoint: "",
   // });
-
   const { status, data: session } = useSession();
+  const idAddress = useRef("");
+  const attempts2 = useRef(0);
+  const [newAddress, setNewAddress] = useState(true);
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && session) {
       // setConfig({
       //   accessToken: session?.user["accessToken"],
       //   endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       // });
+      (async () => {
+        if (attempts2.current != 0) {
+          const addresses: Address = await getCustomerAddresses(
+            session?.user["accessToken"]
+          );
+          const addressesForm = toAddressForm(addresses);
+          if (addressesForm) {
+            setValue("shippingAddress.stateCode", addressesForm.stateCode);
+            setValue("shippingAddress.cityCode", addressesForm.cityCode);
+            setValue("shippingAddress.street", addressesForm.street);
+            setValue("shippingAddress.address", addressesForm.address);
+            setValue("shippingAddress.residence", addressesForm.residence);
+            setValue("shippingAddress.receiver", addressesForm.receiver);
+            idAddress.current = addressesForm.id;
+            if(addressesForm?.id){
+              setNewAddress(false);
+            }
+          }
+        }
+        attempts2.current = 1;
+      })();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, session]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [billingCities, setBillingCities] = useState([]);
   const [states, setStates] = useState([]);
   const [shippingCities, setShippingCities] = useState([]);
   const attempts = useRef(0);
 
-  const { order, addAddresses, getAddresses, onHasShipment } =
-    useContext(CheckoutContext);
-  const { isLogged, user } = useContext(AuthContext);
+  const {
+    order,
+    onHasShipment,
+    getCustomerAddresses,
+    addCustomerAddress,
+    updateCustomerAddress,
+  } = useContext(CheckoutContext);
+  // const { isLogged, user } = useContext(AuthContext);
 
   const schema = yup.object({
     shippingAddress: yup.object({
@@ -108,26 +134,6 @@ const DashboardAddresses = () => {
       isSameAsBillingAddress: yup.boolean(),
       // phone: yup.string().required("Dato Requerido"),
     }),
-    billingAddress: yup
-      .object()
-      .when("shippingAddress.isSameAsBillingAddress", {
-        is: false,
-        then: yup
-          .object({
-            stateCode: yup.string().required("Dato Requerido"),
-            cityCode: yup
-              .string()
-              .required("Dato Requerido")
-              .notOneOf(["Seleccione un Municipio"], "opcion invalida"),
-            address: yup.string().trim().required("Dato Requerido"),
-            street: yup.string().required("Dato Requerido"),
-            residence: yup.string().nullable().notRequired(),
-            receiver: yup.string().nullable().notRequired(),
-            // phone: yup.string().required("Dato Requerido"),
-          })
-          .required("Requerido"),
-        otherwise: yup.object().notRequired(),
-      }),
   });
 
   const {
@@ -156,11 +162,6 @@ const DashboardAddresses = () => {
     if (!e.key.match(letters)) e.preventDefault();
   };
 
-  const isSameAsBillingAddress = useWatch({
-    control,
-    name: "shippingAddress.isSameAsBillingAddress",
-  });
-
   const shippingStateWatched = useWatch({
     control,
     name: "shippingAddress.stateCode",
@@ -170,63 +171,6 @@ const DashboardAddresses = () => {
     control,
     name: "shippingAddress.cityCode",
   });
-
-  const billingStateWatched = useWatch({
-    control,
-    name: "billingAddress.stateCode",
-  });
-
-  useEffect(() => {
-    if (order) {
-      (async () => {
-        const { shippingAddress, billingAddress } = await getAddresses();
-        const shippingAddressFormatted = toAddressForm(shippingAddress);
-        const billingAddressFormatted = toAddressForm(billingAddress);        
-        if (shippingAddressFormatted) {
-          setValue(
-            "shippingAddress.stateCode",
-            shippingAddressFormatted.stateCode
-          );
-          setValue(
-            "shippingAddress.cityCode",
-            shippingAddressFormatted.cityCode
-          );
-          setValue("shippingAddress.street", shippingAddressFormatted.street);
-          setValue("shippingAddress.address", shippingAddressFormatted.address);
-          setValue(
-            "shippingAddress.residence",
-            shippingAddressFormatted.residence
-          );
-          setValue(
-            "shippingAddress.receiver",
-            shippingAddressFormatted.receiver
-          );
-        }
-        if (billingAddressFormatted) {
-          setValue("shippingAddress.isSameAsBillingAddress", false);
-          setValue(
-            "billingAddress.stateCode",
-            billingAddressFormatted.stateCode
-          );
-          setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
-          setValue("billingAddress.address", billingAddressFormatted.address);
-          setValue("billingAddress.street", billingAddressFormatted.street);
-          setValue(
-            "billingAddress.residence",
-            billingAddressFormatted.residence
-          );
-        }
-        reset({
-          shippingAddress: {
-            ...shippingAddressFormatted,
-            isSameAsBillingAddress: (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") || (shippingAddressFormatted?.address == billingAddressFormatted?.address),
-          },
-          billingAddress: billingAddressFormatted,
-        });
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
 
   useEffect(() => {
     (async () => {
@@ -286,34 +230,29 @@ const DashboardAddresses = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
 
-  useEffect(() => {
-    if (!billingStateWatched) return;
-    (async () => {
-      const cities: string[] = await getCitiesByState(billingStateWatched);
-      setBillingCities(cities);
-    })();
-  }, [billingStateWatched]);
-
   const sendData = async (data: IAddresses) => {
     try {
-      const { shippingAddress, billingAddress } = data;
+      const { shippingAddress } = data;
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
-      let clBillingAddr = undefined;
+      if (newAddress) {
+        await addCustomerAddress(session?.user["accessToken"], clShippingAddr);
+      } else {
+        await updateCustomerAddress(
+          session?.user["accessToken"],
+          idAddress.current,
+          clShippingAddr
+        );
+      }
+      // [clShippingAddr].forEach((add) => {
+      //   if (!add) return;
+      //   ((meta: any) => {
+      //     (add.first_name = meta?.name), (add.last_name = meta?.lastName);
+      //   })(isLogged ? user.metadata : order.metadata);
+      // });
 
-      if (billingAddress)
-        clBillingAddr = toCLAddress(billingAddress) as AddressCreate;
-
-      [clShippingAddr, clBillingAddr].forEach((add) => {
-        if (!add) return;
-        ((meta: any) => {
-          (add.first_name = meta?.name), (add.last_name = meta?.lastName);
-        })(isLogged ? user.metadata : order.metadata);
-      });
-
-      await addAddresses(clShippingAddr, clBillingAddr ?? undefined);
+      // await addAddresses(clShippingAddr ?? undefined);
     } catch (error) {
       console.error(error);
-      alert(error.message);
     }
   };
 
@@ -478,116 +417,7 @@ const DashboardAddresses = () => {
                           </p>
                         )}
                       </div>
-                      <div className="w-full">
-                        <CheckBox
-                          {...register(
-                            "shippingAddress.isSameAsBillingAddress"
-                          )}
-                          id="shippingAddress.isSameAsBillingAddress"
-                          label="Acepto usar la dirección de envió para el proceso de facturación"
-                        />
-                      </div>
-                      {!isSameAsBillingAddress && (
-                        <>
-                          <h4 className="!font-semibold text-blue-dark">
-                            Direccion de facturación
-                          </h4>
-                          <div className="w-full">
-                            <SelectAtom
-                              id="billingAddress-state-code"
-                              labelSelect="Escoge tu departamento"
-                              listedContents={states}
-                              isRequired={true}
-                              currentValue={getValues(
-                                "billingAddress.stateCode"
-                              )}
-                              handleChange={(value) => {
-                                setValue("billingAddress.stateCode", value);
-                                clearErrors("billingAddress.stateCode");
-                              }}
-                              {...register("billingAddress.stateCode")}
-                            />
-                            {errors.billingAddress?.stateCode && (
-                              <p className="text-red-600">
-                                {errors.billingAddress?.stateCode?.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="w-full">
-                            <SelectAtom
-                              id="billingCities-city-code"
-                              labelSelect="Escoge tu municipio"
-                              listedContents={billingCities}
-                              isRequired={true}
-                              currentValue={getValues(
-                                "billingAddress.cityCode"
-                              )}
-                              handleChange={(value) => {
-                                setValue("billingAddress.cityCode", value);
-                                clearErrors("billingAddress.cityCode");
-                              }}
-                              {...register("billingAddress.cityCode")}
-                            />
-                            {errors?.billingAddress?.cityCode && (
-                              <p className="text-red-600">
-                                {errors?.billingAddress?.cityCode?.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="w-full">
-                            <TextBox
-                              id="billingAddress.address"
-                              label="Escribe tu direccion"
-                              isRequired={true}
-                              {...register("billingAddress.address")}
-                              placeholder="Ejemplo carrera 00 # 0000"
-                            />
-                            {errors?.billingAddress?.address && (
-                              <p className="text-red-600">
-                                {errors?.billingAddress?.address?.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="w-full">
-                            <TextBox
-                              id="billingAddress.street"
-                              label="Escribir barrio"
-                              isRequired={true}
-                              onKeyPress={(e) => checkAlphaNumeric(e)}
-                              {...register("billingAddress.street")}
-                              placeholder="Nombre del barrio"
-                            />
-                            {errors?.billingAddress?.street && (
-                              <p className="text-red-600">
-                                {errors?.billingAddress?.street?.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="w-full">
-                            <TextBox
-                              id="billingAddress.residence"
-                              label="Información adicional"
-                              onKeyPress={(e) => checkAlphaNumeric(e)}
-                              {...register("billingAddress.residence")}
-                              placeholder="Apartamento / nombre de unidad"
-                            />
-                            {errors?.billingAddress?.residence && (
-                              <p className="text-red-600">
-                                {errors?.billingAddress?.residence?.message}
-                              </p>
-                            )}
-                          </div>
-                        </>
-                      )}
                       <div className="flex justify-end w-full gap-3">
-                        <button
-                          type="button"
-                          className="block text-center underline button text-blue-dark"
-                          onClick={() => console.warn("cancelar")}
-                          disabled={isLoading}
-                        >
-                          Cancelar
-                        </button>
                         <button
                           className="relative button button-primary"
                           type="submit"
@@ -626,41 +456,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     },
     revalidate,
   };
-};
-
-export const ModalConfirm: React.FC<any> = ({
-  data,
-  onEventHandler,
-  onActivedModal,
-}) => {
-  return (
-    <>
-      <div className="flex flex-col gap-6">
-        <div className="text-left">
-          Recuerde que si continua con el proceso, el servicio de instalación
-          será removido por falta de cobertura en la ubicación registrada.
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            className="button button-primary"
-            onClick={() => {
-              onEventHandler(data);
-            }}
-          >
-            Continuar de todos modos
-          </button>
-          <button
-            className="button button-outline"
-            onClick={() => {
-              onActivedModal(false);
-            }}
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </>
-  );
 };
 
 export default DashboardAddresses;

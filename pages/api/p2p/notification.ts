@@ -1,45 +1,90 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { INotification } from "@/lib/interfaces/INotification-p2p-cf.interface";
+import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
+import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
+import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
-import { validateSignature } from "@/lib/services/place-to-pay.service";
+import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
+import { validateP2PSignature } from "@/lib/services/place-to-pay.service";
+import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
-    const data: INotification = req.body;
-    let validation = false;
+    const data: IP2PNotification = req.body;
+    const validation = validateP2PSignature(data);
 
-    validation = validateSignature(data);
+    console.info('notification');
 
     if (validation) {
-      //Buscar la orden en Commercelayer y actualizar su estado
-      const authorizations = await client.authorizations.list({
-        filters: {
-          token_eq: <string>data.requestId,
-        },
-        include: ["order"],
-      });
-      if (!authorizations.length) throw new Error("INVALID_TRANSACTION");
+      console.info('ok validation');
+      const order = await client.orders.retrieve(data.requestId, DEFAULT_ORDER_PARAMS);
+      if (!order) throw new Error("INVALID_ORDER");
+      const authorization = order.authorizations.at(0);
+      if (!authorization) throw new Error("INVALID_TRANSACTION");
 
-      const authorization = authorizations.at(0);
-      await client.authorizations.update({
-        id: authorization.id,
-        _capture: true,
-      });
+      if (authorization.captures || authorization.voids) {
+        throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
+      }
+
+      console.info('ok order search');
+      
+      const metadata = authorization.metadata.p2pNotification = data;
+
+      if (data.status.status === P2PRequestStatus.approved) {
+        console.info('approved');
+
+        await client.orders.update({
+          id: order.id,
+          _approve: true,
+        });
+
+        await client.authorizations.update({
+          id: authorization.id,
+          _capture: true,
+          metadata: metadata
+        });
+      } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
+        console.info('failed or rejected');
+
+        await client.orders.update({
+          id: order.id,
+          _cancel: true,
+        });
+
+        await client.authorizations.update({
+          id: authorization.id,
+          _void: true,
+          metadata: metadata
+        });
+      }
+      
+      console.info('emails');
+      const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
+      if (orderByAlly.status === 200) {
+        await sendClientEmail(orderByAlly.data);
+
+        if (data.status.status === P2PRequestStatus.approved) {
+          await sendVantiEmail(orderByAlly.data);
+          await sendAllyEmail(orderByAlly.data);
+        }
+      }
 
       return res.json({
-        status: 'ok',
+        status: 200,
+        messsage: validation
       });
     }
 
     res.json({
-      status: validation,
+      status: 200,
+      message: validation
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      status: error.message,
+      status: 500,
+      message: error.message,
     });
   }
 };

@@ -1,9 +1,13 @@
 import { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
+import uuid from "react-uuid";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
 import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { MocksModalSuccessProps } from "@/components/organisms/modal-success/ModalSuccess.mocks";
+import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
@@ -12,8 +16,6 @@ import ProductDetailsLayoutSkeleton from "@/components/skeletons/ProductDetailsL
 import Icon from "@/components/atoms/icon/Icon";
 import { gaEventPurchase } from "@/utils/ga-events--checkout";
 import { gaEventForm } from "@/utils/ga-events--forms";
-import { IP2PRequest } from "@/lib/interfaces/p2p-cf-interface";
-import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -50,17 +52,23 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const {
     order,
     tokenRecaptcha,
+    timeToPay,
     reloadOrder,
     productUpdates,
     setPaymentMethod,
+    addPaymentMethodSource,
+    placeOrder,
     setDefaultShippingMethod,
     getShippingMethods,
     validateExternal,
+    upgradeTimePay,
     hasShipment,
     isFetchingOrder,
     updateIsPaymentProcess
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
+  const [openDummyPGModal, setOpenDummyPGModal] = useState(false);
+  const [transactionToken, setTransactionToken] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     icon: "",
@@ -69,6 +77,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   });
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isPlacing, setIsPlacing] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
   const asPathUrl = asPath.split("/")[3];
@@ -94,6 +103,73 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setIsLoading(false);
   };
 
+  /**
+   * Before of place a order we've had to:
+   * 1. Have Setted a shipping method
+   * 2. Have Setted a payment method
+   * 3. Have Added a payment method source
+   */
+  const onPlaceOrder = useCallback(async () => {
+    setIsPlacing(true);
+    try {
+      await validateExternal(tokenRecaptcha);
+
+      const token = uuid();
+
+      const paymentMethodId = order.available_payment_methods.find(
+        (i) => i.reference === DEFAULT_PAYMENT_METHOD
+      )?.id;
+
+      await setDefaultShippingMethod(hasShipment);
+      // return;
+      await setPaymentMethod(paymentMethodId);
+      await addPaymentMethodSource(token);
+      await placeOrder()
+        .then((res) => {
+          if (res.status === 200) {
+            setOpenDummyPGModal(true);
+            setTransactionToken(token);
+          }
+        })
+        .catch((err) => {
+          console.error("error on place order", err);
+          setError(true);
+          if (!navigator.onLine)
+            setErrorMessage({
+              icon: "alert",
+              type: "warning",
+              title:
+                "Comprueba tu conexión a internet e intenta de nuevo por favor.",
+            });
+          else
+            setErrorMessage({
+              icon: "alert",
+              type: "warning",
+              title: `Ocurrió un error al continuar con la pasarela de pagos.`,
+            });
+        })
+        .finally();
+    } catch (error) {
+      console.error(error);
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "Error al Realizar la orden",
+      });
+    }
+    setIsPlacing(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    addPaymentMethodSource,
+    placeOrder,
+    setDefaultShippingMethod,
+    setPaymentMethod,
+    tokenRecaptcha,
+    validateExternal,
+    order?.available_payment_methods,
+  ]);
+
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
     if (!order) return;
@@ -113,7 +189,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       if (onPayment) {
         setOnPayment(false);
         if (productUpdates?.length === 0) {
-          await onPayOrder();
+          await onPlaceOrder();
         } else {
           setError(true);
           setErrorMessage({
@@ -145,76 +221,57 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * Before of place a order we've had to:
-   * 1. Have Setted a shipping method
-   * 2. Have Setted a payment method
-   * 3. Have Added a payment method source
-   */
-  const onPayOrder = useCallback(async () => {
+  const handlePayment = async (toCancel = false) => {
     setIsPaying(true);
     try {
-      await validateExternal(tokenRecaptcha);
-      const paymentMethodId = order.available_payment_methods.find(
-        (i) => i.reference === DEFAULT_PAYMENT_METHOD
-      )?.id;
+      const path =
+        `/api/payments/${transactionToken}` + (toCancel ? `/cancel` : "");
+      await fetch(path, {
+        method: "POST",
+        body: JSON.stringify({
+          customer: order?.customer,
+          products: order?.line_items,
+        }),
+      });
+      const title = !toCancel ? "Pagado con éxito" : "Cancelado por usuario";
+      setError(true);
+      setErrorMessage({
+        icon: !toCancel ? "check" : "alert",
+        type: !toCancel ? "success" : "warning",
+        title: title,
+      });
+      if (!toCancel) {
+        if (isNaN(timeToPay) || timeToPay === 0) {
+          upgradeTimePay(30);
+        }
+      }
+      await reloadOrder(true);
 
-      await setDefaultShippingMethod(hasShipment);
-      await setPaymentMethod(paymentMethodId);
-      await handlePayment();
+      const productsData = products.map(el => {
+        return {
+          product: el.name,
+          sku: el.sku_code
+        };
+      });
+
+      gaEventForm({
+        category: "Checkout",
+        label: "Compra de Productos",
+        productsList: productsData,
+      });
+      push("/");
     } catch (error) {
       console.error(error);
       setError(true);
       setErrorMessage({
         icon: "alert",
         type: "warning",
-        title: "Error al realizar la orden",
+        title: "Error en la pasarela de pago.",
       });
-    }
-    updateIsPaymentProcess(false);
-    setIsPaying(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    setDefaultShippingMethod,
-    setPaymentMethod,
-    tokenRecaptcha,
-    validateExternal,
-    order?.available_payment_methods,
-  ]);
-
-  const handlePayment = async (toCancel = false) => {
-    try {
-      const path =
-        `/api/p2p` + (toCancel ? `/cancel` : "");
-      await fetch(path, {
-        method: "POST",
-        body: JSON.stringify({
-          orderId: order?.id
-        }),
-      }).then((response) => response.json())
-        .then(async (json) => {
-          if (json.data.status.status === 'OK') {
-            const data: IP2PRequest = json.data;
-            const productsData = products.map(el => {
-              return {
-                product: el.name,
-                sku: el.sku_code
-              };
-            });
-
-            gaEventForm({
-              category: "Checkout",
-              label: "Compra de Productos",
-              productsList: productsData,
-            });
-            
-            push(data.processUrl);
-          } else {
-            throw new Error("Error create p2p session");
-          }
-        });
-    } catch (error) {
-      throw new Error(error);
+    } finally {
+      setOpenDummyPGModal(false);
+      setIsPaying(false);
+      updateIsPaymentProcess(false);
     }
   };
 
@@ -463,15 +520,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   {isComplete && (
                     <button
                       onClick={validateOrder}
-                      disabled={isLoading || isPaying || !tokenRecaptcha}
+                      disabled={isLoading || isPlacing || !tokenRecaptcha}
                       className={classNames(
                         "button button-primary w-full mt-[17px]",
-                        (isLoading || isPaying)
+                        (isLoading || isPlacing)
                           ? "disabled flex items-center justify-center gap-3"
                           : ""
                       )}
                     >
-                      {(isLoading || isPaying) && (
+                      {(isLoading || isPlacing) && (
                         <svg
                           aria-hidden="true"
                           className="inline-block w-5 h-5 text-gray-200 animate-spin fill-blue-dark"
@@ -489,7 +546,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           />
                         </svg>
                       )}
-                      {isLoading ? "Validando" : (isPaying ? "Procesando" : "Comprar")}
+                      {isLoading ? "Validando" : (isPlacing ? "Procesando" : "Comprar")}
                     </button>
                   )}
                 </div>
@@ -501,14 +558,44 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           )}
         </div>
       </div>
-      {error && (
-        <InformationModal
-          icon={errorMessage.icon}
-          type={errorMessage.type}
-          title={errorMessage.title}
-          close={() => setError(false)}
-        />
+      {openDummyPGModal && (
+        <ModalSuccess
+          {...MocksModalSuccessProps.modalLayout}
+          isActive={openDummyPGModal}
+          isClosable={false}
+        >
+          <div className="flex justify-end w-full gap-5">
+            <button
+              disabled={isPaying}
+              className="button button-outline"
+              onClick={() => {
+                handlePayment(true);
+              }}
+            >
+              Cancelar pago
+            </button>
+            <button
+              disabled={isPaying}
+              className="button button-primary"
+              onClick={() => {
+                handlePayment();
+              }}
+            >
+              Pagar
+            </button>
+          </div>
+        </ModalSuccess>
       )
+      }
+      {
+        error && (
+          <InformationModal
+            icon={errorMessage.icon}
+            type={errorMessage.type}
+            title={errorMessage.title}
+            close={() => setError(false)}
+          />
+        )
       }
     </>
   );

@@ -4,7 +4,7 @@ import {
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
 } from "@/constants/contentful-ids.constants";
-import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
+import { getMenu } from "@/lib/services/menu-content.service";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -36,8 +36,7 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
               En unos minutos te estaremos contactando.
               <br />
               <br />
-              Si quieres otros productos y servicios, pídelo a nuestros
-              asesores.
+              Si quieres otros productos y servicios, pídelo a nuestros asesores.
             </p>
           ) : (
             <p className="lg:text-size-p1 text-grey-30">
@@ -119,7 +118,7 @@ const CallbackPage = () => {
         if (result.success) {
           gaEventForm({
             category: "Callback",
-            label: "Mantenimiento y Reparación",
+            label: "Reparación Gasodomésticos",
           });
         }
 
@@ -155,9 +154,9 @@ const CallbackPage = () => {
         },
       },
       {
-        promoTitle: "Mantenimiento",
+        promoTitle: "Reparación",
         internalLink: {
-          urlPaths: ["/otros-servicios/mantenimiento"],
+          urlPaths: ["/otros-servicios/reparacion"],
         },
       },
       {
@@ -252,14 +251,14 @@ const CallbackPage = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
-  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = await getMenu(DEFAULT_HEADER_ID, context.preview ?? false);
+  const footerInfo = await getMenu(DEFAULT_FOOTER_ID, context.preview ?? false, 3);
+  const helpButton = await getMenu(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
 
   return {
     props: {
       layout: {
-        name: "Callback Mantenimiento y Reparación",
+        name: "Callback Reparación",
         footerInfo,
         headerInfo,
         helpButton,

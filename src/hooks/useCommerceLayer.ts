@@ -187,7 +187,7 @@ export const useCommerceLayer = () => {
   }, [getOrder]);
 
   /**
-   * Function to SetUP the Order on the Context 
+   * Function to SetUP the Order on the Context
    */
   const setUpOrder = useCallback(async (checkUpdates: boolean) => {
     try {
@@ -264,7 +264,7 @@ export const useCommerceLayer = () => {
       const client = await generateClient();
       const lineItem = order.line_items.find((i) => i.sku_code === skuCode);
       let response : Promise<LineItem> | ILoggedErrorCollection;
-      
+
       if (quantity > 0) {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
         
@@ -284,7 +284,7 @@ export const useCommerceLayer = () => {
             // Send all of requests at the same time
             const [warrantyResult, installationResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise]);
 
-            // Validate if happened any errors with the requests 
+            // Validate if happened any errors with the requests
             if (warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
               console.error('Error with any update promise, see:', warrantyResult, installationResult);
               throw new Error("Error with any service update promise");
@@ -308,11 +308,11 @@ export const useCommerceLayer = () => {
               : Promise.resolve();
 
           const skuPromise = client.line_items.delete(lineItem.id).catch(err => err);
-          
+
           // Send all of requests at the same time
           const [warrantyResult, installationResult, skuResult] = await Promise.allSettled([warrantyServicePromise, installationServicePromise, skuPromise]);
 
-          // Validate if happened any errors with the requests 
+          // Validate if happened any errors with the requests
           if (skuResult.status === 'rejected' || warrantyResult.status === 'rejected' || installationResult.status === 'rejected') {
             console.error('Error with any delete promise, see:', warrantyResult, installationResult, skuResult);
             throw new Error("Error in the quantity updating process");
@@ -442,10 +442,55 @@ export const useCommerceLayer = () => {
     };
   }, [orderId]);
 
-  const getCustomerAddresses = useCallback(async () => {
-    if (!clientLogged) return [];
-    return clientLogged.customer_addresses.list();
-  }, [clientLogged]);
+  const getCommerlayerClient = async (accessToken: string) => (
+    CommerceLayer({
+      organization: "vanti-poc",
+      accessToken,
+    })
+  );
+
+  const getCustomerAddresses = useCallback(async (token) => {
+    if(!token) return [];
+    try {
+      const cl = await getCommerlayerClient(token);
+      const res = await cl.customer_addresses.list({include: ['address']});
+      return res?.[0]?.address ?? [];
+    } catch (error) {
+      console.error('error getCustomerAddresses', error);
+      return [];
+    }
+  }, []);
+
+  const addCustomerAddress = useCallback(async (token, address) => {
+    if (token) {
+      try {
+        const cl = await getCommerlayerClient(token);
+        const client = await cl.customers.retrieve(user?.id);
+        const createAddress = await cl.addresses.create({first_name: client?.metadata?.name, last_name: client?.metadata?.lastName, ...address}); 
+        if(client?.id){
+          await cl.customer_addresses.create({
+            customer: {id: client.id,type: 'customers',}, 
+            address: {id: createAddress.id, type: 'addresses'},
+          });
+        }else console.error('error CLient id = ', client?.id);
+        
+      } catch (error) {
+        console.error('error addCustomerAddress', error);  
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, []);
+
+  const updateCustomerAddress = useCallback(async (token, id, address) => {
+    if (token && id){
+      try {
+        const cl = await getCommerlayerClient(token);
+        await cl.addresses.update({id: id, ...address});
+      } catch (error) {
+        console.error('error updateCustomerAddress', error );
+      }      
+    }
+  }, []);
 
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
@@ -521,7 +566,7 @@ export const useCommerceLayer = () => {
           },
         },
         DEFAULT_ORDER_PARAMS
-      ).catch(err => console.error(err.errors));
+      ).catch(err => console.error('setPaymentMethod', err));
     },
     [orderId]
   );
@@ -700,6 +745,8 @@ export const useCommerceLayer = () => {
     addAddresses,
     getAddresses,
     getCustomerAddresses,
+    addCustomerAddress,
+    updateCustomerAddress,
     updateMetadata,
     placeOrder,
     getPaymentMethods,
