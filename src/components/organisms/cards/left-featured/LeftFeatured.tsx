@@ -80,9 +80,9 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
               width={promoImage?.width ?? image?.width}
               height={promoImage?.height ?? image?.height}
               className={classNames(
-                "object-cover w-full h-full aspect-[328/180]",
-                view?.bannerWidth === "Largo" && !view?.roundedImage && "md:aspect-[630/428] xl:w-[630px]",
-                view?.bannerWidth !== "Largo" && !view?.roundedImage && "md:aspect-[488/400] xl:w-[488px]",
+                "object-cover w-full h-full",
+                view?.bannerWidth === "Largo" && !view?.roundedImage && "aspect-[630/428] xl:w-[630px]",
+                view?.bannerWidth !== "Largo" && !view?.roundedImage && "aspect-[488/400] xl:w-[488px]",
                 view?.roundedImage && "xl:w-[630px]",
               )}
             />

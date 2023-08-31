@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Popover, Transition, Menu } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -120,6 +120,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     name,
   } = props;
   let { menuNavkey = null } = props;
+  const headerRef = useRef(null);
+  const prevScrollPosition = useRef(0);
+  const [isHidden, setIsHidden] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
@@ -129,6 +132,20 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
 
   const [numProducts, setNumProducts] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      const currentScrollPosition = window.scrollY;
+      setIsHidden(currentScrollPosition > prevScrollPosition.current && currentScrollPosition > headerRef?.current?.offsetHeight);
+      prevScrollPosition.current = currentScrollPosition;
+    };
+
+    window.addEventListener('scroll', checkScroll);
+
+    return () => {
+      window.removeEventListener('scroll', checkScroll);
+    };
+  }, []);
 
   useEffect(() => {
     setNumProducts(
@@ -209,7 +226,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
 
   return (
-    <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
+    <header
+      ref={headerRef}
+      id="header"
+      className={classNames(
+        "sticky inset-x-0 top-0 z-50 bg-white shadow transition-transform duration-500",
+        isHidden ? "-translate-y-full" : "translate-y-0"
+      )}
+    >
       {/* Top */}
       <div className="relative hidden lg:block overflow-x-hidden">
         <div
@@ -303,7 +327,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 </p>
               </div>
               {
-                 openModal && <ModalWarnning open={openModal} setOpen={setOpenModal} />
+                openModal && <ModalWarnning open={openModal} setOpen={setOpenModal} />
               }
             </nav>
           </div>
