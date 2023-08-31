@@ -2,13 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getCLAdminCLient, getNameQuantityOrderItems } from "@/lib/services/commerce-layer.service";
 import { createP2PRequest } from "@/lib/services/place-to-pay.service";
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, P2PDisplayOnFields } from "@/lib/interfaces/p2p-cf-interface";
-import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
+import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
-    const data = JSON.parse(req.body);
-    const order = (await getOrderByAlly(data.orderId)).data;
+    const data = req.body;
+    const order = await client.orders.retrieve(data.requestId, DEFAULT_ORDER_PARAMS);
     const description = getNameQuantityOrderItems(order);
 
     const payment: IP2PPayment = {
@@ -61,7 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         },
         include: ['order'],
       })).at(0);
-      const metadata = authorization.metadata.p2pRequestResponse = response;
+      const metadata = authorization.metadata.p2pRequest = response;
       console.info(authorization);
 
       await client.authorizations.update({
