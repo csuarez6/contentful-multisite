@@ -8,6 +8,8 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 import HeaderMainQuery, { HeaderMainFragments } from '../graphql/aux/header-main.gql';
 import { HeaderSecondaryFragments, HeaderSecondaryQuery } from '../graphql/aux/header-secondary.gql';
 import NavigationQuery, { NavigationFragments } from '../graphql/aux/navigation.gql';
+import { getCommercelayerProduct } from './commerce-layer.service';
+import _ from 'lodash';
 
 const getMainHeader = async (navigationId: string = null, preview = false) => {
   if (!navigationId) return null;
@@ -76,6 +78,32 @@ const getSecondaryHeader = async (mainItemInfo: any, preview: boolean) => {
   return { responseData: blockEntryContent };
 };
 
+const applySaltToMegamenu = async (flow: any) => {
+  const { mainNavCollection } = flow || {};
+
+  if (mainNavCollection?.items?.length > 0) {
+    for (const mainItem of mainNavCollection.items) {
+      if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
+        const { secondaryNavCollection } = mainItem || {};
+
+        if (secondaryNavCollection?.items?.length > 0) {
+          mainItem.secondaryNavCollection.items = await Promise.all(
+            secondaryNavCollection.items.map(async (item: any) => {
+              if (item.__typename === CONTENTFUL_TYPENAMES.PRODUCT && item?.sku) {
+                const commercelayerProduct = await getCommercelayerProduct(item.sku);
+                _.merge(item, commercelayerProduct);
+              }
+              return item;
+            })
+          );
+        }
+      }
+    }
+  }
+
+  return flow;
+};
+
 export const getHeader = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_HEADER_ID;
 
@@ -86,8 +114,19 @@ export const getHeader = async (navigationId: string = null, preview = false) =>
       const mainItem = header.mainNavCollection.items[i];
       if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
         const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
-        if(responseError) console.error(`Error on get reference item => `, responseError.message, mainItem);
-        else header.mainNavCollection.items[i] = responseData;
+        if(responseError) {
+          console.error(`Error on get reference item => `, responseError.message, mainItem);
+        } else {
+          let navigation = responseData;
+          if(navigation?.mainNavCollection?.items?.length > 0){ // If its a normal flow
+            navigation = await applySaltToMegamenu(navigation);
+          } else if(navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
+            navigation.secondaryNavCollection.items = await Promise.all(
+              navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
+            );
+          }
+          header.mainNavCollection.items[i] = navigation;
+        }
       }
     }
   }

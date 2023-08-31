@@ -15,6 +15,9 @@ const ProductMinimalQuery = `
   promoDescription {
     ${RichtextQuery}
   }
+  trademark {
+    name
+  }
   size
   capacity
   isNew

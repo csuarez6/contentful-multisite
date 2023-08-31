@@ -60,12 +60,21 @@ const AuxNavigationMainFragment = `
                 }
             }
         }
-        secondaryNavCollection {
+        secondaryNavCollection(limit: 5) {
             items {
                 ...PageMinimalFragment
                 ...AuxCustomContentMinimalFragment
                 ...ProductMinimalFragment
-                ...AuxNavigationMinimalFragment
+                ... on AuxNavigation {
+                    ${DefaultQuery}
+                    name
+                    promoTitle
+                    mainNavCollection(limit: 5) {
+                        items {
+                            ...AuxCustomContentMinimalFragment
+                        }
+                    }
+                }
             }
         }
         mainText {
