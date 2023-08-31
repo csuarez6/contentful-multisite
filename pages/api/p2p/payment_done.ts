@@ -9,13 +9,14 @@ import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/s
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-    const data = req.body;
+    const data = req.query;
+    const orderId = data.id;
 
     try {
         const client = await getCLAdminCLient();
         console.info('payment_done');
 
-        const order = await client.orders.retrieve(data.id, DEFAULT_ORDER_PARAMS);
+        const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
         if (!order) throw new Error("INVALID_ORDER");
         const authorization = order.authorizations?.at(0);
         if (!authorization) throw new Error("INVALID_TRANSACTION");
@@ -77,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         console.error(error);
     }
 
-    res.redirect(307, `/checkout/pse/purchase-order/?id=${data.id}`);
+    res.redirect(307, `/checkout/pse/purchase-order/?id=${orderId}`);
 };
 
 export default handler;

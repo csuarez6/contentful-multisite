@@ -86,7 +86,7 @@ const handler = async (
 
             console.info('autho', authorization);
 
-            if (authorization.captures.length && authorization.voids.length) {
+            if (!authorization.captures.length && !authorization.voids.length) {
                 const metadata = authorization.metadata.p2pNotificationResponse = response;
     
                 if (response.status.status === P2PRequestStatus.approved) {
