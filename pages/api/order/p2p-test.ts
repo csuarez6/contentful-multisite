@@ -1,6 +1,6 @@
+import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
 import { getCLAdminCLient, getNameQuantityOrderItems, isExternalPayment } from '@/lib/services/commerce-layer.service';
-import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -13,7 +13,7 @@ const handler = async (
         const orderId = req.body.orderId;
         const type = req.body.type;
         const client = await getCLAdminCLient();
-        const order = (await getOrderByAlly(orderId)).data;
+        const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
 
         if (type === 'create') {
             const description = getNameQuantityOrderItems(order);
@@ -86,7 +86,7 @@ const handler = async (
 
             console.info('autho', authorization);
 
-            if (authorization.captures.length === 0 && authorization.voids.length === 0) {
+            if (!authorization.captures.length && !authorization.voids.length) {
                 const metadata = authorization.metadata.p2pNotificationResponse = response;
     
                 if (response.status.status === P2PRequestStatus.approved) {

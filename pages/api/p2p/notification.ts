@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
 import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
@@ -17,8 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     if (validation) {
       console.info('ok validation');
-      //Buscar la orden en Commercelayer y actualizar su estado
-      const order = await client.orders.retrieve(data.requestId);
+      const order = await client.orders.retrieve(data.requestId, DEFAULT_ORDER_PARAMS);
       if (!order) throw new Error("INVALID_ORDER");
       const authorization = order.authorizations.at(0);
       if (!authorization) throw new Error("INVALID_TRANSACTION");
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
       console.info('ok order search');
       
-      const metadata = authorization.metadata.p2pNotificationResponse = data;
+      const metadata = authorization.metadata.p2pNotification = data;
 
       if (data.status.status === P2PRequestStatus.approved) {
         console.info('approved');
