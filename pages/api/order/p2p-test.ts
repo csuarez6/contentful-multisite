@@ -84,30 +84,34 @@ const handler = async (
                 throw new Error(response);
             }
 
-            const metadata = authorization.metadata.p2pNotificationResponse = response;
+            console.info('autho', authorization);
 
-            if (response.status.status === P2PRequestStatus.approved) {
-                await client.orders.update({
-                    id: order.id,
-                    _approve: true,
-                });
-
-                await client.authorizations.update({
-                    id: authorization.id,
-                    _capture: true,
-                    metadata: metadata
-                });
-            } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
-                await client.orders.update({
-                    id: order.id,
-                    _approve: true,
-                });
-
-                await client.authorizations.update({
-                    id: authorization.id,
-                    _void: true,
-                    metadata: metadata
-                });
+            if (authorization.captures.length === 0 && authorization.voids.length === 0) {
+                const metadata = authorization.metadata.p2pNotificationResponse = response;
+    
+                if (response.status.status === P2PRequestStatus.approved) {
+                    await client.orders.update({
+                        id: order.id,
+                        _approve: true,
+                    });
+    
+                    await client.authorizations.update({
+                        id: authorization.id,
+                        _capture: true,
+                        metadata: metadata
+                    });
+                } else if (response.status.status === P2PRequestStatus.failed || response.status.status === P2PRequestStatus.rejected) {
+                    await client.orders.update({
+                        id: order.id,
+                        _approve: true,
+                    });
+    
+                    await client.authorizations.update({
+                        id: authorization.id,
+                        _void: true,
+                        metadata: metadata
+                    });
+                }
             }
 
             return res.status(200).json({ status: 200, data: response });
