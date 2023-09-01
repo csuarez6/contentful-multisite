@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
-import { Address, Capture, Order, Void } from '@commercelayer/sdk';
+import { Address, Order } from '@commercelayer/sdk';
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -69,6 +69,7 @@ const CheckoutPurchase = () => {
                 setStatusError(true);
             }
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const isCompleted = useMemo(
