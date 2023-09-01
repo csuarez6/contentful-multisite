@@ -44,7 +44,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
-    await sleep(400);
+    await sleep(300);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

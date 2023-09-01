@@ -37,7 +37,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
     let responseData = null;
     let responseError = null;
     try {
-      await sleep(400);
+      await sleep(300);
       ({ data: responseData, error: responseError } = await contentfulClient(
         preview
       ).query({
@@ -132,7 +132,7 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
-    await sleep(400);
+    await sleep(300);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

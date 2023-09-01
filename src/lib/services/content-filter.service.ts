@@ -150,7 +150,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
 
       if (query) {
         try {
-          await sleep(400);
+          await sleep(300);
           const { data: responseData } = await contentfulClient(preview).query({
             query: gql`
             query getEntriesCollection($preview: Boolean!, $limit: Int!) {
