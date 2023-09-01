@@ -68,7 +68,8 @@ const CheckoutPurchase = () => {
                 setStatusError(true);
             }
         })();
-    }, [getOrderById, orderId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const isCompleted = useMemo(
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
