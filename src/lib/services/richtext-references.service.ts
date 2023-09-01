@@ -26,6 +26,8 @@ const TO_MINIMAL = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT_MINIMAL,
 };
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const getReferencesRichtextContent = async ({ content, preview }) => {
   const referencesContent: any = {};
   if (!content?.sys?.id && RICHTEXT_REFERENCES[content.__typename] !== undefined) return null;
@@ -36,6 +38,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
     let responseData = null;
     let responseError = null;
     try {
+      await sleep(400);
       ({ data: responseData, error: responseError } = await contentfulClient(
         preview
       ).query({
@@ -122,16 +125,18 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   return referencesContent;
 };
 
-export const getDataContent = async (blockInfo, preview = false) => {
+export const getDataContent = async (blockInfo: any, preview = false) => {
 
   let responseData = null;
   let responseError = null;
 
-  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
+    await sleep(400);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getEntry($id: String!, $preview: Boolean!) {
           ${type}(id: $id, preview: $preview) {
             ${query}

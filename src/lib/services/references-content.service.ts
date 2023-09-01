@@ -115,9 +115,9 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
 };
 
 export const getBlocksContent = async ({ content, preview = false }) => {
-  if(!(content?.sys?.id) || !(content?.blocksCollection?.items?.[0])) return content;
-  
   const newBlocksCollection: any = { items: [] }; 
+
+  if(!(content?.sys?.id) || !(content?.blocksCollection?.items?.length > 0)) return newBlocksCollection;
 
   for (const blockInfo of content.blocksCollection.items) {
     const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);

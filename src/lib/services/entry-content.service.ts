@@ -17,6 +17,8 @@ type DefaultBlockInfo = {
   }
 };
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const CACHE_CONTENT = {};
 
 const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6, minimal = false) => {
@@ -43,6 +45,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
+    await sleep(400);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
