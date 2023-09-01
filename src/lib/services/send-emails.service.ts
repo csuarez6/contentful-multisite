@@ -20,8 +20,11 @@ const customerSection = (data: IOrderExtended) => {
     : '';
 
   const paymentInfo = () => {
-    if (data.status !=== OrderStatus.approved) {
-      
+    if (data.status !== OrderStatus.approved) {
+      return {
+        paymentMethod: "-----",
+        paymentEntity: "-----"
+      };
     }
     const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
     return {

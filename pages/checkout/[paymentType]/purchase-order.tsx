@@ -14,6 +14,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
+import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
 const orderStatus = (value: string) => {
@@ -101,6 +102,12 @@ const CheckoutPurchase = () => {
     };
 
     const paymentEntity = () => {
+        if (orderInfoById.status !== OrderStatus.approved) {
+            return {
+                paymentMethod: "-----",
+                paymentEntity: "-----"
+            };
+        }
         const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
         return {
             paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
