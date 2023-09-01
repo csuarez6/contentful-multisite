@@ -47,6 +47,9 @@ const CheckoutPurchase = () => {
     const orderId = router.query.id?.toString();
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    console.log({ orderId });
 
     const fullName = useMemo(() => {
         return (
@@ -57,19 +60,30 @@ const CheckoutPurchase = () => {
 
     useEffect(() => {
         (async () => {
-            if (!orderId) { setStatusError(true); console.info('no orderId'); return; }
-            const orderData = await getOrderById(orderId);
-            if (orderData["status"] === 200) {
-                setOrderInfoById(orderData.data);
-                setBillingAddress(orderData.data["billing_address"]);
-                console.info({ orderData });
-            } else {
-                console.info('status', orderData["status"]);
+            try {
+                if (orderId) {
+                    const orderData = await getOrderById(orderId);
+                    if (orderData["status"] === 200) {
+                        setStatusError(false);
+                        setOrderInfoById(orderData.data);
+                        setBillingAddress(orderData.data["billing_address"]);
+                        console.info({ orderData });
+                    } else {
+                        console.info('status', orderData["status"]);
+                        setStatusError(true);
+                    }
+                    setIsLoading(false);
+                } else {
+                    setStatusError(true);
+                    setIsLoading(false);
+                }
+            } catch (error) {
                 setStatusError(true);
+                setIsLoading(false);
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [orderId]);
 
     const isCompleted = useMemo(
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
@@ -103,33 +117,8 @@ const CheckoutPurchase = () => {
             isCheck={isCompleted}
             rightIcon={orderStatus(orderInfoById?.status).rightIcon}
         >
-
-            {/* Display spinner if statusError and orderInfoById are undefined  */}
-            {!statusError && !orderInfoById && <Spinner position="absolute" size="large" />}
-
-            {/* Display notification if Error */}
-            {statusError &&
-                <div className="bg-white rounded-lg">
-                    <div className="text-center">
-                        <span className="block w-12 h-12 m-auto shrink-0 text-lucuma">
-                            <Icon icon="alert" className="w-full h-full" />
-                        </span>
-                        <h3 className="mt-2 text-sm font-semibold text-gray-900">Comprobación de orden</h3>
-                        <p className="mt-1 text-sm text-gray-500">Ha ocurrido un error al consultar o no existe la orden.</p>
-                        <div className="flex justify-center mt-6">
-                            <CustomLink
-                                content={{ urlPaths: ["/"] }}
-                                linkClassName="relative button button-primary"
-                            >
-                                Ir a la tienda
-                            </CustomLink>
-                        </div>
-                    </div>
-                </div>
-            }
-
             {/* Display order content if no Error and order data no empty*/}
-            {!statusError && orderInfoById &&
+            {!statusError && !isLoading && orderInfoById &&
                 <div className="bg-white rounded-lg">
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
@@ -179,6 +168,30 @@ const CheckoutPurchase = () => {
                     </dl>
                 </div>
             }
+
+            {/* Display notification if Error */}
+            {statusError && !isLoading && !orderInfoById &&
+                <div className="bg-white rounded-lg">
+                    <div className="text-center">
+                        <span className="block w-12 h-12 m-auto shrink-0 text-lucuma">
+                            <Icon icon="alert" className="w-full h-full" />
+                        </span>
+                        <h3 className="mt-2 text-sm font-semibold text-gray-900">Comprobación de orden</h3>
+                        <p className="mt-1 text-sm text-gray-500">Ha ocurrido un error al consultar o no existe la orden.</p>
+                        <div className="flex justify-center mt-6">
+                            <CustomLink
+                                content={{ urlPaths: ["/"] }}
+                                linkClassName="relative button button-primary"
+                            >
+                                Ir a la tienda
+                            </CustomLink>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {/* Display spinner if statusError and orderInfoById are undefined/false  */}
+            {isLoading && <Spinner position="absolute" size="large" />}
         </HeadingCard>
     );
 };
