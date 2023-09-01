@@ -54,19 +54,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     await client.orders.update({
       id: order.id,
       _place: true
-    });
-    
-    await client.orders.update({
-      id: order.id,
-      _authorize: true
-    }).then(async () => {
-      const authorization = (await client.authorizations.list({
-        filters: {
-          order_id_eq: order.id,
-        }
-      })).at(0);
+    }, DEFAULT_ORDER_PARAMS
+    ).then(async (orderUpdated) => {
+      const authorization = orderUpdated.authorizations?.at(0);
       await client.authorizations.update({
-        id: authorization.id,
+        id: authorization?.id,
         metadata: response
       });
     });

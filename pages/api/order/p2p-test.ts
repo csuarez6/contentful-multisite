@@ -119,13 +119,10 @@ const handler = async (
             await client.orders.update({
                 id: order.id,
                 _approve: true,
-                _capture: true,
-            }).then(async () => {
-                const captures = (await client.captures.list({
-                    filters: {
-                        order_id_eq: order.id,
-                    }
-                })).at(0);
+                _capture: true
+            }, DEFAULT_ORDER_PARAMS
+            ).then(async (orderUpdated) => {
+                const captures = orderUpdated.captures.at(0);
                 console.info(captures);
 
                 await client.captures.update({
@@ -141,12 +138,10 @@ const handler = async (
             await client.orders.update({
                 id: order.id,
                 _cancel: true,
-            }).then(async () => {
-                const voids = (await client.voids.list({
-                    filters: {
-                        order_id_eq: order.id,
-                    }
-                })).at(0);
+            }, DEFAULT_ORDER_PARAMS
+            ).then(async (orderUpdated) => {
+                const voids = orderUpdated.voids.at(0);
+                console.info(voids);
 
                 await client.voids.update({
                     id: voids.id,
@@ -158,6 +153,8 @@ const handler = async (
             });
             return res.status(200).json({ status: 200, data: order.transactions });
         }
+
+        console.info(order.captures.at(0)?.metadata);
 
         return res.status(200).json({ status: 200, data: 'ok' });
     } catch (error) {

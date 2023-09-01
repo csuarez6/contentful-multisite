@@ -39,21 +39,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
         await client.orders.update({
           id: order.id,
-          _approve: true
-        });
-
-        await client.orders.update({
-          id: order.id,
-          _capture: true,
-        }).then(async () => {
-          const captures = (await client.captures.list({
-            filters: {
-              order_id_eq: order.id,
-            }
-          })).at(0);
+          _approve: true,
+          _capture: true
+        }, DEFAULT_ORDER_PARAMS
+        ).then(async (orderUpdated) => {
+          const captures = orderUpdated.captures?.at(0);
 
           await client.captures.update({
-            id: captures.id,
+            id: captures?.id,
             metadata: metadata
           });
         });
@@ -63,15 +56,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await client.orders.update({
           id: order.id,
           _cancel: true,
-        }).then(async () => {
-          const voids = (await client.voids.list({
-            filters: {
-              order_id_eq: order.id,
-            }
-          })).at(0);
+        }, DEFAULT_ORDER_PARAMS
+        ).then(async (orderUpdated) => {
+          const voids = orderUpdated.voids?.at(0);
 
           await client.voids.update({
-            id: voids.id,
+            id: voids?.id,
             metadata: metadata
           });
         });

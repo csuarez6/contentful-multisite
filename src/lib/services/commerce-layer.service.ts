@@ -652,14 +652,17 @@ export const getOrderByIdCl = async (orderId?: string) => {
   }
 };
 
+// Función para obtener los nombres de los items de una orden en formato "(cantidad) nombreItem"
 export const getNameQuantityOrderItems = (order: Order): string => {
   try {
     let itemNames = '';
     order.line_items?.forEach(item => {
-      if (itemNames !== '') {
-        itemNames += ', ';
+      if (item.item_type === 'skus') {
+        if (itemNames !== '') {
+          itemNames += ', ';
+        }
+        itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
       }
-      itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
     });
     return itemNames;
   } catch (error) {
@@ -668,6 +671,23 @@ export const getNameQuantityOrderItems = (order: Order): string => {
   }
 };
 
+// Función para validar si un pago es de tipo ExternalPayment
 export const isExternalPayment = (paymentSource: any): paymentSource is ExternalPayment => {
   return paymentSource.type === ExternalPayments.TYPE;
+};
+
+// Función para formatear una fecha a zona horaria Colombia y formato "día/mes/año hora:minutos:segundos am/pm"
+export const formatDate = (date: string) : string => {
+  const formattedDate = new Intl.DateTimeFormat("es-CO", {
+    timeZone: "America/Bogota",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  }).format(new Date(date));
+
+  return formattedDate;
 };

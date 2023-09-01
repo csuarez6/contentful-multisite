@@ -16,7 +16,7 @@ import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
-const orderStatus = (value) => {
+const orderStatus = (value: string) => {
     switch (value) {
         case "cancelled":
             return {
@@ -24,6 +24,7 @@ const orderStatus = (value) => {
                 leftIcon: "order-cart-rejected",
                 rightIcon: "order-rejected"
             };
+        case "approved":
         case "fulfilled":
             return {
                 text: "¡Tu orden ha sido aprobada!",
@@ -48,8 +49,6 @@ const CheckoutPurchase = () => {
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
-    console.log({ orderId });
 
     const fullName = useMemo(() => {
         return (

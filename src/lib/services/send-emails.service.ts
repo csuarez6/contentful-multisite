@@ -2,21 +2,10 @@ import { Shipment } from "@commercelayer/sdk";
 import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
 import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
+import { formatDate } from "./commerce-layer.service";
+import { OrderStatus } from "../enum/EOrderStatus.enum";
 
 const customerSection = (data: IOrderExtended) => {
-  const buyDate = new Date(data.approved_at);
-
-  const formattedTime = [
-    String(buyDate.getHours()).padStart(2, '0'),
-    String(buyDate.getMinutes()).padStart(2, '0'),
-    String(buyDate.getSeconds()).padStart(2, '0')
-  ].join(':');
-  const formattedDate = [
-    String(buyDate.getDate()).padStart(2, '0'),
-    String(buyDate.getMonth() + 1).padStart(2, '0'),
-    buyDate.getFullYear()
-  ].join('/');
-
   const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
   const shipping_address = data.shipping_address?.line_1 + (data.shipping_address?.line_2 ? ', ' + data.shipping_address?.line_2 : '') + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
   const shipping_methods = data.shipments?.map((shipment) => {
@@ -31,6 +20,9 @@ const customerSection = (data: IOrderExtended) => {
     : '';
 
   const paymentInfo = () => {
+    if (data.status !=== OrderStatus.approved) {
+      
+    }
     const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
     return {
       paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
@@ -81,7 +73,7 @@ const customerSection = (data: IOrderExtended) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formattedDate} ${formattedTime}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(data.approved_at)}</td>
       </tr>
       </table>
       </td>
