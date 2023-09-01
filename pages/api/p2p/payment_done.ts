@@ -27,7 +27,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 const infoP2P = await getP2PRequestInformation(transactionToken);
                 const metadata = {
                     medium: 'payment_done',
-                    data: infoP2P
+                    data: data,
+                    paymentInfo: infoP2P
                 };
 
                 if (typeof infoP2P === 'string') {

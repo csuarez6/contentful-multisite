@@ -3,9 +3,9 @@ import { PaymentStatus } from "@/lib/enum/EPaymentStatus.enum";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
 import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
-import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
+import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
-import { validateP2PSignature } from "@/lib/services/place-to-pay.service";
+import { getP2PRequestInformation, validateP2PSignature } from "@/lib/services/place-to-pay.service";
 import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -26,9 +26,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
       }
 
+      const paymentSource = order.payment_source;
+      const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
+      const infoP2P = await getP2PRequestInformation(transactionToken);
+
       const metadata = {
-        medium: 'notification',
-        data: data
+        medium: 'payment_done',
+        data: data,
+        paymentInfo: infoP2P
       };
 
       console.info('ok order search');
@@ -72,7 +77,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         });
       }
       
-      console.info('emails');
       const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
       await sendClientEmail(orderByAlly.data);
 
