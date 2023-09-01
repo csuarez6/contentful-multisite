@@ -188,9 +188,9 @@ const CheckoutAddress = () => {
     (async () => {
       const citiesFinal: any[] = [{ city: "Seleccione un Municipio", isCovered: "false" }];
       const cities: any[] = await getCitiesByState(shippingStateWatched);
-      const mappedCities = cities.map((city, index) => ({
+      const mappedCities = cities.map((city) => ({
         text: city.city,
-        value: (index == 0) ? "" : city.city,
+        value: city.city,
       }));
       setShippingCities(citiesFinal.concat(mappedCities));
       if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });

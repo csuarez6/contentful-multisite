@@ -1,6 +1,4 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
-import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
 import { P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
 import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
@@ -16,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         const client = await getCLAdminCLient();
         console.info('payment_done');
 
-        const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
+        const order = (await getOrderByAlly(orderId)).data;
         if (!order) throw new Error("INVALID_ORDER");
         const authorization = order.authorizations?.at(0);
         if (!authorization) throw new Error("INVALID_TRANSACTION");
@@ -63,14 +61,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 }
 
                 console.info('emails');
-                const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
-                if (orderByAlly.status === 200) {
-                    await sendClientEmail(orderByAlly.data);
+                await sendClientEmail(order);
 
-                    if (infoP2P.status.status === P2PRequestStatus.approved) {
-                        await sendVantiEmail(orderByAlly.data);
-                        await sendAllyEmail(orderByAlly.data);
-                    }
+                if (infoP2P.status.status === P2PRequestStatus.approved) {
+                    await sendVantiEmail(order);
+                    await sendAllyEmail(order);
                 }
             }
         }

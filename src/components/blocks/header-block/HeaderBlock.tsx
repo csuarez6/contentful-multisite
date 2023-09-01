@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Popover, Transition, Menu } from "@headlessui/react";
 import {
   Bars3Icon,
   XMarkIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-
+import ModalWarnning from "@/components/organisms/modal-warnning/ModalWarnning";
 import { classNames, getBackgroundColorClass } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
@@ -120,6 +120,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     name,
   } = props;
   let { menuNavkey = null } = props;
+  const headerRef = useRef(null);
+  const prevScrollPosition = useRef(0);
+  const [isHidden, setIsHidden] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
@@ -128,6 +131,21 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      const currentScrollPosition = window.scrollY;
+      setIsHidden(currentScrollPosition > prevScrollPosition.current && currentScrollPosition > headerRef?.current?.offsetHeight);
+      prevScrollPosition.current = currentScrollPosition;
+    };
+
+    window.addEventListener('scroll', checkScroll);
+
+    return () => {
+      window.removeEventListener('scroll', checkScroll);
+    };
+  }, []);
 
   useEffect(() => {
     setNumProducts(
@@ -148,7 +166,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       console.warn("not authorized");
       // router.push('/acceso');
     }
-    console.warn('session',session);
+    console.warn('session', session);
     console.warn('sessionStatus', sessionStatus);
   }, [session, sessionStatus]);
 
@@ -208,7 +226,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
 
   return (
-    <header id="header" className="sticky inset-x-0 top-0 z-50 bg-white shadow">
+    <header
+      ref={headerRef}
+      id="header"
+      className={classNames(
+        "sticky inset-x-0 top-0 z-50 bg-white shadow transition-transform duration-500",
+        isHidden ? "-translate-y-full" : "translate-y-0"
+      )}
+    >
       {/* Top */}
       <div className="relative hidden lg:block overflow-x-hidden">
         <div
@@ -289,9 +314,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               </ul>
 
               <div className={classNames(
-                "bg-category-orange-light relative justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px]",
+                "bg-category-orange-light relative justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] cursor-pointer",
                 "before:absolute before:w-[50vw] before:h-full before:bg-category-orange-light"
-              )}>
+              )}
+                onClick={() => setOpenModal(!openModal)}
+              >
                 <p className="relative flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
                   <span className="w-8 h-8 shrink-0">
                     <Icon icon="emergency" className="w-full h-full mx-auto" />
@@ -299,6 +326,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   Emergencias: 164
                 </p>
               </div>
+              {
+                openModal && <ModalWarnning open={openModal} setOpen={setOpenModal} />
+              }
             </nav>
           </div>
         </div>
@@ -561,7 +591,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   )}
                 </div>
               </div>
-              <div className="relative z-10 flex items-center lg:hidden">
+              <div className="relative z-10 flex items-center lg:hidden cursor-pointer" onClick={() => setOpenModal(!openModal)}>
                 <span className="block w-10 h-10 rounded-full shrink-0 bg-category-orange-light text-blue-dark">
                   <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
