@@ -9,7 +9,7 @@ import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.in
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "captures", "voids"],
   fields: {
     orders: [
       "number",
@@ -28,7 +28,9 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "customer_email",
       "available_payment_methods",
       "shipments",
-      "billing_address"
+      "billing_address",
+      "captures",
+      "voids"
     ],
     addresses: ["state_code", "city", "line_1", "phone", "full_address"],
     shipments: ["available_shipping_methods", "stock_location"],

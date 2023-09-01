@@ -40,7 +40,7 @@ const getStepsLine = (paymentType) => {
   ];
 };
 
-const DEFAULT_PAYMENT_METHOD = "pse";
+const DEFAULT_PAYMENT_METHOD = "dummy";
 
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push, query } = useRouter();

@@ -114,11 +114,8 @@ const handler = async (
                     });
                 }
             }
-
             return res.status(200).json({ status: 200, data: response });
-        } else {
-            console.info('approved');
-
+        } else if (type === 'approved') {
             await client.orders.update({
                 id: order.id,
                 _approve: true,
@@ -139,11 +136,8 @@ const handler = async (
                     }
                 });
             });
-
-            console.info(order.transactions);
-
-            console.info('failed or rejected');
-
+            return res.status(200).json({ status: 200, data: order.transactions });
+        } else if (type === 'failed') {
             await client.orders.update({
                 id: order.id,
                 _cancel: true,
@@ -162,9 +156,10 @@ const handler = async (
                     }
                 });
             });
-
             return res.status(200).json({ status: 200, data: order.transactions });
         }
+
+        return res.status(200).json({ status: 200, data: 'ok' });
     } catch (error) {
         console.error("An error occurred during the execution of the endpoint p2p-test:", error);
         return res.status(500).json({ status: 500, message: "A general error has occurred" });

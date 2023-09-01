@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
-import { Address, Order } from '@commercelayer/sdk';
+import { Address, Capture, Order, Void } from '@commercelayer/sdk';
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -13,6 +13,7 @@ import AuthContext from "@/context/Auth";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
 const orderStatus = (value) => {
@@ -86,6 +87,11 @@ const CheckoutPurchase = () => {
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
     };
 
+    const PaymentEntity = () => {
+        const paymentInfo: IP2PRequestInformation = orderInfoById.captures?.at(0)?.metadata?.paymentInfo;
+        return paymentInfo.payment.at(0)?.issuerName ?? null;
+    };
+
     return (
         <HeadingCard
             classes="col-span-2"
@@ -146,7 +152,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                -------------
+                                {PaymentEntity() ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">

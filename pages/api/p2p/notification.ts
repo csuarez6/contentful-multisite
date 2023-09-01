@@ -13,19 +13,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
     const data: IP2PNotification = req.body;
+    const orderId = data.requestId;
     const validation = validateP2PSignature(data);
 
     console.info('notification');
 
     if (validation) {
       console.info('ok validation');
-      const order = await client.orders.retrieve(data.requestId, DEFAULT_ORDER_PARAMS);
+      const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
       if (!order) throw new Error("INVALID_ORDER");
-
-      if (order.payment_status === PaymentStatus.paid || order.payment_status === PaymentStatus.voided) {
-        throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
-      }
-
+      if (order.payment_status === PaymentStatus.paid || order.payment_status === PaymentStatus.voided) throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
       const paymentSource = order.payment_source;
       const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
       const infoP2P = await getP2PRequestInformation(transactionToken);
@@ -43,7 +40,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
         await client.orders.update({
           id: order.id,
-          _approve: true,
+          _approve: true
+        });
+
+        await client.orders.update({
+          id: order.id,
           _capture: true,
         }).then(async () => {
           const captures = (await client.captures.list({
@@ -76,13 +77,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           });
         });
       }
-      
-      const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
-      await sendClientEmail(orderByAlly.data);
 
+      const orderByAlly = (await getOrderByAlly(order.id)).data;
+      await sendClientEmail(orderByAlly);
       if (data.status.status === P2PRequestStatus.approved) {
-        await sendVantiEmail(orderByAlly.data);
-        await sendAllyEmail(orderByAlly.data);
+        await sendVantiEmail(orderByAlly);
+        await sendAllyEmail(orderByAlly);
       }
     }
 

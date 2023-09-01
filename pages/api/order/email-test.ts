@@ -12,10 +12,9 @@ const handler = async (
   try {
     const response = await getOrderByAlly(orderId);
     const orderData = response.data;
-
     let count = 0;
-    count += await sendClientEmail(orderData);
 
+    count += await sendClientEmail(orderData);
     if (orderData?.status === "approved") {
       count += await sendVantiEmail(orderData);
       count += await sendAllyEmail(orderData);

@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PaymentStatus } from "@/lib/enum/EPaymentStatus.enum";
+import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
 import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
@@ -13,8 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     try {
         const client = await getCLAdminCLient();
-
-        const order = (await getOrderByAlly(orderId)).data;
+        const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
         if (!order) throw new Error("INVALID_ORDER");
         const authorization = order.authorizations?.at(0);
         if (!authorization) throw new Error("INVALID_TRANSACTION");
@@ -38,7 +38,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
                     await client.orders.update({
                         id: order.id,
-                        _approve: true,
+                        _approve: true
+                    });
+
+                    await client.orders.update({
+                        id: order.id,
                         _capture: true,
                     }).then(async () => {
                         const captures = (await client.captures.list({
@@ -70,11 +74,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                     });
                 }
 
-                await sendClientEmail(order);
-
+                const orderByAlly = (await getOrderByAlly(order.id)).data;
+                await sendClientEmail(orderByAlly);
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
-                    await sendVantiEmail(order);
-                    await sendAllyEmail(order);
+                    await sendVantiEmail(orderByAlly);
+                    await sendAllyEmail(orderByAlly);
                 }
             }
         }
