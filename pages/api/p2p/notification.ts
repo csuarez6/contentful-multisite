@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { PaymentStatus } from "@/lib/enum/EPaymentStatus.enum";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
 import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
@@ -20,16 +21,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       console.info('ok validation');
       const order = await client.orders.retrieve(data.requestId, DEFAULT_ORDER_PARAMS);
       if (!order) throw new Error("INVALID_ORDER");
-      const authorization = order.authorizations.at(0);
-      if (!authorization) throw new Error("INVALID_TRANSACTION");
 
-      if (authorization.captures || authorization.voids) {
+      if (order.payment_status === PaymentStatus.paid || order.payment_status === PaymentStatus.voided) {
         throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
       }
 
+      const metadata = {
+        medium: 'notification',
+        data: data
+      };
+
       console.info('ok order search');
-      
-      const metadata = authorization.metadata.p2pNotification = data;
 
       if (data.status.status === P2PRequestStatus.approved) {
         console.info('approved');
@@ -37,12 +39,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await client.orders.update({
           id: order.id,
           _approve: true,
-        });
-
-        await client.authorizations.update({
-          id: authorization.id,
           _capture: true,
-          metadata: metadata
+        }).then(async () => {
+          const captures = (await client.captures.list({
+            filters: {
+              order_id_eq: order.id,
+            }
+          })).at(0);
+
+          await client.captures.update({
+            id: captures.id,
+            metadata: metadata
+          });
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
         console.info('failed or rejected');
@@ -50,30 +58,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await client.orders.update({
           id: order.id,
           _cancel: true,
-        });
+        }).then(async () => {
+          const voids = (await client.voids.list({
+            filters: {
+              order_id_eq: order.id,
+            }
+          })).at(0);
 
-        await client.authorizations.update({
-          id: authorization.id,
-          _void: true,
-          metadata: metadata
+          await client.voids.update({
+            id: voids.id,
+            metadata: metadata
+          });
         });
       }
       
       console.info('emails');
       const orderByAlly: IAllyResponse = await getOrderByAlly(order.id);
-      if (orderByAlly.status === 200) {
-        await sendClientEmail(orderByAlly.data);
+      await sendClientEmail(orderByAlly.data);
 
-        if (data.status.status === P2PRequestStatus.approved) {
-          await sendVantiEmail(orderByAlly.data);
-          await sendAllyEmail(orderByAlly.data);
-        }
+      if (data.status.status === P2PRequestStatus.approved) {
+        await sendVantiEmail(orderByAlly.data);
+        await sendAllyEmail(orderByAlly.data);
       }
-
-      return res.json({
-        status: 200,
-        messsage: validation
-      });
     }
 
     res.json({

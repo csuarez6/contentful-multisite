@@ -55,19 +55,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     await client.orders.update({
       id: order.id,
       _place: true,
+      _authorize: true
     }).then(async () => {
       const authorization = (await client.authorizations.list({
         filters: {
           order_id_eq: order.id,
-        },
-        include: ['order'],
+        }
       })).at(0);
-      const metadata = authorization.metadata.p2pRequest = response;
-      console.info(authorization);
-
       await client.authorizations.update({
         id: authorization.id,
-        metadata: metadata
+        metadata: response
       });
     });
 
