@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const orderId = data.requestId;
     const validation = validateP2PSignature(data);
 
-    console.info('notification');
+    console.info('p2p notification');
 
     if (validation) {
       console.info('ok validation');

@@ -12,6 +12,7 @@ const handler = async (
   const { data }: IExternalPaymentGWRequest = req.body;
 
   try {
+    console.info('authorize', req);
     paymentGatewayValidation(req);
     const status = req.query.status.toString();
     console.info('authorize', status);
