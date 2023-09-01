@@ -34,7 +34,7 @@ const customerSection = (data: IOrderExtended) => {
     const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
     return {
       paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-      payymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
     };
   };
 
@@ -64,7 +64,7 @@ const customerSection = (data: IOrderExtended) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Entidad Bancaria:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().payymentEntity}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().paymentEntity}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>

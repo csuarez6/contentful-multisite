@@ -90,7 +90,7 @@ const CheckoutPurchase = () => {
         const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
         return {
             paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-            payymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
         };
     };
 
@@ -154,7 +154,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().payymentEntity ?? "-----"}
+                                {paymentEntity().paymentEntity ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
