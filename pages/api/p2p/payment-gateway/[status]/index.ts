@@ -13,7 +13,7 @@ const handler = async (
 
   try {
     paymentGatewayValidation(req);
-    const status = <string>req.query.status;
+    const status = req.query.status.toString();
     console.info('finish', status);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);

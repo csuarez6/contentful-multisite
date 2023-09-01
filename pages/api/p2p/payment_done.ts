@@ -10,7 +10,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data = req.query;
-    const orderId = <string>data.id;
+    const orderId = data.id?.toString();
 
     try {
         const client = await getCLAdminCLient();

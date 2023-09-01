@@ -48,8 +48,6 @@ const CheckoutPurchase = () => {
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
 
-    console.info('orderId', orderId);
-
     const fullName = useMemo(() => {
         return (
             (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
@@ -59,25 +57,25 @@ const CheckoutPurchase = () => {
 
     useEffect(() => {
         (async () => {
-            if (!orderId) { setStatusError(true); return; }
+            if (!orderId) { setStatusError(true); console.info('no orderId'); return; }
             const orderData = await getOrderById(orderId);
             if (orderData["status"] === 200) {
                 setOrderInfoById(orderData.data);
                 setBillingAddress(orderData.data["billing_address"]);
                 console.info({ orderData });
             } else {
+                console.info('status', orderData["status"]);
                 setStatusError(true);
             }
         })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getOrderById, orderId]);
 
     const isCompleted = useMemo(
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
         [orderInfoById]
     );
 
-    const Shipments = () => {
+    const shipments = () => {
         const shipments = orderInfoById.shipments;
         const shipmentItems = [];
         shipments.forEach(async (el) => {
@@ -88,9 +86,12 @@ const CheckoutPurchase = () => {
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
     };
 
-    const PaymentEntity = () => {
-        const paymentInfo: IP2PRequestInformation = orderInfoById.captures?.at(0)?.metadata?.paymentInfo;
-        return paymentInfo.payment.at(0)?.issuerName ?? null;
+    const paymentEntity = () => {
+        const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
+        return {
+            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
+            payymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+        };
     };
 
     return (
@@ -147,13 +148,13 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de pago:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {router.query.paymentType?.toString().toUpperCase() ?? "-----"}
+                                {paymentEntity().paymentMethod ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {PaymentEntity() ?? "-----"}
+                                {paymentEntity().payymentEntity ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
@@ -171,7 +172,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {Shipments() ?? "-----"}
+                                {shipments() ?? "-----"}
                             </dd>
                         </div>
                     </dl>

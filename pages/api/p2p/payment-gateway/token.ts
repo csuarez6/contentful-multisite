@@ -11,7 +11,7 @@ const handler = async (
 
   try {
     paymentGatewayValidation(req);
-    const status = <string>req.query.status;
+    const status = req.query.status.toString();
     console.info('token', status);
 
     res.json({
