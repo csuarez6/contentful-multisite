@@ -6,6 +6,7 @@ import getEntryContent from "./entry-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { RichtextLinksQuery } from "../graphql/shared/richtext.gql";
+import { sleep } from "@/utils/functions";
 
 const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
@@ -25,8 +26,6 @@ const TO_MINIMAL = {
   [CONTENTFUL_TYPENAMES.PRODUCT]: CONTENTFUL_TYPENAMES.PRODUCT_MINIMAL,
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT_MINIMAL,
 };
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const getReferencesRichtextContent = async ({ content, preview }) => {
   const referencesContent: any = {};

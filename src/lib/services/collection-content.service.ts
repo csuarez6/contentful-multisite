@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 import contentfulClient from './contentful-client.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
+import { sleep } from '@/utils/functions';
 
 type DefaultBlockInfo = {
   __typename: string;
@@ -33,6 +34,7 @@ const getCollectionContent = async (
   }
 
   try {
+    await sleep(400);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

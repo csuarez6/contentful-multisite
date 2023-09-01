@@ -56,7 +56,21 @@ const CustomPage: NextPageWithLayout = (props: any) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: "blocking" };
+  const paths = [];
+
+  const entries = await getEntriesSlugs({ limit: 100 }, false);
+
+  for (const entry of entries) {
+    if (entry.urlPaths !== null && entry.urlPaths.length > 0 && entry.urlPaths[0] !== "/") {
+      paths.push({
+        params: {
+          slug: entry.urlPaths[0].split("/").slice(1),
+        },
+      });
+    }
+  }
+
+  return { paths, fallback: "blocking" };
 };
 
 export const revalidate = 60;

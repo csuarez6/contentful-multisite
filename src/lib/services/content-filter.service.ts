@@ -6,6 +6,7 @@ import contentfulClient from "./contentful-client.service";
 
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { FACET_QUERY_MAP } from "@/constants/search.constants";
+import { sleep } from "@/utils/functions";
 
 export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
   const searchClient = algoliasearch(appId, appKey);
@@ -149,6 +150,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
 
       if (query) {
         try {
+          await sleep(400);
           const { data: responseData } = await contentfulClient(preview).query({
             query: gql`
             query getEntriesCollection($preview: Boolean!, $limit: Int!) {

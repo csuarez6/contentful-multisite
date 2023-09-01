@@ -9,6 +9,7 @@ import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants
 import getFilteredContent from './content-filter.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import getReferencesRichtextContent from './richtext-references.service';
+import { sleep } from '@/utils/functions';
 
 type DefaultBlockInfo = {
   __typename: string;
@@ -16,8 +17,6 @@ type DefaultBlockInfo = {
     id: string;
   }
 };
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const CACHE_CONTENT = {};
 
