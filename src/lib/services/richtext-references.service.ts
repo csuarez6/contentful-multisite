@@ -5,7 +5,8 @@ import getEntryContent from "./entry-content.service";
 
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
-import { RichtextLinksQuery } from "../graphql/shared/richtext.qql";
+import { RichtextLinksQuery } from "../graphql/shared/richtext.gql";
+import { sleep } from "@/utils/functions";
 
 const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
@@ -28,19 +29,15 @@ const TO_MINIMAL = {
 
 const getReferencesRichtextContent = async ({ content, preview }) => {
   const referencesContent: any = {};
-  if (!content?.sys?.id && RICHTEXT_REFERENCES[content.__typename] !== undefined) {
-    return null;
-  }
-
+  if (!content?.sys?.id && RICHTEXT_REFERENCES[content.__typename] !== undefined) return null;
   const { queryName: type } = CONTENTFUL_QUERY_MAPS[content.__typename];
   const references = RICHTEXT_REFERENCES[content.__typename];
-  if (!Array.isArray(references)) {
-    return null;
-  }
+  if (!Array.isArray(references)) return null;
   for (const ref of references) {
     let responseData = null;
     let responseError = null;
     try {
+      await sleep(300);
       ({ data: responseData, error: responseError } = await contentfulClient(
         preview
       ).query({
@@ -127,16 +124,18 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   return referencesContent;
 };
 
-export const getDataContent = async (blockInfo, preview = false) => {
+export const getDataContent = async (blockInfo: any, preview = false) => {
 
   let responseData = null;
   let responseError = null;
 
-  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
+    await sleep(300);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getEntry($id: String!, $preview: Boolean!) {
           ${type}(id: $id, preview: $preview) {
             ${query}
@@ -155,7 +154,7 @@ export const getDataContent = async (blockInfo, preview = false) => {
   }
 
   if (responseError) {
-    console.error(`Error on entry query (${type}) => `, responseError.message, blockInfo);
+    console.error(`Error on entry query 5 (${type}) => `, responseError.message, blockInfo);
   }
 
   if (!responseData?.[type]) {

@@ -1,6 +1,5 @@
 import { AssetImageQuery } from "./shared/asset.gql";
-import DefaultQuery from "./shared/default.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
 
 const ProductQuery = `
   ${DefaultQuery}
@@ -57,12 +56,6 @@ const ProductQuery = `
   }
   isNew
   discount
-`;
-
-export const ProductMinimalQuery = `
-  name
-  promoTitle
-  urlPaths
 `;
 
 export default ProductQuery;

@@ -1,42 +1,28 @@
 import { gql } from '@apollo/client';
 
 import contentfulClient from './contentful-client.service';
-import _ from 'lodash';
 
-import { DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
-import AuxNavigationQuery from '../graphql/aux/navigation.gql';
-import getReferencesContent from './references-content.service';
+import HeaderMainQuery, { HeaderMainFragments } from '../graphql/aux/header-main.gql';
+import { HeaderSecondaryFragments, HeaderSecondaryQuery } from '../graphql/aux/header-secondary.gql';
+import NavigationQuery, { NavigationFragments } from '../graphql/aux/navigation.gql';
+import { getCommercelayerProduct } from './commerce-layer.service';
+import _ from 'lodash';
 
-const REFERENCES = {
-  [CONTENTFUL_TYPENAMES.AUX_NAVIGATION]: [
-    'mainNavCollection',
-    'secondaryNavCollection',
-    'utilityNavCollection'
-  ],
-  [CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT]: [
-    'mainNavCollection',
-  ],
-  [CONTENTFUL_TYPENAMES.PAGE]: [
-    'mainNavCollection',
-  ],
-};
+const getMainHeader = async (navigationId: string = null, preview = false) => {
+  if (!navigationId) return null;
 
-const getInitialMenu = async (navigationId: string = null, preview = false) => {
-  if (!navigationId) {
-    return null;
-  }
-
-  let responseData = null;
-  let responseError = null;
+  let responseData = null, responseError = null;
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
-        query getEntry($id: String!, $preview: Boolean!) {
+        ${HeaderMainFragments}
+        query getMainHeader($id: String!, $preview: Boolean!) {
           auxNavigation(id: $id, preview: $preview) {
-            ${AuxNavigationQuery}
+            ${HeaderMainQuery}
           }
         }
       `,
@@ -47,17 +33,12 @@ const getInitialMenu = async (navigationId: string = null, preview = false) => {
       errorPolicy: 'all'
     }));
   } catch (e) {
-    responseError = e;
-    responseData = {};
+    responseError = e, responseData = {};
   }
 
-  if (responseError) {
-    console.error(`Error on entry query (getInitialMenu) => `, responseError.message);
-  }
+  if (responseError) console.error(`Error on entry query (getMainHeader) => `, responseError.message);
 
-  if (!responseData?.auxNavigation) {
-    return null;
-  }
+  if (!responseData?.auxNavigation) return null;
 
   const entryContent = JSON.parse(
     JSON.stringify(
@@ -68,26 +49,134 @@ const getInitialMenu = async (navigationId: string = null, preview = false) => {
   return entryContent;
 };
 
-export const getMenu = async (navigationId: string = null, preview = false, depth = 6) => {
-  if (!navigationId) {
-    navigationId = DEFAULT_HEADER_ID;
+const getSecondaryHeader = async (mainItemInfo: any, preview: boolean) => {
+  let responseData = null;
+  try {
+    ({ data: responseData } = await contentfulClient(preview).query({
+      query: gql`
+      ${HeaderSecondaryFragments}
+      query getSecondaryHeader($id: String!, $preview: Boolean!) {
+        auxNavigation(id: $id, preview: $preview) {
+          ${HeaderSecondaryQuery}
+        }
+      }`,
+      variables: {
+        id: mainItemInfo.sys.id,
+        preview
+      },
+      errorPolicy: 'all'
+    }));
+  } catch (e) {
+    return { responseError: e, responseData };
+  }    
+  
+  const blockEntryContent = JSON.parse(
+    JSON.stringify(
+      responseData?.auxNavigation
+    )
+  );
+  return { responseData: blockEntryContent };
+};
+
+const applySaltToMegamenu = async (flow: any) => {
+  const { mainNavCollection } = flow || {};
+
+  if (mainNavCollection?.items?.length > 0) {
+    for (const mainItem of mainNavCollection.items) {
+      if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
+        const { secondaryNavCollection } = mainItem || {};
+
+        if (secondaryNavCollection?.items?.length > 0) {
+          mainItem.secondaryNavCollection.items = await Promise.all(
+            secondaryNavCollection.items.map(async (item: any) => {
+              if (item.__typename === CONTENTFUL_TYPENAMES.PRODUCT && item?.sku) {
+                const commercelayerProduct = await getCommercelayerProduct(item.sku);
+                _.merge(item, commercelayerProduct);
+              }
+              return item;
+            })
+          );
+        }
+      }
+    }
   }
 
-  const menu = await getInitialMenu(navigationId, preview);
-  if (!menu) {
-    return null;
+  return flow;
+};
+
+const NAVIGATION_CONTENT = {};
+
+export const getHeader = async (navigationId: string = null, preview = false) => {
+  if (!navigationId) navigationId = DEFAULT_HEADER_ID;
+
+  if (NAVIGATION_CONTENT[navigationId]) return { ...NAVIGATION_CONTENT[navigationId] };
+
+  const header = await getMainHeader(navigationId, preview);
+
+  if(header?.mainNavCollection?.items?.length > 0) {
+    for (let i = 0; i < header.mainNavCollection.items.length; i++) {
+      const mainItem = header.mainNavCollection.items[i];
+      if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
+        const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
+        if(responseError) {
+          console.error(`Error on get reference item => `, responseError.message, mainItem);
+        } else {
+          let navigation = responseData;
+          if(navigation?.mainNavCollection?.items?.length > 0){ // If its a normal flow
+            navigation = await applySaltToMegamenu(navigation);
+          } else if(navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
+            navigation.secondaryNavCollection.items = await Promise.all(
+              navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
+            );
+          }
+          header.mainNavCollection.items[i] = navigation;
+        }
+      }
+    }
   }
 
-  const referencesContent = await getReferencesContent({
-    content: menu,
-    preview,
-    referenceOverride: REFERENCES,
-    maxDepthRecursion: depth
-  });
+  NAVIGATION_CONTENT[navigationId] = { ...header };
+  setTimeout(() => { NAVIGATION_CONTENT[navigationId] = null; }, 600000);
 
-  if (referencesContent) {
-    _.merge(menu, referencesContent);
+  return header ?? false;
+};
+
+export const getNavigation = async (navigationId: string = null, preview = false) => {
+  if (!navigationId) navigationId = DEFAULT_FOOTER_ID;
+
+  if (NAVIGATION_CONTENT[navigationId]) return { ...NAVIGATION_CONTENT[navigationId] };
+  
+  let responseData = null, responseError = null;
+  try {
+    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+      query: gql`
+        ${NavigationFragments}
+        query getNavigation($id: String!, $preview: Boolean!) {
+          auxNavigation(id: $id, preview: $preview) {
+            ${NavigationQuery}
+          }
+        }
+      `,
+      variables: {
+        id: navigationId,
+        preview
+      },
+      errorPolicy: 'all'
+    }));
+  } catch (e) {
+    responseError = e, responseData = {};
   }
 
-  return menu;
+  if (responseError) console.error(`Error on entry query (getNavigation) => `, responseError.message);
+
+  const navigation = JSON.parse(
+    JSON.stringify(
+      responseData?.auxNavigation
+    )
+  );
+
+  NAVIGATION_CONTENT[navigationId] = { ...navigation };
+  setTimeout(() => { NAVIGATION_CONTENT[navigationId] = null; }, 600000);
+
+  return navigation ?? false;
 };

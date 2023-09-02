@@ -1,0 +1,12 @@
+export const QN_PAGE = "page";
+export const QN_PRODUCT = "product";
+export const QN_BLOCKPROMOCONTENT = "blockPromoContent";
+export const QN_BLOCKFORM = "blockForm";
+export const QN_CONTENTFILTER = "blockContentFilter";
+export const QN_AUXNAVIGATION = "auxNavigation";
+export const QN_AUXCUSTOMCONTENT = "auxCustomContent";
+export const QN_PRODUCTCATEGORY = "productCategory";
+export const QN_TRADEMARK = "trademark";
+export const QN_AUXRATE = "auxRate";
+export const QN_AUXALLY = "auxAlly";
+export const QN_COPYSET = "copySet";

@@ -1,6 +1,18 @@
+import AuxCustomContentMinimalFragment from "./fragments/aux-custom-content-minimal.fragment";
+import AuxNavigationMinimalFragment from "./fragments/aux-navigation-minimal.fragment";
+import PageMinimalFragment from "./fragments/page-minimal.fragment";
+import ParentFieldsFragment from "./fragments/parent-fields.fragment";
+import ProductMinimalFragment from "./fragments/product-minimal.fragment";
 import { AssetImageQuery } from "./shared/asset.gql";
-import DefaultQuery from "./shared/default.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
+
+export const PageFragments = `
+  ${ParentFieldsFragment}
+  ${PageMinimalFragment}  
+  ${AuxNavigationMinimalFragment}
+  ${AuxCustomContentMinimalFragment}
+  ${ProductMinimalFragment}
+`;
 
 const PageQuery = `
   ${DefaultQuery}
@@ -10,7 +22,19 @@ const PageQuery = `
     ${RichtextQuery}
   }
   parent {
-    ${DefaultQuery}
+    ...ParentFields
+    parent {
+      ...ParentFields
+      parent {
+        ...ParentFields
+        parent {
+          ...ParentFields
+          parent {
+            ...ParentFields
+          }
+        }
+      }
+    }
   }
   blocksCollection {
     items {
@@ -20,7 +44,7 @@ const PageQuery = `
       ...on BlockContentFilter {
         ${DefaultQuery}
       }
-      ...on BlockForm{
+      ...on BlockForm {
         ${DefaultQuery}
       }
     }
@@ -37,47 +61,21 @@ const PageQuery = `
   urlPaths
   mainNavCollection {
     items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on AuxNavigation {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
-      ...on Product {
-        ${DefaultQuery}
-      }
+      ...PageMinimalFragment
+      ...AuxNavigationMinimalFragment
+      ...AuxCustomContentMinimalFragment
+      ...ProductMinimalFragment
     }
   }
   showHeader
   enableHeaderPrecedence
-  relatedContentCollection{
+  relatedContentCollection {
     items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on AuxNavigation {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
-      ...on Product {
-        ${DefaultQuery}
-      }
+      ...PageMinimalFragment
+      ...AuxNavigationMinimalFragment
+      ...AuxCustomContentMinimalFragment
+      ...ProductMinimalFragment
     }
-  }
-`;
-
-export const PageMinimalQuery = `
-  ${DefaultQuery}
-  name
-  promoTitle
-  urlPaths
-  parent {
-    ${DefaultQuery}
   }
 `;
 

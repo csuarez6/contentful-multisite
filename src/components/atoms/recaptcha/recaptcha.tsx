@@ -24,13 +24,9 @@ const ReCaptchaBox: React.FC<IReCaptcha> = ({
     if (version == "2") return;
     // Component mounted
     showCaptcha("block");
-    const interval = setInterval(() => {
-      console.info("ReCaptcha");
-    }, 1000);
 
     return () => {
       // Component Unmounted
-      clearInterval(interval);
       showCaptcha("none");
 
       // window.grecaptcha = null;
