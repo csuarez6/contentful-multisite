@@ -42,6 +42,8 @@ export const generateAmountCents = (line_items: LineItem[]) => {
   });
 };
 
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const getBackgroundColorClass = (name) => {
   switch (name) {
     case "Blanco":
@@ -247,4 +249,8 @@ export const getElementOffset = (el) => {
   } while (el);
 
   return { top, left };
+};
+
+export const hasItems = (object: any) => {
+  return !!(object?.items?.[0]);
 };

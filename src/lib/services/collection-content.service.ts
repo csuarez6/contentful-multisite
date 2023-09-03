@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 import contentfulClient from './contentful-client.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
+import { sleep } from '@/utils/functions';
 
 type DefaultBlockInfo = {
   __typename: string;
@@ -26,15 +27,17 @@ const getCollectionContent = async (
   let responseData = null;
   let responseError = null;
 
-  const { queryName: type, query } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
+  const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   if (where) {
     where = `where: ${where}, `;
   }
 
   try {
+    await sleep(300);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getEntry($preview: Boolean!) {
           ${type}Collection(${where}preview: $preview) {
             items {

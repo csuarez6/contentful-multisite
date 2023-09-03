@@ -1,25 +1,29 @@
 import { onError } from "@apollo/client/link/error";
 import {
   ApolloClient,
+  ApolloLink,
   HttpLink,
   InMemoryCache,
-  from
+  from,
+  gql
 } from '@apollo/client';
+import compress from "graphql-query-compress";
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    console.error(graphQLErrors);
-  }
-
-  if (networkError) {
-    console.warn(networkError);
-  }
+const errorLink  = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) console.error(graphQLErrors);
+  if (networkError) console.warn(networkError);
 });
 
-const httpLink = (preview = false) => {
-  const CONTENTFUL_ENDPOINT = 
-    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`;
+const generalLink = new ApolloLink((operation, forward) => {
+  const minifiedQuery = compress(operation.query.loc.source.body);
+  operation.query = gql`${minifiedQuery}`;
+  return forward(operation);
+});
 
+const combinedLink = errorLink.concat(generalLink);
+
+const httpLink = (preview = false) => {
+  const CONTENTFUL_ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`;
   return new HttpLink({
     fetch,
     uri: CONTENTFUL_ENDPOINT,
@@ -34,12 +38,10 @@ const httpLink = (preview = false) => {
 };
 
 const contentfulClient = (preview = false) => {
-  const appLink = from([
-    errorLink, httpLink(preview)
-  ]);
-
   return new ApolloClient({
-    link: appLink,
+    link: from([
+      combinedLink, httpLink(preview)
+    ]),
     cache: new InMemoryCache({}),
     defaultOptions: {
       watchQuery: {

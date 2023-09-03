@@ -1,0 +1,9 @@
+node_modules 
+/.pnp
+.pnp.js
+/coverage
+.cache
+.output
+/build/
+/public/build
+.env

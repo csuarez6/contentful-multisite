@@ -1,5 +1,5 @@
 import { AssetImageQuery  } from "./shared/asset.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import { RichtextQuery } from "./shared/default.gql";
 
 const AllyQuery = `
     name

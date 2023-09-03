@@ -1,7 +1,7 @@
 import AssetQuery, { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
 
-const AuxCustomContent = `
+const AuxCustomContentMinimalQuery = `
   ${DefaultQuery}
   name
   ${internalLink}
@@ -18,19 +18,6 @@ const AuxCustomContent = `
     ${AssetImageQuery}
   }
   promoIcon
-  mainNavCollection {
-    items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on AuxNavigation {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
-    }
-  }
   linkView
   content{
     ${RichtextQuery}
@@ -41,4 +28,4 @@ const AuxCustomContent = `
   iframeHeight
 `;
 
-export default AuxCustomContent;
+export default AuxCustomContentMinimalQuery;

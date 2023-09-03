@@ -1,5 +1,5 @@
 import { AssetImageQuery } from "../shared/asset.gql";
-import DefaultQuery from "../shared/default.gql";
+import DefaultQuery, { RichtextQuery } from "../shared/default.gql";
 import ViewAccordionQuery from "../views/accordion.gql";
 import ViewBannerImage from "../views/banner-image.gql";
 import ViewFeatured from "../views/featured.gql";
@@ -17,6 +17,15 @@ import ViewFeaturedProducts from "../views/featured-products.gql";
 import ViewVideoSlider from "../views/videoSlider.gql";
 import ViewSecondaryBanner from "../views/secondaryBanner.gql";
 import ViewRichText from "../views/richText.gql";
+import PageMinimalFragment from "../fragments/page-minimal.fragment";
+import ProductMinimalFragment from "../fragments/product-minimal.fragment";
+import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-minimal.fragment";
+
+export const BlockPromoContentFragments = `
+  ${PageMinimalFragment}
+  ${ProductMinimalFragment}
+  ${AuxCustomContentMinimalFragment}
+`;
 
 const BlockPromoContentQuery = `
   ${DefaultQuery}
@@ -25,32 +34,20 @@ const BlockPromoContentQuery = `
   pretitle
   subtitle
   description {
-    json
+    ${RichtextQuery}
   }
   ctaCollection {
     items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on Product {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
     }
   }
   featuredContentsCollection {
     items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on Product {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
       ...on BlockPromoContent{
         ${DefaultQuery}
       } 
@@ -58,15 +55,9 @@ const BlockPromoContentQuery = `
   }
   listedContentsCollection {
     items {
-      ...on Page {
-        ${DefaultQuery}
-      }
-      ...on Product {
-        ${DefaultQuery}
-      }
-      ...on AuxCustomContent {
-        ${DefaultQuery}
-      }
+      ...PageMinimalFragment
+      ...ProductMinimalFragment
+      ...AuxCustomContentMinimalFragment
     }
   }
   image {
@@ -107,29 +98,35 @@ const BlockPromoContentQuery = `
     ...on ViewServicesCard {
       ${ViewServicesCard}
     }
-    ...on ViewInformationCards{
+    ...on ViewInformationCards {
       ${ViewInformationCards}
     }
-    ...on ViewCarousel{ 
+    ...on ViewCarousel { 
       ${ViewCarouselCategories}
     }
-    ...on ViewFeaturedProducts{
+    ...on ViewFeaturedProducts {
       ${ViewFeaturedProducts}
     }
-    ...on ViewVideoSlider{
+    ...on ViewVideoSlider {
       ${ViewVideoSlider}
     }
-    ...on ViewSecondaryBanner{
+    ...on ViewSecondaryBanner {
       ${ViewSecondaryBanner}
     }
-    ...on ViewRichText{
+    ...on ViewRichText {
       ${ViewRichText}
+    }
+    ...on ViewFuneralPlans {
+      ${DefaultQuery}
+    }
+    ...on ViewTabsWithFeaturedImage {
+      ${DefaultQuery}
     }
   }
   blockId
   promoIcon
   footerText {
-    json
+    ${RichtextQuery}
   }
 `;
 

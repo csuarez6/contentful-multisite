@@ -5,25 +5,24 @@ import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
 import contentfulClient from './contentful-client.service';
-import getReferencesContent from './references-content.service';
+import { getBlocksContent } from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
+import { hasItems } from '@/utils/functions';
 import getReferencesRichtextContent from './richtext-references.service';
 
 const getPageContent = async (urlPath, preview = false, fullContent = true) => {
-  if (!urlPath || urlPath === '') {
-    throw new Error(`«urlPath» is required`);
-  }
+  if (!urlPath || urlPath === '') throw new Error(`«urlPath» is required`);
 
-  let responseData = null;
-  let responseError = null;
+  let responseData = null, responseError = null;
 
-  const { queryName: typePage, query: queryPage } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
+  const { queryName: typePage, query: queryPage, fragments = "" } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PAGE];
   const { queryName: typeProduct, query: queryProduct } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PRODUCT];
 
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
+        ${fragments}
         query getPage($urlPath: String!, $preview: Boolean!) {
           ${typePage}Collection(where: { urlPaths_contains_some: [$urlPath] }, limit: 1, preview: $preview) {
             items {
@@ -37,23 +36,18 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
           }
         }
       `,
-      variables: {
-        urlPath,
-        preview
-      },
+      variables: { urlPath, preview },
       errorPolicy: 'all'
     }));
   } catch (e) {
-    responseError = e;
-    responseData = {};
+    responseError = e, responseData = {};
   }
 
   if (responseError) console.error('Error on page content service, query => ', responseError.message);
 
-  if (!responseData[`${typePage}Collection`]?.items?.[0] && !responseData[`${typeProduct}Collection`]?.items?.[0]) return null;
+  if (!hasItems(responseData[`${typePage}Collection`]) && !hasItems(responseData[`${typeProduct}Collection`])) return null;
 
-  // Get related products (with the same category)
-  if (responseData[`${typeProduct}Collection`]?.items?.[0]) {
+  if (hasItems(responseData[`${typeProduct}Collection`])) { // Get related products (with the same category)
     let dataRelatedProducts = null;
     try {
       ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
@@ -79,12 +73,10 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
         errorPolicy: 'all'
       }));
 
-      if (dataRelatedProducts[`${typeProduct}Collection`]?.items) {
-        const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
-          return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
-        }));
-        responseData[`${typeProduct}Collection`].items[0].relatedProducts = relatedProducts;
-      }
+      const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
+        return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
+      }));
+      responseData[`${typeProduct}Collection`].items[0].relatedProducts = relatedProducts;
     } catch (e) {
       console.error("An error has ocurred at related content fetching", e);
     }
@@ -99,11 +91,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   if (pageContent?.parent?.__typename) pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
 
   if (fullContent) {
-    const referencesContent = await getReferencesContent({ content: pageContent, preview });
-
-    if (referencesContent) {
-      _.merge(pageContent, referencesContent);
-    }
+    pageContent.blocksCollection = await getBlocksContent({ content: pageContent, preview });
 
     if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
       const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);

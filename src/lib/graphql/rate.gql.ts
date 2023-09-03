@@ -1,6 +1,5 @@
 import { AssetImageQuery, AssetQuery  } from "./shared/asset.gql";
-import DefaultQuery from "./shared/default.gql";
-import RichtextQuery from "./shared/richtext.qql";
+import { RichtextQuery, internalLink } from "./shared/default.gql";
 
 const RateQuery = `
     name
@@ -18,19 +17,7 @@ const RateQuery = `
     promoIcon
     ctaLabel
     externalLink
-    internalLink {
-    ...on Page{
-        ${DefaultQuery}
-        slug
-        promoTitle
-    }
-    ...on Product {
-        ${DefaultQuery}
-        slug
-        urlPaths
-        promoTitle
-    }
-    }
+    ${internalLink}
     mediaInternalLink{
         ${AssetQuery}
     }
