@@ -13,9 +13,11 @@ import AuthContext from "@/context/Auth";
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
+import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
 const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
-const orderStatus = (value) => {
+const orderStatus = (value: string) => {
     switch (value) {
         case "cancelled":
             return {
@@ -23,6 +25,7 @@ const orderStatus = (value) => {
                 leftIcon: "order-cart-rejected",
                 rightIcon: "order-rejected"
             };
+        case "approved":
         case "fulfilled":
             return {
                 text: "¡Tu orden ha sido aprobada!",
@@ -46,8 +49,7 @@ const CheckoutPurchase = () => {
     const orderId = router.query.id?.toString();
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
-
-    console.info('orderId', orderId);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fullName = useMemo(() => {
         return (
@@ -58,24 +60,37 @@ const CheckoutPurchase = () => {
 
     useEffect(() => {
         (async () => {
-            if (!orderId) { setStatusError(true); return; }
-            const orderData = await getOrderById(orderId);
-            if (orderData["status"] === 200) {
-                setOrderInfoById(orderData.data);
-                setBillingAddress(orderData.data["billing_address"]);
-                console.info({ orderData });
-            } else {
+            try {
+                if (orderId) {
+                    const orderData = await getOrderById(orderId);
+                    if (orderData["status"] === 200) {
+                        setStatusError(false);
+                        setOrderInfoById(orderData.data);
+                        setBillingAddress(orderData.data["billing_address"]);
+                        console.info({ orderData });
+                    } else {
+                        console.info('status', orderData["status"]);
+                        setStatusError(true);
+                    }
+                    setIsLoading(false);
+                } else {
+                    setStatusError(true);
+                    setIsLoading(false);
+                }
+            } catch (error) {
                 setStatusError(true);
+                setIsLoading(false);
             }
         })();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [orderId]);
 
     const isCompleted = useMemo(
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
         [orderInfoById]
     );
 
-    const Shipments = () => {
+    const shipments = () => {
         const shipments = orderInfoById.shipments;
         const shipmentItems = [];
         shipments.forEach(async (el) => {
@@ -86,6 +101,20 @@ const CheckoutPurchase = () => {
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
     };
 
+    const paymentEntity = () => {
+        if (orderInfoById.status !== OrderStatus.approved) {
+            return {
+                paymentMethod: "-----",
+                paymentEntity: "-----"
+            };
+        }
+        const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
+        return {
+            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
+            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+        };
+    };
+
     return (
         <HeadingCard
             classes="col-span-2"
@@ -94,33 +123,8 @@ const CheckoutPurchase = () => {
             isCheck={isCompleted}
             rightIcon={orderStatus(orderInfoById?.status).rightIcon}
         >
-
-            {/* Display spinner if statusError and orderInfoById are undefined  */}
-            {!statusError && !orderInfoById && <Spinner position="absolute" size="large" />}
-
-            {/* Display notification if Error */}
-            {statusError &&
-                <div className="bg-white rounded-lg">
-                    <div className="text-center">
-                        <span className="block w-12 h-12 m-auto shrink-0 text-lucuma">
-                            <Icon icon="alert" className="w-full h-full" />
-                        </span>
-                        <h3 className="mt-2 text-sm font-semibold text-gray-900">Comprobación de orden</h3>
-                        <p className="mt-1 text-sm text-gray-500">Ha ocurrido un error al consultar o no existe la orden.</p>
-                        <div className="flex justify-center mt-6">
-                            <CustomLink
-                                content={{ urlPaths: ["/"] }}
-                                linkClassName="relative button button-primary"
-                            >
-                                Ir a la tienda
-                            </CustomLink>
-                        </div>
-                    </div>
-                </div>
-            }
-
             {/* Display order content if no Error and order data no empty*/}
-            {!statusError && orderInfoById &&
+            {!statusError && !isLoading && orderInfoById &&
                 <div className="bg-white rounded-lg">
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
@@ -140,13 +144,13 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de pago:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {router.query.paymentType?.toString().toUpperCase() ?? "-----"}
+                                {paymentEntity().paymentMethod ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                -------------
+                                {paymentEntity().paymentEntity ?? "-----"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
@@ -164,12 +168,36 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {Shipments() ?? "-----"}
+                                {shipments() ?? "-----"}
                             </dd>
                         </div>
                     </dl>
                 </div>
             }
+
+            {/* Display notification if Error */}
+            {statusError && !isLoading && !orderInfoById &&
+                <div className="bg-white rounded-lg">
+                    <div className="text-center">
+                        <span className="block w-12 h-12 m-auto shrink-0 text-lucuma">
+                            <Icon icon="alert" className="w-full h-full" />
+                        </span>
+                        <h3 className="mt-2 text-sm font-semibold text-gray-900">Comprobación de orden</h3>
+                        <p className="mt-1 text-sm text-gray-500">Ha ocurrido un error al consultar o no existe la orden.</p>
+                        <div className="flex justify-center mt-6">
+                            <CustomLink
+                                content={{ urlPaths: ["/"] }}
+                                linkClassName="relative button button-primary"
+                            >
+                                Ir a la tienda
+                            </CustomLink>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {/* Display spinner if statusError and orderInfoById are undefined/false  */}
+            {isLoading && <Spinner position="absolute" size="large" />}
         </HeadingCard>
     );
 };

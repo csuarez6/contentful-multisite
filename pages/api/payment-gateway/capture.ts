@@ -13,7 +13,7 @@ export default function handler(
     data: {
       transaction_token: data.attributes.payment_source_token,
       metadata: {
-        foo: "bar",
+        methood: "capture",
       },
     },
   });

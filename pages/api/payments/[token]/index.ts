@@ -3,6 +3,7 @@ import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
 import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
 import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
+import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
@@ -32,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     if (orderByAlly.status === 200) {
       await sendClientEmail(orderByAlly.data);
 
-      if (orderByAlly.data?.status === "approved") {
+      if (orderByAlly.data?.status === OrderStatus.approved) {
         await sendVantiEmail(orderByAlly.data);
         await sendAllyEmail(orderByAlly.data);
       }

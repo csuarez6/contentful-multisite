@@ -1,10 +1,11 @@
 import { QueryParamsRetrieve } from "@commercelayer/sdk";
 
 export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-    include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "authorizations.captures", "authorizations.voids", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_source"],
+    include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_method", "payment_source", "transactions", "captures" ,"voids"],
     fields: {
         orders: [
             "number",
+            "autorefresh",
             "status",
             "line_items",
             "customer",
@@ -19,7 +20,12 @@ export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
             "approved_at",
             "market",
             "available_payment_methods",
-            "payment_source"
+            "payment_source",
+            "payment_method",
+            "payment_status",
+            "transactions",
+            "captures",
+            "voids"
         ],
         addresses: [
             "state_code",

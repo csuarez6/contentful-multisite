@@ -199,7 +199,7 @@ export interface IP2PRequestInformation {
         noBuyerFill: boolean,
         type: string,
     },
-    payment: {
+    payment: [{
         status: IP2PStatus,
         internalReference: number,
         reference: string,
@@ -231,8 +231,8 @@ export interface IP2PRequestInformation {
         agreementType: string,
         discount: IP2PDiscount,
         subscription: string,
-    },
-    subscription?: {
+    }],
+    subscription?: [{
         status: IP2PStatus,
         type: string,
         instrument: {
@@ -240,7 +240,7 @@ export interface IP2PRequestInformation {
             value: string,
             displayOn: string,
         }
-    }
+    }]
 }
 
 export interface IP2PSusbcription {

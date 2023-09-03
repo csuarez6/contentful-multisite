@@ -35,7 +35,7 @@ const handler = async (
       data: {
         transaction_token: data.attributes.payment_source_token,
         metadata: {
-          foo: "bar",
+          methood: "authorize",
         },
       },
     });

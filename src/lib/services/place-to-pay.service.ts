@@ -49,8 +49,6 @@ export const createP2PRequest = async (orderId: string, payment: IP2PPayment, ip
     bodyRequest.fields = extraFields; // La propiedad fields se usa para almacenar datos estructurados que pueden visualizarse en la interfaz de Checkout según las condiciones indicadas.
   }
 
-  console.info('body', bodyRequest);
-
   try {
 
     const response = await fetch(`${PLACE_TO_PAY_ENDPOINT}`, {

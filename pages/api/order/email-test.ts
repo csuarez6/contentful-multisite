@@ -1,3 +1,4 @@
+import { OrderStatus } from '@/lib/enum/EOrderStatus.enum';
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
 import { sendAllyEmail, sendClientEmail, sendVantiEmail } from '@/lib/services/send-emails.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -12,11 +13,10 @@ const handler = async (
   try {
     const response = await getOrderByAlly(orderId);
     const orderData = response.data;
-
     let count = 0;
-    count += await sendClientEmail(orderData);
 
-    if (orderData?.status === "approved") {
+    count += await sendClientEmail(orderData);
+    if (orderData?.status === OrderStatus.approved) {
       count += await sendVantiEmail(orderData);
       count += await sendAllyEmail(orderData);
     }

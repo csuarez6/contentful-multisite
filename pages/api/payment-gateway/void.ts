@@ -11,7 +11,7 @@ export default function handler(
       transaction_token: "your-external-transaction-token",
       amount_cents: 12900,
       metadata: {
-        foo: "bar",
+        methood: "void",
       },
     },
   });

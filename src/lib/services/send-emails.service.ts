@@ -1,33 +1,37 @@
 import { Shipment } from "@commercelayer/sdk";
 import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
+import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
+import { formatDate } from "./commerce-layer.service";
+import { OrderStatus } from "../enum/EOrderStatus.enum";
 
 const customerSection = (data: IOrderExtended) => {
-  const buyDate = new Date(data.approved_at);
-
-  const formattedTime = [
-        String(buyDate.getHours()).padStart(2, '0'),
-        String(buyDate.getMinutes()).padStart(2, '0'),
-        String(buyDate.getSeconds()).padStart(2, '0')
-      ].join(':');
-      const formattedDate = [
-        String(buyDate.getDate()).padStart(2, '0'),
-        String(buyDate.getMonth() + 1).padStart(2, '0'),
-        buyDate.getFullYear()
-      ].join('/');
-
   const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
   const shipping_address = data.shipping_address?.line_1 + (data.shipping_address?.line_2 ? ', ' + data.shipping_address?.line_2 : '') + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
   const shipping_methods = data.shipments?.map((shipment) => {
     return shipment.shipping_method?.name;
   }).join(", ");
 
-  const addresseeSection = data.shipping_address?.notes ? 
+  const addresseeSection = data.shipping_address?.notes ?
     `<tr>
       <td class="sm-inline-block sm-w-full" style = "width: 50%; padding-top: 8px; padding-bottom: 8px">Destinatario: </td>
-      <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style = "width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500" >${ data.shipping_address?.notes }</td>
+      <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style = "width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500" >${data.shipping_address?.notes}</td>
     </tr>`
     : '';
+
+  const paymentInfo = () => {
+    if (data.status !== OrderStatus.approved) {
+      return {
+        paymentMethod: "-----",
+        paymentEntity: "-----"
+      };
+    }
+    const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
+    return {
+      paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
+      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+    };
+  };
 
   const section = `
     <tr>
@@ -35,44 +39,44 @@ const customerSection = (data: IOrderExtended) => {
       <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Nombre del adquiriente:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ data.metadata?.name } ${ data.metadata?.lastName }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.name} ${data.metadata?.lastName}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Cédula de ciudadanía:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ data.metadata?.documentNumber }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.documentNumber}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Teléfono:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ data.metadata?.cellPhone }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.cellPhone}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Correo electrónico:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ data.customer_email }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.customer_email}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de pago:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500"></td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().paymentMethod}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Entidad Bancaria:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500"></td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().paymentEntity}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ shipping_address }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_address}</td>
       </tr>
-       ${ addresseeSection }
+       ${addresseeSection}
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de facturación:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ billing_address }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${billing_address}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de envío:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ shipping_methods }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_methods}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${ formattedDate } ${ formattedTime }</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(data.approved_at)}</td>
       </tr>
       </table>
       </td>
@@ -136,7 +140,7 @@ const productAdjustments = (item: ILineItemExtended, border: string, padding: nu
 };
 
 const productPrices = (formatted_compare_at_amount: string, formatted_unit_amount: string) => {
-  const price = formatted_compare_at_amount === formatted_unit_amount ? formatted_unit_amount : `<strike>${ formatted_compare_at_amount }</strike> ${ formatted_unit_amount }`;
+  const price = formatted_compare_at_amount === formatted_unit_amount ? formatted_unit_amount : `<strike>${formatted_compare_at_amount}</strike> ${formatted_unit_amount}`;
   return price;
 };
 
@@ -153,21 +157,21 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
         <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="${border} padding: 20px 20px ${padding}px 20px; vertical-align: top; font-weight: 500">
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${ lineItem.name } ( ${ lineItem.sku_code })</p>
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${ lineItem.item?.shipping_category?.name }</p>
+          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
+          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
           <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
             <li>* IVA incluido</li>
-            <li>Cantidad: ${ lineItem.quantity }</li>
+            <li>Cantidad: ${lineItem.quantity}</li>
           </ul>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price?.formatted_compare_at_amount, lineItem.formatted_unit_amount) }</b>
+          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price?.formatted_compare_at_amount, lineItem.formatted_unit_amount)}</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${ lineItem.formatted_total_amount }</b>
+          <b style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
         </td>
       </tr>
-      ${ productAdjustments(lineItem, border, padding) }`;
+      ${productAdjustments(lineItem, border, padding)}`;
   });
 
   shipments.forEach((shipment) => {
@@ -177,12 +181,12 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
         `<tr>
           <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
           <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
-            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${ shipment.shipping_method?.name }</p>
+            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${shipment.shipping_method?.name}</p>
             <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px"></ul>
           </td>
           <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
           <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
-            <b style="font-weight: 700; color: #113455">${ shipment.shipping_method?.formatted_price_amount }</b>
+            <b style="font-weight: 700; color: #113455">${shipment.shipping_method?.formatted_price_amount}</b>
           </td>
         </tr>`;
     }
@@ -393,12 +397,12 @@ const clientEmailTemplate = (status: string, data: IOrderExtended) => {
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
                     <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
                     <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ¡Tu orden ${ data.number } ha sido ${ status }!
+                      ¡Tu orden ${data.number} ha sido ${status}!
                     </h2>
                     <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
                   </td>
                 </tr>
-                 ${ customerSection(data) }
+                 ${customerSection(data)}
                 <tr>
                   <td style="padding-left: 16px; padding-right: 16px;">
                     <h3 style="margin: 0; font-size: 20px; color: #113455">
@@ -409,10 +413,10 @@ const clientEmailTemplate = (status: string, data: IOrderExtended) => {
                 <tr>
                   <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
                     <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${ productsSection(data.line_items, data.shipments) }
+                      ${productsSection(data.line_items, data.shipments)}
                     </table>
                     <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${ data.formatted_total_amount }</span>
+                      TOTAL <span style="margin-left: 12px;">${data.formatted_total_amount}</span>
                     </div>
                   </td>
                 </tr>
@@ -443,7 +447,7 @@ const vantiEmailTemplate = (data: IOrderExtended) => {
                     <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
                   </td>
                 </tr>
-                 ${ customerSection(data) }
+                 ${customerSection(data)}
                 <tr>
                   <td style="padding-left: 16px; padding-right: 16px;">
                     <h3 style="margin: 0; font-size: 20px; color: #113455">
@@ -454,10 +458,10 @@ const vantiEmailTemplate = (data: IOrderExtended) => {
                 <tr>
                   <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
                     <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${ productsSection(data.line_items, data.shipments) }
+                      ${productsSection(data.line_items, data.shipments)}
                     </table>
                     <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${ data.formatted_total_amount }</span>
+                      TOTAL <span style="margin-left: 12px;">${data.formatted_total_amount}</span>
                     </div>
                   </td>
                 </tr>
@@ -483,7 +487,7 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
                     <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
                     <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ¡La orden ${ data.number } ha sido aprobada!
+                      ¡La orden ${data.number} ha sido aprobada!
                     </h2>
                     <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
                   </td>
@@ -491,7 +495,7 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
                 <tr>
                   <td style="padding: 24px">
                   <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                    ${ customerSection(data) }
+                    ${customerSection(data)}
                   </table>
                   </td>
                 </tr>
@@ -505,10 +509,10 @@ const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
                 <tr>
                   <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
                     <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${ productsSection(productsData.line_items, productsData.shipments) }
+                      ${productsSection(productsData.line_items, productsData.shipments)}
                     </table>
                     <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${ productsData.formatted_ally_shipping_total_amount }</span>
+                      TOTAL <span style="margin-left: 12px;">${productsData.formatted_ally_shipping_total_amount}</span>
                     </div>
                   </td>
                 </tr>
