@@ -22,6 +22,7 @@ import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import SelectAtom, { IListContent } from "@/components/atoms/select-atom/SelectAtom";
+import { useSession } from "next-auth/react";
 
 export interface IAddress {
   id?: string;
@@ -128,8 +129,10 @@ const CheckoutAddress = () => {
   const [modalChild, setmodalChild] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const attempts = useRef(0);
+  const attempts2 = useRef(0);
+  const { status, data: session } = useSession();
 
-  const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment } = useContext(CheckoutContext);
+  const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment, getCustomerAddresses } = useContext(CheckoutContext);
 
   const {
     register,
@@ -139,6 +142,7 @@ const CheckoutAddress = () => {
     getValues,
     clearErrors,
     formState: { errors },
+    
     reset,
   } = useForm<IAddresses>({
     resolver: yupResolver(schema),
@@ -248,49 +252,78 @@ const CheckoutAddress = () => {
   }, [order]);
 
   useEffect(() => {
-    if (order) {
+   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      // setConfig({
+      //   accessToken: session?.user["accessToken"],
+      //   endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+      // });
       (async () => {
-        const { shippingAddress, billingAddress } = await getAddresses();
-        const shippingAddressFormatted = toAddressForm(shippingAddress);
-        const billingAddressFormatted = toAddressForm(billingAddress);
-        if (shippingAddressFormatted) {
-          setValue(
-            "shippingAddress.stateCode",
-            shippingAddressFormatted.stateCode
+        // if (attempts2.current != 0) {
+          const addresses: Address = await getCustomerAddresses(
+            session?.user["accessToken"]
           );
-          setValue(
-            "shippingAddress.cityCode",
-            shippingAddressFormatted.cityCode
-          );
-          setValue("shippingAddress.street", shippingAddressFormatted.street);
-          setValue("shippingAddress.address", shippingAddressFormatted.address);
-          setValue(
-            "shippingAddress.residence",
-            shippingAddressFormatted.residence
-          );
-          setValue(
-            "shippingAddress.receiver",
-            shippingAddressFormatted.receiver
-          );
-        }
-        if (billingAddressFormatted) {
-          setValue("shippingAddress.isSameAsBillingAddress", false);
-          setValue(
-            "billingAddress.stateCode",
-            billingAddressFormatted.stateCode
-          );
-          setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
-          setValue("billingAddress.address", billingAddressFormatted.address);
-          setValue("billingAddress.street", billingAddressFormatted.street);
-          setValue(
-            "billingAddress.residence",
-            billingAddressFormatted.residence
-          );
-        }
+          const addressesForm = toAddressForm(addresses);
+          if (addressesForm) {
+            setValue("shippingAddress.stateCode", addressesForm.stateCode);
+            setValue("shippingAddress.cityCode", addressesForm.cityCode);
+            setValue("shippingAddress.street", addressesForm.street);
+            setValue("shippingAddress.address", addressesForm.address);
+            setValue("shippingAddress.residence", addressesForm.residence);
+            setValue("shippingAddress.receiver", addressesForm.receiver);
+          }
+        // }
+        // attempts2.current = 1;
       })();
+    }else {
+      if (order) {
+        (async () => {
+          const { shippingAddress, billingAddress } = await getAddresses();
+          const shippingAddressFormatted = toAddressForm(shippingAddress);
+          const billingAddressFormatted = toAddressForm(billingAddress);
+          if (shippingAddressFormatted) {
+            setValue(
+              "shippingAddress.stateCode",
+              shippingAddressFormatted.stateCode
+            );
+            setValue(
+              "shippingAddress.cityCode",
+              shippingAddressFormatted.cityCode
+            );
+            setValue("shippingAddress.street", shippingAddressFormatted.street);
+            setValue("shippingAddress.address", shippingAddressFormatted.address);
+            setValue(
+              "shippingAddress.residence",
+              shippingAddressFormatted.residence
+            );
+            setValue(
+              "shippingAddress.receiver",
+              shippingAddressFormatted.receiver
+            );
+          }
+          if (billingAddressFormatted) {
+            setValue("shippingAddress.isSameAsBillingAddress", false);
+            setValue(
+              "billingAddress.stateCode",
+              billingAddressFormatted.stateCode
+            );
+            setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
+            setValue("billingAddress.address", billingAddressFormatted.address);
+            setValue("billingAddress.street", billingAddressFormatted.street);
+            setValue(
+              "billingAddress.residence",
+              billingAddressFormatted.residence
+            );
+          }
+        })();
+      } 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
+  }, [order, status, session]);
 
   const checkAlphaNumeric = (e) => {
     const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
