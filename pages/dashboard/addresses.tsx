@@ -28,6 +28,8 @@ import SelectAtom, {
   IListContent,
 } from "@/components/atoms/select-atom/SelectAtom";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -75,6 +77,8 @@ const DashboardAddresses = () => {
   const idAddress = useRef("");
   const attempts2 = useRef(0);
   const [newAddress, setNewAddress] = useState(true);
+  const [paramModal, setParamModal] = useState<IPromoContent>();
+  const [isActivedModal, setIsActivedModal] = useState(false);
   useEffect(() => {
     if (status === "authenticated" && session) {
       // setConfig({
@@ -230,6 +234,14 @@ const DashboardAddresses = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
 
+  const ModalContent = ({ modalMsg = "" }) => {
+    return (
+      <div className="flex flex-col gap-12">
+        <p className="text-center">{modalMsg}</p>
+      </div>
+    );
+  };
+
   const sendData = async (data: IAddresses) => {
     try {
       const { shippingAddress } = data;
@@ -243,16 +255,24 @@ const DashboardAddresses = () => {
           clShippingAddr
         );
       }
-      // [clShippingAddr].forEach((add) => {
-      //   if (!add) return;
-      //   ((meta: any) => {
-      //     (add.first_name = meta?.name), (add.last_name = meta?.lastName);
-      //   })(isLogged ? user.metadata : order.metadata);
-      // });
-
-      // await addAddresses(clShippingAddr ?? undefined);
+      setIsActivedModal(true);
+      setParamModal({
+        children: (
+          <ModalContent modalMsg="Direccion actualizada con exito." />
+        ),
+        promoIcon: "check",
+        promoTitle: "Direccion Actualizada",
+      });
     } catch (error) {
       console.error(error);
+      setIsActivedModal(true);
+      setParamModal({
+        children: (
+          <ModalContent modalMsg="Ha ocurrido un error, por favor intente nuevamente." />
+        ),
+        promoIcon: "cancel",
+        promoTitle: "Error durante el proceso - Reset!",
+      });
     }
   };
 
@@ -434,6 +454,9 @@ const DashboardAddresses = () => {
           </main>
         </div>
       </div>
+      {isActivedModal && (
+        <ModalSuccess {...paramModal} isActive={isActivedModal} />  
+      )}
     </div>
   );
 };
