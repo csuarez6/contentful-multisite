@@ -97,6 +97,7 @@ services:
       PLACE_TO_PAY_LOGIN: ${PLACE_TO_PAY_LOGIN:-}
       PLACE_TO_PAY_SECRET_KEY: ${PLACE_TO_PAY_SECRET_KEY:-}
       PLACE_TO_PAY_RETURN_URL: ${PLACE_TO_PAY_RETURN_URL:-}
+      COMMERCELAYER_P2P_SHARED_SECRET: ${COMMERCELAYER_P2P_SHARED_SECRET:-}
     networks:
       - public
     restart: unless-stopped
