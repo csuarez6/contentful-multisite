@@ -105,6 +105,7 @@ const applySaltToMegamenu = async (flow: any) => {
 };
 
 const NAVIGATION_CONTENT = {};
+const NAVIGATION_FIELDS = ["mainNavCollection", "secondaryNavCollection"]
 
 export const getHeader = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_HEADER_ID;
@@ -113,23 +114,25 @@ export const getHeader = async (navigationId: string = null, preview = false) =>
 
   const header = await getMainHeader(navigationId, preview);
 
-  if(header?.mainNavCollection?.items?.length > 0) {
-    for (let i = 0; i < header.mainNavCollection.items.length; i++) {
-      const mainItem = header.mainNavCollection.items[i];
-      if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
-        const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
-        if(responseError) {
-          console.error(`Error on get reference item => `, responseError.message, mainItem);
-        } else {
-          let navigation = responseData;
-          if(navigation?.mainNavCollection?.items?.length > 0){ // If its a normal flow
-            navigation = await applySaltToMegamenu(navigation);
-          } else if(navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
-            navigation.secondaryNavCollection.items = await Promise.all(
-              navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
-            );
+  for(const navigationField of NAVIGATION_FIELDS){
+    if(header?.[navigationField]?.items?.length > 0) {
+      for (let i = 0; i < header[navigationField].items.length; i++) {
+        const mainItem = header[navigationField].items[i];
+        if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
+          const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
+          if(responseError) {
+            console.error(`Error on get reference item => `, responseError.message, mainItem);
+          } else {
+            let navigation = responseData;
+            if(navigation?.[navigationField]?.items?.length > 0){ // If its a normal flow
+              navigation = await applySaltToMegamenu(navigation);
+            } else if(navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
+              navigation.secondaryNavCollection.items = await Promise.all(
+                navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
+              );
+            }
+            header[navigationField].items[i] = navigation;
           }
-          header.mainNavCollection.items[i] = navigation;
         }
       }
     }

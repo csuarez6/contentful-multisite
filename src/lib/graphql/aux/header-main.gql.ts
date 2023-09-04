@@ -1,5 +1,4 @@
 import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-minimal.fragment";
-import AuxNavigationMinimalFragment from "../fragments/aux-navigation-minimal.fragment";
 import PageMinimalFragment from "../fragments/page-minimal.fragment";
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
@@ -7,7 +6,6 @@ import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql
 export const HeaderMainFragments = `
   ${PageMinimalFragment}
   ${AuxCustomContentMinimalFragment}
-  ${AuxNavigationMinimalFragment}
 `;
 
 const HeaderMainQuery = `
@@ -27,8 +25,12 @@ const HeaderMainQuery = `
   }
   secondaryNavCollection(limit: 10) {
     items {
-      ...AuxCustomContentMinimalFragment
-      ...AuxNavigationMinimalFragment
+      ... on AuxCustomContent {
+        ${DefaultQuery}
+      }
+      ... on AuxNavigation {
+        ${DefaultQuery}
+      }
     }
   }
   utilityNavCollection(limit: 10) {

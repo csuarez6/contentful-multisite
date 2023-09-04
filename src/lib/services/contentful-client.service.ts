@@ -7,7 +7,6 @@ import {
   from,
   gql
 } from '@apollo/client';
-import compress from "graphql-query-compress";
 
 const errorLink  = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) console.error(graphQLErrors);
@@ -15,7 +14,7 @@ const errorLink  = onError(({ graphQLErrors, networkError }) => {
 });
 
 const generalLink = new ApolloLink((operation, forward) => {
-  const minifiedQuery = compress(operation.query.loc.source.body);
+  const minifiedQuery = operation.query.loc.source.body.replace(/\s\s+/g, ' ');
   operation.query = gql`${minifiedQuery}`;
   return forward(operation);
 });
