@@ -105,7 +105,7 @@ const applySaltToMegamenu = async (flow: any) => {
 };
 
 const NAVIGATION_CONTENT = {};
-const NAVIGATION_FIELDS = ["mainNavCollection", "secondaryNavCollection"]
+const NAVIGATION_FIELDS = ["mainNavCollection", "secondaryNavCollection"];
 
 export const getHeader = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_HEADER_ID;

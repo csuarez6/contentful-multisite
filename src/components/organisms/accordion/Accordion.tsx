@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { classColumns, classNames } from "@/utils/functions";

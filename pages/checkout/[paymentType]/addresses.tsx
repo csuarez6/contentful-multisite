@@ -129,7 +129,6 @@ const CheckoutAddress = () => {
   const [modalChild, setmodalChild] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const attempts = useRef(0);
-  const attempts2 = useRef(0);
   const { status, data: session } = useSession();
 
   const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment, getCustomerAddresses } = useContext(CheckoutContext);
