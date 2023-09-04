@@ -89,7 +89,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     console.error(error);
     return res.status(500).json({
       status: 500,
-      message: error.message,
+      message: error,
     });
   }
 };

@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
 import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
-import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
+import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
+import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 
 const handler = async (
   req: NextApiRequest,
@@ -16,12 +17,13 @@ const handler = async (
   try {
     console.info('refund', req.headers, req.body);
     const client = await getCLAdminCLient();
-    const externalPayment = await client.external_payments.retrieve(data.id);
-
-    if (!externalPayment) {
-      throw new Error("Payment not found");
-    }
-    const paymentInfo = await getP2PRequestInformation(externalPayment.payment_source_token);
+    const order = await client.orders.retrieve(data.relationships.order.id, DEFAULT_ORDER_PARAMS);
+    console.info('order', order);
+    const paymentSource = order.payment_source;
+    const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
+    console.info('transactionToken', transactionToken);
+    const paymentInfo = await getP2PRequestInformation(transactionToken);
+    console.info('paymentInfo', paymentInfo);
 
     if (typeof paymentInfo === 'string') {
       throw new Error(paymentInfo);

@@ -12,19 +12,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data = req.query;
     const orderId = data.id?.toString();
 
+    console.info('payment_done', orderId);
     try {
         const client = await getCLAdminCLient();
         const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
         if (!order) throw new Error("INVALID_ORDER");
         const authorization = order.authorizations?.at(0);
         if (!authorization) throw new Error("INVALID_TRANSACTION");
+        console.info('ok authorization', authorization);
 
         if (order.payment_status !== PaymentStatus.paid && order.payment_status !== PaymentStatus.voided) {
+            console.info('paid or voided');
             const paymentSource = order.payment_source;
             const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
 
             if (transactionToken) {
+                console.info('transaction token');
                 const infoP2P = await getP2PRequestInformation(transactionToken);
+                console.info('infoP2P', infoP2P);
                 const metadata = {
                     medium: 'payment_done',
                     data: data,
@@ -36,27 +41,31 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 }
 
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
+                    console.info('infoP2P approved');
                     await client.orders.update({
                         id: order.id,
                         _approve: true,
                         _capture: true
                     }, DEFAULT_ORDER_PARAMS
                     ).then(async (orderUpdated) => {
+                        console.info('then approved');
                         const captures = orderUpdated.captures?.at(0);
-
+                        console.info('captures');
                         await client.captures.update({
                             id: captures?.id,
                             metadata: metadata
                         });
                     });
                 } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
+                    console.info('infoP2P failed or rejected');
                     await client.orders.update({
                         id: order.id,
                         _cancel: true,
                     }, DEFAULT_ORDER_PARAMS
                     ).then(async (orderUpdated) => {
+                        console.info('then failed or rejected');
                         const voids = orderUpdated.voids?.at(0);
-
+                        console.info('voids');
                         await client.voids.update({
                             id: voids?.id,
                             metadata: metadata
@@ -64,6 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                     });
                 }
 
+                console.info('emails');
                 const orderByAlly = (await getOrderByAlly(order.id)).data;
                 await sendClientEmail(orderByAlly);
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
