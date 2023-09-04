@@ -17,7 +17,8 @@ const handler = async (
   try {
     console.info('refund', req.headers, req.body);
     const client = await getCLAdminCLient();
-    const order = await client.orders.retrieve(data.relationships.order.id, DEFAULT_ORDER_PARAMS);
+    const authorization = await client.authorizations.retrieve(data.id);
+    const order = await client.orders.retrieve(authorization.order.id, DEFAULT_ORDER_PARAMS);
     console.info('order', order);
     const paymentSource = order.payment_source;
     const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;

@@ -1,4 +1,4 @@
-import { HmacSHA256 } from "crypto-js";
+import CryptoJS, { HmacSHA256 } from 'crypto-js';
 import { NextApiRequest } from "next";
 
 const paymentGatewayValidation = (
