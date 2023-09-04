@@ -5,6 +5,7 @@ import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-lay
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
 import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import type { NextApiRequest, NextApiResponse } from "next";
+import uuid from "react-uuid";
 
 const handler = async (
   req: NextApiRequest,
@@ -13,7 +14,7 @@ const handler = async (
   const { data }: IExternalPaymentGWRequest = req.body;
 
   try {
-    console.info('capture/void', req.headers, req.body);
+    console.info('capture/void', req.headers, { data });
     paymentGatewayValidation(req);
     const status = req.query.status.toString();
     console.info('finish', status);
@@ -45,7 +46,15 @@ const handler = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message,
+      "success": false,
+      "data": {
+        "transaction_token": uuid(),
+        "amount_cents": data.attributes._capture_amount_cents,
+        "error": {
+          "code": "500",
+          "message": error
+        }
+      }
     });
   }
 };

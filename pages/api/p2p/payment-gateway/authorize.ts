@@ -9,10 +9,11 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = req.body;
 
   try {
-    console.info('authorize', req.headers, req.body);
+    console.info('authorize', req.headers, { data });
+    console.info('included', { included });
     paymentGatewayValidation(req);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
@@ -35,7 +36,15 @@ const handler = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message,
+      "success": false,
+      "data": {
+        "transaction_token": data.attributes.payment_source_token,
+        "amount_cents": data.attributes._capture_amount_cents,
+        "error": {
+          "code": "500",
+          "message": error
+        }
+      }
     });
   }
 };

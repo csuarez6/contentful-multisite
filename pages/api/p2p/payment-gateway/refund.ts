@@ -12,10 +12,11 @@ const handler = async (
 ) => {
 
   paymentGatewayValidation(req);
-  const { data }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = req.body;
 
   try {
-    console.info('refund', req.headers, req.body);
+    console.info('refund', req.headers, { data });
+    console.info('included', { included });
     const client = await getCLAdminCLient();
     const authorization = await client.authorizations.retrieve(data.id);
     const order = await client.orders.retrieve(authorization.order.id, DEFAULT_ORDER_PARAMS);
