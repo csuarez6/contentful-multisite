@@ -14,9 +14,7 @@ const handler = async (
   const { data }: IExternalPaymentGWRequest = req.body;
 
   try {
-    console.info('refund', req);
-    const status = req.query.status.toString();
-    console.info('refund', status);
+    console.info('refund', req.headers, req.body);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
 
