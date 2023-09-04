@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         include: ["order"],
       });
       if (!paymentSource.length) throw new Error("INVALID_TRANSACTION_TOKEN");
-      const order = paymentSource.at(0)?.order;
+      const order = await client.orders.retrieve(paymentSource.at(0).order.id, DEFAULT_ORDER_PARAMS);
       if (!order) throw new Error("INVALID_ORDER");
       if (order.payment_status === PaymentStatus.paid || order.payment_status === PaymentStatus.voided) throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
       const infoP2P = await getP2PRequestInformation(transactionToken);
