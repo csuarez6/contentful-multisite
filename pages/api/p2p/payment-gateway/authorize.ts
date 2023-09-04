@@ -39,7 +39,7 @@ const handler = async (
       "success": false,
       "data": {
         "transaction_token": data.attributes.payment_source_token,
-        "amount_cents": data.attributes._capture_amount_cents,
+        "amount_cents": 12000,
         "error": {
           "code": "500",
           "message": error

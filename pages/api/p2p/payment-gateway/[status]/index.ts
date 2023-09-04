@@ -36,7 +36,7 @@ const handler = async (
       success: true,
       data: {
         transaction_token: paymentInfo.requestId,
-        amount_cents: paymentInfo.request.payment.amount.total,
+        amount_cents: data.attributes._capture_amount_cents,
         metadata: {
           status: status,
           paymentInfo: paymentInfo
