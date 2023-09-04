@@ -2,7 +2,7 @@
 import { PaymentStatus } from "@/lib/enum/EPaymentStatus.enum";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
-import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
+import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
 import { getP2PRequestInformation, validateP2PSignature } from "@/lib/services/place-to-pay.service";
 import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
@@ -12,18 +12,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
     const data: IP2PNotification = req.body;
-    const orderId = data.requestId;
+    const transactionToken = data.requestId;
     const validation = validateP2PSignature(data);
 
-    console.info('p2p notification');
+    console.info('p2p notification', req.body);
 
     if (validation) {
       console.info('ok validation');
-      const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
+
+      const paymentSource = await client.external_payments.list({
+        filters: {
+          payment_source_token_eq: transactionToken
+        },
+        include: ["order"],
+      });
+      if (!paymentSource.length) throw new Error("INVALID_TRANSACTION_TOKEN");
+      const order = paymentSource.at(0)?.order;
       if (!order) throw new Error("INVALID_ORDER");
       if (order.payment_status === PaymentStatus.paid || order.payment_status === PaymentStatus.voided) throw new Error("ORDER_ALREADY_CAPTURED_OR_VOIDED");
-      const paymentSource = order.payment_source;
-      const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
       const infoP2P = await getP2PRequestInformation(transactionToken);
 
       const metadata = {
