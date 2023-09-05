@@ -4,15 +4,17 @@ import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.
 import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
+import uuid from "react-uuid";
 
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = req.body;
+  const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
-    console.info('authorize', req.headers, req.body);
+    console.info('authorize', req.headers, { data }, { included });
     paymentGatewayValidation(req);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
@@ -35,7 +37,15 @@ const handler = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message,
+      "success": false,
+      "data": {
+        "transaction_token": uuid(),
+        "amount_cents": orderRequest.attributes.total_amount_float,
+        "error": {
+          "code": "500",
+          "message": error
+        }
+      }
     });
   }
 };

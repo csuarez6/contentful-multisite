@@ -5,6 +5,7 @@ import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
 import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
+import uuid from "react-uuid";
 
 const handler = async (
   req: NextApiRequest,
@@ -12,18 +13,17 @@ const handler = async (
 ) => {
 
   paymentGatewayValidation(req);
-  const { data }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = req.body;
+  const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
-    console.info('refund', req.headers, req.body);
+    console.info('refund', req.headers, { data }, { included });
     const client = await getCLAdminCLient();
-    const order = await client.orders.retrieve(data.relationships.order.id, DEFAULT_ORDER_PARAMS);
-    console.info('order', order);
+    const orderId = (included.find(item => item.type === "orders")).id;
+    const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
     const paymentSource = order.payment_source;
     const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
-    console.info('transactionToken', transactionToken);
     const paymentInfo = await getP2PRequestInformation(transactionToken);
-    console.info('paymentInfo', paymentInfo);
 
     if (typeof paymentInfo === 'string') {
       throw new Error(paymentInfo);
@@ -42,7 +42,15 @@ const handler = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message,
+      "success": false,
+      "data": {
+        "transaction_token": uuid(),
+        "amount_cents": orderRequest.attributes.total_amount_float,
+        "error": {
+          "code": "500",
+          "message": error
+        }
+      }
     });
   }
 };
