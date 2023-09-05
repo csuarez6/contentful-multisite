@@ -1,6 +1,6 @@
 import CryptoJS, { HmacSHA256 } from 'crypto-js';
 import { NextApiRequest } from "next";
-import { buffer } from 'stream/consumers';
+import getRawBody from 'raw-body';
 
 const paymentGatewayValidation = async (
     req: NextApiRequest,
@@ -10,7 +10,7 @@ const paymentGatewayValidation = async (
     try {
         const signature = req.headers['x-commercelayer-signature'];
         console.info('signature', signature);
-        const rawBody = await buffer(req);
+        const rawBody = await getRawBody(req);
         const hash = HmacSHA256(JSON.stringify(rawBody), process.env.COMMERCELAYER_P2P_SHARED_SECRET);
         const encode = hash.toString(CryptoJS.enc.Base64);
         console.info('encode', encode);
