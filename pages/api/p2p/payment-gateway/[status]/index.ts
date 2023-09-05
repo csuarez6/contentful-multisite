@@ -11,7 +11,8 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = req.body;
+  const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
     console.info('capture/void', req.headers, { data });
@@ -19,8 +20,7 @@ const handler = async (
     const status = req.query.status.toString();
     console.info('finish', status);
     const client = await getCLAdminCLient();
-    const authorization = await client.authorizations.retrieve(data.id);
-    const order = await client.orders.retrieve(authorization.order.id, DEFAULT_ORDER_PARAMS);
+    const order = await client.orders.retrieve(orderRequest.id, DEFAULT_ORDER_PARAMS);
     console.info('order', order);
     const paymentSource = order.payment_source;
     const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
@@ -36,7 +36,7 @@ const handler = async (
       success: true,
       data: {
         transaction_token: paymentInfo.requestId,
-        amount_cents: data.attributes._capture_amount_cents,
+        amount_cents: paymentInfo.request.payment.amount.total,
         metadata: {
           status: status,
           paymentInfo: paymentInfo
@@ -49,7 +49,7 @@ const handler = async (
       "success": false,
       "data": {
         "transaction_token": uuid(),
-        "amount_cents": data.attributes._capture_amount_cents,
+        "amount_cents": orderRequest.attributes.total_amount_float,
         "error": {
           "code": "500",
           "message": error
