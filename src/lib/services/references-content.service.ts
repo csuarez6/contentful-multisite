@@ -137,7 +137,7 @@ export const getBlocksContent = async ({ content, preview = false }) => {
               if (subResponseError) console.error(`Error on entry query 4 (${type}) => `, subResponseError.message, refItem);
               else {                
                 // Si es una vista TABS, obtener un nivel más de referencias. (Esto quiere decir, obtener los bloques y richtext dentro de los bloques de los bloques)
-                if (blockEntryContent?.view?.__typename === CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS) {
+                if ([CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS, CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS].includes(blockEntryContent?.view?.__typename)) {
                   for (const subRef of REFERENCES[subBlockEntryContent.__typename]) {
                     if (subBlockEntryContent?.[subRef]?.items?.length) {
                       for (let j = 0; j < subBlockEntryContent[subRef].items.length; j++) {
