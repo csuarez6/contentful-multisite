@@ -4,7 +4,7 @@ import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
-import { Address } from "@commercelayer/sdk";
+import { Address, Customer } from "@commercelayer/sdk";
 import { PSE_STEPS_TO_VERIFY } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -13,6 +13,7 @@ import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 import Spinner from "@/components/atoms/spinner/Spinner";
+import { Customers } from "@commercelayer/sdk/lib/cjs/api";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -20,7 +21,12 @@ const CheckoutSummary = () => {
   const { isLogged, user } = useContext(AuthContext);
   const { order, flow, getAddresses, onRecaptcha, tokenRecaptcha, isPaymentProcess } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
+  const [shippingAddress, setShippingAddress] = useState<Address>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const isCustomer = (customer: any): customer is Customer => {
+    return customer?.type === Customers.TYPE;
+  };
 
   const fullName = useMemo(() => {
     return (
@@ -28,11 +34,30 @@ const CheckoutSummary = () => {
     )(isLogged ? user : order);
   }, [user, order, isLogged]);
 
+  const clientId = useMemo(() => {
+    return (
+      (resource) => `${resource?.metadata?.documentNumber ?? "*****"}`
+    )(isLogged ? user : order);
+  }, [user, order, isLogged]);
+
+  const clientPhone = useMemo(() => {
+    return (
+      (resource) => `${resource?.metadata?.cellPhone ?? "*****"}`
+    )(isLogged ? user : order);
+  }, [user, order, isLogged]);
+
+  const clientEmail = useMemo(() => {
+    return (
+      (resource) => isCustomer(resource) ? `${resource?.email}` : `${resource?.customer_email ?? "*****"}`
+    )(isLogged ? user : order);
+  }, [user, order, isLogged]);
+
   useEffect(() => {
     if (!order) return;
     (async () => {
-      const { billingAddress } = await getAddresses();
+      const { shippingAddress, billingAddress } = await getAddresses();
       setBillingAddress(billingAddress);
+      setShippingAddress(shippingAddress);
     })();
   }, [getAddresses, order]);
 
@@ -70,25 +95,35 @@ const CheckoutSummary = () => {
       <div className="bg-white rounded-lg">
         <dl className="space-y-5 text-sm">
           <div className="flex justify-between">
-            <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-            <dd className="flex-1 font-bold text-grey-30">{order?.number}</dd>
-          </div>
-          <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
             <dd className="flex-1 font-bold text-grey-30">{fullName}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="flex-1 text-grey-30">Método de pago:</dt>
+            <dt className="flex-1 text-grey-30">Identificación del adquiriente:</dt>
+            <dd className="flex-1 font-bold text-grey-30">{clientId}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="flex-1 text-grey-30">Teléfono del adquiriente:</dt>
+            <dd className="flex-1 font-bold text-grey-30">{clientPhone}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="flex-1 text-grey-30">Correo electrónico del adquiriente:</dt>
+            <dd className="flex-1 font-bold text-grey-30">{clientEmail}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {router.query.paymentType?.toString().toUpperCase()}
+              {shippingAddress?.full_address ?? "-----"}
             </dd>
           </div>
-          {/* <div className="flex justify-between">
-            <dt className="flex-1 text-grey-30">Banco seleccionado</dt>
-            <dd className="flex-1 font-bold text-grey-30">
-              Banco Davivienda
-            </dd>
-          </div> */}
+          {shippingAddress?.notes &&
+            <div className="flex justify-between">
+              <dt className="flex-1 text-grey-30">Destinatario:</dt>
+              <dd className="flex-1 font-bold text-grey-30">
+                {shippingAddress?.notes}
+              </dd>
+            </div>
+          }
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
