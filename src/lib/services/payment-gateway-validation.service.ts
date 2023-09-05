@@ -10,7 +10,7 @@ const paymentGatewayValidation = async (
     try {
         const signature = req.headers['x-commercelayer-signature'];
         console.info('signature', signature);
-        const rawBody = await buffer(req);
+        const rawBody = (await buffer(req)).toString();
         console.info('rawBody', rawBody);
         const hash = HmacSHA256(JSON.stringify(rawBody), process.env.COMMERCELAYER_P2P_SHARED_SECRET);
         console.info('hash', hash);
