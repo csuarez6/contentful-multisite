@@ -45,15 +45,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
         await client.orders.update({
           id: order.id,
-          _approve: true,
-          _capture: true
-        }, DEFAULT_ORDER_PARAMS
-        ).then(async (orderUpdated) => {
-          const captures = orderUpdated.captures?.at(0);
+          _approve: true
+        }).then(async () => {
+          await client.orders.update({
+            id: order.id,
+            _capture: true
+          }, DEFAULT_ORDER_PARAMS
+          ).then(async (orderUpdated) => {
+            const captures = orderUpdated.captures.at(0);
+            console.info(captures);
 
-          await client.captures.update({
-            id: captures?.id,
-            metadata: metadata
+            await client.captures.update({
+              id: captures.id,
+              metadata: {
+                id: 123,
+                prueba: 'test'
+              }
+            });
           });
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
