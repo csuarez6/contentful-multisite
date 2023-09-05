@@ -21,6 +21,7 @@ import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
 import 'react-circular-progressbar/dist/styles.css';
+// import { throttle } from "lodash";
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   const { mainNavCollection, secondaryNavCollection } = props;
@@ -121,8 +122,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   } = props;
   let { menuNavkey = null } = props;
   const headerRef = useRef(null);
-  const prevScrollPosition = useRef(0);
-  const [isHidden, setIsHidden] = useState(false);
+  // const prevScrollPosition = useRef(0);
+  const isOpenTopMenu = useRef(false);
+  // const [isHidden, setIsHidden] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
@@ -133,19 +135,20 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [numProducts, setNumProducts] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
-  useEffect(() => {
-    const checkScroll = () => {
+  // TODO: Work on this Hook for the evolutionary on the header when doing Scroll
+  /* useEffect(() => {
+    const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
       setIsHidden(currentScrollPosition > prevScrollPosition.current && currentScrollPosition > headerRef?.current?.offsetHeight);
       prevScrollPosition.current = currentScrollPosition;
     };
-
-    window.addEventListener('scroll', checkScroll);
+    const throttledScroll = throttle(handleScroll, 120);
+    window.addEventListener('scroll', throttledScroll);
 
     return () => {
-      window.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('scroll', throttledScroll);
     };
-  }, []);
+  }, []); */
 
   useEffect(() => {
     setNumProducts(
@@ -230,8 +233,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       ref={headerRef}
       id="header"
       className={classNames(
-        "sticky inset-x-0 top-0 z-50 bg-white shadow transition-transform duration-500",
-        isHidden ? "-translate-y-full" : "translate-y-0"
+        "z-50 bg-white shadow transition-transform duration-500",
+        // isHidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
       {/* Top */}
@@ -345,8 +348,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         leaveTo="max-h-0"
       >
         <div
-          onMouseOver={() => setIsOpenMenu(true)}
-          onMouseOut={() => setIsOpenMenu(false)}
+          onMouseOver={() => {
+            isOpenTopMenu.current = true;
+            setIsOpenMenu(true);
+          }}
+          onMouseOut={() => {
+            isOpenTopMenu.current = false;
+            setIsOpenMenu(false);
+          }}
         >
           <TopMenu
             secondaryNavCollection={secondaryNavCollectionMenu}
