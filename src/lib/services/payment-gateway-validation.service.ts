@@ -7,11 +7,10 @@ const paymentGatewayValidation = (
     if (req.method !== "POST") throw new Error("NOT_FOUND");
 
     try {
-        console.info('paymentGatewayValidation', req.headers["x-commercelayer-signature"], process.env.COMMERCELAYER_P2P_SHARED_SECRET);
-        const signature = req.headers["x-commercelayer-signature"];
-        const rawBody = JSON.stringify(req.body);
-        const hash = HmacSHA256(rawBody, process.env.COMMERCELAYER_P2P_SHARED_SECRET);
+        const signature = req.headers['x-commercelayer-signature'];
+        const hash = HmacSHA256(JSON.stringify(req.body), process.env.SHARED_SECRET);
         const encode = hash.toString(CryptoJS.enc.Base64);
+        console.info(signature, encode);
 
         if (signature !== encode) throw new Error("INVALID_SIGNATURE");
     } catch (error) {

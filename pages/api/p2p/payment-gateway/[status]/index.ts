@@ -15,18 +15,14 @@ const handler = async (
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
-    console.info('capture/void', req.headers, { data });
+    console.info('capture/void', req.headers/* , { data }, { included } */);
     paymentGatewayValidation(req);
     const status = req.query.status.toString();
-    console.info('finish', status);
     const client = await getCLAdminCLient();
     const order = await client.orders.retrieve(orderRequest.id, DEFAULT_ORDER_PARAMS);
-    console.info('order', order);
     const paymentSource = order.payment_source;
     const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
-    console.info('transactionToken', transactionToken);
     const paymentInfo = await getP2PRequestInformation(transactionToken);
-    console.info('paymentInfo', paymentInfo);
 
     if (typeof paymentInfo === 'string') {
       throw new Error(paymentInfo);

@@ -17,17 +17,13 @@ const handler = async (
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
-    console.info('refund', req.headers, { data });
-    console.info('included', { included });
+    console.info('refund', req.headers, { data }, { included });
     const client = await getCLAdminCLient();
     const orderId = (included.find(item => item.type === "orders")).id;
     const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
-    console.info('order', order);
     const paymentSource = order.payment_source;
     const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
-    console.info('transactionToken', transactionToken);
     const paymentInfo = await getP2PRequestInformation(transactionToken);
-    console.info('paymentInfo', paymentInfo);
 
     if (typeof paymentInfo === 'string') {
       throw new Error(paymentInfo);

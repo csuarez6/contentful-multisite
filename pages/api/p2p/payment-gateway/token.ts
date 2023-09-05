@@ -10,8 +10,7 @@ const handler = async (
   const { data, included }: IExternalPaymentGWRequest = req.body;
 
   try {
-    console.info('token', req.headers, { data });
-    console.info('included', { included });
+    console.info('token', req.headers, { data }, { included });
     paymentGatewayValidation(req);
 
     res.json({
