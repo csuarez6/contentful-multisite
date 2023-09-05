@@ -657,7 +657,7 @@ export const getNameQuantityOrderItems = (order: Order): string => {
   try {
     let itemNames = '';
     order.line_items?.forEach(item => {
-      if (item.item_type === 'skus') {
+      if (item.item_type === 'skus' || item.item_type === 'adjustments') {
         if (itemNames !== '') {
           itemNames += ', ';
         }
