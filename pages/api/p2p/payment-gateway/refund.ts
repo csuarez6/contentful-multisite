@@ -7,13 +7,19 @@ import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-lay
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import uuid from "react-uuid";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
 
   paymentGatewayValidation(req);
-  const { data, included }: IExternalPaymentGWRequest = req.body;
+  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
