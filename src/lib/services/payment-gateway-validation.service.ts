@@ -8,9 +8,10 @@ const paymentGatewayValidation = (
 
     try {
         const signature = req.headers['x-commercelayer-signature'];
-        const hash = HmacSHA256(JSON.stringify(req.body), process.env.SHARED_SECRET);
+        console.info('signature', signature);
+        const hash = HmacSHA256(JSON.stringify(req.body), process.env.COMMERCELAYER_P2P_SHARED_SECRET);
         const encode = hash.toString(CryptoJS.enc.Base64);
-        console.info(signature, encode);
+        console.info('encode', encode);
 
         if (signature !== encode) throw new Error("INVALID_SIGNATURE");
     } catch (error) {

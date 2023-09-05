@@ -14,7 +14,7 @@ const handler = async (
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
-    console.info('authorize', req.headers/* , { data }, { included } */);
+    console.info('authorize', req.headers, { data }, { included });
     paymentGatewayValidation(req);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
