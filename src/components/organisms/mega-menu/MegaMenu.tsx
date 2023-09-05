@@ -165,7 +165,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       onBlur={() => setIsOpenMenu(false)}
       onClick={handlerClick}
       className={classNames(
-        "group/submenu min-h-[60px] px-3 first:pl-0 -my-2 flex items-center",
+        "group group/submenu min-h-[60px] px-3 first:pl-0 -my-2 flex items-center",
         isOpenMenu && "isOpen",
         currentMenu === item.name && "underline"
       )}
@@ -193,6 +193,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
           content={item}
           className={classNames(
             "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
+            "relative after:absolute after:-right-3 after:w-px after:h-full after:bg-blue-dark group-last:after:!w-0",
             isOpenMenu && "border-blue-dark"
           )}
         >
@@ -203,6 +204,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
         <div className={
           classNames(
             "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none cursor-pointer",
+            "relative after:absolute after:-right-3 after:w-px after:h-full after:bg-blue-dark group-last:after:!w-0",
             isOpenMenu && "border-blue-dark"
           )
         }>
