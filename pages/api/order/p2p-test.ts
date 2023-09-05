@@ -118,19 +118,23 @@ const handler = async (
         } else if (type === 'approved') {
             await client.orders.update({
                 id: order.id,
-                _approve: true,
-                _capture: true
-            }, DEFAULT_ORDER_PARAMS
-            ).then(async (orderUpdated) => {
-                const captures = orderUpdated.captures.at(0);
-                console.info(captures);
+                _approve: true
+            }).then(async () => {
+                await client.orders.update({
+                    id: order.id,
+                    _capture: true
+                }, DEFAULT_ORDER_PARAMS
+                ).then(async (orderUpdated) => {
+                    const captures = orderUpdated.captures.at(0);
+                    console.info(captures);
 
-                await client.captures.update({
-                    id: captures.id,
-                    metadata: {
-                        id: 123,
-                        prueba: 'test'
-                    }
+                    await client.captures.update({
+                        id: captures.id,
+                        metadata: {
+                            id: 123,
+                            prueba: 'test'
+                        }
+                    });
                 });
             });
             return res.status(200).json({ status: 200, data: order.transactions });
