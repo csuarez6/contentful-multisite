@@ -12,7 +12,7 @@ const paymentGatewayValidation = async (
         console.info('signature', signature);
         const rawBody = (await buffer(req)).toString();
         console.info('rawBody', rawBody);
-        const hash = HmacSHA256(JSON.stringify(rawBody), process.env.COMMERCELAYER_P2P_SHARED_SECRET);
+        const hash = HmacSHA256(rawBody, process.env.COMMERCELAYER_P2P_SHARED_SECRET);
         console.info('hash', hash);
         const encode = hash.toString(CryptoJS.enc.Base64);
         console.info('encode', encode);
