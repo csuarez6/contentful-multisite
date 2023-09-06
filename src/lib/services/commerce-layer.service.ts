@@ -658,9 +658,6 @@ export const getNameQuantityOrderItems = (order: Order): string => {
     let itemNames = '';
     order.line_items?.forEach(item => {
       if (item.item_type === 'skus' || item.item_type === 'adjustments') {
-        if (itemNames !== '') {
-          itemNames += ', ';
-        }
         itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
       }
     });
