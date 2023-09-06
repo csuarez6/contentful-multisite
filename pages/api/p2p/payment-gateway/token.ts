@@ -4,17 +4,21 @@ import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.
 import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const rawBody = (await buffer(req)).toString();
-  await paymentGatewayValidation(req, rawBody);
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
-
   try {
+    const rawBody = (await buffer(req)).toString();
+    await paymentGatewayValidation(req, rawBody);
+    const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
     console.info('token', req.headers, { data }, { included });
-    paymentGatewayValidation(req, rawBody);
 
     res.json({
       success: true,

@@ -8,18 +8,23 @@ import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 import uuid from "react-uuid";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
   const rawBody = (await buffer(req)).toString();
-  await paymentGatewayValidation(req, rawBody);
   const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
     console.info('capture/void', req.headers, { data }, { included });
-    paymentGatewayValidation(req, rawBody);
+    await paymentGatewayValidation(req, rawBody);
     const status = req.query.status.toString();
     const client = await getCLAdminCLient();
     const order = await client.orders.retrieve(orderRequest.id, DEFAULT_ORDER_PARAMS);

@@ -18,7 +18,6 @@ const handler = async (
   res: NextApiResponse<any>
 ) => {
   const rawBody = (await buffer(req)).toString();
-  await paymentGatewayValidation(req, rawBody);
   const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
   const orderRequest = (included.find(item => item.type === "orders"));
 
