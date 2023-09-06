@@ -15,6 +15,7 @@ interface IWithLoadingData {
 
 const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   principalSearch,
+  anchor,
   products,
   facets,
   onFacetsChange = null,
@@ -101,14 +102,16 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
           ""
         )}
       </div>
-      {principalSearch ? generalSearchGrill() : (() => {
-        switch (type) {
-          case 'AuxRate':
-            return rateGrill();
-          default:
-            return productGrill();
-        }
-      })()}
+      <div className="w-full" data-anchor={anchor}>
+        {principalSearch ? generalSearchGrill() : (() => {
+          switch (type) {
+            case 'AuxRate':
+              return rateGrill();
+            default:
+              return productGrill();
+          }
+        })()}
+      </div>
     </section>
   );
 };

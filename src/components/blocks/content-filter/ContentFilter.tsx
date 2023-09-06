@@ -24,7 +24,12 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   const updatePage = (value) => {
     setPage(value);
-    window.scrollTo(0, 0);
+    
+    const $header = document.querySelector("header#header");
+    const $anchor = document.querySelector(`[data-anchor="${blockId}"]`);
+    const $coord = $anchor.getBoundingClientRect();
+    
+    window.scrollBy(0, $coord.top - $header.clientHeight);
   };
 
   const principalSearch = sys?.id === '75w6bsU9MWCoxDtT7HXyGb';
@@ -134,6 +139,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
       )}
       {facetsContent && (
         <ProductFilterBlock
+          anchor={blockId}
           products={{ listedContentsCollection: data }}
           facets={facetsContent}
           principalSearch={principalSearch}
