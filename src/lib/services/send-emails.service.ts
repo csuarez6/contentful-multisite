@@ -4,7 +4,6 @@ import { sendEmail } from "./mailer.service";
 import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
 import { formatDate } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
-import Icon from "@/components/atoms/icon/Icon";
 
 const customerSection = (data: IOrderExtended) => {
   const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
