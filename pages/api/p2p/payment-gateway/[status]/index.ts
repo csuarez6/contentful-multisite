@@ -7,17 +7,11 @@ import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import type { NextApiRequest, NextApiResponse } from "next";
 import uuid from "react-uuid";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const { data, included }: IExternalPaymentGWRequest = req.body;
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {

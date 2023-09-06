@@ -6,17 +6,11 @@ import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
 import uuid from "react-uuid";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const { data, included }: IExternalPaymentGWRequest = req.body;
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {

@@ -3,17 +3,11 @@ import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const { data, included }: IExternalPaymentGWRequest = req.body;
 
   try {
     console.info('token', req.headers, { data }, { included });

@@ -196,30 +196,30 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
 };
 
 const bodySection = (status: string, data: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string) => {
-  console.info(status);
   const orderStatus = () => {
     switch (status) {
       case "cancelled":
         return {
           text: "¡Tu orden ha sido rechazada!",
           leftIcon: "icon-cart-rejected",
-          rightIcon: "icon-rejected"
+          rightIcon: "icon-order-rejected"
         };
       case "approved":
       case "fulfilled":
         return {
           text: "¡Tu orden ha sido aprobada!",
-          leftIcon: "icon-cart",
-          rightIcon: "icon-check"
+          leftIcon: "icon-cart-ok",
+          rightIcon: "icon-order-ok"
         };
       default:
         return {
           text: "¡Tu orden está pendiente!",
           leftIcon: "icon-cart-pending",
-          rightIcon: "icon-pending"
+          rightIcon: "icon-order-pending"
         };
     }
   };
+
   const body = `
     <tr>
       <td class="sm-px-0" style="width: 760px; max-width: 100%; padding: 40px 16px">
@@ -229,11 +229,11 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
               <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/${orderStatus().leftIcon}.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
+                    <img class="sm-w-5" src="/images/${orderStatus().leftIcon}.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
                     <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
                       ${orderStatus().text}
                     </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/${orderStatus().rightIcon}.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
+                    <img class="sm-w-6" src="/images/${orderStatus().rightIcon}.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
                   </td>
                 </tr>
                  ${customerSection(data)}

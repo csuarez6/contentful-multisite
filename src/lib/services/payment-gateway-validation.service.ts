@@ -2,6 +2,12 @@ import CryptoJS, { HmacSHA256 } from 'crypto-js';
 import { NextApiRequest } from "next";
 import { buffer } from 'micro';
 
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
 const paymentGatewayValidation = async (
     req: NextApiRequest,
 ) => {
