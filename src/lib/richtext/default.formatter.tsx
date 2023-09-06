@@ -84,8 +84,6 @@ const defaultFormatOptions: Options = {
       ) : null;
     },
     [INLINES.HYPERLINK]: (node, children) => {
-      console.log('node', node);
-      console.log('children', children);
       let isButton = false;
       for (const ct of node.content) {
         if (!ct["marks"] || ct["marks"] == undefined || ct["marks"] == null) {
@@ -127,7 +125,6 @@ const defaultFormatOptions: Options = {
       );
     },
     [INLINES.ASSET_HYPERLINK]: (node, children) => {
-      // console.log('node', node);
       let isButton = false;
       for (const ct of node.content) {
         if (!ct["marks"] || ct["marks"] == undefined || ct["marks"] == null) {
