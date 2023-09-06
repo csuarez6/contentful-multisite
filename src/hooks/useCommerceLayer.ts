@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
 import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "captures", "voids", "payment_method"],
   fields: {
@@ -612,17 +611,6 @@ export const useCommerceLayer = () => {
   }, [orderId]);
 
   const setDefaultShippingMethod = useCallback(async (hasShipment) => {
-    // ************** CODE PREV
-    // const shipmentId = order.shipments.at(0)?.id;
-    // const client = await generateClient();
-    // await client.shipments.update({
-    //   id: shipmentId,
-    //   shipping_method: {
-    //     id: DEFAULT_SHIPPING_METHOD_ID,
-    //     type: "shipping_methods",
-    //   },
-    // }).catch(err => console.error('error set default shipping method', err.errors));
-    // ************** END CODE PREV
     const client = await generateClient();
     const shipments = order.shipments;
     const allies = [];
@@ -643,11 +631,11 @@ export const useCommerceLayer = () => {
     shipments.forEach(async (el, index) => {
       const availableMethods = el.available_shipping_methods;
       const methodID = availableMethods.find((item) => item.name === allies[index].name);
-      const methodIdCheck = (methodID) ? methodID.id : DEFAULT_SHIPPING_METHOD_ID;
+      const methodIdCheck = (methodID) ? methodID.id : process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID;
       await client.shipments.update({
         id: el.id,
         shipping_method: {
-          id: (hasShipment) ? methodIdCheck : DEFAULT_SHIPPING_METHOD_ID,
+          id: (hasShipment) ? methodIdCheck : process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID,
           type: "shipping_methods",
         },
       }).catch(err => console.error('error set default shipping method', err.errors));

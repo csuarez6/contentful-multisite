@@ -1,4 +1,3 @@
-import { COMMERLAYER_MARKET_IDS } from "@/constants/commerceLayer.constants";
 import { LineItem } from "@commercelayer/sdk";
 
 export const classNames = (...classes: string[]) => {
@@ -213,11 +212,11 @@ export const scrollContent = (idContainer: string) => {
 };
 
 export const isGasAppliance = (marketId: string) => {
-  return marketId && marketId === COMMERLAYER_MARKET_IDS.GASODOMESTICOS;
+  return marketId && marketId === process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID;
 };
 
 export const isVantilisto = (marketId: string) => {
-  return marketId && marketId === COMMERLAYER_MARKET_IDS.VANTILISTO;
+  return marketId && marketId === process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID;
 };
 
 export const isAvailableGasAppliance = (marketId: string, priceGasodomestico: string, productsQuantityGasodomestico: string) => {

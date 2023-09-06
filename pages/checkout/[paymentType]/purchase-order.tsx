@@ -15,7 +15,6 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
 
 const orderStatus = (value: string) => {
     switch (value) {
@@ -95,7 +94,7 @@ const CheckoutPurchase = () => {
         const shipmentItems = [];
         shipments.forEach(async (el) => {
             const availableMethods = el.available_shipping_methods;
-            const methods = availableMethods.map((item) => { if (item.id != DEFAULT_SHIPPING_METHOD_ID) return item.name; });
+            const methods = availableMethods.map((item) => { if (item.id != process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
             shipmentItems.push(methods);
         });
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];

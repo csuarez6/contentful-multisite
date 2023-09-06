@@ -65,9 +65,9 @@ export const getIntegrationAppToken = async (): Promise<string> => {
       accessToken,
       data: { expires_in },
     } = await getIntegrationToken({
-      endpoint: process.env.COMMERCELAYER_ENDPOINT,
-      clientId: process.env.COMMERCELAYER_CLIENT_ID,
-      clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
+      endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+      clientId: process.env.COMMERCELAYER_INTEGRATION_CLIENT_ID,
+      clientSecret: process.env.COMMERCELAYER_INTEGRATION_CLIENT_SECRET,
     });
 
     CACHE_TOKENS.APP_TOKEN = accessToken;
@@ -87,7 +87,7 @@ export const getMerchantToken = async (cache = true) => {
     if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN && cache)
       return CACHE_TOKENS.MERCHANT_TOKEN;
 
-    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
+    let commercelayerScope = `market:${process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID}`;
     if (commercelayerScope.indexOf("[") === 0)
       commercelayerScope = JSON.parse(commercelayerScope);
 
@@ -119,10 +119,8 @@ export const getMerchantToken = async (cache = true) => {
 /* For specific user (10 min)  */
 export const getCustomerTokenCl = async ({ email, password }) => {
   try {
-    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf("[") === 0) {
-      commercelayerScope = JSON.parse(commercelayerScope);
-    }
+    let commercelayerScope = `market:${process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID}`;
+    if (commercelayerScope.indexOf("[") === 0) commercelayerScope = JSON.parse(commercelayerScope);
 
     const token = await getCustomerToken(
       {
