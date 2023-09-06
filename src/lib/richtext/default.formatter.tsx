@@ -84,6 +84,50 @@ const defaultFormatOptions: Options = {
       ) : null;
     },
     [INLINES.HYPERLINK]: (node, children) => {
+      console.log('node', node);
+      console.log('children', children);
+      let isButton = false;
+      for (const ct of node.content) {
+        if (!ct["marks"] || ct["marks"] == undefined || ct["marks"] == null) {
+          continue;
+        }
+        const marks = ct["marks"];
+
+        isButton = marks.some((m) => m.type == "italic");
+        if (isButton) {
+          break;
+        }
+      }
+
+      return (
+        <a
+          className={`text-violet-500 underline ${
+            isButton ? "inline-cta-button" : ""
+          }`}
+          href={node.data.uri}
+          target="_blank"
+          rel="noreferrer"
+        >
+          children
+        </a>
+      );
+    },
+    [BLOCKS.EMBEDDED_ENTRY]: (node) => {
+      return <div className="mb-4" key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
+    },
+    [INLINES.EMBEDDED_ENTRY]: (node) => {
+      return (
+        <CustomLink
+          content={node.data.target}
+          linkClassName="inline-block mr-4 mb-4"
+          className="flex w-fit button button-primary text-sm sm:text-base"
+        >
+          {node.data.target.promoTitle ?? node.data.target.name}
+        </CustomLink>
+      );
+    },
+    [INLINES.ASSET_HYPERLINK]: (node, children) => {
+      // console.log('node', node);
       let isButton = false;
       for (const ct of node.content) {
         if (!ct["marks"] || ct["marks"] == undefined || ct["marks"] == null) {
@@ -108,20 +152,6 @@ const defaultFormatOptions: Options = {
         >
           {children}
         </a>
-      );
-    },
-    [BLOCKS.EMBEDDED_ENTRY]: (node) => {
-      return <div className="mb-4" key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
-    },
-    [INLINES.EMBEDDED_ENTRY]: (node) => {
-      return (
-        <CustomLink
-          content={node.data.target}
-          linkClassName="inline-block mr-4 mb-4"
-          className="flex w-fit button button-primary text-sm sm:text-base"
-        >
-          {node.data.target.promoTitle ?? node.data.target.name}
-        </CustomLink>
       );
     },
   },
