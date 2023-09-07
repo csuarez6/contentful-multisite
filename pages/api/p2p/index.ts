@@ -51,16 +51,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       },
     });
 
+    console.info('external_payment ok');
+
     await client.orders.update({
       id: order.id,
       _place: true
     }, DEFAULT_ORDER_PARAMS
     ).then(async (orderUpdated) => {
+      console.info('order updated');
       const authorization = orderUpdated.authorizations?.at(0);
       await client.authorizations.update({
         id: authorization?.id,
         metadata: response
       });
+      console.info('authorization updated');
+    }).catch((err) => {
+      console.error('error updating authorization', err);
+      throw new Error(err);
+      
     });
 
     res.json({
