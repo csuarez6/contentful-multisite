@@ -36,7 +36,7 @@ export interface IContextCheckout {
   updateCustomerAddress: (token: string, id: string, address: any) => Promise<void>;
   placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
-  setPaymentMethod: (paymentMethodId: string) => Promise<void>;
+  setPaymentMethod: (paymentMethodId?: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
   setDefaultShippingMethod: (hasShipment: boolean) => Promise<void>;
   getShippingMethods: () => Promise<ListResponse<ShippingMethod>>;

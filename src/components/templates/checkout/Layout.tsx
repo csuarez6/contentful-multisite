@@ -40,8 +40,6 @@ const getStepsLine = (paymentType) => {
   ];
 };
 
-const DEFAULT_PAYMENT_METHOD = "p2p";
-
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push, query } = useRouter();
   const stepsList = getStepsLine(query.paymentType);
@@ -155,12 +153,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     setIsPaying(true);
     try {
       await validateExternal(tokenRecaptcha);
-      const paymentMethodId = order.available_payment_methods.find(
-        (i) => i.reference === DEFAULT_PAYMENT_METHOD
-      )?.id;
-
       await setDefaultShippingMethod(hasShipment);
-      await setPaymentMethod(paymentMethodId);
+      await setPaymentMethod();
       await handlePayment();
     } catch (error) {
       console.error(error);

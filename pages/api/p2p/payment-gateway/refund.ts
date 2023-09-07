@@ -49,13 +49,13 @@ const handler = async (
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      "success": false,
-      "data": {
-        "transaction_token": uuid(),
-        "amount_cents": orderRequest.attributes.total_amount_float,
-        "error": {
-          "code": "500",
-          "message": error
+      success: false,
+      data: {
+        transaction_token: uuid(),
+        amount_cents: orderRequest.attributes.total_amount_float,
+        error: {
+          code: 500,
+          message: error
         }
       }
     });

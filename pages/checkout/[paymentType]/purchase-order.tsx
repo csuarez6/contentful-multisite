@@ -94,7 +94,7 @@ const CheckoutPurchase = () => {
         const shipmentItems = [];
         shipments.forEach(async (el) => {
             const availableMethods = el.available_shipping_methods;
-            const methods = availableMethods.map((item) => { if (item.id != process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
+            const methods = availableMethods.map((item) => { if (item.id != process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
             shipmentItems.push(methods);
         });
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
