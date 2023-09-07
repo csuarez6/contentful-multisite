@@ -201,21 +201,21 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
       case "cancelled":
         return {
           text: "¡Tu orden ha sido rechazada!",
-          leftIcon: "https://images.ctfassets.net/3brzg7q3bvg1/2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png",
-          rightIcon: "https://images.ctfassets.net/3brzg7q3bvg1/2qZ9m6E3GT5Cskdau8A5zV/53aa2df01146c7fa295c8c5c38502ad0/icon-cancel.svg"
+          leftIcon: "2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png",
+          rightIcon: "2qZ9m6E3GT5Cskdau8A5zV/53aa2df01146c7fa295c8c5c38502ad0/icon-cancel.svg"
         };
       case "approved":
       case "fulfilled":
         return {
           text: "¡Tu orden ha sido aprobada!",
-          leftIcon: "https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png",
-          rightIcon: "https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png"
+          leftIcon: "2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png",
+          rightIcon: "1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png"
         };
       default:
         return {
           text: "¡Tu orden está pendiente!",
-          leftIcon: "https://images.ctfassets.net/3brzg7q3bvg1/2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png",
-          rightIcon: "https://images.ctfassets.net/3brzg7q3bvg1/3cqEZ5d23rviVAf7UP0Ppc/6398b72926e0c1adf87dccdd9d75a156/icon-pending.svg"
+          leftIcon: "2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png",
+          rightIcon: "3cqEZ5d23rviVAf7UP0Ppc/6398b72926e0c1adf87dccdd9d75a156/icon-pending.svg"
         };
     }
   };
@@ -229,11 +229,11 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
               <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="${orderStatus().leftIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
+                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().leftIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
                     <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
                       ${orderStatus().text}
                     </h2>
-                    <img class="sm-w-6" src="${orderStatus().rightIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
+                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().rightIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
                   </td>
                 </tr>
                  ${customerSection(data)}

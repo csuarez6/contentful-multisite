@@ -13,6 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const orderId = data.id?.toString();
 
     try {
+        console.info('p2p payment_done', req.query);
+
         const client = await getCLAdminCLient();
         const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
         if (!order) throw new Error("INVALID_ORDER");
@@ -40,11 +42,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         id: order.id,
                         _approve: true
                     }).then(async () => {
+                        console.info('p2p payment_done approved');
                         await client.orders.update({
                             id: order.id,
                             _capture: true
                         }, DEFAULT_ORDER_PARAMS
                         ).then(async (orderUpdated) => {
+                            console.info('p2p payment_done captured', orderUpdated);
                             const captures = orderUpdated.captures.at(0);
                             console.info(captures);
 
@@ -60,6 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         _cancel: true,
                     }, DEFAULT_ORDER_PARAMS
                     ).then(async (orderUpdated) => {
+                        console.info('p2p payment_done voids', orderUpdated);
                         const voids = orderUpdated.voids?.at(0);
                         await client.voids.update({
                             id: voids?.id,
