@@ -571,13 +571,14 @@ export const useCommerceLayer = () => {
   }, [orderId]);
 
   const setPaymentMethod = useCallback(
-    async (paymentMethodId: string) => {
+    async (paymentMethodId?: string) => {
       const client = await generateClient();
+      const selectedPaymentMethodId = paymentMethodId ?? process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_PAYMENT_METHOD_ID;
       await client.orders.update(
         {
           id: orderId,
           payment_method: {
-            id: paymentMethodId,
+            id: selectedPaymentMethodId,
             type: "payment_methods",
           },
         },
@@ -631,11 +632,11 @@ export const useCommerceLayer = () => {
     shipments.forEach(async (el, index) => {
       const availableMethods = el.available_shipping_methods;
       const methodID = availableMethods.find((item) => item.name === allies[index].name);
-      const methodIdCheck = (methodID) ? methodID.id : process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID;
+      const methodIdCheck = (methodID) ? methodID.id : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID;
       await client.shipments.update({
         id: el.id,
         shipping_method: {
-          id: (hasShipment) ? methodIdCheck : process.env.COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID,
+          id: (hasShipment) ? methodIdCheck : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID,
           type: "shipping_methods",
         },
       }).catch(err => console.error('error set default shipping method', err.errors));
