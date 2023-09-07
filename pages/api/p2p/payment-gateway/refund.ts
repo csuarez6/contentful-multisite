@@ -6,6 +6,7 @@ import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend
 import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import uuid from "react-uuid";
+import { buffer } from "micro";
 
 export const config = {
   api: {
@@ -17,13 +18,13 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-
-  paymentGatewayValidation(req);
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const rawBody = (await buffer(req)).toString();
+  const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
     console.info('refund', req.headers, { data }, { included });
+    await paymentGatewayValidation(req, rawBody);
     const client = await getCLAdminCLient();
     const orderId = (included.find(item => item.type === "orders")).id;
     const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);

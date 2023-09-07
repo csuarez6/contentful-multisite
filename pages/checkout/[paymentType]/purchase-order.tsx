@@ -135,10 +135,18 @@ const CheckoutPurchase = () => {
                             <dd className="flex-1 font-bold text-grey-30">{fullName ?? "-----"}</dd>
                         </div>
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Cedula de ciudadania:</dt>
+                            <dt className="flex-1 text-grey-30">Identificación del adquiriente:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {orderInfoById?.metadata?.documentNumber}
                             </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Teléfono del adquiriente:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.metadata?.cellPhone}</dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Correo electrónico del adquiriente:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.customer_email}</dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de pago:</dt>
@@ -158,16 +166,24 @@ const CheckoutPurchase = () => {
                                 {billingAddress?.line_1} {billingAddress?.city ?? "-----"}
                             </dd>
                         </div>
-                        <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress?.full_address ?? "-----"}
-                            </dd>
-                        </div>
+                        {orderInfoById.shipping_address?.notes &&
+                            <div className="flex justify-between">
+                                <dt className="flex-1 text-grey-30">Destinatario:</dt>
+                                <dd className="flex-1 font-bold text-grey-30">
+                                    {orderInfoById.shipping_address?.notes}
+                                </dd>
+                            </div>
+                        }
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {shipments() ?? "-----"}
+                            </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {billingAddress?.full_address ?? "-----"}
                             </dd>
                         </div>
                     </dl>

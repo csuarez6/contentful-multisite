@@ -4,6 +4,7 @@ import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend
 import { getCLAdminCLient, isExternalPayment } from "@/lib/services/commerce-layer.service";
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
 import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
+import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 import uuid from "react-uuid";
 
@@ -17,12 +18,13 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const rawBody = (await buffer(req)).toString();
+  const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
     console.info('capture/void', req.headers, { data }, { included });
-    paymentGatewayValidation(req);
+    await paymentGatewayValidation(req, rawBody);
     const status = req.query.status.toString();
     const client = await getCLAdminCLient();
     const order = await client.orders.retrieve(orderRequest.id, DEFAULT_ORDER_PARAMS);

@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
 import paymentGatewayValidation from "@/lib/services/payment-gateway-validation.service";
+import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
@@ -13,11 +14,11 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
-
   try {
+    const rawBody = (await buffer(req)).toString();
+    await paymentGatewayValidation(req, rawBody);
+    const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
     console.info('token', req.headers, { data }, { included });
-    paymentGatewayValidation(req);
 
     res.json({
       success: true,

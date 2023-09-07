@@ -5,6 +5,7 @@ import { getP2PRequestInformation } from "@/lib/services/place-to-pay.service";
 import { IExternalPaymentGWRequest } from "@/lib/interfaces/commercelayer-extend.interface";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
 import uuid from "react-uuid";
+import { buffer } from "micro";
 
 export const config = {
   api: {
@@ -16,12 +17,13 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  const { data, included }: IExternalPaymentGWRequest = JSON.parse(req.body.toString());
+  const rawBody = (await buffer(req)).toString();
+  const { data, included }: IExternalPaymentGWRequest = JSON.parse(rawBody);
   const orderRequest = (included.find(item => item.type === "orders"));
 
   try {
     console.info('authorize', req.headers, { data }, { included });
-    paymentGatewayValidation(req);
+    await paymentGatewayValidation(req, rawBody);
     const client = await getCLAdminCLient();
     const externalPayment = await client.external_payments.retrieve(data.id);
     const paymentInfo = await getP2PRequestInformation(externalPayment.payment_source_token);

@@ -50,10 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
                             await client.captures.update({
                                 id: captures.id,
-                                metadata: {
-                                    id: 123,
-                                    prueba: 'test'
-                                }
+                                metadata: metadata
                             });
                         });
                     });
