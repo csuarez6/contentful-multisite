@@ -283,7 +283,7 @@ export const useCommerceLayer = () => {
 
       if (quantity > 0) {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
-        
+
         if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
           console.error("error in sku line item", response.errors);
           return { status: parseInt(response.errors[0].status), data: response.errors[0].title };

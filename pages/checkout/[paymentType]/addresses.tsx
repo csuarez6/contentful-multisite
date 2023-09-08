@@ -141,7 +141,7 @@ const CheckoutAddress = () => {
     getValues,
     clearErrors,
     formState: { errors },
-    
+
     reset,
   } = useForm<IAddresses>({
     resolver: yupResolver(schema),
@@ -251,34 +251,27 @@ const CheckoutAddress = () => {
   }, [order]);
 
   useEffect(() => {
-   
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (status === "authenticated" && session) {
-      // setConfig({
-      //   accessToken: session?.user["accessToken"],
-      //   endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
-      // });
       (async () => {
-        // if (attempts2.current != 0) {
-          const addresses: Address = await getCustomerAddresses(
-            session?.user["accessToken"]
-          );
-          const addressesForm = toAddressForm(addresses);
-          if (addressesForm) {
-            setValue("shippingAddress.stateCode", addressesForm.stateCode);
-            setValue("shippingAddress.cityCode", addressesForm.cityCode);
-            setValue("shippingAddress.street", addressesForm.street);
-            setValue("shippingAddress.address", addressesForm.address);
-            setValue("shippingAddress.residence", addressesForm.residence);
-            setValue("shippingAddress.receiver", addressesForm.receiver);
-          }
-        // }
-        // attempts2.current = 1;
+        const addresses: Address = await getCustomerAddresses(
+          session?.user["accessToken"]
+        );
+        const addressesForm = toAddressForm(addresses);
+        if (addressesForm) {
+          setValue("shippingAddress.stateCode", addressesForm.stateCode);
+          setValue("shippingAddress.cityCode", addressesForm.cityCode);
+          setValue("shippingAddress.street", addressesForm.street);
+          setValue("shippingAddress.address", addressesForm.address);
+          setValue("shippingAddress.residence", addressesForm.residence);
+          setValue("shippingAddress.receiver", addressesForm.receiver);
+        }
       })();
-    }else {
+    } else {
       if (order) {
         (async () => {
           const { shippingAddress, billingAddress } = await getAddresses();
@@ -319,7 +312,7 @@ const CheckoutAddress = () => {
             );
           }
         })();
-      } 
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, status, session]);
@@ -363,7 +356,7 @@ const CheckoutAddress = () => {
 
       await addAddresses(
         clShippingAddr,
-        clBillingAddr ?? undefined
+        (!isSameAsBillingAddress && clBillingAddr) ? clBillingAddr : undefined,
       );
 
       await handleNext();
