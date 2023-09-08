@@ -53,7 +53,7 @@ const CheckoutPurchase = () => {
 
     const fullName = useMemo(() => {
         return (
-            (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
+            (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
         )(isLogged ? user : orderInfoById);
 
     }, [user, orderInfoById, isLogged]);
@@ -94,7 +94,7 @@ const CheckoutPurchase = () => {
     const shipments = () => {
         const shipments = orderInfoById.shipments;
         const shipmentItems = [];
-        shipments.forEach(async (el) => {
+        shipments?.forEach(async (el) => {
             const availableMethods = el.available_shipping_methods;
             const methods = availableMethods.map((item) => { if (item.id != process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
             shipmentItems.push(methods);
@@ -119,7 +119,7 @@ const CheckoutPurchase = () => {
     return (
         <HeadingCard
             classes="col-span-2"
-            title={!statusError ? orderStatus(orderInfoById?.status).text : "Comprobación..."}
+            title={!statusError ? orderStatus(orderInfoById?.status).text : "Comprobación"}
             icon={orderStatus(orderInfoById?.status).leftIcon}
             isCheck={isCompleted}
             rightIcon={orderStatus(orderInfoById?.status).rightIcon}
@@ -129,7 +129,7 @@ const CheckoutPurchase = () => {
                 <div className="bg-white rounded-lg">
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
+                            <dt className="flex-1 text-grey-30">Número de orden:</dt>
                             <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "*****"}</dd>
                         </div>
                         <div className="flex justify-between">

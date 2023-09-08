@@ -184,10 +184,11 @@ export const useCommerceLayer = () => {
 
       const orderResp = await getUpdateOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
       const order = orderResp.data as unknown as Order;
+      if (orderResp.status === 200) return { status: 200, data: order };
+      return { status: 400, data: 'Error get order by ID' };
 
-      return { status: 200, data: order };
     } catch (error) {
-      return { status: 400, data: 'error get order by ID' };
+      return { status: 400, data: 'Error get order by ID' };
     }
   }, []);
 
@@ -284,7 +285,7 @@ export const useCommerceLayer = () => {
 
       if (quantity > 0) {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
-        
+
         if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
           console.error("error in sku line item", response.errors);
           return { status: parseInt(response.errors[0].status), data: response.errors[0].title };
