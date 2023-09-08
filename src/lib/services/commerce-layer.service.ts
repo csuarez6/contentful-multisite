@@ -1,4 +1,4 @@
-import CommerceLayer, { CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { Address, CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
@@ -685,4 +685,9 @@ export const formatDate = (date: string) : string => {
   }).format(new Date(date));
 
   return formattedDate;
+};
+
+// Función para formatear una dirección
+export const formatAddress = (address: Address): string => {
+  return address.line_1 + (address.line_2 ? ', ' + address.line_2 : '') + ', ' + address.city + ', ' + address.state_code;
 };
