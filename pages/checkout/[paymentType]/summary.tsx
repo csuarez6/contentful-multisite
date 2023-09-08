@@ -14,6 +14,7 @@ import AuthContext from "@/context/Auth";
 import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { Customers } from "@commercelayer/sdk/lib/cjs/api";
+import { formatAddress } from "@/lib/services/commerce-layer.service";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -113,7 +114,7 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {shippingAddress ? (shippingAddress?.line_1 + (shippingAddress.line_2 ? ', ' + shippingAddress?.line_2 : '') + ', ' + shippingAddress?.city + ', ' + shippingAddress?.state_code) : "*****"}
+              {shippingAddress ? formatAddress(shippingAddress) : "*****"}
             </dd>
           </div>
           {shippingAddress?.notes &&
@@ -127,7 +128,7 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {billingAddress ? (billingAddress?.line_1 + (billingAddress?.line_2 ? ', ' + billingAddress?.line_2 : '') + ', ' + billingAddress?.city + ', ' + billingAddress?.state_code) : "*****"}
+              {billingAddress ? formatAddress(billingAddress) : "*****"}
             </dd>
           </div>
           <div className="flex justify-between">

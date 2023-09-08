@@ -1,4 +1,4 @@
-import CommerceLayer, { CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { Address, CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
@@ -627,6 +627,12 @@ export const getOrderStatusCl = async (status?: string) => {
   try {
     const cl = await getCLAdminCLient();
     const orderList = await cl.orders.list({
+      include: ["payment_source"],
+      fields: {
+        orders: [
+          "payment_source"
+        ]
+      },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },
       pageSize: 25, // The maximum page size allowed is 25 - Commercelayer
@@ -685,4 +691,9 @@ export const formatDate = (date: string) : string => {
   }).format(new Date(date));
 
   return formattedDate;
+};
+
+// Función para formatear una dirección
+export const formatAddress = (address: Address): string => {
+  return address.line_1 + (address.line_2 ? ', ' + address.line_2 : '') + ', ' + address.city + ', ' + address.state_code;
 };

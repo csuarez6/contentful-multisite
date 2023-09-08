@@ -15,6 +15,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
+import { formatAddress } from "@/lib/services/commerce-layer.service";
 
 const orderStatus = (value: string) => {
     switch (value) {
@@ -165,7 +166,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {shippingAddress ? (shippingAddress?.line_1 + (shippingAddress.line_2 ? ', ' + shippingAddress?.line_2 : '') + ', ' + shippingAddress?.city + ', ' + shippingAddress?.state_code) : "*****"}
+                                {shippingAddress ? formatAddress(shippingAddress) : "*****"}
                             </dd>
                         </div>
                         {shippingAddress?.notes &&
@@ -185,7 +186,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress ? (billingAddress?.line_1 + (billingAddress.line_2 ? ', ' + billingAddress?.line_2 : '') + ', ' + billingAddress?.city + ', ' + billingAddress?.state_code) : "*****"}
+                                {billingAddress ? formatAddress(billingAddress) : "*****"}
                             </dd>
                         </div>
                     </dl>
