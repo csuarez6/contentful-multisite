@@ -8,7 +8,7 @@ import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.inter
 import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "captures", "voids", "payment_method"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "shipping_address", "captures", "voids", "payment_method"],
   fields: {
     orders: [
       "number",
@@ -28,6 +28,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "available_payment_methods",
       "shipments",
       "billing_address",
+      "shipping_address",
       "captures",
       "voids",
       "payment_method"
