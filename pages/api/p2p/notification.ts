@@ -18,8 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     console.info('p2p notification', req.body);
 
     if (validation) {
-      console.info('ok validation');
-
       const paymentSource = await client.external_payments.list({
         filters: {
           payment_source_token_eq: transactionToken
@@ -38,22 +36,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         paymentInfo: infoP2P
       };
 
-      console.info('ok order search');
-
       if (data.status.status === P2PRequestStatus.approved) {
-        console.info('approved');
-
         await client.orders.update({
           id: order.id,
           _approve: true
         }).then(async () => {
+          console.info('p2p notification approved');
           await client.orders.update({
             id: order.id,
             _capture: true
           }, DEFAULT_ORDER_PARAMS
           ).then(async (orderUpdated) => {
+            console.info('p2p notification captured', orderUpdated);
             const captures = orderUpdated.captures.at(0);
-            console.info(captures);
 
             await client.captures.update({
               id: captures.id,
@@ -62,13 +57,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           });
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
-        console.info('failed or rejected');
-
         await client.orders.update({
           id: order.id,
           _cancel: true,
         }, DEFAULT_ORDER_PARAMS
         ).then(async (orderUpdated) => {
+          console.info('p2p notification voids', orderUpdated);
           const voids = orderUpdated.voids?.at(0);
 
           await client.voids.update({
@@ -94,7 +88,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     console.error(error);
     return res.status(500).json({
       status: 500,
-      message: error.message,
+      message: error.message || 'NOTIFICATION_PAYMENT_ERROR'
     });
   }
 };
