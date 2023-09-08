@@ -627,6 +627,12 @@ export const getOrderStatusCl = async (status?: string) => {
   try {
     const cl = await getCLAdminCLient();
     const orderList = await cl.orders.list({
+      include: ["payment_source"],
+      fields: {
+        orders: [
+          "payment_source"
+        ]
+      },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },
       pageSize: 25, // The maximum page size allowed is 25 - Commercelayer
