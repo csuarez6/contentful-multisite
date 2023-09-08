@@ -22,14 +22,14 @@ const customerSection = (data: IOrderExtended) => {
   const paymentInfo = () => {
     if (data.status !== OrderStatus.approved) {
       return {
-        paymentMethod: "-----",
-        paymentEntity: "-----"
+        paymentMethod: "*****",
+        paymentEntity: "*****"
       };
     }
     const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
     return {
-      paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+      paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "*****",
+      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "*****"
     };
   };
 

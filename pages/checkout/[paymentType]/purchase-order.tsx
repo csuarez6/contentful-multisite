@@ -45,6 +45,7 @@ const CheckoutPurchase = () => {
     const { isLogged, user } = useContext(AuthContext);
     const { getOrderById } = useContext(CheckoutContext);
     const [billingAddress, setBillingAddress] = useState<Address>();
+    const [shippingAddress, setShippingAddress] = useState<Address>();
     const orderId = router.query.id?.toString();
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
@@ -66,6 +67,7 @@ const CheckoutPurchase = () => {
                         setStatusError(false);
                         setOrderInfoById(orderData.data);
                         setBillingAddress(orderData.data["billing_address"]);
+                        setShippingAddress(orderData.data["shipping_address"]);
                         console.info({ orderData });
                     } else {
                         console.info('status', orderData["status"]);
@@ -103,14 +105,14 @@ const CheckoutPurchase = () => {
     const paymentEntity = () => {
         if (orderInfoById.status !== OrderStatus.approved) {
             return {
-                paymentMethod: "-----",
-                paymentEntity: "-----"
+                paymentMethod: "*****",
+                paymentEntity: "*****"
             };
         }
         const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
         return {
-            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "*****",
+            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "*****"
         };
     };
 
@@ -128,11 +130,11 @@ const CheckoutPurchase = () => {
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "-----"}</dd>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "*****"}</dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">{fullName ?? "-----"}</dd>
+                            <dd className="flex-1 font-bold text-grey-30">{fullName ?? "*****"}</dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Identificación del adquiriente:</dt>
@@ -151,39 +153,39 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de pago:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentMethod ?? "-----"}
+                                {paymentEntity().paymentMethod ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentEntity ?? "-----"}
+                                {paymentEntity().paymentEntity ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress?.line_1} {billingAddress?.city ?? "-----"}
+                                {shippingAddress ? (shippingAddress?.line_1 + (shippingAddress.line_2 ? ', ' + shippingAddress?.line_2 : '') + ', ' + shippingAddress?.city + ', ' + shippingAddress?.state_code) : "*****"}
                             </dd>
                         </div>
-                        {orderInfoById.shipping_address?.notes &&
+                        {shippingAddress?.notes &&
                             <div className="flex justify-between">
                                 <dt className="flex-1 text-grey-30">Destinatario:</dt>
                                 <dd className="flex-1 font-bold text-grey-30">
-                                    {orderInfoById.shipping_address?.notes}
+                                    {shippingAddress?.notes}
                                 </dd>
                             </div>
                         }
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {shipments() ?? "-----"}
+                                {shipments() ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress?.full_address ?? "-----"}
+                                {billingAddress ? (billingAddress?.line_1 + (billingAddress.line_2 ? ', ' + billingAddress?.line_2 : '') + ', ' + billingAddress?.city + ', ' + billingAddress?.state_code) : "*****"}
                             </dd>
                         </div>
                     </dl>

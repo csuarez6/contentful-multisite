@@ -113,7 +113,7 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {shippingAddress?.full_address ?? "-----"}
+              {shippingAddress ? (shippingAddress?.line_1 + (shippingAddress.line_2 ? ', ' + shippingAddress?.line_2 : '') + ', ' + shippingAddress?.city + ', ' + shippingAddress?.state_code) : "*****"}
             </dd>
           </div>
           {shippingAddress?.notes &&
@@ -127,7 +127,7 @@ const CheckoutSummary = () => {
           <div className="flex justify-between">
             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
             <dd className="flex-1 font-bold text-grey-30">
-              {billingAddress?.full_address ?? "-----"}
+              {billingAddress ? (billingAddress?.line_1 + (billingAddress?.line_2 ? ', ' + billingAddress?.line_2 : '') + ', ' + billingAddress?.city + ', ' + billingAddress?.state_code) : "*****"}
             </dd>
           </div>
           <div className="flex justify-between">
