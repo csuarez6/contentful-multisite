@@ -127,5 +127,31 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const underlineUtilities = {};
+      for (let index = 1; index < 5; index++) {
+        const underlineFull = {
+          backgroundImage: "linear-gradient(to right, currentColor, currentColor)",
+          backgroundSize: `100% ${index}px`
+        };
+
+        underlineUtilities[`.underline-animated-${index}`] = {
+          backgroundImage: "linear-gradient(to right, transparent, currentColor)",
+          backgroundSize: `0px ${index}px`,
+          backgroundPosition: "0 100%",
+          backgroundRepeat: "no-repeat",
+          transition: "background-size ease-in-out 0.5s",
+          transitionDuration: "500ms",
+          '&:hover': underlineFull,
+        };
+        underlineUtilities[`.underline-animated-full-${index}`] = {
+          ...underlineUtilities[`.underline-animated-${index}`],
+          ...underlineFull
+        };
+      }
+
+      addUtilities(underlineUtilities);
+    }
+  ],
 };

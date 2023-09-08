@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 const iconLeft = (id: string) => (
-  `<button id="${id}" class="carousel-control-prev-icon h-9 w-9 hidden sm:block mr-1" aria-label="Prev Slide">
+  `<button id="${id}" class="carousel-control-prev-icon h-9 w-9 hidden sm:block mr-1 transition-transform duration-500 hover:-translate-x-1" aria-label="Prev Slide">
     <svg class="text-neutral-20 drop-shadow-[-1px_2px_2px_rgba(255,255,255,1)] h-9 w-9" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
       <path d="M618.667 277.333l-213.333 213.333 213.333 213.333" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
     </svg>
@@ -18,7 +18,7 @@ const iconLeft = (id: string) => (
 );
 
 const iconRight = (id: string) => (
-  `<button id="${id}" class="carousel-control-next-icon h-9 w-9 hidden sm:block ml-1" aria-label="Next Slide">
+  `<button id="${id}" class="carousel-control-next-icon h-9 w-9 hidden sm:block ml-1 transition-transform duration-500 hover:translate-x-1" aria-label="Next Slide">
     <svg class="text-neutral-20 drop-shadow-[1px_2px_2px_rgba(255,255,255,1)] h-9 w-9" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
       <path d="M405.333 704l213.333-213.333-213.333-213.333" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="42.666666666666664"></path>
     </svg>
@@ -100,9 +100,9 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                 effect="fade"
                 className="relative w-full h-[472px] sm:h-[394px] banner-slider"
               >
-                {featuredContentsCollection.items.map((content) => (
+                {featuredContentsCollection.items.map((content, idx) => (
                   content?.promoImage?.url && (
-                    <SwiperSlide className="flex flex-col sm:flex-row gap-4 md:gap-0 items-center !h-auto sm:h-full bg-white" key={content.promoTitle}>
+                    <SwiperSlide className="flex flex-col sm:flex-row gap-4 md:gap-0 items-center !h-auto sm:h-full bg-white" key={content.promoTitle + idx}>
                       <figure className="md:w-screen h-[472px] sm:h-[394px]">
                         <Image
                           src={content.promoImage.url}

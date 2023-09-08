@@ -98,67 +98,68 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
               id={`tabs_${_uuid}`}
               className="flex w-full border-b border-transparent"
             >
-              <Tab.List
-                className={classNames(
-                  "flex w-full justify-start",
-                  view?.alignTitle !== "Izquierda" && "gap-[10px]"
-                )}
-              >
-                {featuredContentsCollection?.items?.map((tab) =>
-                  isCustomLink(tab) ? (
-                    <CustomLink
-                      key={`${tab.name}_tab`}
-                      content={tab}
-                      linkClassName="flex h-full"
-                      className={classNames(
-                        "flex flex-col flex-shrink-0 first:ml-auto last:mr-auto flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
-                        [asPath].includes(
-                          tab?.urlPaths?.[0] ||
+              <Tab.List className={classNames(
+                "flex w-full justify-start",
+                view?.alignTitle !== "Izquierda" && "gap-[10px]"
+              )}>
+                {featuredContentsCollection?.items?.map((tab) => (
+                  isCustomLink(tab)
+                    ? (
+                      <CustomLink
+                        key={`${tab.name}_tab`}
+                        content={tab}
+                        linkClassName="flex h-full"
+                        className={classNames(
+                          "flex flex-col flex-shrink-0 first:ml-auto last:mr-auto flex-grow items-center title is-3 gap-[10px] focus:outline-none underline-animated-2 text-lucuma",
+                          [asPath].includes(
+                            tab?.urlPaths?.[0] ||
                             tab?.internalLink?.urlPaths?.[0] ||
                             tab?.externalLink
-                        )
-                          ? "border-lucuma text-blue-dark"
-                          : "border-transparent hover:border-lucuma text-category-sky-blue-50",
-                        view?.alignTitle !== "Centrado"
-                          ? "p-3"
-                          : "max-w-[190px] xl:max-w-[220px] shrink-0 grow p-5"
-                      )}
-                    >
-                      <span
-                        className={classNames(
-                          view?.alignTitle === "Izquierda" &&
-                            "whitespace-nowrap"
-                        )}
-                      >
-                        {tab.promoTitle ?? tab.title ?? tab.name}
-                      </span>
-                    </CustomLink>
-                  ) : (
-                    <Tab
-                      key={`${tab.name}_tab`}
-                      className={({ selected }) =>
-                        classNames(
-                          "flex flex-col flex-shrink-0 first:ml-auto last:mr-auto flex-grow items-center title is-3 gap-[10px] focus:outline-none border-b-2",
-                          selected
-                            ? "border-lucuma text-blue-dark"
-                            : "border-transparent hover:border-lucuma text-category-sky-blue-50",
+                          ) && "underline-animated-full-2",
                           view?.alignTitle !== "Centrado"
                             ? "p-3"
                             : "max-w-[190px] xl:max-w-[220px] shrink-0 grow p-5"
-                        )
-                      }
-                    >
-                      <span
-                        className={classNames(
-                          view?.alignTitle === "Izquierda" &&
-                            "whitespace-nowrap"
                         )}
                       >
-                        {tab.promoTitle ?? tab.title ?? tab.name}
-                      </span>
-                    </Tab>
-                  )
-                )}
+                        <span className={classNames(
+                          [asPath].includes(
+                            tab?.urlPaths?.[0] ||
+                            tab?.internalLink?.urlPaths?.[0] ||
+                            tab?.externalLink
+                          )
+                            ? "text-blue-dark"
+                            : "text-category-sky-blue-50",
+                          view?.alignTitle === "Izquierda" && "whitespace-nowrap"
+                        )}>
+                          {tab.promoTitle ?? tab.title ?? tab.name}
+                        </span>
+                      </CustomLink>
+                    ) : (
+                      <Tab
+                        key={`${tab.name}_tab`}
+                        as={Fragment}
+                      >
+                        {({ selected }) => (
+                          <button className={classNames(
+                            "flex flex-col flex-shrink-0 first:ml-auto last:mr-auto flex-grow items-center title is-3 gap-[10px] focus:outline-none underline-animated-2 text-lucuma",
+                            selected && "underline-animated-full-2",
+                            view?.alignTitle !== "Centrado"
+                              ? "p-3"
+                              : "max-w-[190px] xl:max-w-[220px] shrink-0 grow p-5"
+                          )}>
+                            <span className={classNames(
+                              selected
+                                ? "text-blue-dark"
+                                : "text-category-sky-blue-50",
+                              view?.alignTitle === "Izquierda" && "whitespace-nowrap"
+                            )}>
+                              {tab.promoTitle ?? tab.title ?? tab.name}
+                            </span>
+                          </button>
+                        )}
+                      </Tab>
+                    )
+                ))}
               </Tab.List>
             </div>
           </div>
@@ -166,56 +167,54 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
           <div className="relative">
             <Tab.Panels as={Fragment}>
               {featuredContentsCollection?.items?.map((collection) => {
-                return (
-                  !isCustomLink(collection) && (
-                    <Tab.Panel
-                      key={`${collection.name}_content`}
-                      className="focus:outline-none"
+                return (!isCustomLink(collection) && (
+                  <Tab.Panel
+                    key={`${collection.name}_content`}
+                    className="focus:outline-none"
+                  >
+                    <Transition
+                      appear
+                      show
+                      enter="transition-opacity ease-in duration-700"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="transition-opacity ease-out duration-700"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
                     >
-                      <Transition
-                        appear
-                        show
-                        enter="transition-opacity ease-in duration-700"
-                        enterFrom="opacity-0"
-                        enterTo="opacity-100"
-                        leave="transition-opacity ease-out duration-700"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        {view?.isBlock &&
+                      {view?.isBlock &&
                         collection.__typename ===
-                          CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
-                          jsonToReactComponent(collection)
-                        ) : (
-                          <div
-                            className={classNames(
-                              "grid grid-cols-1 gap-5 mt-6",
-                              grid[
-                                collection?.featuredContentsCollection?.items
-                                  ?.length
-                              ]
-                            )}
-                          >
-                            {collection?.featuredContentsCollection?.items?.map(
-                              (item) => {
-                                if (item) {
-                                  return (
-                                    <div
-                                      key={item?.name}
-                                      className="grid grid-cols-1"
-                                    >
-                                      <ListWithIcons {...item} />
-                                    </div>
-                                  );
-                                }
+                        CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT ? (
+                        jsonToReactComponent(collection)
+                      ) : (
+                        <div
+                          className={classNames(
+                            "grid grid-cols-1 gap-5 mt-6",
+                            grid[
+                            collection?.featuredContentsCollection?.items
+                              ?.length
+                            ]
+                          )}
+                        >
+                          {collection?.featuredContentsCollection?.items?.map(
+                            (item) => {
+                              if (item) {
+                                return (
+                                  <div
+                                    key={item?.name}
+                                    className="grid grid-cols-1"
+                                  >
+                                    <ListWithIcons {...item} />
+                                  </div>
+                                );
                               }
-                            )}
-                          </div>
-                        )}
-                      </Transition>
-                    </Tab.Panel>
-                  )
-                );
+                            }
+                          )}
+                        </div>
+                      )}
+                    </Transition>
+                  </Tab.Panel>
+                ));
               })}
             </Tab.Panels>
           </div>

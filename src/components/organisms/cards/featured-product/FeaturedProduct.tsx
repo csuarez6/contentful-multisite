@@ -113,14 +113,14 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                 )}
                 {cta ? (
                   <Link legacyBehavior href={cta.href}>
-                    <a className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]">
+                    <a className="absolute bottom-0 left-0 button button-primary w-fit z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]">
                       {cta?.name}
                     </a>
                   </Link>
                 ) : urlPaths && (
                   <CustomLink
                     onClick={onClick}
-                    className="absolute bottom-0 left-0 px-[18px] py-[9px] bg-lucuma rounded-[20px] z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]"
+                    className="absolute bottom-0 left-0 button button-primary w-fit z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]"
                     content={{
                       internalLink: { urlPaths, promoTitle: "Conoce más" },
                     }}

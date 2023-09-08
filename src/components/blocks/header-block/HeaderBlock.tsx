@@ -21,6 +21,7 @@ import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
 import 'react-circular-progressbar/dist/styles.css';
+// import { throttle } from "lodash";
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
   const { mainNavCollection, secondaryNavCollection } = props;
@@ -121,8 +122,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   } = props;
   let { menuNavkey = null } = props;
   const headerRef = useRef(null);
-  const prevScrollPosition = useRef(0);
-  const [isHidden, setIsHidden] = useState(false);
+  // const prevScrollPosition = useRef(0);
+  const isOpenTopMenu = useRef(false);
+  // const [isHidden, setIsHidden] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
@@ -133,19 +135,20 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [numProducts, setNumProducts] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
-  useEffect(() => {
-    const checkScroll = () => {
+  // TODO: Work on this Hook for the evolutionary on the header when doing Scroll
+  /* useEffect(() => {
+    const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
       setIsHidden(currentScrollPosition > prevScrollPosition.current && currentScrollPosition > headerRef?.current?.offsetHeight);
       prevScrollPosition.current = currentScrollPosition;
     };
-
-    window.addEventListener('scroll', checkScroll);
+    const throttledScroll = throttle(handleScroll, 120);
+    window.addEventListener('scroll', throttledScroll);
 
     return () => {
-      window.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('scroll', throttledScroll);
     };
-  }, []);
+  }, []); */
 
   useEffect(() => {
     setNumProducts(
@@ -230,8 +233,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       ref={headerRef}
       id="header"
       className={classNames(
-        "sticky inset-x-0 top-0 z-50 bg-white shadow transition-transform duration-500",
-        isHidden ? "-translate-y-full" : "translate-y-0"
+        "z-50 bg-white shadow transition-transform duration-500",
+        // isHidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
       {/* Top */}
@@ -265,7 +268,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             item.promoTitle === isFolder
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
-                            "cursor-pointer inline-block relative hover:text-lucuma pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
+                            "cursor-pointer inline-block relative hover:text-lucuma transition-colors duration-500 pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
                           )}
                         >
                           {item.promoTitle ?? item.name}
@@ -281,7 +284,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                             item.internalLink?.slug === firstPath
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
-                            "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
+                            "inline-block hover:text-lucuma transition-colors duration-500 pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
                           )}
                           content={item}
                           aria-current={index === 0 ? "page" : undefined}
@@ -302,7 +305,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         item.internalLink?.slug === firstPath
                           ? "text-lucuma border-lucuma"
                           : "text-white border-transparent",
-                        "inline-block hover:text-lucuma pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
+                        "inline-block hover:text-lucuma transition-colors duration-500 pt-2 pb-3 text-xl font-semibold leading-none border-b-2"
                       )}
                       content={item}
                       aria-current={index === 0 ? "page" : undefined}
@@ -345,8 +348,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         leaveTo="max-h-0"
       >
         <div
-          onMouseOver={() => setIsOpenMenu(true)}
-          onMouseOut={() => setIsOpenMenu(false)}
+          onMouseOver={() => {
+            isOpenTopMenu.current = true;
+            setIsOpenMenu(true);
+          }}
+          onMouseOut={() => {
+            isOpenTopMenu.current = false;
+            setIsOpenMenu(false);
+          }}
         >
           <TopMenu
             secondaryNavCollection={secondaryNavCollectionMenu}
@@ -416,7 +425,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           <CustomLink
                             content={item}
                             className={classNames(
-                              "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
+                              "bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
                               item.promoIcon
                                 ? "justify-start"
                                 : "justify-center"
@@ -439,7 +448,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       <li className="flex w-[68px] 2lg:w-[75px]" key={`cart_${uuid()}`}>
                         <Link
                           href="/checkout/pse/verify"
-                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
+                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
                         >
                           <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
                             <Icon
@@ -471,7 +480,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         className="relative inline-block text-left min-w-[180px]"
                       >
                         <div>
-                          <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 ">
+                          <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-500">
                             <span className="flex w-5 h-5 mr-2 text-neutral-30 shrink-0">
                               <Icon
                                 icon="personal-data"

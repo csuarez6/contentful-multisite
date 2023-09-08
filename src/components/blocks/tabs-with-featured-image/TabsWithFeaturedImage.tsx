@@ -34,7 +34,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                                 selected
                                   ? "border-lucuma text-blue-dark"
                                   : "border-neutral-80 hover:border-lucuma text-category-sky-blue-50",
-                                "flex flex-col items-center gap-4 shrink-0 grow focus:outline-none 2md:border-b-2 p-4 max-w-[92px]"
+                                "flex flex-col items-center gap-4 shrink-0 grow group focus:outline-none 2md:border-b-2 p-4 max-w-[92px]"
                               )
                             }
                           >
@@ -42,7 +42,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({ title, description,
                               <>
                                 <span className={
                                   classNames(
-                                    selected ? "bg-lucuma" : "bg-blue-dark-90",
+                                    selected ? "bg-lucuma" : "bg-blue-dark-90 group-hover:bg-lucuma",
                                     "flow-root shrink-0 w-[50px] h-[50px] p-2 rounded-full text-neutral-30 transition-colors duration-500",
                                   )}
                                 >

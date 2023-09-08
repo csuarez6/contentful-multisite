@@ -104,7 +104,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
         </div>
         <div className="flex self-end justify-center w-full">
           <CustomLink
-            className="block text-center underline button text-blue-dark"
+            className="block button text-button"
             content={{ urlPaths: ["/registro"] }}
           >
             Crear cuenta
@@ -119,7 +119,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
 
       <div className="flex flex-col w-full gap-2">
         <CustomLink
-          className="flex justify-between button text-grey-30"
+          className="flex justify-between button text-grey-30 hover:text-blue-dark group transition-colors duration-500"
           content={{ urlPaths: ["/forgotpassword"] }}
         >
           <div className="flex">
@@ -132,7 +132,7 @@ const LoginForm: React.FC<IForm> = ({ onSubmitForm, cta, modal }) => {
             </span>
             Recupera tu contraseña
           </div>
-          <span className="flex items-center w-6 h-6 text-neutral-30 shrink-0">
+          <span className="flex items-center w-6 h-6 text-neutral-30 shrink-0 group-hover:translate-x-1 transition-transform duration-500">
             <Icon
               icon="arrow-right"
               className="w-full h-full"

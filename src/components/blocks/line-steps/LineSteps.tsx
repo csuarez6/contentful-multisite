@@ -92,9 +92,9 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                     )}
                     key={item.name}
                   >
-                    <div className="flex flex-col gap-8 px-6 py-4 border shadow rounded-xl group-[.open]:border-blue-dark group-[.open]:py-6">
+                    <div className="flex flex-col gap-8 px-6 py-4 border shadow group-hover:shadow-md rounded-xl group-[.open]:border-blue-dark group-[.open]:py-6">
                       <div className="flex gap-4 step-check cursor-pointer">
-                        <h3 className="text-2xl text-justify text-blue-dark font-bold w-0 flex-grow">
+                        <h3 className="text-2xl text-justify text-blue-dark group-hover:text-category-blue-dark font-bold w-0 flex-grow">
                           <span className="inline-block mr-1">
                             {index + 1}.
                           </span>

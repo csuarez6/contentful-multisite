@@ -37,7 +37,7 @@ const TabElement = ({ promoIcon, promoImage, image, promoTitle, name, display })
         </div>
       )
     )}
-    <span className="font-semibold text-center text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</span>
+    <span className="text-blue-dark font-semibold text-center text-sm md:text-base tracking-tight xs:tracking-normal break-words leading-[1.6]">{promoTitle ?? name}</span>
   </>
 );
 
@@ -90,7 +90,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
               >
                 {featuredContentsCollection.items.map((tab) => (
                   <SwiperSlide
-                    key={tab?.name+'_'+tab?.sys?.id}
+                    key={tab?.name + '_' + tab?.sys?.id}
                     className="max-w-[176px] w-[100px] xs:w-[120px] lg:w-[176px] h-full shrink-0"
                   >
                     {(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink) ? (
@@ -98,9 +98,11 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                         content={tab}
                         linkClassName="flex h-full"
                         className={classNames(
-                          "flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none hover:border-lucuma border-b-2 py-[10px] text-center",
-                          (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                          ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink)) ? "border-lucuma" : "border-transparent"
+                          "flex flex-col items-center gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none py-[10px] text-center underline-animated-2 text-lucuma",
+                          (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono"))
+                            ? "justify-start"
+                            : "justify-center",
+                          ([asPath].includes(tab?.urlPaths?.[0] || tab?.internalLink?.urlPaths?.[0] || tab?.externalLink)) && "underline-animated-full-2"
                         )}
                       >
                         {<TabElement {...tab} display={view?.tabDisplay} />}
@@ -110,11 +112,9 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                         as="div"
                         className={({ selected }) => (
                           classNames(
+                            "cursor-pointer flex flex-col items-center gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none px-2 py-[10px] underline-animated-2 text-lucuma",
                             (tab?.promoImage || tab?.image || (tab?.promoIcon && view?.tabDisplay === "Icono")) ? "justify-start" : "justify-center",
-                            selected
-                              ? "border-lucuma"
-                              : "border-transparent hover:border-lucuma",
-                            "cursor-pointer flex flex-col items-center text-blue-dark gap-[10px] mx-auto w-[100px] xs:w-[120px] lg:w-[176px] h-full focus:outline-none border-b-2 px-2 py-[10px]"
+                            selected && "underline-animated-full-2"
                           )
                         )}
                       >
@@ -139,7 +139,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
             {featuredContentsCollection.items.map((tab, idx) => (
               (!tab?.urlPaths?.[0] && !tab?.internalLink && !tab?.externalLink) && (
                 <Tab.Panel
-                  key={tab?.name+'_'+tab?.sys?.id}
+                  key={tab?.name + '_' + tab?.sys?.id}
                   className="focus:outline-none"
                 >
                   <Transition
@@ -155,7 +155,7 @@ const ServicesTabsBlock: React.FC<IPromoBlock> = ({
                     {
                       tab?.__typename === CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT
                         ? (<LeftFeatured {...tab} buttonType={view?.buttonType} />)
-                        : (<div key={tab?.name+'_'+tab?.sys?.id}>{jsonToReactComponent(tab)}</div>)
+                        : (<div key={tab?.name + '_' + tab?.sys?.id}>{jsonToReactComponent(tab)}</div>)
                     }
                   </Transition>
                 </Tab.Panel>
