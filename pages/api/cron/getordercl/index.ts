@@ -25,7 +25,6 @@ const handler = async (
                     throw new Error('Transaction token not found');
                 }
                 const infoP2P = await getP2PRequestInformation(transactionToken);
-                console.info({ infoP2P });
 
                 if (typeof infoP2P === 'string') {
                     throw new Error(infoP2P);
