@@ -89,7 +89,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId]);
+  }, [orderId, oderProp]);
   // **********************************************
 
   const products = useMemo(() => {
