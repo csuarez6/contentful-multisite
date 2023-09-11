@@ -64,7 +64,7 @@ const handler = async (
     }
 };
 
-const approveOrder = async (order: Order, metadata: {}) => {
+const approveOrder = async (order: Order, metadata: any) => {
     const client = await getCLAdminCLient();
 
     await client.orders.update({
@@ -82,7 +82,7 @@ const approveOrder = async (order: Order, metadata: {}) => {
     });
 };
 
-const cancelOrder = async (order: Order, metadata: {}) => {
+const cancelOrder = async (order: Order, metadata: any) => {
     const client = await getCLAdminCLient();
 
     await client.orders.update({
@@ -106,6 +106,6 @@ const sendEmails = async (order: Order, infoP2P?: IP2PRequestInformation) => {
         await sendVantiEmail(orderByAlly);
         await sendAllyEmail(orderByAlly);
     }
-}
+};
 
 export default handler;
