@@ -184,10 +184,11 @@ export const useCommerceLayer = () => {
 
       const orderResp = await getUpdateOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
       const order = orderResp.data as unknown as Order;
+      if (orderResp.status === 200) return { status: 200, data: order };
+      return { status: 400, data: 'Error get order by ID' };
 
-      return { status: 200, data: order };
     } catch (error) {
-      return { status: 400, data: 'error get order by ID' };
+      return { status: 400, data: 'Error get order by ID' };
     }
   }, []);
 

@@ -14,6 +14,7 @@ import { gaEventPurchase } from "@/utils/ga-events--checkout";
 import { gaEventForm } from "@/utils/ga-events--forms";
 import { IP2PRequest } from "@/lib/interfaces/p2p-cf-interface";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
+import { Order } from "@commercelayer/sdk";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -46,7 +47,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const showStepList = stepsList.find(el => el.path === asPath);
 
   const {
-    order,
+    order: oderProp,
     tokenRecaptcha,
     reloadOrder,
     productUpdates,
@@ -56,7 +57,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     validateExternal,
     hasShipment,
     isFetchingOrder,
-    updateIsPaymentProcess
+    updateIsPaymentProcess,
+    getOrderById
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [error, setError] = useState(false);
@@ -72,6 +74,23 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const asPathUrl = asPath.split("/")[3];
   const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
   const shippingCostTotal = useRef([]);
+  const router = useRouter();
+  const orderId = router.query.id?.toString();
+  const [order, setOrder] = useState<Order>();
+
+  // UseEffect for check order data if by Id or not
+  useEffect(() => {
+    (async () => {
+      if (asPath.startsWith("/checkout/pse/purchase-order")) {
+        const orderData = await getOrderById(orderId);
+        setOrder(orderData.data);
+      } else {
+        setOrder(oderProp);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId]);
+  // **********************************************
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
@@ -95,7 +114,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
     if (!order) return;
-    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length) {
+    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length && !asPath.startsWith("/checkout/pse/purchase-order")) {
       push("/checkout/pse/verify");
     }
     if (asPath.startsWith('/checkout/pse/summary')) {
@@ -201,7 +220,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               label: "Compra de Productos",
               productsList: productsData,
             });
-            
+
             push(data.processUrl);
           } else {
             throw new Error("Error create p2p session");
@@ -301,9 +320,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                             className="grid grid-cols-1 mb-2 text-sm"
                             key={"product-name" + i}
                           >
-                            <p className="font-bold flex justify-between gap-3 mb-1">
+                            <p className="flex justify-between gap-3 mb-1 font-bold">
                               <span className="text-left">{product.name}</span>
-                              <span className="text-blue-dark text-base">{(product.formatted_unit_amount).split(',')[0]}</span>
+                              <span className="text-base text-blue-dark">{(product.formatted_unit_amount).split(',')[0]}</span>
                             </p>
                             <p className="text-xs text-gray-600">* IVA incluido</p>
                             <p className="text-sm text-gray-600">
