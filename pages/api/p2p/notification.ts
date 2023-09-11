@@ -14,6 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data: IP2PNotification = req.body;
     const transactionToken = data.requestId;
     const validation = validateP2PSignature(data);
+    let sendEmails = false;
 
     console.info('p2p notification', req.body);
 
@@ -54,6 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
               id: captures.id,
               metadata: metadata
             });
+            sendEmails = true;
           });
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
@@ -69,14 +71,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             id: voids?.id,
             metadata: metadata
           });
+          sendEmails = true;
         });
       }
 
-      const orderByAlly = (await getOrderByAlly(order.id)).data;
-      await sendClientEmail(orderByAlly);
-      if (data.status.status === P2PRequestStatus.approved) {
-        await sendVantiEmail(orderByAlly);
-        await sendAllyEmail(orderByAlly);
+      if (sendEmails) {
+        console.info('p2p notification emails');
+        const orderByAlly = (await getOrderByAlly(order.id)).data;
+        await sendClientEmail(orderByAlly);
+        if (data.status.status === P2PRequestStatus.approved) {
+          await sendVantiEmail(orderByAlly);
+          await sendAllyEmail(orderByAlly);
+        }
       }
     }
 
