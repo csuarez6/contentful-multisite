@@ -19,13 +19,13 @@ const TopMenu: React.FC<ITopMenu> = ({ secondaryNavCollection, firstPath }) => {
                 <div className="grid grid-cols-5 gap-12">
                   {secondaryNavCollection?.items?.map((item, idx) => (
                     <div key={item?.promoTitle + "-" + idx}>
-                      <CustomLink content={item}>
+                      <CustomLink content={item} className="group">
                         <h2 className={classNames("text-base font-semibold  mb-5 flex flex-wrap gap-2", item.internalLink?.slug === firstPath
-                          ? "text-lucuma border-lucuma" : "text-blue-dark")}>
+                          ? "text-lucuma border-lucuma" : "text-blue-dark group-hover:text-neutral-30 transition-colors duration-500")}>
                           {item.promoTitle ?? item.name}
                           <Icon
                             icon="arrow-right"
-                            className="w-7 h-7"
+                            className="w-7 h-7 group-hover:translate-x-1 transition-transform duration-500"
                             aria-hidden="true"
                           />
                         </h2>

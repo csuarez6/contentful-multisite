@@ -250,7 +250,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                                   <CustomLink
                                     content={{ ...itemList, ...{ linkView: "" } }}
                                     onClick={() => handleClicked(itemList)}
-                                    className={classNames("flex items-center text-base text-blue-dark hover:text-lucuma-60",
+                                    className={classNames("flex items-center text-base text-blue-dark hover:text-lucuma-60 transition-colors duration-500",
                                       itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
                                     )}
                                   >

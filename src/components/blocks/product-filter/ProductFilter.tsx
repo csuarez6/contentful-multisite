@@ -65,7 +65,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
   return (
     <section className="w-full">
-      <div className="flex items-end md:justify-between gap-6">
+      <div className="flex items-end md:justify-between gap-6 mb-5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-grow">
           {facets?.map((el: ISelect, i: number) => {
             return (
@@ -82,7 +82,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
           <div className="flex">
             <div className='relative'>
               <input
-                className="h-[50px] w-full md:w-[345px] border border-grey-60 rounded py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
+                className="h-[50px] w-full md:w-[345px] border border-grey-60 hover:border-grey-30 focus:border-lucuma-60 rounded py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
                 type="text"
                 placeholder="Buscar"
                 value={filterText}
@@ -103,14 +103,14 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
         )}
       </div>
       <div className="w-full" data-anchor={anchor}>
-        {principalSearch ? generalSearchGrill() : (() => {
-          switch (type) {
-            case 'AuxRate':
-              return rateGrill();
-            default:
-              return productGrill();
-          }
-        })()}
+        {principalSearch
+          ? generalSearchGrill()
+          : (
+            type === "AuxRate"
+              ? rateGrill()
+              : productGrill()
+          )
+        }
       </div>
     </section>
   );

@@ -19,12 +19,12 @@ const ModalContent = ({ modalMsg }) => {
 };
 
 const Login = () => {
-
     const router = useRouter();
     const modalDefault = {
         children: <ModalContent modalMsg="..." />,
         promoIcon: 'loader',
         promoTitle: 'Espere...',
+        isClosable: false
     };
     const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
 
@@ -38,7 +38,7 @@ const Login = () => {
                 tokenReCaptcha: data.tokenReCaptcha,
                 redirect: false
             });
-            if (resp && resp.ok) {
+            if (resp?.ok) {
                 router.replace(destination);
             } else {
                 setDataModal({
@@ -55,6 +55,7 @@ const Login = () => {
             });
         }
     };
+
     const formData: IForm = {
         formData: {
             cta: {
@@ -65,6 +66,7 @@ const Login = () => {
             modal: dataModal
         }
     };
+
     const breadcrumbs = {
         items: [
             {
@@ -83,14 +85,12 @@ const Login = () => {
     };
 
     return (
-        <>
-            <div className="overflow-hidden">
-                <div className="main-container">
-                    <Breadcrumbs ctaCollection={breadcrumbs} />
-                    <LoginFormBlock {...formData} />
-                </div>
+        <div className="overflow-hidden">
+            <div className="main-container">
+                <Breadcrumbs ctaCollection={breadcrumbs} />
+                <LoginFormBlock {...formData} />
             </div>
-        </>
+        </div>
     );
 };
 

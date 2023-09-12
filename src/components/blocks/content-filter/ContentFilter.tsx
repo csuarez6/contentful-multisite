@@ -157,7 +157,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
               <li>
                 <button
                   onClick={() => updatePage(data.actualPage)}
-                  className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
+                  className="py-1 mx-2 text-sm font-normal bg-white text-blue-dark underline-animated-1"
                 >
                   &lt; Anterior
                 </button>
@@ -182,7 +182,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
                 <li>
                   <button
                     onClick={() => updatePage(data.actualPage + 2)}
-                    className="py-1 mx-2 text-sm font-normal bg-white border-b border-transparent border-solid blue-dark hover:border-blue-dark"
+                    className="py-1 mx-2 text-sm font-normal bg-white text-blue-dark underline-animated-1"
                   >
                     Siguiente &gt;
                   </button>

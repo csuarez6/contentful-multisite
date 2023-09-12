@@ -15,13 +15,13 @@ import React from "react";
 const iconLeft: IIcon = {
   icon: "arrow-left",
   size: 28,
-  className: "z-10 text-blue-dark",
+  className: "z-10 text-blue-dark group-hover:text-white transition-colors duration-500",
 };
 
 const iconRight: IIcon = {
   icon: "arrow-right",
   size: 28,
-  className: "z-10 text-blue-dark",
+  className: "z-10 text-blue-dark group-hover:text-white transition-colors duration-500",
 };
 
 const CarouselCategoriesBlock: React.FC<
@@ -61,11 +61,9 @@ const CarouselCategoriesBlock: React.FC<
         )}
       >
         {(title || description) && (
-          <div
-            className={classNames(
-              carouselAlignTitleClass()
-            )}
-          >
+          <div className={classNames(
+            carouselAlignTitleClass()
+          )}>
             {title && <h2 className="text-blue-dark text-4xl mb-2">{title}</h2>}
             {description && (
               <div className="text-blue-dark">
@@ -75,18 +73,17 @@ const CarouselCategoriesBlock: React.FC<
           </div>
         )}
         {featuredContentsCollection?.items?.length > 0 && (
-          <div
-            className={classNames(
-              "flex flex-nowrap relative grow w-full items-center",
-              view?.alignTitle === "Left" && "md:max-w-[calc(100%-331px)] md:pl-[14px] lg:!pl-5"
-            )}
-          >
+          <div className={classNames(
+            "flex flex-nowrap relative grow w-full items-center",
+            view?.alignTitle === "Left" && "md:max-w-[calc(100%-331px)] md:pl-[14px] lg:!pl-5"
+          )}>
             {allowTouchMove && (
               <div className=' h-10 w-10'>
-                <div className={classNames(`${indexSlide + 1 === 1 ? " hidden" : "flex"}`, ' justify-center items-center')}>
-                  <div
-                    className={`prevSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
-                  >
+                <div className={classNames(
+                  indexSlide + 1 === 1 ? " hidden" : "flex",
+                  'justify-center items-center'
+                )}>
+                  <div className={`prevSlide${uui} border border-blue-dark hover:bg-blue-dark h-10 w-10 group rounded-full cursor-pointer flex items-center justify-center transition-colors duration-500`}>
                     <Icon {...iconLeft} />
                   </div>
                 </div>
@@ -94,12 +91,12 @@ const CarouselCategoriesBlock: React.FC<
             )}
             <Swiper
               allowTouchMove={allowTouchMove}
-              onRealIndexChange={
-                ({ isEnd, realIndex }) => {
-                  setIsEndSlider(isEnd);
-                  setIndexSlide(realIndex);
-                }
-              }
+              onSwiper={({ isEnd }) => setIsEndSlider(isEnd)}
+              onResize={({ isEnd }) => setIsEndSlider(isEnd)}
+              onRealIndexChange={({ isEnd, realIndex }) => {
+                setIsEndSlider(isEnd);
+                setIndexSlide(realIndex);
+              }}
               slidesPerView={1}
               breakpoints={{
                 375: {
@@ -147,10 +144,12 @@ const CarouselCategoriesBlock: React.FC<
             </Swiper>
             {allowTouchMove && (
               <div className=' h-10 w-10'>
-                <div className={classNames(`${isEndSlider && "!hidden"}`, ' justify-center items-center flex', featuredContentsCollection.items.length < 6 && "lg:hidden")}>
-                  <div
-                    className={`nextSlide${uui} border border-blue-dark h-10 w-10 rounded-full cursor-pointer flex items-center justify-center`}
-                  >
+                <div className={classNames(
+                  isEndSlider ? "!hidden" : "flex",
+                  'justify-center items-center',
+                  featuredContentsCollection.items.length < 6 && "lg:hidden"
+                )}>
+                  <div className={`nextSlide${uui} border border-blue-dark hover:bg-blue-dark h-10 w-10 group rounded-full cursor-pointer flex items-center justify-center transition-colors duration-500`}>
                     <Icon {...iconRight} />
                   </div>
                 </div>

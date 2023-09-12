@@ -15,7 +15,7 @@ const item = (str: string) => (
 
 const SidebarInformative: React.FC<IPromoBlock> = ({ listedContentsCollection, title, blockId, sysId }) => {
     return (
-        <article id={blockId? blockId: sysId} className='shadow-card p-6 rounded-[20px] flex flex-col gap-9 h-fit'>
+        <article id={blockId ?? sysId} className='shadow-card p-6 rounded-[20px] flex flex-col gap-9 h-fit'>
             <h3 className='text-blue-dark '>{title}</h3>
             <div className='flex flex-col gap-[34px]'>
                 {listedContentsCollection?.items.map((content, i) => (
@@ -26,12 +26,10 @@ const SidebarInformative: React.FC<IPromoBlock> = ({ listedContentsCollection, t
                                 <li key={i}>
                                     {item(tag.label)}
                                 </li>
-                            ))
-                            }
+                            ))}
                         </ul>
                     </div>
-                ))
-                }
+                ))}
             </div>
         </article>
     );

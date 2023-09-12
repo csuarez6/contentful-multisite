@@ -55,7 +55,7 @@ const Accordion: React.FC<any> = ({
           <>
             <div
               key={`${el.name}-${index}`}
-              className="first:border-0 border-t border-neutral-80"
+              className="first:border-0 border-t border-neutral-80 group"
             >
               <div className="text-lg cursor-pointer">
                 <div
@@ -65,14 +65,14 @@ const Accordion: React.FC<any> = ({
                 >
                   <div className="flex items-center gap-3 flex-grow">
                     {el.promoIcon && displayIcon && (
-                      <span className={`flow-root shrink-0 w-7 h-7 -my-2`}>
+                      <span className="flow-root shrink-0 w-7 h-7 -my-2 group-hover:scale-110 transition-transform">
                         <Icon
                           icon={el.promoIcon}
                           className="mx-auto w-full h-full text-blue-dark"
                         />
                       </span>
                     )}
-                    <h3 className="text-blue-dark text-size-subtitle1 !mb-0 w-1 flex-grow">
+                    <h3 className="text-blue-dark group-hover:text-category-blue-dark text-size-subtitle1 !mb-0 w-1 flex-grow">
                       {el.promoTitle ?? el.name}
                     </h3>
                   </div>
