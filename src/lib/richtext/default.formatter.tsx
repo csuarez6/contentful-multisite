@@ -106,7 +106,7 @@ const defaultFormatOptions: Options = {
           target="_blank"
           rel="noreferrer"
         >
-          children
+          {children}
         </a>
       );
     },

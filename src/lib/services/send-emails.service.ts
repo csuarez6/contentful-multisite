@@ -229,11 +229,11 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
               <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().leftIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
+                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px">
                     <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
                       ${orderStatus().text}
                     </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().rightIcon}" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
+                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;">
                   </td>
                 </tr>
                  ${customerSection(data)}

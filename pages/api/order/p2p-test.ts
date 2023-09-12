@@ -1,7 +1,7 @@
 import { PaymentStatus } from '@/lib/enum/EPaymentStatus.enum';
 import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
-import { getCLAdminCLient, getNameQuantityOrderItems, getOrderStatusCl, isExternalPayment } from '@/lib/services/commerce-layer.service';
+import { getCLAdminCLient, getNameQuantityOrderItems,  isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
