@@ -41,21 +41,27 @@ const ProductFinancingBlock: React.FC<IPromoBlock> = ({
         <div className="flex justify-center overflow-x-auto">
           <div className="flex border-b border-transparent">
             <Tab.List className="flex gap-[10px] pb-2 md:pb-0">
-              {productTabs?.map((tab) =>
+              {productTabs?.map((tab) => (
                 <Tab
+                  as={Fragment}
                   key={tab.id}
-                  className={({ selected }) =>
-                    classNames(
-                      selected
-                        ? "border-lucuma text-blue-dark"
-                        : "border-transparent hover:border-lucuma text-category-sky-blue-50",
-                      "flex flex-col items-center text-size-subtitle3 md:text-[1.25rem] font-semibold md:font-bold gap-[10px] shrink-0 grow focus:outline-none border-b-2 p-5"
-                    )
-                  }
                 >
-                  <span>{tab.name}</span>
+                  {({ selected }) => (
+                    <button className={classNames(
+                      "flex flex-col items-center text-size-subtitle3 md:text-[1.25rem] font-semibold md:font-bold gap-[10px] shrink-0 grow focus:outline-none p-5 underline-animated-2 text-lucuma",
+                      selected && "underline-animated-full-2"
+                    )}>
+                      <span className={
+                        selected
+                          ? "text-blue-dark"
+                          : "text-category-sky-blue-50"
+                      }>
+                        {tab.name}
+                      </span>
+                    </button>
+                  )}
                 </Tab>
-              )}
+              ))}
             </Tab.List>
           </div>
         </div>

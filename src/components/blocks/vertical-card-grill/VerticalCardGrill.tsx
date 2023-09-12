@@ -87,9 +87,9 @@ const VerticalCardGrillBlock: React.FC<IPromoBlock> = ({
               containerClasses
             )
           }>
-            {featuredContentsCloned.map((el) => (
+            {featuredContentsCloned.map((el, idx) => (
               <div
-                key={el.name}
+                key={el.name + idx}
                 className={
                   classNames(
                     'grid max-w-[588px] w-full',
@@ -121,8 +121,8 @@ const VerticalCardGrillBlock: React.FC<IPromoBlock> = ({
                   clickable: true
                 }}
               >
-                {featuredContentsCloned.map((el) => (
-                  <SwiperSlide key={el.promoTitle}>
+                {featuredContentsCloned.map((el, idx) => (
+                  <SwiperSlide key={el.promoTitle + idx}>
                     <div className='grid justify-items-center h-full px-0.5 py-2 mb-16'>
                       <VerticalCardGrill {...{ ...el, ...{ alignButton: "Izquierda" } }} />
                     </div>

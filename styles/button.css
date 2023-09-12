@@ -1,9 +1,15 @@
 .button {
-  @apply px-4 py-2 leading-[1.6] font-semibold focus:outline-none transition-colors duration-500;
+  @apply px-4 py-2 leading-[1.6] font-semibold focus:outline-none transition-[background-color,color,box-shadow] duration-500;
+}
+
+.button:where(.button-primary, .button-secondary, .button-outline) {
+  @apply relative overflow-hidden rounded-[20px] hover:shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.4)];
+  @apply after:pointer-events-none after:absolute after:pt-[350%] after:pl-[350%] after:-mt-[120%] after:-ml-5 after:-left-5 after:opacity-0 after:bg-white after:bg-opacity-30 after:transition-all after:duration-700;
+  @apply after:rounded-[20px] active:after:m-0 active:after:p-0 active:after:opacity-100 active:after:duration-0;
 }
 
 .button.button-primary {
-  @apply rounded-[20px] bg-lucuma text-black hover:bg-lucuma-60 hover:border-lucuma-60 disabled:bg-lucuma-80 disabled:border-lucuma-80 disabled:text-grey-60 border border-lucuma;
+  @apply bg-lucuma text-black hover:bg-lucuma-60 hover:border-lucuma-60 disabled:bg-lucuma-80 disabled:border-lucuma-80 disabled:text-grey-60 border border-lucuma hover:shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.15)];
 }
 
 .button.button-primary.disabled {
@@ -11,7 +17,7 @@
 }
 
 .button.button-secondary {
-  @apply rounded bg-blue-dark text-white hover:bg-blue-dark-8 disabled:bg-blue-dark-90 disabled:text-neutral-70;
+  @apply bg-blue-dark border-blue-dark text-white hover:bg-blue-dark-8 hover:border-blue-dark-8 disabled:bg-blue-dark-90 disabled:border-blue-dark-90 disabled:text-neutral-70;
 }
 
 .button.button-secondary.disabled {
@@ -19,7 +25,7 @@
 }
 
 .button.button-outline {
-  @apply rounded-[20px] bg-white text-blue-dark border border-blue-dark hover:border-blue-dark hover:bg-blue-dark hover:text-white disabled:bg-grey-90 disabled:text-grey-60 disabled:border-grey-60;
+  @apply bg-white text-blue-dark border border-blue-dark hover:border-blue-dark hover:bg-blue-dark hover:text-white disabled:bg-grey-90 disabled:text-grey-60 disabled:border-grey-60;
 }
 
 .button.button-outline.disabled {
@@ -27,7 +33,7 @@
 }
 
 .button.text-button {
-  @apply p-0 text-blue-dark hover:text-blue-dark-8 hover:underline disabled:text-grey-60;
+  @apply p-0 text-blue-dark hover:text-blue-dark-8 disabled:text-grey-60 underline-animated-1;
 }
 
 .button.text-button.disabled {

@@ -91,7 +91,7 @@ h6 {
 }
 
 .swiper-pagination-bullet.swiper-pagination-custom-bullet {
-  @apply sm:w-[18px] sm:h-[18px] bg-grey-80 opacity-100 cursor-pointer mx-[5px] w-full h-[2px];
+  @apply sm:w-[18px] sm:h-[18px] bg-grey-80 hover:bg-lucuma-60 transition-colors duration-500 opacity-100 cursor-pointer mx-[5px] w-full h-[2px];
 }
 
 .swiper-pagination-bullet.swiper-pagination-custom-bullet-sliders {

@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import { IPromoContent } from '@/lib/interfaces/promo-content-cf.interface';
-import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import Icon from '@/components/atoms/icon/Icon';
@@ -16,7 +15,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
     const [open, setOpen] = useState(isActive);
     return (
         <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={setOpen}>
+            <Dialog as="div" className="relative z-50" onClose={() => setOpen(!isClosable)}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -74,7 +73,7 @@ const ModalSuccess: React.FC<IPromoContent> = ({
                                         }
                                     </div>
                                 </div>
-                                {/* <div className="mt-5 sm:mt-[47px] self-end">
+                                {/* <div className="mt-5 sm:mt-12 self-end">
                                     <button type="button" className="button button-primary !px-10" onClick={() => setOpen(false)}>
                                         {ctaLabel}
                                     </button>

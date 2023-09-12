@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import RadioBox from './RadioBox';
-import { dataRadioBox, IRadioBox } from './RadioBox.mocks';
+import RadioBox, { IRadioBox } from './RadioBox';
+import { dataRadioBox } from './RadioBox.mocks';
 
 export default {
     title: 'atoms/input/RadioBox',
