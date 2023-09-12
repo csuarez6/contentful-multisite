@@ -15,7 +15,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp - pass using env varible
+import { formatAddress } from "@/lib/services/commerce-layer.service";
 
 const orderStatus = (value: string) => {
     switch (value) {
@@ -46,6 +46,7 @@ const CheckoutPurchase = () => {
     const { isLogged, user } = useContext(AuthContext);
     const { getOrderById } = useContext(CheckoutContext);
     const [billingAddress, setBillingAddress] = useState<Address>();
+    const [shippingAddress, setShippingAddress] = useState<Address>();
     const orderId = router.query.id?.toString();
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
@@ -53,7 +54,7 @@ const CheckoutPurchase = () => {
 
     const fullName = useMemo(() => {
         return (
-            (resource) => `${resource?.metadata?.name} ${resource?.metadata.lastName}`
+            (resource) => `${resource?.metadata?.name} ${resource?.metadata?.lastName}`
         )(isLogged ? user : orderInfoById);
 
     }, [user, orderInfoById, isLogged]);
@@ -67,6 +68,7 @@ const CheckoutPurchase = () => {
                         setStatusError(false);
                         setOrderInfoById(orderData.data);
                         setBillingAddress(orderData.data["billing_address"]);
+                        setShippingAddress(orderData.data["shipping_address"]);
                         console.info({ orderData });
                     } else {
                         console.info('status', orderData["status"]);
@@ -93,9 +95,9 @@ const CheckoutPurchase = () => {
     const shipments = () => {
         const shipments = orderInfoById.shipments;
         const shipmentItems = [];
-        shipments.forEach(async (el) => {
+        shipments?.forEach(async (el) => {
             const availableMethods = el.available_shipping_methods;
-            const methods = availableMethods.map((item) => { if (item.id != DEFAULT_SHIPPING_METHOD_ID) return item.name; });
+            const methods = availableMethods.map((item) => { if (item.id != process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
             shipmentItems.push(methods);
         });
         return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
@@ -104,21 +106,21 @@ const CheckoutPurchase = () => {
     const paymentEntity = () => {
         if (orderInfoById.status !== OrderStatus.approved) {
             return {
-                paymentMethod: "-----",
-                paymentEntity: "-----"
+                paymentMethod: "*****",
+                paymentEntity: "*****"
             };
         }
         const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
         return {
-            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+            paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "*****",
+            paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "*****"
         };
     };
 
     return (
         <HeadingCard
             classes="col-span-2"
-            title={!statusError ? orderStatus(orderInfoById?.status).text : "Comprobación..."}
+            title={!statusError ? orderStatus(orderInfoById?.status).text : "Comprobación"}
             icon={orderStatus(orderInfoById?.status).leftIcon}
             isCheck={isCompleted}
             rightIcon={orderStatus(orderInfoById?.status).rightIcon}
@@ -128,47 +130,63 @@ const CheckoutPurchase = () => {
                 <div className="bg-white rounded-lg">
                     <dl className="space-y-5 text-sm">
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Cuenta contrato:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "-----"}</dd>
+                            <dt className="flex-1 text-grey-30">Número de orden:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.number ?? "*****"}</dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Nombre del adquiriente:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">{fullName ?? "-----"}</dd>
+                            <dd className="flex-1 font-bold text-grey-30">{fullName ?? "*****"}</dd>
                         </div>
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Cedula de ciudadania:</dt>
+                            <dt className="flex-1 text-grey-30">Identificación del adquiriente:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {orderInfoById?.metadata?.documentNumber}
                             </dd>
                         </div>
                         <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Teléfono del adquiriente:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.metadata?.cellPhone}</dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Correo electrónico del adquiriente:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.customer_email}</dd>
+                        </div>
+                        <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de pago:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentMethod ?? "-----"}
+                                {paymentEntity().paymentMethod ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentEntity ?? "-----"}
+                                {paymentEntity().paymentEntity ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress?.line_1} {billingAddress?.city ?? "-----"}
+                                {shippingAddress ? formatAddress(shippingAddress) : "*****"}
+                            </dd>
+                        </div>
+                        {shippingAddress?.notes &&
+                            <div className="flex justify-between">
+                                <dt className="flex-1 text-grey-30">Destinatario:</dt>
+                                <dd className="flex-1 font-bold text-grey-30">
+                                    {shippingAddress?.notes}
+                                </dd>
+                            </div>
+                        }
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Método de envio:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">
+                                {shipments() ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Dirección de facturación:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {billingAddress?.full_address ?? "-----"}
-                            </dd>
-                        </div>
-                        <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Método de envio:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">
-                                {shipments() ?? "-----"}
+                                {billingAddress ? formatAddress(billingAddress) : "*****"}
                             </dd>
                         </div>
                     </dl>

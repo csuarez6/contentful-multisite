@@ -1,7 +1,7 @@
 import { PaymentStatus } from '@/lib/enum/EPaymentStatus.enum';
 import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
-import { getCLAdminCLient, getNameQuantityOrderItems, isExternalPayment } from '@/lib/services/commerce-layer.service';
+import { getCLAdminCLient, getNameQuantityOrderItems,  isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -118,19 +118,23 @@ const handler = async (
         } else if (type === 'approved') {
             await client.orders.update({
                 id: order.id,
-                _approve: true,
-                _capture: true
-            }, DEFAULT_ORDER_PARAMS
-            ).then(async (orderUpdated) => {
-                const captures = orderUpdated.captures.at(0);
-                console.info(captures);
+                _approve: true
+            }).then(async () => {
+                await client.orders.update({
+                    id: order.id,
+                    _capture: true
+                }, DEFAULT_ORDER_PARAMS
+                ).then(async (orderUpdated) => {
+                    const captures = orderUpdated.captures.at(0);
+                    console.info(captures);
 
-                await client.captures.update({
-                    id: captures.id,
-                    metadata: {
-                        id: 123,
-                        prueba: 'test'
-                    }
+                    await client.captures.update({
+                        id: captures.id,
+                        metadata: {
+                            id: 123,
+                            prueba: 'test'
+                        }
+                    });
                 });
             });
             return res.status(200).json({ status: 200, data: order.transactions });

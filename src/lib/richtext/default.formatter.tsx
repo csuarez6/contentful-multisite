@@ -124,6 +124,33 @@ const defaultFormatOptions: Options = {
         </CustomLink>
       );
     },
+    [INLINES.ASSET_HYPERLINK]: (node, children) => {
+      let isButton = false;
+      for (const ct of node.content) {
+        if (!ct["marks"] || ct["marks"] == undefined || ct["marks"] == null) {
+          continue;
+        }
+        const marks = ct["marks"];
+
+        isButton = marks.some((m) => m.type == "italic");
+        if (isButton) {
+          break;
+        }
+      }
+
+      return (
+        <a
+          className={`text-violet-500 underline ${
+            isButton ? "inline-cta-button" : ""
+          }`}
+          href={node.data.uri}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {children}
+        </a>
+      );
+    },
   },
   renderMark: {
     [MARKS.CODE]: (node) => {

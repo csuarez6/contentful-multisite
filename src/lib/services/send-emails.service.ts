@@ -22,14 +22,14 @@ const customerSection = (data: IOrderExtended) => {
   const paymentInfo = () => {
     if (data.status !== OrderStatus.approved) {
       return {
-        paymentMethod: "-----",
-        paymentEntity: "-----"
+        paymentMethod: "*****",
+        paymentEntity: "*****"
       };
     }
     const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
     return {
-      paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "-----",
-      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "-----"
+      paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "*****",
+      paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "*****"
     };
   };
 
@@ -193,6 +193,75 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   });
 
   return section;
+};
+
+const bodySection = (status: string, data: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string) => {
+  const orderStatus = () => {
+    switch (status) {
+      case "cancelled":
+        return {
+          text: `¡Tu orden ${data.number} ha sido rechazada!`,
+          leftIcon: `2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png`,
+          rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/53aa2df01146c7fa295c8c5c38502ad0/icon-cancel.svg`
+        };
+      case "approved":
+      case "fulfilled":
+        return {
+          text: `¡Tu orden ${data.number} ha sido aprobada!`,
+          leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
+          rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`
+        };
+      default:
+        return {
+          text: `¡Tu orden ${data.number} está pendiente!`,
+          leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
+          rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/6398b72926e0c1adf87dccdd9d75a156/icon-pending.svg`
+        };
+    }
+  };
+
+  const body = `
+    <tr>
+      <td class="sm-px-0" style="width: 760px; max-width: 100%; padding: 40px 16px">
+        <table style="margin: auto;" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <td style="width: 600px; max-width: 100%;">
+              <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
+                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px">
+                    <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
+                      ${orderStatus().text}
+                    </h2>
+                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;">
+                  </td>
+                </tr>
+                 ${customerSection(data)}
+                <tr>
+                  <td style="padding-left: 16px; padding-right: 16px;">
+                    <h3 style="margin: 0; font-size: 20px; color: #113455">
+                      Detalle de tu pedido
+                    </h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
+                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
+                      ${productsSection(line_items, shipments)}
+                    </table>
+                    <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
+                      TOTAL <span style="margin-left: 12px;">${formatted_total_amount}</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>`;
+
+    return body;
 };
 
 const header = `
@@ -386,150 +455,23 @@ const footer = `
     </html>`;
 
 const clientEmailTemplate = (status: string, data: IOrderExtended) => {
-  const body = `
-    <tr>
-      <td class="sm-px-0" style="width: 760px; max-width: 100%; padding: 40px 16px">
-        <table style="margin: auto;" cellpadding="0" cellspacing="0" role="presentation">
-          <tr>
-            <td style="width: 600px; max-width: 100%;">
-              <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
-                    <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ¡Tu orden ${data.number} ha sido ${status}!
-                    </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
-                  </td>
-                </tr>
-                 ${customerSection(data)}
-                <tr>
-                  <td style="padding-left: 16px; padding-right: 16px;">
-                    <h3 style="margin: 0; font-size: 20px; color: #113455">
-                      Detalle de tu pedido
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
-                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${productsSection(data.line_items, data.shipments)}
-                    </table>
-                    <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${data.formatted_total_amount}</span>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>`;
-
+  const body = bodySection(status, data, data.line_items, data.shipments, data.formatted_total_amount);
   return header + body + footer;
 };
 
-const vantiEmailTemplate = (data: IOrderExtended) => {
-  const body = `
-    <tr>
-      <td class="sm-px-0" style="width: 760px; max-width: 100%; padding: 40px 16px">
-        <table style="margin: auto;" cellpadding="0" cellspacing="0" role="presentation">
-          <tr>
-            <td style="width: 600px; max-width: 100%;">
-              <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
-                    <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ¡La orden ${data.number} ha sido aprobada!
-                    </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
-                  </td>
-                </tr>
-                 ${customerSection(data)}
-                <tr>
-                  <td style="padding-left: 16px; padding-right: 16px;">
-                    <h3 style="margin: 0; font-size: 20px; color: #113455">
-                      Detalle del pedido
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
-                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${productsSection(data.line_items, data.shipments)}
-                    </table>
-                    <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${data.formatted_total_amount}</span>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>`;
-
+const vantiEmailTemplate = (status: string, data: IOrderExtended) => {
+  const body = bodySection(status, data, data.line_items, data.shipments, data.formatted_total_amount);
   return header + body + footer;
 };
 
-const allyEmailTemplate = (data: IOrderExtended, productsData: IAlly) => {
-  const body = `
-    <tr>
-      <td class="sm-px-0" style="width: 760px; max-width: 100%; padding: 40px 16px">
-        <table style="margin: auto;" cellpadding="0" cellspacing="0" role="presentation">
-          <tr>
-            <td style="width: 600px; max-width: 100%;">
-              <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0">
-                    <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ¡La orden ${data.number} ha sido aprobada!
-                    </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0; float: right">
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 24px">
-                  <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                    ${customerSection(data)}
-                  </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-left: 16px; padding-right: 16px;">
-                    <h3 style="margin: 0; font-size: 20px; color: #113455">
-                      Detalle del pedido
-                    </h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
-                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${productsSection(productsData.line_items, productsData.shipments)}
-                    </table>
-                    <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
-                      TOTAL <span style="margin-left: 12px;">${productsData.formatted_ally_shipping_total_amount}</span>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>`;
-
+const allyEmailTemplate = (status: string, data: IOrderExtended, productsData: IAlly) => {
+  const body = bodySection(status, data, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
   return header + body + footer;
 };
 
 export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   const jsonBody = orderByAlly;
-  const status = orderByAlly.status === "approved" ? "aprobada" : "cancelada";
-  const email = clientEmailTemplate(status, jsonBody);
+  const email = clientEmailTemplate(orderByAlly.status, jsonBody);
 
   const clientEmail = {
     to: jsonBody.customer.email,
@@ -553,7 +495,7 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
 
 export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   const jsonBody = orderByAlly;
-  const email = vantiEmailTemplate(jsonBody);
+  const email = vantiEmailTemplate(orderByAlly.status, jsonBody);
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -588,7 +530,7 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number
 
   allyItems.forEach((allyItem) => {
     const productsData = allyItem;
-    const email = allyEmailTemplate(orderByAlly, productsData);
+    const email = allyEmailTemplate(orderByAlly.status, orderByAlly, productsData);
     const emailAddresses = String(allyItem.metadata?.email).split(',');
 
     if (!emailAddresses) {

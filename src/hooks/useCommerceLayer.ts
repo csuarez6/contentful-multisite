@@ -7,9 +7,8 @@ import { useRouter } from "next/router";
 import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
 import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
-const DEFAULT_SHIPPING_METHOD_ID = "dOLWPFmmvE"; //Temp
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "captures", "voids", "payment_method"],
+  include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "shipping_address", "captures", "voids", "payment_method"],
   fields: {
     orders: [
       "number",
@@ -29,6 +28,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "available_payment_methods",
       "shipments",
       "billing_address",
+      "shipping_address",
       "captures",
       "voids",
       "payment_method"
@@ -184,10 +184,11 @@ export const useCommerceLayer = () => {
 
       const orderResp = await getUpdateOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
       const order = orderResp.data as unknown as Order;
+      if (orderResp.status === 200) return { status: 200, data: order };
+      return { status: 400, data: 'Error get order by ID' };
 
-      return { status: 200, data: order };
     } catch (error) {
-      return { status: 400, data: 'error get order by ID' };
+      return { status: 400, data: 'Error get order by ID' };
     }
   }, []);
 
@@ -284,7 +285,7 @@ export const useCommerceLayer = () => {
 
       if (quantity > 0) {
         response = await client.line_items.update({ id: lineItem.id, quantity }).catch(err => err);
-        
+
         if ('errors' in response && (await client.line_items.retrieve(lineItem.id))?.quantity !== quantity) { // It checks if has ocurred an error and the quantity was updated in fact 
           console.error("error in sku line item", response.errors);
           return { status: parseInt(response.errors[0].status), data: response.errors[0].title };
@@ -572,13 +573,14 @@ export const useCommerceLayer = () => {
   }, [orderId]);
 
   const setPaymentMethod = useCallback(
-    async (paymentMethodId: string) => {
+    async (paymentMethodId?: string) => {
       const client = await generateClient();
+      const selectedPaymentMethodId = paymentMethodId ?? process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_PAYMENT_METHOD_ID;
       await client.orders.update(
         {
           id: orderId,
           payment_method: {
-            id: paymentMethodId,
+            id: selectedPaymentMethodId,
             type: "payment_methods",
           },
         },
@@ -612,17 +614,6 @@ export const useCommerceLayer = () => {
   }, [orderId]);
 
   const setDefaultShippingMethod = useCallback(async (hasShipment) => {
-    // ************** CODE PREV
-    // const shipmentId = order.shipments.at(0)?.id;
-    // const client = await generateClient();
-    // await client.shipments.update({
-    //   id: shipmentId,
-    //   shipping_method: {
-    //     id: DEFAULT_SHIPPING_METHOD_ID,
-    //     type: "shipping_methods",
-    //   },
-    // }).catch(err => console.error('error set default shipping method', err.errors));
-    // ************** END CODE PREV
     const client = await generateClient();
     const shipments = order.shipments;
     const allies = [];
@@ -643,11 +634,11 @@ export const useCommerceLayer = () => {
     shipments.forEach(async (el, index) => {
       const availableMethods = el.available_shipping_methods;
       const methodID = availableMethods.find((item) => item.name === allies[index].name);
-      const methodIdCheck = (methodID) ? methodID.id : DEFAULT_SHIPPING_METHOD_ID;
+      const methodIdCheck = (methodID) ? methodID.id : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID;
       await client.shipments.update({
         id: el.id,
         shipping_method: {
-          id: (hasShipment) ? methodIdCheck : DEFAULT_SHIPPING_METHOD_ID,
+          id: (hasShipment) ? methodIdCheck : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID,
           type: "shipping_methods",
         },
       }).catch(err => console.error('error set default shipping method', err.errors));

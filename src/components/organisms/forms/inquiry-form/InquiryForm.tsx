@@ -199,7 +199,7 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
             </div>
             <div className="rounded-xl bg-neutral-30 p-3 flex items-center justify-center">
               <p className='text-white title is-1 text-center'>
-                {showInfo && response ? (isRPO ? response.date : `${formatPrice(response.quotaApproved)}*`) : "-----"}
+                {showInfo && response ? (isRPO ? response.date : `${formatPrice(response.quotaApproved)}*`) : "*****"}
               </p>
             </div>
 
@@ -211,13 +211,13 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
                   <div className="grid grid-cols-2 sm:grid-cols-5">
                     <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Nombre del titular</p>
                     <p className='text-size-p1 text-blue-dark text-right col-span-3'>
-                      {showInfo && response ? response.name : "-----"}
+                      {showInfo && response ? response.name : "*****"}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-5">
                     <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Dirección del predio</p>
                     <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
-                      {showInfo && response?.address ? response.address : "-----"}
+                      {showInfo && response?.address ? response.address : "*****"}
                     </p>
                   </div>
                 </>
@@ -227,13 +227,13 @@ const InquiryForm: React.FC<IFormBlock> = ({ simpleView }) => {
                   <div className="grid grid-cols-2 sm:grid-cols-5">
                     <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Cupo Utilizado</p>
                     <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
-                      {showInfo && response?.quotaUsed ? `${formatPrice(response.quotaUsed)}` : "-----"}
+                      {showInfo && response?.quotaUsed ? `${formatPrice(response.quotaUsed)}` : "*****"}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-5">
                     <p className='text-size-subtitle1 font-bold text-blue-dark sm:col-span-2'>Cupo Disponible</p>
                     <p className='text-size-p1 text-blue-dark text-right sm:col-span-3'>
-                      {showInfo && response?.quotaAvailable ? `${formatPrice(response.quotaAvailable)}` : "-----"}
+                      {showInfo && response?.quotaAvailable ? `${formatPrice(response.quotaAvailable)}` : "*****"}
                     </p>
                   </div>
                 </>

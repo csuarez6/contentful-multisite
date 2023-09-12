@@ -21,7 +21,7 @@ const orderValidation = async ({ body, method }: NextApiRequest, res: NextApiRes
             },
         });
     }
-    const vantiListoMarket = included?.find((el: any) => el.id === process.env.NEXT_PUBLIC_VANTI_LISTO_MARKET_ID);
+    const vantiListoMarket = included?.find((el: any) => el.id === `market:${process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID}`);
 
     if (vantiListoMarket) {
         res.status(400).json({

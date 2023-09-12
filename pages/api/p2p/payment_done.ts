@@ -11,8 +11,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data = req.query;
     const orderId = data.id?.toString();
+    let sendEmails = false;
 
     try {
+        console.info('p2p payment_done', req.query);
+
         const client = await getCLAdminCLient();
         const order = await client.orders.retrieve(orderId, DEFAULT_ORDER_PARAMS);
         if (!order) throw new Error("INVALID_ORDER");
@@ -38,14 +41,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
                     await client.orders.update({
                         id: order.id,
-                        _approve: true,
-                        _capture: true
-                    }, DEFAULT_ORDER_PARAMS
-                    ).then(async (orderUpdated) => {
-                        const captures = orderUpdated.captures?.at(0);
-                        await client.captures.update({
-                            id: captures?.id,
-                            metadata: metadata
+                        _approve: true
+                    }).then(async () => {
+                        console.info('p2p payment_done approved');
+                        await client.orders.update({
+                            id: order.id,
+                            _capture: true
+                        }, DEFAULT_ORDER_PARAMS
+                        ).then(async (orderUpdated) => {
+                            console.info('p2p payment_done captured', orderUpdated);
+                            const captures = orderUpdated.captures.at(0);
+                            console.info(captures);
+
+                            await client.captures.update({
+                                id: captures.id,
+                                metadata: metadata
+                            });
+                            sendEmails = true;
                         });
                     });
                 } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
@@ -54,19 +66,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         _cancel: true,
                     }, DEFAULT_ORDER_PARAMS
                     ).then(async (orderUpdated) => {
+                        console.info('p2p payment_done voids', orderUpdated);
                         const voids = orderUpdated.voids?.at(0);
                         await client.voids.update({
                             id: voids?.id,
                             metadata: metadata
                         });
+                        sendEmails = true;
                     });
                 }
 
-                const orderByAlly = (await getOrderByAlly(order.id)).data;
-                await sendClientEmail(orderByAlly);
-                if (infoP2P.status.status === P2PRequestStatus.approved) {
-                    await sendVantiEmail(orderByAlly);
-                    await sendAllyEmail(orderByAlly);
+                if (sendEmails) {
+                    console.info('p2p payment_done emails');
+                    const orderByAlly = (await getOrderByAlly(order.id)).data;
+                    await sendClientEmail(orderByAlly);
+                    if (infoP2P.status.status === P2PRequestStatus.approved) {
+                        await sendVantiEmail(orderByAlly);
+                        await sendAllyEmail(orderByAlly);
+                    }
                 }
             }
         }

@@ -11,6 +11,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const order = await client.orders.retrieve(data.orderId, DEFAULT_ORDER_PARAMS);
     const description = getNameQuantityOrderItems(order);
 
+    console.info('p2p create_request', req.body);
+
     const payment: IP2PPayment = {
       'reference': order.id,
       'description': description,
@@ -56,6 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       _place: true
     }, DEFAULT_ORDER_PARAMS
     ).then(async (orderUpdated) => {
+      console.info('p2p create_request placed', orderUpdated);
       const authorization = orderUpdated.authorizations?.at(0);
       await client.authorizations.update({
         id: authorization?.id,
@@ -70,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message || 'CAPTURE_PAYMENT_ERROR',
+      error: error.message || 'CAPTURE_PAYMENT_ERROR'
     });
   }
 };

@@ -84,6 +84,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
               type={linkView}
               text={ctaLabel ?? name}
               classes={getButtonType("Contorno")}
+              modalClass="w-auto max-w-7xl"
             >
               {documentToReactComponents(
                 attachLinksToRichtextContent(content?.json, content?.links),

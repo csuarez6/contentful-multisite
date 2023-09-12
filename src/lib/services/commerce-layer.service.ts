@@ -1,4 +1,4 @@
-import CommerceLayer, { CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { Address, CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
@@ -65,9 +65,9 @@ export const getIntegrationAppToken = async (): Promise<string> => {
       accessToken,
       data: { expires_in },
     } = await getIntegrationToken({
-      endpoint: process.env.COMMERCELAYER_ENDPOINT,
-      clientId: process.env.COMMERCELAYER_CLIENT_ID,
-      clientSecret: process.env.COMMERCELAYER_CLIENT_SECRET,
+      endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+      clientId: process.env.COMMERCELAYER_INTEGRATION_CLIENT_ID,
+      clientSecret: process.env.COMMERCELAYER_INTEGRATION_CLIENT_SECRET,
     });
 
     CACHE_TOKENS.APP_TOKEN = accessToken;
@@ -87,7 +87,7 @@ export const getMerchantToken = async (cache = true) => {
     if (CACHE_TOKENS.MERCHANT_TOKEN !== null && CACHE_TOKENS.MERCHANT_TOKEN && cache)
       return CACHE_TOKENS.MERCHANT_TOKEN;
 
-    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
+    let commercelayerScope = `market:${process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID}`;
     if (commercelayerScope.indexOf("[") === 0)
       commercelayerScope = JSON.parse(commercelayerScope);
 
@@ -119,10 +119,8 @@ export const getMerchantToken = async (cache = true) => {
 /* For specific user (10 min)  */
 export const getCustomerTokenCl = async ({ email, password }) => {
   try {
-    let commercelayerScope = process.env.NEXT_PUBLIC_COMMERCELAYER_MARKET_SCOPE;
-    if (commercelayerScope.indexOf("[") === 0) {
-      commercelayerScope = JSON.parse(commercelayerScope);
-    }
+    let commercelayerScope = `market:${process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID}`;
+    if (commercelayerScope.indexOf("[") === 0) commercelayerScope = JSON.parse(commercelayerScope);
 
     const token = await getCustomerToken(
       {
@@ -629,6 +627,12 @@ export const getOrderStatusCl = async (status?: string) => {
   try {
     const cl = await getCLAdminCLient();
     const orderList = await cl.orders.list({
+      include: ["payment_source"],
+      fields: {
+        orders: [
+          "payment_source"
+        ]
+      },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },
       pageSize: 25, // The maximum page size allowed is 25 - Commercelayer
@@ -657,10 +661,7 @@ export const getNameQuantityOrderItems = (order: Order): string => {
   try {
     let itemNames = '';
     order.line_items?.forEach(item => {
-      if (item.item_type === 'skus') {
-        if (itemNames !== '') {
-          itemNames += ', ';
-        }
+      if (item.item_type === 'skus' || item.item_type === 'adjustments') {
         itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
       }
     });
@@ -690,4 +691,9 @@ export const formatDate = (date: string) : string => {
   }).format(new Date(date));
 
   return formattedDate;
+};
+
+// Función para formatear una dirección
+export const formatAddress = (address: Address): string => {
+  return address.line_1 + (address.line_2 ? ', ' + address.line_2 : '') + ', ' + address.city + ', ' + address.state_code;
 };

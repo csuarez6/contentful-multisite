@@ -14,12 +14,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const data: IP2PNotification = req.body;
     const transactionToken = data.requestId;
     const validation = validateP2PSignature(data);
+    let sendEmails = false;
 
     console.info('p2p notification', req.body);
 
     if (validation) {
-      console.info('ok validation');
-
       const paymentSource = await client.external_payments.list({
         filters: {
           payment_source_token_eq: transactionToken
@@ -38,46 +37,52 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         paymentInfo: infoP2P
       };
 
-      console.info('ok order search');
-
       if (data.status.status === P2PRequestStatus.approved) {
-        console.info('approved');
-
         await client.orders.update({
           id: order.id,
-          _approve: true,
-          _capture: true
-        }, DEFAULT_ORDER_PARAMS
-        ).then(async (orderUpdated) => {
-          const captures = orderUpdated.captures?.at(0);
+          _approve: true
+        }).then(async () => {
+          console.info('p2p notification approved');
+          await client.orders.update({
+            id: order.id,
+            _capture: true
+          }, DEFAULT_ORDER_PARAMS
+          ).then(async (orderUpdated) => {
+            console.info('p2p notification captured', orderUpdated);
+            const captures = orderUpdated.captures.at(0);
 
-          await client.captures.update({
-            id: captures?.id,
-            metadata: metadata
+            await client.captures.update({
+              id: captures.id,
+              metadata: metadata
+            });
+            sendEmails = true;
           });
         });
       } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
-        console.info('failed or rejected');
-
         await client.orders.update({
           id: order.id,
           _cancel: true,
         }, DEFAULT_ORDER_PARAMS
         ).then(async (orderUpdated) => {
+          console.info('p2p notification voids', orderUpdated);
           const voids = orderUpdated.voids?.at(0);
 
           await client.voids.update({
             id: voids?.id,
             metadata: metadata
           });
+          sendEmails = true;
         });
       }
 
-      const orderByAlly = (await getOrderByAlly(order.id)).data;
-      await sendClientEmail(orderByAlly);
-      if (data.status.status === P2PRequestStatus.approved) {
-        await sendVantiEmail(orderByAlly);
-        await sendAllyEmail(orderByAlly);
+      if (sendEmails) {
+        console.info('p2p notification emails');
+        const orderByAlly = (await getOrderByAlly(order.id)).data;
+        await sendClientEmail(orderByAlly);
+        if (data.status.status === P2PRequestStatus.approved) {
+          await sendVantiEmail(orderByAlly);
+          await sendAllyEmail(orderByAlly);
+        }
       }
     }
 
@@ -89,7 +94,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     console.error(error);
     return res.status(500).json({
       status: 500,
-      message: error.message,
+      message: error.message || 'NOTIFICATION_PAYMENT_ERROR'
     });
   }
 };
