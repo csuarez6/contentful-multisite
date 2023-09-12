@@ -21,15 +21,19 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
             isError && "has-error"
         )}>
             {label && (
-                <label className={`block text-lg ${isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'}`} {...id && { htmlFor: id }}>
-                    {label}{isRequired && <span className='text-red-700'>*</span>}
+                <label className={`block text-lg transition-colors duration-500 ${isError ? 'text-states-error-txt' : 'text-grey-30'}`} {...id && { htmlFor: id }}>
+                    {label}{isRequired && <span className='text-states-error-txt'>*</span>}
                 </label>
             )}
             <div className='relative'>
                 <input
                     data-testid="textbox"
                     ref={ref}
-                    className={`border border-grey-60 rounded w-full py-2 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none ${className ?? ''}`}
+                    className={classNames(
+                        "border rounded w-full py-2 px-3 text-grey-30 placeholder:text-grey-60 leading-tight focus:outline-none transition-colors duration-500",
+                        isError ? "border-states-error" : "border-grey-80 focus:border-lucuma-60 hover:border-grey-30",
+                        className
+                    )}
                     {...rest}
                     {...id && { id }}
                     {...id && { name: id }}
@@ -42,7 +46,7 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
                 }
             </div>
             {isError &&
-                <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errorMessage}</p>
+                <p className="mt-2 text-sm text-states-error-txt">{errorMessage}</p>
             }
         </div>
     );

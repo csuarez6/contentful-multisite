@@ -395,10 +395,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
               <div className="flex items-center justify-end flex-grow md:py-5">
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full h-10 lg:max-w-xs pr-4 2lg:pr-5 xl:pr-6"
+                  className="w-full h-11 lg:max-w-xs pr-4 2lg:pr-5 xl:pr-6"
                 >
-                  <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap gap-2 p-2 pl-3">
-                    <label htmlFor="search" className="flex items-center">
+                  <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap relative h-full">
+                    <label htmlFor="search" className="flex items-center absolute left-3 h-full">
                       <span className="flex items-center w-6 h-6 shrink-0">
                         <Icon icon="search" className="w-full h-full mx-auto" />
                       </span>
@@ -409,7 +409,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       defaultValue={searchText}
                       type="text"
                       placeholder="Buscar"
-                      className="bg-transparent focus:outline-none text-[#616B8A] text-lg font-medium w-full"
+                      className="bg-transparent rounded-lg border border-category-blue-light-90 hover:border-grey-30 focus:border-lucuma-60 focus:outline-none text-[#616B8A] text-lg font-medium w-full p-2 pl-11 transition-colors duration-500"
                       autoComplete="off"
                     />
                   </div>

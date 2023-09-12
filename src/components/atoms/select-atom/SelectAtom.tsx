@@ -168,23 +168,27 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
               {labelSelect && (
                 <Listbox.Label
                   className={classNames(
-                    "block text-lg text-grey-30 font-medium",
-                    isError ? 'text-red-700 dark:text-red-500' : 'text-grey-30'
+                    "block text-lg font-medium transition-colors duration-500",
+                    isError ? 'text-states-error-txt' : 'text-grey-30'
                   )}
                 >
-                  {labelSelect}{isRequired && <span className='text-red-700'>*</span>}
+                  {labelSelect}{isRequired && <span className='text-states-error-txt'>*</span>}
                 </Listbox.Label>
               )}
               <div className="grid gap-2 relative">
                 <Listbox.Button
                   className={classNames(
-                    "flex gap-[10px] flex-nowrap px-3 py-[6px] bg-white border border-grey-60 rounded hover:border-grey-30 group",
-                    open && "border-lucuma-60"
+                    "flex gap-[10px] flex-nowrap px-3 py-[6px] rounded bg-white border group transition-colors duration-500",
+                    isError
+                      ? "border-states-error" :
+                      open
+                        ? "border-lucuma-60"
+                        : "border-grey-80 hover:border-grey-30",
                   )}
                 >
                   <span
                     className={classNames(
-                      "grow text-left font-medium",
+                      "grow text-left font-medium transition-colors duration-500",
                       selectedOption?.text ? "text-grey-30" : "text-grey-60"
                     )}
                   >
@@ -192,8 +196,8 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   </span>
                   <span
                     className={classNames(
-                      "w-6 h-6 flex items-center text-grey-60 group-hover:text-grey-30",
-                      open && "transform rotate-180"
+                      "w-6 h-6 flex items-center text-grey-60 group-hover:text-grey-30 transform transition-[color,transform] duration-500",
+                      open && "rotate-180"
                     )}
                   >
                     <Icon icon="arrow-down" className="w-full h-full" />
@@ -219,7 +223,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                           key={content.value + "-list"}
                           value={content}
                           className={classNames(
-                            "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90",
+                            "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90 transition-colors duration-500",
                             content.text === selectedOption.text
                               ? "font-bold"
                               : "font-medium"
@@ -233,7 +237,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                 </Transition>
               </div>
               {isError &&
-                <p className="mt-2 text-sm text-red-600 dark:text-red-500">{errorMessage}</p>
+                <p className="mt-2 text-sm text-states-error-txt">{errorMessage}</p>
               }
             </div>
           )}

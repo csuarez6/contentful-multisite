@@ -19,26 +19,29 @@ const ServiceLine: React.FC<IPromoContent> = (props) => {
     iconPosition = "left"
   } = props;
   return (
-    <article className="bg-cyan-50 shadow rounded-xl overflow-hidden w-full max-w-[588px]">
+    <article className="bg-cyan-50 hover:bg-cyan-100 hover:bg-opacity-70 transition-colors duration-500 shadow rounded-xl overflow-hidden w-full max-w-[588px]">
       {(externalLink || internalLink) && (
         <CustomLink
           content={props}
           linkClassName="w-full"
         >
-          <div className={
-            classNames("flex my-4 w-full gap-1 px-4 ", iconCustomPosition[iconPosition])
-            }>
+          <div className={classNames(
+            "flex my-4 w-full gap-2 px-3",
+            iconCustomPosition[iconPosition]
+          )}>
             {promoIcon &&
               <div className="bg-cyan-400 rounded-full h-fit w-fit">
                 <Icon
                   icon={promoIcon}
-                  className="w-12 h-12 text-blue-dark grow-0 shrink-0"
+                  className="w-10 h-10 text-blue-dark grow-0 shrink-0"
                 />
               </div>
             }
             {(promoTitle) && (
               <div className="flex-1 text-blue-dark">
-                {(promoTitle) && <h3 className="">{promoTitle}</h3>}
+                {promoTitle && (
+                  <h3>{promoTitle}</h3>
+                )}
                 {subtitle && (
                   <div className="text-size-p2">
                     {subtitle}

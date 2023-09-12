@@ -1,8 +1,8 @@
 .form-input {
-  @apply rounded focus:border-blue-dark focus:outline-none border-grey-60 h-10 placeholder:text-grey-60;
+  @apply rounded focus:border-blue-dark focus:outline-none border-grey-60 h-10 placeholder:text-grey-60 transition-colors duration-500;
 }
 .form-input--error {
-  @apply bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500;
+  @apply bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500;
 }
 
 .form-select:focus {
@@ -28,8 +28,9 @@ input::-webkit-inner-spin-button {
 }
 
 .form-select--error {
-  @apply bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500;
+  @apply bg-red-50 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500;
 }
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
