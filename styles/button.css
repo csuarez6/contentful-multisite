@@ -32,9 +32,6 @@
   @apply bg-grey-90 text-grey-60 border-grey-60;
 }
 
-.button.text-button {
-  @apply p-0 text-blue-dark hover:text-blue-dark-8 disabled:text-grey-60 underline-animated-1;
-}
 
 .button.text-button.disabled {
   @apply text-grey-60;

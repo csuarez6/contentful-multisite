@@ -75,7 +75,6 @@ const DashboardAddresses = () => {
   // });
   const { status, data: session } = useSession();
   const idAddress = useRef("");
-  const attempts2 = useRef(0);
   const [newAddress, setNewAddress] = useState(true);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [isActivedModal, setIsActivedModal] = useState(false);
