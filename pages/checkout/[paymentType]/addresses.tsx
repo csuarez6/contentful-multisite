@@ -1,4 +1,11 @@
-import { ReactElement, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,15 +20,21 @@ import TextBox from "@/components/atoms/input/textbox/TextBox";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import {
+  DEFAULT_FOOTER_ID,
+  DEFAULT_HEADER_ID,
+  DEFAULT_HELP_BUTTON_ID,
+} from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
-import citiesFile from '@/utils/static/cities-co.json';
+import citiesFile from "@/utils/static/cities-co.json";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
-import SelectAtom, { IListContent } from "@/components/atoms/select-atom/SelectAtom";
+import SelectAtom, {
+  IListContent,
+} from "@/components/atoms/select-atom/SelectAtom";
 import { useSession } from "next-auth/react";
 
 export interface IAddress {
@@ -33,65 +46,79 @@ export interface IAddress {
   street: string;
   residence: string;
   receiver: string;
-  isSameAsBillingAddress?: boolean
+  isSameAsBillingAddress?: boolean;
 }
 
 export interface IAddresses {
-  shippingAddress: IAddress,
-  billingAddress?: IAddress
+  shippingAddress: IAddress;
+  billingAddress?: IAddress;
 }
 
 const toAddressForm = (addr: Address): IAddress => {
-  const line2Tmp = (addr && addr.line_2) ? (addr.line_2).split(', ') : [];
+  const line2Tmp = addr && addr.line_2 ? addr.line_2.split(", ") : [];
   return {
     id: addr?.id ?? "",
     address: addr?.line_1 ?? "",
     cityCode: addr?.city ?? "",
     stateCode: addr?.state_code ?? "",
     phone: addr?.phone ?? "",
-    street: (line2Tmp.length > 0) ? line2Tmp[0] : "",
-    residence: (line2Tmp.length > 0) ? line2Tmp[1] : "",
-    receiver: addr?.notes ?? ""
+    street: line2Tmp.length > 0 ? line2Tmp[0] : "",
+    residence: line2Tmp.length > 0 ? line2Tmp[1] : "",
+    receiver: addr?.notes ?? "",
   };
 };
 
 const schema = yup.object({
   shippingAddress: yup.object({
     stateCode: yup.string().required("Dato Requerido"),
-    cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
+    cityCode: yup
+      .string()
+      .required("Dato Requerido")
+      .notOneOf(["Seleccione un Municipio"], "opcion invalida"),
     address: yup.string().trim().required("Dato Requerido"),
     street: yup.string().required("Dato Requerido"),
     residence: yup.string().nullable().notRequired(),
     receiver: yup.string().nullable().notRequired(),
-    isSameAsBillingAddress: yup.boolean()
+    isSameAsBillingAddress: yup.boolean(),
     // phone: yup.string().required("Dato Requerido"),
   }),
-  billingAddress: yup.object().when('shippingAddress.isSameAsBillingAddress', {
+  billingAddress: yup.object().when("shippingAddress.isSameAsBillingAddress", {
     is: false,
-    then: yup.object({
-      stateCode: yup.string().required("Dato Requerido"),
-      cityCode: yup.string().required("Dato Requerido").notOneOf(['Seleccione un Municipio'], 'opcion invalida'),
-      address: yup.string().trim().required("Dato Requerido"),
-      street: yup.string().required("Dato Requerido"),
-      residence: yup.string().nullable().notRequired(),
-      receiver: yup.string().nullable().notRequired(),
-      // phone: yup.string().required("Dato Requerido"),
-    }).required('Requerido'),
-    otherwise: yup.object().notRequired()
-  })
+    then: yup
+      .object({
+        stateCode: yup.string().required("Dato Requerido"),
+        cityCode: yup
+          .string()
+          .required("Dato Requerido")
+          .notOneOf(["Seleccione un Municipio"], "opcion invalida"),
+        address: yup.string().trim().required("Dato Requerido"),
+        street: yup.string().required("Dato Requerido"),
+        residence: yup.string().nullable().notRequired(),
+        receiver: yup.string().nullable().notRequired(),
+        // phone: yup.string().required("Dato Requerido"),
+      })
+      .required("Requerido"),
+    otherwise: yup.object().notRequired(),
+  }),
 });
 
-const DEFAULT_COUNTRY = 'CO';
-const DEFAULT_ZIP_CODE = '000000';
+const DEFAULT_COUNTRY = "CO";
+const DEFAULT_ZIP_CODE = "000000";
 
-const getCitiesByState = async (state: string) => (await fetch(`/api/static/cities/${state}`)).json();
+const getCitiesByState = async (state: string) =>
+  (await fetch(`/api/static/cities/${state}`)).json();
 
-export const ModalConfirm: React.FC<any> = ({ data, onEventHandler, onActivedModal }) => {
+export const ModalConfirm: React.FC<any> = ({
+  data,
+  onEventHandler,
+  onActivedModal,
+}) => {
   return (
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
-          Recuerde que si continua con el proceso, el servicio de instalación será removido por falta de cobertura en la ubicación registrada.
+          Recuerde que si continua con el proceso, el servicio de instalación
+          será removido por falta de cobertura en la ubicación registrada.
         </div>
         <div className="flex justify-end gap-2">
           <button
@@ -131,7 +158,15 @@ const CheckoutAddress = () => {
   const attempts = useRef(0);
   const { status, data: session } = useSession();
 
-  const { order, flow, addAddresses, getAddresses, deleteItemService, onHasShipment, getCustomerAddresses } = useContext(CheckoutContext);
+  const {
+    order,
+    flow,
+    addAddresses,
+    getAddresses,
+    deleteItemService,
+    onHasShipment,
+    getCustomerAddresses,
+  } = useContext(CheckoutContext);
 
   const {
     register,
@@ -149,8 +184,8 @@ const CheckoutAddress = () => {
     defaultValues: {
       shippingAddress: {
         isSameAsBillingAddress: true,
-        stateCode: '',
-        cityCode: ''
+        stateCode: "",
+        cityCode: "",
       },
     },
   });
@@ -189,14 +224,23 @@ const CheckoutAddress = () => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const citiesFinal: any[] = [{ city: "Seleccione un Municipio", isCovered: "false" }];
+      const citiesFinal: any[] = [
+        { city: "Seleccione un Municipio", isCovered: "false" },
+      ];
       const cities: any[] = await getCitiesByState(shippingStateWatched);
       const mappedCities = cities.map((city) => ({
         text: city.city,
         value: city.city,
       }));
       setShippingCities(citiesFinal.concat(mappedCities));
-      if (attempts.current != 0) reset({ shippingAddress: { isSameAsBillingAddress: true, cityCode: "", stateCode: shippingStateWatched } });
+      if (attempts.current != 0)
+        reset({
+          shippingAddress: {
+            isSameAsBillingAddress: true,
+            cityCode: "",
+            stateCode: shippingStateWatched,
+          },
+        });
       attempts.current = 1;
     })();
     setShowAlert(false);
@@ -205,7 +249,11 @@ const CheckoutAddress = () => {
 
   useEffect(() => {
     if (!shippingCityWatched) return;
-    const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    const cityCheck = citiesFile.filter(
+      (city) =>
+        city.admin_name === shippingStateWatched &&
+        city.city === shippingCityWatched
+    );
     onHasShipment(cityCheck[0]?.isCovered == "false");
     setShowAlert(cityCheck[0]?.isCovered == "false");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,7 +276,11 @@ const CheckoutAddress = () => {
   }, [errors]);
 
   const isCompleted = useMemo(
-    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
+    () =>
+      order &&
+      PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every(
+        (i) => i
+      ),
     [order]
   );
 
@@ -238,20 +290,25 @@ const CheckoutAddress = () => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
-        reset({
-          shippingAddress: {
-            ...shippingAddressFormatted,
-            isSameAsBillingAddress: (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") || (shippingAddressFormatted?.address == billingAddressFormatted?.address),
-          },
-          billingAddress: billingAddressFormatted,
-        });
+        if (status !== "authenticated" && !session) {
+          reset({
+            shippingAddress: {
+              ...shippingAddressFormatted,
+              isSameAsBillingAddress:
+                (shippingAddressFormatted?.address == "" &&
+                  billingAddressFormatted?.address == "") ||
+                shippingAddressFormatted?.address ==
+                  billingAddressFormatted?.address,
+            },
+            billingAddress: billingAddressFormatted,
+          });
+        }
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   useEffect(() => {
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -287,7 +344,10 @@ const CheckoutAddress = () => {
               shippingAddressFormatted.cityCode
             );
             setValue("shippingAddress.street", shippingAddressFormatted.street);
-            setValue("shippingAddress.address", shippingAddressFormatted.address);
+            setValue(
+              "shippingAddress.address",
+              shippingAddressFormatted.address
+            );
             setValue(
               "shippingAddress.residence",
               shippingAddressFormatted.residence
@@ -303,7 +363,10 @@ const CheckoutAddress = () => {
               "billingAddress.stateCode",
               billingAddressFormatted.stateCode
             );
-            setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
+            setValue(
+              "billingAddress.cityCode",
+              billingAddressFormatted.cityCode
+            );
             setValue("billingAddress.address", billingAddressFormatted.address);
             setValue("billingAddress.street", billingAddressFormatted.street);
             setValue(
@@ -319,7 +382,7 @@ const CheckoutAddress = () => {
 
   const checkAlphaNumeric = (e) => {
     const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
-    if (!(e.key).match(letters)) e.preventDefault();
+    if (!e.key.match(letters)) e.preventDefault();
   };
 
   const toCLAddress = (addr: IAddress): Partial<AddressCreate> => ({
@@ -337,26 +400,29 @@ const CheckoutAddress = () => {
     try {
       setIsActivedModal(false);
       const checkCovered = checkCityCovered();
-      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
+      if (
+        !checkCovered["isCovered"] &&
+        checkCovered["idItemsIntall"].length > 0
+      ) {
         await deleteItemService(checkCovered["idItemsIntall"]);
       }
       const { shippingAddress, billingAddress } = data;
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
       let clBillingAddr = undefined;
 
-      if (billingAddress) clBillingAddr = toCLAddress(billingAddress) as AddressCreate;
+      if (billingAddress)
+        clBillingAddr = toCLAddress(billingAddress) as AddressCreate;
 
       [clShippingAddr, clBillingAddr].forEach((add) => {
         if (!add) return;
         ((meta: any) => {
-          (add.first_name = meta?.name),
-            (add.last_name = meta?.lastName);
+          (add.first_name = meta?.name), (add.last_name = meta?.lastName);
         })(isLogged ? user.metadata : order.metadata);
       });
 
       await addAddresses(
         clShippingAddr,
-        (!isSameAsBillingAddress && clBillingAddr) ? clBillingAddr : undefined,
+        !isSameAsBillingAddress && clBillingAddr ? clBillingAddr : undefined
       );
 
       await handleNext();
@@ -368,12 +434,20 @@ const CheckoutAddress = () => {
 
   const checkCityCovered = () => {
     let status = true;
-    const adjustmentsList = (order.line_items)
-      .filter(item => item?.item_type === "skus" && item?.["installlation_service"].length > 0)
+    const adjustmentsList = order.line_items
+      .filter(
+        (item) =>
+          item?.item_type === "skus" &&
+          item?.["installlation_service"].length > 0
+      )
       .map((itemInstall) => {
         return itemInstall?.["installlation_service"]?.[0]?.id;
       });
-    const cityCheck = citiesFile.filter(city => city.admin_name === shippingStateWatched && city.city === shippingCityWatched);
+    const cityCheck = citiesFile.filter(
+      (city) =>
+        city.admin_name === shippingStateWatched &&
+        city.city === shippingCityWatched
+    );
     if (cityCheck[0]?.isCovered == "false") status = false;
     return { isCovered: status, idItemsIntall: adjustmentsList };
   };
@@ -384,7 +458,10 @@ const CheckoutAddress = () => {
 
     try {
       const checkCovered = checkCityCovered();
-      if (!checkCovered["isCovered"] && checkCovered["idItemsIntall"].length > 0) {
+      if (
+        !checkCovered["isCovered"] &&
+        checkCovered["idItemsIntall"].length > 0
+      ) {
         setParamModal({ promoTitle: "Advertencia" });
         setmodalChild(
           <ModalConfirm
@@ -425,11 +502,11 @@ const CheckoutAddress = () => {
   useEffect(() => {
     // subscribe to routeChangeStart event
     const onRouteChangeStart = () => setIsLoading(true);
-    router.events.on('routeChangeStart', onRouteChangeStart);
+    router.events.on("routeChangeStart", onRouteChangeStart);
 
     // unsubscribe on component destroy in useEffect return function
     return () => {
-      router.events.off('routeChangeStart', onRouteChangeStart);
+      router.events.off("routeChangeStart", onRouteChangeStart);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -446,27 +523,34 @@ const CheckoutAddress = () => {
           className="flex flex-wrap max-w-full gap-6"
           onSubmit={handleSubmit(onSubmit)}
         >
-          {showAlert &&
+          {showAlert && (
             <div className="w-full">
-              <div className="px-3 py-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500" role="alert">
-                La ubicación que ha seleccionado no tiene cobertura para el servicio de instalación.
+              <div
+                className="px-3 py-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
+                role="alert"
+              >
+                La ubicación que ha seleccionado no tiene cobertura para el
+                servicio de instalación.
                 <br />
-                <strong>Si continua con el proceso, el servicio de instalación será removido automáticamente de la compra.</strong>
+                <strong>
+                  Si continua con el proceso, el servicio de instalación será
+                  removido automáticamente de la compra.
+                </strong>
               </div>
             </div>
-          }
+          )}
           <div className="w-full">
             <SelectAtom
-              id='shipping-state-code'
-              labelSelect='Escoge tu departamento'
+              id="shipping-state-code"
+              labelSelect="Escoge tu departamento"
               listedContents={states}
               isRequired={true}
               currentValue={getValues("shippingAddress.stateCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.stateCode", value);
-                clearErrors('shippingAddress.stateCode');
+                clearErrors("shippingAddress.stateCode");
               }}
-              {...register('shippingAddress.stateCode')}
+              {...register("shippingAddress.stateCode")}
             />
             {errors.shippingAddress?.stateCode && (
               <p className="text-red-600">
@@ -477,16 +561,16 @@ const CheckoutAddress = () => {
           <div className="w-full">
             <SelectAtom
               key={getValues("shippingAddress.cityCode")}
-              id='shipping-city-code'
-              labelSelect='Escoge tu municipio'
+              id="shipping-city-code"
+              labelSelect="Escoge tu municipio"
               listedContents={shippingCities}
               isRequired={true}
               currentValue={getValues("shippingAddress.cityCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.cityCode", value);
-                clearErrors('shippingAddress.cityCode');
+                clearErrors("shippingAddress.cityCode");
               }}
-              {...register('shippingAddress.cityCode')}
+              {...register("shippingAddress.cityCode")}
             />
             {errors?.shippingAddress?.cityCode && (
               <p className="text-red-600">
@@ -578,16 +662,16 @@ const CheckoutAddress = () => {
               </h4>
               <div className="w-full">
                 <SelectAtom
-                  id='billingAddress-state-code'
-                  labelSelect='Escoge tu departamento'
+                  id="billingAddress-state-code"
+                  labelSelect="Escoge tu departamento"
                   listedContents={states}
                   isRequired={true}
                   currentValue={getValues("billingAddress.stateCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.stateCode", value);
-                    clearErrors('billingAddress.stateCode');
+                    clearErrors("billingAddress.stateCode");
                   }}
-                  {...register('billingAddress.stateCode')}
+                  {...register("billingAddress.stateCode")}
                 />
                 {errors.billingAddress?.stateCode && (
                   <p className="text-red-600">
@@ -597,16 +681,16 @@ const CheckoutAddress = () => {
               </div>
               <div className="w-full">
                 <SelectAtom
-                  id='billingCities-city-code'
-                  labelSelect='Escoge tu municipio'
+                  id="billingCities-city-code"
+                  labelSelect="Escoge tu municipio"
                   listedContents={billingCities}
                   isRequired={true}
                   currentValue={getValues("billingAddress.cityCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.cityCode", value);
-                    clearErrors('billingAddress.cityCode');
+                    clearErrors("billingAddress.cityCode");
                   }}
-                  {...register('billingAddress.cityCode')}
+                  {...register("billingAddress.cityCode")}
                 />
                 {errors?.billingAddress?.cityCode && (
                   <p className="text-red-600">
@@ -682,19 +766,23 @@ const CheckoutAddress = () => {
             >
               Volver
             </button>
-            <button className="relative button button-primary" type="submit" disabled={isLoading}>
+            <button
+              className="relative button button-primary"
+              type="submit"
+              disabled={isLoading}
+            >
               Continuar
             </button>
           </div>
         </form>
         {isLoading && <Spinner position="absolute" size="large" />}
-      </div >
+      </div>
       {isActivedModal && (
         <ModalSuccess {...paramModal} isActive={isActivedModal}>
           {modalChild}
         </ModalSuccess>
       )}
-    </HeadingCard >
+    </HeadingCard>
   );
 };
 
@@ -706,14 +794,23 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
-  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = await getHeader(
+    DEFAULT_HEADER_ID,
+    context.preview ?? false
+  );
+  const footerInfo = await getNavigation(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false
+  );
+  const helpButton = await getNavigation(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {
       layout: {
-        name: 'Direcciones de la orden',
+        name: "Direcciones de la orden",
         footerInfo,
         headerInfo,
         helpButton,
