@@ -112,7 +112,7 @@ const ListWithIcons: React.FC<IPromoContent> = (props) => {
             modalClass={hasBlocks ? "main-container" : null}
             text={ctaLabel ?? promoTitle ?? name}
           >
-            {promoDescription?.json && (
+            {content?.json && (
               <div className="richtext-container">
                 {documentToReactComponents(contentJson, defaultFormatOptions)}
               </div>
