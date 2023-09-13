@@ -75,7 +75,6 @@ const DashboardAddresses = () => {
   // });
   const { status, data: session } = useSession();
   const idAddress = useRef("");
-  const attempts2 = useRef(0);
   const [newAddress, setNewAddress] = useState(true);
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [isActivedModal, setIsActivedModal] = useState(false);
@@ -86,7 +85,6 @@ const DashboardAddresses = () => {
       //   endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       // });
       (async () => {
-        if (attempts2.current != 0) {
           const addresses: Address = await getCustomerAddresses(
             session?.user["accessToken"]
           );
@@ -103,8 +101,6 @@ const DashboardAddresses = () => {
               setNewAddress(false);
             }
           }
-        }
-        attempts2.current = 1;
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -205,9 +201,9 @@ const DashboardAddresses = () => {
         { city: "Seleccione un Municipio", isCovered: "false" },
       ];
       const cities: any[] = await getCitiesByState(shippingStateWatched);
-      const mappedCities = cities.map((city, index) => ({
+      const mappedCities = cities.map((city) => ({
         text: city.city,
-        value: index == 0 ? "" : city.city,
+        value: city.city,
       }));
       setShippingCities(citiesFinal.concat(mappedCities));
       if (attempts.current != 0)
