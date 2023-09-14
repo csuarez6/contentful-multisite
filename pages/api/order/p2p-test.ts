@@ -158,8 +158,6 @@ const handler = async (
             return res.status(200).json({ status: 200, data: order.transactions });
         }
 
-        console.info(order.captures.at(0)?.metadata);
-
         return res.status(200).json({ status: 200, data: 'ok' });
     } catch (error) {
         console.error("An error occurred during the execution of the endpoint p2p-test:", error);

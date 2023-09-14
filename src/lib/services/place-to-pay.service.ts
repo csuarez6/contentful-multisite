@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { IP2PAuth, IP2PCreateRequest, IP2PFields, IP2PNotification, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation } from '../interfaces/p2p-cf-interface';
+import { IP2PAuth, IP2PCreateRequest, IP2PFields, IP2PNotification, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDocumentTypes } from '../interfaces/p2p-cf-interface';
 
 const PLACE_TO_PAY_ENDPOINT = process.env.PLACE_TO_PAY_ENDPOINT + '/api/session';
 const PLACE_TO_PAY_LOGIN = process.env.PLACE_TO_PAY_LOGIN;
@@ -96,4 +96,13 @@ export const validateP2PSignature = (data: IP2PNotification): boolean => {
   ).digest('hex');
 
   return (createSignature === data.signature);
+};
+
+export const getP2PIdentificationType = (identificationType: string): P2PDocumentTypes | null => {
+  const keyExists = Object.keys(P2PDocumentTypes).includes(identificationType);
+  if (keyExists) {
+    return P2PDocumentTypes[identificationType as keyof typeof P2PDocumentTypes];
+  } else {
+    return P2PDocumentTypes.cedula;
+  }
 };

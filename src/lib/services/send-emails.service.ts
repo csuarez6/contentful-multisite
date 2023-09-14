@@ -42,7 +42,8 @@ const customerSection = (data: IOrderExtended) => {
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.name} ${data.metadata?.lastName}</td>
       </tr>
       <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Cédula de ciudadanía:</td>
+      <tr>
+        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Número de documento:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.documentNumber}</td>
       </tr>
       <tr>
