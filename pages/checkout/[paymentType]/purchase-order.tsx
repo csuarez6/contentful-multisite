@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
+import { ReactElement, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { defaultLayout } from "../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
@@ -51,6 +51,7 @@ const CheckoutPurchase = () => {
     const [orderInfoById, setOrderInfoById] = useState<Order>();
     const [statusError, setStatusError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const atemps = useRef(0);
 
     const fullName = useMemo(() => {
         return (
@@ -62,20 +63,23 @@ const CheckoutPurchase = () => {
     useEffect(() => {
         (async () => {
             try {
+                atemps.current = atemps.current + 1;
                 if (orderId) {
                     const orderData = await getOrderById(orderId);
                     if (orderData["status"] === 200) {
-                        setStatusError(false);
+                        console.log({ orderData });
                         setOrderInfoById(orderData.data);
                         setBillingAddress(orderData.data["billing_address"]);
                         setShippingAddress(orderData.data["shipping_address"]);
+                        setStatusError(false);
                         console.info({ orderData });
                     } else {
                         console.info('status', orderData["status"]);
                         setStatusError(true);
                     }
                     setIsLoading(false);
-                } else {
+                }
+                if (!orderId && atemps.current > 2) {
                     setStatusError(true);
                     setIsLoading(false);
                 }
@@ -215,7 +219,7 @@ const CheckoutPurchase = () => {
             }
 
             {/* Display spinner if statusError and orderInfoById are undefined/false  */}
-            {isLoading && <Spinner position="absolute" size="large" />}
+            {isLoading && (!statusError && !orderInfoById) && <Spinner position="absolute" size="large" />}
         </HeadingCard>
     );
 };
