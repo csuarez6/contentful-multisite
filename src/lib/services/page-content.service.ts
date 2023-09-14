@@ -5,7 +5,7 @@ import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
 import contentfulClient from './contentful-client.service';
-import { getBlocksContent } from './references-content.service';
+import { getPageBlocks } from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
 import { hasItems } from '@/utils/functions';
@@ -47,64 +47,70 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
 
   if (!hasItems(responseData[`${typePage}Collection`]) && !hasItems(responseData[`${typeProduct}Collection`])) return null;
 
-  if (hasItems(responseData[`${typeProduct}Collection`])) { // Get related products (with the same category)
-    let dataRelatedProducts = null;
-    try {
-      ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
-        query: gql`
-          query getRelatedProducts($urlPath: String!, $categoryName: String!, $preview: Boolean!) {
-            ${typeProduct}Collection(where: { 
-              AND: [
-                { category: { name: $categoryName } },
-                { urlPath_not: $urlPath }
-              ]
-            }, limit: 2, preview: $preview, order: sys_publishedAt_DESC) {
-              items {
-                ${queryProduct}
-              }
-            }
-          }
-        `,
-        variables: {
-          urlPath,
-          categoryName: responseData[`${typeProduct}Collection`]?.items?.[0]?.category?.name ?? '',
-          preview
-        },
-        errorPolicy: 'all'
-      }));
-
-      const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
-        return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
-      }));
-      responseData[`${typeProduct}Collection`].items[0].relatedProducts = relatedProducts;
-    } catch (e) {
-      console.error("An error has ocurred at related content fetching", e);
-    }
+  // Get Related products if its necesary
+  if (hasItems(responseData[`${typeProduct}Collection`])) {
+    const categoryName = responseData[`${typeProduct}Collection`]?.items?.[0]?.category?.name ?? '';
+    responseData[`${typeProduct}Collection`].items[0].relatedProducts = await getRelatedProducts(categoryName, typeProduct, queryProduct, urlPath, preview);
   }
 
+  // Process data to JSON
   const pageContent = JSON.parse(
     JSON.stringify(
       responseData[`${typeProduct}Collection`]?.items?.[0] ?? responseData[`${typePage}Collection`]?.items?.[0]
     )
   );
 
-  if (pageContent?.parent?.__typename) pageContent.parent.__typename = CONTENTFUL_TYPENAMES.PAGE_MINIMAL;
+  const richtextPageContent = await getReferencesRichtextContent({ content: pageContent, preview });
+  if (richtextPageContent && typeof richtextPageContent === 'object' && Object.keys(richtextPageContent).length > 0) {
+    _.merge(pageContent, richtextPageContent);
+  }
 
   if (fullContent) {
-    pageContent.blocksCollection = await getBlocksContent({ content: pageContent, preview });
-
+    pageContent.blocksCollection = await getPageBlocks({ content: pageContent, preview });
     if (pageContent.__typename === CONTENTFUL_TYPENAMES.PRODUCT && pageContent?.sku) {
       const commercelayerProduct = await getCommercelayerProduct(pageContent.sku);
       _.merge(pageContent, commercelayerProduct);
     }
-
-    const richtextReferences = await getReferencesRichtextContent({ content: pageContent, preview });
-    if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-      _.merge(pageContent, richtextReferences);
-    }
   }
 
   return pageContent;
+};
+
+const getRelatedProducts = async (categoryName: string, typeProduct: string, queryProduct: string, urlPath: string, preview: boolean) => {
+  let dataRelatedProducts = null;
+  try {
+    ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
+      query: gql`
+        query getRelatedProducts($urlPath: String!, $categoryName: String!, $preview: Boolean!) {
+          ${typeProduct}Collection(where: { 
+            AND: [
+              { category: { name: $categoryName } },
+              { urlPath_not: $urlPath }
+            ]
+          }, limit: 2, preview: $preview, order: sys_publishedAt_DESC) {
+            items {
+              ${queryProduct}
+            }
+          }
+        }
+      `,
+      variables: {
+        urlPath,
+        categoryName,
+        preview
+      },
+      errorPolicy: 'all'
+    }));
+
+    const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
+      return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
+    }));
+
+    return relatedProducts;
+  } catch (e) {
+    console.error("An error has ocurred at related content fetching", e);
+    return [];
+  }
 };
 
 export default getPageContent;

@@ -2,14 +2,14 @@ import { gql } from '@apollo/client';
 import _ from 'lodash';
 
 import contentfulClient from './contentful-client.service';
-import getReferencesContent from './references-content.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 import getFilteredContent from './content-filter.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
-import getReferencesRichtextContent from './richtext-references.service';
 import { sleep } from '@/utils/functions';
+import getReferencesRichtextContent from './richtext-references.service';
+import getReferencesContent from './references-content.service';
 
 type DefaultBlockInfo = {
   __typename: string;
@@ -20,7 +20,7 @@ type DefaultBlockInfo = {
 
 const CACHE_CONTENT = {};
 
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = true, overrideMaxDepth = 6, minimal = false) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = false, overrideMaxDepth = 0, minimal = false) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
@@ -44,7 +44,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
-    await sleep(300);
+    await sleep(50);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

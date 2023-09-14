@@ -23,8 +23,8 @@ import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-min
 
 export const BlockPromoContentFragments = `
   ${PageMinimalFragment}
-  ${ProductMinimalFragment}
   ${AuxCustomContentMinimalFragment}
+  ${ProductMinimalFragment}
 `;
 
 const BlockPromoContentQuery = `
@@ -33,9 +33,6 @@ const BlockPromoContentQuery = `
   title
   pretitle
   subtitle
-  description {
-    ${RichtextQuery}
-  }
   ctaCollection {
     items {
       ...PageMinimalFragment
@@ -48,7 +45,7 @@ const BlockPromoContentQuery = `
       ...PageMinimalFragment
       ...ProductMinimalFragment
       ...AuxCustomContentMinimalFragment
-      ...on BlockPromoContent{
+      ...on BlockPromoContent {
         ${DefaultQuery}
       } 
     }
@@ -62,6 +59,9 @@ const BlockPromoContentQuery = `
   }
   image {
     ${AssetImageQuery}
+  }
+  description {
+    ${RichtextQuery}
   }
   simpleView
   view {

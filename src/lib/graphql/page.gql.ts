@@ -8,7 +8,7 @@ import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
 
 export const PageFragments = `
   ${ParentFieldsFragment}
-  ${PageMinimalFragment}  
+  ${PageMinimalFragment}
   ${AuxNavigationMinimalFragment}
   ${AuxCustomContentMinimalFragment}
   ${ProductMinimalFragment}
@@ -18,9 +18,6 @@ const PageQuery = `
   ${DefaultQuery}
   name
   slug
-  content {
-    ${RichtextQuery}
-  }
   parent {
     ...ParentFields
     parent {
@@ -48,6 +45,9 @@ const PageQuery = `
         ${DefaultQuery}
       }
     }
+  }
+  content {
+    ${RichtextQuery}
   }
   promoTitle
   subtitle

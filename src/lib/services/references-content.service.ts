@@ -106,74 +106,91 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
     )
   );
 
-  const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
-  if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
-    _.merge(blockEntryContent, richtextReferences);
-  }
-
   return { responseData: blockEntryContent, type };
 };
 
-export const getBlocksContent = async ({ content, preview = false }) => {
+export const getPageBlocks = async ({ content, preview = false }) => {
   const newBlocksCollection: any = { items: [] }; 
 
   if(!(content?.sys?.id) || !(content?.blocksCollection?.items?.length > 0)) return newBlocksCollection;
 
-  for (const blockInfo of content.blocksCollection.items) {
-    const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);
+  for (const blockInfo of content.blocksCollection.items) {    
+    const blockEntryContent = await getBlockInfo(blockInfo, preview);
+    newBlocksCollection.items.push(blockEntryContent);
+  };
 
-    if (responseError) console.error(`Error on entry query 3 (${type}) => `, responseError.message, blockInfo);
+  return newBlocksCollection;
+};
+
+export const viewIsSupported = ({actualView, ref}) => {
+  return (
+    ([
+      CONTENTFUL_TYPENAMES.VIEW_LIST_WITH_ICONS,
+      CONTENTFUL_TYPENAMES.VIEW_INFORMATION_GRID,
+      CONTENTFUL_TYPENAMES.VIEW_INFORMATION_CARDS,
+      CONTENTFUL_TYPENAMES.VIEW_LINE_OF_STEPS,
+      CONTENTFUL_TYPENAMES.VIEW_ACCORDION,
+      CONTENTFUL_TYPENAMES.VIEW_TABS_WITH_FEATURED_IMAGE,
+      CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS,
+      CONTENTFUL_TYPENAMES.VIEW_FEATURED,
+      CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRID,
+      CONTENTFUL_TYPENAMES.VIEW_SERVICES_CARD,
+      CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS
+    ].includes(actualView) && ref === "featuredContentsCollection") ||
+    ([
+      CONTENTFUL_TYPENAMES.VIEW_LIST_WITH_ICONS,
+      CONTENTFUL_TYPENAMES.VIEW_PRODUCT_GRID
+    ].includes(actualView) && ref === "ctaCollection")
+  );
+};
+
+export const getBlockInfo = async (blockInfo: any, preview: boolean, levelBlock = 1) => {
+  const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);
+
+    if (responseError) {
+      console.error(`Error on entry query 3 (${type}) => `, responseError.message, blockInfo);
+      return blockInfo;
+    }
 
     if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
-      // Obtener los campos con referencias del bloque contenidos promo
+      
+      // Recorrer todas las relaciones del bloque ContenidosPromo
       for (const ref of REFERENCES[blockEntryContent.__typename]) {
         if (blockEntryContent?.[ref]?.items?.length) {
           for (let i = 0; i < blockEntryContent[ref].items.length; i++) {
             const refItem = blockEntryContent[ref].items[i];
 
-            // Para obtener los bloques dentro de los bloques
-            if(ref === "featuredContentsCollection" && refItem.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
-              const { responseData: subBlockEntryContent, responseError: subResponseError = "" } = await getBlockEntry(refItem, preview);
-              if (subResponseError) console.error(`Error on entry query 4 (${type}) => `, subResponseError.message, refItem);
-              else {                
-                // Si es una vista TABS, obtener un nivel más de referencias. (Esto quiere decir, obtener los bloques y richtext dentro de los bloques de los bloques)
-                if ([CONTENTFUL_TYPENAMES.VIEW_SERVICES_TABS, CONTENTFUL_TYPENAMES.VIEW_FEATURED_TABS].includes(blockEntryContent?.view?.__typename)) {
-                  for (const subRef of REFERENCES[subBlockEntryContent.__typename]) {
-                    if (subBlockEntryContent?.[subRef]?.items?.length) {
-                      for (let j = 0; j < subBlockEntryContent[subRef].items.length; j++) {
-                        const subRefItem = subBlockEntryContent[subRef].items[j];
-
-                        // Agregar un bloque promo a un subbloque promo
-                        if(subRef === "featuredContentsCollection" && subRefItem.__typename == CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
-                          const { responseData: subsubBlockEntryContent, responseError: subsubResponseError = "" } = await getBlockEntry(subRefItem, preview);
-                          if(subsubResponseError) console.error(`Error on sub entry query => `, subsubResponseError.message, subRef);
-                          else subBlockEntryContent[subRef].items[j] = subsubBlockEntryContent;
-                        }
-
-                        const richtextSubSubBlockItemReferences = await getReferencesRichtextContent({ content: subRefItem, preview });
-                        if (richtextSubSubBlockItemReferences && typeof richtextSubSubBlockItemReferences === 'object' && Object.keys(richtextSubSubBlockItemReferences).length > 0) {
-                          _.merge(subBlockEntryContent[subRef].items[j], richtextSubSubBlockItemReferences);
-                        }
-                      }
-                    }
-                  }
+            // Si hay un bloque dentro de otro bloque
+            if(refItem?.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT){
+              if(ref === "featuredContentsCollection" && levelBlock < 3){
+                const subBlock = await getBlockInfo(refItem, preview, levelBlock + 1);
+                _.merge(refItem, subBlock);
+              }
+            } else {
+              // Obtener el RichText de los destacados principales que no sean un bloque
+              if(viewIsSupported({ actualView: blockEntryContent?.view?.__typename ?? blockEntryContent?.simpleView, ref })){
+                const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
+                if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
+                  _.merge(refItem, richtextItemReferences);
                 }
-                blockEntryContent[ref].items[i] = subBlockEntryContent;
               }
             }
 
-            const richtextItemReferences = await getReferencesRichtextContent({ content: refItem, preview });
-            if (richtextItemReferences && typeof richtextItemReferences === 'object' && Object.keys(richtextItemReferences).length > 0) {
-              _.merge(refItem, richtextItemReferences);
-            }
-
-            if(refItem.__typename === CONTENTFUL_TYPENAMES.PRODUCT && refItem?.sku){
+            // Obtener la información del producto si aplica
+            if(refItem.__typename === CONTENTFUL_TYPENAMES.PRODUCT && refItem?.sku) {
               const commercelayerProduct = await getCommercelayerProduct(refItem.sku);
               _.merge(refItem, commercelayerProduct);
             }
           }
         }
       }
+
+      // Obtener las referencias de RichText para el bloque ContenidosPromo
+      const richtextReferences = await getReferencesRichtextContent({ content: blockEntryContent, preview });
+      if (richtextReferences && typeof richtextReferences === 'object' && Object.keys(richtextReferences).length > 0) {
+        _.merge(blockEntryContent, richtextReferences);
+      }
+
     } else if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
       const preloadContent = await getFilteredContent({
         contentTypesFilter: blockEntryContent.contentTypesFilter ?? [],
@@ -185,10 +202,7 @@ export const getBlocksContent = async ({ content, preview = false }) => {
       _.merge(blockEntryContent, { preloadContent });
     }
 
-    newBlocksCollection.items.push(blockEntryContent);
-  };
-
-  return newBlocksCollection;
+    return blockEntryContent;
 };
 
 export default getReferencesContent;

@@ -11,11 +11,14 @@ const AuxCustomContent = `
   pretitle
   promoTitle
   subtitle
-  promoDescription {
-    ${RichtextQuery}
-  }
   promoImage {
     ${AssetImageQuery}
+  }
+  content {
+    ${RichtextQuery}
+  }
+  promoDescription {
+    ${RichtextQuery}
   }
   promoIcon
   mainNavCollection {
@@ -32,10 +35,7 @@ const AuxCustomContent = `
     }
   }
   linkView
-  content{
-    ${RichtextQuery}
-  }
-  mediaInternalLink{
+  mediaInternalLink {
     ${AssetQuery}
   }
   iframeHeight

@@ -7,6 +7,7 @@ import {
 } from "@commercelayer/js-auth";
 import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from '@/constants/checkout.constants';
 import { ExternalPayments } from '@commercelayer/sdk/lib/cjs/api';
+import { sleep } from '@/utils/functions';
 
 export interface ICustomer {
   name: string;
@@ -339,7 +340,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
   let product = null;
   try {
     const clientGasodomesticos = await getCLAdminCLient();
-
+    await sleep(50);
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
@@ -409,7 +410,7 @@ export const getCommercelayerProductPrice = async (skuCode: string, market: Mark
   let prices = null;
   try {
     const clientGasodomesticos = await getCLAdminCLient();
-
+    await sleep(50);
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },

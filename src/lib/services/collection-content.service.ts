@@ -34,7 +34,7 @@ const getCollectionContent = async (
   }
 
   try {
-    await sleep(300);
+    await sleep(50);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

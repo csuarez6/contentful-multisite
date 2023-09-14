@@ -11,17 +11,17 @@ const AuxCustomContentMinimalQuery = `
   pretitle
   promoTitle
   subtitle
-  promoDescription {
-    ${RichtextQuery}
-  }
   promoImage {
     ${AssetImageQuery}
   }
-  promoIcon
-  linkView
-  content{
+  content {
     ${RichtextQuery}
   }
+  promoDescription {
+    ${RichtextQuery}
+  }
+  promoIcon
+  linkView
   mediaInternalLink{
     ${AssetQuery}
   }
