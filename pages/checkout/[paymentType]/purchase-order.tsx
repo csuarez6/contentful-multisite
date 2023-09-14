@@ -67,7 +67,6 @@ const CheckoutPurchase = () => {
                 if (orderId) {
                     const orderData = await getOrderById(orderId);
                     if (orderData["status"] === 200) {
-                        console.log({ orderData });
                         setOrderInfoById(orderData.data);
                         setBillingAddress(orderData.data["billing_address"]);
                         setShippingAddress(orderData.data["shipping_address"]);
