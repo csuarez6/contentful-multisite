@@ -202,7 +202,7 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
         return {
           text: `¡Tu orden ${data.number} ha sido rechazada!`,
           leftIcon: `2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png`,
-          rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/53aa2df01146c7fa295c8c5c38502ad0/icon-cancel.svg`
+          rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/12aa9915a9ab6e68fedc8c5cd38ba6de/icon-cancel.png`
         };
       case "approved":
       case "fulfilled":
@@ -215,7 +215,7 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
         return {
           text: `¡Tu orden ${data.number} está pendiente!`,
           leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
-          rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/6398b72926e0c1adf87dccdd9d75a156/icon-pending.svg`
+          rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`
         };
     }
   };
