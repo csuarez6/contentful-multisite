@@ -15,7 +15,6 @@ import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { Customers } from "@commercelayer/sdk/lib/cjs/api";
 import { formatAddress } from "@/lib/services/commerce-layer.service";
-import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 
 const CheckoutSummary = () => {
   const router = useRouter();
