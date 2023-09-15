@@ -30,25 +30,32 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   const referencesContent: any = {};
   const { queryName: type } = CONTENTFUL_QUERY_MAPS[content.__typename];
   
-  let contentReferences = "";
-  const newReferences = [];
-  for (const ref of references) {
-    if(content?.[ref]) {
-      newReferences.push(ref);
-      contentReferences += `
-      ${ref}{
-        ${RichtextLinksQuery}
-      }
-      `;
+  // Only if the RichText has relations to embeds
+  const newReferences = references.filter((ref) => {
+    const textoJSON = JSON.stringify(content?.[ref]);
+    return (
+      content?.[ref] &&
+      (
+        textoJSON.includes("embedded-entry-block") ||
+        textoJSON.includes("embedded-entry-inline") ||
+        textoJSON.includes("embedded-asset-block")
+      )
+    );
+  });
+  
+  // Join de Ref Maps in One Query to GraphQL (For example with AuxCustomContent which has 2 fields with RichText)
+  const contentReferences = newReferences.map((ref) => `
+    ${ref}{
+      ${RichtextLinksQuery}
     }
-  }
+  `).join("");
 
   // Si no hay referencias por consultar retornar
   if(!contentReferences) return null;
 
   let responseData = null, responseError = null;
   try {
-    await sleep(50);
+    await sleep(30);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${RichTextLinksFragments}
@@ -108,7 +115,7 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
   try {
-    await sleep(50);
+    await sleep(30);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}

@@ -340,7 +340,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
   let product = null;
   try {
     const clientGasodomesticos = await getCLAdminCLient();
-    await sleep(50);
+    await sleep(30);
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
@@ -410,7 +410,7 @@ export const getCommercelayerProductPrice = async (skuCode: string, market: Mark
   let prices = null;
   try {
     const clientGasodomesticos = await getCLAdminCLient();
-    await sleep(50);
+    await sleep(30);
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
