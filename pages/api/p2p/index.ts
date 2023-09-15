@@ -74,7 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         metadata: response
       });
       const orderByAlly = (await getOrderByAlly(order.id)).data;
-      sendCreateOrderEmail(orderByAlly, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
+      await sendCreateOrderEmail(orderByAlly, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
     });
 
     res.json({

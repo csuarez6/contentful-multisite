@@ -100,10 +100,10 @@ const cancelOrder = async (order: Order, metadata: any) => {
 
 const sendEmails = async (order: Order, infoP2P?: IP2PRequestInformation) => {
     const orderByAlly = (await getOrderByAlly(order.id)).data;
-    sendClientEmail(orderByAlly);
+    await sendClientEmail(orderByAlly);
     if (infoP2P && infoP2P.status.status === P2PRequestStatus.approved) {
-        sendVantiEmail(orderByAlly);
-        sendAllyEmail(orderByAlly);
+        await sendVantiEmail(orderByAlly);
+        await sendAllyEmail(orderByAlly);
     }
 };
 
