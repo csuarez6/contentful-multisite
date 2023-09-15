@@ -15,6 +15,7 @@ import ReCaptchaBox from '@/components/atoms/recaptcha/recaptcha';
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { Customers } from "@commercelayer/sdk/lib/cjs/api";
 import { formatAddress } from "@/lib/services/commerce-layer.service";
+import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -143,7 +144,12 @@ const CheckoutSummary = () => {
           </div>
           <div className="flex justify-between">
             <dt>
-              NOTA: Al hacer click en “Enviar datos” serás contactado por un
+              <p className="font-bold text-blue-dark">Al continuar el proceso acepta el tratamiento de datos conforme a la política de tratamiento de datos personales de la compra.</p>
+            </dt>
+          </div>
+          <div className="flex justify-between">
+            <dt>
+              <strong>NOTA:</strong> Al hacer click en “Enviar datos” serás contactado por un
               agente de Vanti
             </dt>
           </div>
