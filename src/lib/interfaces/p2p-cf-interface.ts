@@ -16,11 +16,12 @@ export enum P2PDisplayOnFields {
 }
 
 export enum P2PDocumentTypes {
-    cc = 'CC',
-    ce = 'CE',
-    ti = 'TI',
+    cedula = 'CC',
+    cedulaDeExtranjeria = 'CE',
+    tarjetaDeIdentidad = 'TI',
     nit = 'NIT',
     rut = 'RUT',
+    pasaporte = 'PPN'
 }
 
 export interface IP2PAddress {

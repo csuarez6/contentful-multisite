@@ -1,58 +1,39 @@
-import { Shipment } from "@commercelayer/sdk";
+import { LineItem, Order, Shipment } from "@commercelayer/sdk";
 import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
 import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
 import { formatDate } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
 
-const customerSection = (data: IOrderExtended) => {
-  const billing_address = data.billing_address?.line_1 + (data.billing_address?.line_2 ? ', ' + data.billing_address?.line_2 : '') + ', ' + data.billing_address?.city + ', ' + data.billing_address?.state_code;
-  const shipping_address = data.shipping_address?.line_1 + (data.shipping_address?.line_2 ? ', ' + data.shipping_address?.line_2 : '') + ', ' + data.shipping_address?.city + ', ' + data.shipping_address?.state_code;
-  const shipping_methods = data.shipments?.map((shipment) => {
+const customerSection = (order: Order, showPaymentInfo: boolean) => {
+  const billing_address = order.billing_address?.line_1 + (order.billing_address?.line_2 ? ', ' + order.billing_address?.line_2 : '') + ', ' + order.billing_address?.city + ', ' + order.billing_address?.state_code;
+  const shipping_address = order.shipping_address?.line_1 + (order.shipping_address?.line_2 ? ', ' + order.shipping_address?.line_2 : '') + ', ' + order.shipping_address?.city + ', ' + order.shipping_address?.state_code;
+  const shipping_methods = order.shipments?.map((shipment) => {
     return shipment.shipping_method?.name;
   }).join(", ");
 
-  const addresseeSection = data.shipping_address?.notes ?
+  const addresseeSection = order.shipping_address?.notes ?
     `<tr>
       <td class="sm-inline-block sm-w-full" style = "width: 50%; padding-top: 8px; padding-bottom: 8px">Destinatario: </td>
-      <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style = "width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500" >${data.shipping_address?.notes}</td>
+      <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style = "width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500" >${order.shipping_address?.notes}</td>
     </tr>`
     : '';
 
   const paymentInfo = () => {
-    if (data.status !== OrderStatus.approved) {
+    if (order.status !== OrderStatus.approved) {
       return {
         paymentMethod: "*****",
         paymentEntity: "*****"
       };
     }
-    const paymentInfo: IP2PRequestInformation = data.captures?.at(0).metadata?.paymentInfo;
+    const paymentInfo: IP2PRequestInformation = order.captures?.at(0).metadata?.paymentInfo;
     return {
       paymentMethod: paymentInfo?.payment.at(0)?.paymentMethodName ?? "*****",
       paymentEntity: paymentInfo?.payment.at(0)?.issuerName ?? "*****"
     };
   };
 
-  const section = `
-    <tr>
-      <td style="padding: 24px">
-      <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Nombre del adquiriente:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.name} ${data.metadata?.lastName}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Cédula de ciudadanía:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.documentNumber}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Teléfono:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.metadata?.cellPhone}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Correo electrónico:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${data.customer_email}</td>
-      </tr>
+  const paymentInfoSection = showPaymentInfo ? `
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de pago:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().paymentMethod}</td>
@@ -61,11 +42,36 @@ const customerSection = (data: IOrderExtended) => {
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Entidad Bancaria:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${paymentInfo().paymentEntity}</td>
       </tr>
+    ` : '';
+
+
+  const section = `
+    <tr>
+      <td style="padding: 24px">
+      <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Nombre del adquiriente:</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.name} ${order.metadata?.lastName}</td>
+      </tr>
+      <tr>
+      <tr>
+        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Número de documento:</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.documentNumber}</td>
+      </tr>
+      <tr>
+        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Teléfono:</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.cellPhone}</td>
+      </tr>
+      <tr>
+        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Correo electrónico:</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.customer_email}</td>
+      </tr>
+        ${paymentInfoSection}
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_address}</td>
       </tr>
-       ${addresseeSection}
+        ${addresseeSection}
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de facturación:</td>
         <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${billing_address}</td>
@@ -76,7 +82,7 @@ const customerSection = (data: IOrderExtended) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(data.approved_at)}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.approved_at)}</td>
       </tr>
       </table>
       </td>
@@ -195,30 +201,46 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   return section;
 };
 
-const bodySection = (status: string, data: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string) => {
-  const orderStatus = () => {
-    switch (status) {
-      case "cancelled":
-        return {
-          text: `¡Tu orden ${data.number} ha sido rechazada!`,
-          leftIcon: `2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png`,
-          rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/12aa9915a9ab6e68fedc8c5cd38ba6de/icon-cancel.png`
-        };
-      case "approved":
-      case "fulfilled":
-        return {
-          text: `¡Tu orden ${data.number} ha sido aprobada!`,
-          leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
-          rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`
-        };
-      default:
-        return {
-          text: `¡Tu orden ${data.number} está pendiente!`,
-          leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
-          rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`
-        };
-    }
-  };
+const getOrderStatus = (status: string, order: Order, host?: string) => {
+  switch (status) {
+    case "cancelled":
+      return {
+        text: `¡Tu orden ${order.number} ha sido rechazada!`,
+        additionalText: ``,
+        leftIcon: `2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png`,
+        rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/12aa9915a9ab6e68fedc8c5cd38ba6de/icon-cancel.png`,
+        showPaymentInfo: false
+      };
+    case "approved":
+    case "fulfilled":
+      return {
+        text: `¡Tu orden ${order.number} ha sido aprobada!`,
+        additionalText: ``,
+        leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
+        rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`,
+        showPaymentInfo: true
+      };
+    case "create":
+      return {
+        text: `¡Tu orden ${order.number} ha sido creada!`,
+        additionalText: `Hemos recibido tu orden de compra y estará pendiente hasta que se resuelva el pago. Te llegará un correo informandote el estado final de tu orden. Para hacer seguimiento puedes hacer click <a href="${host}/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
+        leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
+        rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`,
+        showPaymentInfo: false
+      };
+    default:
+      return {
+        text: `¡Tu orden ${order.number} está pendiente!`,
+        additionalText: ``,
+        leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
+        rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`,
+        showPaymentInfo: false
+      };
+  }
+};
+
+const bodySection = (status: string, order: Order, line_items: LineItem[], shipments: Shipment[], formatted_total_amount: string, host?: string) => {
+  const orderStatus = getOrderStatus(status, order, host);
 
   const body = `
     <tr>
@@ -229,14 +251,17 @@ const bodySection = (status: string, data: IOrderExtended, line_items: ILineItem
               <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px">
-                    <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                      ${orderStatus().text}
-                    </h2>
-                    <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus().rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;">
+                    <div>
+                      <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px">
+                      <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
+                        ${orderStatus.text}
+                      </h2>
+                      <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;">
+                    </div>
+                    ${orderStatus.additionalText ? '<div><small>' + orderStatus.additionalText + '</small></div>' : ''}
                   </td>
                 </tr>
-                 ${customerSection(data)}
+                 ${customerSection(order, orderStatus.showPaymentInfo)}
                 <tr>
                   <td style="padding-left: 16px; padding-right: 16px;">
                     <h3 style="margin: 0; font-size: 20px; color: #113455">
@@ -454,27 +479,54 @@ const footer = `
       </body>
     </html>`;
 
-const clientEmailTemplate = (status: string, data: IOrderExtended) => {
-  const body = bodySection(status, data, data.line_items, data.shipments, data.formatted_total_amount);
+const createOrderEmailTemplate = (order: Order, host: string) => {
+  const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host, false);
   return header + body + footer;
 };
 
-const vantiEmailTemplate = (status: string, data: IOrderExtended) => {
-  const body = bodySection(status, data, data.line_items, data.shipments, data.formatted_total_amount);
+const clientEmailTemplate = (status: string, order: Order) => {
+  const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
   return header + body + footer;
 };
 
-const allyEmailTemplate = (status: string, data: IOrderExtended, productsData: IAlly) => {
-  const body = bodySection(status, data, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+const vantiEmailTemplate = (status: string, order: Order) => {
+  const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
   return header + body + footer;
 };
 
-export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const jsonBody = orderByAlly;
-  const email = clientEmailTemplate(orderByAlly.status, jsonBody);
+const allyEmailTemplate = (status: string, order: Order, productsData: IAlly) => {
+  const body = bodySection(status, order, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+  return header + body + footer;
+};
+
+export const sendCreateOrderEmail = async (order: Order, host: string): Promise<number> => {
+  const email = createOrderEmailTemplate(order, host);
 
   const clientEmail = {
-    to: jsonBody.customer.email,
+    to: order.customer.email,
+    subject: "Confirmación orden " + order.number + " - Vanti",
+    message: "Body-email",
+    from: "Vanti info <dev@aplyca.com>",
+    messageHtml: email,
+  };
+
+  const isMailSended = await sendEmail(
+    clientEmail.to,
+    clientEmail.subject,
+    clientEmail.message,
+    clientEmail.from,
+    clientEmail.messageHtml
+  );
+
+  console.info('sendCreateOrderEmail ' + clientEmail.to + ': ' + isMailSended);
+  return isMailSended ? 1 : 0;
+};
+
+export const sendClientEmail = async (orderByAlly: Order): Promise<number> => {
+  const email = clientEmailTemplate(orderByAlly.status, orderByAlly);
+
+  const clientEmail = {
+    to: orderByAlly.customer.email,
     subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
     message: "Body-email",
     from: "Vanti info <dev@aplyca.com>",
@@ -493,13 +545,12 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
   return isMailSended ? 1 : 0;
 };
 
-export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const jsonBody = orderByAlly;
-  const email = vantiEmailTemplate(orderByAlly.status, jsonBody);
+export const sendVantiEmail = async (orderByAlly: Order): Promise<number> => {
+  const email = vantiEmailTemplate(orderByAlly.status, orderByAlly);
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!vantiEmailAddress || !emailRegex.test(email)) {
+  if (!vantiEmailAddress || !emailRegex.test(vantiEmailAddress)) {
     console.info('sendVantiEmail environment variable not defined or is not a valid email');
     return 0;
   }

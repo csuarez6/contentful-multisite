@@ -20,6 +20,7 @@ import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import SelectAtom from "@/components/atoms/select-atom/SelectAtom";
+import { IdentificationTypes } from "@/lib/enum/EIdentificationTypes.enum";
 
 interface ICustomer {
   name: string;
@@ -81,50 +82,10 @@ const CheckoutPersonalInfo = () => {
       text: "Seleccione un tipo de documento",
       value: "",
     },
-    {
-      text: "Nit",
-      value: "Nit",
-    },
-    {
-      text: "Registro civil de nacimiento",
-      value: "registroCivilDeNacimiento",
-    },
-    {
-      text: "Tarjeta de Identidad",
-      value: "tarjetaDeIdentidad",
-    },
-    {
-      text: "Cédula de ciudadanía",
-      value: "cedula",
-    },
-    {
-      text: "Cédula de extranjeria",
-      value: "cedulaDeExtranjeria",
-    },
-    {
-      text: "Pasaporte",
-      value: "pasaporte",
-    },
-    {
-      text: "Documento identificación extranjero",
-      value: "documentoIdentificaciónExtranjero",
-    },
-    {
-      text: "Sin identificación del exterior",
-      value: "sinIdentificaciónDelExterior",
-    },
-    {
-      text: "PEP",
-      value: "pep",
-    },
-    {
-      text: "NIF del extranjero",
-      value: "nifDelExtranjero",
-    },
-    {
-      text: "NUIP",
-      value: "nuip",
-    },
+    ...Object.keys(IdentificationTypes).map((key) => ({
+      text: IdentificationTypes[key as keyof typeof IdentificationTypes],
+      value: key,
+    }))
   ];
 
   useEffect(() => {
