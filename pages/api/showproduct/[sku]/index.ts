@@ -3,11 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { redirect } from 'next/dist/server/api-utils';
 
 const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<any>
+  request: NextApiRequest,
+  response: NextApiResponse<any>
 ) => {
   try {
-    const { sku } = req.query;
+    const { sku } = request.query;
     const skuString = typeof sku == 'string' ? sku : sku[0];
 
     const indexSearch = getAlgoliaSearchIndex(
@@ -21,12 +21,17 @@ const handler = async (
       attributesToRetrieve: ['fields'],
     });
 
+    response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=10800');
+    response.setHeader('CDN-Cache-Control', 'public, max-age=0');
+    response.setHeader('Cache-Control', 'public, max-age=0');
+
     if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields?.urlPaths?.[0]) {
-      redirect(res, resultAlgolia.hits[0].fields.urlPaths[0]);
+      redirect(response, resultAlgolia.hits[0].fields.urlPaths[0]);
     }
+
   } catch (err) {
     console.error(err);
-    redirect(res, '/');
+    redirect(response, '/');
   }
 };
 

@@ -3,10 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAlgoliaSearchIndex } from '@/lib/services/content-filter.service';
 
 const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<any>
+  request: NextApiRequest,
+  response: NextApiResponse<any>
 ) => {
-  const { sku } = req.query;
+  const { sku } = request.query;
   const skuString = typeof sku == 'string' ? sku : sku[0];
 
   const indexSearch = getAlgoliaSearchIndex(
@@ -21,10 +21,13 @@ const handler = async (
   });
 
   if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields) {
-    return res.status(200).json(resultAlgolia.hits[0].fields);
+    response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=10800');
+    response.setHeader('CDN-Cache-Control', 'public, max-age=0');
+    response.setHeader('Cache-Control', 'public, max-age=0');
+    return response.status(200).json(resultAlgolia.hits[0].fields);
   }
 
-  return res.status(404).json({
+  return response.status(404).json({
     code: 404,
     message: `Product with SKU "${skuString}" not found`
   });
