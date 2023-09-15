@@ -109,8 +109,8 @@ const CheckoutPurchase = () => {
     const paymentEntity = () => {
         if (orderInfoById.status !== OrderStatus.approved) {
             return {
-                paymentMethod: "*****",
-                paymentEntity: "*****"
+                paymentMethod: null,
+                paymentEntity: null
             };
         }
         const paymentInfo: IP2PRequestInformation = orderInfoById?.captures?.at(0).metadata?.paymentInfo;
@@ -154,18 +154,22 @@ const CheckoutPurchase = () => {
                             <dt className="flex-1 text-grey-30">Correo electrónico del adquiriente:</dt>
                             <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.customer_email}</dd>
                         </div>
-                        <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Método de pago:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentMethod ?? "*****"}
-                            </dd>
-                        </div>
-                        <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">
-                                {paymentEntity().paymentEntity ?? "*****"}
-                            </dd>
-                        </div>
+                        {paymentEntity().paymentMethod && 
+                            <div>
+                                <div className="flex justify-between">
+                                    <dt className="flex-1 text-grey-30">Método de pago:</dt>
+                                    <dd className="flex-1 font-bold text-grey-30">
+                                        {paymentEntity().paymentMethod}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between">
+                                    <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
+                                    <dd className="flex-1 font-bold text-grey-30">
+                                        {paymentEntity().paymentEntity}
+                                    </dd>
+                                </div>
+                            </div>
+                        }
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">

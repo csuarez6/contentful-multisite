@@ -3,6 +3,7 @@ import { getCLAdminCLient, getNameQuantityOrderItems } from "@/lib/services/comm
 import { createP2PRequest, getP2PIdentificationType } from "@/lib/services/place-to-pay.service";
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, P2PDisplayOnFields } from "@/lib/interfaces/p2p-cf-interface";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
+import { sendCreateOrderEmail } from "@/lib/services/send-emails.service";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
@@ -71,6 +72,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         id: authorization?.id,
         metadata: response
       });
+      sendCreateOrderEmail(order, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
     });
 
     res.json({
