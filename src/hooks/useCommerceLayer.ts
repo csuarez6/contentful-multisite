@@ -35,7 +35,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "created_at"
     ],
     addresses: ["state_code", "city", "line_1", "phone", "full_address"],
-    shipments: ["available_shipping_methods", "stock_location"],
+    shipments: ["shipping_method", "available_shipping_methods", "stock_location"],
     line_items: [
       "item_type",
       "image_url",

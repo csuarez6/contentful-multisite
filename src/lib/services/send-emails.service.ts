@@ -2,17 +2,13 @@ import { Shipment } from "@commercelayer/sdk";
 import { ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
 import { IP2PRequestInformation, P2PRequestStatus } from "../interfaces/p2p-cf-interface";
-import { formatDate } from "./commerce-layer.service";
+import { formatDate, getShippingMethods } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
 import { getOrderByAlly } from "./order-by-ally.service";
 
 const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
   const billing_address = order.billing_address?.line_1 + (order.billing_address?.line_2 ? ', ' + order.billing_address?.line_2 : '') + ', ' + order.billing_address?.city + ', ' + order.billing_address?.state_code;
   const shipping_address = order.shipping_address?.line_1 + (order.shipping_address?.line_2 ? ', ' + order.shipping_address?.line_2 : '') + ', ' + order.shipping_address?.city + ', ' + order.shipping_address?.state_code;
-  const shipping_methods = order.shipments?.map((shipment) => {
-    return shipment.shipping_method?.name;
-  }).join(", ");
-
   const addresseeSection = order.shipping_address?.notes ?
     `<tr>
       <td class="sm-inline-block sm-w-full" style = "width: 50%; padding-top: 8px; padding-bottom: 8px">Destinatario: </td>
@@ -78,7 +74,7 @@ const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de envío:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_methods}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${getShippingMethods(order)}</td>
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
@@ -480,139 +476,161 @@ const footer = `
     </html>`;
 
 const sendCreateOrderEmail = async (order: IOrderExtended, host: string): Promise<number> => {
-  const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
-  const email = header + body + footer;
+  try {
+    const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
+    const email = header + body + footer;
 
-  const clientEmail = {
-    to: order.customer_email,
-    subject: "Confirmación orden " + order.number + " - Vanti",
-    message: "Body-email",
-    from: "Vanti info <dev@aplyca.com>",
-    messageHtml: email,
-  };
+    const clientEmail = {
+      to: order.customer_email,
+      subject: "Confirmación orden " + order.number + " - Vanti",
+      message: "Body-email",
+      from: "Vanti info <dev@aplyca.com>",
+      messageHtml: email,
+    };
 
-  const isMailSended = await sendEmail(
-    clientEmail.to,
-    clientEmail.subject,
-    clientEmail.message,
-    clientEmail.from,
-    clientEmail.messageHtml
-  );
+    const isMailSended = await sendEmail(
+      clientEmail.to,
+      clientEmail.subject,
+      clientEmail.message,
+      clientEmail.from,
+      clientEmail.messageHtml
+    );
 
-  console.info('sendCreateOrderEmail ' + clientEmail.to + ': ' + isMailSended);
-  return isMailSended ? 1 : 0;
+    console.info('sendCreateOrderEmail ' + clientEmail.to + ': ' + isMailSended);
+    return isMailSended ? 1 : 0;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
 };
 
 const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
-  const email = header + body + footer;
+  try {
+    const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+    const email = header + body + footer;
 
-  const clientEmail = {
-    to: orderByAlly.customer_email,
-    subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
-    message: "Body-email",
-    from: "Vanti info <dev@aplyca.com>",
-    messageHtml: email,
-  };
+    const clientEmail = {
+      to: orderByAlly.customer_email,
+      subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
+      message: "Body-email",
+      from: "Vanti info <dev@aplyca.com>",
+      messageHtml: email,
+    };
 
-  const isMailSended = await sendEmail(
-    clientEmail.to,
-    clientEmail.subject,
-    clientEmail.message,
-    clientEmail.from,
-    clientEmail.messageHtml
-  );
+    const isMailSended = await sendEmail(
+      clientEmail.to,
+      clientEmail.subject,
+      clientEmail.message,
+      clientEmail.from,
+      clientEmail.messageHtml
+    );
 
-  console.info('sendClientEmail ' + clientEmail.to + ': ' + isMailSended);
-  return isMailSended ? 1 : 0;
+    console.info('sendClientEmail ' + clientEmail.to + ': ' + isMailSended);
+    return isMailSended ? 1 : 0;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
 };
 
 const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
-  const email = header + body + footer;
+  try {
+    const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+    const email = header + body + footer;
 
-  const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!vantiEmailAddress || !emailRegex.test(vantiEmailAddress)) {
-    console.info('sendVantiEmail environment variable not defined or is not a valid email');
+    if (!vantiEmailAddress || !emailRegex.test(vantiEmailAddress)) {
+      console.info('sendVantiEmail environment variable not defined or is not a valid email');
+      return 0;
+    }
+
+    const clientEmail = {
+      to: vantiEmailAddress,
+      subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
+      message: "Body-email",
+      from: "Vanti info <dev@aplyca.com>",
+      messageHtml: email,
+    };
+
+    const isMailSended = await sendEmail(
+      clientEmail.to,
+      clientEmail.subject,
+      clientEmail.message,
+      clientEmail.from,
+      clientEmail.messageHtml
+    );
+
+    console.info('sendVantiEmail ' + clientEmail.to + ': ' + isMailSended);
+    return isMailSended ? 1 : 0;
+  } catch (error) {
+    console.error(error);
     return 0;
   }
-
-  const clientEmail = {
-    to: vantiEmailAddress,
-    subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
-    message: "Body-email",
-    from: "Vanti info <dev@aplyca.com>",
-    messageHtml: email,
-  };
-
-  const isMailSended = await sendEmail(
-    clientEmail.to,
-    clientEmail.subject,
-    clientEmail.message,
-    clientEmail.from,
-    clientEmail.messageHtml
-  );
-
-  console.info('sendVantiEmail ' + clientEmail.to + ': ' + isMailSended);
-  return isMailSended ? 1 : 0;
 };
 
 const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const allyItems = orderByAlly.line_items_by_ally;
-  const emailPromises: Promise<boolean>[] = [];
+  try {
+    const allyItems = orderByAlly.line_items_by_ally;
+    const emailPromises: Promise<boolean>[] = [];
 
-  allyItems.forEach((allyItem) => {
-    const productsData = allyItem;
-    const body = bodySection(orderByAlly.status, orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
-    const email = header + body + footer;
+    allyItems.forEach((allyItem) => {
+      const productsData = allyItem;
+      const body = bodySection(orderByAlly.status, orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+      const email = header + body + footer;
 
-    const emailAddresses = String(allyItem.metadata?.email).split(',');
+      const emailAddresses = String(allyItem.metadata?.email).split(',');
 
-    if (!emailAddresses) {
-      console.info('sendAllyEmail no email for ' + allyItem.name);
-    }
+      if (!emailAddresses) {
+        console.info('sendAllyEmail no email for ' + allyItem.name);
+      }
 
-    emailAddresses.forEach((emailAddress) => {
-      const clientEmail = {
-        to: emailAddress,
-        subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
-        message: "Body-email",
-        from: "Vanti info <dev@aplyca.com>",
-        messageHtml: email,
-      };
+      emailAddresses.forEach((emailAddress) => {
+        const clientEmail = {
+          to: emailAddress,
+          subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
+          message: "Body-email",
+          from: "Vanti info <dev@aplyca.com>",
+          messageHtml: email,
+        };
 
-      const emailPromise = sendEmail(
-        clientEmail.to,
-        clientEmail.subject,
-        clientEmail.message,
-        clientEmail.from,
-        clientEmail.messageHtml
-      );
+        const emailPromise = sendEmail(
+          clientEmail.to,
+          clientEmail.subject,
+          clientEmail.message,
+          clientEmail.from,
+          clientEmail.messageHtml
+        );
 
-      emailPromises.push(emailPromise);
+        emailPromises.push(emailPromise);
 
-      emailPromise.then((isMailSended) => {
-        console.info('sendAllyEmail ' + emailAddress + ': ' + isMailSended);
+        emailPromise.then((isMailSended) => {
+          console.info('sendAllyEmail ' + emailAddress + ': ' + isMailSended);
+        });
       });
     });
-  });
 
-  const emailResults = await Promise.all(emailPromises);
-  const count = emailResults.filter((result) => result).length;
-  return count;
+    const emailResults = await Promise.all(emailPromises);
+    const count = emailResults.filter((result) => result).length;
+    return count;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
 };
 
-export const sendEmails = async (orderId: string, createEmail = false, statusP2P?: string, host?: string) => {
+export const sendEmails = async (orderId: string, createEmail = false, statusP2P?: string, host?: string): Promise<number> => {
   const order = (await getOrderByAlly(orderId)).data;
+  let count = 0;
   if (createEmail) {
-    await sendCreateOrderEmail(order, host);
+    count += await sendCreateOrderEmail(order, host);
   } else {
-    await sendClientEmail(order);
+    count += await sendClientEmail(order);
     if (statusP2P && statusP2P === P2PRequestStatus.approved) {
-      await sendVantiEmail(order);
-      await sendAllyEmail(order);
+      count += await sendVantiEmail(order);
+      count += await sendAllyEmail(order);
     }
+    return count;
   }
 };
