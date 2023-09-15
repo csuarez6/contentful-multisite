@@ -390,7 +390,7 @@ const CheckoutAddress = () => {
     state_code: addr.stateCode,
     city: addr.cityCode,
     line_1: addr.address,
-    line_2: addr.street + ", " + addr.residence,
+    line_2: addr.street + (addr.residence ? ", " + addr.residence : ''),
     notes: addr?.receiver ?? "",
     phone: order?.metadata?.cellPhone ?? "0000",
     zip_code: DEFAULT_ZIP_CODE,
