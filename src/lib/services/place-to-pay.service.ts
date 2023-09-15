@@ -61,7 +61,7 @@ export const createP2PRequest = async (orderId: string, payment: IP2PPayment, ip
     return data;
   } catch (error) {
     console.error(error);
-    return `Ocurrió un error al crear la transacción en P2P`;
+    throw new Error(error);
   }
 };
 
@@ -83,7 +83,7 @@ export const getP2PRequestInformation = async (requestId: string): Promise<IP2PR
     return data;
   } catch (error) {
     console.error(error);
-    return `Ocurrió un error al consultar la transacción ${requestId} en P2P`;
+    throw new Error(error);
   }
 };
 

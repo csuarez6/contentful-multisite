@@ -15,7 +15,7 @@ import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
-import { formatAddress } from "@/lib/services/commerce-layer.service";
+import { formatAddress, formatDate, getShippingMethods } from "@/lib/services/commerce-layer.service";
 
 const orderStatus = (value: string) => {
     switch (value) {
@@ -94,18 +94,7 @@ const CheckoutPurchase = () => {
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
         [orderInfoById]
     );
-
-    const shipments = () => {
-        const shipments = orderInfoById.shipments;
-        const shipmentItems = [];
-        shipments?.forEach(async (el) => {
-            const availableMethods = el.available_shipping_methods;
-            const methods = availableMethods.map((item) => { if (item.id != process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID) return item.name; });
-            shipmentItems.push(methods);
-        });
-        return (shipmentItems.length > 1) ? shipmentItems.toString() : shipmentItems[0];
-    };
-
+    
     const paymentEntity = () => {
         if (orderInfoById.status !== OrderStatus.approved) {
             return {
@@ -155,23 +144,23 @@ const CheckoutPurchase = () => {
                             <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.customer_email}</dd>
                         </div>
                         {paymentEntity().paymentMethod && 
-                            <div>
-                                <div className="flex justify-between">
-                                    <dt className="flex-1 text-grey-30">Método de pago:</dt>
-                                    <dd className="flex-1 font-bold text-grey-30">
-                                        {paymentEntity().paymentMethod}
-                                    </dd>
-                                </div>
-                                <div className="flex justify-between">
-                                    <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
-                                    <dd className="flex-1 font-bold text-grey-30">
-                                        {paymentEntity().paymentEntity}
-                                    </dd>
-                                </div>
+                            <div className="flex justify-between">
+                                <dt className="flex-1 text-grey-30">Método de pago:</dt>
+                                <dd className="flex-1 font-bold text-grey-30">
+                                    {paymentEntity().paymentMethod}
+                                </dd>
+                            </div>
+                        }
+                        {paymentEntity().paymentEntity && 
+                            <div className="flex justify-between">
+                                <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
+                                <dd className="flex-1 font-bold text-grey-30">
+                                    {paymentEntity().paymentEntity}
+                                </dd>
                             </div>
                         }
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Direccion de envio:</dt>
+                            <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {shippingAddress ? formatAddress(shippingAddress) : "*****"}
                             </dd>
@@ -187,7 +176,7 @@ const CheckoutPurchase = () => {
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Método de envio:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
-                                {shipments() ?? "*****"}
+                                {getShippingMethods(orderInfoById) ?? "*****"}
                             </dd>
                         </div>
                         <div className="flex justify-between">
@@ -195,6 +184,10 @@ const CheckoutPurchase = () => {
                             <dd className="flex-1 font-bold text-grey-30">
                                 {billingAddress ? formatAddress(billingAddress) : "*****"}
                             </dd>
+                        </div>
+                        <div className="flex justify-between">
+                            <dt className="flex-1 text-grey-30">Fecha de compra:</dt>
+                            <dd className="flex-1 font-bold text-grey-30">{formatDate(orderInfoById.created_at)}</dd>
                         </div>
                     </dl>
                 </div>

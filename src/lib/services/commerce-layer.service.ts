@@ -663,7 +663,7 @@ export const getNameQuantityOrderItems = (order: Order): string => {
     let itemNames = '';
     order.line_items?.forEach(item => {
       if (item.item_type === 'skus' || item.item_type === 'adjustments') {
-        itemNames += `${itemNames !== '' ? ',' : ''} (${item.quantity}) ${item.name}`;
+        itemNames += `${itemNames !== '' ? ', ' : ''}(${item.quantity}) ${item.name}`;
       }
     });
     return itemNames;
@@ -697,4 +697,16 @@ export const formatDate = (date: string) : string => {
 // Función para formatear una dirección
 export const formatAddress = (address: Address): string => {
   return address.line_1 + (address.line_2 ? ', ' + address.line_2 : '') + ', ' + address.city + ', ' + address.state_code;
+};
+
+// Función para obtener los métodos de envio de una orden
+export const getShippingMethods = (order: Order): string  => {
+  const shippingMethods = [];
+  order.shipments?.forEach((shipment) => {
+    console.info(shipment);
+    if (!shippingMethods.includes(shipment.shipping_method?.name)) {
+      shippingMethods.push(shipment.shipping_method?.name);
+    }
+  });
+  return shippingMethods.join(', ');
 };

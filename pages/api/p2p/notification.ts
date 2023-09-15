@@ -3,18 +3,17 @@ import { PaymentStatus } from "@/lib/enum/EPaymentStatus.enum";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { IP2PNotification, P2PRequestStatus } from "@/lib/interfaces/p2p-cf-interface";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
-import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
 import { getP2PRequestInformation, validateP2PSignature } from "@/lib/services/place-to-pay.service";
-import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
+import { sendEmails } from "@/lib/services/send-emails.service";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
     const client = await getCLAdminCLient();
-    const data: IP2PNotification = req.body;
-    const transactionToken = data.requestId;
-    const validation = validateP2PSignature(data);
-    let sendEmails = false;
+    const p2pNotification: IP2PNotification = req.body;
+    const transactionToken = p2pNotification.requestId;
+    const validation = validateP2PSignature(p2pNotification);
+    let emails = false;
 
     console.info('p2p notification', req.body);
 
@@ -33,11 +32,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
       const metadata = {
         medium: 'payment_done',
-        data: data,
+        data: p2pNotification,
         paymentInfo: infoP2P
       };
 
-      if (data.status.status === P2PRequestStatus.approved) {
+      if (p2pNotification.status.status === P2PRequestStatus.approved) {
         await client.orders.update({
           id: order.id,
           _approve: true
@@ -55,10 +54,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
               id: captures.id,
               metadata: metadata
             });
-            sendEmails = true;
+            emails = true;
           });
         });
-      } else if (data.status.status === P2PRequestStatus.failed || data.status.status === P2PRequestStatus.rejected) {
+      } else if (p2pNotification.status.status === P2PRequestStatus.failed || p2pNotification.status.status === P2PRequestStatus.rejected) {
         await client.orders.update({
           id: order.id,
           _cancel: true,
@@ -71,18 +70,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             id: voids?.id,
             metadata: metadata
           });
-          sendEmails = true;
+          emails = true;
         });
       }
 
-      if (sendEmails) {
+      if (emails) {
         console.info('p2p notification emails');
-        const orderByAlly = (await getOrderByAlly(order.id)).data;
-        await sendClientEmail(orderByAlly);
-        if (data.status.status === P2PRequestStatus.approved) {
-          await sendVantiEmail(orderByAlly);
-          await sendAllyEmail(orderByAlly);
-        }
+        await sendEmails(order.id, false, p2pNotification.status.status);
       }
     }
 

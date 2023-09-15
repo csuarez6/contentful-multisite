@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCLAdminCLient, getOrderStatusCl, isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
-import { sendAllyEmail, sendClientEmail, sendVantiEmail } from '@/lib/services/send-emails.service';
-import { IP2PRequestInformation, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
-import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
+import { sendEmails } from '@/lib/services/send-emails.service';
+import { P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
 import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { Order } from '@commercelayer/sdk';
 
@@ -44,7 +43,7 @@ const handler = async (
                         canceled++;
                     });
                 }
-                sendEmails(order, infoP2P);
+                await sendEmails(order.id, false, infoP2P.status.status);
             } else {
                 const metadata = {
                     medium: 'cron',
@@ -54,7 +53,7 @@ const handler = async (
                 await cancelOrder(order, metadata).then(() => {
                     canceled++;
                 });
-                sendEmails(order);
+                await sendEmails(order.id);
             }
         });
         return res.status(200).json({ recordsNumber: orderData.length, approvedOrders: approved, canceledOrders: canceled });
@@ -96,15 +95,6 @@ const cancelOrder = async (order: Order, metadata: any) => {
             metadata: metadata
         });
     });
-};
-
-const sendEmails = async (order: Order, infoP2P?: IP2PRequestInformation) => {
-    const orderByAlly = (await getOrderByAlly(order.id)).data;
-    await sendClientEmail(orderByAlly);
-    if (infoP2P && infoP2P.status.status === P2PRequestStatus.approved) {
-        await sendVantiEmail(orderByAlly);
-        await sendAllyEmail(orderByAlly);
-    }
 };
 
 export default handler;
