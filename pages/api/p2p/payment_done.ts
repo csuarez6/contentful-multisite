@@ -79,10 +79,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 if (sendEmails) {
                     console.info('p2p payment_done emails');
                     const orderByAlly = (await getOrderByAlly(order.id)).data;
-                    sendClientEmail(orderByAlly);
+                    await sendClientEmail(orderByAlly);
                     if (infoP2P.status.status === P2PRequestStatus.approved) {
-                        sendVantiEmail(orderByAlly);
-                        sendAllyEmail(orderByAlly);
+                        await sendVantiEmail(orderByAlly);
+                        await sendAllyEmail(orderByAlly);
                     }
                 }
             }
