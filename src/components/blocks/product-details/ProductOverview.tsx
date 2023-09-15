@@ -25,6 +25,7 @@ import CartModal from "@/components/organisms/cart-modal/CartModal";
 import { IAdjustments } from "@/lib/services/commerce-layer.service";
 import { apiResponse } from "@/lib/interfaces/api-response.interface";
 import { LineItem } from "@commercelayer/sdk";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -246,7 +247,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     </div>
                   )}
                   {discount && (
-                    <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-cyan-300 h-fit">
+                    <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-blue-100 h-fit">
                       <span className="title is-5">{discount} de descuento</span>
                     </div>
                   )}
@@ -307,7 +308,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </div>
                     )}
                     {discount && (
-                      <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-cyan-300 h-fit">
+                      <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-blue-100 h-fit">
                         <span className="title is-5">
                           {discount} de descuento
                         </span>
@@ -348,7 +349,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </div>
                   <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl w-full xl:w-full 2xl:w-full">
                     <p className="text-base md:text-size-subtitle1">
-                      ¿Aún no tienes crédito con Vanti?
+                      Consulta tu Cupo de Financiación Vanti Listo
                     </p>
                     <div className="flex justify-between pl-[6px]">
                       <CustomLink
@@ -437,7 +438,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       {isGasAppliance(marketId) && priceVantiListo && (
                         <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
                           <span>{(priceVantiListo).split(',')[0]}</span>
-                          <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
+                          <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
                             Vanti Listo
                           </span>
                         </p>
@@ -520,12 +521,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             <div id="content-features" className="grid col-span-2 gap-9">
               <h2 className="text-blue-dark">Características principales</h2>
               <div className="">
-                {documentToReactComponents(features.json, options)}
-              </div>
-              <div className="flex">
-                <button className="button button-outline">
-                  Ver más características
-                </button>
+                {documentToReactComponents(
+                  attachLinksToRichtextContent(features.json, features?.links ?? []), 
+                  options
+                )}
               </div>
             </div>
           )}
@@ -545,10 +544,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               {warranty && (
                 <div id="content-warranty" className="w-full gap-8">
                   <h2 className="text-blue-dark">Garantía</h2>
-                  {documentToReactComponents(
-                    warranty.description.json,
-                    options
-                  )}
+                  {documentToReactComponents(warranty.description.json, options )}
                 </div>
               )}
             </div>
@@ -591,7 +587,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {isGasAppliance(marketId) && priceVantiListo && (
                   <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
                     <span>{(priceVantiListo).split(',')[0]}</span>
-                    <span className="inline-block text-size-small font-bold bg-blue-100 py-0.5 px-1 rounded border">
+                    <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
                       Vanti Listo
                     </span>
                   </p>

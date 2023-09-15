@@ -15,6 +15,9 @@ const RICHTEXT_REFERENCES = {
   [CONTENTFUL_TYPENAMES.PAGE]: [
     "content",
   ],
+  [CONTENTFUL_TYPENAMES.PRODUCT]: [
+    "features",
+  ],
   [CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT]: [
     "description",
   ]

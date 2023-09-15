@@ -1,9 +1,13 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { IIcon } from "@/components/atoms/icon/Icon";
 import { classNames, formatPrice } from "@/utils/functions";
-import { BLOCKS } from "@contentful/rich-text-types";
+import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 import { useState } from "react";
 import Spinner from "@/components/atoms/spinner/Spinner";
+import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 export const iconInvoice: IIcon = {
   icon: "invoice",
@@ -51,6 +55,50 @@ export const options = {
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
       <td className="px-3 py-4 text-grey-30 text-size-subtitle1">{children}</td>
     ),
+    [INLINES.EMBEDDED_ENTRY]: (node: any) => {
+      const cta = node?.data?.target;
+      return (
+        <span className="flex my-3">
+          {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
+            <CustomLink
+              content={cta}
+              key={cta.name}
+              className="button button-outline"
+            >
+              {cta.promoTitle ?? cta.name}
+            </CustomLink>
+          )}
+
+          {cta.linkView === "Modal" && (
+            <ButtonAtom
+              key={cta.name}
+              type="Modal"
+              classes="button button-outline"
+              modalClass={null}
+              text={cta.promoTitle ?? cta.name}
+            >
+              {cta?.content?.json && (
+                <span>
+                  {documentToReactComponents(
+                    attachLinksToRichtextContent(cta?.content?.json, cta?.content?.links ?? []),
+                    defaultFormatOptions
+                  )}
+                </span>
+              )}
+            </ButtonAtom>
+          )}
+
+          {cta?.mediaInternalLink && (
+            <CustomLink
+              content={cta}
+              className="button button-outline"
+            >
+              {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
+            </CustomLink>
+          )}
+        </span>
+      );
+    },
   },
 };
 
