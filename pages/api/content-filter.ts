@@ -4,28 +4,32 @@ import getFilteredContent from '@/lib/services/content-filter.service';
 import { FACET_QUERY_MAP } from '@/constants/search.constants';
 
 const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<any>
+  request: NextApiRequest,
+  response: NextApiResponse<any>
 ) => {
   const filters = {};
   for (const fk in FACET_QUERY_MAP) {
-    if (req?.query[FACET_QUERY_MAP[fk].inputName]) {
-      filters[FACET_QUERY_MAP[fk].inputName] = typeof req.query[FACET_QUERY_MAP[fk].inputName] == 'string'
-        ? req.query[FACET_QUERY_MAP[fk].inputName]
-        : req.query[FACET_QUERY_MAP[fk].inputName][0];
+    if (request?.query[FACET_QUERY_MAP[fk].inputName]) {
+      filters[FACET_QUERY_MAP[fk].inputName] = typeof request.query[FACET_QUERY_MAP[fk].inputName] == 'string'
+        ? request.query[FACET_QUERY_MAP[fk].inputName]
+        : request.query[FACET_QUERY_MAP[fk].inputName][0];
     }
   }
 
   const filteredContent = await getFilteredContent({
-    fullTextSearch: typeof req.query.text == 'string' ? req.query.text : (req?.query?.text?.[0] ?? ''),
-    pageResults: req.query.pageResults,
-    contentTypesFilter: typeof req.query.type == 'string' ? [req.query.type] : req.query.type,
-    parentIds: typeof req.query.parent == 'string' ? [req.query.parent] : req.query.parent,
-    page: typeof req.query.page == 'string' ? parseInt(req.query.page) : parseInt(req.query.page[0]),
+    fullTextSearch: typeof request.query.text == 'string' ? request.query.text : (request?.query?.text?.[0] ?? ''),
+    pageResults: request.query.pageResults,
+    contentTypesFilter: typeof request.query.type == 'string' ? [request.query.type] : request.query.type,
+    parentIds: typeof request.query.parent == 'string' ? [request.query.parent] : request.query.parent,
+    page: typeof request.query.page == 'string' ? parseInt(request.query.page) : parseInt(request.query.page[0]),
     filters
   });
 
-  res.status(200).json(filteredContent);
+  response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=10800');
+  response.setHeader('CDN-Cache-Control', 'public, max-age=0');
+  response.setHeader('Cache-Control', 'public, max-age=0');
+  
+  response.status(200).json(filteredContent);
 };
 
 export default handler;
