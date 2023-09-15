@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getCLAdminCLient } from "@/lib/services/commerce-layer.service";
 import { getOrderByAlly } from '@/lib/services/order-by-ally.service';
-import { sendAllyEmail, sendClientEmail, sendVantiEmail } from "@/lib/services/send-emails.service";
+import { sendAllyEmail, sendClientEmail, sendEmails, sendVantiEmail } from "@/lib/services/send-emails.service";
 import { IAllyResponse } from "@/lib/interfaces/ally-collection.interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
 
@@ -31,12 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     const orderByAlly: IAllyResponse = await getOrderByAlly(authorization.order.id);
     if (orderByAlly.status === 200) {
-      await sendClientEmail(orderByAlly.data);
-
-      if (orderByAlly.data?.status === OrderStatus.approved) {
-        await sendVantiEmail(orderByAlly.data);
-        await sendAllyEmail(orderByAlly.data);
-      }
+      await sendEmails(orderByAlly.data.id, false, orderByAlly.data.status.toUpperCase());
     }
 
     res.json({

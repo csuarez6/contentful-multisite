@@ -1,9 +1,10 @@
 import { Shipment } from "@commercelayer/sdk";
-import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
+import { ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
-import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
+import { IP2PRequestInformation, P2PRequestStatus } from "../interfaces/p2p-cf-interface";
 import { formatDate } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
+import { getOrderByAlly } from "./order-by-ally.service";
 
 const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
   const billing_address = order.billing_address?.line_1 + (order.billing_address?.line_2 ? ', ' + order.billing_address?.line_2 : '') + ', ' + order.billing_address?.city + ', ' + order.billing_address?.state_code;
@@ -81,7 +82,7 @@ const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.approved_at)}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.created_at)}</td>
       </tr>
       </table>
       </td>
@@ -478,28 +479,9 @@ const footer = `
       </body>
     </html>`;
 
-const createOrderEmailTemplate = (order: IOrderExtended, host: string) => {
+const sendCreateOrderEmail = async (order: IOrderExtended, host: string): Promise<number> => {
   const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
-  return header + body + footer;
-};
-
-const clientEmailTemplate = (status: string, order: IOrderExtended) => {
-  const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
-  return header + body + footer;
-};
-
-const vantiEmailTemplate = (status: string, order: IOrderExtended) => {
-  const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
-  return header + body + footer;
-};
-
-const allyEmailTemplate = (status: string, order: IOrderExtended, productsData: IAlly) => {
-  const body = bodySection(status, order, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
-  return header + body + footer;
-};
-
-export const sendCreateOrderEmail = async (order: IOrderExtended, host: string): Promise<number> => {
-  const email = createOrderEmailTemplate(order, host);
+  const email = header + body + footer;
 
   const clientEmail = {
     to: order.customer_email,
@@ -521,8 +503,9 @@ export const sendCreateOrderEmail = async (order: IOrderExtended, host: string):
   return isMailSended ? 1 : 0;
 };
 
-export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const email = clientEmailTemplate(orderByAlly.status, orderByAlly);
+const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+  const email = header + body + footer;
 
   const clientEmail = {
     to: orderByAlly.customer_email,
@@ -544,8 +527,10 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
   return isMailSended ? 1 : 0;
 };
 
-export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
-  const email = vantiEmailTemplate(orderByAlly.status, orderByAlly);
+const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+  const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+  const email = header + body + footer;
+
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -574,13 +559,15 @@ export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<numbe
   return isMailSended ? 1 : 0;
 };
 
-export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
+const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   const allyItems = orderByAlly.line_items_by_ally;
   const emailPromises: Promise<boolean>[] = [];
 
   allyItems.forEach((allyItem) => {
     const productsData = allyItem;
-    const email = allyEmailTemplate(orderByAlly.status, orderByAlly, productsData);
+    const body = bodySection(orderByAlly.status, orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+    const email = header + body + footer;
+
     const emailAddresses = String(allyItem.metadata?.email).split(',');
 
     if (!emailAddresses) {
@@ -615,4 +602,17 @@ export const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number
   const emailResults = await Promise.all(emailPromises);
   const count = emailResults.filter((result) => result).length;
   return count;
+};
+
+export const sendEmails = async (orderId: string, createEmail = false, statusP2P?: string, host?: string) => {
+  const order = (await getOrderByAlly(orderId)).data;
+  if (createEmail) {
+    await sendCreateOrderEmail(order, host);
+  } else {
+    await sendClientEmail(order);
+    if (statusP2P && statusP2P === P2PRequestStatus.approved) {
+      await sendVantiEmail(order);
+      await sendAllyEmail(order);
+    }
+  }
 };
