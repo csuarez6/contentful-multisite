@@ -4,6 +4,7 @@ import { createP2PRequest, getP2PIdentificationType } from "@/lib/services/place
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, P2PDisplayOnFields } from "@/lib/interfaces/p2p-cf-interface";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { sendCreateOrderEmail } from "@/lib/services/send-emails.service";
+import { getOrderByAlly } from "@/lib/services/order-by-ally.service";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
@@ -68,11 +69,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     ).then(async (orderUpdated) => {
       console.info('p2p create_request placed', orderUpdated);
       const authorization = orderUpdated.authorizations?.at(0);
-      await client.authorizations.update({
+      client.authorizations.update({
         id: authorization?.id,
         metadata: response
       });
-      sendCreateOrderEmail(order, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
+      const orderByAlly = (await getOrderByAlly(order.id)).data;
+      sendCreateOrderEmail(orderByAlly, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
     });
 
     res.json({

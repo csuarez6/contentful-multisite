@@ -1,11 +1,11 @@
-import { LineItem, Order, Shipment } from "@commercelayer/sdk";
+import { Shipment } from "@commercelayer/sdk";
 import { IAlly, ILineItemExtended, IOrderExtended } from "../interfaces/ally-collection.interface";
 import { sendEmail } from "./mailer.service";
 import { IP2PRequestInformation } from "../interfaces/p2p-cf-interface";
 import { formatDate } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
 
-const customerSection = (order: Order, showPaymentInfo: boolean) => {
+const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
   const billing_address = order.billing_address?.line_1 + (order.billing_address?.line_2 ? ', ' + order.billing_address?.line_2 : '') + ', ' + order.billing_address?.city + ', ' + order.billing_address?.state_code;
   const shipping_address = order.shipping_address?.line_1 + (order.shipping_address?.line_2 ? ', ' + order.shipping_address?.line_2 : '') + ', ' + order.shipping_address?.city + ', ' + order.shipping_address?.state_code;
   const shipping_methods = order.shipments?.map((shipment) => {
@@ -200,7 +200,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   return section;
 };
 
-const getOrderStatus = (status: string, order: Order, host?: string) => {
+const getOrderStatus = (status: string, order: IOrderExtended, host?: string) => {
   switch (status) {
     case "cancelled":
       return {
@@ -238,7 +238,7 @@ const getOrderStatus = (status: string, order: Order, host?: string) => {
   }
 };
 
-const bodySection = (status: string, order: Order, line_items: LineItem[], shipments: Shipment[], formatted_total_amount: string, host?: string) => {
+const bodySection = (status: string, order: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string, host?: string) => {
   const orderStatus = getOrderStatus(status, order, host);
 
   const body = `
@@ -478,27 +478,27 @@ const footer = `
       </body>
     </html>`;
 
-const createOrderEmailTemplate = (order: Order, host: string) => {
+const createOrderEmailTemplate = (order: IOrderExtended, host: string) => {
   const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
   return header + body + footer;
 };
 
-const clientEmailTemplate = (status: string, order: Order) => {
+const clientEmailTemplate = (status: string, order: IOrderExtended) => {
   const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
   return header + body + footer;
 };
 
-const vantiEmailTemplate = (status: string, order: Order) => {
+const vantiEmailTemplate = (status: string, order: IOrderExtended) => {
   const body = bodySection(status, order, order.line_items, order.shipments, order.formatted_total_amount);
   return header + body + footer;
 };
 
-const allyEmailTemplate = (status: string, order: Order, productsData: IAlly) => {
+const allyEmailTemplate = (status: string, order: IOrderExtended, productsData: IAlly) => {
   const body = bodySection(status, order, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
   return header + body + footer;
 };
 
-export const sendCreateOrderEmail = async (order: Order, host: string): Promise<number> => {
+export const sendCreateOrderEmail = async (order: IOrderExtended, host: string): Promise<number> => {
   const email = createOrderEmailTemplate(order, host);
 
   const clientEmail = {
@@ -521,7 +521,7 @@ export const sendCreateOrderEmail = async (order: Order, host: string): Promise<
   return isMailSended ? 1 : 0;
 };
 
-export const sendClientEmail = async (orderByAlly: Order): Promise<number> => {
+export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   const email = clientEmailTemplate(orderByAlly.status, orderByAlly);
 
   const clientEmail = {
@@ -544,7 +544,7 @@ export const sendClientEmail = async (orderByAlly: Order): Promise<number> => {
   return isMailSended ? 1 : 0;
 };
 
-export const sendVantiEmail = async (orderByAlly: Order): Promise<number> => {
+export const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   const email = vantiEmailTemplate(orderByAlly.status, orderByAlly);
   const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
