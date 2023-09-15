@@ -581,7 +581,7 @@ const CheckoutAddress = () => {
           <div className="w-full">
             <TextBox
               id="shippingAddress.address"
-              label="Escribe tu direccion"
+              label="Escribe tu dirección"
               isRequired={true}
               {...register("shippingAddress.address")}
               placeholder="Ejemplo carrera 00 # 0000"
@@ -658,7 +658,7 @@ const CheckoutAddress = () => {
           {!isSameAsBillingAddress && (
             <>
               <h4 className="!font-semibold text-blue-dark">
-                Direccion de facturación
+                Dirección de facturación
               </h4>
               <div className="w-full">
                 <SelectAtom
@@ -701,7 +701,7 @@ const CheckoutAddress = () => {
               <div className="w-full">
                 <TextBox
                   id="billingAddress.address"
-                  label="Escribe tu direccion"
+                  label="Escribe tu dirección"
                   isRequired={true}
                   {...register("billingAddress.address")}
                   placeholder="Ejemplo carrera 00 # 0000"

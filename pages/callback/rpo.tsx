@@ -45,7 +45,7 @@ const modalBody = (data, isSuccess, errorMessage, closeModal) => {
               </div>
               <p className="lg:text-size-p1 text-neutral-20">
                 En caso de tener inconvenientes con la visita, te contactaremos
-                al numero que nos has brindado.
+                al número que nos has brindado.
                 <br />
                 <br />
                 ¡Gracias por confiar en Vanti!

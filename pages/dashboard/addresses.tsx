@@ -254,10 +254,10 @@ const DashboardAddresses = () => {
       setIsActivedModal(true);
       setParamModal({
         children: (
-          <ModalContent modalMsg="Direccion actualizada con exito." />
+          <ModalContent modalMsg="Dirección actualizada con exito." />
         ),
         promoIcon: "check",
-        promoTitle: "Direccion Actualizada",
+        promoTitle: "Dirección Actualizada",
       });
     } catch (error) {
       console.error(error);
@@ -380,7 +380,7 @@ const DashboardAddresses = () => {
                       <div className="w-full">
                         <TextBox
                           id="shippingAddress.address"
-                          label="Escribe tu direccion"
+                          label="Escribe tu dirección"
                           isRequired={true}
                           {...register("shippingAddress.address")}
                           placeholder="Ejemplo carrera 00 # 0000"

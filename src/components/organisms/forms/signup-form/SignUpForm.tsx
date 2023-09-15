@@ -162,7 +162,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                     />
                     <Textbox
                         id='cellPhone'
-                        label='Escribe tu numero de celular'
+                        label='Escribe tu número de celular'
                         placeholder='300 000 000'
                         className='form-input'
                         isError={!!errors.cellPhone}
@@ -200,7 +200,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                 <div className="flex flex-col">
                     <Textbox
                         id='contractNumber'
-                        label='Escribe tu numero de cuenta contrato (lo encuentras en la parte superior izquierda de tu factura)'
+                        label='Escribe tu número de cuenta contrato (lo encuentras en la parte superior izquierda de tu factura)'
                         placeholder='00000000'
                         className='form-input'
                         isError={!!errors.contractNumber}

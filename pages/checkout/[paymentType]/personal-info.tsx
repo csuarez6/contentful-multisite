@@ -182,7 +182,7 @@ const CheckoutPersonalInfo = () => {
               id="cellPhone"
               type="number"
               name="cellPhone"
-              label="Escribe tu numero de celular"
+              label="Escribe tu número de celular"
               placeholder="000 000 0000"
               isRequired={true}
               {...register("cellPhone")}
@@ -206,7 +206,7 @@ const CheckoutPersonalInfo = () => {
             )}
           </div>
           <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-x-3">
-            <div>
+            <div className="w-full">
               <SelectAtom
                   id='documentType'
                   labelSelect='Tipo de documento'
@@ -225,7 +225,7 @@ const CheckoutPersonalInfo = () => {
                 </p>
               )}
             </div>
-            <div>
+            <div className="w-full">
               <TextBox
                 id="documentNumber"
                 type="text"
