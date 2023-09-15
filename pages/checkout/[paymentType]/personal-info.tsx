@@ -139,6 +139,11 @@ const CheckoutPersonalInfo = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const checkAllAlphaNumeric = (e) => {
+    const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+    if (!e.key.match(letters)) e.preventDefault();
+  };
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -158,6 +163,7 @@ const CheckoutPersonalInfo = () => {
               label="Escribe tu nombre"
               placeholder="Nombre"
               isRequired={true}
+              onKeyPress={(e) => checkAllAlphaNumeric(e)}
               {...register("name")}
             />
             {errors.name?.message && (
@@ -171,6 +177,7 @@ const CheckoutPersonalInfo = () => {
               label="Escribe tu apellido"
               placeholder="Apellido"
               isRequired={true}
+              onKeyPress={(e) => checkAllAlphaNumeric(e)}
               {...register("lastName")}
             />
             {errors.lastName?.message && (
@@ -208,16 +215,16 @@ const CheckoutPersonalInfo = () => {
           <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-x-3">
             <div>
               <SelectAtom
-                  id='documentType'
-                  labelSelect='Tipo de documento'
-                  listedContents={selectOptions}
-                  isRequired={true}
-                  currentValue={getValues("documentType")}
-                  handleChange={(value) => {
-                      setValue("documentType", value);
-                      clearErrors('documentType');
-                  }}
-                  {...register('documentType')}
+                id='documentType'
+                labelSelect='Tipo de documento'
+                listedContents={selectOptions}
+                isRequired={true}
+                currentValue={getValues("documentType")}
+                handleChange={(value) => {
+                  setValue("documentType", value);
+                  clearErrors('documentType');
+                }}
+                {...register('documentType')}
               />
               {errors.documentType?.message && (
                 <p className="mt-1 text-red-600">
