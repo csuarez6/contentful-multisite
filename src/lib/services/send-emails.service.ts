@@ -44,7 +44,6 @@ const customerSection = (order: Order, showPaymentInfo: boolean) => {
       </tr>
     ` : '';
 
-
   const section = `
     <tr>
       <td style="padding: 24px">
@@ -480,7 +479,7 @@ const footer = `
     </html>`;
 
 const createOrderEmailTemplate = (order: Order, host: string) => {
-  const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host, false);
+  const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
   return header + body + footer;
 };
 
