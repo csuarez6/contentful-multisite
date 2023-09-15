@@ -502,7 +502,7 @@ export const sendCreateOrderEmail = async (order: IOrderExtended, host: string):
   const email = createOrderEmailTemplate(order, host);
 
   const clientEmail = {
-    to: order.customer.email,
+    to: order.customer_email,
     subject: "Confirmación orden " + order.number + " - Vanti",
     message: "Body-email",
     from: "Vanti info <dev@aplyca.com>",
@@ -525,7 +525,7 @@ export const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<numb
   const email = clientEmailTemplate(orderByAlly.status, orderByAlly);
 
   const clientEmail = {
-    to: orderByAlly.customer.email,
+    to: orderByAlly.customer_email,
     subject: "Confirmación orden " + orderByAlly.number + " - Vanti",
     message: "Body-email",
     from: "Vanti info <dev@aplyca.com>",
