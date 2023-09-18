@@ -381,7 +381,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   {product?.name}
                 </Link>
                 <p className="text-xs text-left text-grey-60">
-                  * Precio IVA incluido
+                  * IVA incluido
                 </p>
               </div>
               <div className="inline-block py-3.5 pb-0 sm:px-3 text-blue-dark sm:mx-auto">
