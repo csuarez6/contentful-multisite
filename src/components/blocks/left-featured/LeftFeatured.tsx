@@ -239,7 +239,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                                 <ButtonAtom
                                   type={cta?.linkView}
                                   text={cta?.ctaLabel ?? cta?.name}
-                                  classes={getButtonType("Contorno")}
+                                  classes={getButtonType(view?.buttonType ?? "Contorno")}
                                   modalClass="w-auto max-w-7xl"
                                 >
                                   {documentToReactComponents(
@@ -257,7 +257,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                                 content={cta}
                                 className={classNames(
                                   "button w-full sm:w-auto flex justify-center text-center",
-                                  getButtonType("Contorno")
+                                  getButtonType(view?.buttonType ?? "Contorno")
                                 )}
                               >
                                 {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}

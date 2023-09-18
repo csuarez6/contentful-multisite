@@ -83,8 +83,19 @@ export const attachLinksToRichtextContent = (jsonDocument, links) => {
       case 'embedded-entry-inline':
         blockInfo = links?.entries?.inline?.find((itemLink) => itemLink.sys?.id === content[kCont].data.target.sys.id);
         break;
+      case 'asset-hyperlink':
+        blockInfo = links?.assets?.hyperlink?.find((itemLink) => itemLink.sys?.id === content[kCont].data.target.sys.id);
+        break;
       case 'paragraph':
         content[kCont] = attachLinksToRichtextContent(content[kCont], links);
+        break;
+      case 'unordered-list':
+        content[kCont]?.content.map(listItem => {
+          const res = attachLinksToRichtextContent(listItem?.content?.[0], links);
+          for (const kres in res?.content) {
+            listItem.content[kres] = res.content[kres];
+          }
+        });
         break;
       default:
         continue;
