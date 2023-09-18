@@ -18,7 +18,7 @@ import {
   isVantilisto,
   scrollContent,
 } from "@/utils/functions";
-import { iconInvoice, iconPSE, options } from "./ProductConfig";
+import { iconInvoice, iconPSE, options, iconPlaceToPay } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
 import CartModal from "@/components/organisms/cart-modal/CartModal";
@@ -426,6 +426,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <div className="flex gap-1">
                           {isGasAppliance(marketId) && <Icon {...iconPSE} />}
                           <Icon {...iconInvoice} />
+                          <Icon {...iconPlaceToPay} />
                         </div>
                       </div>
                       {/* Main price */}
