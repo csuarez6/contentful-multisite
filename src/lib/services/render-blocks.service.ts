@@ -91,9 +91,9 @@ export const attachLinksToRichtextContent = (jsonDocument, links) => {
         break;
       case 'unordered-list':
         content[kCont]?.content.map(listItem => {
-          const res = attachLinksToRichtextContent(listItem?.content?.[0], links)
+          const res = attachLinksToRichtextContent(listItem?.content?.[0], links);
           for (const kres in res?.content) {
-            listItem.content[kres] = res.content[kres]
+            listItem.content[kres] = res.content[kres];
           }
         });
         break;

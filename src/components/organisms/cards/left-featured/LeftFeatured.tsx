@@ -42,7 +42,6 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
   };
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const [hasRoundedImage, setHasRoundedImage] = useState(false);
-  console.log('buttonType', buttonType);
   
   useEffect(() => {
     const checkMediaQuery = () =>
