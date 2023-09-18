@@ -42,7 +42,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
   };
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const [hasRoundedImage, setHasRoundedImage] = useState(false);
-
+  
   useEffect(() => {
     const checkMediaQuery = () =>
       window.matchMedia("(min-width: 768px)").matches;
@@ -193,7 +193,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
                           <ButtonAtom
                             type={cta?.linkView}
                             text={cta?.ctaLabel ?? cta?.name}
-                            classes={getButtonType("Contorno")}
+                            classes={getButtonType(buttonType ?? "Contorno")}
                             modalClass="w-auto max-w-7xl"
                           >
                             {documentToReactComponents(
@@ -211,7 +211,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
                           content={cta}
                           className={classNames(
                             "button w-full sm:w-auto flex justify-center text-center",
-                            getButtonType("Contorno")
+                            getButtonType(buttonType ?? "Contorno")
                           )}
                         >
                           {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
