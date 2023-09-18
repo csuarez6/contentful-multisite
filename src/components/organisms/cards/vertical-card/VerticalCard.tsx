@@ -102,7 +102,7 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
                 getButtonType(buttonType ?? "Contorno")
               )}
             >
-              {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
+              {ctaLabel ?? promoTitle ?? name}
             </CustomLink>
           </div>
         )}

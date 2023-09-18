@@ -45,16 +45,16 @@ const CarouselCategories: React.FC<
             )}
           >
             {(promoImage || image) && (
-              <figure className="relative w-[98px] h-[98px]">
+              <figure className={classNames(
+                "relative w-[98px] h-[98px] rounded-full border-[3px] group-hover:border-neutral-70 transition-colors duration-500",
+                filterName !== null && isCurrentItem ? "border-neutral-70" : "border-transparent"
+              )}>
                 <Image
                   src={promoImage?.url ?? image?.url}
                   alt={promoImage?.title ?? image?.title}
                   width={promoImage?.width ?? image?.width ?? 50}
                   height={promoImage?.height ?? image?.height ?? 50}
-                  className={classNames(
-                    "object-cover rounded-full w-full h-full border border-neutral-80 group-hover:border-[3px] group-hover:border-neutral-70",
-                    filterName !== null && isCurrentItem && "border-[4px] border-neutral-70"
-                  )}
+                  className="object-cover rounded-full w-full h-full border border-neutral-80"
                 />
               </figure>
             )}
@@ -78,7 +78,7 @@ const CarouselCategories: React.FC<
           )}
         >
           {(promoImage || image) && (
-            <figure className="relative w-[98px] h-[98px]">
+            <figure className="relative w-[98px] h-[98px] border-[3px] border-transparent">
               <Image
                 src={promoImage?.url ?? image?.url}
                 alt={promoImage?.title ?? image?.title}
