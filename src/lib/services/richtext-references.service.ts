@@ -41,7 +41,8 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
       (
         textoJSON.includes("embedded-entry-block") ||
         textoJSON.includes("embedded-entry-inline") ||
-        textoJSON.includes("embedded-asset-block")
+        textoJSON.includes("embedded-asset-block") || 
+        textoJSON.includes("asset-hyperlink")
       )
     );
   });
@@ -56,7 +57,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   // Si no hay referencias por consultar retornar
   if(!contentReferences) return null;
 
-  let responseData = null, responseError = null;
+  let responseData = null, responseError = null;  
   try {
     await sleep(30);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
@@ -116,7 +117,7 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
   let responseData = null, responseError = null;
 
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
-
+  
   try {
     await sleep(30);
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
@@ -138,7 +139,7 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
     responseError = e;
     responseData = {};
   }
-
+ 
   if (responseError) {
     console.error(`Error on entry query 5 (${type}) => `, responseError.message, blockInfo);
   }

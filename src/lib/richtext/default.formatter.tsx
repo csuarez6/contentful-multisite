@@ -143,7 +143,7 @@ const defaultFormatOptions: Options = {
           className={`text-violet-500 underline ${
             isButton ? "inline-cta-button" : ""
           }`}
-          href={node.data.uri}
+          href={node.data.target.url}
           target="_blank"
           rel="noreferrer"
         >
