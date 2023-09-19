@@ -390,7 +390,7 @@ const CheckoutAddress = () => {
     state_code: addr.stateCode,
     city: addr.cityCode,
     line_1: addr.address,
-    line_2: addr.street + (addr.residence ? ", " + addr.residence : ''),
+    line_2: addr.street + (addr.residence ? ", " + addr.residence : ""),
     notes: addr?.receiver ?? "",
     phone: order?.metadata?.cellPhone ?? "0000",
     zip_code: DEFAULT_ZIP_CODE,
@@ -558,26 +558,28 @@ const CheckoutAddress = () => {
               </p>
             )}
           </div>
-          <div className="w-full">
-            <SelectAtom
-              key={getValues("shippingAddress.cityCode")}
-              id="shipping-city-code"
-              labelSelect="Escoge tu municipio"
-              listedContents={shippingCities}
-              isRequired={true}
-              currentValue={getValues("shippingAddress.cityCode")}
-              handleChange={(value) => {
-                setValue("shippingAddress.cityCode", value);
-                clearErrors("shippingAddress.cityCode");
-              }}
-              {...register("shippingAddress.cityCode")}
-            />
-            {errors?.shippingAddress?.cityCode && (
-              <p className="text-red-600">
-                {errors?.shippingAddress?.cityCode?.message}
-              </p>
-            )}
-          </div>
+          {shippingStateWatched && (
+            <div className="w-full">
+              <SelectAtom
+                key={getValues("shippingAddress.cityCode")}
+                id="shipping-city-code"
+                labelSelect="Escoge tu municipio"
+                listedContents={shippingCities}
+                isRequired={true}
+                currentValue={getValues("shippingAddress.cityCode")}
+                handleChange={(value) => {
+                  setValue("shippingAddress.cityCode", value);
+                  clearErrors("shippingAddress.cityCode");
+                }}
+                {...register("shippingAddress.cityCode")}
+              />
+              {errors?.shippingAddress?.cityCode && (
+                <p className="text-red-600">
+                  {errors?.shippingAddress?.cityCode?.message}
+                </p>
+              )}
+            </div>
+          )}
           <div className="w-full">
             <TextBox
               id="shippingAddress.address"
@@ -679,25 +681,27 @@ const CheckoutAddress = () => {
                   </p>
                 )}
               </div>
-              <div className="w-full">
-                <SelectAtom
-                  id="billingCities-city-code"
-                  labelSelect="Escoge tu municipio"
-                  listedContents={billingCities}
-                  isRequired={true}
-                  currentValue={getValues("billingAddress.cityCode")}
-                  handleChange={(value) => {
-                    setValue("billingAddress.cityCode", value);
-                    clearErrors("billingAddress.cityCode");
-                  }}
-                  {...register("billingAddress.cityCode")}
-                />
-                {errors?.billingAddress?.cityCode && (
-                  <p className="text-red-600">
-                    {errors?.billingAddress?.cityCode?.message}
-                  </p>
-                )}
-              </div>
+              {billingStateWatched && (
+                <div className="w-full">
+                  <SelectAtom
+                    id="billingCities-city-code"
+                    labelSelect="Escoge tu municipio"
+                    listedContents={billingCities}
+                    isRequired={true}
+                    currentValue={getValues("billingAddress.cityCode")}
+                    handleChange={(value) => {
+                      setValue("billingAddress.cityCode", value);
+                      clearErrors("billingAddress.cityCode");
+                    }}
+                    {...register("billingAddress.cityCode")}
+                  />
+                  {errors?.billingAddress?.cityCode && (
+                    <p className="text-red-600">
+                      {errors?.billingAddress?.cityCode?.message}
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="w-full">
                 <TextBox
                   id="billingAddress.address"
