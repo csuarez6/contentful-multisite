@@ -94,7 +94,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
-    console.log("sssss: ", order.line_items.filter((i) => i.sku_code));
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -150,7 +149,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     (async () => {
       try {
         const shippingMethod = await getShippingMethods();
-        console.log({ shippingMethod });
         if (shippingMethod) setShippingMethodGlobal(shippingMethod);
       } catch (error) {
         console.error("Error at: ProductService", error);
