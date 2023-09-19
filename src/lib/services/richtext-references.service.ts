@@ -107,12 +107,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   return referencesContent;
 };
 
-const CACHE_DATACONTENT = {};
-
 export const getDataContent = async (blockInfo: any, preview = false) => {
-
-  const cacheIndex = blockInfo.sys.id;
-  if (CACHE_DATACONTENT[cacheIndex]) return { ...CACHE_DATACONTENT[cacheIndex] };
 
   let responseData = null, responseError = null;
 
@@ -153,12 +148,6 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
       responseData?.[type]
     )
   );
-
-  CACHE_DATACONTENT[cacheIndex] = { ...entryContent };
-
-  setTimeout(() => {
-    CACHE_DATACONTENT[cacheIndex] = null;
-  }, 10 * 60 * 1000); // Cache for 10 minutes for deployment
 
   return entryContent;
   
