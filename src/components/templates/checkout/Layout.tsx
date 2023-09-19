@@ -94,6 +94,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const products = useMemo(() => {
     if (!order?.line_items) return [];
+    console.log("sssss: ", order.line_items.filter((i) => i.sku_code));
     return order.line_items.filter((i) => i.sku_code);
   }, [order]);
 
@@ -149,6 +150,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     (async () => {
       try {
         const shippingMethod = await getShippingMethods();
+        console.log({ shippingMethod });
         if (shippingMethod) setShippingMethodGlobal(shippingMethod);
       } catch (error) {
         console.error("Error at: ProductService", error);
@@ -389,7 +391,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           {/* Ent Product Installation */}
 
                           {/* Start Shipping Cost */}
-                          {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) && (
+                          {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order")) && (
                             <div
                               className="grid grid-cols-3 text-sm"
                               key={"product-unit-shipcost" + i}
@@ -424,7 +426,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="col-span-1 font-bold">Subtotal:</p>
                             <span className="col-span-2 font-bold text-right text-blue-dark">
-                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && ((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order"))
                                 ? formatPrice(
                                   showProductTotal(
                                     product?.total_amount_float,
@@ -462,7 +464,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
                       {/* {order?.formatted_total_amount_with_taxes} */}
-                      {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
+                      {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order"))
                         ?
                         formatPrice(
                           order?.total_amount_with_taxes_float +
