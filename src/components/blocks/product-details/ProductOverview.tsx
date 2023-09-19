@@ -18,7 +18,7 @@ import {
   isVantilisto,
   scrollContent,
 } from "@/utils/functions";
-import { iconInvoice, iconPSE, options } from "./ProductConfig";
+import { iconInvoice, iconPSE, options, iconPlaceToPay } from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
 import CartModal from "@/components/organisms/cart-modal/CartModal";
@@ -322,7 +322,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 <div className="py-[2px] flex flex-col gap-[32px] lg:w-[43%] shrink-0 sm:w-1/2">
                   <div className="flex flex-col gap-[14px] bg-slate-50 p-3 rounded-xl">
                     <h4 className="text-blue-dark">
-                      Características del producto
+                      Información a tener en cuenta
                     </h4>
                     {productFeatures && (
                       <div className="flex flex-col gap-[5px] text-blue-dark">
@@ -426,6 +426,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <div className="flex gap-1">
                           {isGasAppliance(marketId) && <Icon {...iconPSE} />}
                           <Icon {...iconInvoice} />
+                          <Icon {...iconPlaceToPay} />
                         </div>
                       </div>
                       {/* Main price */}
@@ -434,7 +435,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           ? priceGasodomestico
                           : priceVantiListo).split(',')[0]}
                       </p>
-                      {/* Secondary text */}
+                      {/* Secondary price */}
                       {isGasAppliance(marketId) && priceVantiListo && (
                         <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
                           <span>{(priceVantiListo).split(',')[0]}</span>
@@ -443,9 +444,13 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                           </span>
                         </p>
                       )}
+
+                      {/* IVA Price */}
                       <div className="text-xs text-grey-30">
-                        <p>* Precio IVA incluido</p>
+                        <p>* IVA incluido</p>
+                        <p>** Debes tener cupo Vanti Listo disponible</p>
                       </div>
+                      
                       {/* Product stock */}
                       <div className="text-sm text-grey-30">
                         <p>

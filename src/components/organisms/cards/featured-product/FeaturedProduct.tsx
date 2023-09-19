@@ -170,19 +170,31 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
               </div>
               {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
                 <div className="flex flex-col gap-[6px]">
-                  {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceBeforeVantiListo) &&
-                    !hideBeforePrice && (
-                      <p className="line-through title is-4 text-blue-dark before-price">
-                        {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
-                      </p>
-                    )}
+                  {/* Price before */}
+                  {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceBeforeVantiListo) && !hideBeforePrice && (
+                    <p className="line-through title is-4 text-blue-dark before-price">
+                      {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
+                    </p>
+                  )}
+
+                  {/* Main price */}
                   <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
-                    {
-                      hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)
-                    }
+                    {hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)}
                   </p>
+
+                  {/* Secondary price */}
+                  {isGasAppliance(marketId) && priceVantiListo && (
+                    <p className="group-[.card-mega-menu]:text-xs text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                      <span>{hideDecimalPrice ? priceVantiListo.split(",")[0] : priceVantiListo}</span>
+                      <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
+                        Vanti Listo
+                      </span>
+                    </p>
+                  )}
+
+                  {/* IVA price */}
                   <div className="text-xs text-grey-30">
-                    <p>* Precio IVA incluido</p>
+                    <p>* IVA incluido</p>
                   </div>
                 </div>
               )}

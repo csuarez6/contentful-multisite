@@ -138,7 +138,7 @@ const TabsWithFeaturedImageBlock: React.FC<IPromoBlock> = ({
           )}
 
           {currentImage?.url && (
-            <div className="hidden 2md:flex w-1/2 lg:w-[494px] shrink-0 grow" key={currentImage.url}>
+            <div className="2md:flex w-full sm:w-1/2 lg:w-[494px] shrink-0 grow" key={currentImage.url}>
               <Transition
                 appear
                 show
