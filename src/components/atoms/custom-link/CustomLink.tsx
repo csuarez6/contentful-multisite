@@ -31,7 +31,7 @@ const CustomLink: React.FC<ICustomLink> = ({
       className={linkClassName}
     >
       <div className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
-        {children ? children : textLink}
+        {children ?? textLink}
         {icon && <Icon icon={icon} className="w-6 h-6 shrink-0" />}
       </div>
     </Link>

@@ -11,12 +11,58 @@ import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
 
-const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
+const RenderCard: React.FC<IPromoContent & IPage> = (props) => {
   const {
     name,
     promoTitle,
     promoDescription,
     promoImage,
+    children = null,
+  } = props;
+
+  return (
+    <article className="bg-white overflow-hidden w-full h-full flex flex-col">
+      {promoImage && (
+        <figure className={classNames(
+          "w-full relative overflow-hidden",
+          promoImage.isPortrait ? "aspect-[588/536]" : "aspect-[588/180]"
+        )}>
+          <Image
+            src={promoImage.url}
+            alt={promoImage.title}
+            width={promoImage.width}
+            height={promoImage.height}
+            className={classNames(
+              "h-full w-full object-cover group-hover:scale-110 transition-transform duration-500",
+              promoImage.isPortrait ? "aspect-[588/536]" : "aspect-[588/180]"
+            )}
+          />
+        </figure>
+      )}
+
+      <div className="w-full p-6 flex flex-col flex-grow justify-between">
+        {(promoTitle || promoDescription || name) && (
+          <div className="grid gap-2">
+            {(promoTitle || name) && (
+              <h3 className="text-blue-dark group-hover:text-category-blue-dark transition-colors duration-500">{promoTitle || name}</h3>
+            )}
+            {promoDescription?.json && (
+              <div className="text-blue-dark-8 text-size-p1">
+                {documentToReactComponents(promoDescription.json)}
+              </div>
+            )}
+          </div>
+        )}
+        {children}
+      </div>
+    </article>
+  );
+};
+
+const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
+  const {
+    name,
+    promoTitle,
     internalLink,
     externalLink,
     buttonType,
@@ -28,86 +74,67 @@ const VerticalCard: React.FC<IPromoContent & IPage> = (props) => {
     mediaInternalLink,
   } = props;
 
-  return (
-    <article className="bg-white shadow rounded-xl overflow-hidden w-full max-w-[588px] flex flex-col">
-      {promoImage && (
-        <figure className="w-full relative">
-          <Image
-            src={promoImage.url}
-            alt={promoImage.title}
-            width={promoImage.width}
-            height={promoImage.height}
-            className={classNames(
-              "h-full w-full object-cover",
-              promoImage.isPortrait ? "aspect-[588/536]" : "aspect-[588/180]"
-            )}
-          />
-        </figure>
-      )}
+  const isModalView = linkView === "Modal" && content.json;
 
-      <div className="w-full p-6 flex flex-col flex-grow justify-between">
-        {(promoTitle || promoDescription || name) && (
-          <div className="grid gap-2">
-            {(promoTitle || name) && (
-              <h3 className="text-blue-dark">{promoTitle || name}</h3>
-            )}
-            {promoDescription?.json && (
-              <div className="text-blue-dark-8 text-size-p1">
-                {documentToReactComponents(promoDescription.json)}
+  return (
+    <CustomLink
+      content={props}
+      linkClassName="max-w-[588px] w-full h-full overflow-hidden shadow rounded-xl group"
+      className="w-full h-full"
+    >
+      <RenderCard {...props}>
+        {isModalView
+          ? (
+            <div className="flex gap-2">
+              <ButtonAtom
+                type={linkView}
+                text={ctaLabel ?? name}
+                classes={getButtonType("Contorno")}
+                modalClass="w-auto max-w-7xl"
+              >
+                {documentToReactComponents(
+                  attachLinksToRichtextContent(content?.json, content?.links),
+                  defaultFormatOptions
+                )}
+              </ButtonAtom>
+            </div>
+          )
+          : (<>
+            {(internalLink?.urlPaths?.[0] || externalLink || urlPaths) && (
+              <div
+                className={classNames(
+                  "flex mt-6 grow items-end",
+                  getAlign(alignButton) === "left"
+                    ? "justify-start"
+                    : "justify-center"
+                )}
+              >
+                <span
+                  className={classNames(
+                    "button block",
+                    getButtonType(buttonType ?? "Contorno")
+                  )}
+                >
+                  {getLinkProps(props).textLink ?? "conoce mas"}
+                </span>
               </div>
             )}
-          </div>
-        )}
-        {(internalLink?.urlPaths?.[0] || externalLink || urlPaths) && (
-          <div
-            className={classNames(
-              "flex mt-6 grow items-end",
-              getAlign(alignButton) === "left"
-                ? "justify-start"
-                : "justify-center"
+            {mediaInternalLink && (
+              <div className="flex items-end mt-3 flex-grow">
+                <span
+                  className={classNames(
+                    "button !rounded-full",
+                    getButtonType(buttonType ?? "Contorno")
+                  )}
+                >
+                  {ctaLabel ?? promoTitle ?? name}
+                </span>
+              </div>
             )}
-          >
-            <CustomLink
-              content={props}
-              className={classNames(
-                "button block",
-                getButtonType(buttonType ?? "Contorno")
-              )}
-            >
-              {getLinkProps(props).textLink ?? "conoce mas"}
-            </CustomLink>
-          </div>
-        )}
-        {linkView === "Modal" && content.json && (
-          <div className="flex gap-2">
-            <ButtonAtom
-              type={linkView}
-              text={ctaLabel ?? name}
-              classes={getButtonType("Contorno")}
-              modalClass="w-auto max-w-7xl"
-            >
-              {documentToReactComponents(
-                attachLinksToRichtextContent(content?.json, content?.links),
-                defaultFormatOptions
-              )}
-            </ButtonAtom>
-          </div>
-        )}
-        {mediaInternalLink && (
-          <div className="flex items-end mt-3 flex-grow">
-            <CustomLink
-              content={props}
-              className={classNames(
-                "button !rounded-full",
-                getButtonType(buttonType ?? "Contorno")
-              )}
-            >
-              {ctaLabel ? ctaLabel : promoTitle ? promoTitle : name}
-            </CustomLink>
-          </div>
-        )}
-      </div>
-    </article>
+          </>)
+        }
+      </RenderCard>
+    </CustomLink>
   );
 };
 

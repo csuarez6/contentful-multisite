@@ -36,40 +36,45 @@ export const getUrlPath = (content: GetUrlPathProps): string => {
     urlPath = /^\//.test(urlPath) ? urlPath : `/${urlPath}`;
   }
 
-  if(!urlPath && content?.mediaInternalLink?.url) {
+  if (!urlPath && content?.mediaInternalLink?.url) {
     urlPath = content.mediaInternalLink.url.replace(re, '');
     urlPath = /^[http|mailto|tel|#]/.test(urlPath) ? urlPath : `/${urlPath}`;
   }
-  return urlPath ? urlPath + (content.linkParameters ?? ''): '/';
+
+  if (content?.linkParameters) {
+    urlPath += content.linkParameters;
+  }
+
+  return urlPath;
 };
 
-export const getLinkProps = (content: GetUrlPathProps) => {  
+export const getLinkProps = (content: GetUrlPathProps) => {
   let textLink = content?.name ?? '';
 
   const href = getUrlPath(content);
   let isExternalLink;
-  if(!content?.internalLink?.urlPaths?.[0]){
+  if (!content?.internalLink?.urlPaths?.[0]) {
     isExternalLink = content?.mediaInternalLink?.url ?? content?.externalLink;
   }
   const icon = getIconView(content?.linkView);
 
-  if(content?.internalLink?.name){
-    textLink = content.internalLink.name; 
+  if (content?.internalLink?.name) {
+    textLink = content.internalLink.name;
   }
 
-  if(content?.internalLink?.promoTitle){
-    textLink = content.internalLink.promoTitle; 
+  if (content?.internalLink?.promoTitle) {
+    textLink = content.internalLink.promoTitle;
   }
 
-  if(content?.promoTitle){
+  if (content?.promoTitle) {
     textLink = content?.promoTitle;
   }
 
-  if(content?.ctaLabel){
+  if (content?.ctaLabel) {
     textLink = content.ctaLabel;
   }
-  
-  if(content?.__typename && content?.__typename === 'Page'){
+
+  if (content?.__typename && content?.__typename === 'Page') {
     textLink = 'Conoce más';
   }
 
@@ -83,8 +88,8 @@ export const getLinkProps = (content: GetUrlPathProps) => {
 };
 
 export const getIconView = (linkView) => {
-  if(!linkView) return;
-  switch(linkView){
+  if (!linkView) return;
+  switch (linkView) {
     case 'Link con icono':
       return 'arrow-right';
     case 'Botón llamada':
