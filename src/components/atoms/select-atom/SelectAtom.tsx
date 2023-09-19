@@ -129,7 +129,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (listedContents.length === 0) return;
+    if (listedContents?.length === 0) return;
 
     return (
       <>
@@ -140,7 +140,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
           data-testid="select"
           ref={ref}
           {...rest}
-          defaultValue={defaultOption.value}
+          defaultValue={defaultOption?.value}
           onChange={onChangeInput}
           hidden
         >
@@ -148,8 +148,8 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
             {placeholder}
           </option>
           {listedContents?.map((content) => (
-            <option key={content.value + "-src"} value={content.value}>
-              {content.text}
+            <option key={content?.value + "-src"} value={content?.value}>
+              {content?.text}
             </option>
           ))}
         </select>
