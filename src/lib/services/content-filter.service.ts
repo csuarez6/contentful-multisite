@@ -198,7 +198,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
               value: "*",
               totalItems: 0,
               image: {
-                url: `/images/show-all-${facetContents.name}.png`,
+                url: `/images/show-all-${facetContents.name}.webp`,
               },
             });
             facetsWithValues.push(facetContents);
