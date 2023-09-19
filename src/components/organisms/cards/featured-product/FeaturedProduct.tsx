@@ -24,32 +24,33 @@ interface IAFeaturedProduct {
   hideDecimalPrice?: boolean
 }
 
-const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails & IAFeaturedProduct> = ({
-  __typename,
-  promoTitle,
-  cta,
-  priceGasodomestico,
-  priceBeforeGasodomestico,
-  priceVantiListo,
-  priceBeforeVantiListo,
-  productsQuantityGasodomestico,
-  productsQuantityVantiListo,
-  rating,
-  imagesCollection,
-  paymentMethods,
-  promoImage,
-  urlPaths,
-  trademark,
-  phone,
-  address,
-  city,
-  hideBeforePrice,
-  hideDecimalPrice = true,
-  marketId,
-  isNew,
-  discount,
-  sku
-}) => {
+const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails & IAFeaturedProduct> = (props) => {
+  const {
+    __typename,
+    promoTitle,
+    cta,
+    priceGasodomestico,
+    priceBeforeGasodomestico,
+    priceVantiListo,
+    priceBeforeVantiListo,
+    productsQuantityGasodomestico,
+    productsQuantityVantiListo,
+    rating,
+    imagesCollection,
+    paymentMethods,
+    promoImage,
+    urlPaths,
+    trademark,
+    phone,
+    address,
+    city,
+    hideBeforePrice,
+    hideDecimalPrice = true,
+    marketId,
+    isNew,
+    discount,
+    sku
+  } = props; 
   const onClick = () => {
     const isGasodomestico = isGasAppliance(marketId);
 
@@ -84,7 +85,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
       className="w-full h-full"
       content={cta
         ? { externalLink: cta.href }
-        : { internalLink: { urlPaths } }
+        : { ...props  }
       }
     >
       <article className="relative h-full group">

@@ -24,7 +24,7 @@ const CustomLink: React.FC<ICustomLink> = ({
   const { href, target, isExternalLink, textLink, icon } = getLinkProps(content);
   return (
     <Link
-      href={href}
+      href={href ?? '#'}
       target={target}
       {...(isExternalLink ? { rel: "noreferrer" } : null)}
       onClick={onClick}
