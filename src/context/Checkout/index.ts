@@ -32,8 +32,8 @@ export interface IContextCheckout {
     billingAddress?: Address;
   }>;
   getCustomerAddresses: (token: string) => Promise<any>;
-  addCustomerAddress: (token: string, address: any) => Promise<void>;
-  updateCustomerAddress: (token: string, id: string, address: any) => Promise<void>;
+  addCustomerAddress: (token: string, address: any) => Promise<apiResponse>;
+  updateCustomerAddress: (token: string, id: string, address: any) => Promise<apiResponse>;
   placeOrder: () => Promise<apiResponse>;
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId?: string) => Promise<void>;

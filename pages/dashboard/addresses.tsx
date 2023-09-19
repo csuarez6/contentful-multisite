@@ -242,22 +242,25 @@ const DashboardAddresses = () => {
     try {
       const { shippingAddress } = data;
       const clShippingAddr = toCLAddress(shippingAddress) as AddressCreate;
+      let errorMsg = false;
       if (newAddress) {
-        await addCustomerAddress(session?.user["accessToken"], clShippingAddr);
+       const response = await addCustomerAddress(session?.user["accessToken"], clShippingAddr);
+       if(response?.status === 500) errorMsg = true;
       } else {
-        await updateCustomerAddress(
+        const response  = await updateCustomerAddress(
           session?.user["accessToken"],
           idAddress.current,
           clShippingAddr
         );
+        if(response?.status === 500) errorMsg = true;
       }
       setIsActivedModal(true);
       setParamModal({
         children: (
-          <ModalContent modalMsg="Dirección actualizada con exito." />
+          <ModalContent modalMsg= {errorMsg? 'Ha ocurrido un error intentelo nuevamente' : "Dirección actualizada con exito."}  />
         ),
-        promoIcon: "check",
-        promoTitle: "Dirección Actualizada",
+        promoIcon: errorMsg? "cancel" : "check",
+        promoTitle: errorMsg? "Error durante el proceso" : "Dirección Actualizada",
       });
     } catch (error) {
       console.error(error);

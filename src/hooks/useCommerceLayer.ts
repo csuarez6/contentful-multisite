@@ -1,11 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import CommerceLayer, { AddressCreate, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
-import { getMerchantToken, IAdjustments } from "@/lib/services/commerce-layer.service";
+import { getMerchantToken, IAdjustments, JWTProps } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
 import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
 import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
+import jwtDecode from "jwt-decode";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
 const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
   include: ["line_items", "line_items.item", "line_items.shipment_line_items", "line_items.item.shipping_category", "available_payment_methods", "shipments", "shipments.shipping_method", "shipments.available_shipping_methods", "customer", "billing_address", "shipping_address", "captures", "voids", "payment_method"],
@@ -484,7 +485,8 @@ export const useCommerceLayer = () => {
     if (token) {
       try {
         const cl = await getCommerlayerClient(token);
-        const client = await cl.customers.retrieve(user?.id);
+        const { owner } = jwtDecode(token) as JWTProps;
+        const client = await cl.customers.retrieve(owner?.id ?? user?.id);
         const createAddress = await cl.addresses.create({ first_name: client?.metadata?.name, last_name: client?.metadata?.lastName, ...address });
         if (client?.id) {
           await cl.customer_addresses.create({
@@ -492,9 +494,10 @@ export const useCommerceLayer = () => {
             address: { id: createAddress.id, type: 'addresses' },
           });
         } else console.error('error CLient id = ', client?.id);
-
+        return {status: 200, data: 'direccion creada con exito'};
       } catch (error) {
         console.error('error addCustomerAddress', error);
+        return {status: 500, data: error};
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps 
@@ -505,8 +508,10 @@ export const useCommerceLayer = () => {
       try {
         const cl = await getCommerlayerClient(token);
         await cl.addresses.update({ id: id, ...address });
+        return {status: 200, data: 'direccion actualizada con exito'};
       } catch (error) {
         console.error('error updateCustomerAddress', error);
+        return {status: 500, data: error};
       }
     }
   }, []);
