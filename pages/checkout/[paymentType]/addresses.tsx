@@ -24,6 +24,7 @@ import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
+  DEFAULT_WARRANTY_COPY,
 } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import citiesFile from "@/utils/static/cities-co.json";
@@ -36,6 +37,8 @@ import SelectAtom, {
   IListContent,
 } from "@/components/atoms/select-atom/SelectAtom";
 import { useSession } from "next-auth/react";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import { getDataContent } from "@/lib/services/richtext-references.service";
 
 export interface IAddress {
   id?: string;
@@ -143,7 +146,9 @@ export const ModalConfirm: React.FC<any> = ({
   );
 };
 
-const CheckoutAddress = () => {
+const CheckoutAddress = (props: any) => {
+  
+  const { copyServices } = props;
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState([]);
@@ -157,6 +162,7 @@ const CheckoutAddress = () => {
   const [isLoading, setIsLoading] = useState(false);
   const attempts = useRef(0);
   const { status, data: session } = useSession();
+  const [showInstallation, setShowInstallation] = useState<boolean>();
 
   const {
     order,
@@ -219,6 +225,10 @@ const CheckoutAddress = () => {
       }));
       setStates(mappedStates);
     })();
+    setShowInstallation(
+      !!copyServices.find((i) => i.key === "show.installation")?.active
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -523,7 +533,7 @@ const CheckoutAddress = () => {
           className="flex flex-wrap max-w-full gap-6"
           onSubmit={handleSubmit(onSubmit)}
         >
-          {showAlert && (
+          {(showAlert && !!showInstallation) && (
             <div className="w-full">
               <div
                 className="px-3 py-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
@@ -811,6 +821,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     context.preview ?? false
   );
 
+  const info = {
+    __typename: CONTENTFUL_TYPENAMES.COPY_SET,
+    sys: {
+      id: DEFAULT_WARRANTY_COPY,
+    }
+  };
+  const copyRes = await getDataContent(info);
+  const copyServices = copyRes?.copiesCollection?.items;
+
   return {
     props: {
       layout: {
@@ -819,6 +838,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         headerInfo,
         helpButton,
       },
+      copyServices,
     },
     revalidate,
   };
