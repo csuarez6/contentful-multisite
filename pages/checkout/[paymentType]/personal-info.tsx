@@ -140,7 +140,7 @@ const CheckoutPersonalInfo = () => {
   }, []);
 
   const checkAllAlphaNumeric = (e) => {
-    const letters = /^[aA-zZ-z0-9-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+    const letters = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ]+$/;
     if (!e.key.match(letters)) e.preventDefault();
   };
 
@@ -212,7 +212,7 @@ const CheckoutPersonalInfo = () => {
               <p className="mt-1 text-red-600">{errors.email?.message}</p>
             )}
           </div>
-          <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
             <div className="w-full">
               <SelectAtom
                 id='documentType'
