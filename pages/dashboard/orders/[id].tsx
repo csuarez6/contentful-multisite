@@ -61,7 +61,7 @@ const subNavigation = [
     current: true,
   },
   {
-    name: "Direcciones",
+    name: "Dirección",
     href: "/dashboard/addresses",
     icon: MapPinIcon,
     current: false,

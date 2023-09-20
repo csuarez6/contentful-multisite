@@ -117,7 +117,7 @@ const EmptyBlock = (): JSX.Element => {
 const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
     { name: "Compras", href: "#", icon: ShoppingCartIcon, current: true },
-    { name: "Direcciones", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
+    { name: "Dirección", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
     { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false },
 ];
 

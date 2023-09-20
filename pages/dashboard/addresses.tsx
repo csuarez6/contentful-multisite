@@ -39,7 +39,7 @@ const subNavigation = [
     icon: ShoppingCartIcon,
     current: false,
   },
-  { name: "Direcciones", href: "#", icon: MapPinIcon, current: true },
+  { name: "Direccion", href: "#", icon: MapPinIcon, current: true },
   {
     name: "Actualizar Contraseña",
     href: "/dashboard/upgradePassword",
@@ -108,7 +108,7 @@ const DashboardAddresses = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [states, setStates] = useState([]);
-  const [shippingCities, setShippingCities] = useState([]);
+  const [shippingCities, setShippingCities] = useState<any>([{ city: "Seleccione un Municipio", isCovered: "false" }]);
   const attempts = useRef(0);
 
   const {
@@ -282,7 +282,7 @@ const DashboardAddresses = () => {
       await sendData(data);
       gaEventForm({
         category: "Profile",
-        label: "Actualización de direcciones",
+        label: "Actualización de dirección",
       });
     } catch (error) {
       console.error(error);
@@ -326,11 +326,6 @@ const DashboardAddresses = () => {
 
               {/* Payment details */}
               <div className="space-y-3 sm:px-6 lg:col-span-9 lg:px-0">
-                <div>
-                  <h2 className="text-lg font-medium text-blue-dark">
-                    Direcciones
-                  </h2>
-                </div>
                 <div className="w-full">
                   <HeadingCard
                     title="Dirección"
@@ -454,7 +449,7 @@ const DashboardAddresses = () => {
         </div>
       </div>
       {isActivedModal && (
-        <ModalSuccess {...paramModal} isActive={isActivedModal} />  
+        <ModalSuccess {...paramModal} isActive={isActivedModal} onClose={() => setIsActivedModal(false) } />  
       )}
     </div>
   );

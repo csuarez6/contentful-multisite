@@ -39,7 +39,6 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
     imagesCollection,
     paymentMethods,
     promoImage,
-    urlPaths,
     trademark,
     phone,
     address,
