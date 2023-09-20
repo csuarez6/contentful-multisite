@@ -18,7 +18,12 @@ import {
   isVantilisto,
   scrollContent,
 } from "@/utils/functions";
-import { iconInvoice, iconPSE, options, iconPlaceToPay } from "./ProductConfig";
+import {
+  ICON_PLACE_TO_PAY_URL,
+  iconInvoice,
+  iconPSE,
+  options,
+} from "./ProductConfig";
 import ProductServices from "@/components/organisms/product-services/ProductServices";
 import ProductActions from "@/components/organisms/product-actions/ProductActions";
 import CartModal from "@/components/organisms/cart-modal/CartModal";
@@ -54,7 +59,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   copyServices,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { addToCart, order, reloadOrder, deleteItemService } = useContext(CheckoutContext);
+  const { addToCart, order, reloadOrder, deleteItemService } =
+    useContext(CheckoutContext);
   const baseCallback = isVantilisto(marketId) ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
   const closeModal = () => setIsOpen(false);
@@ -114,9 +120,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         category
       );
       if (res.status === 200) {
-        const itemProduct = (orderLocalRef.current) ? orderLocalRef.current.filter(
-          (item) => item.item_type === "skus" && item.id === res.data["id"]
-        ) : [];
+        const itemProduct = orderLocalRef.current
+          ? orderLocalRef.current.filter(
+              (item) => item.item_type === "skus" && item.id === res.data["id"]
+            )
+          : [];
         // validate and add to cart a service (Installation)
         if (
           Object.keys(installCheck).length > 0 &&
@@ -163,12 +171,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         ) {
           const dataAdjustment: IAdjustments = {
             name: warrantyCheck["name"] + " - " + sku,
-            amount_cents:
-              (
-                (Number(warrantyCheck["price_amount_float"]) *
-                  Number(_priceGasodomestico)) /
-                100
-              ).toString(),
+            amount_cents: (
+              (Number(warrantyCheck["price_amount_float"]) *
+                Number(_priceGasodomestico)) /
+              100
+            ).toString(),
             type: "warranty",
             sku_id: res.data["id"] ?? "",
             sku_code: sku,
@@ -248,7 +255,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   )}
                   {discount && (
                     <div className="flex px-2 py-1 text-center uppercase rounded-lg bg-blue-100 h-fit">
-                      <span className="title is-5">{discount} de descuento</span>
+                      <span className="title is-5">
+                        {discount} de descuento
+                      </span>
                     </div>
                   )}
                 </div>
@@ -408,37 +417,52 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     priceGasodomestico,
                     productsQuantityGasodomestico
                   ) ||
-                    isAvailableVantilisto(
-                      marketId,
-                      priceVantiListo,
-                      productsQuantityVantiListo
-                    ) ? (
+                  isAvailableVantilisto(
+                    marketId,
+                    priceVantiListo,
+                    productsQuantityVantiListo
+                  ) ? (
                     <>
                       <div className="flex items-center justify-between gap-2">
-                        {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
+                        {(priceBeforeGasodomestico !== priceGasodomestico ||
+                          priceBeforeVantiListo !== priceVantiListo) && (
                           <p className="line-through text-[#035177] text-sm md:text-xl">
-                            {(isGasAppliance(marketId)
-                              ? priceBeforeGasodomestico
-                              : priceBeforeVantiListo).split(',')[0]}{" "}
+                            {
+                              (isGasAppliance(marketId)
+                                ? priceBeforeGasodomestico
+                                : priceBeforeVantiListo
+                              ).split(",")[0]
+                            }{" "}
                             Antes
                           </p>
                         )}
                         <div className="flex gap-1">
                           {isGasAppliance(marketId) && <Icon {...iconPSE} />}
                           <Icon {...iconInvoice} />
-                          <Icon {...iconPlaceToPay} />
+                          <figure>
+                            <Image
+                              alt="placetopay"
+                              src={ICON_PLACE_TO_PAY_URL}
+                              width={80}
+                              height={28}
+                              className="w-20 h-7"
+                            />
+                          </figure>
                         </div>
                       </div>
                       {/* Main price */}
                       <p className="text-[#035177] max-md:text-2xl title is-3">
-                        {(isGasAppliance(marketId)
-                          ? priceGasodomestico
-                          : priceVantiListo).split(',')[0]}
+                        {
+                          (isGasAppliance(marketId)
+                            ? priceGasodomestico
+                            : priceVantiListo
+                          ).split(",")[0]
+                        }
                       </p>
                       {/* Secondary price */}
                       {isGasAppliance(marketId) && priceVantiListo && (
                         <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                          <span>{(priceVantiListo).split(',')[0]}</span>
+                          <span>{priceVantiListo.split(",")[0]}</span>
                           <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
                             Vanti Listo
                           </span>
@@ -450,7 +474,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <p>* IVA incluido</p>
                         <p>** Debes tener cupo Vanti Listo disponible</p>
                       </div>
-                      
+
                       {/* Product stock */}
                       <div className="text-sm text-grey-30">
                         <p>
@@ -527,7 +551,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               <h2 className="text-blue-dark">Características principales</h2>
               <div className="">
                 {documentToReactComponents(
-                  attachLinksToRichtextContent(features.json, features?.links ?? []), 
+                  attachLinksToRichtextContent(
+                    features.json,
+                    features?.links ?? []
+                  ),
                   options
                 )}
               </div>
@@ -549,7 +576,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               {warranty && (
                 <div id="content-warranty" className="w-full gap-8">
                   <h2 className="text-blue-dark">Garantía</h2>
-                  {documentToReactComponents(warranty.description.json, options )}
+                  {documentToReactComponents(
+                    warranty.description.json,
+                    options
+                  )}
                 </div>
               )}
             </div>
@@ -568,59 +598,66 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           priceVantiListo,
           productsQuantityVantiListo
         )) && (
-          <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
-            <div className="flex gap-[10px] items-start xxs:items-center justify-between">
-              <div className="flex flex-col-reverse gap-x-[10px]">
-                {/* Main price */}
-                <p className="text-[#035177] title is-4">
-                  {(isGasAppliance(marketId)
+        <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
+          <div className="flex gap-[10px] items-start xxs:items-center justify-between">
+            <div className="flex flex-col-reverse gap-x-[10px]">
+              {/* Main price */}
+              <p className="text-[#035177] title is-4">
+                {
+                  (isGasAppliance(marketId)
                     ? priceGasodomestico
-                    : priceVantiListo).split(',')[0]}
-                </p>
-                {/* Before price */}
-                {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceVantiListo) && (
-                  <p className="line-through text-[#035177] text-size-small flex items-center">
-                    {(isGasAppliance(marketId)
+                    : priceVantiListo
+                  ).split(",")[0]
+                }
+              </p>
+              {/* Before price */}
+              {(priceBeforeGasodomestico !== priceGasodomestico ||
+                priceBeforeVantiListo !== priceVantiListo) && (
+                <p className="line-through text-[#035177] text-size-small flex items-center">
+                  {
+                    (isGasAppliance(marketId)
                       ? priceBeforeGasodomestico
-                      : priceBeforeVantiListo).split(',')[0]}{" "}
-                    Antes
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
-                {/* Secondary price */}
-                {isGasAppliance(marketId) && priceVantiListo && (
-                  <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
-                    <span>{(priceVantiListo).split(',')[0]}</span>
-                    <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                      Vanti Listo
-                    </span>
-                  </p>
-                )}
-                {/* Product stock */}
-                <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
-                  <p>
-                    {isGasAppliance(marketId)
-                      ? productsQuantityGasodomestico
-                      : productsQuantityVantiListo}{" "}
-                    unidades disponibles
-                  </p>
-                </div>
+                      : priceBeforeVantiListo
+                    ).split(",")[0]
+                  }{" "}
+                  Antes
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
+              {/* Secondary price */}
+              {isGasAppliance(marketId) && priceVantiListo && (
+                <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
+                  <span>{priceVantiListo.split(",")[0]}</span>
+                  <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
+                    Vanti Listo
+                  </span>
+                </p>
+              )}
+              {/* Product stock */}
+              <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
+                <p>
+                  {isGasAppliance(marketId)
+                    ? productsQuantityGasodomestico
+                    : productsQuantityVantiListo}{" "}
+                  unidades disponibles
+                </p>
               </div>
             </div>
-            <ProductActions
-              sku={sku}
-              _priceGasodomestico={_priceGasodomestico}
-              priceGasodomestico={priceGasodomestico}
-              priceVantiListo={priceVantiListo}
-              productsQuantityGasodomestico={productsQuantityGasodomestico}
-              productsQuantityVantiListo={productsQuantityVantiListo}
-              marketId={marketId}
-              callbackURL={callbackURL}
-              onBuyHandler={onBuyHandler}
-            />
           </div>
-        )}
+          <ProductActions
+            sku={sku}
+            _priceGasodomestico={_priceGasodomestico}
+            priceGasodomestico={priceGasodomestico}
+            priceVantiListo={priceVantiListo}
+            productsQuantityGasodomestico={productsQuantityGasodomestico}
+            productsQuantityVantiListo={productsQuantityVantiListo}
+            marketId={marketId}
+            callbackURL={callbackURL}
+            onBuyHandler={onBuyHandler}
+          />
+        </div>
+      )}
       {isOpen && <CartModal close={closeModal} />}
     </section>
   );

@@ -30,6 +30,7 @@ const nextConfig = {
       "via.placeholder.com",
       "data.commercelayer.app",
       "tienda.grupovanti.com",
+      "static.placetopay.com"
     ],
   },
   async redirects() {

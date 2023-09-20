@@ -27,12 +27,7 @@ export const iconCallback: IIcon = {
   className: "h-5 w-5",
 };
 
-export const iconPlaceToPay : IIcon = {
-  icon: "placetopay",
-  size: 28,
-  className: "w-20"
-};
-
+export const ICON_PLACE_TO_PAY_URL = "https://static.placetopay.com/placetopay-logo.svg";
 export const options = {
   renderNode: {
     [BLOCKS.UL_LIST]: (_node: any, children: any) => {
