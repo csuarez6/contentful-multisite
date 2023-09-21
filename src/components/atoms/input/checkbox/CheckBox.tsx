@@ -12,8 +12,8 @@ export interface ICheckBox {
   errorMessage?: string
 }
 
-const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
-  const [isChecked, setIsChecked] = useState(false);
+const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, checked = false ,errorMessage, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
+  const [isChecked, setIsChecked] = useState(checked);
   const parentRef = useRef(null);
 
   useEffect(() => {

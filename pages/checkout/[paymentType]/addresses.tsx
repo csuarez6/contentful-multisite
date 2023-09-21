@@ -147,13 +147,16 @@ export const ModalConfirm: React.FC<any> = ({
 };
 
 const CheckoutAddress = (props: any) => {
-  
   const { copyServices } = props;
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState([]);
-  const [shippingCities, setShippingCities] = useState([]);
-  const [billingCities, setBillingCities] = useState([]);
+  const [shippingCities, setShippingCities] = useState<any>([
+    { city: "Seleccione un Municipio", isCovered: "false" },
+  ]);
+  const [billingCities, setBillingCities] = useState<any>([
+    { city: "Seleccione un Municipio", isCovered: "false" },
+  ]);
   const { isLogged, user } = useContext(AuthContext);
   const [showAlert, setShowAlert] = useState(false);
   const [isActivedModal, setIsActivedModal] = useState(false);
@@ -269,6 +272,19 @@ const CheckoutAddress = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
 
+  const getListCities = async (state, selectType) => {
+    const cities: any[] = await getCitiesByState(state);
+    const mappedCities = cities.map((city) => ({
+      text: city.city,
+      value: city.city,
+    }));
+    if (selectType === "billing") {
+      setBillingCities(mappedCities);
+    } else {
+      setShippingCities(mappedCities);
+    }
+  };
+
   useEffect(() => {
     if (!billingStateWatched) return;
     (async () => {
@@ -300,92 +316,64 @@ const CheckoutAddress = (props: any) => {
         const { shippingAddress, billingAddress } = await getAddresses();
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
+
+        if (
+          shippingAddressFormatted &&
+          shippingAddressFormatted.stateCode !== ""
+        ) {
+          getListCities(shippingAddressFormatted.stateCode, "shipping").then(
+            () => {
+              setValue("shippingAddress.stateCode",shippingAddressFormatted.stateCode);
+              setValue("shippingAddress.cityCode", shippingAddressFormatted.cityCode);
+              setValue("shippingAddress.street",shippingAddressFormatted.street);
+              setValue("shippingAddress.address",shippingAddressFormatted.address);
+              setValue("shippingAddress.residence",shippingAddressFormatted.residence);
+              setValue("shippingAddress.receiver",shippingAddressFormatted.receiver);
+            }
+          );
+        } else {
+          if (status === "authenticated" && session) {
+            const addresses: Address = await getCustomerAddresses(
+              session?.user["accessToken"]
+            );
+            const addressesForm = toAddressForm(addresses);
+            if (addressesForm) {
+              getListCities(addressesForm.stateCode, "shipping").then(() => {
+                setValue("shippingAddress.stateCode", addressesForm.stateCode);
+                setValue("shippingAddress.cityCode", addressesForm.cityCode);
+                setValue("shippingAddress.street", addressesForm.street);
+                setValue("shippingAddress.address", addressesForm.address);
+                setValue("shippingAddress.residence", addressesForm.residence);
+                setValue("shippingAddress.receiver", addressesForm.receiver);
+              });
+            }
+          }
+        }
+        if (
+          billingAddressFormatted &&
+          billingAddressFormatted.stateCode !== ""
+        ) {
+          getListCities(billingAddressFormatted.stateCode, "billing").then(() => {
+            setValue("shippingAddress.isSameAsBillingAddress", false);
+            setValue("billingAddress.stateCode",billingAddressFormatted.stateCode);
+            setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
+            setValue("billingAddress.address", billingAddressFormatted.address);
+            setValue("billingAddress.street", billingAddressFormatted.street);
+            setValue("billingAddress.residence",billingAddressFormatted.residence);
+          });
+        }
         if (status !== "authenticated" && !session) {
           reset({
             shippingAddress: {
-              ...shippingAddressFormatted,
               isSameAsBillingAddress:
                 (shippingAddressFormatted?.address == "" &&
                   billingAddressFormatted?.address == "") ||
                 shippingAddressFormatted?.address ==
                   billingAddressFormatted?.address,
             },
-            billingAddress: billingAddressFormatted,
           });
         }
       })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (status === "authenticated" && session) {
-      (async () => {
-        const addresses: Address = await getCustomerAddresses(
-          session?.user["accessToken"]
-        );
-        const addressesForm = toAddressForm(addresses);
-        if (addressesForm) {
-          setValue("shippingAddress.stateCode", addressesForm.stateCode);
-          setValue("shippingAddress.cityCode", addressesForm.cityCode);
-          setValue("shippingAddress.street", addressesForm.street);
-          setValue("shippingAddress.address", addressesForm.address);
-          setValue("shippingAddress.residence", addressesForm.residence);
-          setValue("shippingAddress.receiver", addressesForm.receiver);
-        }
-      })();
-    } else {
-      if (order) {
-        (async () => {
-          const { shippingAddress, billingAddress } = await getAddresses();
-          const shippingAddressFormatted = toAddressForm(shippingAddress);
-          const billingAddressFormatted = toAddressForm(billingAddress);
-          if (shippingAddressFormatted) {
-            setValue(
-              "shippingAddress.stateCode",
-              shippingAddressFormatted.stateCode
-            );
-            setValue(
-              "shippingAddress.cityCode",
-              shippingAddressFormatted.cityCode
-            );
-            setValue("shippingAddress.street", shippingAddressFormatted.street);
-            setValue(
-              "shippingAddress.address",
-              shippingAddressFormatted.address
-            );
-            setValue(
-              "shippingAddress.residence",
-              shippingAddressFormatted.residence
-            );
-            setValue(
-              "shippingAddress.receiver",
-              shippingAddressFormatted.receiver
-            );
-          }
-          if (billingAddressFormatted) {
-            setValue("shippingAddress.isSameAsBillingAddress", false);
-            setValue(
-              "billingAddress.stateCode",
-              billingAddressFormatted.stateCode
-            );
-            setValue(
-              "billingAddress.cityCode",
-              billingAddressFormatted.cityCode
-            );
-            setValue("billingAddress.address", billingAddressFormatted.address);
-            setValue("billingAddress.street", billingAddressFormatted.street);
-            setValue(
-              "billingAddress.residence",
-              billingAddressFormatted.residence
-            );
-          }
-        })();
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, status, session]);
@@ -533,7 +521,7 @@ const CheckoutAddress = (props: any) => {
           className="flex flex-wrap max-w-full gap-6"
           onSubmit={handleSubmit(onSubmit)}
         >
-          {(showAlert && !!showInstallation) && (
+          {showAlert && !!showInstallation && (
             <div className="w-full">
               <div
                 className="px-3 py-1 mb-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
@@ -568,28 +556,26 @@ const CheckoutAddress = (props: any) => {
               </p>
             )}
           </div>
-          {shippingStateWatched && (
-            <div className="w-full">
-              <SelectAtom
-                key={getValues("shippingAddress.cityCode")}
-                id="shipping-city-code"
-                labelSelect="Escoge tu municipio"
-                listedContents={shippingCities}
-                isRequired={true}
-                currentValue={getValues("shippingAddress.cityCode")}
-                handleChange={(value) => {
-                  setValue("shippingAddress.cityCode", value);
-                  clearErrors("shippingAddress.cityCode");
-                }}
-                {...register("shippingAddress.cityCode")}
-              />
-              {errors?.shippingAddress?.cityCode && (
-                <p className="text-red-600">
-                  {errors?.shippingAddress?.cityCode?.message}
-                </p>
-              )}
-            </div>
-          )}
+          <div className="w-full">
+            <SelectAtom
+              key={getValues("shippingAddress.cityCode")}
+              id="shipping-city-code"
+              labelSelect="Escoge tu municipio"
+              listedContents={shippingCities}
+              isRequired={true}
+              currentValue={getValues("shippingAddress.cityCode")}
+              handleChange={(value) => {
+                setValue("shippingAddress.cityCode", value);
+                clearErrors("shippingAddress.cityCode");
+              }}
+              {...register("shippingAddress.cityCode")}
+            />
+            {errors?.shippingAddress?.cityCode && (
+              <p className="text-red-600">
+                {errors?.shippingAddress?.cityCode?.message}
+              </p>
+            )}
+          </div>
           <div className="w-full">
             <TextBox
               id="shippingAddress.address"
@@ -646,25 +632,12 @@ const CheckoutAddress = (props: any) => {
               </p>
             )}
           </div>
-          {/* <div className="w-full">
-            <TextBox
-              {...register("shippingAddress.phone")}
-              id="shippingAddress.phone"
-              label="Escribe tu telefono"
-              type="number"
-              placeholder="000 000 0000"
-            />
-            {errors?.shippingAddress?.phone && (
-              <p className="text-red-600">
-                {errors?.shippingAddress.phone?.message}
-              </p>
-            )}
-          </div> */}
           <div className="w-full">
             <CheckBox
               {...register("shippingAddress.isSameAsBillingAddress")}
               id="shippingAddress.isSameAsBillingAddress"
-              label="Acepto usar la dirección de envió para el proceso de facturación"
+              label="Acepto usar la dirección de envio para el proceso de facturación"
+              checked={isSameAsBillingAddress}
             />
           </div>
           {!isSameAsBillingAddress && (
@@ -691,27 +664,25 @@ const CheckoutAddress = (props: any) => {
                   </p>
                 )}
               </div>
-              {billingStateWatched && (
-                <div className="w-full">
-                  <SelectAtom
-                    id="billingCities-city-code"
-                    labelSelect="Escoge tu municipio"
-                    listedContents={billingCities}
-                    isRequired={true}
-                    currentValue={getValues("billingAddress.cityCode")}
-                    handleChange={(value) => {
-                      setValue("billingAddress.cityCode", value);
-                      clearErrors("billingAddress.cityCode");
-                    }}
-                    {...register("billingAddress.cityCode")}
-                  />
-                  {errors?.billingAddress?.cityCode && (
-                    <p className="text-red-600">
-                      {errors?.billingAddress?.cityCode?.message}
-                    </p>
-                  )}
-                </div>
-              )}
+              <div className="w-full">
+                <SelectAtom
+                  id="billingCities-city-code"
+                  labelSelect="Escoge tu municipio"
+                  listedContents={billingCities}
+                  isRequired={true}
+                  currentValue={getValues("billingAddress.cityCode")}
+                  handleChange={(value) => {
+                    setValue("billingAddress.cityCode", value);
+                    clearErrors("billingAddress.cityCode");
+                  }}
+                  {...register("billingAddress.cityCode")}
+                />
+                {errors?.billingAddress?.cityCode && (
+                  <p className="text-red-600">
+                    {errors?.billingAddress?.cityCode?.message}
+                  </p>
+                )}
+              </div>
               <div className="w-full">
                 <TextBox
                   id="billingAddress.address"
@@ -755,20 +726,6 @@ const CheckoutAddress = (props: any) => {
                   </p>
                 )}
               </div>
-              {/* <div className="w-full">
-                <TextBox
-                  {...register("billingAddress.phone")}
-                  id="billingAddress.phone"
-                  label="Escribe tu telefono"
-                  type="number"
-                  placeholder="000 000 0000"
-                />
-                {errors?.billingAddress?.phone && (
-                  <p className="text-red-600">
-                    {errors?.billingAddress.phone?.message}
-                  </p>
-                )}
-              </div> */}
             </>
           )}
           <div className="flex justify-end w-full gap-3">
@@ -825,7 +782,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
     sys: {
       id: DEFAULT_WARRANTY_COPY,
-    }
+    },
   };
   const copyRes = await getDataContent(info);
   const copyServices = copyRes?.copiesCollection?.items;

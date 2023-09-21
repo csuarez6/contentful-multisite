@@ -30,7 +30,7 @@ export interface IContextCheckout {
   getAddresses: () => Promise<{
     shippingAddress?: Address;
     billingAddress?: Address;
-  }>;
+  } | any>;
   getCustomerAddresses: (token: string) => Promise<any>;
   addCustomerAddress: (token: string, address: any) => Promise<apiResponse>;
   updateCustomerAddress: (token: string, id: string, address: any) => Promise<apiResponse>;

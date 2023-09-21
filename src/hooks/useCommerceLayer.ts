@@ -452,8 +452,8 @@ export const useCommerceLayer = () => {
   const getAddresses = useCallback(async () => {
     const client = await generateClient();
     const [shippingAddress, billingAddress] = await Promise.all([
-      client.orders?.shipping_address(orderId),
-      client.orders?.billing_address(orderId),
+      client.orders?.shipping_address(orderId) ?? '',
+      client.orders?.billing_address(orderId) ?? '',
     ]);
 
     return {
