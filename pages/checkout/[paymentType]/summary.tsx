@@ -19,6 +19,23 @@ import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { Customers } from "@commercelayer/sdk/lib/cjs/api";
 import { formatAddress } from "@/lib/services/commerce-layer.service";
+import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
+import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+
+const ModalContent = ({ modalMsg }) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-center">
+        Estimado usuario, antes de continuar con el proceso de compra tenga en cuenta que tiene órdenes pendientes por aprobación de su entidad bancaria.
+        <br />
+        <strong>Órdenes pendientes: </strong>
+      </p>
+      <p className="text-center">
+        {modalMsg}
+      </p>
+    </div>
+  );
+};
 
 const CheckoutSummary = () => {
   const router = useRouter();
@@ -31,10 +48,19 @@ const CheckoutSummary = () => {
     onRecaptcha,
     tokenRecaptcha,
     isPaymentProcess,
+    getOrdersByCustomerEmail
   } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [shippingAddress, setShippingAddress] = useState<Address>();
   const [isLoading, setIsLoading] = useState(false);
+  const modalDefault = {
+    children: <ModalContent modalMsg="Cargando..." />,
+    promoIcon: 'alert',
+    promoTitle: 'Notificación',
+    isClosable: true
+  };
+  const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
+  const [showModal, setShowModal] = useState(false);
 
   const isCustomer = (customer: any): customer is Customer => {
     return customer?.type === Customers.TYPE;
@@ -42,8 +68,7 @@ const CheckoutSummary = () => {
 
   const fullName = useMemo(() => {
     return ((resource) =>
-      `${resource?.metadata?.name ?? "*****"} ${
-        resource?.metadata?.lastName ?? "*****"
+      `${resource?.metadata?.name ?? "*****"} ${resource?.metadata?.lastName ?? "*****"
       }`)(isLogged ? user : order);
   }, [user, order, isLogged]);
 
@@ -72,6 +97,17 @@ const CheckoutSummary = () => {
       const { shippingAddress, billingAddress } = await getAddresses();
       setBillingAddress(billingAddress);
       setShippingAddress(shippingAddress);
+      const checkOrderPlaced = await getOrdersByCustomerEmail(clientEmail);
+      if (checkOrderPlaced && checkOrderPlaced?.status === 200 && checkOrderPlaced?.data.length > 0) {
+        const ordersNumber = checkOrderPlaced?.data?.map((item) => " " + item.number);
+        setDataModal({
+          children: <ModalContent modalMsg={ordersNumber} />,
+          promoIcon: 'alert',
+          promoTitle: 'Notificación',
+          isClosable: true
+        });
+        setShowModal(true);
+      }
     })();
   }, [getAddresses, order]);
 
@@ -92,6 +128,7 @@ const CheckoutSummary = () => {
   };
 
   useEffect(() => {
+    setDataModal(modalDefault);
     // subscribe to routeChangeStart event
     const onRouteChangeStart = () => setIsLoading(true);
     router.events.on("routeChangeStart", onRouteChangeStart);
@@ -205,6 +242,7 @@ const CheckoutSummary = () => {
         </div>
         {isLoading && <Spinner position="absolute" size="large" />}
       </div>
+      {showModal && <ModalSuccess {...dataModal} isActive={true} />}
     </HeadingCard>
   );
 };

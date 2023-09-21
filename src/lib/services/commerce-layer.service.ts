@@ -623,6 +623,29 @@ export const createServiceAditional = async (
   }
 };
 
+/*** Get orders status by customer email on commercelayer  ***/
+export const getOrdersByEmail = async (customerEmail: string) => {
+  try {
+    const cl = await getCLAdminCLient();
+    const orderList = await cl.orders.list({
+      fields: {
+        orders: [
+          "id",
+          "number",
+          "created_at",
+        ]
+      },
+      filters: { status_eq: "placed", customer_email_eq: customerEmail },
+      sort: { created_at: "desc" },
+      pageSize: 4, // The maximum page size allowed is 25 - Commercelayer
+    });
+    return { status: 200, data: orderList };
+  } catch (error) {
+    console.error("Error getOrderStatusCl: ", error);
+    return { status: 401, error: error };
+  }
+};
+
 /*** Get orders status on commercelayer  ***/
 export const getOrderStatusCl = async (status?: string) => {
   try {
@@ -679,7 +702,7 @@ export const isExternalPayment = (paymentSource: any): paymentSource is External
 };
 
 // Función para formatear una fecha a zona horaria Colombia y formato "día/mes/año hora:minutos:segundos am/pm"
-export const formatDate = (date: string) : string => {
+export const formatDate = (date: string): string => {
   const formattedDate = new Intl.DateTimeFormat("es-CO", {
     timeZone: "America/Bogota",
     year: "numeric",
@@ -700,7 +723,7 @@ export const formatAddress = (address: Address): string => {
 };
 
 // Función para obtener los métodos de envio de una orden
-export const getShippingMethods = (order: Order): string  => {
+export const getShippingMethods = (order: Order): string => {
   const shippingMethods = [];
   order.shipments?.forEach((shipment) => {
     console.info(shipment);

@@ -151,6 +151,31 @@ export const useCommerceLayer = () => {
     return data;
   };
 
+  const getOrdersByCustomerEmail = async (email?: string) => {
+    let data = { status: 400, data: "Error getting orders by customer" };
+    await fetch("/api/order/by-email", {
+      method: "POST",
+      body: JSON.stringify({
+        customerEmail: email,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 200) {
+          data = json;
+        } else {
+          console.error("Error get getOrdersByCustomerEmail");
+          data = { status: 400, data: "Error getting orders - 1" };
+        }
+      }).catch((error) => {
+        console.error({ error });
+      });
+    return data;
+  };
+
   const getOrder = useCallback(async (checkUpdates?: boolean) => {
     setIsFetchingOrder(true);
     try {
@@ -494,10 +519,10 @@ export const useCommerceLayer = () => {
             address: { id: createAddress.id, type: 'addresses' },
           });
         } else console.error('error CLient id = ', client?.id);
-        return {status: 200, data: 'direccion creada con exito'};
+        return { status: 200, data: 'direccion creada con exito' };
       } catch (error) {
         console.error('error addCustomerAddress', error);
-        return {status: 500, data: error};
+        return { status: 500, data: error };
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps 
@@ -508,10 +533,10 @@ export const useCommerceLayer = () => {
       try {
         const cl = await getCommerlayerClient(token);
         await cl.addresses.update({ id: id, ...address });
-        return {status: 200, data: 'direccion actualizada con exito'};
+        return { status: 200, data: 'direccion actualizada con exito' };
       } catch (error) {
         console.error('error updateCustomerAddress', error);
-        return {status: 500, data: error};
+        return { status: 500, data: error };
       }
     }
   }, []);
@@ -777,7 +802,8 @@ export const useCommerceLayer = () => {
     deleteItemService,
     upgradeTimePay,
     updateIsPaymentProcess,
-    getOrderById
+    getOrderById,
+    getOrdersByCustomerEmail
   };
 };
 
