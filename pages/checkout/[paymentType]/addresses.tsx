@@ -3,7 +3,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useRouter } from "next/router";
@@ -83,7 +82,6 @@ const schema = yup.object({
     residence: yup.string().nullable().notRequired(),
     receiver: yup.string().nullable().notRequired(),
     isSameAsBillingAddress: yup.boolean(),
-    // phone: yup.string().required("Dato Requerido"),
   }),
   billingAddress: yup.object().when("shippingAddress.isSameAsBillingAddress", {
     is: false,
@@ -98,7 +96,6 @@ const schema = yup.object({
         street: yup.string().required("Dato Requerido"),
         residence: yup.string().nullable().notRequired(),
         receiver: yup.string().nullable().notRequired(),
-        // phone: yup.string().required("Dato Requerido"),
       })
       .required("Requerido"),
     otherwise: yup.object().notRequired(),
@@ -163,7 +160,6 @@ const CheckoutAddress = (props: any) => {
   const [paramModal, setParamModal] = useState<IPromoContent>();
   const [modalChild, setmodalChild] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
-  const attempts = useRef(0);
   const { status, data: session } = useSession();
   const [showInstallation, setShowInstallation] = useState<boolean>();
 
@@ -246,15 +242,6 @@ const CheckoutAddress = (props: any) => {
         value: city.city,
       }));
       setShippingCities(citiesFinal.concat(mappedCities));
-      if (attempts.current != 0)
-        reset({
-          shippingAddress: {
-            isSameAsBillingAddress: true,
-            cityCode: "",
-            stateCode: shippingStateWatched,
-          },
-        });
-      attempts.current = 1;
     })();
     setShowAlert(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -272,7 +259,7 @@ const CheckoutAddress = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
 
-  const getListCities = async (state, selectType) => {
+  const getListCities = async (state: string, selectType: string) => {
     const cities: any[] = await getCitiesByState(state);
     const mappedCities = cities.map((city) => ({
       text: city.city,
@@ -317,44 +304,32 @@ const CheckoutAddress = (props: any) => {
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
 
-        if (
-          shippingAddressFormatted &&
-          shippingAddressFormatted.stateCode !== ""
-        ) {
-          getListCities(shippingAddressFormatted.stateCode, "shipping").then(
-            () => {
-              setValue("shippingAddress.stateCode",shippingAddressFormatted.stateCode);
-              setValue("shippingAddress.cityCode", shippingAddressFormatted.cityCode);
-              setValue("shippingAddress.street",shippingAddressFormatted.street);
-              setValue("shippingAddress.address",shippingAddressFormatted.address);
-              setValue("shippingAddress.residence",shippingAddressFormatted.residence);
-              setValue("shippingAddress.receiver",shippingAddressFormatted.receiver);
-            }
-          );
-        } else {
-          if (status === "authenticated" && session) {
-            const addresses: Address = await getCustomerAddresses(
-              session?.user["accessToken"]
-            );
-            const addressesForm = toAddressForm(addresses);
-            if (addressesForm) {
-              getListCities(addressesForm.stateCode, "shipping").then(() => {
-                setValue("shippingAddress.stateCode", addressesForm.stateCode);
-                setValue("shippingAddress.cityCode", addressesForm.cityCode);
-                setValue("shippingAddress.street", addressesForm.street);
-                setValue("shippingAddress.address", addressesForm.address);
-                setValue("shippingAddress.residence", addressesForm.residence);
-                setValue("shippingAddress.receiver", addressesForm.receiver);
-              });
-            }
+        if (shippingAddressFormatted && shippingAddressFormatted.stateCode !== "") {
+          getListCities(shippingAddressFormatted.stateCode, "shipping").then(() => {
+            setValue("shippingAddress.stateCode",shippingAddressFormatted.stateCode);
+            setValue("shippingAddress.cityCode", shippingAddressFormatted.cityCode);
+            setValue("shippingAddress.street",shippingAddressFormatted.street);
+            setValue("shippingAddress.address",shippingAddressFormatted.address);
+            setValue("shippingAddress.residence",shippingAddressFormatted.residence);
+            setValue("shippingAddress.receiver",shippingAddressFormatted.receiver);
+          });
+        } else if (status === "authenticated" && session) {
+          const addresses: Address = await getCustomerAddresses(session?.user?.["accessToken"]);
+          const addressesForm = toAddressForm(addresses);
+          if (addressesForm) {
+            getListCities(addressesForm.stateCode, "shipping").then(() => {
+              setValue("shippingAddress.stateCode", addressesForm.stateCode);
+              setValue("shippingAddress.cityCode", addressesForm.cityCode);
+              setValue("shippingAddress.street", addressesForm.street);
+              setValue("shippingAddress.address", addressesForm.address);
+              setValue("shippingAddress.residence", addressesForm.residence);
+              setValue("shippingAddress.receiver", addressesForm.receiver);
+            });
           }
         }
-        if (
-          billingAddressFormatted &&
-          billingAddressFormatted.stateCode !== ""
-        ) {
+
+        if (billingAddressFormatted && billingAddressFormatted.stateCode !== "") {
           getListCities(billingAddressFormatted.stateCode, "billing").then(() => {
-            setValue("shippingAddress.isSameAsBillingAddress", false);
             setValue("billingAddress.stateCode",billingAddressFormatted.stateCode);
             setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
             setValue("billingAddress.address", billingAddressFormatted.address);
@@ -362,17 +337,14 @@ const CheckoutAddress = (props: any) => {
             setValue("billingAddress.residence",billingAddressFormatted.residence);
           });
         }
-        if (status !== "authenticated" && !session) {
-          reset({
-            shippingAddress: {
-              isSameAsBillingAddress:
-                (shippingAddressFormatted?.address == "" &&
-                  billingAddressFormatted?.address == "") ||
-                shippingAddressFormatted?.address ==
-                  billingAddressFormatted?.address,
-            },
-          });
-        }
+
+        reset({
+          shippingAddress: {
+            isSameAsBillingAddress: 
+              (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") ||
+              (shippingAddressFormatted?.address == billingAddressFormatted?.address)
+          },
+        });
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -637,7 +609,6 @@ const CheckoutAddress = (props: any) => {
               {...register("shippingAddress.isSameAsBillingAddress")}
               id="shippingAddress.isSameAsBillingAddress"
               label="Acepto usar la dirección de envio para el proceso de facturación"
-              checked={isSameAsBillingAddress}
             />
           </div>
           {!isSameAsBillingAddress && (
