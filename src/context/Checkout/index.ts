@@ -46,6 +46,7 @@ export interface IContextCheckout {
   upgradeTimePay: (e: number) => Promise<void>;
   updateIsPaymentProcess: (e: boolean) => Promise<void>;
   getOrderById: (orderId: string) => Promise<any>;
+  getOrdersByCustomerEmail: (customerEmail: string) => Promise<any>;
 }
 
 const CheckoutContext = createContext<IContextCheckout>({
@@ -84,6 +85,7 @@ const CheckoutContext = createContext<IContextCheckout>({
   upgradeTimePay: () => undefined,
   updateIsPaymentProcess: () => undefined,
   getOrderById: () => undefined,
+  getOrdersByCustomerEmail: () => undefined,
 });
 
 export default CheckoutContext;

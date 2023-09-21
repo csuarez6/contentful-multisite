@@ -42,7 +42,8 @@ const CheckoutProvider = ({ children }) => {
     deleteItemService,
     upgradeTimePay,
     updateIsPaymentProcess,
-    getOrderById
+    getOrderById,
+    getOrdersByCustomerEmail
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -82,7 +83,8 @@ const CheckoutProvider = ({ children }) => {
     deleteItemService,
     upgradeTimePay,
     updateIsPaymentProcess,
-    getOrderById
+    getOrderById,
+    getOrdersByCustomerEmail
   };
 
   return (
