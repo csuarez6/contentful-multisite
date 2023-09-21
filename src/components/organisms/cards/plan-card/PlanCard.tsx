@@ -42,7 +42,6 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
     linkView,
     linkParameters,
   };
-
   return (
     <article
       className={classNames(
@@ -73,117 +72,134 @@ const PlanCard: React.FC<IPromoContent & IPromoBlock> = ({
         title ||
         description ||
         tags) && (
-          <div className="flex-grow py-6 px-[26px] flex flex-col gap-[30px]">
-            {(promoTitle ||
-              subtitle ||
-              promoDescription ||
-              title ||
-              description) && (
-                <div className="flex flex-col gap-[15px]">
-                  {(promoTitle || subtitle) && (
-                    <div className="flex flex-col gap-2">
-                      {(promoTitle || title) && (
-                        <h3 className="text-neutral-30 title is-4">
-                          {promoTitle ?? title}
-                        </h3>
-                      )}
-                      {subtitle && <h4 className="text-blue-dark">{subtitle}</h4>}
-                    </div>
+        <div className="flex-grow py-6 px-[26px] flex flex-col gap-[30px]">
+          {(promoTitle ||
+            subtitle ||
+            promoDescription ||
+            title ||
+            description) && (
+            <div className="flex flex-col gap-[15px]">
+              {(promoTitle || subtitle) && (
+                <div className="flex flex-col gap-2">
+                  {(promoTitle || title) && (
+                    <h3 className="text-neutral-30 title is-4">
+                      {promoTitle ?? title}
+                    </h3>
                   )}
-                  {(promoDescription || description) && (
-                    <div className="text-grey-30 font-medium">
-                      {documentToReactComponents(
-                        promoDescription?.json ?? description?.json
-                      )}
-                    </div>
+                  {subtitle && <h4 className="text-blue-dark">{subtitle}</h4>}
+                </div>
+              )}
+              {(promoDescription || description) && (
+                <div className="text-grey-30 font-medium">
+                  {documentToReactComponents(
+                    promoDescription?.json ?? description?.json
                   )}
                 </div>
               )}
-            {tags?.length > 0 && (
-              <div className="flex gap-[15px] sm:items-center flex-col xs:flex-row">
-                <span>Puedes pagar con:</span>
-                <div className="flex gap-x-[18px] flex-wrap gap-y-2">
-                  {tags.map((el) => {
-                    if (!el.label) return;
+            </div>
+          )}
+          {tags?.length > 0 && (
+            <div className="flex gap-[15px] sm:items-center flex-col xs:flex-row">
+              <span>Puedes pagar con:</span>
+              <div className="flex gap-x-[18px] flex-wrap gap-y-2">
+                {tags.map((el) => {
+                  if (!el.label) return;
+                  return (
+                    <div
+                      className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`}
+                      key={`${promoTitle}-${el.label}`}
+                    >
+                      <span>{el.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {(internalLink ||
+            externalLink ||
+            linkView === "Modal" ||
+            ctaCollection?.items?.length > 0) && (
+            <div className="flex gap-3">
+              {(internalLink || externalLink) && (
+                <div className="flex gap-3">
+                  <CustomLink
+                    content={propsLink}
+                    className={classNames(
+                      "button",
+                      getButtonType(
+                        linkView === "Botón llamada"
+                          ? "Primario"
+                          : buttonType ?? "Primario"
+                      )
+                    )}
+                  >
+                    {getLinkProps(propsLink).textLink}
+                  </CustomLink>
+                </div>
+              )}
+              {ctaCollection?.items?.length > 0 && (
+                <div className="flex gap-3">
+                  {ctaCollection.items.map((cta) => {
                     return (
-                      <div
-                        className={`bg-neutral-90 py-1 px-2 rounded-lg text-grey-10 text-xs sm:text-sm font-medium text-center`}
-                        key={`${promoTitle}-${el.label}`}
-                      >
-                        <span>{el.label}</span>
+                      <div key={cta.name}>
+                        {!cta?.content && (
+                          <CustomLink
+                            content={cta}
+                            className={classNames(
+                              "button",
+                              getButtonType(buttonType ?? "Contorno")
+                            )}
+                          >
+                            {cta.promoTitle ?? cta.name}
+                          </CustomLink>
+                        )}
+
+                        {cta?.linkView === "Modal" && cta?.content?.json && (
+                          <div className="flex gap-2">
+                            <ButtonAtom
+                              type={cta?.linkView}
+                              text={cta?.ctaLabel ?? cta?.name}
+                              classes={getButtonType(buttonType ?? "Contorno")}
+                              modalClass="w-auto max-w-7xl"
+                            >
+                              {documentToReactComponents(
+                                attachLinksToRichtextContent(
+                                  cta?.content?.json,
+                                  cta?.content?.links
+                                ),
+                                defaultFormatOptions
+                              )}
+                            </ButtonAtom>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
                 </div>
-              </div>
-            )}
-            {(internalLink ||
-              externalLink ||
-              linkView === "Modal" ||
-              ctaCollection?.items?.length > 0) && (
-                <div className="flex gap-3">
-                  {(internalLink || externalLink) && (
-                    <div className="flex gap-3">
-                      <CustomLink
-                        content={propsLink}
-                        className={classNames(
-                          "button",
-                          getButtonType(linkView === "Botón llamada" ? "Primario" : (buttonType ?? "Primario"))
-                        )}
-                      >
-                        {getLinkProps(propsLink).textLink}
-                      </CustomLink>
-                    </div>
-                  )}
-                  {ctaCollection?.items?.length > 0 && (
-                    <div className="flex gap-3">
-                      {ctaCollection.items.map((cta) => {
-                        return (
-                          <div key={cta.name}>
-                            {!cta?.content && (
-                              <CustomLink
-                                content={cta}
-                                className={classNames(
-                                  "button",
-                                  getButtonType(buttonType ?? "Contorno")
-                                )}
-                              >
-                                {cta.promoTitle ?? cta.name}
-                              </CustomLink>
-                            )}
-
-                            {cta?.linkView === "Modal" && cta?.content?.json && (
-                              <div className="flex gap-2">
-                                <ButtonAtom
-                                  type={cta?.linkView}
-                                  text={cta?.ctaLabel ?? cta?.name}
-                                  classes={getButtonType(buttonType ?? "Contorno")}
-                                  modalClass="w-auto max-w-7xl"
-                                >
-                                  {documentToReactComponents(attachLinksToRichtextContent(cta?.content?.json, cta?.content?.links), defaultFormatOptions)}
-                                </ButtonAtom>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {linkView === "Modal" && content?.json && (
-                    <div className="flex gap-2">
-                      <ButtonAtom
-                        type={linkView}
-                        text={ctaLabel ?? name}
-                        classes={getButtonType(buttonType ?? "Contorno")}
-                      >
-                        {documentToReactComponents(attachLinksToRichtextContent(content?.json, content?.links), defaultFormatOptions)}
-                      </ButtonAtom>
-                    </div>
-                  )}
+              )}
+              {linkView === "Modal" && content?.json && (
+                <div className="flex gap-2">
+                  <ButtonAtom
+                    type={linkView}
+                    text={ctaLabel ?? name}
+                    classes={getButtonType(buttonType ?? "Contorno")}
+                    modalClass="w-auto max-w-7xl"
+                  >
+                    {documentToReactComponents(
+                      attachLinksToRichtextContent(
+                        content?.json,
+                        content?.links
+                      ),
+                      defaultFormatOptions
+                    )}
+                  </ButtonAtom>
                 </div>
               )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
+      )}
     </article>
   );
 };
