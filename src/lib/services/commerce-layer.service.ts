@@ -703,18 +703,24 @@ export const isExternalPayment = (paymentSource: any): paymentSource is External
 
 // Función para formatear una fecha a zona horaria Colombia y formato "día/mes/año hora:minutos:segundos am/pm"
 export const formatDate = (date: string): string => {
-  const formattedDate = new Intl.DateTimeFormat("es-CO", {
-    timeZone: "America/Bogota",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  }).format(new Date(date));
+  console.info(date);
+  try {
+    const formattedDate = new Intl.DateTimeFormat("es-CO", {
+      timeZone: "America/Bogota",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
+    }).format(new Date(date));
 
-  return formattedDate;
+    return formattedDate;
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
 };
 
 // Función para formatear una dirección
@@ -726,7 +732,6 @@ export const formatAddress = (address: Address): string => {
 export const getShippingMethods = (order: Order): string => {
   const shippingMethods = [];
   order.shipments?.forEach((shipment) => {
-    console.info(shipment);
     if (!shippingMethods.includes(shipment.shipping_method?.name)) {
       shippingMethods.push(shipment.shipping_method?.name);
     }

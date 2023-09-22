@@ -33,7 +33,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "captures",
       "voids",
       "payment_method",
-      "created_at"
+      "created_at",
+      "placed_at"
     ],
     addresses: ["state_code", "city", "line_1", "phone", "full_address"],
     shipments: ["shipping_method", "available_shipping_methods", "stock_location"],
