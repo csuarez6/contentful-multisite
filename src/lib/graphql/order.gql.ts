@@ -26,7 +26,8 @@ export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
             "transactions",
             "captures",
             "voids",
-            "created_at"
+            "created_at",
+            "placed_at"
         ],
         addresses: [
             "state_code",

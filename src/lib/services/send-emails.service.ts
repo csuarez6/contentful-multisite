@@ -78,7 +78,7 @@ const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
       </tr>
       <tr>
         <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.created_at)}</td>
+        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.placed_at)}</td>
       </tr>
       </table>
       </td>

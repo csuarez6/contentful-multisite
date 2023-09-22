@@ -187,7 +187,7 @@ const CheckoutPurchase = () => {
                         </div>
                         <div className="flex justify-between">
                             <dt className="flex-1 text-grey-30">Fecha de compra:</dt>
-                            <dd className="flex-1 font-bold text-grey-30">{formatDate(orderInfoById.created_at)}</dd>
+                            <dd className="flex-1 font-bold text-grey-30">{formatDate(orderInfoById.placed_at)}</dd>
                         </div>
                     </dl>
                 </div>
