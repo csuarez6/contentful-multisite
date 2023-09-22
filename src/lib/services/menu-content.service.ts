@@ -104,13 +104,10 @@ const applySaltToMegamenu = async (flow: any) => {
   return flow;
 };
 
-const NAVIGATION_CACHE_CONTENT = {};
 const NAVIGATION_FIELDS = ["mainNavCollection", "secondaryNavCollection"];
 
 export const getHeader = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_HEADER_ID;
-
-  if (NAVIGATION_CACHE_CONTENT[navigationId]) return { ...NAVIGATION_CACHE_CONTENT[navigationId] };
 
   const header = await getMainHeader(navigationId, preview);
 
@@ -138,17 +135,12 @@ export const getHeader = async (navigationId: string = null, preview = false) =>
     }
   }
 
-  NAVIGATION_CACHE_CONTENT[navigationId] = { ...header };
-  setTimeout(() => { NAVIGATION_CACHE_CONTENT[navigationId] = null; }, 600000);
-
   return header ?? false;
 };
 
 export const getNavigation = async (navigationId: string = null, preview = false) => {
   if (!navigationId) navigationId = DEFAULT_FOOTER_ID;
 
-  if (NAVIGATION_CACHE_CONTENT[navigationId]) return { ...NAVIGATION_CACHE_CONTENT[navigationId] };
-  
   let responseData = null, responseError = null;
   try {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
@@ -177,9 +169,6 @@ export const getNavigation = async (navigationId: string = null, preview = false
       responseData?.auxNavigation
     )
   );
-
-  NAVIGATION_CACHE_CONTENT[navigationId] = { ...navigation };
-  setTimeout(() => { NAVIGATION_CACHE_CONTENT[navigationId] = null; }, 600000);
 
   return navigation ?? false;
 };

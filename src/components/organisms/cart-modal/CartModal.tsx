@@ -82,14 +82,14 @@ const CartModal: React.FC<IModal> = ({
                     </Dialog.Title>
                   </div>
                   <div className="flex justify-center gap-4">
-                    <Link href="/gasodomesticos/productos">
+                    <Link href="/gasodomesticos/productos" prefetch>
                       <div
                         className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
                       >
                         Ver más Productos
                       </div>
                     </Link>
-                    <Link href="/checkout/pse/verify">
+                    <Link href="/checkout/pse/verify" prefetch>
                       <div
                         className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
                       >

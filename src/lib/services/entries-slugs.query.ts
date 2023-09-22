@@ -9,7 +9,7 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
-          pageCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } },order: name_ASC, limit: 1000, preview: false) {
+          pageCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } }, order: name_ASC, limit: $limit, preview: false) {
             items {
               sys {
                 id
@@ -36,13 +36,10 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
       errorPolicy: 'all'
     }));
   } catch (e) {
-    responseError = e;
-    responseData = {};
+    responseError = e, responseData = {};
   }
 
-  if (responseError) {
-    console.error('Error on entry-slug query => ', responseError.message);
-  }
+  if (responseError) console.error('Error on entry-slug query => ', responseError.message);
 
   const resultEntries = responseData?.pageCollection?.items ?? [];
   if (responseData?.productCollection?.items) {

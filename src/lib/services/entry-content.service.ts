@@ -18,28 +18,18 @@ type DefaultBlockInfo = {
   }
 };
 
-const CACHE_CONTENT = {};
-
-const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = false, overrideMaxDepth = 0, minimal = false) => {
+const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, recursive = false, overrideMaxDepth = 0) => {
   if (!blockInfo || !CONTENTFUL_QUERY_MAPS[blockInfo.__typename]) {
     console.error(`Error on getEntryContent: «blockInfo» are required or it's not defined`);
     return null;
   }
 
-  let responseData = null;
-  let responseError = null;
-  let cacheIndex = blockInfo.sys.id;
+  let responseData = null, responseError = null;
   
   if (!blockInfo?.sys?.id) {
     console.error(`Error on entry query, sys.id not defined => `, blockInfo);
     return null;
   }
-
-  if (blockInfo?.__typename === CONTENTFUL_TYPENAMES.PAGE_MINIMAL || minimal) {
-    cacheIndex += '_minimal';
-  }
-
-  if (CACHE_CONTENT[cacheIndex]) return { ...CACHE_CONTENT[cacheIndex] };
 
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
 
@@ -118,12 +108,6 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
     const commercelayerProduct = await getCommercelayerProduct(entryContent.sku);
     _.merge(entryContent, commercelayerProduct);
   }
-
-  CACHE_CONTENT[cacheIndex] = { ...entryContent };
-
-  setTimeout(() => {
-    CACHE_CONTENT[cacheIndex] = null;
-  }, 10 * 60 * 1000); // Cache for 10 minutes for deployment
 
   return entryContent;
 };

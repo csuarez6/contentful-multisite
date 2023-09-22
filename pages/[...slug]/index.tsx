@@ -7,7 +7,6 @@ import {
 
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import {
@@ -19,7 +18,6 @@ import {
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import ProductOverview from "@/components/blocks/product-details/ProductOverview";
-import getEntriesSlugs from "@/lib/services/entries-slugs.query";
 import getBreadcrumbs from "@/utils/breadcrumbs";
 import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
 import { getDataContent } from "@/lib/services/richtext-references.service";
@@ -55,21 +53,8 @@ const CustomPage: NextPageWithLayout = (props: any) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   const paths = [];
-
-  const entries = await getEntriesSlugs({ limit: 100 }, false);
-
-  for (const entry of entries) {
-    if (entry.urlPaths !== null && entry.urlPaths.length > 0 && entry.urlPaths[0] !== "/") {
-      paths.push({
-        params: {
-          slug: entry.urlPaths[0].split("/").slice(1),
-        },
-      });
-    }
-  }
-
   return { paths, fallback: "blocking" };
 };
 

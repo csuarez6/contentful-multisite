@@ -29,6 +29,7 @@ const CustomLink: React.FC<ICustomLink> = ({
       {...(isExternalLink ? { rel: "noreferrer" } : null)}
       onClick={onClick}
       className={linkClassName}
+      prefetch
     >
       <div className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
         {children ?? textLink}
