@@ -703,7 +703,6 @@ export const isExternalPayment = (paymentSource: any): paymentSource is External
 
 // Función para formatear una fecha a zona horaria Colombia y formato "día/mes/año hora:minutos:segundos am/pm"
 export const formatDate = (date: string): string => {
-  console.info(date);
   try {
     const formattedDate = new Intl.DateTimeFormat("es-CO", {
       timeZone: "America/Bogota",
