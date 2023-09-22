@@ -109,6 +109,7 @@ const CheckoutSummary = () => {
         setShowModal(true);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAddresses, order]);
 
   const isCompleted = useMemo(
