@@ -87,7 +87,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
         : { ...props  }
       }
     >
-      <article className="relative h-full group">
+      <article className="relative w-full h-full group">
         {(isNew || discount) && (
           <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10 group-[.card-mega-menu]:left-0 group-[.card-mega-menu]:top-0">
             {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">nuevo</span>}

@@ -1,36 +1,44 @@
+import { useContext, useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+
 import {
   IProductOverviewDetails,
   PaymentMethodType,
 } from "@/lib/interfaces/product-cf.interface";
-import Carousel from "@/components/organisms/carousel/Carousel";
-import Rating from "@/components/organisms/ratings/Rating";
-import Icon from "@/components/atoms/icon/Icon";
+import { apiResponse } from "@/lib/interfaces/api-response.interface";
+
+import { IAdjustments } from "@/lib/services/commerce-layer.service";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useContext, useEffect, useState, useRef } from "react";
-import CheckoutContext from "@/context/Checkout";
 import FeaturedProduct from "@/components/organisms/cards/featured-product/FeaturedProduct";
+import Carousel from "@/components/organisms/carousel/Carousel";
+import Icon from "@/components/atoms/icon/Icon";
+import Rating from "@/components/organisms/ratings/Rating";
+import ProductServices from "@/components/organisms/product-services/ProductServices";
+import ProductActions from "@/components/organisms/product-actions/ProductActions";
+import CartModal from "@/components/organisms/cart-modal/CartModal";
+
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import CheckoutContext from "@/context/Checkout";
+import { LineItem } from "@commercelayer/sdk";
+
 import {
   isAvailableGasAppliance,
-  isAvailableVantilisto,
+  isAvailableVantilisto as isAvailableVantilistoAppliance,
   isGasAppliance,
   isVantilisto,
   scrollContent,
 } from "@/utils/functions";
+
 import {
   ICON_PLACE_TO_PAY_URL,
   iconInvoice,
   iconPSE,
   options,
 } from "./ProductConfig";
-import ProductServices from "@/components/organisms/product-services/ProductServices";
-import ProductActions from "@/components/organisms/product-actions/ProductActions";
-import CartModal from "@/components/organisms/cart-modal/CartModal";
-import { IAdjustments } from "@/lib/services/commerce-layer.service";
-import { apiResponse } from "@/lib/interfaces/api-response.interface";
-import { LineItem } from "@commercelayer/sdk";
-import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -68,6 +76,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
   const orderLocalRef = useRef<LineItem[]>();
+  const nextSlideId = `nextSlide_${marketId}`;
+  const prevSlideId = `prevSlide_${marketId}`;
+
+  const isAvailableGasodomestico = isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico);
+  const isAvailableVantilisto = isAvailableVantilistoAppliance(marketId, priceVantiListo, productsQuantityVantiListo);
 
   useEffect(() => {
     orderLocalRef.current = order?.line_items;
@@ -113,17 +126,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const onBuyHandler = async (type: PaymentMethodType) => {
     try {
       // Add to cart- product
-      const res: apiResponse = await addToCart(
-        sku,
-        promoImage.url,
-        promoTitle,
-        category
-      );
+      const res: apiResponse = await addToCart(sku, promoImage.url, promoTitle, category);
       if (res.status === 200) {
         const itemProduct = orderLocalRef.current
-          ? orderLocalRef.current.filter(
-              (item) => item.item_type === "skus" && item.id === res.data["id"]
-            )
+          ? orderLocalRef.current.filter((item) => item.item_type === "skus" && item.id === res.data["id"])
           : [];
         // validate and add to cart a service (Installation)
         if (
@@ -141,6 +147,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             sku_option_name: installCheck["name"],
             categoryReference: category.clInstallationReference ?? null,
           };
+
           if (
             itemProduct.length > 0 &&
             itemProduct[0]["installlation_service"].length > 0
@@ -172,9 +179,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           const dataAdjustment: IAdjustments = {
             name: warrantyCheck["name"] + " - " + sku,
             amount_cents: (
-              (Number(warrantyCheck["price_amount_float"]) *
-                Number(_priceGasodomestico)) /
-              100
+              (Number(warrantyCheck["price_amount_float"]) * Number(_priceGasodomestico)) / 100
             ).toString(),
             type: "warranty",
             sku_id: res.data["id"] ?? "",
@@ -412,117 +417,111 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   </ul>
                 </div>
                 <div className="hidden sm:flex flex-col gap-[10px] sm:flex-grow">
-                  {isAvailableGasAppliance(
-                    marketId,
-                    priceGasodomestico,
-                    productsQuantityGasodomestico
-                  ) ||
-                  isAvailableVantilisto(
-                    marketId,
-                    priceVantiListo,
-                    productsQuantityVantiListo
-                  ) ? (
-                    <>
-                      <div className="flex items-center justify-between gap-2">
-                        {(priceBeforeGasodomestico !== priceGasodomestico ||
-                          priceBeforeVantiListo !== priceVantiListo) && (
-                          <p className="line-through text-[#035177] text-sm md:text-xl">
-                            {
-                              (isGasAppliance(marketId)
-                                ? priceBeforeGasodomestico
-                                : priceBeforeVantiListo
-                              ).split(",")[0]
-                            }{" "}
-                            Antes
+                  {(isAvailableGasodomestico || isAvailableVantilisto)
+                    ? (
+                      <>
+                        <div className="flex items-center justify-between gap-2">
+                          {(priceBeforeGasodomestico !== priceGasodomestico ||
+                            priceBeforeVantiListo !== priceVantiListo) && (
+                              <p className="line-through text-[#035177] text-sm md:text-xl">
+                                {
+                                  (isGasAppliance(marketId)
+                                    ? priceBeforeGasodomestico
+                                    : priceBeforeVantiListo
+                                  ).split(",")[0]
+                                }{" "}
+                                Antes
+                              </p>
+                            )}
+                          <div className="flex gap-1">
+                            {isGasAppliance(marketId) && <Icon {...iconPSE} />}
+                            <Icon {...iconInvoice} />
+                            <figure>
+                              <Image
+                                alt="placetopay"
+                                src={ICON_PLACE_TO_PAY_URL}
+                                width={80}
+                                height={28}
+                                className="w-20 h-7"
+                              />
+                            </figure>
+                          </div>
+                        </div>
+                        {/* Main price */}
+                        <p className="text-[#035177] max-md:text-2xl title is-3">
+                          {
+                            (isGasAppliance(marketId)
+                              ? priceGasodomestico
+                              : priceVantiListo
+                            ).split(",")[0]
+                          }
+                        </p>
+                        {/* Secondary price */}
+                        {isGasAppliance(marketId) && priceVantiListo && (
+                          <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                            <span>{priceVantiListo.split(",")[0]}</span>
+                            <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
+                              Vanti Listo
+                            </span>
                           </p>
                         )}
-                        <div className="flex gap-1">
-                          {isGasAppliance(marketId) && <Icon {...iconPSE} />}
-                          <Icon {...iconInvoice} />
-                          <figure>
-                            <Image
-                              alt="placetopay"
-                              src={ICON_PLACE_TO_PAY_URL}
-                              width={80}
-                              height={28}
-                              className="w-20 h-7"
-                            />
-                          </figure>
+
+                        {/* IVA Price */}
+                        <div className="text-xs text-grey-30">
+                          <p>* IVA incluido</p>
+                          <p>** Debes tener cupo Vanti Listo disponible</p>
                         </div>
-                      </div>
-                      {/* Main price */}
-                      <p className="text-[#035177] max-md:text-2xl title is-3">
-                        {
-                          (isGasAppliance(marketId)
-                            ? priceGasodomestico
-                            : priceVantiListo
-                          ).split(",")[0]
-                        }
-                      </p>
-                      {/* Secondary price */}
-                      {isGasAppliance(marketId) && priceVantiListo && (
-                        <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                          <span>{priceVantiListo.split(",")[0]}</span>
-                          <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                            Vanti Listo
-                          </span>
-                        </p>
-                      )}
 
-                      {/* IVA Price */}
-                      <div className="text-xs text-grey-30">
-                        <p>* IVA incluido</p>
-                        <p>** Debes tener cupo Vanti Listo disponible</p>
-                      </div>
+                        {/* Product stock */}
+                        <div className="text-sm text-grey-30">
+                          <p>
+                            {isGasAppliance(marketId)
+                              ? productsQuantityGasodomestico
+                              : productsQuantityVantiListo}{" "}
+                            unidades disponibles
+                          </p>
+                        </div>
 
-                      {/* Product stock */}
-                      <div className="text-sm text-grey-30">
-                        <p>
-                          {isGasAppliance(marketId)
-                            ? productsQuantityGasodomestico
-                            : productsQuantityVantiListo}{" "}
-                          unidades disponibles
-                        </p>
-                      </div>
-
-                      <form
-                        onSubmit={(e) => e.preventDefault()}
-                        className="hidden sm:flex flex-col gap-[15px]"
-                      >
-                        <ProductActions
-                          sku={sku}
-                          _priceGasodomestico={_priceGasodomestico}
-                          priceGasodomestico={priceGasodomestico}
-                          productsQuantityGasodomestico={
-                            productsQuantityGasodomestico
-                          }
-                          marketId={marketId}
-                          callbackURL={callbackURL}
-                          onBuyHandler={onBuyHandler}
-                        />
-                        {isGasAppliance(marketId) && (
-                          <ProductServices
-                            warranty={warranty}
-                            category={category}
-                            onEventHandler={servicesHandler}
+                        <form
+                          onSubmit={(e) => e.preventDefault()}
+                          className="hidden sm:flex flex-col gap-[15px]"
+                        >
+                          <ProductActions
+                            sku={sku}
                             _priceGasodomestico={_priceGasodomestico}
-                            copyServices={copyServices}
+                            priceGasodomestico={priceGasodomestico}
+                            productsQuantityGasodomestico={
+                              productsQuantityGasodomestico
+                            }
+                            marketId={marketId}
+                            callbackURL={callbackURL}
+                            onBuyHandler={onBuyHandler}
                           />
-                        )}
-                      </form>
-                    </>
-                  ) : (
-                    <div
-                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                      role="alert"
-                    >
-                      <strong className="font-bold">¡Lo sentimos! </strong>
-                      <span className="block sm:inline">
-                        Este producto no se encuentra disponible en este
-                        momento.
-                      </span>
-                    </div>
-                  )}
+                          {isGasAppliance(marketId) && (
+                            <ProductServices
+                              warranty={warranty}
+                              category={category}
+                              onEventHandler={servicesHandler}
+                              _priceGasodomestico={_priceGasodomestico}
+                              copyServices={copyServices}
+                            />
+                          )}
+                        </form>
+                      </>
+                    )
+                    : (
+                      <div
+                        className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                        role="alert"
+                      >
+                        <strong className="font-bold">¡Lo sentimos! </strong>
+                        <span className="block sm:inline">
+                          Este producto no se encuentra disponible en este
+                          momento.
+                        </span>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -535,10 +534,50 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             <div className="grid text-left gap-9">
               <h2 className="text-blue-dark">Te puede interesar</h2>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2lg:grid-cols-3">
+            <div className="hidden md:grid md:gap-6 md:grid-cols-2 2lg:grid-cols-3">
               {relatedProducts.map((el) => (
                 <FeaturedProduct {...el} key={el.name} />
               ))}
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              <div className="flex -mx-1.5">
+                <Swiper
+                  slidesPerView={1}
+                  spaceBetween={20}
+                  breakpoints={{
+                    480: {
+                      slidesPerView: 1.2
+                    },
+                    600: {
+                      slidesPerView: 1.35
+                    }
+                  }}
+                  modules={[Navigation]}
+                  navigation={{
+                    nextEl: `#${nextSlideId}`,
+                    prevEl: `#${prevSlideId}`,
+                    disabledClass: "swiper-button-disabled opacity-50 !cursor-default"
+                  }}
+                  className="relative w-full p-1.5"
+                >
+                  {relatedProducts.map((el) => (
+                    <SwiperSlide
+                      key={el?.name + '_' + el?.sys?.id}
+                      className="w-full h-full shrink-0"
+                    >
+                      <FeaturedProduct {...el} key={el.name} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+              <div className="flex justify-center gap-6">
+                <div id={prevSlideId} className="w-6 h-6 text-neutral-20 cursor-pointer">
+                  <Icon icon="arrow-left" className="w-full h-full" />
+                </div>
+                <div id={nextSlideId} className="w-6 h-6 text-neutral-20 cursor-pointer">
+                  <Icon icon="arrow-right" className="w-full h-full" />
+                </div>
+              </div>
             </div>
           </section>
         )}
@@ -588,76 +627,69 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
         </div>
       </div>
       {/* ********* Buttons - Flow payment (mobile) ************ */}
-      {(isAvailableGasAppliance(
-        marketId,
-        priceGasodomestico,
-        productsQuantityGasodomestico
-      ) ||
-        isAvailableVantilisto(
-          marketId,
-          priceVantiListo,
-          productsQuantityVantiListo
-        )) && (
-        <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
-          <div className="flex gap-[10px] items-start xxs:items-center justify-between">
-            <div className="flex flex-col-reverse gap-x-[10px]">
-              {/* Main price */}
-              <p className="text-[#035177] title is-4">
-                {
-                  (isGasAppliance(marketId)
-                    ? priceGasodomestico
-                    : priceVantiListo
-                  ).split(",")[0]
-                }
-              </p>
-              {/* Before price */}
-              {(priceBeforeGasodomestico !== priceGasodomestico ||
-                priceBeforeVantiListo !== priceVantiListo) && (
-                <p className="line-through text-[#035177] text-size-small flex items-center">
+      {(isAvailableGasodomestico || isAvailableVantilisto)
+        && (
+          <div className="flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] bg-white px-4 pb-5 pt-[14px] gap-[13px]">
+            <div className="flex gap-[10px] items-start xxs:items-center justify-between">
+              <div className="flex flex-col-reverse gap-x-[10px]">
+                {/* Main price */}
+                <p className="text-[#035177] title is-4">
                   {
                     (isGasAppliance(marketId)
-                      ? priceBeforeGasodomestico
-                      : priceBeforeVantiListo
+                      ? priceGasodomestico
+                      : priceVantiListo
                     ).split(",")[0]
-                  }{" "}
-                  Antes
+                  }
                 </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
-              {/* Secondary price */}
-              {isGasAppliance(marketId) && priceVantiListo && (
-                <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
-                  <span>{priceVantiListo.split(",")[0]}</span>
-                  <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                    Vanti Listo
-                  </span>
-                </p>
-              )}
-              {/* Product stock */}
-              <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
-                <p>
-                  {isGasAppliance(marketId)
-                    ? productsQuantityGasodomestico
-                    : productsQuantityVantiListo}{" "}
-                  unidades disponibles
-                </p>
+                {/* Before price */}
+                {(priceBeforeGasodomestico !== priceGasodomestico ||
+                  priceBeforeVantiListo !== priceVantiListo) && (
+                    <p className="line-through text-[#035177] text-size-small flex items-center">
+                      {
+                        (isGasAppliance(marketId)
+                          ? priceBeforeGasodomestico
+                          : priceBeforeVantiListo
+                        ).split(",")[0]
+                      }{" "}
+                      Antes
+                    </p>
+                  )}
+              </div>
+              <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
+                {/* Secondary price */}
+                {isGasAppliance(marketId) && priceVantiListo && (
+                  <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
+                    <span>{priceVantiListo.split(",")[0]}</span>
+                    <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
+                      Vanti Listo
+                    </span>
+                  </p>
+                )}
+                {/* Product stock */}
+                <div className="text-sm tracking-tighter xxs:tracking-normal text-grey-30">
+                  <p>
+                    {isGasAppliance(marketId)
+                      ? productsQuantityGasodomestico
+                      : productsQuantityVantiListo}{" "}
+                    unidades disponibles
+                  </p>
+                </div>
               </div>
             </div>
+            <ProductActions
+              sku={sku}
+              _priceGasodomestico={_priceGasodomestico}
+              priceGasodomestico={priceGasodomestico}
+              priceVantiListo={priceVantiListo}
+              productsQuantityGasodomestico={productsQuantityGasodomestico}
+              productsQuantityVantiListo={productsQuantityVantiListo}
+              marketId={marketId}
+              callbackURL={callbackURL}
+              onBuyHandler={onBuyHandler}
+            />
           </div>
-          <ProductActions
-            sku={sku}
-            _priceGasodomestico={_priceGasodomestico}
-            priceGasodomestico={priceGasodomestico}
-            priceVantiListo={priceVantiListo}
-            productsQuantityGasodomestico={productsQuantityGasodomestico}
-            productsQuantityVantiListo={productsQuantityVantiListo}
-            marketId={marketId}
-            callbackURL={callbackURL}
-            onBuyHandler={onBuyHandler}
-          />
-        </div>
-      )}
+        )
+      }
       {isOpen && <CartModal close={closeModal} />}
     </section>
   );
