@@ -20,7 +20,7 @@ import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
-import 'react-circular-progressbar/dist/styles.css';
+import "react-circular-progressbar/dist/styles.css";
 // import { throttle } from "lodash";
 
 const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
@@ -128,9 +128,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
-  const {
-    order,
-  } = useContext(CheckoutContext);
+  const { order } = useContext(CheckoutContext);
 
   const [numProducts, setNumProducts] = useState(0);
   const [openModal, setOpenModal] = useState(false);
@@ -154,12 +152,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
-          (acum, line_item) =>
-            acum + line_item.quantity +
-            (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
-            (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
-          0
-        )
+            (acum, line_item) =>
+              acum +
+              line_item.quantity +
+              (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
+              (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
+            0
+          )
         : 0
     );
   }, [order]);
@@ -169,8 +168,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       console.warn("not authorized");
       // router.push('/acceso');
     }
-    console.warn('session', session);
-    console.warn('sessionStatus', sessionStatus);
+    console.warn("session", session);
+    console.warn("sessionStatus", sessionStatus);
   }, [session, sessionStatus]);
 
   const [searchText, setSearchText] = useState("");
@@ -227,13 +226,12 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     color = secondaryNavCollectionColor;
   }
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
-
   return (
     <header
       ref={headerRef}
       id="header"
       className={classNames(
-        "z-50 bg-white shadow transition-transform duration-500",
+        "z-50 bg-white shadow transition-transform duration-500"
         // isHidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
@@ -244,8 +242,8 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
             "absolute inset-x-0 h-full",
             isOpenMenu
               ? getBackgroundColorClass(
-                secondaryNavCollectionColor ?? "Azul Oscuro"
-              ).background
+                  secondaryNavCollectionColor ?? "Azul Oscuro"
+                ).background
               : backgroundColor.background
           )}
         ></div>
@@ -316,10 +314,11 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 ))}
               </ul>
 
-              <div className={classNames(
-                "bg-category-orange-light relative justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] cursor-pointer",
-                "before:absolute before:w-[50vw] before:h-full before:bg-category-orange-light"
-              )}
+              <div
+                className={classNames(
+                  "bg-category-orange-light relative justify-self-end flex items-center rounded-tl-xl px-[10px] py-[5px] cursor-pointer",
+                  "before:absolute before:w-[50vw] before:h-full before:bg-category-orange-light"
+                )}
                 onClick={() => setOpenModal(!openModal)}
               >
                 <p className="relative flex items-center gap-1 title is-5 text-blue-dark flex-nowrap">
@@ -329,9 +328,9 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   Emergencias: 164
                 </p>
               </div>
-              {
-                openModal && <ModalWarnning open={openModal} setOpen={setOpenModal} />
-              }
+              {openModal && (
+                <ModalWarnning open={openModal} setOpen={setOpenModal} />
+              )}
             </nav>
           </div>
         </div>
@@ -398,7 +397,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   className="w-full h-11 lg:max-w-xs pr-4 2lg:pr-5 xl:pr-6"
                 >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap relative h-full">
-                    <label htmlFor="search" className="flex items-center absolute left-3 h-full">
+                    <label
+                      htmlFor="search"
+                      className="flex items-center absolute left-3 h-full"
+                    >
                       <span className="flex items-center w-6 h-6 shrink-0">
                         <Icon icon="search" className="w-full h-full mx-auto" />
                       </span>
@@ -419,9 +421,16 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     aria-label="Utility"
                     className="relative hidden px-4 2lg:px-5 xl:px-6 lg:block border-x border-neutral-70"
                   >
-                    <ul className={classNames("flex 2lg:gap-0.5 xl:gap-1 flex-nowrap")}>
-                      {utilityNavCollection.items.map(item => (
-                        <li className="flex w-[68px] 2lg:w-[75px] justify-center" key={item.sys.id}>
+                    <ul
+                      className={classNames(
+                        "flex 2lg:gap-0.5 xl:gap-1 flex-nowrap"
+                      )}
+                    >
+                      {utilityNavCollection.items.map((item) => (
+                        <li
+                          className="flex w-[68px] 2lg:w-[75px] justify-center"
+                          key={item.sys.id}
+                        >
                           <CustomLink
                             content={item}
                             className={classNames(
@@ -445,7 +454,10 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         </li>
                       ))}
                       {/* Carrito de compras */}
-                      <li className="flex w-[68px] 2lg:w-[75px]" key={`cart_${uuid()}`}>
+                      <li
+                        className="flex w-[68px] 2lg:w-[75px]"
+                        key={`cart_${uuid()}`}
+                      >
                         <Link
                           href="/checkout/pse/verify"
                           className="bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
@@ -600,34 +612,37 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   )}
                 </div>
               </div>
-              <div className="relative z-10 flex items-center lg:hidden cursor-pointer" onClick={() => setOpenModal(!openModal)}>
+              <div
+                className="relative z-10 flex items-center lg:hidden cursor-pointer"
+                onClick={() => setOpenModal(!openModal)}
+              >
                 <span className="block w-10 h-10 rounded-full shrink-0 bg-category-orange-light text-blue-dark">
                   <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
               </div>
-              <div className="relative z-10 flex items-center lg:hidden">
-                <Link
-                  href="/checkout/pse/verify"
-                  className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
-                >
-                  <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
-                    <Icon
-                      icon="shopping-cart"
-                      className="absolute w-full h-full mx-auto right-1"
-                    />
-                    <span
-                      className={classNames(
-                        "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                        numProducts > 0
-                          ? "bg-blue-dark text-white"
-                          : "bg-blue-100"
-                      )}
-                    >
-                      {numProducts}
-                    </span>
-                  </span>
-                </Link>
-              </div>
+              {utilityNavCollection?.items?.slice(0,1)?.map((item) => (
+                <li className="relative z-10 flex items-center lg:hidden" key={item?.sys?.id}>
+                  <CustomLink
+                    onClick={() => close()}
+                    content={item}
+                    className={classNames(
+                      "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
+                      item.promoIcon ? "justify-start" : "justify-center"
+                    )}
+                  >
+                    {item.promoIcon && (
+                      <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                        <Icon
+                          icon={item.promoIcon}
+                          className="w-full h-full mx-auto"
+                        />
+                      </span>
+                    )}
+                    {item.promoTitle ?? item.name}
+                  </CustomLink>
+                </li>
+              ))}
+
               {/* Mobile */}
               <div className="relative z-10 flex items-center lg:hidden">
                 <Popover className="relative lg:hidden">
@@ -721,36 +736,62 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               onClick={() => close()}
                               className="block absolute top-full left-0 w-full h-[calc(100vh_-_225px)] bg-black bg-opacity-75 cursor-pointer"
                             ></span>
-
                             <nav aria-label="Utility" className="relative p-5">
                               <ul className="flex justify-center gap-1 flex-nowrap ">
-                                {utilityNavCollection.items.map((item) => (
-                                  <li
-                                    className="flex max-w-[75px]"
-                                    key={item.sys.id}
+                                {/* icons nav mobile */}
+                                <li className="flex max-w-[75px]">
+                                  <Link
+                                    href="/checkout/pse/verify"
+                                    className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
                                   >
-                                    <CustomLink
-                                      onClick={() => close()}
-                                      content={item}
-                                      className={classNames(
-                                        "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
-                                        item.promoIcon
-                                          ? "justify-start"
-                                          : "justify-center"
-                                      )}
+                                    <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
+                                      <Icon
+                                        icon="shopping-cart"
+                                        className="absolute w-full h-full mx-auto right-1"
+                                      />
+                                      <span
+                                        className={classNames(
+                                          "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
+                                          numProducts > 0
+                                            ? "bg-blue-dark text-white"
+                                            : "bg-blue-100"
+                                        )}
+                                      >
+                                        {numProducts}
+                                      </span>
+                                    </span>
+                                    Carrito
+                                  </Link>
+                                </li>
+                                {utilityNavCollection?.items
+                                  ?.slice(1)
+                                  ?.map((item) => (
+                                    <li
+                                      className="flex max-w-[75px]"
+                                      key={item?.sys?.id}
                                     >
-                                      {item.promoIcon && (
-                                        <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
-                                          <Icon
-                                            icon={item.promoIcon}
-                                            className="w-full h-full mx-auto"
-                                          />
-                                        </span>
-                                      )}
-                                      {item.promoTitle ?? item.name}
-                                    </CustomLink>
-                                  </li>
-                                ))}
+                                      <CustomLink
+                                        onClick={() => close()}
+                                        content={item}
+                                        className={classNames(
+                                          "bg-white text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light gap-0.5 px-2 py-1",
+                                          item.promoIcon
+                                            ? "justify-start"
+                                            : "justify-center"
+                                        )}
+                                      >
+                                        {item.promoIcon && (
+                                          <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                            <Icon
+                                              icon={item.promoIcon}
+                                              className="w-full h-full mx-auto"
+                                            />
+                                          </span>
+                                        )}
+                                        {item.promoTitle ?? item.name}
+                                      </CustomLink>
+                                    </li>
+                                  ))}
                               </ul>
                             </nav>
                           </>
