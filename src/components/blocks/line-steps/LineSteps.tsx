@@ -26,6 +26,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
 }) => {
   const [currentImage, setCurrentImage] = useState(null);
   const lineStep = useRef(null);
+
   useEffect(() => {
     const stepGroup = lineStep.current.querySelectorAll(".step-group");
     stepGroup.forEach((item, index) => {
