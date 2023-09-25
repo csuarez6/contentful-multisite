@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+
 import { documentToReactComponents, Options } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
-import Image from "next/image";
+
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+
 import Icon from "@/components/atoms/icon/Icon";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import RichtextPageSkeleton from "@/components/skeletons/RichtextPageSkeleton/RichtextPageSkeleton";
+
 import { classNames } from "@/utils/functions";
 
 const fixId = (value) => {
@@ -65,10 +70,13 @@ const filterHeading = (objData) => {
 };
 
 const RichtextPage: React.FC<IPage> = (props) => {
-  const [mounted, setMounted] = useState(false);
   const { content, showHeader, promoTitle, subtitle, promoImage, relatedContentCollection } = props;
-  const filteredHeading = filterHeading(content?.json?.content);
+  const [mounted, setMounted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { asPath } = useRouter();
+  const isDetailView = asPath?.includes("financiacion") || asPath?.includes("gasodomesticos");
+  const filteredHeading = filterHeading(content?.json?.content);
+
   const calcScroll = () => {
     const header: HTMLElement = document.querySelector('header');
     const sectionHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.richtext-container h2');
@@ -98,9 +106,8 @@ const RichtextPage: React.FC<IPage> = (props) => {
   if (attachLinksToRichtextContent && contentJson) {
     contentJson = attachLinksToRichtextContent(contentJson, content?.links ?? []);
   }
-
   return (
-    <section className="section flex gap-10 md:gap-16 md:px-12">
+    <section className={classNames("section flex gap-10 md:gap-16", !isDetailView && "md:px-12")}>
       <div className="content-page flex flex-col grow gap-16 overflow-hidden">
         {showHeader && (promoTitle || promoImage) && (
           <div className="flex flex-col gap-8">
@@ -121,7 +128,7 @@ const RichtextPage: React.FC<IPage> = (props) => {
         )}
         {!mounted && <RichtextPageSkeleton />}
         {contentJson && mounted && (
-          <div className="richtext-container grow px-2 -mx-1">
+          <div className={classNames("richtext-container grow", !isDetailView && "px-2 -mx-1")}>
             {documentToReactComponents(contentJson, richtextFormatOptions)}
           </div>
         )}
