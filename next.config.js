@@ -1,22 +1,13 @@
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
-
-// const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 const isProduction = false;
-const ContentSecurityPolicy = `
-  default-src 'self';
-  script-src 'self';
-  style-src 'self';
-  font-src 'self';
-`;
-// {
-//   key: "Content-Security-Policy",
-//   value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
-// },
 
 const nextConfig = {
   reactStrictMode: true,
+  generateBuildId: async () => {
+    return 'main'
+  },
   swcMinify: true,
   eslint: {
     dirs: ["pages", "src"], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
@@ -128,7 +119,7 @@ if (isProduction) {
 }
 
 const sentryWebpackPluginOptions = {
-  silent: true, // Suppresses all logs
+  silent: true
 };
 
 module.exports = isProduction
