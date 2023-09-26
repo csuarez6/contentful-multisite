@@ -274,17 +274,17 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         </div>
       )}
       <div className="main-container">
-        <div className="grid grid-cols-1 2md:grid-cols-3 gap-y-6 2md:gap-x-6 pt-[84px] pb-[180px]">
+        <div className="grid grid-cols-1 2md:grid-cols-5 2lg:grid-cols-3 gap-y-6 2md:gap-x-6 pt-[84px] pb-[180px]">
           {showStepList && (
             <div className="col-span-full">
               <StepsLine {...{ items: stepsList }} />
             </div>
           )}
-          <div className="col-span-2">
+          <div className="2md:col-span-3 2lg:col-span-2">
             {children}
           </div>
           {(products?.length > 0 || productUpdates?.length > 0) && (
-            <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
+            <article className="2md:col-span-2 2lg:col-span-1 bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
               <div className="flex flex-col gap-[17px] w-full h-full text-justify">
                 <h4 className="pb-3 border-b text-blue-dark border-blue-dark">
                   Detalle de tu pedido
@@ -444,15 +444,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     </div>
                   ))}
                   {/* <div className="grid grid-cols-2 mt-2 rounded">
-                  <p className="font-semibold text-left">Costo de envío</p>
-                  <span className="font-semibold text-right">
-                    {
-                      (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
-                        ? (hasShipment) ? "$20.000,00" : "$0"
-                        : "-"
-                    }
-                  </span>
-                </div> */}
+                    <p className="font-semibold text-left">Costo de envío</p>
+                    <span className="font-semibold text-right">
+                      {
+                        (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
+                          ? (hasShipment) ? "$20.000,00" : "$0"
+                          : "-"
+                      }
+                    </span>
+                  </div> */}
                   <div className="grid grid-cols-1 rounded">
                     <p className="text-xs text-gray-600">
                       El costo de envío depende de la cobertura de Vanti y la marca de cada producto, de acuerdo a esto se realiza el cálculo del envío

@@ -122,7 +122,7 @@ const CallbackPage = () => {
 
   useEffect(() => {
     if (sku && !productData) {
-      fetch(`/api/product/${sku}`)
+      fetch(`/api/product/${encodeURIComponent(sku ?? "")}`)
         .then((res) => res.json())
         .then((res) => {
           if (res.code === 404) {
@@ -268,8 +268,8 @@ const CallbackPage = () => {
               </div>
             )}
             {sku && productData && !isLoading && (
-              <div className="grid grid-cols-1 gap-6 2md:grid-cols-3">
-                <div className="2md:col-span-2">
+              <div className="grid grid-cols-1 2md:grid-cols-5 2lg:grid-cols-3 gap-6">
+                <div className="relative 2md:col-span-3 2lg:col-span-2">
                   <HeadingCard
                     title="1. Diligencia tus datos para llamarte"
                     isCheck={isValid}
@@ -351,43 +351,56 @@ const CallbackPage = () => {
                     </div>
                   </HeadingCard>
                 </div>
-                <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit col-span-1">
-                  <div className="flex flex-col gap-[17px] w-full h-full text-justify">
-                    <h4 className="pb-3 border-b text-blue-dark border-blue-dark">Detalle de tu pedido</h4>
-                    <div className="flex flex-col gap-3">
-                      <div className="pb-2 mb-2 border-b border-gray-300">
-                        <div className="flex items-start gap-2">
-                          <figure className="w-16 shrink-0">
-                            <Image
-                              className="object-contain w-full h-full"
-                              src={productData?.promoImage?.url}
-                              alt={productData.promoImage.title}
-                              width={64}
-                              height={64}
-                              priority
-                            />
-                          </figure>
-                          <div className="flex-1">
-                            <div className="grid grid-cols-1 text-sm mb-2">
-                              <p className="font-bold flex justify-between gap-3 mb-1">
-                                <span className="text-left">{productData?.productName}</span>
-                                <span className="text-blue-dark text-base">{productData?.priceVantiListo ?? productData?.priceGasodomestico}</span>
-                              </p>
-                              <p className="text-xs text-gray-600">* IVA incluido</p>
-                              <p className="text-sm text-gray-600">
-                                Cantidad: 1
-                              </p>
+                <div className="flex flex-col gap-6 col-span-1 2md:col-span-2 2lg:col-span-1">
+                  <article className="bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
+                    <div className="flex flex-col gap-[17px] w-full h-full text-justify">
+                      <h4 className="pb-3 border-b text-blue-dark border-blue-dark">Detalle de tu pedido</h4>
+                      <div className="flex flex-col gap-3">
+                        <div className="pb-2 mb-2 border-b border-gray-300">
+                          <div className="flex items-start gap-2">
+                            <figure className="w-16 shrink-0">
+                              <Image
+                                className="object-contain w-full h-full"
+                                src={productData?.promoImage?.url}
+                                alt={productData.promoImage.title}
+                                width={64}
+                                height={64}
+                                priority
+                              />
+                            </figure>
+                            <div className="flex-1">
+                              <div className="grid grid-cols-1 text-sm mb-2">
+                                <p className="font-bold flex justify-between gap-3 mb-1">
+                                  <span className="text-left">{productData?.productName}</span>
+                                  <span className="text-blue-dark text-base">{(productData?.priceVantiListo ?? productData?.priceGasodomestico)?.split(',')[0]}</span>
+                                </p>
+                                <p className="text-xs text-gray-600">* IVA incluido</p>
+                                <p className="text-sm text-gray-600">
+                                  Cantidad: 1
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="grid grid-cols-2 mt-2 rounded">
-                        <p className="font-bold text-left">TOTAL A PAGAR</p>
-                        <span className="font-bold text-right">{productData?.priceVantiListo ?? productData?.priceGasodomestico}</span>
+                        <div className="grid grid-cols-2 mt-2 rounded">
+                          <p className="font-bold text-left">TOTAL A PAGAR</p>
+                          <span className="font-bold text-right">{(productData?.priceVantiListo ?? productData?.priceGasodomestico)?.split(',')[0]}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                  {sku && errorMessage && !isLoading && (
+                    <div
+                      className="w-full max-w-xs px-4 py-3 bg-red-100 border border-red-400 rounded-md md:max-w-2xl"
+                      role="alert"
+                    >
+                      <p className="font-bold text-red-700 text-size-subtitle1">
+                        ¡Error!
+                      </p>
+                      <p className="text-red-600">{errorMessage}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             {!sku && !isLoading && (
@@ -399,17 +412,6 @@ const CallbackPage = () => {
                 <p className="text-black">
                   La URL es invalida, el SKU es obligatorio.
                 </p>
-              </div>
-            )}
-            {sku && errorMessage && !isLoading && (
-              <div
-                className="w-full max-w-xs px-4 py-3 bg-red-100 border border-red-400 rounded-md md:max-w-2xl"
-                role="alert"
-              >
-                <p className="font-bold text-red-700 text-size-subtitle1">
-                  ¡Error!
-                </p>
-                <p className="text-red-600">{errorMessage}</p>
               </div>
             )}
           </section>
