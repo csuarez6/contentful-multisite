@@ -13,6 +13,20 @@ interface IWithLoadingData {
   error?: boolean;
 }
 
+const FailedContent = () => {
+  return (
+    <div
+      className="w-full max-w-xs px-4 py-3 m-auto bg-red-100 border border-red-400 rounded-md md:max-w-2xl"
+      role="alert"
+    >
+      <p className="font-bold text-red-700 text-size-subtitle1">
+        ¡Notificación - Error!
+      </p>
+      <p className="text-red-600">No se pudo cargar el contenido</p>
+    </div>
+  );
+};
+
 const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   principalSearch,
   anchor,
@@ -46,27 +60,27 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   };
 
   const productGrill = () => {
-    if (error) return <div>failed to load</div>;
+    if (error) return <FailedContent />;
     if (isLoading) return <FeaturedProductBlockSkeleton />;
     return <FeaturedProductBlock {...products} />;
   };
 
   const rateGrill = () => {
-    if (error) return <div>failed to load</div>;
+    if (error) return <FailedContent />;
     if (isLoading) return <FeaturedProductBlockSkeleton />;
     return <InfoCardBlock {...products} />;
   };
 
   const generalSearchGrill = () => {
-    if (error) return <div>failed to load</div>;
+    if (error) return <FailedContent />;
     if (isLoading) return <FeaturedProductBlockSkeleton />;
     return <SearchCardBlock {...products} />;
   };
 
   return (
     <section className="w-full">
-      <div className="flex items-end md:justify-between gap-6 mb-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-grow">
+      <div className="flex items-end gap-6 mb-5 md:justify-between">
+        <div className="grid flex-grow grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {facets?.map((el: ISelect, i: number) => {
             return (
               <div className="flex flex-col w-full xs:w-auto" key={`${el.name}-${i}`}>
