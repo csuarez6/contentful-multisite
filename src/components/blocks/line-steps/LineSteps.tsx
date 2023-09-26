@@ -112,7 +112,7 @@ const LineSteps: React.FC<IPromoBlock & IPromoContent> = ({
                         </div>
                       </div>
                       {item?.promoImage?.url && (
-                        <figure className="hidden group-[.open]:block md:!hidden w-full rounded-xl aspect-[304/124] overflow-hidden">
+                        <figure className="hidden group-[.open]:block md:!hidden w-full rounded-xl aspect-[562/604] overflow-hidden">
                           <Image
                             width={item.promoImage.width}
                             height={item.promoImage.height}

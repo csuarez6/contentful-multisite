@@ -165,7 +165,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       onBlur={() => setIsOpenMenu(false)}
       onClick={handlerClick}
       className={classNames(
-        "group group/submenu min-h-[60px] px-3 first:pl-0 -my-2 flex items-center",
+        "group/submenu min-h-[60px] first:pl-0 -my-2 flex items-center",
         isOpenMenu && "isOpen",
         currentMenu === item.name && "underline"
       )}
@@ -192,8 +192,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
         <CustomLink
           content={item}
           className={classNames(
-            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
-            "relative after:absolute after:-right-3 after:w-px after:h-full after:bg-blue-dark group-last:after:!w-0",
+            "relative flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none",
             isOpenMenu && "border-blue-dark"
           )}
         >
@@ -203,8 +202,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       {item.mainNavCollection?.items && item.__typename === "AuxNavigation" && (
         <div className={
           classNames(
-            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none cursor-pointer",
-            "relative after:absolute after:-right-3 after:w-px after:h-full after:bg-blue-dark group-last:after:!w-0",
+            "relative flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none cursor-pointer",
             isOpenMenu && "border-blue-dark"
           )
         }>
@@ -217,7 +215,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
           id={uniqueId}
           style={{ maxHeight: `${submenuH}px` }}
           className={classNames(
-            "absolute inset-x-0 top-full z-10 transform transition-opacity duration-200 bg-grey-90 shadow border-t border-neutral-80 overflow-y-auto",
+            "absolute inset-x-0 top-full z-10 transform transition-opacity duration-200 bg-white shadow border-t border-neutral-80 overflow-y-auto",
             isOpenMenu
               ? "pointer-events-auto opacity-100"
               : "pointer-events-none opacity-0 delay-100 duration-300"
@@ -310,7 +308,7 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name, currentMenu 
       <div className="z-20">
         <div className="mx-auto flex items-center">
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
-            <div className="flex">
+            <div className="flex gap-8 xl:gap-10">
               {mainNavCollection.items.map((item) => (
                 <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name} currentMenu={currentMenu} />
               ))}

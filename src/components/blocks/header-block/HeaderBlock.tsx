@@ -806,7 +806,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         </div>
       </div>
       {/* Bottom */}
-      <div className="relative bg-grey-90">
+      <div className="relative">
         <div className="mx-auto xl:container">
           <div className="px-2 sm:px-4 2xl:px-[70px]">
             {mainNavCollectionMenu?.items?.length > 0 && (

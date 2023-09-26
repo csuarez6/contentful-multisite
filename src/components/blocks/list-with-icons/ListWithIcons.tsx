@@ -5,7 +5,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { IPromoBlock } from "@/lib/interfaces/promo-content-cf.interface";
 import defaultFormatOptions from '@/lib/richtext/default.formatter';
 import { attachLinksToRichtextContent } from '@/lib/services/render-blocks.service';
-import { classColumns, classColumnsFlex, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
+import { classColumnsFlex, classNames, getBackgroundColorClass, getButtonType, getTextAlignClass } from '@/utils/functions';
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper";
@@ -35,7 +35,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
   return (
     <section id={_blockId} className={
       classNames(
-        "section md:grid gap-9 max-md:!pb-[90px]",
+        "section grid gap-7 md:gap-9 max-md:!pb-[90px]",
         isRichtext && "rounded-xl overflow-hidden"
       )
     }>
@@ -60,8 +60,11 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
               ))}
             </div>
           </div>
-          <div className="sm:px-[72px] px-5 md:hidden shadow-card py-[21px] mt-7">
-            <div>
+          <div className={classNames(
+            "sm:px-[72px] px-5 block md:hidden overflow-hidden shadow-card py-[21px]",
+            isRichtext && "mx-1"
+          )}>
+            <div className='block w-full'>
               <Swiper
                 loop={true}
                 spaceBetween={12}
@@ -111,17 +114,13 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
                   });
                 }}
               >
-                <div className="relative">
-                  {featuredContentsCollection?.items.map((el, i) => {
-                    return (
-                      <SwiperSlide key={`${el.promoTitle}-${i}`}>
-                        <div className={classNames("mx-auto", classColumns(view.columnsSize))}>
-                          <ListWithIcon key={`${el.sys.id}-desktop-${i}`} {...el} />
-                        </div>
-                      </SwiperSlide>
-                    );
-                  })}
-                </div>
+                {featuredContentsCollection?.items.map((el, i) => (
+                  <SwiperSlide key={`${el.promoTitle}-${i}`} className='relative'>
+                    <div className='grid justify-items-center h-full'>
+                      <ListWithIcon key={`${el.sys.id}-mobile-${i}`} {...el} />
+                    </div>
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>
           </div>
@@ -140,10 +139,12 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
             const hasBlocks = cta?.content?.json?.content?.some(el => {
               return ["embedded-entry-block", "embedded-asset-block"].includes(el.nodeType);
             });
+
             let contentJson = cta?.content?.json;
             if (attachLinksToRichtextContent && contentJson) {
               contentJson = attachLinksToRichtextContent(contentJson, cta?.content?.links ?? []);
-            }            
+            }
+
             return (
               <>
                 {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
