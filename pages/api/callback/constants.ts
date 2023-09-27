@@ -6,13 +6,16 @@ export const GENESYS_CONSTANTS = {
 };
 
 export const CALLBACK_TYPES: object = {
+  "instalacion-gasodomesticos": "Instalación Gasodomésticos",
   "mantenimiento-gasodomesticos": "Mantenimiento Gasodomésticos",
   "reparacion-gasodomesticos": "Reparación Gasodomésticos",
+  "comercio/instalacion-gasodomesticos": "Instalación Gasodomésticos - Comercio",
+  "comercio/mantenimiento-gasodomesticos": "Mantenimiento Gasodomésticos - Comercio",
+  "comercio/reparacion-gasodomesticos": "Reparación Gasodomésticos - Comercio",
   "servihogar": "Servihogar",
   "nuevo-punto": "Nuevo Punto",
   "rpo": "Revisión Periódica Obligatoria",
   "producto": "Producto",
-  "instalacion-gasodomesticos": "Instalación Gasodomésticos",
   "gasodomesticos": "Productos Gasodomésticos",
   "vantilisto": "Catálogo Vantilisto"
 };
