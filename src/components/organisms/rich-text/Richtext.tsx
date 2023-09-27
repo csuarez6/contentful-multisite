@@ -1,14 +1,33 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import { Options, documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS } from "@contentful/rich-text-types";
+
 import {
   IPromoBlock,
   IPromoContent,
 } from "@/lib/interfaces/promo-content-cf.interface";
-import { classNames, getButtonType } from "@/utils/functions";
+
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
+import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import { classNames, getButtonType } from "@/utils/functions";
+
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import ButtonAtom from "@/components/atoms/button/ButtonAtom";
+
+const pageFormatOptions: Options = {
+  renderNode: {
+    [BLOCKS.HEADING_1]: (_node, children) => {
+      return <h1 className="text-center">{children}</h1>;
+    },
+  }
+};
+
+const richtextFormatOptions = {
+  renderNode: {
+    ...defaultFormatOptions.renderNode,
+    ...pageFormatOptions.renderNode
+  }
+};
 
 const RichText: React.FC<IPromoBlock & IPromoContent> = ({
   title,
@@ -42,7 +61,7 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({
     <section id={blockId ?? sysId} className="section">
       <div className="grid gap-2 mb-6">
         {(promoTitle || title) && (
-          <h2 className="text-4xl text-blue-dark text-center font-bold">
+          <h2 className="text-blue-dark text-center font-bold">
             {promoTitle ?? title}
           </h2>
         )}
@@ -51,10 +70,8 @@ const RichText: React.FC<IPromoBlock & IPromoContent> = ({
         )}
       </div>
       {descriptionJson && (
-        <div
-          className={`richtext-container text-lg text-grey-10 ${onTextAlign()}`}
-        >
-          {documentToReactComponents(descriptionJson, defaultFormatOptions)}
+        <div className={`richtext-container text-lg text-grey-10 ${onTextAlign()}`}>
+          {documentToReactComponents(descriptionJson, richtextFormatOptions)}
         </div>
       )}
       {ctaCollection?.items?.length > 0 && (
