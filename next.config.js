@@ -59,7 +59,7 @@ const nextConfig = {
         headers: [
           {
             key: "Vercel-CDN-Cache-Control",
-            value: "max-age=900, stale-while-revalidate",
+            value: "max-age=600, stale-while-revalidate",
           },
           {
             key: "CDN-Cache-Control",
