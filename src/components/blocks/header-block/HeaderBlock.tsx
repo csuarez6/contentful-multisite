@@ -374,14 +374,14 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 >
                   <figure className="relative aspect-square h-10 sm:h-[52px] sm:aspect-[180/52]">
                     <Image
-                      className="block w-auto sm:hidden"
+                      className="w-auto h-full block sm:hidden"
                       src={"/images/vanti-icon.png"}
                       alt={promoImage?.title ?? "Logo Grupo Vanti"}
                       width={180}
                       height={52}
                     />
                     <Image
-                      className="hidden w-auto sm:block"
+                      className="w-auto h-full hidden sm:block"
                       src={promoImage?.url ?? "/images/vanti-logo.png"}
                       alt={promoImage?.title ?? "Logo Grupo Vanti"}
                       width={180}

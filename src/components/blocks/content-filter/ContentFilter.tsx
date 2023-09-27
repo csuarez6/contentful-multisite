@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 
 import { IContentFilter } from "@/lib/interfaces/content-filter-cf.interface";
 
+import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
+import Pagination from "@/components/organisms/pagination/Pagination";
 import ProductFilterBlock from "../product-filter/ProductFilter";
 import CarouselCategoriesBlock from "../carousel-categories/CarouselCategories";
-import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
-import { useRouter } from "next/router";
+
 import { DEFAULT_GASODOMESTICOS_PARENT_ID } from "@/constants/contentful-ids.constants";
 
 const ContentFilter: React.FC<IContentFilter> = ({
@@ -24,20 +26,20 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   const updatePage = (value) => {
     setPage(value);
-    
-    const $header = document.querySelector("header#header");
-    const $anchor = document.querySelector(`[data-anchor="${blockId}"]`);
-    const $coord = $anchor.getBoundingClientRect();
-    
-    window.scrollBy(0, $coord.top - $header.clientHeight);
+
+    const $header = document?.querySelector("header#header");
+    const $anchor = document?.querySelector(`[data-anchor="${blockId}"]`);
+    const $coord = $anchor?.getBoundingClientRect();
+
+    window.scroll(0, $coord?.top - $header?.clientHeight);
   };
 
-  const principalSearch = sys?.id === '75w6bsU9MWCoxDtT7HXyGb';
+  const principalSearch = sys?.id === "75w6bsU9MWCoxDtT7HXyGb";
 
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
-    ["pageResults", preloadContent?.pageResults ?? 9]
+    ["pageResults", preloadContent?.pageResults ?? 9],
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
@@ -47,10 +49,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
   );
   const urlParams = new URLSearchParams(queryString);
   const fetcher = (url) => fetch(url).then((r) => r.json());
-  const { data, error, isLoading } = useSWR(
+  const { data: contentData, error, isLoading } = useSWR(
     `/api/content-filter?${queryString}&page=${page}`,
     fetcher
   );
+
   const facetsChangeHandle = (newQueryParams: string) => {
     const { pathname: realPathname } = location;
     push(pathname, realPathname + newQueryParams, { shallow: true });
@@ -84,7 +87,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   useEffect(() => {
     // Delete the filter Vantilisto in the gasodomestico searching
-    if(preloadContent?.facets) {
+    if (preloadContent?.facets) {
       preloadContent.facets = preloadContent.facets.filter((facet: any) => {
         return !(facet?.name === "precio_vantilisto" && parentsCollection.items?.[0]?.sys?.id === DEFAULT_GASODOMESTICOS_PARENT_ID);
       });
@@ -114,12 +117,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath]);
+
   return (
     <div className="relative w-full flex flex-col">
-      {(principalSearch && data?.totalItems > 0) && (
+      {principalSearch && contentData?.totalItems > 0 && (
         <div className="flex flex-col gap-5 mb-7 md:mb-9">
           <h1 className="text-4xl text-center text-blue-dark">Resultados de búsqueda</h1>
-          <p className="text-2xl text-center text-grey-30">Hemos encontrado ({data.totalItems}) resultados asociados a tu búsqueda</p>
+          <p className="text-2xl text-center text-grey-30">Hemos encontrado ({contentData.totalItems}) resultados asociados a tu búsqueda</p>
         </div>
       )}
       {(title || mainFacetContent?.listedContents?.length > 0) && (
@@ -140,7 +144,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
       {facetsContent && (
         <ProductFilterBlock
           anchor={blockId}
-          products={{ listedContentsCollection: data }}
+          products={{ listedContentsCollection: contentData }}
           facets={facetsContent}
           principalSearch={principalSearch}
           onFacetsChange={facetsChangeHandle}
@@ -150,48 +154,15 @@ const ContentFilter: React.FC<IContentFilter> = ({
           types={contentTypesFilter}
         />
       )}
-      {data?.totalPages > 1 && (
-        <div className="block w-full my-4 mb-12">
-          <ul className="flex flex-row items-center justify-center w-full gap-1">
-            {data?.actualPage !== undefined && data.actualPage > 0 && (
-              <li>
-                <button
-                  onClick={() => updatePage(data.actualPage)}
-                  className="py-1 mx-2 text-sm font-normal bg-white text-blue-dark underline-animated-1"
-                >
-                  &lt; Anterior
-                </button>
-              </li>
-            )}
-            {new Array(data?.totalPages ?? 1).fill("").map((_, k) => (
-              <li key={`page-${k}`}>
-                <button
-                  onClick={() => updatePage(k + 1)}
-                  className={`blue-dark bg-white mx-2 py-1 text-sm font-normal border-b border-solid ${k == data?.actualPage
-                    ? "border-blue-dark"
-                    : "border-transparent"
-                    }`}
-                >
-                  {k + 1}
-                </button>
-              </li>
-            ))}
-            {data?.actualPage !== undefined &&
-              data?.totalPages !== undefined &&
-              data.actualPage + 1 < data.totalPages && (
-                <li>
-                  <button
-                    onClick={() => updatePage(data.actualPage + 2)}
-                    className="py-1 mx-2 text-sm font-normal bg-white text-blue-dark underline-animated-1"
-                  >
-                    Siguiente &gt;
-                  </button>
-                </li>
-              )}
-          </ul>
-        </div>
+      {contentData?.totalPages > 1 && (
+        <Pagination
+          currentPage={contentData?.actualPage}
+          pageRange={5}
+          totalPages={contentData?.totalPages}
+          onPage={updatePage}
+        />
       )}
-      {data === null && (
+      {contentData === null && (
         <h3 className="flex justify-center items-center w-full min-h-[200px] pb-12 text-center">
           No se encontraron resultados
         </h3>
