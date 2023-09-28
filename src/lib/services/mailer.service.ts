@@ -1,32 +1,21 @@
-import { SMTPClient } from 'emailjs';
+import sgMail from '@sendgrid/mail';
 
 export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>', messageHtml?: any): Promise<boolean> => {
-  const client = new SMTPClient({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT),
-    user: process.env.SMTP_USER,
-    password: process.env.SMTP_PASSWORD,
-    ssl: process.env.NODE_ENV == 'production' || process.env.VERCEL_ENV == 'production',
-  });
 
-  const attachmentOptions = messageHtml ?
-    [
-      {
-        data: messageHtml,
-        alternative: true
-      }
-    ] : [];
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
+    to,
+    from: process.env.SENDGRID_EMAIL_SENDER ?? 'marketplace@grupovanti.com',
+    subject,
+    text: message,
+    html: messageHtml,
+  };
 
   try {
-    await client.sendAsync(
-      {
-        text: message,
-        from,
-        to,
-        subject,
-        attachment: attachmentOptions,
-      },
-    );
+    await sgMail.send(msg)
+      .then(() => {
+        console.info('Email sent');
+      });
   } catch (err) {
     console.error('Error sending email', err);
     return false;
