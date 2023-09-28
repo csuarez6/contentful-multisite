@@ -3,7 +3,8 @@ import reducer from "./MenuReducer";
 import MenuContext from "./MenuContext";
 
 const initialState = {
-  level: 0
+  level: 0,
+  nav: null
 };
 
 const MenuState = ({ children }) => {

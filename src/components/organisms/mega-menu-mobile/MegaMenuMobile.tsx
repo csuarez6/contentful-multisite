@@ -10,13 +10,16 @@ const NavItem = ({
   children,
   next,
   prev,
+  parent,
   parentPanel,
   setParentPanel,
   close,
   noBorder = false,
 }) => {
   const [panel, setPanel] = useState(false);
-  const { dispatch } = useContext(MenuContext);
+  const {
+    dispatch
+  } = useContext(MenuContext);
   const refBtnCollapse = useRef(null);
   const elements =
     item?.mainNavCollection?.items?.length > 0 ||
@@ -25,7 +28,10 @@ const NavItem = ({
   const onPanel = () => {
     setPanel(!panel);
     if (setParentPanel) setParentPanel(!parentPanel);
-    dispatch({ type: "setLevel", value: !panel ? next : prev - 1 });
+    dispatch({
+      type: "setLevel",
+      value: { level: !panel ? next : prev - 1, nav: next ? parent : null },
+    });
   };
 
   const handlerClick = (evt, item) => {
@@ -33,7 +39,6 @@ const NavItem = ({
     if (isLink) close();
     else if (
       next % 2 == 0 &&
-      next < 4 &&
       item?.mainNavCollection?.items?.length > 0 &&
       !panel
     )
@@ -132,7 +137,6 @@ const NavItem = ({
               </span>
             )}
             {next % 2 == 0 &&
-              next < 4 &&
               item?.mainNavCollection?.items?.length > 0 &&
               !panel && (
                 <span className="font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2">
@@ -145,7 +149,6 @@ const NavItem = ({
               )}
           </span>
         }
-        {/*{(collapse || panel) && children}*/}
         {elements && children}
       </li>
     </>
@@ -157,6 +160,7 @@ const NavList = ({
   level,
   utilityNavCollection,
   close,
+  id = "",
   currentPanel = null,
   hasSetCurrentPanel = null,
   noBorder = false,
@@ -212,6 +216,7 @@ const NavList = ({
             item={item}
             next={lv}
             prev={level}
+            parent={id}
             noBorder={noBorder}
             parentPanel={currentPanel}
             setParentPanel={setCurrentPanel}
@@ -224,6 +229,7 @@ const NavList = ({
                 items={item?.mainNavCollection?.items}
                 currentPanel={panel}
                 hasSetCurrentPanel={setPanel}
+                id={id}
                 close={close}
               />
             )}
@@ -234,6 +240,7 @@ const NavList = ({
                 items={item?.secondaryNavCollection?.items}
                 currentPanel={panel}
                 hasSetCurrentPanel={setPanel}
+                id={id}
                 close={close}
               />
             )}
@@ -285,19 +292,23 @@ const MegaMenuMobile = ({
   return (
     <MenuState>
       <MenuContext.Consumer>
-        {({ state }) => (
+        {({ state: { level, nav } }) => (
           <div className="relative">
-            <NavList
-              level={0}
-              items={items}
-              utilityNavCollection={utilityNavCollection}
-              close={close}
-            />
-            {state.level == 0 && (
+            {(!level || nav == "nav-1") && (
+              <NavList
+                level={0}
+                items={items}
+                className="mb-3"
+                id="nav-1"
+                utilityNavCollection={utilityNavCollection}
+                close={close}
+              />
+            )}
+            {(!level || nav == "nav-2") && (
               <NavList
                 level={0}
                 noBorder={true}
-                className="mt-3"
+                id="nav-2"
                 items={secondaryNavCollection?.items}
                 utilityNavCollection={utilityNavCollection}
                 close={close}

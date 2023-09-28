@@ -1,7 +1,7 @@
-const MenuReducer = (state, action) => {
-  switch (action.type) {
+const MenuReducer = (state, {type, value}) => {
+  switch (type) {
     case 'setLevel':
-      return {level: action.value};
+      return {...state, ...value};
     default:
       throw new Error();
   }
