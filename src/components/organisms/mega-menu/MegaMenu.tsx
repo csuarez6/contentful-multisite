@@ -20,20 +20,21 @@ const LinkElement = ({ item, isOpen }) => {
         </span>
       )}
       {item.promoTitle ?? item.name}
-      {item.mainNavCollection?.items?.length > 0 && item.__typename !== "AuxCustomContent" && (
-        <span
-          className={classNames(
-            "flex items-center w-6 h-6 shrink-0 text-blue-dark",
-            isOpen && "transform rotate-180"
-          )}
-        >
-          <Icon
-            icon="arrow-down"
-            className="w-full h-full"
-            aria-hidden="true"
-          />
-        </span>
-      )}
+      {item.mainNavCollection?.items?.length > 0 &&
+        item.__typename !== "AuxCustomContent" && (
+          <span
+            className={classNames(
+              "flex items-center w-6 h-6 shrink-0 text-blue-dark",
+              isOpen && "transform rotate-180"
+            )}
+          >
+            <Icon
+              icon="arrow-down"
+              className="w-full h-full"
+              aria-hidden="true"
+            />
+          </span>
+        )}
     </>
   );
 };
@@ -43,8 +44,9 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const columns = 6;
   const { asPath } = useRouter();
-  const ProductName = asPath.split('=')[1];
-  if (ProductName) name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
+  const ProductName = asPath.split("=")[1];
+  if (ProductName)
+    name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
 
   const [screenW, setScreenW] = useState(0);
   const [screenH, setScreenH] = useState(0);
@@ -78,7 +80,8 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
   };
   const openSubmenu = () => {
     const _submenu = submenu.current;
-    const subTitles: NodeListOf<HTMLParagraphElement> = _submenu.querySelectorAll(".subTitleList");
+    const subTitles: NodeListOf<HTMLParagraphElement> =
+      _submenu.querySelectorAll(".subTitleList");
     const height: Array<number> = [];
 
     subTitles.forEach((item) => {
@@ -98,31 +101,34 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     const item = evt.target;
     const isChildren = item.closest(`#${uniqueId}`);
     const isClickedInside = item.id === uniqueId || isChildren;
-    const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
     if (!isTouchDevice && !isClickedInside) setIsOpenMenu(!isOpenMenu);
   };
 
   const handleMouseOver = (item) => {
     if (item.name === "Tienda Virtual") {
       gTagEvent("view_item_list", {
-        items: [{
-          item_id: '',
-          item_name: 'Tienda Virtual',
-          coupon: '',
-          discount: 0,
-          index: 0,
-          item_list_name: '',
-          item_list_id: '',
-          affiliation: 'Marketplace',
-          item_brand: '',
-          item_category: '',
-          item_variant: '',
-          price: 0,
-          currency: 'COP',
-          quantity: 0
-        }],
-        item_list_name: '',
-        item_list_id: ''
+        items: [
+          {
+            item_id: "",
+            item_name: "Tienda Virtual",
+            coupon: "",
+            discount: 0,
+            index: 0,
+            item_list_name: "",
+            item_list_id: "",
+            affiliation: "Marketplace",
+            item_brand: "",
+            item_category: "",
+            item_variant: "",
+            price: 0,
+            currency: "COP",
+            quantity: 0,
+          },
+        ],
+        item_list_name: "",
+        item_list_id: "",
       });
     }
     setIsOpenMenu(true);
@@ -132,21 +138,23 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
     const isProduct = item.internalLink?.slug?.toLowerCase() === "productos";
     if (isProduct) {
       gTagEvent("view_item", {
-        currency: 'COP',
-        items: [{
-          item_id: '',
-          item_name: item.promoTitle ?? item.name,
-          coupon: '',
-          discount: 0,
-          affiliation: 'Marketplace',
-          item_brand: '',
-          item_category: item.promoTitle ?? item.name,
-          item_variant: '',
-          price: 0,
-          currency: 'COP',
-          quantity: 0
-        }],
-        value: 0
+        currency: "COP",
+        items: [
+          {
+            item_id: "",
+            item_name: item.promoTitle ?? item.name,
+            coupon: "",
+            discount: 0,
+            affiliation: "Marketplace",
+            item_brand: "",
+            item_category: item.promoTitle ?? item.name,
+            item_variant: "",
+            price: 0,
+            currency: "COP",
+            quantity: 0,
+          },
+        ],
+        value: 0,
       });
     }
     setIsOpenMenu(false);
@@ -172,20 +180,21 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
       ref={submenu}
     >
       {/* contenido personalizado, Navegacion */}
-      {(!item.mainNavCollection?.items && (item.internalLink?.urlPaths?.[0] || item.externalLink)) && (
-        <CustomLink
-          content={item}
-          linkClassName={
-            "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
-          }
-          className={classNames(
-            "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
-            isOpenMenu ? "border-lucuma" : "border-transparent"
-          )}
-        >
-          <LinkElement item={item} isOpen={isOpenMenu} />
-        </CustomLink>
-      )}
+      {!item.mainNavCollection?.items &&
+        (item.internalLink?.urlPaths?.[0] || item.externalLink) && (
+          <CustomLink
+            content={item}
+            linkClassName={
+              "relative group-hover/submenu:after:content-[''] group-hover/submenu:after:block group-hover/submenu:after:absolute group-hover/submenu:after:min-h-[60px] group-hover/submenu:after:w-full"
+            }
+            className={classNames(
+              "flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b text-blue-dark focus:outline-none",
+              isOpenMenu ? "border-lucuma" : "border-transparent"
+            )}
+          >
+            <LinkElement item={item} isOpen={isOpenMenu} />
+          </CustomLink>
+        )}
 
       {/* Pagina, producto */}
       {item.urlPaths?.[0] && item.__typename !== "AuxNavigation" && (
@@ -200,12 +209,12 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
         </CustomLink>
       )}
       {item.mainNavCollection?.items && item.__typename === "AuxNavigation" && (
-        <div className={
-          classNames(
+        <div
+          className={classNames(
             "relative flex items-center gap-1 pb-1 font-semibold leading-tight text-center border-b border-transparent text-blue-dark focus:outline-none cursor-pointer",
             isOpenMenu && "border-blue-dark"
-          )
-        }>
+          )}
+        >
           <LinkElement item={item} isOpen={false} />
         </div>
       )}
@@ -242,14 +251,22 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                             (itemList, idx) =>
                               itemList && (
                                 <li
-                                  key={`${itemList?.sys?.id ?? itemList.name}_${idx}`}
+                                  key={`${
+                                    itemList?.sys?.id ?? itemList.name
+                                  }_${idx}`}
                                   className="flow-root"
                                 >
                                   <CustomLink
-                                    content={{ ...itemList, ...{ linkView: "" } }}
+                                    content={{
+                                      ...itemList,
+                                      ...{ linkView: "" },
+                                    }}
                                     onClick={() => handleClicked(itemList)}
-                                    className={classNames("flex items-center text-base text-blue-dark hover:text-lucuma-60 transition-colors duration-500",
-                                      itemList?.name === name ? 'text-lucuma-60' : 'text-blue-dark'
+                                    className={classNames(
+                                      "flex items-center text-base text-blue-dark hover:text-lucuma-60 transition-colors duration-500",
+                                      itemList?.name === name
+                                        ? "text-lucuma-60"
+                                        : "text-blue-dark"
                                     )}
                                   >
                                     <span>
@@ -267,6 +284,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                     <div
                       className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
                       style={columnCard(item.mainNavCollection.items.length)}
+                      onClick={() => setIsOpenMenu(false)}
                     >
                       {item.secondaryNavCollection.items.map((block) => (
                         <div
@@ -297,7 +315,11 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
   );
 };
 
-const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name, currentMenu }) => {
+const MegaMenu: React.FC<INavigation> = ({
+  mainNavCollection,
+  name,
+  currentMenu,
+}) => {
   if (mainNavCollection.items?.length <= 0) return;
   return (
     <div className="hidden lg:block">
@@ -310,7 +332,12 @@ const MegaMenu: React.FC<INavigation> = ({ mainNavCollection, name, currentMenu 
           <div className="flex flex-1 items-center py-2 min-h-[60px]">
             <div className="flex gap-8 xl:gap-10">
               {mainNavCollection.items.map((item) => (
-                <MegaMenuItem item={item} key={`${item.name}_mega-menu-item`} name={name} currentMenu={currentMenu} />
+                <MegaMenuItem
+                  item={item}
+                  key={`${item.name}_mega-menu-item`}
+                  name={name}
+                  currentMenu={currentMenu}
+                />
               ))}
             </div>
           </div>

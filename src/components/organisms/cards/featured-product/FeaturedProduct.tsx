@@ -112,10 +112,10 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                   ) : (
                     <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
                       <Image
-                        alt={imagesCollection.items[0].title}
-                        src={imagesCollection.items[0].url}
-                        width={imageSize.w}
-                        height={imageSize.h}
+                        alt={imagesCollection?.items[0]?.title}
+                        src={imagesCollection?.items[0]?.url}
+                        width={imageSize?.w}
+                        height={imageSize?.h}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </figure>
