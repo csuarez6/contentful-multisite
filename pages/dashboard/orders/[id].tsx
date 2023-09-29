@@ -44,13 +44,14 @@ import {
   MapPinIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-import { classNames } from "@/utils/functions";
+import { classNames, formatPrice } from "@/utils/functions";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AsteriskSimple } from "phosphor-react";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
+import CheckoutContext from "@/context/Checkout";
+import { Order } from "@commercelayer/sdk";
 
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -214,62 +215,9 @@ const Parcel = (): JSX.Element => {
   );
 };
 
-interface PaymentSourceCreditCardExpiresProps {
-  variant: "row" | "card";
-}
-
-const PaymentSourceCreditCardExpires = ({
-  variant,
-}: PaymentSourceCreditCardExpiresProps): JSX.Element => {
-  const expiry_month = (
-    <PaymentSourceDetail type="exp_month">
-      {({ text }) =>
-        text === "**" ? (
-          <div className="flex items-center">
-            <AsteriskSimple size={8} />
-            <AsteriskSimple size={8} />
-          </div>
-        ) : (
-          <span>{text}</span>
-        )
-      }
-    </PaymentSourceDetail>
-  );
-
-  const exp_year = (
-    <PaymentSourceDetail type="exp_year">
-      {({ text }) =>
-        text === "**" ? (
-          <div className="flex items-center">
-            <AsteriskSimple size={8} />
-            <AsteriskSimple size={8} />
-          </div>
-        ) : (
-          <span>{text.toString().slice(-2)}</span>
-        )
-      }
-    </PaymentSourceDetail>
-  );
-
-  const label = (
-    <div className="flex items-center gap-1">
-      Expira
-      <div className="flex">
-        {expiry_month}/{exp_year}
-      </div>
-    </div>
-  );
-
-  return variant === "card" ? (
-    <span className="antialiased text-[13px] leading-[20px] text-gray-400 mt-[4px]">
-      {label}
-    </span>
-  ) : (
-    <div className="font-light text-gray-500">{label}</div>
-  );
-};
-
-const PaymentSourceRow = (): JSX.Element => {
+const PaymentSourceRow = (props: any): JSX.Element => {
+  const name = props?.payment?.name;
+  const date = new Date(props?.payment?.updated_at).toLocaleDateString();
   return (
     <div className="rounded flex bg-gray-50 items-center px-4 h-[57px]">
       <div>
@@ -305,10 +253,11 @@ const PaymentSourceRow = (): JSX.Element => {
                     }}
                   </PaymentSourceBrandName>
                   <div className="font-bold break-all">
-                    Terminado en <PaymentSourceDetail type="last4" />
+                    {name}
                   </div>
                 </div>
-                <PaymentSourceCreditCardExpires variant="row" />
+                {/* <PaymentSourceCreditCardExpires variant="row" /> */}
+                <span>{date}</span>
               </>
             );
           }}
@@ -318,8 +267,46 @@ const PaymentSourceRow = (): JSX.Element => {
   );
 };
 
+const setOrderStatus = {
+  draft: {
+      classChip: "bg-grey-200 border-grey-200 text-grey-700",
+      nameChip: "Borrador"
+  },
+  pending: {
+      classChip: "bg-orange-200 border-orange-200 text-orange-700",
+      nameChip: "Pendiente"
+  },
+  cancelled: {
+      classChip: "bg-red-200 border-red-200 text-red-700",
+      nameChip: "Cancelado"
+  },
+  placed: {
+      classChip: "bg-green-200 border-green-200 text-green-700",
+      nameChip: "Colocado"
+  },
+  approved: {
+      classChip: "bg-green-200 border-green-200 text-green-700",
+      nameChip: "Aprobado"
+  }
+};
+
+const OrderStatusChip = ({ status }): JSX.Element => {
+  if (status === undefined) return <></>;
+  return (
+      <div className={
+          classNames(
+              "flex items-center px-2 py-1 m-1 font-medium border rounded-full w-fit",
+              `${setOrderStatus[status]["classChip"]}`,
+          )}
+      >
+          <div className="flex-initial max-w-full text-xs font-normal leading-none">{setOrderStatus[status]["nameChip"] ?? status}</div>
+      </div>
+  );
+};
+
 const DashboardOrder = () => {
   let orderId = "";
+  const { getOrderById } = useContext(CheckoutContext);
   const { query } = useRouter();
   if (query["id"]) {
     orderId = query["id"] as string;
@@ -328,6 +315,7 @@ const DashboardOrder = () => {
     accessToken: "",
     endpoint: "",
   });
+  const [order, setOrder] = useState<Order>(); 
 
   const { status, data: session } = useSession();
   useEffect(() => {
@@ -336,7 +324,12 @@ const DashboardOrder = () => {
         accessToken: session?.user["accessToken"],
         endpoint: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
       });
+      (async () => {
+        const order = await getOrderById(orderId);
+        setOrder(order.data);
+      })();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, session]);
 
   return (
@@ -385,9 +378,12 @@ const DashboardOrder = () => {
                         >
                           <Icon className="w-6" icon="arrow-left" />
                         </CustomLink>
-                        <h2 className="text-lg font-medium text-blue-dark">
-                          Compra # <OrderNumber />
-                        </h2>
+                        <div>
+                          <h2 className="text-lg font-medium text-blue-dark">
+                            Compra # <OrderNumber />
+                            <OrderStatusChip status={order?.status} />
+                          </h2>
+                        </div>
                       </div>
                       <div className="flex flex-col gap-5">
                         <div className="relative flex items-center justify-between text-black transition duration-500 cursor-pointer ease focus:bg-gray-400">
@@ -442,6 +438,14 @@ const DashboardOrder = () => {
                             <div className="flex flex-row justify-between">
                               <p>Envío</p>
                               <ShippingAmount />
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <p>G.E</p>
+                              <span>{ order?.line_items?.[0]?.["warranty_service"]?.length > 0 ? formatPrice(order?.line_items?.[0]?.["warranty_service"]?.[0]?.unit_amount_float) : '$0,00' }</span>
+                            </div>
+                            <div className="flex flex-row justify-between">
+                              <p>S.I</p>
+                              <span>{ order?.line_items?.[0]?.["installlation_service"]?.length > 0 ? formatPrice(order?.line_items?.[0]?.["installlation_service"]?.[0]?.unit_amount_float) : '$0,00'}</span>
                             </div>
                             <div className="flex flex-row justify-between">
                               <PaymentMethodAmount>
@@ -546,7 +550,7 @@ const DashboardOrder = () => {
                         </div>
                         <PaymentMethodsContainer>
                           <PaymentSource readonly>
-                            <PaymentSourceRow />
+                            <PaymentSourceRow payment={order?.payment_method}/>
                           </PaymentSource>
                         </PaymentMethodsContainer>
                       </div>
@@ -571,9 +575,18 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
-  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = await getHeader(
+    DEFAULT_HEADER_ID,
+    context.preview ?? false
+  );
+  const footerInfo = await getNavigation(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false
+  );
+  const helpButton = await getNavigation(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {
