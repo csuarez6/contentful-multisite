@@ -94,23 +94,23 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
             {discount && <span className="p-2 uppercase rounded-md bg-blue-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">{discount} de descuento</span>}
           </div>
         )}
-        <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-6 w-full h-full">
+        <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-[45px] w-full h-full justify-between">
           {(imagesCollection?.items || promoImage) && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 h-full">
               {(imagesCollection?.items || cta || promoImage) && (
-                <div className={`relative mt-5 aspect-[${imageSize.w}/${imageSize.h}]`}>
+                <div className={`relative mt-5 h-full`}>
                   {promoImage ? (
-                    <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
+                    <figure className="relative h-full">
                       <Image
                         alt={promoImage.title}
                         src={promoImage.url}
                         width={imageSize.w}
                         height={imageSize.h}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </figure>
                   ) : (
-                    <figure className={`aspect-[${imageSize.w}/${imageSize.h}]`}>
+                    <figure className="">
                       <Image
                         alt={imagesCollection?.items[0]?.title}
                         src={imagesCollection?.items[0]?.url}
@@ -128,9 +128,9 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
             </div>
           )}
           {promoTitle && (
-            <div className="flex flex-col gap-[25px] grow justify-between">
-              <div className="flex flex-col gap-[7px]">
-                <div className="flex flex-wrap items-center justify-between gap-1">
+            <div className="flex flex-col gap-[25px] h-fit justify-end">
+              <div className="flex flex-col gap-[7px] w-full">
+                <div className="flex flex-wrap items-center  gap-1">
                   <h3 className="group-[.card-mega-menu]:text-lg text-blue-dark title is-4  group-hover:text-category-blue-dark group-hover:-translate-y-1 transition-[color,transform] duration-500">{promoTitle}</h3>
                   {!!rating && (
                     <div className="flex items-center gap-[13px] mr-1">
