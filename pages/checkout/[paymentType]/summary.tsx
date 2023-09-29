@@ -61,6 +61,8 @@ const CheckoutSummary = () => {
   };
   const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
   const [showModal, setShowModal] = useState(false);
+  const [tokenReCaptchaRender, setTokenReCaptchaRender] = useState<string>('');
+  const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
 
   const isCustomer = (customer: any): customer is Customer => {
     return customer?.type === Customers.TYPE;
@@ -129,7 +131,14 @@ const CheckoutSummary = () => {
   };
 
   useEffect(() => {
+    // Set Recaptcha value to Context
+    onRecaptcha(tokenReCaptchaRender);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenReCaptchaRender]);
+
+  useEffect(() => {
     setDataModal(modalDefault);
+    setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
     // subscribe to routeChangeStart event
     const onRouteChangeStart = () => setIsLoading(true);
     router.events.on("routeChangeStart", onRouteChangeStart);
@@ -192,12 +201,13 @@ const CheckoutSummary = () => {
           </div>
           <div className="flex justify-between">
             <dt className="text-blue-dark">
-              Sabemos que eres un humano, pero debemos confirmarlo.
-              <ReCaptchaBox
+              {/* Sabemos que eres un humano, pero debemos confirmarlo. */}
+              {/* <ReCaptchaBox
                 version={2}
                 handleChange={(e) => onRecaptcha(e)}
                 classNames="mt-6"
-              />
+              /> */}
+              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptchaRender} />
             </dt>
           </div>
           <div className="flex justify-between">
