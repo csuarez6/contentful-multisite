@@ -34,7 +34,7 @@ import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
   {
-    name: "Compras",
+    name: "Mis compras",
     href: "/dashboard/orders",
     icon: ShoppingCartIcon,
     current: false,

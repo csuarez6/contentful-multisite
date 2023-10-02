@@ -29,7 +29,7 @@ import { IdentificationTypes } from "@/lib/enum/EIdentificationTypes.enum";
 const subNavigation = [
   { name: "Perfíl", href: "#", icon: UserCircleIcon, current: true },
   {
-    name: "Compras",
+    name: "Mis compras",
     href: "/dashboard/orders",
     icon: ShoppingCartIcon,
     current: false,
@@ -64,22 +64,27 @@ const schema = yup.object({
     .string()
     .required("Dato Requerido")
     .min(3, "Mínimo 3 caracteres"),
-  documentType: yup.string().required("Dato Requerido"),
+  documentType: yup
+  .string()
+  .required("Dato Requerido")
+  .notOneOf(["Seleccione un tipo de documento", "Seleccionar"]),
   documentNumber: yup
     .number()
+    .typeError("El valor debe ser numérico")
     .required("Dato Requerido")
     .nullable()
     .transform((value) => (isNaN(value) ? undefined : value))
     .positive("Solo números positivos"),
   cellPhone: yup
     .number()
+    .typeError("El valor debe ser numérico")
     .transform((value) => (isNaN(value) ? undefined : value))
     .nullable()
     .required("Dato Requerido")
     .min(8, "Faltan Números"),
   contractNumber: yup
     .number()
-    .typeError("Dato Requerido: El valor debe ser numérico")
+    .typeError("El valor debe ser numérico")
     .positive("Valor no valido, deben ser números positivos")
     .required("Dato Requerido"),
 });
@@ -124,7 +129,7 @@ const Dashboard = () => {
     ...Object.keys(IdentificationTypes).map((key) => ({
       text: IdentificationTypes[key as keyof typeof IdentificationTypes],
       value: key,
-    }))
+    })),
   ];
 
   useEffect(() => {
@@ -140,7 +145,7 @@ const Dashboard = () => {
           cellPhone: info?.metadata["cellPhone"],
           contractNumber: info?.metadata["contractNumber"],
         });
-      });
+      }); 
     }
   }, [status, session, customerDataForm.email]);
 
@@ -242,7 +247,7 @@ const Dashboard = () => {
                 {/* Payment details */}
                 <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
                   <HeadingCard
-                    title="Detalles usuario"
+                    title="Perfil"
                     headClasses="w-full !justify-center text-2xl text-blue-dark mt-2"
                     hideCheck={true}
                   >
@@ -324,20 +329,22 @@ const Dashboard = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
-                          <SelectAtom
-                            id='documentType'
-                            labelSelect='Tipo de documento'
-                            listedContents={selectOptions}
-                            isRequired={true}
-                            currentValue={getValues("documentType")}
-                            isError={!!errors.documentType}
-                            errorMessage={errors?.documentType?.message}
-                            handleChange={(value) => {
-                              setValue("documentType", value);
-                              clearErrors('documentType');
-                            }}
-                            {...register('documentType')}
-                          />
+                          <div className="w-full">
+                            <SelectAtom
+                              id="documentType"
+                              labelSelect="Tipo de documento"
+                              listedContents={selectOptions}
+                              isRequired={true}
+                              currentValue={getValues("documentType")}
+                              isError={!!errors.documentType}
+                              errorMessage={errors?.documentType?.message}
+                              handleChange={(value) => {
+                                setValue("documentType", value);
+                                clearErrors("documentType");
+                              }}
+                              {...register("documentType")}
+                            />
+                          </div>
 
                           <Textbox
                             id="documentNumber"
@@ -397,7 +404,7 @@ const Dashboard = () => {
                       <div className="self-end mt-[25px]">
                         <button
                           type="submit"
-                          disabled={!isValid}
+                          disabled={!!isValid}
                           className="button button-primary"
                         >
                           Actualizar
@@ -418,9 +425,18 @@ const Dashboard = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
-  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = await getHeader(
+    DEFAULT_HEADER_ID,
+    context.preview ?? false
+  );
+  const footerInfo = await getNavigation(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false
+  );
+  const helpButton = await getNavigation(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   return {
     props: {

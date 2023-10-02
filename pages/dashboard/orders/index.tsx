@@ -116,7 +116,7 @@ const EmptyBlock = (): JSX.Element => {
 
 const subNavigation = [
     { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
-    { name: "Compras", href: "#", icon: ShoppingCartIcon, current: true },
+    { name: "Mis compras", href: "#", icon: ShoppingCartIcon, current: true },
     { name: "Dirección", href: "/dashboard/addresses", icon: MapPinIcon, current: false },
     { name: "Actualizar Contraseña", href: "/dashboard/upgradePassword", icon: ArrowPathIcon, current: false },
 ];
@@ -211,7 +211,7 @@ const DashboardOrders = () => {
                                                                     content={{
                                                                         urlPaths: [`/dashboard/orders/${order.id}`],
                                                                     }}
-                                                                    className="text-sm font-bold text-blue-dark"
+                                                                    className="text-sm font-bold text-blue-600 underline"
                                                                 >
                                                                     # {cell.render('Cell')}
                                                                 </CustomLink>

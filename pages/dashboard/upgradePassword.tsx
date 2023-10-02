@@ -26,7 +26,7 @@ import { gaEventForm } from "@/utils/ga-events--forms";
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
   {
-    name: "Compras",
+    name: "Mis compras",
     href: "/dashboard/orders",
     icon: ShoppingCartIcon,
     current: false,
@@ -265,6 +265,7 @@ const DashboardUpgradePassword = () => {
                           {...register("password")}
                           isRequired={true}
                           autoComplete="off"
+                          placeholder="Ingrese su contraseña actual"
                         />
                       </div>
 
