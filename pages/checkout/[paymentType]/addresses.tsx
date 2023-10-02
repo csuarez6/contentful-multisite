@@ -277,7 +277,7 @@ const CheckoutAddress = (props: any) => {
         value: city.city,
       }));
       setBillingCities(defaultCities.concat(mappedCities));
-      setValue("shippingAddress.cityCode", null);
+      setValue("billingAddress.cityCode", null);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billingStateWatched]);
