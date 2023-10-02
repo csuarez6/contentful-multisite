@@ -144,16 +144,13 @@ export const ModalConfirm: React.FC<any> = ({
 };
 
 const CheckoutAddress = (props: any) => {
+  const defaultCityOption = { city: "Seleccione un Municipio", isCovered: "false" };
   const { copyServices } = props;
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState([]);
-  const [shippingCities, setShippingCities] = useState<any>([
-    { city: "Seleccione un Municipio", isCovered: "false" },
-  ]);
-  const [billingCities, setBillingCities] = useState<any>([
-    { city: "Seleccione un Municipio", isCovered: "false" },
-  ]);
+  const [shippingCities, setShippingCities] = useState<any>([defaultCityOption]);
+  const [billingCities, setBillingCities] = useState<any>([defaultCityOption]);
   const { isLogged, user } = useContext(AuthContext);
   const [showAlert, setShowAlert] = useState(false);
   const [isActivedModal, setIsActivedModal] = useState(false);
@@ -181,7 +178,6 @@ const CheckoutAddress = (props: any) => {
     getValues,
     clearErrors,
     formState: { errors },
-
     reset,
   } = useForm<IAddresses>({
     resolver: yupResolver(schema),
@@ -233,15 +229,13 @@ const CheckoutAddress = (props: any) => {
   useEffect(() => {
     if (!shippingStateWatched) return;
     (async () => {
-      const citiesFinal: any[] = [
-        { city: "Seleccione un Municipio", isCovered: "false" },
-      ];
+      const defaultCities: any[] = [defaultCityOption];
       const cities: any[] = await getCitiesByState(shippingStateWatched);
       const mappedCities = cities.map((city) => ({
         text: city.city,
         value: city.city,
       }));
-      setShippingCities(citiesFinal.concat(mappedCities));
+      setShippingCities(defaultCities.concat(mappedCities));
     })();
     setShowAlert(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,28 +254,32 @@ const CheckoutAddress = (props: any) => {
   }, [shippingCityWatched]);
 
   const getListCities = async (state: string, selectType: string) => {
+    const defaultCities: any[] = [defaultCityOption];
     const cities: any[] = await getCitiesByState(state);
     const mappedCities = cities.map((city) => ({
       text: city.city,
       value: city.city,
     }));
     if (selectType === "billing") {
-      setBillingCities(mappedCities);
+      setBillingCities(defaultCities.concat(mappedCities));
     } else {
-      setShippingCities(mappedCities);
+      setShippingCities(defaultCities.concat(mappedCities));
     }
   };
 
   useEffect(() => {
     if (!billingStateWatched) return;
     (async () => {
+      const defaultCities: any[] = [defaultCityOption];
       const cities: any[] = await getCitiesByState(billingStateWatched);
       const mappedCities = cities.map((city) => ({
         text: city.city,
         value: city.city,
       }));
-      setBillingCities(mappedCities);
+      setBillingCities(defaultCities.concat(mappedCities));
+      setValue("shippingAddress.cityCode", null);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billingStateWatched]);
 
   useEffect(() => {
@@ -306,12 +304,12 @@ const CheckoutAddress = (props: any) => {
 
         if (shippingAddressFormatted && shippingAddressFormatted.stateCode !== "") {
           getListCities(shippingAddressFormatted.stateCode, "shipping").then(() => {
-            setValue("shippingAddress.stateCode",shippingAddressFormatted.stateCode);
+            setValue("shippingAddress.stateCode", shippingAddressFormatted.stateCode);
             setValue("shippingAddress.cityCode", shippingAddressFormatted.cityCode);
-            setValue("shippingAddress.street",shippingAddressFormatted.street);
-            setValue("shippingAddress.address",shippingAddressFormatted.address);
-            setValue("shippingAddress.residence",shippingAddressFormatted.residence);
-            setValue("shippingAddress.receiver",shippingAddressFormatted.receiver);
+            setValue("shippingAddress.street", shippingAddressFormatted.street);
+            setValue("shippingAddress.address", shippingAddressFormatted.address);
+            setValue("shippingAddress.residence", shippingAddressFormatted.residence);
+            setValue("shippingAddress.receiver", shippingAddressFormatted.receiver);
           });
         } else if (status === "authenticated" && session) {
           const addresses: Address = await getCustomerAddresses(session?.user?.["accessToken"]);
@@ -330,17 +328,17 @@ const CheckoutAddress = (props: any) => {
 
         if (billingAddressFormatted && billingAddressFormatted.stateCode !== "") {
           getListCities(billingAddressFormatted.stateCode, "billing").then(() => {
-            setValue("billingAddress.stateCode",billingAddressFormatted.stateCode);
+            setValue("billingAddress.stateCode", billingAddressFormatted.stateCode);
             setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
             setValue("billingAddress.address", billingAddressFormatted.address);
             setValue("billingAddress.street", billingAddressFormatted.street);
-            setValue("billingAddress.residence",billingAddressFormatted.residence);
+            setValue("billingAddress.residence", billingAddressFormatted.residence);
           });
         }
 
         reset({
           shippingAddress: {
-            isSameAsBillingAddress: 
+            isSameAsBillingAddress:
               (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") ||
               (shippingAddressFormatted?.address == billingAddressFormatted?.address)
           },
@@ -518,6 +516,7 @@ const CheckoutAddress = (props: any) => {
               currentValue={getValues("shippingAddress.stateCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.stateCode", value);
+                setValue("shippingAddress.cityCode", null);
                 clearErrors("shippingAddress.stateCode");
               }}
               {...register("shippingAddress.stateCode")}
@@ -609,6 +608,7 @@ const CheckoutAddress = (props: any) => {
               {...register("shippingAddress.isSameAsBillingAddress")}
               id="shippingAddress.isSameAsBillingAddress"
               label="Acepto usar la dirección de envio para el proceso de facturación"
+              checked={isSameAsBillingAddress}
             />
           </div>
           {!isSameAsBillingAddress && (
@@ -625,6 +625,7 @@ const CheckoutAddress = (props: any) => {
                   currentValue={getValues("billingAddress.stateCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.stateCode", value);
+                    setValue("billingAddress.cityCode", null);
                     clearErrors("billingAddress.stateCode");
                   }}
                   {...register("billingAddress.stateCode")}
