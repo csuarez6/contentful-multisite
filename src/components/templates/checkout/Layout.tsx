@@ -15,6 +15,7 @@ import { gaEventForm } from "@/utils/ga-events--forms";
 import { IP2PRequest } from "@/lib/interfaces/p2p-cf-interface";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { Order } from "@commercelayer/sdk";
+import citiesFile from "@/utils/static/cities-co.json";
 
 interface IChekoutLayoutProps {
   children: React.ReactNode;
@@ -58,7 +59,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     hasShipment,
     isFetchingOrder,
     updateIsPaymentProcess,
-    getOrderById
+    getOrderById,
+    onHasShipment
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [error, setError] = useState(false);
@@ -122,6 +124,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     } else {
       setIsComplete(false);
     }
+    shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
 
@@ -263,6 +266,15 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     }
   };
 
+  const shippmentdash = (state, cityWached) => {
+    const cityCheck = citiesFile.filter(
+      (city) =>
+        city.admin_name === state &&
+        city.city === cityWached
+    );
+    onHasShipment(cityCheck[0]?.isCovered == "false");
+  };
+
   return (
     <>
       {asPathUrl === "purchase-order" && (
@@ -389,7 +401,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           {/* Ent Product Installation */}
 
                           {/* Start Shipping Cost */}
-                          {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order")) && (
+                          {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order") && hasShipment )) && (
                             <div
                               className="grid grid-cols-3 text-sm"
                               key={"product-unit-shipcost" + i}
@@ -424,7 +436,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="col-span-1 font-bold">Subtotal:</p>
                             <span className="col-span-2 font-bold text-right text-blue-dark">
-                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order"))
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order")&& hasShipment))
                                 ? formatPrice(
                                   showProductTotal(
                                     product?.total_amount_float,
@@ -462,7 +474,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
                       {/* {order?.formatted_total_amount_with_taxes} */}
-                      {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || asPath.startsWith("/checkout/pse/purchase-order"))
+                      {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order")&& hasShipment))
                         ?
                         formatPrice(
                           order?.total_amount_with_taxes_float +

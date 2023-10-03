@@ -76,12 +76,16 @@ const subNavigation = [
 ];
 
 const handlerStatusColor = (status: string) => {
+  console.log('status', status);
+  
   switch (status) {
     case "placed": // Orders
     case "approved": // Orders
     case "shipped": // Shipments
     case "received": // Returns
       return "text-green-400 bg-green-400 bg-opacity-10";
+    case "cancelled": 
+      return "text-red-400 bg-red-400 bg-opacity-10";
     default:
       return "text-yellow-400 bg-yellow-400 bg-opacity-10";
   }
@@ -544,7 +548,7 @@ const DashboardOrder = () => {
                       </div>
                       {/* ***************** */}
                       {/* Payments */}
-                      <div className="flex flex-col gap-9">
+                      {/* <div className="flex flex-col gap-9">
                         <div className="relative flex items-center justify-between text-black transition duration-500 cursor-pointer ease focus:bg-gray-400">
                           <span>PAGOS</span>
                         </div>
@@ -553,7 +557,7 @@ const DashboardOrder = () => {
                             <PaymentSourceRow payment={order?.payment_method}/>
                           </PaymentSource>
                         </PaymentMethodsContainer>
-                      </div>
+                      </div> */}
                       {/* ***************** */}
                     </OrderContainer>
                   </div>

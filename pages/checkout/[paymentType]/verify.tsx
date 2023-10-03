@@ -145,7 +145,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   };
 
   const getShippingPrice = (product) => {
-    return shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name)?.price_amount_float ?? 0;
+    return shippingMethodGlobal.find((x) => x?.name === product?.item?.shipping_category?.name)?.price_amount_float ?? 0;
   };
 
   useEffect(() => {
@@ -584,28 +584,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {/* {formatPrice(
-                  showProductTotal(
-                    product?.total_amount_float,
-                    product?.["installlation_service"],
-                    product?.["warranty_service"]
-                  )
-                )} */}
-                {Object.entries(product.item["shipping_category"]).length > 0
-                  ? formatPrice(
+                {
+                   formatPrice(
                     showProductTotal(
                       product?.total_amount_float,
                       product?.["installlation_service"],
                       product?.["warranty_service"]
                     ) +
                     getShippingPrice(product)
-                  )
-                  : formatPrice(
-                    showProductTotal(
-                      product?.total_amount_float,
-                      product?.["installlation_service"],
-                      product?.["warranty_service"]
-                    )
                   )
                 }
               </div>
