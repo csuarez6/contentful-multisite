@@ -106,17 +106,21 @@ h6 {
 .swiper-pagination-bullet-active.swiper-pagination-custom-bullet-sliders {
   @apply bg-lucuma;
 }
+
 .indicators-bullets {
   @apply sm:flex sm:justify-center sm:items-center grid gap-3;
 }
+
 .swiper-pagination-custom-bullet--iconslist {
   width: 14px !important;
   height: 14px !important;
 }
+
 .slider-listIcon .swiper-pagination {
   @apply flex justify-center gap-[14px];
   bottom: 26px !important;
 }
+
 .slider-bullets-custom {
   @apply flex justify-between items-center w-full;
 }
@@ -124,6 +128,15 @@ h6 {
 .swiper-pagination {
   @apply h-10 items-center flex justify-center bottom-[2.2%] !important;
 }
+
+.swiper-thumbs .swiper-slide {
+  @apply underline-animated-3 pb-2 text-lucuma;
+}
+
+.swiper-thumbs .swiper-slide.swiper-slide-thumb-active {
+  @apply underline-animated-full-3;
+}
+
 /* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;

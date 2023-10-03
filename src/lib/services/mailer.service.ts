@@ -1,5 +1,6 @@
 import sgMail from '@sendgrid/mail';
 
+//eslint-disable-next-line
 export const sendEmail = async (to: string, subject: string, message: string, from = 'Aplyca Dev <dev@aplyca.com>', messageHtml?: any): Promise<boolean> => {
 
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
