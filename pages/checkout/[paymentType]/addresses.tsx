@@ -179,6 +179,7 @@ const CheckoutAddress = (props: any) => {
     clearErrors,
     formState: { errors },
     reset,
+    resetField,
   } = useForm<IAddresses>({
     resolver: yupResolver(schema),
     shouldUnregister: true,
@@ -277,7 +278,7 @@ const CheckoutAddress = (props: any) => {
         value: city.city,
       }));
       setBillingCities(defaultCities.concat(mappedCities));
-      setValue("billingAddress.cityCode", null);
+      resetField("billingAddress.cityCode");
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billingStateWatched]);
@@ -516,7 +517,7 @@ const CheckoutAddress = (props: any) => {
               currentValue={getValues("shippingAddress.stateCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.stateCode", value);
-                setValue("shippingAddress.cityCode", null);
+                resetField("shippingAddress.cityCode");
                 clearErrors("shippingAddress.stateCode");
               }}
               {...register("shippingAddress.stateCode")}
@@ -625,7 +626,7 @@ const CheckoutAddress = (props: any) => {
                   currentValue={getValues("billingAddress.stateCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.stateCode", value);
-                    setValue("billingAddress.cityCode", null);
+                    resetField("billingAddress.cityCode");
                     clearErrors("billingAddress.stateCode");
                   }}
                   {...register("billingAddress.stateCode")}
