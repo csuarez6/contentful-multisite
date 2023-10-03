@@ -41,7 +41,7 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
   blockId,
   sysId
 }) => {
-  const imageAlignLocal = view?.imageAlign === "Derecha" ? "order-last" : "";
+  const imageAlignLocal = view?.imageAlign === "Derecha" ? "md:order-last" : "";
 
   return (
     <section id={blockId ?? sysId} className="section grid">
