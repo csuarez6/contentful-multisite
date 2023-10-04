@@ -44,12 +44,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             from: "Vanti Soporte <dev@aplyca.com>"
         };
 
-        const isMailSended = await sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
-        if (isMailSended) {
-            res.status(201).json({ ...resp, method: req.method });
-        } else {
-            res.status(401).json({ error: "Error al enviar correo de restauración." });
-        }
+        sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
+        res.status(201).json({ data: "correo Enviado con exito", method: req.method });
     } catch (error) {
         res.status(401).json(error);
     }

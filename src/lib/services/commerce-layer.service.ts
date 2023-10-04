@@ -277,7 +277,7 @@ export const updateCustomerResetPwd = async (
       customer_password: customerPWD,
       _reset_password_token: resetToken,
     });
-    return { status: 200, data: updateCustomerRPwd };
+    return { status: 200, data: { type: updateCustomerRPwd?.type, customer_email: updateCustomerRPwd.customer_email} };
   } catch (error) {
     console.error("Error Update Customer Reset: ", error);
     return { status: 401, error: error };
