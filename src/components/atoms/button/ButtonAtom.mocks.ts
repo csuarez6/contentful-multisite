@@ -21,7 +21,7 @@ const dataModal: IButtonAtom = {
   text: 'Modal',
   type: 'Modal',
   classes: 'button-secondary',
-  children: "Componente Hijo"
+  children: "Contenido del modal de prueba"
 };
 
 export const mockButtonAtomProps = {
