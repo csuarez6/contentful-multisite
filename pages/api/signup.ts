@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(201).json({ success: true, data: 'Usuario creado con exito'});
     } catch (error) {
         console.error("Error in signup handler: ", error.message);
-        res.status(400).json({ success: false, data: error.message });
+        res.status(400).json({ success: false, data: 'Error al crear el usuario' });
     }
 };
 

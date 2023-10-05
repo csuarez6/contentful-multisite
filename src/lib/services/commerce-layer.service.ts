@@ -272,8 +272,7 @@ export const updateCustomerResetPwd = async (
     });
     return { status: 200, data: { type: updateCustomerRPwd?.type, customer_email: updateCustomerRPwd.customer_email} };
   } catch (error) {
-    console.error("Error Update Customer Reset: ", error);
-    return { status: 401, error: error };
+    throw new Error(error);
   }
 };
 

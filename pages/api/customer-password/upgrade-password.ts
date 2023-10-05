@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200)
         .json(await updatePassWord(req.body.user, req.body.password, req.body.newPassword));
     } catch (error) {
-        res.status(402).json(error);
+        res.status(402).json({data: 'error al actualizar la contraseña'});
     }
 };
 

@@ -47,7 +47,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
         res.status(201).json({ data: "Intento de envío de correo realizado con exito", method: req.method });
     } catch (error) {
-        res.status(401).json(error);
+        console.error('Error handle forgot password', error);
+        res.status(401).json({data: 'error al actualizar la contraseña'});
     }
 };
 
