@@ -179,6 +179,7 @@ const SignUp = () => {
   return (
     <>
       <div className="overflow-hidden">
+        <h1 className="sr-only">Registro de usuario</h1>
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
           <SignUpFormBlock

@@ -113,7 +113,7 @@ const BannerSliderBlock: React.FC<IPromoBlock> = ({
                           priority
                         />
                       </figure>
-                      <div className="container sm:px-14  2md:px-28 mx-auto absolute h-full sm:h-auto flex items-end sm:block">
+                      <div className="container sm:px-14 2md:px-28 mx-auto absolute h-full sm:h-auto flex items-end sm:block">
                         <div className="relative flex justify-center items-center sm:items-start flex-col gap-[30px] px-2 xxs:px-0 md:px-2 sm:w-3/5 mb-6 sm:mb-0">
                           <h1 className="text-blue-dark text-2xl sm:text-3xl xl:text-[43px] xl:leading-[1.3] text-center sm:text-left p-2 sm:px-1 bg-white bg-opacity-50 rounded-xl sm:bg-transparent sm:rounded-none sm:drop-shadow-[2px_2px_2px_rgba(255,255,255,0.9)]">
                             {content?.promoTitle ?? content.name}

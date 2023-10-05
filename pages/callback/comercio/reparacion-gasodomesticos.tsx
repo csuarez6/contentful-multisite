@@ -175,6 +175,7 @@ const CallbackPage = () => {
   return (
     <>
       <div className="overflow-hidden">
+        <h1 className="sr-only">Callback Reparación - Comercio</h1>
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
           <section className="section">

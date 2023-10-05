@@ -183,6 +183,7 @@ const CallbackPage = () => {
   return (
     <>
       <div className="overflow-hidden">
+        <h1 className="sr-only">Callback Catálogo VantiListo</h1>
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
           <section className="section flex flex-col md:flex-row gap-6">

@@ -45,7 +45,7 @@ const getStepsLine = (paymentType) => {
 const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const { asPath, push, query } = useRouter();
   const stepsList = getStepsLine(query.paymentType);
-  const showStepList = stepsList.find(el => el.path === asPath);
+  const currentStepList = stepsList.find(el => el.path === asPath);
 
   const {
     order: oderProp,
@@ -124,7 +124,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     } else {
       setIsComplete(false);
     }
-    shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city );
+    shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
 
@@ -277,6 +277,9 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   return (
     <>
+      <h1 className="sr-only">
+        {currentStepList ? `"Proceso de compra" - ${currentStepList?.title}` : "Checkout"}
+      </h1>
       {asPathUrl === "purchase-order" && (
         <div className="hidden 2md:flex w-full main-container justify-end relative top-[17px] pt-2">
           <div className="top-[-15px] absolute left-0 main-container">
@@ -287,7 +290,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       )}
       <div className="main-container">
         <div className="grid grid-cols-1 2md:grid-cols-5 2lg:grid-cols-3 gap-y-6 2md:gap-x-6 pt-[84px] pb-[180px]">
-          {showStepList && (
+          {currentStepList && (
             <div className="col-span-full">
               <StepsLine {...{ items: stepsList }} />
             </div>
@@ -401,7 +404,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           {/* Ent Product Installation */}
 
                           {/* Start Shipping Cost */}
-                          {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order") && hasShipment )) && (
+                          {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order") && hasShipment)) && (
                             <div
                               className="grid grid-cols-3 text-sm"
                               key={"product-unit-shipcost" + i}
@@ -436,7 +439,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="col-span-1 font-bold">Subtotal:</p>
                             <span className="col-span-2 font-bold text-right text-blue-dark">
-                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order")&& hasShipment))
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order") && hasShipment))
                                 ? formatPrice(
                                   showProductTotal(
                                     product?.total_amount_float,
@@ -462,7 +465,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <div className="grid grid-cols-2 mt-2 rounded">
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
-                      {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order")&& hasShipment))
+                      {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order") && hasShipment))
                         ?
                         formatPrice(
                           order?.total_amount_float +

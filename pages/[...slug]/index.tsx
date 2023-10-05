@@ -24,13 +24,14 @@ import { getDataContent } from "@/lib/services/richtext-references.service";
 import { classNames } from "@/utils/functions";
 
 const CustomPage: NextPageWithLayout = (props: any) => {
-  const { blocksCollection, content, enableHeaderPrecedence, showHeader, __typename, sys } = props;
+  const { name, promoTitle, blocksCollection, content, enableHeaderPrecedence, showHeader, __typename, sys } = props;
   const __Breadcrumbs = getBreadcrumbs(props);
   return (
     <div className={classNames(
       "flex",
       enableHeaderPrecedence && showHeader ? "flex-col-reverse" : "flex-col"
     )}>
+      {!showHeader && <h1 className="sr-only">{promoTitle ?? name}</h1>}
       {blocksCollection?.items?.length > 0 && (
         <div className="overflow-hidden">
           <div className="main-container">

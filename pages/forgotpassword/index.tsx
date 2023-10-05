@@ -133,6 +133,7 @@ const ForgotPassword = () => {
   return (
     <>
       <div className="overflow-hidden">
+        <h1 className="sr-only">Recuperar contraseña</h1>
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
           <section className="block w-1/2 py-12 m-auto">

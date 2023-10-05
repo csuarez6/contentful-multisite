@@ -171,6 +171,7 @@ const CallbackPage = () => {
   return (
     <>
       <div className="overflow-hidden">
+        <h1 className="sr-only">Callback Nuevo Punto</h1>
         <div className="main-container">
           <Breadcrumbs ctaCollection={breadcrumbs} />
           <section className="section">

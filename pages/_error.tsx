@@ -8,7 +8,7 @@ import ErrorBlock from "@/components/blocks/error-block/ErrorBlock";
 
 const CustomErrorComponent = () => {
   return (
-      <ErrorBlock {...mocksErrorBlockprops.data}/>
+    <ErrorBlock {...mocksErrorBlockprops.data} />
   );
 };
 

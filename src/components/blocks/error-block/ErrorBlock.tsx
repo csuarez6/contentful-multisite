@@ -6,6 +6,7 @@ import React from 'react';
 const ErrorBlock: React.FC<IPromoBlock> = ({ title, subtitle, links }) => {
     return (
         <section className='h-[525px] flex items-center justify-center bg-[#FFFFFF]'>
+            <h1 className='sr-only'>Página de Error</h1>
             <div className='flex flex-col 2md:flex-row items-center gap-[42px]'>
                 <div className='text-[#1C508D] font-bold text-[127px] flex'>
                     <p className='leading-none'>

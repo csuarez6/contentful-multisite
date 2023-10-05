@@ -181,6 +181,7 @@ const ResetPassword = () => {
 
   return (
     <div className="overflow-hidden">
+      <h1 className="sr-only">Reestablecer contraseña</h1>
       <div className="main-container">
         {/* waiting info */}
         {!data && !error && (
