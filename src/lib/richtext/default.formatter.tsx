@@ -99,9 +99,7 @@ const defaultFormatOptions: Options = {
 
       return (
         <a
-          className={`text-violet-500 underline ${
-            isButton ? "inline-cta-button" : ""
-          }`}
+          className={`text-violet-500 underline ${isButton ? "inline-cta-button" : ""}`}
           href={node.data.uri}
           target="_blank"
           rel="noreferrer"
@@ -140,9 +138,7 @@ const defaultFormatOptions: Options = {
 
       return (
         <a
-          className={`text-violet-500 underline ${
-            isButton ? "inline-cta-button" : ""
-          }`}
+          className={`text-violet-500 underline ${isButton ? "inline-cta-button" : ""}`}
           href={node.data.target.url}
           target="_blank"
           rel="noreferrer"
@@ -154,11 +150,11 @@ const defaultFormatOptions: Options = {
   },
   renderMark: {
     [MARKS.CODE]: (node) => {
-      return(
+      return (
         <div className="modal-body">
-             <span dangerouslySetInnerHTML={rawMarkup(node)} />
+          <span dangerouslySetInnerHTML={rawMarkup(node)} />
         </div>
-    );
+      );
     },
   },
 };
