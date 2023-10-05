@@ -23,18 +23,58 @@ const data: IForm = {
     modal: MocksModalSuccessProps.data,
     selectOptions: [
         {
-            text: 'Seleccione un tipo de documento',
-            value: ''
+            text: "Seleccione un tipo de documento",
+            value: "",
         },
         {
-            text: 'Cedula',
-            value: 'cedula'
+            "value": "registroCivilDeNacimiento",
+            "text": "Registro civil de nacimiento"
         },
         {
-            text: 'Pasaporte',
-            value: 'pasaporte'
+            "value": "tarjetaDeIdentidad",
+            "text": "Tarjeta de Identidad"
         },
-    ]
+        {
+            "value": "cedula",
+            "text": "Cédula de ciudadanía"
+        },
+        {
+            "value": "tarjetaDeExtranjeria",
+            "text": "Tarjeta de extranjeria"
+        },
+        {
+            "value": "cedulaDeExtranjeria",
+            "text": "Cédula de extranjeria"
+        },
+        {
+            "value": "pasaporte",
+            "text": "Pasaporte"
+        },
+        {
+            "value": "documentoIdentificaciónExtranjero",
+            "text": "Documento identificación extranjero"
+        },
+        {
+            "value": "sinIdentificaciónDelExterior",
+            "text": "Sin identificación del exterior"
+        },
+        {
+            "value": "pep",
+            "text": "PEP"
+        },
+        {
+            "value": "nifDelExtranjero",
+            "text": "NIF del extranjero"
+        },
+        {
+            "value": "nuip",
+            "text": "NUIP"
+        },
+        {
+            "value": "nit",
+            "text": "Nit"
+        },
+    ],
 };
 
 export const mockSignUpFormsProps = {

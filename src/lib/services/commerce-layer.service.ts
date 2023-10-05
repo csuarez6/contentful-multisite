@@ -175,7 +175,7 @@ export const createCustomer = async ({
   try {
     const merchantToken = await getMerchantToken();
     if (merchantToken.error) throw new Error(merchantToken.message);
-    if (!validatePassWordsCharacters(password)) throw new Error("Error - password is invalid");
+    if (!validatePassWordsCharacters(password)) throw new Error("Password is invalid");
     const cl = await getCommerlayerClient(merchantToken);
     await cl.customers.create({
       email: email,
@@ -263,7 +263,7 @@ export const updateCustomerResetPwd = async (
   resetToken: string
 ) => {
   try {
-    if (!validatePassWordsCharacters(customerPWD)) return { status: 401, error: "Error - password is invalid" };
+    if (!validatePassWordsCharacters(customerPWD)) return { status: 401, error: "Password is invalid" };
     const cl = await getCLAdminCLient();
     const updateCustomerRPwd = await cl.customer_password_resets.update({
       id: tokenID,
@@ -444,7 +444,7 @@ export const updatePassWord = async (
       });
       if (response) return { status: 200, data: "password is update" };
     }
-    return { status: 401, data: "password is invalid" };
+    return { status: 401, data: "Password is invalid" };
   } catch (error) {
     console.error("Error updating password", error);
     return { status: 401, error: error };

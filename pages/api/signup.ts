@@ -25,7 +25,6 @@ const validate = (
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const isValidReCaptcha = await reCaptchaService.validate(req.body.tokenReCaptcha);
-
         if (!isValidReCaptcha) {
             res.status(400).json({
                 success: false,
@@ -42,7 +41,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         await createCustomer(req.body);
         res.status(201).json({ success: true, data: 'Usuario creado con exito'});
     } catch (error) {
-        res.status(400).json(error);
+        console.error("Error in signup handler: ", error.message);
+        res.status(400).json({ success: false, data: error.message });
     }
 };
 
