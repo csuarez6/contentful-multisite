@@ -1,13 +1,13 @@
-import CommerceLayer, { Address, CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from '@commercelayer/sdk';
+import CommerceLayer, { Address, CommerceLayerClient, ExternalPayment, LineItem, Market, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import jwtDecode from "jwt-decode";
 import {
   getCustomerToken,
   getIntegrationToken,
   getSalesChannelToken,
 } from "@commercelayer/js-auth";
-import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from '@/constants/checkout.constants';
-import { ExternalPayments } from '@commercelayer/sdk/lib/cjs/api';
-import { sleep } from '@/utils/functions';
+import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from "@/constants/checkout.constants";
+import { ExternalPayments } from "@commercelayer/sdk/lib/cjs/api";
+import { sleep } from "@/utils/functions";
 
 export interface ICustomer {
   name: string;
@@ -174,16 +174,10 @@ export const createCustomer = async ({
 }: ICustomer) => {
   try {
     const merchantToken = await getMerchantToken();
-    if (merchantToken.error) {
-      return {
-        status: 400,
-        error: merchantToken.data,
-        message: merchantToken.message
-      };
-    }
+    if (merchantToken.error) throw new Error(merchantToken.message);
+    if (!validatePassWordsCharacters(password)) throw new Error("Error - password is invalid");
     const cl = await getCommerlayerClient(merchantToken);
-
-    const createCustomer = await cl.customers.create({
+    await cl.customers.create({
       email: email,
       password: password,
       metadata: {
@@ -197,10 +191,8 @@ export const createCustomer = async ({
         notifications: notificate,
       },
     });
-    return { status: 201, ...createCustomer }; // this will return the created resource object
   } catch (error) {
-    console.error("Error - Customer Service: ", error);
-    return { status: error.status, error };
+    throw new Error(error);
   }
 };
 
@@ -271,6 +263,7 @@ export const updateCustomerResetPwd = async (
   resetToken: string
 ) => {
   try {
+    if (!validatePassWordsCharacters(customerPWD)) return { status: 401, error: "Error - password is invalid" };
     const cl = await getCLAdminCLient();
     const updateCustomerRPwd = await cl.customer_password_resets.update({
       id: tokenID,
@@ -358,7 +351,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     let reservation = 0;
     reservation = sku?.stock_items?.find(
       (p) => p.stock_location.reference === "gasodomesticos"
-    )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
+      )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
 
     if (sku) {
       product = {
@@ -390,8 +383,8 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 
         productsQuantityGasodomestico:
           Number(sku?.stock_items?.find(
-            (p) => p.stock_location.reference === "gasodomesticos"
-          )?.quantity) - reservation ?? 0,
+              (p) => p.stock_location.reference === "gasodomesticos"
+            )?.quantity) - reservation ?? 0,
         productsQuantityVantiListo:
           sku?.stock_items?.find(
             (p) => p.stock_location.reference === "vantiListo"
@@ -414,22 +407,17 @@ export const getCommercelayerProductPrice = async (skuCode: string, market: Mark
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
-        include: [
-          "prices",
-          "prices.price_list"
-        ],
+        include: ["prices", "prices.price_list"],
         fields: {
           skus: ["id", "prices"],
-          prices: ["formatted_compare_at_amount", "price_list"]
-        }
-
+          prices: ["formatted_compare_at_amount", "price_list"],
+        },
       })
     ).first();
 
     prices = sku.prices.find((price) => {
       return price.price_list?.name === market.price_list.name;
     });
-
   } catch (error) {
     console.error("Error retrieving SKU: ", error);
   }
@@ -447,7 +435,7 @@ export const updatePassWord = async (
       email: user,
       password: customerPWD,
     });
-    if (validPassword?.status === 200) {
+    if (validPassword?.status === 200 && !!validatePassWordsCharacters(newPWD)) {
       const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
       const cl = await getCommerlayerClient(validPassword.access_token);
       const response = await cl.customers.update({
@@ -464,12 +452,20 @@ export const updatePassWord = async (
 };
 
 export const getReformatedOrder = (order: Order) => {
-  const adjustmentsList = (order.line_items).filter(item => item.item_type === "adjustments");
-  const productsList = (order.line_items)
-    .filter(item => item.item_type === "skus")
+  const adjustmentsList = order.line_items.filter((item) => item.item_type === "adjustments");
+  const productsList = order.line_items
+    .filter((item) => item.item_type === "skus")
     .map((item) => {
-      const installAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "installation");
-      const warrantyAdjItem = (adjustmentsList).filter(adjItem => adjItem.item.metadata.sku_id === item.id && adjItem.item.metadata.type === "warranty");
+      const installAdjItem = adjustmentsList.filter(
+        (adjItem) =>
+          adjItem.item.metadata.sku_id === item.id &&
+          adjItem.item.metadata.type === "installation"
+      );
+      const warrantyAdjItem = adjustmentsList.filter(
+        (adjItem) =>
+          adjItem.item.metadata.sku_id === item.id &&
+          adjItem.item.metadata.type === "warranty"
+      );
       item["installlation_service"] = installAdjItem;
       item["warranty_service"] = warrantyAdjItem;
       return item;
@@ -479,44 +475,65 @@ export const getReformatedOrder = (order: Order) => {
 };
 
 /** updateOrderAdminService */
-export const updateOrderAdminService = async (idOrder?: string, defaultOrderParams?: QueryParamsRetrieve, checkUpdates?: boolean) => {
+export const updateOrderAdminService = async (
+  idOrder?: string,
+  defaultOrderParams?: QueryParamsRetrieve,
+  checkUpdates?: boolean
+) => {
   try {
     const productUpdates = [];
     const response = { status: 200 };
 
     const client = await getCLAdminCLient();
-    const formatedOrder = getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams));
+    const formatedOrder = getReformatedOrder(
+      await client.orders.retrieve(idOrder, defaultOrderParams)
+    );
 
     if (checkUpdates) {
-      await Promise.all(formatedOrder.line_items.map(async (line_item: LineItem) => {
-        try {
-          const productCL = await getCommercelayerProduct(line_item.sku_code);
-          if (productCL?.priceGasodomestico !== line_item.formatted_unit_amount) {
-            await deleteLineItem(client, line_item);
-            productUpdates.push({
-              id: line_item.id,
-              sku_code: line_item.sku_code,
-              name: line_item.name,
-              type: PRICE_VALIDATION_ID
-            });
-          } else if (productCL.productsQuantityGasodomestico < line_item.quantity) {
-            await deleteLineItem(client, line_item);
-            productUpdates.push({
-              id: line_item.id,
-              sku_code: line_item.sku_code,
-              name: line_item.name,
-              type: STOCK_VALIDATION_ID
-            });
+      await Promise.all(
+        formatedOrder.line_items.map(async (line_item: LineItem) => {
+          try {
+            const productCL = await getCommercelayerProduct(line_item.sku_code);
+            if (
+              productCL?.priceGasodomestico !== line_item.formatted_unit_amount
+            ) {
+              await deleteLineItem(client, line_item);
+              productUpdates.push({
+                id: line_item.id,
+                sku_code: line_item.sku_code,
+                name: line_item.name,
+                type: PRICE_VALIDATION_ID,
+              });
+            } else if (
+              productCL.productsQuantityGasodomestico < line_item.quantity
+            ) {
+              await deleteLineItem(client, line_item);
+              productUpdates.push({
+                id: line_item.id,
+                sku_code: line_item.sku_code,
+                name: line_item.name,
+                type: STOCK_VALIDATION_ID,
+              });
+            }
+          } catch (err) {
+            console.error(
+              "General error in the checkUpdates section:",
+              err,
+              "line-item:",
+              line_item
+            );
           }
-        } catch (err) {
-          console.error("General error in the checkUpdates section:", err, "line-item:", line_item);
-        }
-
-      }));
+        })
+      );
     }
 
     response["productUpdates"] = productUpdates;
-    response["data"] = productUpdates.length > 0 ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
+    response["data"] =
+      productUpdates.length > 0
+        ? getReformatedOrder(
+            await client.orders.retrieve(idOrder, defaultOrderParams)
+          )
+        : formatedOrder;
 
     return response;
   } catch (error) {
@@ -525,15 +542,43 @@ export const updateOrderAdminService = async (idOrder?: string, defaultOrderPara
   }
 };
 
-export const deleteLineItem = async (client: CommerceLayerClient, line_item: LineItem) => {
-  await client.line_items.delete(line_item.id).catch(err => { console.error("Error deleting the main line item in updateOrderAdminService:", err.errors); });
+export const deleteLineItem = async (
+  client: CommerceLayerClient,
+  line_item: LineItem
+) => {
+  await client.line_items.delete(line_item.id).catch((err) => {
+    console.error(
+      "Error deleting the main line item in updateOrderAdminService:",
+      err.errors
+    );
+  });
 
-  if (line_item["installlation_service"] && line_item["installlation_service"].length > 0) {
-    await client.line_items.delete(line_item["installlation_service"][0].id).catch(err => { console.error("Error deleting the instalation service in updateOrderAdminService:", err.errors); });
+  if (
+    line_item["installlation_service"] &&
+    line_item["installlation_service"].length > 0
+  ) {
+    await client.line_items
+      .delete(line_item["installlation_service"][0].id)
+      .catch((err) => {
+        console.error(
+          "Error deleting the instalation service in updateOrderAdminService:",
+          err.errors
+        );
+      });
   }
 
-  if (line_item["warranty_service"] && line_item["warranty_service"].length > 0) {
-    await client.line_items.delete(line_item["warranty_service"][0].id).catch(err => { console.error("Error deleting the warranty service in updateOrderAdminService:", err.errors); });
+  if (
+    line_item["warranty_service"] &&
+    line_item["warranty_service"].length > 0
+  ) {
+    await client.line_items
+      .delete(line_item["warranty_service"][0].id)
+      .catch((err) => {
+        console.error(
+          "Error deleting the warranty service in updateOrderAdminService:",
+          err.errors
+        );
+      });
   }
 };
 
@@ -570,7 +615,9 @@ export const createAdjustmentsService = async ({
 }: IAdjustments) => {
   try {
     const cl = await getCLAdminCLient();
-    const amount_centsFloat = (parseFloat(amount_cents).toFixed(2)).replace(".", "");
+    const amount_centsFloat = parseFloat(amount_cents)
+      .toFixed(2)
+      .replace(".", "");
     const adjustment = await cl.adjustments.create({
       name: name,
       currency_code: currency_code ?? "COP",
@@ -629,11 +676,7 @@ export const getOrdersByEmail = async (customerEmail: string) => {
     const cl = await getCLAdminCLient();
     const orderList = await cl.orders.list({
       fields: {
-        orders: [
-          "id",
-          "number",
-          "created_at",
-        ]
+        orders: ["id", "number", "created_at"],
       },
       filters: { status_eq: "placed", customer_email_eq: customerEmail },
       sort: { created_at: "desc" },
@@ -653,9 +696,7 @@ export const getOrderStatusCl = async (status?: string) => {
     const orderList = await cl.orders.list({
       include: ["payment_source"],
       fields: {
-        orders: [
-          "payment_source"
-        ]
+        orders: ["payment_source"],
       },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },
@@ -683,21 +724,25 @@ export const getOrderByIdCl = async (orderId?: string) => {
 // Función para obtener los nombres de los items de una orden en formato "(cantidad) nombreItem"
 export const getNameQuantityOrderItems = (order: Order): string => {
   try {
-    let itemNames = '';
-    order.line_items?.forEach(item => {
-      if (item.item_type === 'skus' || item.item_type === 'adjustments') {
-        itemNames += `${itemNames !== '' ? ', ' : ''}(${item.quantity}) ${item.name}`;
+    let itemNames = "";
+    order.line_items?.forEach((item) => {
+      if (item.item_type === "skus" || item.item_type === "adjustments") {
+        itemNames += `${itemNames !== "" ? ", " : ""}(${item.quantity}) ${
+          item.name
+        }`;
       }
     });
     return itemNames;
   } catch (error) {
     console.error("Error getNameQuantityOrderItems", error);
-    return '';
+    return "";
   }
 };
 
 // Función para validar si un pago es de tipo ExternalPayment
-export const isExternalPayment = (paymentSource: any): paymentSource is ExternalPayment => {
+export const isExternalPayment = (
+  paymentSource: any
+): paymentSource is ExternalPayment => {
   return paymentSource.type === ExternalPayments.TYPE;
 };
 
@@ -712,19 +757,26 @@ export const formatDate = (date: string): string => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true
+      hour12: true,
     }).format(new Date(date));
 
     return formattedDate;
   } catch (error) {
     console.error(error);
-    return '';
+    return "";
   }
 };
 
 // Función para formatear una dirección
 export const formatAddress = (address: Address): string => {
-  return address.line_1 + (address.line_2 ? ', ' + address.line_2 : '') + ', ' + address.city + ', ' + address.state_code;
+  return (
+    address.line_1 +
+    (address.line_2 ? ", " + address.line_2 : "") +
+    ", " +
+    address.city +
+    ", " +
+    address.state_code
+  );
 };
 
 // Función para obtener los métodos de envio de una orden
@@ -735,5 +787,11 @@ export const getShippingMethods = (order: Order): string => {
       shippingMethods.push(shipment.shipping_method?.name);
     }
   });
-  return shippingMethods.join(', ');
+  return shippingMethods.join(", ");
+};
+
+const validatePassWordsCharacters = (pass) => {
+  //eslint-disable-next-line
+  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+  return re.test(pass);
 };

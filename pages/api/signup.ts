@@ -39,14 +39,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             });
         }
 
-        const resp = await createCustomer(req.body);
-        const errorStatus = !resp.error
-            ? 201
-            : resp.error && isNaN(resp.status)
-                ? resp.status
-                : 400;
-
-        res.status(errorStatus).json({ ...resp, method: req.method });
+        await createCustomer(req.body);
+        res.status(201).json({ success: true, data: 'Usuario creado con exito'});
     } catch (error) {
         res.status(400).json(error);
     }
