@@ -140,10 +140,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     setIsActivedModal(false);
   };
 
-  const updateInstallCurrent = (value) => {
-    console.info(value);
-  };
-
   const getShippingPrice = (product) => {
     return shippingMethodGlobal.find((x) => x?.name === product?.item?.shipping_category?.name)?.price_amount_float ?? 0;
   };
@@ -212,7 +208,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           optionsList={[defaultInstallList, ...skusOptions]}
           onEventHandler={servicesHandler}
           installCurrent={posSkuIdService + 1}
-          upInstallCurrent={updateInstallCurrent}
         />
       );
     } else {
@@ -221,7 +216,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           optionsList={[defaultWarrantyList, ...skusOptions]}
           onEventHandler={servicesHandler}
           installCurrent={posSkuIdService + 1}
-          upInstallCurrent={updateInstallCurrent}
           productPrice={productPriceItem}
         />
       );

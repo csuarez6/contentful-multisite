@@ -17,17 +17,14 @@ const Accordion: React.FC<any> = ({
     
     const $content = $panelAccordion.current.querySelectorAll("[data-content-accordion]");
     const $accordion = [];
-    console.info({$content });
     $content.forEach((item, index) => {
       item.style.height = item.firstChild.clientHeight + "px";
       $accordion[index] = false;
     });
     
     window.onresize = () => {
-      $content.forEach((item, index) => {
+      $content.forEach((item, _index) => {
         item.style.height = item.firstChild.clientHeight + "px";
-        if(index == 1)
-          console.info(item.scrollHeight);
       });
     };
 

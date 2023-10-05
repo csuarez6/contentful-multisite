@@ -447,7 +447,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                 )
                                 : formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))
                               }
-                              {/* {formatPrice(showProductTotal(product?.total_amount_float, product?.["installlation_service"], product?.["warranty_service"]))} */}
                             </span>
                           </div>
                           {/* End Product Subtotal Price */}
@@ -455,16 +454,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                       </div>
                     </div>
                   ))}
-                  {/* <div className="grid grid-cols-2 mt-2 rounded">
-                    <p className="font-semibold text-left">Costo de envío</p>
-                    <span className="font-semibold text-right">
-                      {
-                        (asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary'))
-                          ? (hasShipment) ? "$20.000,00" : "$0"
-                          : "-"
-                      }
-                    </span>
-                  </div> */}
                   <div className="grid grid-cols-1 rounded">
                     <p className="text-xs text-gray-600">
                       El costo de envío depende de la cobertura de Vanti y la marca de cada producto, de acuerdo a esto se realiza el cálculo del envío
@@ -473,15 +462,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <div className="grid grid-cols-2 mt-2 rounded">
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
-                      {/* {order?.formatted_total_amount_with_taxes} */}
                       {(((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment) || (asPath.startsWith("/checkout/pse/purchase-order")&& hasShipment))
                         ?
                         formatPrice(
-                          order?.total_amount_with_taxes_float +
+                          order?.total_amount_float +
                           shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
                         )
                         :
-                        (order?.formatted_total_amount_with_taxes)?.split(',')[0]
+                        (order?.formatted_total_amount)?.split(',')[0]
                       }
                     </span>
                   </div>

@@ -57,7 +57,6 @@ export const createP2PRequest = async (orderId: string, payment: IP2PPayment, ip
       body: JSON.stringify(bodyRequest)
     });
     const data = await response.json() as IP2PRequest;
-    console.info({ data });
     return data;
   } catch (error) {
     console.error(error);
@@ -79,7 +78,6 @@ export const getP2PRequestInformation = async (requestId: string): Promise<IP2PR
       body: JSON.stringify(bodyRequest)
     });
     const data = await response.json() as IP2PRequestInformation;
-    console.info({ data });
     return data;
   } catch (error) {
     console.error(error);

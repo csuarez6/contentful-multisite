@@ -61,7 +61,7 @@ const columns: OrderListColumn[] = [
     },
     {
         Header: 'Monto',
-        accessor: 'formatted_total_amount_with_taxes',
+        accessor: 'formatted_total_amount',
         className: colClassName,
         titleClassName,
     },
@@ -243,7 +243,7 @@ const DashboardOrders = () => {
                                                 className="py-2 text-sm align-top border-b"
                                             />
                                             <OrderListRow
-                                                field="formatted_total_amount_with_taxes"
+                                                field="formatted_total_amount"
                                                 className="py-2 text-sm font-bold align-top border-b text-blue-dark"
                                             />
                                             <OrderListPaginationInfo className="text-sm text-blue-dark" />

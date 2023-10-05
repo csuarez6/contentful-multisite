@@ -84,8 +84,7 @@ const ForgotPassword = () => {
             children: <ModalContent />,
             promoIcon: "check",
             promoTitle: "Recuperar contraseña",
-            subtitle:
-              "Estimado usuario, se han enviado las instrucciones a su correo electrónico para recuperar la contraseña.",
+            subtitle: "Si el correo ingresado existe, las instrucciones para recuperar su contraseña han sido enviadas.",
           });
           gaEventForm({
             category: "Password",

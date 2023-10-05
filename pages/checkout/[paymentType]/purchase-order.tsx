@@ -71,9 +71,7 @@ const CheckoutPurchase = () => {
                         setBillingAddress(orderData.data["billing_address"]);
                         setShippingAddress(orderData.data["shipping_address"]);
                         setStatusError(false);
-                        console.info({ orderData });
                     } else {
-                        console.info('status', orderData["status"]);
                         setStatusError(true);
                     }
                     setIsLoading(false);

@@ -20,8 +20,8 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_shipping_amount",
       "formatted_total_tax_amount",
       "formatted_gift_card_amount",
-      "formatted_total_amount_with_taxes",
-      "total_amount_with_taxes_float",
+      "formatted_total_amount",
+      "total_amount_float",
       "line_items",
       "customer",
       "metadata",
@@ -617,9 +617,7 @@ export const useCommerceLayer = () => {
           },
         },
         DEFAULT_ORDER_PARAMS
-      ).then((update) => {
-        console.info(update);
-      }).catch(err => console.error('setPaymentMethod', err));
+      ).catch(err => console.error('setPaymentMethod', err));
     },
     [orderId]
   );

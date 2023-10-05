@@ -505,15 +505,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <div className="grid grid-cols-2 mt-2 rounded">
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
-                      {/* {order?.formatted_total_amount_with_taxes} */}
                       {((asPath.startsWith('/checkout/pse/addresses') || asPath.startsWith('/checkout/pse/summary')) && hasShipment)
                         ?
                         formatPrice(
-                          order?.total_amount_with_taxes_float +
+                          order?.total_amount_float +
                           shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
                         )
                         :
-                        (order?.formatted_total_amount_with_taxes)?.split(',')[0]
+                        (order?.formatted_total_amount)?.split(',')[0]
                       }
                     </span>
                   </div>

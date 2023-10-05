@@ -31,12 +31,7 @@ import {
   TaxesAmount,
   GiftCardAmount,
   TotalAmount,
-  OrderNumber,
-  PaymentMethodsContainer,
-  PaymentSource,
-  PaymentSourceBrandIcon,
-  PaymentSourceDetail,
-  PaymentSourceBrandName,
+  OrderNumber
 } from "@commercelayer/react-components";
 import {
   UserCircleIcon,
@@ -76,8 +71,6 @@ const subNavigation = [
 ];
 
 const handlerStatusColor = (status: string) => {
-  console.log('status', status);
-  
   switch (status) {
     case "placed": // Orders
     case "approved": // Orders
@@ -105,26 +98,6 @@ const getStatusTranslations = (value: string) => {
       return "Cancelado";
     case "shipped":
       return "Enviado";
-    default:
-      return value || "";
-  }
-};
-
-const getTranslations = (value: string) => {
-  switch (value) {
-    case "Stripe Payment":
-    case "Adyen Payment":
-    case "Braintree Payment":
-    case "Checkout Com Payment":
-      return "creditCard";
-
-    case "Paypal Payment":
-      return "PayPal";
-
-    case "Wire transfer":
-    case "Wire Transfer":
-      return "wireTransfer";
-
     default:
       return value || "";
   }
@@ -216,58 +189,6 @@ const Parcel = (): JSX.Element => {
         </div>
       </div>
     </>
-  );
-};
-
-const PaymentSourceRow = (props: any): JSX.Element => {
-  const name = props?.payment?.name;
-  const date = new Date(props?.payment?.updated_at).toLocaleDateString();
-  return (
-    <div className="rounded flex bg-gray-50 items-center px-4 h-[57px]">
-      <div>
-        <PaymentSourceBrandIcon width={36} />
-      </div>
-      <div className="flex flex-col w-full ml-6 text-sm">
-        <PaymentSourceDetail type="last4">
-          {(props) => {
-            if (props.text === null || props.text.length === 0)
-              return (
-                <div className="flex gap-1">
-                  <PaymentSourceBrandName>
-                    {(props) => {
-                      return props?.brand ? (
-                        <div className="font-bold break-all">
-                          {getTranslations(props?.brand)}
-                        </div>
-                      ) : null;
-                    }}
-                  </PaymentSourceBrandName>
-                </div>
-              );
-            return (
-              <>
-                <div className="flex gap-1">
-                  <PaymentSourceBrandName>
-                    {(props) => {
-                      return props?.brand ? (
-                        <div className="font-bold break-all">
-                          {getTranslations(props?.brand)}
-                        </div>
-                      ) : null;
-                    }}
-                  </PaymentSourceBrandName>
-                  <div className="font-bold break-all">
-                    {name}
-                  </div>
-                </div>
-                {/* <PaymentSourceCreditCardExpires variant="row" /> */}
-                <span>{date}</span>
-              </>
-            );
-          }}
-        </PaymentSourceDetail>
-      </div>
-    </div>
   );
 };
 

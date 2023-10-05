@@ -59,8 +59,7 @@ const SignUp = () => {
     })
       .then(async (response) => {
         const resp = await response.json();
-        let msgError =
-          "Ha ocurrido un error o el usuario ya existe, por favor intente nuevamente.";
+        let msgError = "Se ha producido un error o el usuario ya se encuentra registrado. Por favor vuelva a intentar.";
         if (response.status === 201) {
           setDataModal({
             children: <ModalContent statusSubmit={true} />,

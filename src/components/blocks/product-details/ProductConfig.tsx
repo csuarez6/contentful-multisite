@@ -139,7 +139,7 @@ export const ModalIntall: React.FC<any> = ({
                   <li
                     key={item.id}
                     onClick={() => {
-                      upInstallCurrent(index);
+                      if (upInstallCurrent) upInstallCurrent(index);
                       setChecked(index);
                     }}
                   >
@@ -215,7 +215,7 @@ export const ModalWarranty: React.FC<any> = ({
                   <li
                     key={item.id}
                     onClick={() => {
-                      upInstallCurrent(index);
+                      if (upInstallCurrent) upInstallCurrent(index);
                       setChecked(index);
                     }}
                   >
