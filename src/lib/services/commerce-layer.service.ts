@@ -175,7 +175,6 @@ export const createCustomer = async ({
   try {
     const merchantToken = await getMerchantToken();
     if (merchantToken.error) throw new Error(merchantToken.message);
-    if (!validatePassWordsCharacters(password)) throw new Error("Password is invalid");
     const cl = await getCommerlayerClient(merchantToken);
     await cl.customers.create({
       email: email,
@@ -263,7 +262,6 @@ export const updateCustomerResetPwd = async (
   resetToken: string
 ) => {
   try {
-    if (!validatePassWordsCharacters(customerPWD)) return { status: 401, error: "Password is invalid" };
     const cl = await getCLAdminCLient();
     const updateCustomerRPwd = await cl.customer_password_resets.update({
       id: tokenID,
@@ -434,19 +432,16 @@ export const updatePassWord = async (
       email: user,
       password: customerPWD,
     });
-    if (validPassword?.status === 200 && !!validatePassWordsCharacters(newPWD)) {
-      const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
-      const cl = await getCommerlayerClient(validPassword.access_token);
-      const response = await cl.customers.update({
-        id: owner.id,
-        password: newPWD,
-      });
-      if (response) return { status: 200, data: "password is update" };
-    }
-    return { status: 401, data: "Password is invalid" };
+    if (validPassword?.status !== 200) throw new Error("Error al actualizar la contraseña");
+    const { owner } = jwtDecode(validPassword.access_token) as JWTProps;
+    const cl = await getCommerlayerClient(validPassword.access_token);
+    await cl.customers.update({
+      id: owner.id,
+      password: newPWD,
+    });
   } catch (error) {
     console.error("Error updating password", error);
-    return { status: 401, error: error };
+    throw new Error("Error al actualizar el password");
   }
 };
 
@@ -787,10 +782,4 @@ export const getShippingMethods = (order: Order): string => {
     }
   });
   return shippingMethods.join(", ");
-};
-
-const validatePassWordsCharacters = (pass) => {
-  //eslint-disable-next-line
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-  return re.test(pass);
 };

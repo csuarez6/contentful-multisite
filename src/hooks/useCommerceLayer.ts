@@ -718,16 +718,6 @@ export const useCommerceLayer = () => {
     [orderId, order]
   );
 
-  const checkCurrentPrices = useCallback(() => {
-    console.warn(order);
-    return [
-      {
-        sku: "Therm 1400 F 12 lt",
-        productName: "Calendator 12LT Tiro Forzado THERM1400F Bosh",
-      }
-    ];
-  }, [order]);
-
   const onRecaptcha = async (e) => {
     try {
       if (!e || e === "not authorized") {
@@ -797,7 +787,6 @@ export const useCommerceLayer = () => {
     validateExternal,
     getSkuList,
     changeItemService,
-    checkCurrentPrices,
     deleteItemService,
     upgradeTimePay,
     updateIsPaymentProcess,

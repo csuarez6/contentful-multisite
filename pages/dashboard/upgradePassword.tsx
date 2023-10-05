@@ -18,10 +18,9 @@ import { useEffect, useState } from "react";
 import Icon from "@/components/atoms/icon/Icon";
 import Textbox from "@/components/atoms/input/textbox/TextBox";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ref, string } from "yup";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import { newPassSchema } from "@/schemas/newPass";
 
 const subNavigation = [
   { name: "Perfíl", href: "/dashboard", icon: UserCircleIcon, current: false },
@@ -51,24 +50,6 @@ interface ITemsForm {
   confirmNewPassword?: string;
   user?: string;
 }
-
-const schema = yup.object({
-  newPassword: string()
-    .required("Dato Requerido")
-    .matches(
-      //eslint-disable-next-line
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
-    ),
-  confirmNewPassword: string()
-    .required("Dato Requerido")
-    .oneOf([ref("newPassword")], "Contraseñas no coinciden")
-    .matches(
-      //eslint-disable-next-line
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-      "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
-    ),
-});
 
 const DashboardUpgradePassword = () => {
   const { status, data: session } = useSession();
@@ -105,7 +86,7 @@ const DashboardUpgradePassword = () => {
     formState: { errors, isValid },
   } = useForm<ITemsForm>({
     mode: "onChange",
-    resolver: yupResolver(schema),
+    resolver: yupResolver(newPassSchema),
     shouldUnregister: true,
     defaultValues: customerDataForm,
   });
@@ -120,10 +101,8 @@ const DashboardUpgradePassword = () => {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((response) => response.json())
-      .then((json) => {
-        const { status } = json;
-        if (status === 200) {
+      .then((response) => {
+        if (response.status === 201) {
           setErrorMessage("Datos guardados con éxito!");
           setShowAlert({
             show: true,

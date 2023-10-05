@@ -1,14 +1,8 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { string, object } from 'yup';
 import { ObjectShape, OptionalObjectSchema } from 'yup/lib/object';
 import { updateCustomerResetPwd } from '@/lib/services/commerce-layer.service';
 import { sendEmail } from '@/lib/services/mailer.service';
-
-const schema = object({
-    tID: string(),
-    resetT: string(),
-    password: string(),
-});
+import { recoveryPass } from '@/schemas/recoveryPass';
 
 const validate = (
     schema: OptionalObjectSchema<ObjectShape>,
@@ -19,7 +13,8 @@ const validate = (
             try {
                 req.body = await schema.validate(req.body, { abortEarly: false, stripUnknown: true });
             } catch (error) {
-                return res.status(400).json(error);
+                console.error("Error reseting a new password", error);
+                return res.status(400).json({ error: "Petición inválida, los valores enviados no son consistentes." });
             }
         } else {
             return res.status(400).json({ error: "Método no existe." });
@@ -50,4 +45,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 };
 
-export default validate(schema, handler);
+export default validate(recoveryPass, handler);

@@ -13,7 +13,8 @@ const validate = (
             try {
                 req.body = await schema.validate(req.body, { abortEarly: false, stripUnknown: true });
             } catch (error) {
-                return res.status(400).json(error);
+                console.error('error validate signup', error);
+                return res.status(400).json({ error: "Petición inválida, los valores enviados no son consistentes." });
             }
         } else {
             return res.status(400).json({ error: "Método de petición invalido." });
@@ -37,7 +38,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
             });
         }
-
         await createCustomer(req.body);
         res.status(201).json({ success: true, data: 'Usuario creado con exito'});
     } catch (error) {
