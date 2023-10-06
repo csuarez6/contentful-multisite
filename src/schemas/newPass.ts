@@ -2,6 +2,8 @@ import * as yup from "yup";
 import { ref, string } from "yup";
 
 export const newPassSchema = yup.object({
+    user: string(),
+    password: string(),
     newPassword: string()
         .required("Dato Requerido")
         .matches(
