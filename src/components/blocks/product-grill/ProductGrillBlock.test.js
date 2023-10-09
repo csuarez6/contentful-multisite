@@ -1,22 +1,16 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import ProductGrill from './ProductGrill';
-import { mockProductGrillProps } from './ProductGrill.mocks'
+import React from "react";
+import { render } from "@testing-library/react";
+import ProductGrill from "./ProductGrill";
+import { mockProductGrillProps } from "./ProductGrill.mocks";
 
-describe('ProductGrillBlock', () => {
+describe("ProductGrillBlock", () => {
+  test("renders", () => {
+    render(<ProductGrill {...mockProductGrillProps.data} />);
+  });
+});
 
-    test('renders', () => {
-        render(<ProductGrill {...mockProductGrillProps.data} />);
-
-    });
-
-})
-
-describe('ProductGrillBlock dataListedContents', () => {
-
-    test('renders', () => {
-        render(<ProductGrill {...mockProductGrillProps.dataListedContents} />);
-
-    });
-
-})
+describe("ProductGrillBlock dataListedContents", () => {
+  test("renders", () => {
+    render(<ProductGrill {...mockProductGrillProps.dataListedContents} />);
+  });
+});

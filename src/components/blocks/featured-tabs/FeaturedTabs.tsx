@@ -102,11 +102,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                 "flex w-full justify-start",
                 view?.alignTitle !== "Izquierda" && "gap-[10px]"
               )}>
-                {featuredContentsCollection?.items?.map((tab) => (
+                {featuredContentsCollection?.items?.map((tab, index) => (
                   isCustomLink(tab)
                     ? (
                       <CustomLink
-                        key={`${tab.name}_tab`}
+                        key={`${tab.name}_tab_${index}`}
                         content={tab}
                         linkClassName="flex h-full"
                         className={classNames(
@@ -136,7 +136,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                       </CustomLink>
                     ) : (
                       <Tab
-                        key={`${tab.name}_tab`}
+                        key={`${tab.name}_tab_${index}`}
                         as={Fragment}
                       >
                         {({ selected }) => (
@@ -166,10 +166,10 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
 
           <div className="relative">
             <Tab.Panels as={Fragment}>
-              {featuredContentsCollection?.items?.map((collection) => {
+              {featuredContentsCollection?.items?.map((collection, index) => {
                 return (!isCustomLink(collection) && (
                   <Tab.Panel
-                    key={`${collection.name}_content`}
+                    key={`${collection.name}_content_${index}`}
                     className="focus:outline-none"
                   >
                     <Transition
@@ -197,11 +197,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                           )}
                         >
                           {collection?.featuredContentsCollection?.items?.map(
-                            (item) => {
+                            (item, i) => {
                               if (item) {
                                 return (
                                   <div
-                                    key={item?.name}
+                                    key={`${item?.name}_${i}_${index}`}
                                     className="grid grid-cols-1"
                                   >
                                     <ListWithIcons {...item} />
@@ -222,7 +222,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
       )}
       {ctaCollection?.items?.length > 0 && (
         <div className="flex justify-center gap-3">
-          {ctaCollection.items.map((cta) => {
+          {ctaCollection.items.map((cta, index) => {
             const hasBlocks = cta?.content?.json?.content?.some((el) => {
               return ["embedded-entry-block", "embedded-asset-block"].includes(
                 el.nodeType
@@ -236,12 +236,11 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
               );
             }
             return (
-              <>
+              <Fragment key={`${cta.name}_${index}`}>
                 {cta.linkView !== "Modal" &&
                   (cta.externalLink || cta.internalLink) && (
                     <CustomLink
                       content={cta}
-                      key={cta.name}
                       className={classNames(
                         "button w-fit",
                         getButtonType(view.buttonType ?? "Primario")
@@ -252,7 +251,6 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                   )}
                 {cta.linkView === "Modal" && (
                   <ButtonAtom
-                    key={cta.name}
                     type="Modal"
                     classes={classNames(
                       "button w-fit",
@@ -282,7 +280,7 @@ const FeaturedTabsBlock: React.FC<IPromoBlock> = ({
                     {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
                   </CustomLink>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </div>

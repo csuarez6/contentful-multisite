@@ -86,6 +86,7 @@ const Verify = ({ handleNext, formData, setFormData, productData, quantity, setQ
                   <div className="relative flex flex-row w-full h-full mt-1 bg-transparent rounded-lg">
                     <button
                       type="button"
+                      data-testid="minus"
                       className="w-20 h-full border border-r-0 outline-none cursor-pointer rounded-l-3xl"
                       onClick={() => {
                         if (quantity > 1) setQuantity(quantity - 1);
@@ -102,6 +103,7 @@ const Verify = ({ handleNext, formData, setFormData, productData, quantity, setQ
                     />
                     <button
                       type="button"
+                      data-testid="plus"
                       className="w-20 h-full border border-l-0 cursor-pointer rounded-r-3xl"
                       onClick={() => {
                         if (parseInt(productData.productsQuantity) > quantity) setQuantity(quantity + 1);
@@ -137,7 +139,7 @@ const Verify = ({ handleNext, formData, setFormData, productData, quantity, setQ
           </div>
 
           <div className="w-full flex justify-end">
-            <button type="submit" className="w-fit button button-primary">
+            <button type="submit" data-testid="submit" className="w-fit button button-primary">
               Continuar
             </button>
           </div>

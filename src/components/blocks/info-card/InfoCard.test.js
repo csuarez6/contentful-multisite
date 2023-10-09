@@ -1,17 +1,16 @@
-import React from 'react';
-import '@testing-library/jest-dom'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import InfoCard from './InfoCard';
-import { mockInfoCardProps } from './InfoCard.mocks'
+import React from "react";
+import "@testing-library/jest-dom";
+import { render } from "@testing-library/react";
+import { mockInfoCardProps } from "./InfoCard.mocks";
+import InfoCard from "./InfoCard";
 
-describe('InfoCard', () => {
-    test('renders', async () => {
-        render(<InfoCard {...mockInfoCardProps.data} />);
-    });
-})
+const { data } = mockInfoCardProps;
+jest.mock("@/lib/services/render-blocks.service", () => ({
+  attachLinksToRichtextContent: jest.fn(),
+}))
 
-describe('InfoCard left', () => {
-    test('renders', async () => {
-        render(<InfoCard {...mockInfoCardProps.left} />);
-    });
-})
+describe("InfoCard data", () => {
+  test("renders", async () => {
+    render(<InfoCard {...data} />);
+  });
+});

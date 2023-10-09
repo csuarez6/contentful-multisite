@@ -19,8 +19,8 @@ const ExampleIcons: React.FC<IExampleIcons> = ({ name, dataIcon }) => {
     <div className="p-2">
       <h1>{name}</h1>
       <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 grid-flow-row gap-x-4 gap-y-10">
-        {listIcons.map(item => (
-          <div className="grid gap-4" key={item.icon}>
+        {listIcons.map((item, index) => (
+          <div className="grid gap-4" key={`${item.icon}-${index}`}>
             <p>name: <span className="bg-neutral-200 rounded block"><code>{item.icon}</code></span></p>
             <Icon {...item} />
           </div>

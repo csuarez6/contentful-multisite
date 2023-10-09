@@ -96,9 +96,9 @@ const FeaturedBlock: React.FC<IPromoBlock> = ({
                           : "md:grid-cols-1"
                       )}
                     >
-                      {featuredContentsCollection.items.map((item) => (
+                      {featuredContentsCollection.items.map((item, index) => (
                         <div
-                          key={item.promoTitle}
+                          key={`${item.promoTitle}-${index}`}
                           className={classNames(
                             "flex flex-row gap-6",
                             item.promoTitle ? "items-start" : "items-center"
