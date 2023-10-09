@@ -523,6 +523,21 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <CustomLink
+                                      content={{ urlPaths: ["/dashboard"] }}
+                                      className={classNames(
+                                        active
+                                          ? "bg-gray-100 text-gray-900"
+                                          : "text-blue-dark",
+                                        "block w-full underline py-2"
+                                      )}
+                                    >
+                                      Mi Perfil
+                                    </CustomLink>
+                                  )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <CustomLink
                                       content={{
                                         urlPaths: ["/dashboard/orders"],
                                       }}
@@ -537,38 +552,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                     </CustomLink>
                                   )}
                                 </Menu.Item>
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <CustomLink
-                                      content={{ urlPaths: ["#"] }}
-                                      className={classNames(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-blue-dark",
-                                        "block w-full underline py-2"
-                                      )}
-                                    >
-                                      Mis favoritos
-                                    </CustomLink>
-                                  )}
-                                </Menu.Item>
                               </div>
-                              <hr className="w-full my-3" />
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <CustomLink
-                                    content={{ urlPaths: ["/dashboard"] }}
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-blue-dark",
-                                      "block w-full underline py-2"
-                                    )}
-                                  >
-                                    Mi Perfil
-                                  </CustomLink>
-                                )}
-                              </Menu.Item>
                               <hr className="w-full my-3" />
                               <Menu.Item>
                                 {({ active }) => (

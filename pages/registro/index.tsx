@@ -26,7 +26,7 @@ const ModalContent = ({ modalMsg = "", statusSubmit = false }) => {
         <div className="flex justify-end">
           <CustomLink
             content={{ urlPaths: ["/acceso"] }}
-            linkClassName="button button-primary w-[140px] h-[42px]"
+            linkClassName="button button-primary w-auto h-auto"
           >
             Aceptar
           </CustomLink>
@@ -64,9 +64,7 @@ const SignUp = () => {
           setDataModal({
             children: <ModalContent statusSubmit={true} />,
             promoIcon: "check",
-            promoTitle: "¡Has creado tu cuenta Vanti!",
-            subtitle:
-              "Pronto recibirás en el correo electrónico registrado la confirmación de la creación de tu cuenta y los beneficios a los que tienes acceso.",
+            promoTitle: "¡Has creado tu cuenta Vanti!"
           });
           resultBoolean = true;
         } else {
