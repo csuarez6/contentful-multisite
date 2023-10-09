@@ -43,12 +43,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             message: templateEmail,
             from: "Vanti Soporte <dev@aplyca.com>"
         };
-
-        sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
+        if (resp?.status === 200) sendEmail(clientEmail.to, clientEmail.subject, clientEmail.message, clientEmail.from);
         res.status(201).json({ data: "Intento de envío de correo realizado con exito", method: req.method });
     } catch (error) {
         console.error('Error handle forgot password', error);
-        res.status(401).json({data: 'error al actualizar la contraseña'});
+        res.status(401).json({ data: 'error al actualizar la contraseña' });
     }
 };
 
