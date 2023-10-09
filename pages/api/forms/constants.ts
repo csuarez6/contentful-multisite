@@ -1,6 +1,6 @@
 export const VANTILISTO_CONSTANTS = {
-  URL_VANTILISTO_QUOTA: "https://testing.ecs-la.com/VantiListoServices/api/NewPolicy/getAccountQuota",
-  URL_TOKEN: "https://testing.ecs-la.com/VantiListoServices/api/Auth/getTokenLanding",
+  URL_VANTILISTO_QUOTA: process.env.URL_VANTILISTO_QUOTA,
+  URL_TOKEN: process.env.URL_VANTILISTO_TOKEN,
   USER_NAME: process.env.VANTILISTO_USER_NAME,
   USER_PASSWORD: process.env.VANTILISTO_USER_PASSWORD
 };

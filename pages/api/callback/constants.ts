@@ -1,6 +1,6 @@
 export const GENESYS_CONSTANTS = {
-  URL_CALLBACK: "https://api.mypurecloud.com/api/v2/conversations/callbacks",
-  URL_TOKEN: "https://login.mypurecloud.com/oauth/token",
+  URL_CALLBACK: process.env.URL_GENESYS_CALLBACK,
+  URL_TOKEN: process.env.URL_GENESYS_TOKEN,
   CLIENT_ID: process.env.GENESYS_CLIENT_ID,
   CLIENT_SECRET: process.env.GENESYS_CLIENT_SECRET
 };
