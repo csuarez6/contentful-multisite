@@ -6,6 +6,7 @@ const [AUTH_USER, AUTH_PASS] = (process.env.HTTP_BASIC_AUTH || ':').split(':');
 const enviroment = process.env.NODE_ENV;
 const checkAuth: string[] = ["/acceso", "/forgotpassword", "/registro"];
 export async function middleware(request: NextRequest) {
+  let response = null;
   const token = await getToken({
     req: request,
     secret: 'secret',
@@ -32,9 +33,9 @@ export async function middleware(request: NextRequest) {
     if (checkAuth.some((path) => pathname.startsWith(path))) {
       const urlTmp = request.nextUrl.clone();
       urlTmp.pathname = `/`;
-      return NextResponse.redirect(urlTmp);
+      response = NextResponse.redirect(urlTmp);
     } else {
-      return NextResponse.next();
+      response = NextResponse.next();
     }
   } else {
     // the user is not logged in, redirect to the sign-in page
@@ -44,9 +45,31 @@ export async function middleware(request: NextRequest) {
     url.pathname = `/acceso`;
     url.search = `p=${requestedPage}`;
     if (!checkAuth.some((path) => pathname.startsWith(path))) {
-      return NextResponse.redirect(url);
+      response = NextResponse.redirect(url);
     }
   }
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    style-src 'self' 'nonce-${nonce}';
+    img-src 'self' blob: data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    block-all-mixed-content;
+    upgrade-insecure-requests;
+  `
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set(
+    'Content-Security-Policy',
+    // Replace newline characters and spaces
+    cspHeader.replace(/\s{2,}/g, ' ').trim()
+  );
+  return response;
   // **************************
 }
 
