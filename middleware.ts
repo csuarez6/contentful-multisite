@@ -26,28 +26,6 @@ export async function middleware(request: NextRequest) {
   }
   // *************************
 
-  // Check User Session
-  if (token) {
-    // validate your session here
-    console.info("********** Middleware Response: User Session Actived");
-    if (checkAuth.some((path) => pathname.startsWith(path))) {
-      const urlTmp = request.nextUrl.clone();
-      urlTmp.pathname = `/`;
-      response = NextResponse.redirect(urlTmp);
-    } else {
-      response = NextResponse.next();
-    }
-  } else {
-    // the user is not logged in, redirect to the sign-in page
-    console.info("********** Middleware Response: No User Session");
-    const requestedPage = request.nextUrl.pathname;
-    const url = request.nextUrl.clone();
-    url.pathname = `/acceso`;
-    url.search = `p=${requestedPage}`;
-    if (!checkAuth.some((path) => pathname.startsWith(path))) {
-      response = NextResponse.redirect(url);
-    }
-  }
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
   const cspHeader = `
     default-src 'self';
@@ -69,7 +47,34 @@ export async function middleware(request: NextRequest) {
     // Replace newline characters and spaces
     cspHeader.replace(/\s{2,}/g, ' ').trim()
   );
-  return response;
+
+  // Check User Session
+  if (token) {
+    // validate your session here
+    console.info("********** Middleware Response: User Session Actived");
+    if (checkAuth.some((path) => pathname.startsWith(path))) {
+      const urlTmp = request.nextUrl.clone();
+      urlTmp.pathname = `/`;
+      // response = NextResponse.redirect(urlTmp);
+      return NextResponse.redirect(urlTmp);
+    } else {
+      // response = NextResponse.next();
+      return NextResponse.next();
+    }
+  } else {
+    // the user is not logged in, redirect to the sign-in page
+    console.info("********** Middleware Response: No User Session");
+    const requestedPage = request.nextUrl.pathname;
+    const url = request.nextUrl.clone();
+    url.pathname = `/acceso`;
+    url.search = `p=${requestedPage}`;
+    if (!checkAuth.some((path) => pathname.startsWith(path))) {
+      // response = NextResponse.redirect(url);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // return response;
   // **************************
 }
 
