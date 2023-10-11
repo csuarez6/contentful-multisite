@@ -22,6 +22,7 @@ import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import { ContactText } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
 
 const modalBody = (isSuccess, errorMessage, closeModal, productData) => {
   return (
@@ -74,7 +75,7 @@ const modalBody = (isSuccess, errorMessage, closeModal, productData) => {
 
 interface IForm {
   cellPhone: string;
-  agreeHD: boolean;
+  acceptHD: boolean;
 }
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
@@ -83,7 +84,7 @@ const schema = yup.object({
     message:
       "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
   }),
-  agreeHD: yup.bool().oneOf([true], "Dato requerido"),
+  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
 });
 
 const CallbackPage = () => {
@@ -300,17 +301,14 @@ const CallbackPage = () => {
                         </div>
                         <div className="w-full -mt-6">
                           <CheckBox
-                            id="agreeHD"
-                            name="agreeHD"
-                            label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
-                            disabled={isSending}
-                            {...register("agreeHD")}
+                            id="acceptHD"
+                            name="acceptHD"
+                            label={<ContactText />}
+                            type="checkbox"
+                            value={true}
+                            {...register("acceptHD")}
                           />
-                          {errors.agreeHD && (
-                            <p className="mt-1 text-red-600">
-                              {errors.agreeHD?.message}
-                            </p>
-                          )}
+                          {errors.acceptHD && <p className="mt-1 text-red-600">{errors.acceptHD?.message}</p>}
                         </div>
                         <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />
 

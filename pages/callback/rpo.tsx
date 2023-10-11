@@ -20,6 +20,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
+import { AuthData } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
 import { gaEventForm } from "@/utils/ga-events--forms";
 
 const modalBody = (data, isSuccess, errorMessage, closeModal) => {
@@ -81,7 +82,6 @@ interface IForm {
   hour: string;
   cellPhone: string;
   agreeHD: boolean;
-  acceptHD: boolean;
 }
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
@@ -107,7 +107,6 @@ const schema = yup.object({
       "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
   }),
   agreeHD: yup.bool().oneOf([true], "Dato requerido"),
-  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
 });
 
 const CallbackPage = () => {
@@ -170,10 +169,7 @@ const CallbackPage = () => {
       })
       .catch((err) => {
         setIsSuccess(false);
-        if (!navigator.onLine)
-          setErrorMessage(
-            "Comprueba tu conexión a internet e intenta de nuevo por favor."
-          );
+        if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
         console.warn(err);
       })
       .finally(() => {
@@ -293,25 +289,11 @@ const CallbackPage = () => {
                     <CheckBox
                       id="agreeHD"
                       name="agreeHD"
-                      label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales"
+                      label={<AuthData />}
                       {...register("agreeHD")}
                     />
                     {errors.agreeHD && (
                       <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
-                    )}
-
-                    <CheckBox
-                      id="acceptHD"
-                      name="acceptHD"
-                      label="Autorizo que me contacten para agendar tu servicio"
-                      type="checkbox"
-                      value={true}
-                      {...register("acceptHD")}
-                    />
-                    {errors.acceptHD && (
-                      <p className="mt-1 text-red-600">
-                        {errors.acceptHD?.message}
-                      </p>
                     )}
                   </div>
 

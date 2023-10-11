@@ -20,6 +20,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import { AuthData } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
 
 const modalBody = (isSuccess, errorMessage, closeModal) => {
   return (
@@ -36,8 +37,7 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
               En unos minutos te estaremos contactando.
               <br />
               <br />
-              Si quieres añadir más productos y servicios a tu compra, puedes
-              pedirlo a nuestros asesores
+              Si quieres añadir más productos y servicios a tu compra, puedes pedirlo a nuestros asesores
             </p>
           ) : (
             <p className="lg:text-size-p1 text-grey-30">
@@ -63,29 +63,16 @@ const modalBody = (isSuccess, errorMessage, closeModal) => {
 };
 
 interface IForm {
-  contractAccount?: number;
-  fullName: string;
   cellPhone: string;
-  email: string;
   agreeHD: boolean;
-  acceptHD: boolean;
 }
 
 const regexCellPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 const schema = yup.object({
-  contractAccount: yup
-    .number()
-    .typeError("Dato Requerido: El valor debe ser numérico")
-    .positive("Valor no valido, deben ser números positivos")
-    .required("Dato Requerido"),
-  fullName: yup.string().required("Dato requerido"),
   cellPhone: yup.string().required("Dato requerido").matches(regexCellPhone, {
-    message:
-      "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
+    message: "Formatos validos: ### ### #### / (###) ### #### / +## ###-###-#### / +## (###)-###-####",
   }),
-  email: yup.string().email("Email no válido").required("Dato requerido"),
   agreeHD: yup.bool().oneOf([true], "Dato requerido"),
-  acceptHD: yup.bool().oneOf([true], "Dato requerido"),
 });
 
 const CallbackPage = () => {
@@ -132,7 +119,6 @@ const CallbackPage = () => {
           gaEventForm({
             category: "Callback",
             label: "Servihogar",
-            contractAccount: data.contractAccount
           });
         }
 
@@ -141,10 +127,7 @@ const CallbackPage = () => {
       })
       .catch((err) => {
         setIsSuccess(false);
-        if (!navigator.onLine)
-          setErrorMessage(
-            "Comprueba tu conexión a internet e intenta de nuevo por favor."
-          );
+        if (!navigator.onLine) setErrorMessage("Comprueba tu conexión a internet e intenta de nuevo por favor.");
         console.warn(err);
       })
       .finally(() => {
@@ -207,40 +190,6 @@ const CallbackPage = () => {
                   onSubmit={handleSubmit(onSubmit)}
                 >
                   <div className="w-full">
-                    <label
-                      className="block text-lg text-grey-30"
-                      htmlFor="contractAccount"
-                    >
-                      Escribe tu número de cuenta contrato
-                    </label>
-                    <TextBox
-                      id="contractAccount"
-                      name="contractAccount"
-                      label="(Lo encuentras en la parte superior izquierda de tu factura del gas)"
-                      placeholder="00000000"
-                      {...register("contractAccount")}
-                    />
-                    {errors.contractAccount && (
-                      <p className="mt-1 text-red-600">
-                        {errors.contractAccount?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <TextBox
-                      id="fullName"
-                      name="fullName"
-                      label="Escribe tu nombre"
-                      placeholder="Nombre completo *"
-                      {...register("fullName")}
-                    />
-                    {errors.fullName && (
-                      <p className="mt-1 text-red-600">
-                        {errors.fullName?.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="w-full">
                     <TextBox
                       id="cellPhone"
                       name="cellPhone"
@@ -254,43 +203,16 @@ const CallbackPage = () => {
                       </p>
                     )}
                   </div>
-                  <div className="w-full">
-                    <TextBox
-                      id="email"
-                      name="email"
-                      type="email"
-                      label="Escribe tu correo electrónico"
-                      placeholder="Correo electrónico *"
-                      {...register("email")}
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-red-600">{errors.email?.message}</p>
-                    )}
-                  </div>
 
                   <div className="w-full">
                     <CheckBox
                       id="agreeHD"
                       name="agreeHD"
-                      label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales"
+                      label={<AuthData />}
                       {...register("agreeHD")}
                     />
                     {errors.agreeHD && (
                       <p className="mt-1 text-red-600">{errors.agreeHD?.message}</p>
-                    )}
-
-                    <CheckBox
-                      id="acceptHD"
-                      name="acceptHD"
-                      label="Autorizo que me contacten para agendar tu servicio"
-                      type="checkbox"
-                      value={true}
-                      {...register("acceptHD")}
-                    />
-                    {errors.acceptHD && (
-                      <p className="mt-1 text-red-600">
-                        {errors.acceptHD?.message}
-                      </p>
                     )}
                   </div>
                   <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptcha} />

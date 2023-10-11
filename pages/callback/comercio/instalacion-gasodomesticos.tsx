@@ -21,6 +21,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
 import ReCaptchaBox from "@/components/atoms/recaptcha/recaptcha";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import { AuthData } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
 
 const modalBody = (isSuccess, errorMessage, closeModal) => {
   return (
@@ -209,7 +210,7 @@ const CallbackPage = () => {
                     <CheckBox
                       id="agreeHD"
                       name="agreeHD"
-                      label="Acepto el tratamiento de datos personales conforme a la política de tratamiento de datos personales y autorizo que me contacten para realizar la compra."
+                      label={<AuthData />}
                       {...register("agreeHD")}
                     />
                     {errors.agreeHD && (
