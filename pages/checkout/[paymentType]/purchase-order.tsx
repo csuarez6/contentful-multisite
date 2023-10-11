@@ -92,7 +92,7 @@ const CheckoutPurchase = () => {
         () => !!orderInfoById?.metadata?.[VantiOrderMetadata.HasPersonalInfo],
         [orderInfoById]
     );
-    
+
     const paymentEntity = () => {
         if (orderInfoById.status !== OrderStatus.approved) {
             return {
@@ -141,7 +141,7 @@ const CheckoutPurchase = () => {
                             <dt className="flex-1 text-grey-30">Correo electrónico del adquiriente:</dt>
                             <dd className="flex-1 font-bold text-grey-30">{orderInfoById?.customer_email}</dd>
                         </div>
-                        {paymentEntity().paymentMethod && 
+                        {paymentEntity().paymentMethod &&
                             <div className="flex justify-between">
                                 <dt className="flex-1 text-grey-30">Método de pago:</dt>
                                 <dd className="flex-1 font-bold text-grey-30">
@@ -149,7 +149,7 @@ const CheckoutPurchase = () => {
                                 </dd>
                             </div>
                         }
-                        {paymentEntity().paymentEntity && 
+                        {paymentEntity().paymentEntity &&
                             <div className="flex justify-between">
                                 <dt className="flex-1 text-grey-30">Entidad bancaria:</dt>
                                 <dd className="flex-1 font-bold text-grey-30">
