@@ -43,6 +43,7 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventBeginCheckout } from "@/utils/ga-events--checkout";
+import citiesFile from "@/utils/static/cities-co.json";
 
 const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const { copyServices } = props;
@@ -105,10 +106,10 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       amount_cents:
         type === "warranty"
           ? (
-            (Number(params["price_amount_float"]) *
-              Number(itemService[0]["unit_amount_float"])) /
-            100
-          ).toString()
+              (Number(params["price_amount_float"]) *
+                Number(itemService[0]["unit_amount_float"])) /
+              100
+            ).toString()
           : params["price_amount_float"],
       type: type === "warranty" ? "warranty" : "installation",
       sku_id: itemService?.[0]?.["id"],
@@ -140,8 +141,22 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     setIsActivedModal(false);
   };
 
-  const getShippingPrice = (product) => {
-    return shippingMethodGlobal.find((x) => x?.name === product?.item?.shipping_category?.name)?.price_amount_float ?? 0;
+  const getShippingPrice = (product, order = null) => {
+    if (order?.shipping_address) {
+      const cityCheck = citiesFile.filter(
+        (city) =>
+          city.admin_name === order.shipping_address?.state_code &&
+          city.city === order.shipping_address?.city
+      );
+      if (cityCheck?.[0]?.isCovered === "false") {
+        return (
+          shippingMethodGlobal.find(
+            (x) => x?.name === product?.item?.shipping_category?.name
+          )?.price_amount_float ?? 0
+        );
+      }
+    }
+    return 0;
   };
 
   useEffect(() => {
@@ -270,7 +285,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       setIsLoading(false);
     }
   };
-  
+
   const dropServices = (product) => {
     if (product) {
       if (!showWarranty && product["warranty_service"]?.length > 0) {
@@ -285,15 +300,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   };
 
   const increDecreQuantity = (product, operator) => {
-    const quantityTemp = (operator == "plus") ? product?.quantity + 1 : product?.quantity - 1;
+    const quantityTemp =
+      operator == "plus" ? product?.quantity + 1 : product?.quantity - 1;
     setIsLoading(true);
-    updateItemQuantity(
-      product?.sku_code,
-      quantityTemp
-    )
+    updateItemQuantity(product?.sku_code, quantityTemp)
       .then((result) => {
         if (result.status !== 200) {
-          const messageMinus = "Ocurrió un error con el producto seleccionado, por favor intente nuevamente.";
+          const messageMinus =
+            "Ocurrió un error con el producto seleccionado, por favor intente nuevamente.";
           const messagePlus =
             result.status === 422
               ? `No hay más unidades disponibles para el producto seleccionado.`
@@ -302,7 +316,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           setErrorMessage({
             icon: "alert",
             type: "warning",
-            title: (operator == "plus") ? messagePlus : messageMinus,
+            title: operator == "plus" ? messagePlus : messageMinus,
           });
         }
       })
@@ -315,11 +329,11 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     const onRouteChangeStart = () => {
       if (products.length > 0) setIsLoading(true);
     };
-    router.events.on('routeChangeStart', onRouteChangeStart);
+    router.events.on("routeChangeStart", onRouteChangeStart);
 
     // unsubscribe on component destroy in useEffect return function
     return () => {
-      router.events.off('routeChangeStart', onRouteChangeStart);
+      router.events.off("routeChangeStart", onRouteChangeStart);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
@@ -374,9 +388,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 >
                   {product?.name}
                 </Link>
-                <p className="text-xs text-left text-grey-60">
-                  * IVA incluido
-                </p>
+                <p className="text-xs text-left text-grey-60">* IVA incluido</p>
               </div>
               <div className="inline-block py-3.5 pb-0 sm:px-3 text-blue-dark sm:mx-auto">
                 <div className="w-32 custom-number-input h-9">
@@ -438,17 +450,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 </button>
               </div>
               <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
-                {(product.formatted_unit_amount).split(',')[0]}
+                {product.formatted_unit_amount.split(",")[0]}
               </div>
               {/* Shipping */}
               <div className="w-full sm:hidden"></div>
               <>
                 <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                  Envío{" "}
-                  {Object.entries(product.item.shipping_category).length > 0 && (
-                    <>
-                      <b>{product.item.shipping_category.name}</b>
-                    </>
+                  {getShippingPrice(product, order) !== 0 && (
+                    <b>Envío {formatPrice(getShippingPrice(product, order))}</b>
                   )}
                 </div>
                 <div className="px-3 text-right">
@@ -482,12 +491,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["warranty_service"]?.[0]?.["item"]?.[
-                          "metadata"
+                            "metadata"
                           ]?.["categoryReference"] ??
-                          product["clWarrantyReference"],
+                            product["clWarrantyReference"],
                           "warranty_service",
                           product["warranty_service"]?.[0]?.["item"]?.[
-                          "metadata"
+                            "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clWarrantyReference
@@ -509,14 +518,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   </div>
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right text-blue-dark">
                     {product["warranty_service"]?.length > 0
-                      ? (product["warranty_service"][0]["formatted_unit_amount"]).split(',')[0]
+                      ? product["warranty_service"][0][
+                          "formatted_unit_amount"
+                        ].split(",")[0]
                       : "$0"}
                   </div>
                 </>
               ) : (
-                <>
-                  {dropServices(product)}
-                </>
+                <>{dropServices(product)}</>
               )}
               <div className="w-full sm:hidden"></div>
               {showInstallation ? (
@@ -534,12 +543,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                       onClick={() =>
                         openModal(
                           product["installlation_service"]?.[0]?.["item"]?.[
-                          "metadata"
+                            "metadata"
                           ]?.["categoryReference"] ??
-                          product["clInstallationReference"],
+                            product["clInstallationReference"],
                           "installlation_service",
                           product["installlation_service"]?.[0]?.["item"]?.[
-                          "metadata"
+                            "metadata"
                           ]?.["sku_option_id"],
                           product.id,
                           product.metadata.clInstallationReference
@@ -561,16 +570,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                   </div>
                   <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
                     {product["installlation_service"]?.length > 0
-                      ? (product["installlation_service"][0][
-                      "formatted_unit_amount"
-                      ]).split(',')[0]
+                      ? product["installlation_service"][0][
+                          "formatted_unit_amount"
+                        ].split(",")[0]
                       : "$0"}
                   </div>
                 </>
               ) : (
-                <>
-                  {dropServices(product)}
-                </>
+                <>{dropServices(product)}</>
               )}
               {/* ********* End Services ******** */}
               <div className="w-full col-start-1 col-end-3 mt-3 sm:w-auto bg-blue-50"></div>
@@ -578,16 +585,13 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                 Total Producto
               </div>
               <div className="flex-grow inline-block py-1 pr-1 mt-3 font-bold text-right text-blue-dark text-md bg-blue-50">
-                {
-                   formatPrice(
-                    showProductTotal(
-                      product?.total_amount_float,
-                      product?.["installlation_service"],
-                      product?.["warranty_service"]
-                    ) +
-                    getShippingPrice(product)
-                  )
-                }
+                {formatPrice(
+                  showProductTotal(
+                    product?.total_amount_float,
+                    product?.["installlation_service"],
+                    product?.["warranty_service"]
+                  ) + getShippingPrice(product, order)
+                )}
               </div>
             </div>
           );
@@ -607,7 +611,13 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
             Ir a la tienda
           </CustomLink>
         ) : (
-          <button onClick={handleNext} className={classNames("mt-6 button button-primary relative flex gap-2 items-center")} disabled={isLoading}>
+          <button
+            onClick={handleNext}
+            className={classNames(
+              "mt-6 button button-primary relative flex gap-2 items-center"
+            )}
+            disabled={isLoading}
+          >
             Continuar
           </button>
         )}
@@ -638,9 +648,18 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
-  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
-  const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const headerInfo = await getHeader(
+    DEFAULT_HEADER_ID,
+    context.preview ?? false
+  );
+  const footerInfo = await getNavigation(
+    DEFAULT_FOOTER_ID,
+    context.preview ?? false
+  );
+  const helpButton = await getNavigation(
+    DEFAULT_HELP_BUTTON_ID,
+    context.preview ?? false
+  );
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
