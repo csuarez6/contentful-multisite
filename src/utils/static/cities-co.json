@@ -7,7 +7,7 @@
    {
       "city": "Medellín",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "San Rafael",
@@ -17,17 +17,17 @@
    {
       "city": "Santiago de Cali",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Barranquilla",
       "admin_name": "Atlántico",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Cartagena de Indias",
       "admin_name": "Bolívar",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Soacha",
@@ -47,12 +47,12 @@
    {
       "city": "Soledad",
       "admin_name": "Atlántico",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Pereira",
       "admin_name": "Risaralda",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Bucaramanga",
@@ -62,32 +62,32 @@
    {
       "city": "Valledupar",
       "admin_name": "Cesar",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Ibagué",
       "admin_name": "Tolima",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Villavicencio",
       "admin_name": "Meta",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Santa Marta",
       "admin_name": "Magdalena",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Montería",
       "admin_name": "Córdoba",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Manizales",
       "admin_name": "Caldas",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Riosucio",
@@ -107,7 +107,7 @@
    {
       "city": "Bello",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Caucasia",
@@ -117,12 +117,12 @@
    {
       "city": "Neiva",
       "admin_name": "Huila",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Armenia",
       "admin_name": "Quindío",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Popayán",
@@ -132,7 +132,7 @@
    {
       "city": "Sincelejo",
       "admin_name": "Sucre",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Floridablanca",
@@ -142,17 +142,17 @@
    {
       "city": "Itagüí",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Envigado",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Tuluá",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Tumaco",
@@ -202,7 +202,7 @@
    {
       "city": "Dosquebradas",
       "admin_name": "Risaralda",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Ríohacha",
@@ -222,12 +222,12 @@
    {
       "city": "Fusagasugá",
       "admin_name": "Cundinamarca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Cartago",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Pitalito",
@@ -237,7 +237,7 @@
    {
       "city": "Ciénaga",
       "admin_name": "Magdalena",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Sogamoso",
@@ -252,7 +252,7 @@
    {
       "city": "Girardot",
       "admin_name": "Cundinamarca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Duitama",
@@ -287,7 +287,7 @@
    {
       "city": "Guadalajara de Buga",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Madrid",
@@ -302,7 +302,7 @@
    {
       "city": "Aguachica",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Ipiales",
@@ -317,7 +317,7 @@
    {
       "city": "Jamundí",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Arauca",
@@ -327,7 +327,7 @@
    {
       "city": "Yumbo",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Mosquera",
@@ -337,7 +337,7 @@
    {
       "city": "Fundación",
       "admin_name": "Magdalena",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Ocaña",
@@ -352,7 +352,7 @@
    {
       "city": "Chiquinquirá",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Sabanalarga",
@@ -367,12 +367,12 @@
    {
       "city": "Cereté",
       "admin_name": "Córdoba",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Caldas",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Funza",
@@ -407,7 +407,7 @@
    {
       "city": "Turbaco",
       "admin_name": "Bolívar",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Espinal",
@@ -422,7 +422,7 @@
    {
       "city": "Copacabana",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Santa Rosa de Cabal",
@@ -482,7 +482,7 @@
    {
       "city": "Marinilla",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Ciénaga de Oro",
@@ -512,7 +512,7 @@
    {
       "city": "Villamaría",
       "admin_name": "Caldas",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "San Marcos",
@@ -527,7 +527,7 @@
    {
       "city": "Florida",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Pamplona",
@@ -537,7 +537,7 @@
    {
       "city": "Pradera",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Orito",
@@ -552,7 +552,7 @@
    {
       "city": "El Banco",
       "admin_name": "Magdalena",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "San Gil",
@@ -562,7 +562,7 @@
    {
       "city": "Sabaneta",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Valle del Guamuez",
@@ -582,7 +582,7 @@
    {
       "city": "Barbosa",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Lorica",
@@ -597,7 +597,7 @@
    {
       "city": "Guarne",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "El Bagre",
@@ -632,7 +632,7 @@
    {
       "city": "Agustín Codazzi",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Samaniego",
@@ -682,7 +682,7 @@
    {
       "city": "Zarzal",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Valencia",
@@ -752,7 +752,7 @@
    {
       "city": "Montenegro",
       "admin_name": "Quindío",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Pueblo Nuevo",
@@ -807,7 +807,7 @@
    {
       "city": "Ubaté",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "San Juan del Cesar",
@@ -857,7 +857,7 @@
    {
       "city": "Melgar",
       "admin_name": "Tolima",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Dagua",
@@ -892,7 +892,7 @@
    {
       "city": "Guacarí",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Timbío",
@@ -1067,7 +1067,7 @@
    {
       "city": "Paipa",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Santa Cruz (Guachavés)",
@@ -1082,7 +1082,7 @@
    {
       "city": "Puerto Wilches",
       "admin_name": "Santander",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "B-manga Veredal",
@@ -1112,7 +1112,7 @@
    {
       "city": "Circasia",
       "admin_name": "Quindío",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Amagá",
@@ -1257,7 +1257,7 @@
    {
       "city": "Puerto Colombia",
       "admin_name": "Atlántico",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Fortul",
@@ -1282,7 +1282,7 @@
    {
       "city": "San Alberto",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Balboa",
@@ -1482,7 +1482,7 @@
    {
       "city": "Curumaní",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Dabeiba",
@@ -1527,7 +1527,7 @@
    {
       "city": "La Jagua de Ibirico",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Natagaima",
@@ -1542,12 +1542,12 @@
    {
       "city": "El Colegio",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Pailitas",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Timbiquí",
@@ -1577,7 +1577,7 @@
    {
       "city": "Ginebra",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Puerto Triunfo",
@@ -1677,7 +1677,7 @@
    {
       "city": "Samacá",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Timaná",
@@ -1787,7 +1787,7 @@
    {
       "city": "Villa de Leyva",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Campo de la Cruz",
@@ -1797,7 +1797,7 @@
    {
       "city": "S de Torres",
       "admin_name": "Santander",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "El Llanito",
@@ -1807,7 +1807,7 @@
    {
       "city": "Pelaya",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Salgar",
@@ -1832,7 +1832,7 @@
    {
       "city": "El Rosal",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Retiro",
@@ -1897,7 +1897,7 @@
    {
       "city": "Obando",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Condoto",
@@ -2017,7 +2017,7 @@
    {
       "city": "Candelaria",
       "admin_name": "Atlántico",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Saboyá",
@@ -2092,7 +2092,7 @@
    {
       "city": "Bojacá",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "El Playón",
@@ -2212,7 +2212,7 @@
    {
       "city": "La Belleza",
       "admin_name": "Santander",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Usiacurí",
@@ -2257,7 +2257,7 @@
    {
       "city": "Motavita",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Pedraza",
@@ -2327,7 +2327,7 @@
    {
       "city": "Salento",
       "admin_name": "Quindío",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Boavita",
@@ -2377,7 +2377,7 @@
    {
       "city": "Florián",
       "admin_name": "Santander",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Heliconia",
@@ -2397,7 +2397,7 @@
    {
       "city": "Sutamarchán",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Chitaraque",
@@ -2407,7 +2407,7 @@
    {
       "city": "Zipacón",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Chíquiza",
@@ -2487,7 +2487,7 @@
    {
       "city": "Sáchica",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Güepsa",
@@ -2547,12 +2547,12 @@
    {
       "city": "Tinjacá",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Sora",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Covarachía",
@@ -2562,7 +2562,7 @@
    {
       "city": "Oicatá",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Guataquí",
@@ -2572,7 +2572,7 @@
    {
       "city": "Santa Sofía",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Jerusalén",
@@ -2587,7 +2587,7 @@
    {
       "city": "Briceño",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "La Uvita",
@@ -2662,7 +2662,7 @@
    {
       "city": "Tununguá",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Pajarito",
@@ -2697,17 +2697,17 @@
    {
       "city": "La Estrella",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Malambo",
       "admin_name": "Atlántico",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Rionegro",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Galapa",
@@ -2727,7 +2727,7 @@
    {
       "city": "Chinchiná",
       "admin_name": "Caldas",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Gachancipá",
@@ -2737,7 +2737,7 @@
    {
       "city": "La Ceja",
       "admin_name": "Antioquia",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Santuario",
@@ -2747,7 +2747,7 @@
    {
       "city": "Calarcá",
       "admin_name": "Quindío",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Santo Tomás",
@@ -2757,7 +2757,7 @@
    {
       "city": "Nobsa",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Málaga",
@@ -2767,7 +2767,7 @@
    {
       "city": "Palmira",
       "admin_name": "Valle del Cauca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Providencia",
@@ -2812,7 +2812,7 @@
    {
       "city": "La Mesa",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Villarica",
@@ -2827,7 +2827,7 @@
    {
       "city": "Granada",
       "admin_name": "Meta",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Sibundoy",
@@ -2872,7 +2872,7 @@
    {
       "city": "Tibasosa",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Colón (Génova)",
@@ -2927,7 +2927,7 @@
    {
       "city": "Susa",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Ulloa",
@@ -2992,12 +2992,12 @@
    {
       "city": "Nemocón",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Simijaca",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "El Cerrito",
@@ -3087,7 +3087,7 @@
    {
       "city": "Anapoima",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "San José",
@@ -3107,7 +3107,7 @@
    {
       "city": "Cucaita",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Angelópolis",
@@ -3117,7 +3117,7 @@
    {
       "city": "S. Rosa de Viterbo",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Padilla",
@@ -3197,7 +3197,7 @@
    {
       "city": "Cómbita",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Boyacá",
@@ -3317,7 +3317,7 @@
    {
       "city": "Subachoque",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "La Celia",
@@ -3362,7 +3362,7 @@
    {
       "city": "Sutatausa",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Cocorná",
@@ -3382,7 +3382,7 @@
    {
       "city": "Ricaurte",
       "admin_name": "Cundinamarca",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "Rafael Reyes (Apulo)",
@@ -3482,7 +3482,7 @@
    {
       "city": "Fúquene",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Guachetá",
@@ -3517,7 +3517,7 @@
    {
       "city": "Ráquira",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Sucre",
@@ -3597,7 +3597,7 @@
    {
       "city": "Tuta",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "La Apartada",
@@ -3612,7 +3612,7 @@
    {
       "city": "San Pablo de Borbur",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Páramo",
@@ -3652,7 +3652,7 @@
    {
       "city": "Viotá",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Chipatá",
@@ -3672,7 +3672,7 @@
    {
       "city": "Cucunubá",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Vianí",
@@ -3682,7 +3682,7 @@
    {
       "city": "Cerinza",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Campamento",
@@ -3757,7 +3757,7 @@
    {
       "city": "Gamarra",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Trujillo",
@@ -3802,7 +3802,7 @@
    {
       "city": "Floresta",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Buenavista",
@@ -3952,7 +3952,7 @@
    {
       "city": "Tausa",
       "admin_name": "Cundinamarca",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Elías",
@@ -4032,7 +4032,7 @@
    {
       "city": "Albania",
       "admin_name": "Santander",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Tibirita",
@@ -4087,7 +4087,7 @@
    {
       "city": "Belén",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Belencito",
@@ -4102,7 +4102,7 @@
    {
       "city": "Caldas",
       "admin_name": "Boyacá",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Gámeza",
@@ -4352,7 +4352,7 @@
    {
       "city": "Tamalameque",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Casacara",
@@ -4367,7 +4367,7 @@
    {
       "city": "Sabanagrande",
       "admin_name": "Cesar",
-      "isCovered": "false"
+      "isCovered": "true"
    },
    {
       "city": "San Roque",
@@ -4822,7 +4822,7 @@
    {
       "city": "San Diego",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Mosquera",
@@ -4882,7 +4882,7 @@
    {
       "city": "San Martín",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "El Rosario",
@@ -4937,7 +4937,7 @@
    {
       "city": "Chiriguaná",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "El Tambo",
@@ -5027,7 +5027,7 @@
    {
       "city": "La Gloria",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Curillo",
@@ -5207,7 +5207,7 @@
    {
       "city": "Cantagallo",
       "admin_name": "Bolívar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Mongua",
@@ -5297,7 +5297,7 @@
    {
       "city": "Becerril",
       "admin_name": "Cesar",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Toledo",
@@ -5347,7 +5347,7 @@
    {
       "city": "Yondó",
       "admin_name": "Antioquia",
-      "isCovered": "true"
+      "isCovered": "false"
    },
    {
       "city": "Santa Helena del Opón",

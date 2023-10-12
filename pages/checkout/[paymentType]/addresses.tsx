@@ -1,10 +1,4 @@
-import {
-  ReactElement,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { ReactElement, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -38,6 +32,7 @@ import SelectAtom, {
 import { useSession } from "next-auth/react";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import { getDataContent } from "@/lib/services/richtext-references.service";
+import Link from "next/link";
 
 export interface IAddress {
   id?: string;
@@ -143,13 +138,50 @@ export const ModalConfirm: React.FC<any> = ({
   );
 };
 
+const ModalCities: React.FC<any> = ({ onActivedModal }) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-center">
+        Estimado usuario, antes de continuar con el proceso de compra tenga en
+        cuenta que esta ciudad no cuenta con envio.
+        <br />
+      </p>
+      <div className="flex justify-end gap-2">
+        <Link href="/gasodomesticos/productos" prefetch>
+          <div
+            className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
+          >
+            Ver más Productos
+          </div>
+        </Link>
+        <button
+          onClick={() => {
+            onActivedModal(false);
+          }}
+        >
+          <div
+            className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
+          >
+            Continuar en la compra
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const CheckoutAddress = (props: any) => {
-  const defaultCityOption = { city: "Seleccione un Municipio", isCovered: "false" };
+  const defaultCityOption = {
+    city: "Seleccione un Municipio",
+    isCovered: "false",
+  };
   const { copyServices } = props;
   const router = useRouter();
   const lastPath = useLastPath();
   const [states, setStates] = useState([]);
-  const [shippingCities, setShippingCities] = useState<any>([defaultCityOption]);
+  const [shippingCities, setShippingCities] = useState<any>([
+    defaultCityOption,
+  ]);
   const [billingCities, setBillingCities] = useState<any>([defaultCityOption]);
   const { isLogged, user } = useContext(AuthContext);
   const [showAlert, setShowAlert] = useState(false);
@@ -159,7 +191,6 @@ const CheckoutAddress = (props: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const { status, data: session } = useSession();
   const [showInstallation, setShowInstallation] = useState<boolean>();
-
   const {
     order,
     flow,
@@ -251,6 +282,11 @@ const CheckoutAddress = (props: any) => {
     );
     onHasShipment(cityCheck[0]?.isCovered == "false");
     setShowAlert(cityCheck[0]?.isCovered == "false");
+    if (cityCheck[0]?.isCovered == "false") {
+      setParamModal({ promoTitle: "Advertencia", promoIcon: "info" });
+      setmodalChild(<ModalCities  onActivedModal={setIsActivedModal}/>);
+      setIsActivedModal(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingCityWatched]);
 
@@ -302,17 +338,42 @@ const CheckoutAddress = (props: any) => {
         const shippingAddressFormatted = toAddressForm(shippingAddress);
         const billingAddressFormatted = toAddressForm(billingAddress);
 
-        if (shippingAddressFormatted && shippingAddressFormatted.stateCode !== "") {
-          getListCities(shippingAddressFormatted.stateCode, "shipping").then(() => {
-            setValue("shippingAddress.stateCode", shippingAddressFormatted.stateCode);
-            setValue("shippingAddress.cityCode", shippingAddressFormatted.cityCode);
-            setValue("shippingAddress.street", shippingAddressFormatted.street);
-            setValue("shippingAddress.address", shippingAddressFormatted.address);
-            setValue("shippingAddress.residence", shippingAddressFormatted.residence);
-            setValue("shippingAddress.receiver", shippingAddressFormatted.receiver);
-          });
+        if (
+          shippingAddressFormatted &&
+          shippingAddressFormatted.stateCode !== ""
+        ) {
+          getListCities(shippingAddressFormatted.stateCode, "shipping").then(
+            () => {
+              setValue(
+                "shippingAddress.stateCode",
+                shippingAddressFormatted.stateCode
+              );
+              setValue(
+                "shippingAddress.cityCode",
+                shippingAddressFormatted.cityCode
+              );
+              setValue(
+                "shippingAddress.street",
+                shippingAddressFormatted.street
+              );
+              setValue(
+                "shippingAddress.address",
+                shippingAddressFormatted.address
+              );
+              setValue(
+                "shippingAddress.residence",
+                shippingAddressFormatted.residence
+              );
+              setValue(
+                "shippingAddress.receiver",
+                shippingAddressFormatted.receiver
+              );
+            }
+          );
         } else if (status === "authenticated" && session) {
-          const addresses: Address = await getCustomerAddresses(session?.user?.["accessToken"]);
+          const addresses: Address = await getCustomerAddresses(
+            session?.user?.["accessToken"]
+          );
           const addressesForm = toAddressForm(addresses);
           if (addressesForm) {
             getListCities(addressesForm.stateCode, "shipping").then(() => {
@@ -326,21 +387,40 @@ const CheckoutAddress = (props: any) => {
           }
         }
 
-        if (billingAddressFormatted && billingAddressFormatted.stateCode !== "") {
-          getListCities(billingAddressFormatted.stateCode, "billing").then(() => {
-            setValue("billingAddress.stateCode", billingAddressFormatted.stateCode);
-            setValue("billingAddress.cityCode", billingAddressFormatted.cityCode);
-            setValue("billingAddress.address", billingAddressFormatted.address);
-            setValue("billingAddress.street", billingAddressFormatted.street);
-            setValue("billingAddress.residence", billingAddressFormatted.residence);
-          });
+        if (
+          billingAddressFormatted &&
+          billingAddressFormatted.stateCode !== ""
+        ) {
+          getListCities(billingAddressFormatted.stateCode, "billing").then(
+            () => {
+              setValue(
+                "billingAddress.stateCode",
+                billingAddressFormatted.stateCode
+              );
+              setValue(
+                "billingAddress.cityCode",
+                billingAddressFormatted.cityCode
+              );
+              setValue(
+                "billingAddress.address",
+                billingAddressFormatted.address
+              );
+              setValue("billingAddress.street", billingAddressFormatted.street);
+              setValue(
+                "billingAddress.residence",
+                billingAddressFormatted.residence
+              );
+            }
+          );
         }
 
         reset({
           shippingAddress: {
             isSameAsBillingAddress:
-              (shippingAddressFormatted?.address == "" && billingAddressFormatted?.address == "") ||
-              (shippingAddressFormatted?.address == billingAddressFormatted?.address)
+              (shippingAddressFormatted?.address == "" &&
+                billingAddressFormatted?.address == "") ||
+              shippingAddressFormatted?.address ==
+                billingAddressFormatted?.address,
           },
         });
       })();

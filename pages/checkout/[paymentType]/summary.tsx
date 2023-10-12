@@ -26,13 +26,13 @@ const ModalContent = ({ modalMsg }) => {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-center">
-        Estimado usuario, antes de continuar con el proceso de compra tenga en cuenta que tiene órdenes pendientes por aprobación de su entidad bancaria.
+        Estimado usuario, antes de continuar con el proceso de compra tenga en
+        cuenta que tiene órdenes pendientes por aprobación de su entidad
+        bancaria.
         <br />
         <strong>Órdenes pendientes: </strong>
       </p>
-      <p className="text-center">
-        {modalMsg}
-      </p>
+      <p className="text-center">{modalMsg}</p>
     </div>
   );
 };
@@ -48,20 +48,20 @@ const CheckoutSummary = () => {
     onRecaptcha,
     tokenRecaptcha,
     isPaymentProcess,
-    getOrdersByCustomerEmail
+    getOrdersByCustomerEmail,
   } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [shippingAddress, setShippingAddress] = useState<Address>();
   const [isLoading, setIsLoading] = useState(false);
   const modalDefault = {
     children: <ModalContent modalMsg="Cargando..." />,
-    promoIcon: 'alert',
-    promoTitle: 'Notificación',
-    isClosable: true
+    promoIcon: "alert",
+    promoTitle: "Notificación",
+    isClosable: true,
   };
   const [dataModal, setDataModal] = useState<IPromoContent>(modalDefault);
   const [showModal, setShowModal] = useState(false);
-  const [tokenReCaptchaRender, setTokenReCaptchaRender] = useState<string>('');
+  const [tokenReCaptchaRender, setTokenReCaptchaRender] = useState<string>("");
   const [refreshTokenReCaptcha, setRefreshTokenReCaptcha] = useState(0);
 
   const isCustomer = (customer: any): customer is Customer => {
@@ -70,7 +70,8 @@ const CheckoutSummary = () => {
 
   const fullName = useMemo(() => {
     return ((resource) =>
-      `${resource?.metadata?.name ?? "*****"} ${resource?.metadata?.lastName ?? "*****"
+      `${resource?.metadata?.name ?? "*****"} ${
+        resource?.metadata?.lastName ?? "*****"
       }`)(isLogged ? user : order);
   }, [user, order, isLogged]);
 
@@ -100,13 +101,19 @@ const CheckoutSummary = () => {
       setBillingAddress(billingAddress);
       setShippingAddress(shippingAddress);
       const checkOrderPlaced = await getOrdersByCustomerEmail(clientEmail);
-      if (checkOrderPlaced && checkOrderPlaced?.status === 200 && checkOrderPlaced?.data.length > 0) {
-        const ordersNumber = checkOrderPlaced?.data?.map((item) => " " + item.number);
+      if (
+        checkOrderPlaced &&
+        checkOrderPlaced?.status === 200 &&
+        checkOrderPlaced?.data.length > 0
+      ) {
+        const ordersNumber = checkOrderPlaced?.data?.map(
+          (item) => " " + item.number
+        );
         setDataModal({
           children: <ModalContent modalMsg={ordersNumber} />,
-          promoIcon: 'alert',
-          promoTitle: 'Notificación',
-          isClosable: true
+          promoIcon: "alert",
+          promoTitle: "Notificación",
+          isClosable: true,
         });
         setShowModal(true);
       }
@@ -207,25 +214,30 @@ const CheckoutSummary = () => {
                 handleChange={(e) => onRecaptcha(e)}
                 classNames="mt-6"
               /> */}
-              <ReCaptchaBox key={refreshTokenReCaptcha} handleChange={setTokenReCaptchaRender} />
+              <ReCaptchaBox
+                key={refreshTokenReCaptcha}
+                handleChange={setTokenReCaptchaRender}
+              />
             </dt>
           </div>
           <div className="flex justify-between">
             <dt>
               <p className="font-bold text-blue-dark">
-                Al continuar el proceso acepta el tratamiento de datos conforme
-                a la &nbsp;
+                Autorizo de manera libre, expresa, inequívoca e informada el
+                tratamiento de mis datos personales de acuerdo con lo dispuesto
+                en la Ley 1581/2012 y conforme a la política de tratamiento de
+                datos personales publicada en &nbsp;
                 <a
                   className={`text-gray-500 underline`}
-                  href={'/terminos-y-condiciones'}
+                  href={"/tramites-y-ayuda/proteccion-de-datos-personales"}
                   rel="noreferrer"
                 >
                   política de tratamiento de datos personales
                 </a>
-                &nbsp; de la compra y los &nbsp;
+                &nbsp; y los &nbsp;
                 <a
                   className={`text-gray-500 underline`}
-                  href={'/terminos-y-condiciones'}
+                  href={"/terminos-y-condiciones"}
                   target="_blank"
                   rel="noreferrer"
                 >

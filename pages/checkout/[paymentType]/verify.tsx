@@ -456,9 +456,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               <div className="w-full sm:hidden"></div>
               <>
                 <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                  {getShippingPrice(product, order) !== 0 && (
-                    <b>Envío {formatPrice(getShippingPrice(product, order))}</b>
-                  )}
+                  Envío
                 </div>
                 <div className="px-3 text-right">
                   {" "}
@@ -472,6 +470,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                     ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
                     : "-"
                   } */}
+                  {formatPrice(getShippingPrice(product, order))}
                 </div>
               </>
               {/* ********* Services ******** */}
