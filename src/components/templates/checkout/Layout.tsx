@@ -523,7 +523,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
               </div>
             </article>
           )}
-          {(isFetchingOrder && products?.length === 0 && productUpdates?.length === 0) && (
+          {(isFetchingOrder && !isFinishProductsLoading && products?.length === 0 && productUpdates?.length === 0) && (
             <ProductDetailsLayoutSkeleton />
           )}
         </div>
