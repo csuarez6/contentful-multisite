@@ -105,6 +105,7 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         const password = getValues("password");
         const confirmPassword = getValues("confirmPassword");
         if (confirmPassword !== "" && password !== confirmPassword) trigger("confirmPassword");
+        //eslint-disable-next-line
     }, [watchPassword]);
 
     return (

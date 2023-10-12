@@ -16,7 +16,6 @@ const showCaptcha = (attr) => {
 const ReCaptchaBox: React.FC<IReCaptcha> = ({
   version,
   handleChange,
-  classNames,
 }) => {
   const [token, setToken] = useState<string>("");
 
