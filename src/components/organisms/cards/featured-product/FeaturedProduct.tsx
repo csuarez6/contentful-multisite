@@ -27,6 +27,7 @@ interface IAFeaturedProduct {
 const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails & IAFeaturedProduct> = (props) => {
   const {
     __typename,
+    name,
     promoTitle,
     cta,
     priceGasodomestico,
@@ -40,6 +41,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
     paymentMethods,
     promoImage,
     trademark,
+    category,
     phone,
     address,
     city,
@@ -49,14 +51,14 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
     isNew,
     discount,
     sku
-  } = props; 
+  } = props;
   const onClick = () => {
     const isGasodomestico = isGasAppliance(marketId);
 
     gTagEvent("select_item", {
       items: [{
         item_id: `SKU_${sku}`,
-        item_name: promoTitle,
+        item_name: promoTitle ?? name,
         coupon: '',
         discount: discount,
         index: 0,
@@ -64,7 +66,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
         item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo",
         affiliation: isGasodomestico ? 'Marketplace Gasodoméstico' : 'Marketplace VantiListo',
         item_brand: trademark?.name ?? '',
-        item_category: '',
+        item_category: category?.name ?? "",
         item_variant: '',
         price: isGasodomestico ? priceGasodomestico : priceVantiListo,
         currency: 'COP',
@@ -72,6 +74,15 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
       }],
       item_list_name: isGasodomestico ? "Gasodoméstico" : "Catálogo VantiListo",
       item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo"
+    });
+
+    gTagEvent("ProductInfo", {
+      'product': {
+        'id': `SKU_${sku}`,
+        'name': promoTitle ?? name,
+        'category': category?.name ?? "",
+        'brand': trademark?.name ?? ''
+      }
     });
   };
 
@@ -84,7 +95,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
       className="w-full h-full"
       content={cta
         ? { externalLink: cta.href }
-        : { ...props  }
+        : { ...props }
       }
     >
       <article className="relative w-full h-full group">

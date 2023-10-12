@@ -3,7 +3,7 @@ import { event as gTagEvent } from "nextjs-google-analytics";
 const getElements = (products) => {
   return products.map(prod => {
     const { sku_code, item, quantity, unit_amount_float } = prod;
-    const { name, discount, trademark } = item;
+    const { name, discount, trademark, category } = item;
 
     return {
       item_id: `SKU_${sku_code}`,
@@ -12,7 +12,7 @@ const getElements = (products) => {
       discount: discount ?? 0,
       affiliation: trademark ? `Marketplace: ${trademark.name}` : 'Marketplace Gasodomésticos',
       item_brand: trademark?.name ?? '',
-      item_category: '',
+      item_category: category?.name ?? '',
       item_variant: '',
       price: unit_amount_float,
       currency: 'COP',

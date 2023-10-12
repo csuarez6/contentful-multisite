@@ -152,13 +152,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     setNumProducts(
       order?.line_items
         ? order.line_items.reduce(
-            (acum, line_item) =>
-              acum +
-              line_item.quantity +
-              (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
-              (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
-            0
-          )
+          (acum, line_item) =>
+            acum +
+            line_item.quantity +
+            (line_item?.["installlation_service"]?.[0]?.quantity ?? 0) +
+            (line_item?.["warranty_service"]?.[0]?.quantity ?? 0),
+          0
+        )
         : 0
     );
   }, [order]);
@@ -241,9 +241,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
           className={classNames(
             "absolute inset-x-0 h-full",
             isOpenMenu
-              ? getBackgroundColorClass(
-                  secondaryNavCollectionColor ?? "Azul Oscuro"
-                ).background
+              ? getBackgroundColorClass(secondaryNavCollectionColor ?? "Azul Oscuro").background
               : backgroundColor.background
           )}
         ></div>
@@ -577,17 +575,15 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   ) : (
                     <>
                       <CustomLink
-                        content={{ urlPaths: ["/registro"] }}
+                        // content={{ urlPaths: ["/registro"] }}
+                        content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
                         className="flex items-center h-full text-center button button-primary whitespace-nowrap"
                       >
                         Regístrate
                       </CustomLink>
                       <CustomLink
-                        content={{
-                          urlPaths: [
-                            "/acceso" + (asPath !== "/" ? `?p=${asPath}` : ""),
-                          ],
-                        }}
+                        // content={{ urlPaths: ["/acceso" + (asPath !== "/" ? `?p=${asPath}` : "")] }}
+                        content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
                         className="flex items-center h-full text-center button button-outline whitespace-nowrap"
                       >
                         Inicia sesión
@@ -604,7 +600,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
               </div>
-              {utilityNavCollection?.items?.slice(0,1)?.map((item) => (
+              {utilityNavCollection?.items?.slice(0, 1)?.map((item) => (
                 <li className="relative z-10 flex items-center lg:hidden" key={item?.sys?.id}>
                   <CustomLink
                     onClick={() => close()}

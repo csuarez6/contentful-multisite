@@ -92,10 +92,7 @@ const NavItem = ({
             ref={next % 2 != 0 && elements ? refBtnCollapse : null}
             className={classNames(
               panel ? "mb-4" : null,
-              next % 2 != 0 &&
-                elements &&
-                getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro")
-                  .background,
+              next % 2 != 0 && elements && getBackgroundColorClass(item.backgroundColor ?? "Azul Oscuro").background,
               "transition py-2.5 px-3.5 flex items-center gap-2 relative cursor-pointer"
             )}
             onClick={(evt: any) => handlerClick(evt, item)}
@@ -109,24 +106,24 @@ const NavItem = ({
                 />
               </span>
             )}
-            {item?.internalLink?.urlPaths?.[0] ||
-            item?.urlPaths?.[0] ||
-            item?.externalLink ? (
-              <CustomLink
-                content={{ ...item, ...{ linkView: "" } }}
-                className="pointer-events-none"
-                linkClassName={classNames(
-                  "py-2.5 px-3.5 -my-2.5 -mx-3.5",
-                  !elements && "flex-grow"
-                )}
-              >
-                {item.promoTitle ?? item.name}
-              </CustomLink>
-            ) : (
-              <span className="py-2.5 px-3.5 -my-2.5 -mx-3.5">
-                {item.promoTitle ?? item.name}
-              </span>
-            )}
+            {(item?.internalLink?.urlPaths?.[0] || item?.urlPaths?.[0] || item?.externalLink)
+              ? (
+                <CustomLink
+                  content={{ ...item, ...{ linkView: "" } }}
+                  className="pointer-events-none"
+                  linkClassName={classNames(
+                    "py-2.5 px-3.5 -my-2.5 -mx-3.5",
+                    !elements && "flex-grow"
+                  )}
+                >
+                  {item.promoTitle ?? item.name}
+                </CustomLink>
+              ) : (
+                <span className="py-2.5 px-3.5 -my-2.5 -mx-3.5">
+                  {item.promoTitle ?? item.name}
+                </span>
+              )
+            }
             {next % 2 != 0 && elements && (
               <span className="btn-collpase font-bold cursor-pointer absolute right-3 top-1/2 z-10 -translate-y-1/2">
                 <Icon
@@ -195,14 +192,16 @@ const NavList = ({
         {level == 1 && (
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
-              content={{ urlPaths: ["/registro"] }}
+              // content={{ urlPaths: ["/registro"] }}
+              content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
               className="!block text-center button button-primary"
               onClick={() => close()}
             >
               Regístrate
             </CustomLink>
             <CustomLink
-              content={{ urlPaths: ["/acceso"] }}
+              // content={{ urlPaths: ["/acceso"] }}
+              content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
               className="!block text-center button button-outline"
               onClick={() => close()}
             >
