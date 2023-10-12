@@ -142,16 +142,14 @@ const ModalCities: React.FC<any> = ({ onActivedModal }) => {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-center">
-        Estimado usuario, antes de continuar con el proceso de compra tenga en
-        cuenta que esta ciudad no cuenta con envio.
-        <br />
+        Estimado usuario, su compra no puede continuar porque Vanti no cuenta con cobertura en su ciudad  
       </p>
       <div className="flex justify-end gap-2">
         <Link href="/gasodomesticos/productos" prefetch>
           <div
             className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
           >
-            Ver más Productos
+            Volver
           </div>
         </Link>
         <button
@@ -162,7 +160,7 @@ const ModalCities: React.FC<any> = ({ onActivedModal }) => {
           <div
             className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
           >
-            Continuar en la compra
+            Validar dirección
           </div>
         </button>
       </div>
