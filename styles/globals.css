@@ -234,3 +234,13 @@ h6 {
 ol ol {
   @apply list-[lower-alpha];
 }
+
+input[type="number"].remove-arrow::-webkit-inner-spin-button,
+input[type="number"].remove-arrow::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"].remove-arrow {
+  -moz-appearance: textfield;
+}

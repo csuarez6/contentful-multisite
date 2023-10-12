@@ -21,21 +21,17 @@ export const customerSchema = object({
         .required("Dato Requerido")
         .matches(
             //eslint-disable-next-line
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])(?=.{8,})/,
             "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
         ),
     confirmPassword: string()
         .required("Dato Requerido")
-        .oneOf([ref("password")], "Contraseñas no coinciden")
-        .matches(
-            //eslint-disable-next-line
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-            "Contraseñas debe contener: Min 8 caracteres, Min 1 letra mayúscula, Min 1 letra minúscula, Min 1 número y 1 caracter especial."
-        ),
+        .oneOf([ref("password")], "Contraseñas no coinciden"),
     contractNumber: number()
-        .typeError("Dato Requerido: El valor debe ser numérico")
-        .positive("Valor no valido, deben ser números positivos")
-        .required("Dato Requerido"),
+        .required("Dato Requerido")
+        .nullable()
+        .transform((value) => (isNaN(value) ? undefined : value))
+        .positive("Valor no valido, deben ser números positivos"),
     authorize: bool().oneOf([true], "Dato Requerido"),
     notificate: bool(),
     tokenReCaptcha: string(),

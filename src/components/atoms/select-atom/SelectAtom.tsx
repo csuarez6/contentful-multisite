@@ -133,7 +133,6 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
     return (
       <>
-        {/* <div className="sr-only"> */}
         <select
           {...id && { id }}
           name={name}
@@ -153,7 +152,6 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
             </option>
           ))}
         </select>
-        {/* </div> */}
 
         <Listbox value={selectedOption} onChange={onChange}>
           {({ open }) => (
@@ -168,7 +166,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
               {labelSelect && (
                 <Listbox.Label
                   className={classNames(
-                    "block text-lg font-medium transition-colors duration-500",
+                    "block text-lg transition-colors duration-500",
                     isError ? 'text-states-error-txt' : 'text-grey-30'
                   )}
                 >
@@ -178,7 +176,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
               <div className="grid gap-2 relative">
                 <Listbox.Button
                   className={classNames(
-                    "flex gap-[10px] flex-nowrap px-3 py-[6px] rounded bg-white border group transition-colors duration-500",
+                    "flex gap-[10px] flex-nowrap px-3 py-[6px] rounded bg-white border group transition-colors duration-500 focus:outline-none focus:border-lucuma-60",
                     isError
                       ? "border-states-error" :
                       open
@@ -212,7 +210,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                 >
                   <div className="absolute z-20 min-w-full top-full mt-2">
                     <Listbox.Options
-                      className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 overflow-auto"
+                      className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 overflow-auto focus:outline-none"
                       style={{
                         minHeight: `${defaultMinHeight}px`,
                         maxHeight: `${maxHeight}px`
@@ -222,11 +220,14 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                         <Listbox.Option
                           key={content.value + "-list"}
                           value={content}
-                          className={classNames(
-                            "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90 transition-colors duration-500",
-                            content.text === selectedOption.text
-                              ? "font-bold"
-                              : "font-medium"
+                          className={({ active }) => (
+                            classNames(
+                              "p-[10px] text-size-p2 text-gray-700 cursor-pointer hover:bg-grey-90 transition-colors duration-500",
+                              content.text === selectedOption.text
+                                ? "font-bold bg-grey-90 bg-opacity-50"
+                                : "font-medium",
+                              active && "bg-grey-90 bg-opacity-100"
+                            )
                           )}
                         >
                           {content.text}

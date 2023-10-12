@@ -3,6 +3,10 @@ import Icon from '../../icon/Icon';
 import { ITextBox } from './TextBox.mocks';
 import { classNames } from '@/utils/functions';
 
+export const blockInvalidChar = (evt, type) => {
+    if (type === "number") ['e', 'E', '+', '-', '.'].includes(evt.key) && evt.preventDefault();
+};
+
 const Textbox: React.FC<ITextBox> = forwardRef(({
     label,
     id,
@@ -31,9 +35,11 @@ const Textbox: React.FC<ITextBox> = forwardRef(({
                     ref={ref}
                     className={classNames(
                         "border rounded w-full py-2 px-3 text-grey-30 placeholder:text-grey-60 leading-tight focus:outline-none transition-colors duration-500",
+                        type === "number" && "remove-arrow",
                         isError ? "border-states-error" : "border-grey-80 focus:border-lucuma-60 hover:border-grey-30",
                         className
                     )}
+                    onKeyDown={(evt) => blockInvalidChar(evt, type)}
                     {...rest}
                     {...id && { id }}
                     {...id && { name: id }}

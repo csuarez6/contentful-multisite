@@ -1,8 +1,8 @@
-import React, { LegacyRef, createRef, useState } from 'react';
+import React, { LegacyRef, createRef, useEffect, useState } from 'react';
 import Textbox from '@/components/atoms/input/textbox/TextBox';
 import CheckBox from '@/components/atoms/input/checkbox/CheckBox';
 import { IForm } from './SignUpForm.mocks';
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import HeadingCard from '../../cards/heading-card/HeadingCard';
 import ModalSuccess from '../../modal-success/ModalSuccess';
@@ -51,14 +51,22 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         register,
         handleSubmit,
         setValue,
+        getValues,
         clearErrors,
         formState: { errors, isValid, submitCount },
-        reset
+        reset,
+        control,
+        trigger
     } = useForm<ITemsForm>({
         mode: 'onChange',
         resolver: yupResolver(schema),
         shouldUnregister: true,
         defaultValues
+    });
+
+    const watchPassword = useWatch({
+        control,
+        name: "password",
     });
 
     const onSubmit = (data: ITemsForm) => {
@@ -93,6 +101,12 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
         }
     };
 
+    useEffect(() => {
+        const password = getValues("password");
+        const confirmPassword = getValues("confirmPassword");
+        if (confirmPassword !== "" && password !== confirmPassword) trigger("confirmPassword");
+    }, [watchPassword]);
+
     return (
         <HeadingCard title='Crea tu cuenta vanti' icon='customer-service' isCheck={isValid}>
             <p className="pb-5 font-bold">
@@ -109,8 +123,8 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.name}
                         errorMessage={errors?.name?.message}
                         autoComplete="on"
-                        {...register('name')}
                         isRequired={true}
+                        {...register('name')}
                     />
                     <Textbox
                         id='lastName'
@@ -120,18 +134,20 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.lastName}
                         errorMessage={errors?.lastName?.message}
                         autoComplete="on"
-                        {...register("lastName")}
                         isRequired={true}
+                        {...register("lastName")}
                     />
                     <SelectAtom
                         id='documentType'
                         labelSelect='Elige el tipo de documento de identidad'
+                        firstOptionSelected
                         listedContents={selectOptions}
                         isError={!!errors.documentType}
                         errorMessage={errors?.documentType?.message}
                         isRequired={true}
+                        currentValue={getValues("documentType")}
                         handleChange={(value) => {
-                            setValue("documentType", value);
+                            setValue("documentType", value, { shouldValidate: true });
                             clearErrors('documentType');
                         }}
                         {...register('documentType')}
@@ -144,9 +160,9 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.documentNumber}
                         errorMessage={errors?.documentNumber?.message}
                         autoComplete="on"
-                        {...register('documentNumber')}
                         type="number"
                         isRequired={true}
+                        {...register('documentNumber')}
                     />
                     <Textbox
                         id='email'
@@ -157,8 +173,8 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.email}
                         errorMessage={errors?.email?.message}
                         autoComplete="on"
-                        {...register('email')}
                         isRequired={true}
+                        {...register('email')}
                     />
                     <Textbox
                         id='cellPhone'
@@ -168,9 +184,9 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.cellPhone}
                         errorMessage={errors?.cellPhone?.message}
                         autoComplete="on"
-                        {...register("cellPhone")}
                         type="number"
                         isRequired={true}
+                        {...register("cellPhone")}
                     />
                     <Textbox
                         id='password'
@@ -181,8 +197,8 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         autoComplete="off"
                         isError={!!errors.password}
                         errorMessage={errors?.password?.message}
-                        {...register("password")}
                         isRequired={true}
+                        {...register("password")}
                     />
                     <Textbox
                         id='confirmPassword'
@@ -193,8 +209,8 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         autoComplete="off"
                         isError={!!errors.confirmPassword}
                         errorMessage={errors?.confirmPassword?.message}
-                        {...register("confirmPassword")}
                         isRequired={true}
+                        {...register("confirmPassword")}
                     />
                 </div>
                 <div className="flex flex-col">
@@ -206,8 +222,9 @@ const SignUpForm: React.FC<IForm> = ({ onSubmitForm, cta, modal, selectOptions }
                         isError={!!errors.contractNumber}
                         errorMessage={errors?.contractNumber?.message}
                         autoComplete="on"
-                        {...register("contractNumber")}
+                        type="number"
                         isRequired={true}
+                        {...register("contractNumber")}
                     />
                     <div className='-mt-[6px]'>
                         <CheckBox
