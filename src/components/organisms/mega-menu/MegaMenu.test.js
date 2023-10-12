@@ -1,16 +1,16 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
-import { mockContentFilterProps } from "./ContentFilter.mocks";
-import ContentFilter from "./ContentFilter";
-import { useRouter } from "next/router";
+import MegaMenu from "./MegaMenu";
+import { mockMegaMenuProps } from "./MegaMenu.mocks";
 
-const { data } = mockContentFilterProps;
+const { data } = mockMegaMenuProps;
+
+import { useRouter } from "next/router";
 
 const useRouterMock = () => ({
   asPath: "/",
   push: jest.fn(),
-  pathname: ""
 });
 
 jest.mock("next/router", () => ({
@@ -20,16 +20,18 @@ jest.mock("next/router", () => ({
 jest.mock("@/lib/richtext/default.formatter", () => ({
   defaultFormatOptions: jest.fn(() => ({})),
 }));
+
 jest.mock("@/lib/services/render-blocks.service", () => ({
   attachLinksToRichtextContent: jest.fn(),
 }));
+
 jest.mock("@/lib/services/render-cards.service", () => jest.fn());
 
-describe("ContentFilter data", () => {
+describe("MegaMenu", () => {
   beforeEach(() => {
     useRouter.mockImplementation(useRouterMock);
   });
   test("renders", async () => {
-    render(<ContentFilter {...data} />);
+    render(<MegaMenu {...data} />);
   });
 });

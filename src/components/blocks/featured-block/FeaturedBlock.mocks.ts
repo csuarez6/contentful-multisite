@@ -8,6 +8,8 @@ const data: IPromoBlock = {
   description: RICHTEXT_SHORT_SIMPLE,
   image: {
     url: 'https://via.placeholder.com/1120x1042.png',
+    width: 1120,
+    height: 1042,
     title: 'featuredView'
   },
   ctaCollection: {
@@ -59,6 +61,8 @@ const dataImageRight: IPromoBlock = {
   },
   image: {
     url: 'https://via.placeholder.com/1120x1042.png',
+    width: 1120,
+    height: 1042,
     title: 'featuredView'
   },
   ctaCollection: {

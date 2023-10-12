@@ -3,34 +3,54 @@ import { ICarousel } from "./Carousel";
 const data: ICarousel = {
     content:[
         {
-            url: 'https://picsum.photos/600/550'
+            url: 'https://picsum.photos/600/550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://via.placeholder.com/600x550'
+            url: 'https://via.placeholder.com/600x550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://picsum.photos/600/550'
+            url: 'https://picsum.photos/600/550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://via.placeholder.com/600x550'
+            url: 'https://via.placeholder.com/600x550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://picsum.photos/600/550'
+            url: 'https://picsum.photos/600/550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://via.placeholder.com/600x550'
+            url: 'https://via.placeholder.com/600x550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://picsum.photos/600/550'
+            url: 'https://picsum.photos/600/550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://via.placeholder.com/600x550'
+            url: 'https://via.placeholder.com/600x550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://picsum.photos/600/550'
+            url: 'https://picsum.photos/600/550',
+            width: 600,
+            height: 550
         },
         {
-            url: 'https://via.placeholder.com/600x550'
+            url: 'https://via.placeholder.com/600x550',
+            width: 600,
+            height: 550
         }
     ],
     footerText: {

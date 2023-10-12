@@ -4,6 +4,16 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import ListWithIcons from './ListWithIcons';
 import { mockListWithIconsProps } from './ListWithIcons.mocks'
 
+jest.mock("@/lib/richtext/default.formatter", () => ({
+  defaultFormatOptions: jest.fn(() => ({})),
+}));
+
+// jest.mock("@/lib/services/render-blocks.service", () => ({
+//   attachLinksToRichtextContent: jest.fn(),
+// }));
+
+jest.mock("@/lib/services/render-cards.service", () => jest.fn());
+
 describe('List with icons data', () => {
     test('renders', async () => {
         render(<ListWithIcons {...mockListWithIconsProps.data} />);

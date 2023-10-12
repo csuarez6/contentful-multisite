@@ -3,9 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ProductFilterBlock from "./ProductFilter";
 import { mockProductFilterProps } from "./ProductFilter.mocks";
 
+jest.mock("@/lib/richtext/default.formatter", () => ({
+  defaultFormatOptions: jest.fn(() => ({})),
+}));
 jest.mock("@/lib/services/render-blocks.service", () => ({
   attachLinksToRichtextContent: jest.fn(),
 }));
+jest.mock("@/lib/services/render-cards.service", () => jest.fn());
 
 describe("ProductFilterBlock", () => {
   // Definimos una constante con la información de prueba que queremos renderizar

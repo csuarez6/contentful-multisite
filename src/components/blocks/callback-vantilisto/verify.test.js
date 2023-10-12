@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Verify from './verify';
-import {data} from "./CallbackVantilisto"
+import {data} from "./CallbackVantilisto.mocks"
 
 describe('Verify', () => {
     test('renders', async () => {

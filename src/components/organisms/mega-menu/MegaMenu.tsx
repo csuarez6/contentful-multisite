@@ -280,7 +280,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                       </div>
                     ))}
                   </div>
-                  {item?.secondaryNavCollection.items.length > 0 && (
+                  {item?.secondaryNavCollection?.items?.length > 0 && (
                     <div
                       className="grid gap-6 xl:gap-10 -ml-5 pl-5 border-l border-neutral-70"
                       style={columnCard(item.mainNavCollection.items.length)}
