@@ -303,18 +303,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           <div className="2md:col-span-3 2lg:col-span-2">
             {children}
           </div>
-          {(products?.length > 0 || productUpdates?.length > 0 || isFinishProductsLoading) && (
+          {(products?.length > 0 || productUpdates?.length > 0) && (
             <article className="2md:col-span-2 2lg:col-span-1 bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
               <div className="flex flex-col gap-[17px] w-full h-full text-justify">
                 <h4 className="pb-3 border-b text-blue-dark border-blue-dark">
                   Detalle de tu pedido
                 </h4>
                 <div className="flex flex-col gap-3">
-                  {(products?.length === 0 && isFinishProductsLoading) && (
-                    <div className="px-3 py-2 mb-2 text-sm text-orange-700 bg-orange-100 border-l-4 border-orange-500">
-                      No se puede mostrar el detalle del pedido
-                    </div>
-                  )}
                   {(productUpdates?.length > 0) && (
                     <div className="w-full">
                       {productUpdates.map((productUpdate: any) => {
@@ -525,6 +520,20 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           )}
           {(isFetchingOrder && !isFinishProductsLoading && products?.length === 0 && productUpdates?.length === 0) && (
             <ProductDetailsLayoutSkeleton />
+          )}
+          {(isFinishProductsLoading && products.length === 0) && (
+            <article className="2md:col-span-2 2lg:col-span-1 bg-white rounded-[20px] p-6 shadow-[-2px_-2px_0px_0px_rgb(0,0,0,0.04),2px_2px_4px_0px_rgb(0,0,0,0.08)] w-full h-fit">
+              <div className="flex flex-col gap-[17px] w-full h-full text-justify">
+                <h4 className="pb-3 border-b text-blue-dark border-blue-dark">
+                  Detalle de tu pedido
+                </h4>
+                <div className="flex flex-col gap-3">
+                  <div className="px-3 py-2 mb-2 text-sm text-orange-700 bg-orange-100 border-l-4 border-orange-500">
+                    No se puede mostrar el detalle del pedido
+                  </div>
+                </div>
+              </div>
+            </article>
           )}
         </div>
       </div>
