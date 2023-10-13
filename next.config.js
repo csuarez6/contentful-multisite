@@ -36,6 +36,31 @@ const nextConfig = {
         destination: "/:slug*",
         permanent: true,
       },
+      {
+        source: "/acceso",
+        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        permanent: true,
+      },
+      {
+        source: "/registro",
+        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        permanent: true,
+      },
+      {
+        source: "/forgotpassword",
+        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        permanent: true,
+      },
+      {
+        source: "/dashboard",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/:path*",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
   publicRuntimeConfig: {
