@@ -46,7 +46,7 @@ const buildSitemapXml = (fields): string => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const pageEntries = await getEntriesSlugs({ limit: 10000 }, false);
+  const pageEntries = await getEntriesSlugs({ limit: 5000 }, false);  
   const pageEntriesArr = consolideEntriesWithLocales(pageEntries);
   const consolidatedEntries = [...pageEntriesArr];
 
