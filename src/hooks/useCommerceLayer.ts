@@ -73,6 +73,7 @@ export const useCommerceLayer = () => {
   const [isInitialRender, setIsInitialRender] = useState<boolean>();
   const [localOrderId, setLocalOrderId] = useState<string>();
   const [isPaymentProcess, setisPaymentProcess] = useState(false);
+  const [isPolicyCheck, setIspolicyCheck] = useState(false);
 
   /**
    * Set localStorage and State Order ID
@@ -755,12 +756,19 @@ export const useCommerceLayer = () => {
     }, []
   );
 
+  const updateIspolicyCheck = useCallback(
+    async (value: boolean) => {
+      setIspolicyCheck(value);
+    }, []
+  );
+
   return {
     order,
     orderError,
     productUpdates,
     tokenRecaptcha,
     timeToPay,
+    isPolicyCheck,
     onRecaptcha,
     onHasShipment,
     hasShipment,
@@ -791,7 +799,8 @@ export const useCommerceLayer = () => {
     upgradeTimePay,
     updateIsPaymentProcess,
     getOrderById,
-    getOrdersByCustomerEmail
+    getOrdersByCustomerEmail,
+    updateIspolicyCheck,
   };
 };
 

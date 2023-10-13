@@ -43,7 +43,9 @@ const CheckoutProvider = ({ children }) => {
     upgradeTimePay,
     updateIsPaymentProcess,
     getOrderById,
-    getOrdersByCustomerEmail
+    getOrdersByCustomerEmail,
+    updateIspolicyCheck,
+    isPolicyCheck,
   } = useCommerceLayer();
 
   const flow = useMemo(() => flows.find(i => i.name === paymentType), [paymentType]);
@@ -84,7 +86,9 @@ const CheckoutProvider = ({ children }) => {
     upgradeTimePay,
     updateIsPaymentProcess,
     getOrderById,
-    getOrdersByCustomerEmail
+    getOrdersByCustomerEmail,
+    updateIspolicyCheck,
+    isPolicyCheck
   };
 
   return (

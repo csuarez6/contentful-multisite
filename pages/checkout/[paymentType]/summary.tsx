@@ -21,6 +21,8 @@ import { Customers } from "@commercelayer/sdk/lib/cjs/api";
 import { formatAddress } from "@/lib/services/commerce-layer.service";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
+import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
+import { DataPolicyText } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
 
 const ModalContent = ({ modalMsg }) => {
   return (
@@ -49,6 +51,9 @@ const CheckoutSummary = () => {
     tokenRecaptcha,
     isPaymentProcess,
     getOrdersByCustomerEmail,
+    updateMetadata,
+    updateIspolicyCheck,
+    isPolicyCheck,
   } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [shippingAddress, setShippingAddress] = useState<Address>();
@@ -86,6 +91,10 @@ const CheckoutSummary = () => {
       isLogged ? user : order
     );
   }, [user, order, isLogged]);
+
+  const metadata = useMemo(() => {
+    return order?.metadata;
+  }, [order]);
 
   const clientEmail = useMemo(() => {
     return ((resource) =>
@@ -157,6 +166,21 @@ const CheckoutSummary = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const validateDataPolicy = (isCheck) => {
+    updateIspolicyCheck(isCheck);
+  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = {...metadata, ...{isPolicyCheck: isPolicyCheck}};
+        await updateMetadata(data);
+      } catch (error) {
+        console.error('error update', error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPolicyCheck]);
+
   return (
     <HeadingCard
       classes="col-span-2"
@@ -222,28 +246,15 @@ const CheckoutSummary = () => {
           </div>
           <div className="flex justify-between">
             <dt>
-              <p className="font-bold text-blue-dark">
-                Autorizo de manera libre, expresa, inequívoca e informada el
-                tratamiento de mis datos personales de acuerdo con lo dispuesto
-                en la Ley 1581/2012 y conforme a la política de tratamiento de
-                datos personales publicada en &nbsp;
-                <a
-                  className={`text-gray-500 underline`}
-                  href={"/tramites-y-ayuda/proteccion-de-datos-personales"}
-                  rel="noreferrer"
-                >
-                  política de tratamiento de datos personales
-                </a>
-                &nbsp; y los &nbsp;
-                <a
-                  className={`text-gray-500 underline`}
-                  href={"/terminos-y-condiciones"}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  términos y condiciones.
-                </a>
-              </p>
+              <CheckBox
+                id="dataPolicy"
+                name="dataPolicy"
+                label={<DataPolicyText />}
+                type="checkbox"
+                checked={!!isPolicyCheck}
+                onClick={validateDataPolicy}
+              />
+              {!isPolicyCheck && <p className="mt-1 text-red-600">Campo obligatorio</p>}
             </dt>
           </div>
           <div className="flex justify-between">

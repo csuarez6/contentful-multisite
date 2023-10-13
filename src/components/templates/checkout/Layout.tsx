@@ -60,7 +60,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     isFetchingOrder,
     updateIsPaymentProcess,
     getOrderById,
-    onHasShipment
+    onHasShipment,
+    isPolicyCheck
   } = useContext(CheckoutContext);
   const [onPayment, setOnPayment] = useState<boolean>();
   const [error, setError] = useState(false);
@@ -485,7 +486,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   {isComplete && (
                     <button
                       onClick={validateOrder}
-                      disabled={isLoading || isPaying || !tokenRecaptcha}
+                      disabled={isLoading || isPaying || !tokenRecaptcha || !isPolicyCheck}
                       className={classNames(
                         "button button-primary w-full mt-[17px]",
                         (isLoading || isPaying)

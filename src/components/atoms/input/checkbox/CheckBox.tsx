@@ -9,22 +9,26 @@ export interface ICheckBox {
   checked?: boolean,
   value?: any,
   isError?: boolean,
-  errorMessage?: string
+  errorMessage?: string,
+  onClick?: (evt) => void
 }
 
-const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, checked, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
+const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, checked, onClick, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
   const [isChecked, setIsChecked] = useState(false);
   const parentRef = useRef(null);
 
   useEffect(() => {
     setIsChecked(checked);
   }, [checked]);
-
+  
   useEffect(() => {
     const input: HTMLInputElement = parentRef?.current?.querySelector('input');
 
     if (input) {
-      const handleChange = (evt) => setIsChecked(evt.target.checked);
+      const handleChange = (evt) => {
+        setIsChecked(evt.target.checked);
+        onClick(evt.target.checked);
+      };
       input.addEventListener('click', handleChange);
 
       return () => {
