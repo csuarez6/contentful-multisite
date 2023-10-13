@@ -58,7 +58,7 @@ const schema = yup.object({
 
 const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
   const refForm: LegacyRef<HTMLFormElement> = createRef();
-  const lastPath = useLastPath();
+  const lastPath = useLastPath(true);
   const {
     register,
     handleSubmit,

@@ -77,7 +77,7 @@ const schema = yup.object({
 
 const CallbackPage = () => {
   const refForm: LegacyRef<HTMLFormElement> = createRef();
-  const lastPath = useLastPath();
+  const lastPath = useLastPath(true);
   const {
     register,
     handleSubmit,

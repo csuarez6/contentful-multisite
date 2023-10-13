@@ -79,8 +79,8 @@ const schema = yup.object({
 
 const CallbackPage = () => {
   const router = useRouter();
-  const { asPath } = router;
-  const typeName = asPath.split('/callback/')?.join('');
+  const { pathname } = router;
+  const typeName = pathname.split('/callback/')?.join('');
 
   const refForm: LegacyRef<HTMLFormElement> = createRef();
   const {
