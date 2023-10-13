@@ -16,9 +16,14 @@ const handler = async (
         const resp = await getOrderStatusCl();
         const orderData = resp.data ?? [];
         let approved = 0, canceled = 0;
-        orderData.forEach(async function (order) {
+        const canceledOrders = [];
+        const approvedOrders = [];
+        const promises = orderData.map(async (order) => {
+            // orderData.forEach(async function (order) {
             const paymentSource = order.payment_source;
+            console.log("paymentSource ", paymentSource);
             if (paymentSource) {
+                console.log("Entrooooo paymentSource ");
                 const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
                 if (!transactionToken) {
                     throw new Error('Transaction token not found');
@@ -37,10 +42,12 @@ const handler = async (
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
                     await approveOrder(order, metadata).then(() => {
                         approved++;
+                        approvedOrders.push(order.number);
                     });
                 } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
                     await cancelOrder(order, metadata).then(() => {
                         canceled++;
+                        canceledOrders.push(order.number);
                     });
                 }
                 await sendEmails(order.id, false, infoP2P.status.status);
@@ -52,11 +59,16 @@ const handler = async (
 
                 await cancelOrder(order, metadata).then(() => {
                     canceled++;
+                    canceledOrders.push(order.number);
                 });
                 await sendEmails(order.id);
             }
         });
-        console.info("recordsNumber: ", orderData.length, " approvedOrders: ", approved, " canceledOrders: ", canceled);
+        await Promise.all(promises).then(() => {
+            console.info("recordsNumber: ", orderData.length, " approvedOrders: ", approved, " canceledOrders: ", canceled);
+            console.info("Canceled orders: ", canceledOrders);
+            console.info("Approved orders: ", approvedOrders);
+        });
         return res.status(200).json({ recordsNumber: orderData.length, approvedOrders: approved, canceledOrders: canceled });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: e.message });

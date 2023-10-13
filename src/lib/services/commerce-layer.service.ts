@@ -268,7 +268,7 @@ export const updateCustomerResetPwd = async (
       customer_password: customerPWD,
       _reset_password_token: resetToken,
     });
-    return { status: 200, data: { type: updateCustomerRPwd?.type, customer_email: updateCustomerRPwd.customer_email} };
+    return { status: 200, data: { type: updateCustomerRPwd?.type, customer_email: updateCustomerRPwd.customer_email } };
   } catch (error) {
     throw new Error(error);
   }
@@ -348,7 +348,7 @@ export const getCommercelayerProduct = async (skuCode: string) => {
     let reservation = 0;
     reservation = sku?.stock_items?.find(
       (p) => p.stock_location.reference === "gasodomesticos"
-      )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
+    )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
 
     if (sku) {
       product = {
@@ -380,8 +380,8 @@ export const getCommercelayerProduct = async (skuCode: string) => {
 
         productsQuantityGasodomestico:
           Number(sku?.stock_items?.find(
-              (p) => p.stock_location.reference === "gasodomesticos"
-            )?.quantity) - reservation ?? 0,
+            (p) => p.stock_location.reference === "gasodomesticos"
+          )?.quantity) - reservation ?? 0,
         productsQuantityVantiListo:
           sku?.stock_items?.find(
             (p) => p.stock_location.reference === "vantiListo"
@@ -525,8 +525,8 @@ export const updateOrderAdminService = async (
     response["data"] =
       productUpdates.length > 0
         ? getReformatedOrder(
-            await client.orders.retrieve(idOrder, defaultOrderParams)
-          )
+          await client.orders.retrieve(idOrder, defaultOrderParams)
+        )
         : formatedOrder;
 
     return response;
@@ -690,7 +690,7 @@ export const getOrderStatusCl = async (status?: string) => {
     const orderList = await cl.orders.list({
       include: ["payment_source"],
       fields: {
-        orders: ["payment_source"],
+        orders: ["number", "payment_source"],
       },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },
@@ -721,9 +721,8 @@ export const getNameQuantityOrderItems = (order: Order): string => {
     let itemNames = "";
     order.line_items?.forEach((item) => {
       if (item.item_type === "skus" || item.item_type === "adjustments") {
-        itemNames += `${itemNames !== "" ? ", " : ""}(${item.quantity}) ${
-          item.name
-        }`;
+        itemNames += `${itemNames !== "" ? ", " : ""}(${item.quantity}) ${item.name
+          }`;
       }
     });
     return itemNames;
