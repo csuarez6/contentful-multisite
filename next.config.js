@@ -61,6 +61,16 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/conoce-tu-cupo",
+        destination: "/vantilisto/consulta-tu-cupo",
+        permanent: true,
+      },
+      {
+        source: "/hogar/servicio-al-cliente/oficina-virtual",
+        destination: "/acceso",
+        permanent: true,
+      },
     ];
   },
   publicRuntimeConfig: {
