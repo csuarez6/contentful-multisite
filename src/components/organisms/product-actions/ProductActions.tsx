@@ -10,6 +10,7 @@ import {
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames, isAvailableGasAppliance } from "@/utils/functions";
 import CheckoutContext from "@/context/Checkout";
+import { ADD_CART_422_ERROR_MSG, ADD_CART_GENERAL_ERROR_MSG } from "@/constants/checkout.constants";
 
 const ProductActions: React.FC<IProductOverviewDetails> = ({
   _priceGasodomestico,
@@ -29,6 +30,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
     icon: "",
     type: "",
     title: "",
+    description: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { orderError } = useContext(CheckoutContext);
@@ -63,10 +65,8 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
           setErrorMessage({
             icon: "alert",
             type: "warning",
-            title:
-              result.status === 422
-                ? `No hay más unidades disponibles para este producto.`
-                : "Ocurrió un error al agregar al carrito, por favor intente nuevamente",
+            title: `¡Ups!`,
+            description: result.status === 422 ? ADD_CART_422_ERROR_MSG : ADD_CART_GENERAL_ERROR_MSG,
           });
         }
       })
@@ -132,6 +132,8 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
           icon={errorMessage.icon}
           type={errorMessage.type}
           title={errorMessage.title}
+          description={errorMessage.description}
+          isCentered={false}
           close={() => setError(false)}
         />
       )}

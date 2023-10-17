@@ -41,15 +41,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       'mobile': order.metadata?.cellPhone,
       'email': order.customer_email
     };
-
     const ipAddress = req.socket.remoteAddress;
     const userAgent = req.headers['user-agent'];
-
     const response: IP2PRequest | string = await createP2PRequest(order.id, payment, ipAddress, userAgent, extraFields, buyer);
-
-    if (typeof response === 'string') {
-      throw new Error(response);
-    }
+    
+    if (typeof response === 'string') throw new Error(response);
+    if (response?.status?.status === "FAILED") return res.status(422).json({ error: 'AMOUNT_ERROR'});
 
     const token = response.requestId;
 
@@ -60,7 +57,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         type: "orders",
       },
     });
-
     await client.orders.update({
       id: order.id,
       _place: true
@@ -72,7 +68,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         id: authorization?.id,
         metadata: response
       });
-      await sendEmails(order.id, true, null, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
+      sendEmails(order.id, true, null, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
     });
 
     res.json({

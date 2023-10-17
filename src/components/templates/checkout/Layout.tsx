@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
-import { PRICE_VALIDATION_ID, PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import { CHANGED_PRODUCTS_ERROR_MSG, FINAL_422_ERROR_MSG, NEXT_STEP_ERROR_MSG, PRICE_VALIDATION_ID } from "@/constants/checkout.constants";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
@@ -69,6 +69,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     icon: "",
     type: "",
     title: "",
+    description: "",
   });
   const [isComplete, setIsComplete] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
@@ -105,11 +106,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
     return items;
   }, [asPath, order]);
 
-  const completed = useMemo(
-    () => order && PSE_STEPS_TO_VERIFY.map((step) => !!order.metadata?.[step]).every((i) => i),
-    [order]
-  );
-
   const validateOrder = async () => {
     setIsLoading(true);
     gaEventPurchase(order, shippingMethodGlobal);
@@ -122,14 +118,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
     if (!order) return;
-    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length && !asPath.startsWith("/checkout/pse/purchase-order")) {
-      push("/checkout/pse/verify");
-    }
-    if (asPath.startsWith('/checkout/pse/summary')) {
-      setIsComplete(completed);
-    } else {
-      setIsComplete(false);
-    }
+    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length && !asPath.startsWith("/checkout/pse/purchase-order")) push("/checkout/pse/verify");
+    setIsComplete(asPath.startsWith('/checkout/pse/summary'));
     shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, order]);
@@ -145,8 +135,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           setErrorMessage({
             icon: "alert",
             type: "warning",
-            title:
-              "La orden ha tenido algunos cambios de especificaciones, por favor compruebe si desea continuar.",
+            title: "¡Vaya! Tenemos cambios",
+            description: CHANGED_PRODUCTS_ERROR_MSG,
           });
         }
       }
@@ -185,12 +175,12 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
       await setPaymentMethod();
       await handlePayment();
     } catch (error) {
-      console.error(error);
       setError(true);
       setErrorMessage({
         icon: "alert",
         type: "warning",
-        title: "Error al realizar la orden",
+        title: "¡Ups!",
+        description: NEXT_STEP_ERROR_MSG
       });
     }
     updateIsPaymentProcess(false);
@@ -206,16 +196,16 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const handlePayment = async (toCancel = false) => {
     try {
-      const path =
-        `/api/p2p` + (toCancel ? `/cancel` : "");
+      const path = `/api/p2p` + (toCancel ? `/cancel` : "");
       await fetch(path, {
         method: "POST",
         body: JSON.stringify({
           orderId: order?.id
         }),
-      }).then((response) => response.json())
+      })
+        .then((response) => response.json())
         .then(async (json) => {
-          if (json.data.status.status === 'OK') {
+          if (json?.data?.status?.status === 'OK') {
             const data: IP2PRequest = json.data;
             const productsData = products.map(el => {
               return {
@@ -231,6 +221,14 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
             });
 
             push(data.processUrl);
+          } else if (json?.error === 'AMOUNT_ERROR') {
+            setError(true);
+            setErrorMessage({
+              icon: "alert",
+              type: "warning",
+              title: "¡Ups!",
+              description: FINAL_422_ERROR_MSG
+            });
           } else {
             throw new Error("Error create p2p session");
           }
@@ -543,6 +541,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
           icon={errorMessage.icon}
           type={errorMessage.type}
           title={errorMessage.title}
+          description={errorMessage.description}
           close={() => setError(false)}
         />
       )

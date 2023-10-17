@@ -23,7 +23,11 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { defaultLayout } from "../../_app";
 import {
+  ADD_CART_422_ERROR_MSG,
+  ADD_CART_GENERAL_ERROR_MSG,
+  NEXT_STEP_ERROR_MSG,
   PSE_STEPS_TO_VERIFY,
+  REMOVE_CART_GENERAL_ERROR_MSG,
   VantiOrderMetadata,
 } from "@/constants/checkout.constants";
 import AuthContext from "@/context/Auth";
@@ -54,6 +58,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     icon: "",
     type: "",
     title: "",
+    description: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isActivedModal, setIsActivedModal] = useState(false);
@@ -251,7 +256,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
         setErrorMessage({
           icon: "alert",
           type: "warning",
-          title: "No hay productos en el carrito",
+          title: "Carrito vacío",
+          description: "Tu carrito de compras está vacío en este momento. ¡Descubre nuestro amplio catálogo de productos en la tienda virtual y encuentra algo que te encante!",
         });
         return;
       }
@@ -279,7 +285,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
       setErrorMessage({
         icon: "alert",
         type: "warning",
-        title: "Algo a salido mal",
+        title: "¡Ups!",
+        description: NEXT_STEP_ERROR_MSG
       });
     } finally {
       setIsLoading(false);
@@ -306,17 +313,14 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     updateItemQuantity(product?.sku_code, quantityTemp)
       .then((result) => {
         if (result.status !== 200) {
-          const messageMinus =
-            "Ocurrió un error con el producto seleccionado, por favor intente nuevamente.";
-          const messagePlus =
-            result.status === 422
-              ? `No hay más unidades disponibles para el producto seleccionado.`
-              : "Ocurrió un error al agregar más unidades, por favor valide e intente nuevamente.";
+          const messageMinus = REMOVE_CART_GENERAL_ERROR_MSG;
+          const messagePlus = result.status === 422 ? ADD_CART_422_ERROR_MSG : ADD_CART_GENERAL_ERROR_MSG;
           setError(true);
           setErrorMessage({
             icon: "alert",
             type: "warning",
-            title: operator == "plus" ? messagePlus : messageMinus,
+            title: "¡Ups!",
+            description: operator == "plus" ? messagePlus : messageMinus,
           });
         }
       })
@@ -439,7 +443,8 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                           setErrorMessage({
                             icon: "alert",
                             type: "warning",
-                            title: `Ocurrió un error al eliminar el producto seleccionado, por favor intente nuevamente.`,
+                            title: "¡Ups!",
+                            description: REMOVE_CART_GENERAL_ERROR_MSG,
                           });
                         }
                       })
@@ -626,6 +631,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           icon={errorMessage.icon}
           type={errorMessage.type}
           title={errorMessage.title}
+          description={errorMessage.description}
           close={() => setError(false)}
         />
       )}

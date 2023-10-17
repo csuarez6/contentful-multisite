@@ -5,7 +5,7 @@ import { classNames } from "@/utils/functions";
 import Icon from "@/components/atoms/icon/Icon";
 export interface IModal {
   title?: string;
-  subtitle?: string;
+  description?: string;
   isCentered?: boolean;
   icon?: string;
   type?: string;
@@ -18,6 +18,7 @@ const InformationModal: React.FC<IModal> = ({
   isCentered = true,
   close = () => null,
   title,
+  description,
   type,
   icon,
 }) => {
@@ -43,7 +44,7 @@ const InformationModal: React.FC<IModal> = ({
               containerClass ?? "max-w-lg"
             )}
           >
-            <div className="w-full flex justify-center items-center p-2 sm:p-4">
+            <div className="w-full flex justify-center items-center sm:p-4">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -55,16 +56,16 @@ const InformationModal: React.FC<IModal> = ({
               >
                 <Dialog.Panel
                   className={classNames(
-                    "relative transform w-full overflow-hidden rounded-[20px] bg-white p-8 pt-12 align-middle shadow-xl transition-all flex flex-col gap-16 justify-end",
+                    "relative transform w-full overflow-hidden rounded-[20px] bg-white align-middle shadow-xl transition-all flex flex-col justify-end gap-6",
                     isCentered && "text-center"
                   )}
                 >
                   <div
-                    className={`-mx-8 -mt-12 p-8 pt-12 ${
+                    className={`px-7 py-6 ${
                       type === "warning" ? "bg-orange-100" : "bg-green-100"
                     }`}
                   >
-                    <div className="absolute -top-px right-0 pt-4 pr-[22px]">
+                    <div className="absolute top-0 right-0 pt-8 pr-8">
                       <button
                         type="button"
                         className="rounded-md text-neutral-30 hover:text-gray-500 focus:outline-none focus:ring-offset-2"
@@ -97,9 +98,14 @@ const InformationModal: React.FC<IModal> = ({
                       )}
                     </Dialog.Title>
                   </div>
-                  <div className="flex justify-center gap-4 item">
+                  {description && (
+                    <div className="text-justify text-lg text-gray-600 px-8">
+                      {description}
+                    </div>
+                  )}
+                  <div className="flex justify-end gap-4 item px-8 pb-6">
                     <div
-                      className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline absolute bottom-[9%] right-12`}
+                      className={`cursor-pointer flex gap-1 flex-nowrap w-fit button button-outline absolute bottom-[9%]`}
                       onClick={close}
                     >
                       Cerrar
