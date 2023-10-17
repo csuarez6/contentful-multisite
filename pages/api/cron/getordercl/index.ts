@@ -21,6 +21,8 @@ const handler = async (
         const approvedOrders = [];
         const authHeader = req.headers;
         console.info("authHeader: ", authHeader);
+        const authHeader2 = req.headers.get('authorization');
+        console.info("authHeader2 ", authHeader2);
         // const promises = orderData.map(async (order) => {
         //     // orderData.forEach(async function (order) {
         //     const paymentSource = order.payment_source;
