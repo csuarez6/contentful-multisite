@@ -385,7 +385,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <CustomLink
                         className="underline text-[#035177] text-sm mt-[7px]"
                         content={{
-                          urlPaths: ["financiacion/vanti-listo"],
+                          urlPaths: ["vantilisto/consulta-tu-cupo"],
                         }}
                       >
                         Conóce más
@@ -408,7 +408,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </div>
                       <CustomLink
                         content={{
-                          urlPaths: ["centro-de-ayuda/preguntas-frecuentes"],
+                          urlPaths: ["tramites-y-ayuda/preguntas-frecuentes-sobre-pagos-electronicos"],
                         }}
                         className="text-sm underline text-blue-dark"
                       >

@@ -254,13 +254,7 @@ const CheckoutSummary = () => {
                 checked={!!isPolicyCheck}
                 onClick={validateDataPolicy}
               />
-              {!isPolicyCheck && <p className="mt-1 text-red-600">Campo obligatorio</p>}
-            </dt>
-          </div>
-          <div className="flex justify-between">
-            <dt>
-              <strong>NOTA:</strong> Al hacer click en “Enviar datos” serás
-              contactado por un agente de Vanti
+              {!isPolicyCheck && <p className="mt-1 text-red-600">Campo obligatorio *</p>}
             </dt>
           </div>
         </dl>
