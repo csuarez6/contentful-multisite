@@ -1,5 +1,4 @@
-import type { NextApiResponse } from 'next';
-import type { NextRequest } from 'next/server';
+import type { NextApiResponse, NextApiRequest } from 'next';
 import { getCLAdminCLient, getOrderStatusCl, isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
 import { sendEmails } from '@/lib/services/send-emails.service';
@@ -8,7 +7,7 @@ import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { Order } from '@commercelayer/sdk';
 
 const handler = async (
-    req: NextRequest,
+    req: NextApiRequest,
     res: NextApiResponse<any>
 ) => {
 
@@ -18,10 +17,10 @@ const handler = async (
         let approved = 0, canceled = 0;
         const canceledOrders = [];
         const approvedOrders = [];
-        const authHeader = req.headers.get('authorization');
+        const authHeader = req.headers.authorization;
         console.info("authHeader ", authHeader);
         if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-            return res.status(500).json({ status: 'error', message: "Error RequestAuth" });
+            return res.status(400).json({ status: 'error', message: "Error RequestAuth" });
         }
         const promises = orderData.map(async (order) => {
             // orderData.forEach(async function (order) {
