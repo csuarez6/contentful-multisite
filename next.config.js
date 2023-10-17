@@ -119,10 +119,6 @@ const nextConfig = {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
-          {
-            key: "Content-Security-Policy",
-            value: "upgrade-insecure-requests; block-all-mixed-content; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; font-src 'self';",
-          },
         ],
       },
       {
