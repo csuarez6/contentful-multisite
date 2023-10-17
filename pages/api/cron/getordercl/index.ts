@@ -11,7 +11,6 @@ const handler = async (
     req: NextRequest,
     res: NextApiResponse<any>
 ) => {
-    // if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const resp = await getOrderStatusCl();
@@ -19,61 +18,61 @@ const handler = async (
         let approved = 0, canceled = 0;
         const canceledOrders = [];
         const approvedOrders = [];
-        const authHeader = req.headers;
-        console.info("authHeader: ", authHeader);
-        const authHeader2 = req.headers.get('authorization');
-        console.info("authHeader2 ", authHeader2);
-        // const promises = orderData.map(async (order) => {
-        //     // orderData.forEach(async function (order) {
-        //     const paymentSource = order.payment_source;
-        //     if (paymentSource) {
-        //         const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
-        //         if (!transactionToken) {
-        //             throw new Error('Transaction token not found');
-        //         }
-        //         const infoP2P = await getP2PRequestInformation(transactionToken);
+        const authHeader = req.headers.get('authorization');
+        console.info("authHeader ", authHeader);
+        if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+            return res.status(500).json({ status: 'error', message: "Error RequestAuth" });
+        }
+        const promises = orderData.map(async (order) => {
+            // orderData.forEach(async function (order) {
+            const paymentSource = order.payment_source;
+            if (paymentSource) {
+                const transactionToken = isExternalPayment(paymentSource) ? paymentSource.payment_source_token : null;
+                if (!transactionToken) {
+                    throw new Error('Transaction token not found');
+                }
+                const infoP2P = await getP2PRequestInformation(transactionToken);
 
-        //         if (typeof infoP2P === 'string') {
-        //             throw new Error(infoP2P);
-        //         }
+                if (typeof infoP2P === 'string') {
+                    throw new Error(infoP2P);
+                }
 
-        //         const metadata = {
-        //             medium: 'cron',
-        //             paymentInfo: infoP2P
-        //         };
+                const metadata = {
+                    medium: 'cron',
+                    paymentInfo: infoP2P
+                };
 
-        //         if (infoP2P.status.status === P2PRequestStatus.approved) {
-        //             await approveOrder(order, metadata).then(() => {
-        //                 approved++;
-        //                 approvedOrders.push(order.number);
-        //             });
-        //         } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
-        //             await cancelOrder(order, metadata).then(() => {
-        //                 canceled++;
-        //                 canceledOrders.push(order.number);
-        //             });
-        //         }
-        //         await sendEmails(order.id, false, infoP2P.status.status);
-        //     } else {
-        //         const metadata = {
-        //             medium: 'cron',
-        //             paymentInfo: 'no payment info'
-        //         };
+                if (infoP2P.status.status === P2PRequestStatus.approved) {
+                    await approveOrder(order, metadata).then(() => {
+                        approved++;
+                        approvedOrders.push(order.number);
+                    });
+                } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
+                    await cancelOrder(order, metadata).then(() => {
+                        canceled++;
+                        canceledOrders.push(order.number);
+                    });
+                }
+                await sendEmails(order.id, false, infoP2P.status.status);
+            } else {
+                const metadata = {
+                    medium: 'cron',
+                    paymentInfo: 'no payment info'
+                };
 
-        //         await cancelOrder(order, metadata).then(() => {
-        //             canceled++;
-        //             canceledOrders.push(order.number);
-        //         });
-        //         await sendEmails(order.id);
-        //     }
-        // });
-        // await Promise.all(promises).then(() => {
-        //     console.info("recordsNumber: ", orderData.length, " approvedOrders: ", approved, " canceledOrders: ", canceled);
-        //     console.info("Canceled orders: ", canceledOrders);
-        //     console.info("Approved orders: ", approvedOrders);
-        // });
-        // return res.status(200).json({ recordsNumber: orderData.length, approvedOrders: approved, canceledOrders: canceled });
-        return res.status(500).json({ status: 'error', message: "kkkk" });
+                await cancelOrder(order, metadata).then(() => {
+                    canceled++;
+                    canceledOrders.push(order.number);
+                });
+                await sendEmails(order.id);
+            }
+        });
+        await Promise.all(promises).then(() => {
+            console.info("recordsNumber: ", orderData.length, " approvedOrders: ", approved, " canceledOrders: ", canceled);
+            console.info("Canceled orders: ", canceledOrders);
+            console.info("Approved orders: ", approvedOrders);
+        });
+        return res.status(200).json({ recordsNumber: orderData.length, approvedOrders: approved, canceledOrders: canceled });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: e.message });
     }

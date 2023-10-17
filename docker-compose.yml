@@ -100,6 +100,7 @@ services:
       VANTI_EMAIL_ADDRESS: ${VANTI_EMAIL_ADDRESS}
       SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
       SENDGRID_EMAIL_SENDER: ${SENDGRID_EMAIL_SENDER:-}
+      CRON_SECRET: ${CRON_SECRET:-}
     networks:
       - public
     restart: unless-stopped
