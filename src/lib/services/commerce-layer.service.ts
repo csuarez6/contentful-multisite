@@ -690,7 +690,7 @@ export const getOrderStatusCl = async (status?: string) => {
     const orderList = await cl.orders.list({
       include: ["payment_source"],
       fields: {
-        orders: ["number", "payment_source"],
+        orders: ["number", "status", "payment_status", "payment_source"],
       },
       filters: { status_eq: status ?? "placed" },
       sort: { created_at: "desc" },

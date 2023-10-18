@@ -18,7 +18,6 @@ const handler = async (
         const canceledOrders = [];
         const approvedOrders = [];
         const authHeader = req.headers.authorization;
-        console.info("authHeader ", authHeader);
         if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
             return res.status(400).json({ status: 'error', message: "Error RequestAuth" });
         }
@@ -42,28 +41,35 @@ const handler = async (
                 };
 
                 if (infoP2P.status.status === P2PRequestStatus.approved) {
-                    await approveOrder(order, metadata).then(() => {
+                    await approveOrder(order, metadata).then(async () => {
                         approved++;
                         approvedOrders.push(order.number);
+                        await sendEmails(order.id, false, infoP2P.status.status);
+                    }).catch((error) => {
+                        console.error("Error ApprovedOrder: ", order.id, " -> ", error.errors);
                     });
                 } else if (infoP2P.status.status === P2PRequestStatus.failed || infoP2P.status.status === P2PRequestStatus.rejected) {
-                    await cancelOrder(order, metadata).then(() => {
+                    await cancelOrder(order, metadata, infoP2P).then(async () => {
                         canceled++;
                         canceledOrders.push(order.number);
+                        await sendEmails(order.id, false, infoP2P.status.status);
+                    }).catch((error) => {
+                        console.error("Error CanceledOrder: ", order.id, " -> ", error.errors);
                     });
                 }
-                await sendEmails(order.id, false, infoP2P.status.status);
             } else {
                 const metadata = {
                     medium: 'cron',
                     paymentInfo: 'no payment info'
                 };
 
-                await cancelOrder(order, metadata).then(() => {
+                await cancelOrder(order, metadata).then(async () => {
                     canceled++;
                     canceledOrders.push(order.number);
+                    await sendEmails(order.id);
+                }).catch((error) => {
+                    console.error("Error CanceledOrder: ", order.id, " -> ", error.errors);
                 });
-                await sendEmails(order.id);
             }
         });
         await Promise.all(promises).then(() => {
@@ -73,7 +79,7 @@ const handler = async (
         });
         return res.status(200).json({ recordsNumber: orderData.length, approvedOrders: approved, canceledOrders: canceled });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: e.message });
+        return res.status(500).json({ status: 'error', message: e });
     }
 };
 
@@ -82,20 +88,26 @@ const approveOrder = async (order: Order, metadata: any) => {
 
     await client.orders.update({
         id: order.id,
-        _approve: true,
-        _capture: true
-    }, DEFAULT_ORDER_PARAMS
-    ).then(async (orderUpdated) => {
-        const captures = orderUpdated.captures?.at(0);
+        _approve: true
+    }).then(async () => {
+        console.info('Order approved');
+        await client.orders.update({
+            id: order.id,
+            _capture: true
+        }, DEFAULT_ORDER_PARAMS
+        ).then(async (orderUpdated) => {
+            console.info('Order captured', orderUpdated);
+            const captures = orderUpdated.captures?.at(0);
 
-        await client.captures.update({
-            id: captures?.id,
-            metadata: metadata
+            await client.captures.update({
+                id: captures?.id,
+                metadata: metadata
+            });
         });
     });
 };
 
-const cancelOrder = async (order: Order, metadata: any) => {
+const cancelOrder = async (order: Order, metadata: any, infoP2P?: any) => {
     const client = await getCLAdminCLient();
 
     await client.orders.update({
@@ -103,6 +115,7 @@ const cancelOrder = async (order: Order, metadata: any) => {
         _cancel: true,
     }, DEFAULT_ORDER_PARAMS
     ).then(async (orderUpdated) => {
+        console.info('Order Canceled');
         const voids = orderUpdated.voids?.at(0);
 
         await client.voids.update({
@@ -110,6 +123,7 @@ const cancelOrder = async (order: Order, metadata: any) => {
             metadata: metadata
         });
     });
+
 };
 
 export default handler;
