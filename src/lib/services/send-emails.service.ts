@@ -141,11 +141,6 @@ const productAdjustments = (item: ILineItemExtended, border: string, padding: nu
   return section;
 };
 
-const productPrices = (formatted_compare_at_amount: string, formatted_unit_amount: string) => {
-  const price = formatted_compare_at_amount === formatted_unit_amount ? formatted_unit_amount : `<strike>${formatted_compare_at_amount}</strike> ${formatted_unit_amount}`;
-  return price;
-};
-
 const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   let section = "";
   const shippingMethodNames = [];
@@ -167,7 +162,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
           </ul>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${productPrices(lineItem.price?.formatted_compare_at_amount, lineItem.formatted_unit_amount)}</b>
+          <b style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
@@ -657,6 +652,6 @@ export const sendEmails = async (orderId: string, createEmail = false, statusP2P
       count += await sendVantiEmail(order);
       count += await sendAllyEmail(order);
     }
-    return count;
   }
+  return count;
 };
