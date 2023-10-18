@@ -202,7 +202,7 @@ const getOrderStatus = (status: string, order: IOrderExtended, host?: string) =>
     case "cancelled":
       return {
         text: `¡Tu orden ${order.number} ha sido rechazada!`,
-        additionalText: ``,
+        additionalText: `Hemos recibido tu orden de compra, sin embargo esta ha sido rechazada por inconvenientes al momento de cobro.`,
         leftIcon: `2s1UZ40XOxyT7Z99fAHFDt/a64fa1f379563c9501a5280b36b0c91a/icon-cart-cancel.png`,
         rightIcon: `2qZ9m6E3GT5Cskdau8A5zV/12aa9915a9ab6e68fedc8c5cd38ba6de/icon-cancel.png`,
         showPaymentInfo: false
@@ -211,7 +211,11 @@ const getOrderStatus = (status: string, order: IOrderExtended, host?: string) =>
     case "fulfilled":
       return {
         text: `¡Tu orden ${order.number} ha sido aprobada!`,
-        additionalText: ``,
+        additionalText: `Hemos recibido tu orden de compra y ha sido aprobada.
+          Ten en cuenta que nuestra marca aliada realizará posterior a este correo un proceso para contactarte informándote el estado final de tu orden y proceso de entrega.
+          Para hacer seguimiento puedes hacer clic <a href="${host}/checkout/pse/purchase-order?id=${order.id}">aquí</a>.
+          Gracias por comprar con nosotros.
+          Disfruta tu compra.`,
         leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
         rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`,
         showPaymentInfo: true
@@ -219,10 +223,30 @@ const getOrderStatus = (status: string, order: IOrderExtended, host?: string) =>
     case "create":
       return {
         text: `¡Tu orden ${order.number} ha sido creada!`,
-        additionalText: `Hemos recibido tu orden de compra y estará pendiente hasta que se resuelva el pago. Te llegará un correo informandote el estado final de tu orden. Para hacer seguimiento puedes hacer click <a href="${host}/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
+        additionalText: `Hemos recibido tu orden de compra y estará pendiente de aprobación hasta que se confirme el pago.
+          Ten en cuenta que te llegará un correo posterior a este informándote el estado final de tu orden.
+          Para hacer seguimiento puedes hacer clic <a href="${host}/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
         leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
         rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`,
         showPaymentInfo: false
+      };
+    case "ally":
+      return {
+        text: `La orden ${order.number} ha sido creada!`,
+        additionalText: `Hemos recibido la orden de compra en nuestro marketplace y esta ha sido creada dentro de Commerce Layer.
+          Ya se puede gestionar para entregar al cliente y realizar el proceso establecido.
+          Tener en cuenta actualizar el estado de la orden dentro de la plataforma para un mejor seguimiento.`,
+        leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
+        rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`,
+        showPaymentInfo: true
+      };
+    case "vanti":
+      return {
+        text: `La orden ${order.number} ha sido creada!`,
+        additionalText: `Hemos recibido la orden de compra en nuestro marketplace y esta ha sido creada dentro de Commerce Layer.`,
+        leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
+        rightIcon: `1cAtkwe1dXM9ckG06i0gx3/f88616d9c9e899db5a8bc7dd3960bdb0/icon-check.png`,
+        showPaymentInfo: true
       };
     default:
       return {
@@ -537,7 +561,7 @@ const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => 
 
 const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   try {
-    const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+    const body = bodySection('vanti', orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
     const email = header('Resumen de compra') + body + footer;
 
     const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
@@ -579,7 +603,7 @@ const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
 
     allyItems.forEach((allyItem) => {
       const productsData = allyItem;
-      const body = bodySection(orderByAlly.status, orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+      const body = bodySection('ally', orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
       const email = header('Resumen de compra') + body + footer;
 
       const emailAddresses = String(allyItem.metadata?.email).split(',');

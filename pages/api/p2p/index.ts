@@ -4,6 +4,7 @@ import { createP2PRequest, getP2PIdentificationType } from "@/lib/services/place
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, P2PDisplayOnFields } from "@/lib/interfaces/p2p-cf-interface";
 import { DEFAULT_ORDER_PARAMS } from "@/lib/graphql/order.gql";
 import { sendEmails } from "@/lib/services/send-emails.service";
+import { NEXT_STEP_ERROR_MSG } from "@/constants/checkout.constants";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
@@ -46,7 +47,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const response: IP2PRequest | string = await createP2PRequest(order.id, payment, ipAddress, userAgent, extraFields, buyer);
     
     if (typeof response === 'string') throw new Error(response);
-    if (response?.status?.status === "FAILED") return res.status(422).json({ error: 'AMOUNT_ERROR'});
+    
+    if (!response.requestId || !response.processUrl) {
+      console.error(response);
+      throw new Error(NEXT_STEP_ERROR_MSG);
+    }
 
     const token = response.requestId;
 
@@ -78,7 +83,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: error.message || 'CAPTURE_PAYMENT_ERROR'
+      error: error.message || NEXT_STEP_ERROR_MSG
     });
   }
 };

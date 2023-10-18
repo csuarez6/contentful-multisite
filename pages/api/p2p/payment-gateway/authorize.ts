@@ -32,6 +32,10 @@ const handler = async (
       throw new Error(paymentInfo);
     }
 
+    if (!paymentInfo.requestId || !paymentInfo.request) {
+      throw new Error('Error de comunicación con pasarela de pagos');
+    }
+
     res.json({
       success: true,
       data: {

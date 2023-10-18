@@ -131,12 +131,7 @@ export interface IP2PDiscount {
 }
 
 export interface IP2PDispersion {
-    status: {
-        status: P2PRequestStatus,
-        reason?: string,
-        message?: string,
-        date: string,
-    },
+    status: IP2PStatus,
     internalReference: number,
     reference: string,
     paymentMethod: string,
@@ -255,12 +250,7 @@ export interface IP2PSusbcription {
 }
 
 export interface IP2PRequest {
-    status: {
-        status: P2PRequestStatus,
-        reason?: string,
-        message?: string,
-        date: string
-    },
+    status: IP2PStatus,
     requestId?: string,
     processUrl?: string
 }
@@ -295,10 +285,5 @@ export interface IP2PNotification {
     requestId: string,
     reference: string,
     signature: string,
-    status: {
-        status: string,
-        date: string,
-        message: string,
-        reason: string,
-    },
+    status: IP2PStatus,
 }

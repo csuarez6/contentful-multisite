@@ -50,7 +50,6 @@ export const createP2PRequest = async (orderId: string, payment: IP2PPayment, ip
   }
 
   try {
-
     const response = await fetch(`${PLACE_TO_PAY_ENDPOINT}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -59,8 +58,8 @@ export const createP2PRequest = async (orderId: string, payment: IP2PPayment, ip
     const data = await response.json() as IP2PRequest;
     return data;
   } catch (error) {
-    console.error(error);
-    throw new Error(error);
+    console.error('createP2PRequest: ' + error);
+    throw new Error('Error de comunicación con pasarela de pagos');
   }
 };
 
@@ -80,8 +79,8 @@ export const getP2PRequestInformation = async (requestId: string): Promise<IP2PR
     const data = await response.json() as IP2PRequestInformation;
     return data;
   } catch (error) {
-    console.error(error);
-    throw new Error(error);
+    console.error('getP2PRequestInformation: ' + error);
+    throw new Error('Error de comunicación con pasarela de pagos');
   }
 };
 
