@@ -9,9 +9,7 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) => {
-  if (req.method !== 'PUT' && req.method !== 'DELETE') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method !== 'PUT') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
     const index = await getAlgoliaSearchIndex(
@@ -21,16 +19,10 @@ const handler = async (
     );
 
     let entryData = typeof req.body == 'string' ? JSON.parse(req.body) : { ...req.body };
+
+    if(entryData?.metadata?.tags?.find((tag: any) => tag?.sys?.id === "testPage")) return res.status(415).json({ status: 'error', message: 'Content is for testing' });
+
     const indexType = _.upperFirst(entryData.sys.contentType.sys.id).replaceAll('_', '');
-    
-    if (req.method === 'DELETE') {
-      const { taskID } = await index.deleteObject(entryData.sys.id);
-      return res.status(200).json({
-        deletedAt: new Date().toISOString(),
-        taskID,
-        objectID: entryData.sys.id,
-      });
-    }
 
     let entryFields = await getEntryContent({
       __typename: indexType,
@@ -39,9 +31,7 @@ const handler = async (
       }
     }, false, true, 3);
 
-    if (!entryFields) {
-      return res.status(404).json({ status: 'error', message: 'Content not found' });
-    }
+    if (!entryFields) return res.status(404).json({ status: 'error', message: 'Content not found' });
 
     if (indexType === 'Product') {
       const productPrices = await getCommercelayerProduct(entryFields.sku);

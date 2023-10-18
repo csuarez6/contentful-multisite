@@ -22,9 +22,11 @@ const handler = async (
   });
 
   if (resultAlgolia.nbHits === 1 && resultAlgolia?.hits?.[0]?.fields) {
-    response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=10800');
-    response.setHeader('CDN-Cache-Control', 'public, max-age=0');
-    response.setHeader('Cache-Control', 'public, max-age=0');
+    
+    response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=600');
+    response.setHeader('CDN-Cache-Control', 'no-store, must-revalidate');
+    response.setHeader('Cache-Control', 'no-store, must-revalidate');
+    
     return response.status(200).json(resultAlgolia.hits[0].fields);
   }
 

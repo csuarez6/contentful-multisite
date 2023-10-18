@@ -107,7 +107,7 @@ const approveOrder = async (order: Order, metadata: any) => {
     });
 };
 
-const cancelOrder = async (order: Order, metadata: any, infoP2P?: any) => {
+const cancelOrder = async (order: Order, metadata: any, _infoP2P?: any) => {
     const client = await getCLAdminCLient();
 
     await client.orders.update({
