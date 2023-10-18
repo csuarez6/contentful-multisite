@@ -37,7 +37,7 @@ const getToken = async () => {
 
 const createCallback = async (body) => {
   const { type, contractAccount, email, fullName, cellPhone, productName, priceVantiListo, priceGasodomestico } = body;
-  const typeName = getType(type);
+  const { typeName, queueId } = getType(type);
   const response = await getToken();
   const { access_token, error } = response;
   console.info(response);
@@ -54,11 +54,10 @@ const createCallback = async (body) => {
     myHeaders.append("Authorization", `Bearer ${access_token}`);
 
     const raw = {
-      "scriptId": "90968378-7f4a-4973-ad25-665feb88f8ca",
+      "scriptId": GENESYS_CONSTANTS.SCRIPT_ID,
       "routingData": {
-        // "queueId": "314fb622-75ab-4d4c-b253-ba7ddc9521a0",
-        // Queue GNS_TEST
-        "queueId": "64e1990e-ddb3-4833-8d69-ef30a31e19c9",
+        // "queueId": queueId,
+        "queueId": "714b2e6a-214d-4b65-ba3b-b0e09fe233e9",
         "preferredAgentIds": [
           ""
         ]
@@ -68,7 +67,7 @@ const createCallback = async (body) => {
       ],
       "callbackScheduledTime": "",
       "countryCode": "CO",
-      "validateCallbackNumbers": true,
+      "validateCallbackNumbers": false,
       "data": {
         "numero_de_contacto": cellPhone ?? "",
         "nombre_cliente": fullName ?? "",

@@ -13,7 +13,7 @@ export interface ICheckBox {
   onClick?: (evt) => void
 }
 
-const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, checked, onClick, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
+const CheckBox: FC<ICheckBox> = forwardRef(({ id, name, label, isError, errorMessage, checked, onClick = () => null, ...rest }, ref: ForwardedRef<HTMLInputElement>) => {
   const [isChecked, setIsChecked] = useState(false);
   const parentRef = useRef(null);
 
