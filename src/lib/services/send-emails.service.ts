@@ -153,7 +153,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
         <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
-        <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="${border} padding: 20px 20px ${padding}px 20px; vertical-align: top; font-weight: 500">
+        <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="${border} padding: 20px 20px ${padding}px 20px; vertical-align: top; font-weight: 500">
           <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
           <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
           <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
@@ -161,7 +161,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
             <li>Cantidad: ${lineItem.quantity}</li>
           </ul>
         </td>
-        <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
+        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
@@ -177,11 +177,11 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
       section +=
         `<tr>
           <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
-          <td class="sm-inline-block sm-w-3-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
+          <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
             <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${shipment.shipping_method?.name}</p>
             <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px"></ul>
           </td>
-          <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
+          <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
           <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
             <b style="font-weight: 700; color: #113455">${shipment.shipping_method?.formatted_price_amount}</b>
           </td>
@@ -329,73 +329,76 @@ const header = (title: string) => {
         <![endif]-->
         <style>
             @media (max-width: 600px) {
-            .sm-clear-both {
-                clear: both !important
-            }
-            .sm-mb-2 {
-                margin-bottom: 8px !important
-            }
-            .sm-mt-4 {
-                margin-top: 16px !important
-            }
-            .sm-inline-block {
-                display: inline-block !important
-            }
-            .sm-w-1-4 {
-                width: 25% !important
-            }
-            .sm-w-3-4 {
-                width: 75% !important
-            }
-            .sm-w-36 {
-                width: 144px !important
-            }
-            .sm-w-48 {
-                width: 192px !important
-            }
-            .sm-w-5 {
-                width: 20px !important
-            }
-            .sm-w-6 {
-                width: 24px !important
-            }
-            .sm-w-full {
-                width: 100% !important
-            }
-            .sm-border-0 {
-                border-width: 0px !important
-            }
-            .sm-p-4 {
-                padding: 16px !important
-            }
-            .sm-px-0 {
-                padding-left: 0 !important;
-                padding-right: 0 !important
-            }
-            .sm-pb-4 {
-                padding-bottom: 16px !important
-            }
-            .sm-pt-0 {
-                padding-top: 0 !important
-            }
-            .sm-pt-4 {
-                padding-top: 16px !important
-            }
-            .sm-text-center {
-                text-align: center !important
-            }
-            .sm-text-justify {
-                text-align: justify !important
-            }
-            .sm-text-12px {
-                font-size: 12px !important
-            }
-            .sm-text-16px {
-                font-size: 16px !important
-            }
-            .sm-text-20px {
-                font-size: 20px !important
-            }
+              .sm-clear-both {
+                  clear: both !important
+              }
+              .sm-mb-2 {
+                  margin-bottom: 8px !important
+              }
+              .sm-mt-4 {
+                  margin-top: 16px !important
+              }
+              .sm-inline-block {
+                  display: inline-block !important
+              }
+              .sm-w-1-4 {
+                  width: 25% !important
+              }
+              .sm-w-2-4 {
+                  width: 50% !important
+              }
+              .sm-w-3-4 {
+                  width: 75% !important
+              }
+              .sm-w-36 {
+                  width: 144px !important
+              }
+              .sm-w-48 {
+                  width: 192px !important
+              }
+              .sm-w-5 {
+                  width: 20px !important
+              }
+              .sm-w-6 {
+                  width: 24px !important
+              }
+              .sm-w-full {
+                  width: 100% !important
+              }
+              .sm-border-0 {
+                  border-width: 0px !important
+              }
+              .sm-p-4 {
+                  padding: 16px !important
+              }
+              .sm-px-0 {
+                  padding-left: 0 !important;
+                  padding-right: 0 !important
+              }
+              .sm-pb-4 {
+                  padding-bottom: 16px !important
+              }
+              .sm-pt-0 {
+                  padding-top: 0 !important
+              }
+              .sm-pt-4 {
+                  padding-top: 16px !important
+              }
+              .sm-text-center {
+                  text-align: center !important
+              }
+              .sm-text-justify {
+                  text-align: justify !important
+              }
+              .sm-text-12px {
+                  font-size: 12px !important
+              }
+              .sm-text-16px {
+                  font-size: 16px !important
+              }
+              .sm-text-20px {
+                  font-size: 20px !important
+              }
             }
         </style>
         </head>
