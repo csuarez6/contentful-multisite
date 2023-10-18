@@ -6,7 +6,7 @@ const isProduction = false;
 const nextConfig = {
   reactStrictMode: true,
   generateBuildId: async () => {
-    return 'main'
+    return "main";
   },
   swcMinify: true,
   eslint: {
@@ -21,7 +21,7 @@ const nextConfig = {
       "via.placeholder.com",
       "data.commercelayer.app",
       "tienda.grupovanti.com",
-      "static.placetopay.com"
+      "static.placetopay.com",
     ],
   },
   async redirects() {
@@ -76,7 +76,7 @@ const nextConfig = {
   },
   staticPageGenerationTimeout: 300,
   experimental: {
-    largePageDataBytes: 1024 * 1024
+    largePageDataBytes: 1024 * 1024,
   },
   i18n: {
     locales: ["es"],
@@ -153,7 +153,7 @@ if (isProduction) {
 }
 
 const sentryWebpackPluginOptions = {
-  silent: true
+  silent: true,
 };
 
 module.exports = isProduction

@@ -8,11 +8,9 @@ import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { FACET_QUERY_MAP } from "@/constants/search.constants";
 import { sleep } from "@/utils/functions";
 
-export const getAlgoliaSearchIndex = (appId, appKey): SearchIndex => {
+export const getAlgoliaSearchIndex = (appId, appKey, indexName): SearchIndex => {
   const searchClient = algoliasearch(appId, appKey);
-  const searchIndex = searchClient.initIndex("Production");
-
-  return searchIndex;
+  return searchClient.initIndex(indexName);
 };
 
 const applyFilterModifier = (filterKey, filterValue, modifier) => {
@@ -115,7 +113,8 @@ const getAlgoliaResults = async ({
 
   const indexSearch = getAlgoliaSearchIndex(
     process.env.ALGOLIASEARCH_APP_ID,
-    process.env.ALGOLIASEARCH_READ_API_KEY
+    process.env.ALGOLIASEARCH_READ_API_KEY,
+    process.env.ALGOLIASEARCH_INDEX
   );
   const resultAlgolia = await indexSearch.search((fullTextSearch), {
     filters: algoliaFilter.join(' AND '),

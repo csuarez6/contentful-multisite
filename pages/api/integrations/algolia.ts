@@ -10,7 +10,8 @@ const handler = async (
     try {
         const indexSearch = getAlgoliaSearchIndex(
             process.env.ALGOLIASEARCH_APP_ID,
-            process.env.ALGOLIASEARCH_READ_API_KEY
+            process.env.ALGOLIASEARCH_READ_API_KEY,
+            process.env.ALGOLIASEARCH_INDEX
         ); 
         
         if(!indexSearch){

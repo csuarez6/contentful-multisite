@@ -12,7 +12,8 @@ const handler = async (
 
     const indexSearch = getAlgoliaSearchIndex(
       process.env.ALGOLIASEARCH_APP_ID,
-      process.env.ALGOLIASEARCH_READ_API_KEY
+      process.env.ALGOLIASEARCH_READ_API_KEY,
+      process.env.ALGOLIASEARCH_INDEX
     );
 
     const resultAlgolia: any = await indexSearch.search('', {

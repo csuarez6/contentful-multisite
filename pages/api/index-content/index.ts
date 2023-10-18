@@ -16,7 +16,8 @@ const handler = async (
   try {
     const index = await getAlgoliaSearchIndex(
       req.headers['x-algolia-application-id'],
-      req.headers['x-algolia-api-key']
+      req.headers['x-algolia-api-key'],
+      req.headers['x-algolia-index']
     );
 
     let entryData = typeof req.body == 'string' ? JSON.parse(req.body) : { ...req.body };
