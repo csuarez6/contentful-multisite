@@ -1,13 +1,15 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import Script from "next/script";
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 import HeaderBlock from "@/components/blocks/header-block/HeaderBlock";
 import FooterBlock from "@/components/blocks/footer-block/FooterBlock";
 import HelpButton from "@/components/organisms/help-button/HelpButton";
+
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-import Link from "next/link";
-import Script from "next/script";
+import { GaMeasurementId } from "@/utils/functions";
 
 const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, promoImage, children, mainNavCollection, __typename }) => {
   const { preview } = layout;
@@ -64,9 +66,9 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         <meta name="theme-color" content="#ffffff" />
 
         <meta property="og:type" content="Pagina" />
-        <meta name="title" content={promoTitle ? promoTitle : layout.name} />
-        <meta name="twitter:title" content={`${promoTitle ? promoTitle : layout.name}  - Grupo Vanti`} />
-        <meta property="og:title" content={promoTitle ? promoTitle : layout.name} />
+        <meta name="title" content={promoTitle ?? layout.name} />
+        <meta name="twitter:title" content={`${promoTitle ?? layout.name}  - Grupo Vanti`} />
+        <meta property="og:title" content={promoTitle ?? layout.name} />
         {canonicalUrl && (
           <>
             <link rel="canonical" href={canonicalUrl} />
@@ -92,7 +94,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         {/* <meta name="robots" content="noindex, nofollow" /> */}
         {/* ************************ */}
       </Head>
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-9T5PX5P83V" />
+      <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GaMeasurementId}`} />
       <Script
         id="google-analytics"
         dangerouslySetInnerHTML={
@@ -103,7 +105,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
                   dataLayer.push(arguments);
                 }
                 gtag('js', new Date()); 
-                gtag('config', 'G-9T5PX5P83V');
+                gtag('config', '${GaMeasurementId}');
               `
           }
         }

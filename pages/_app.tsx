@@ -14,6 +14,7 @@ import "../styles/grills.css";
 import CheckoutProvider from "@/context/Checkout/Provider";
 import AuthProvider from "@/context/Auth/Provider";
 import TagManager from "react-gtm-module";
+import { GtmId } from "@/utils/functions";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -34,11 +35,10 @@ export const defaultLayout = (page: ReactNode, pageProps: IPage) => (
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
-    TagManager.initialize({ gtmId: "GTM-P26VHQQT" });
+    TagManager.initialize({ gtmId: GtmId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getLayout = Component.getLayout ?? (defaultLayout);
-
   return getLayout(<Component {...pageProps} />, pageProps);
 }

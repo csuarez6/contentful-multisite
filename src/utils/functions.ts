@@ -13,7 +13,7 @@ export const classColumns = (columns = 1, ignoreCols = []) => {
   return classes.join(" ");
 };
 
-export const classColumnsFlex =  {
+export const classColumnsFlex = {
   1: "listIcons-grill-1",
   2: "listIcons-grill-2",
   3: "listIcons-grill-3",
@@ -238,8 +238,7 @@ export const formatPrice = (value) => {
 };
 
 export const getElementOffset = (el) => {
-  let top = 0;
-  let left = 0;
+  let top = 0, left = 0;
 
   do {
     if (!isNaN(el.offsetTop)) top += el.offsetTop;
@@ -253,3 +252,6 @@ export const getElementOffset = (el) => {
 export const hasItems = (object: any) => {
   return !!(object?.items?.[0]);
 };
+
+export const GtmId = process.env.NEXT_PUBLIC_GTM_ID;
+export const GaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
