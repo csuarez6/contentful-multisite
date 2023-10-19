@@ -18,7 +18,7 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
               urlPaths
             }
           }
-          productCollection(where: { urlPaths_exists: true }, order: name_ASC, limit: $limit, preview: $preview) {
+          productCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } }, order: name_ASC, limit: $limit, preview: $preview) {
             items {
               sys {
                 id

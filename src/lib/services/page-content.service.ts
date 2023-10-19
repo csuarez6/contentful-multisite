@@ -77,7 +77,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
 };
 
 const getRelatedProducts = async (categoryName: string, typeProduct: string, queryProduct: string, urlPath: string, preview: boolean) => {
-  let dataRelatedProducts = null;
+  let dataRelatedProducts = null;  
   try {
     ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
       query: gql`
@@ -85,7 +85,8 @@ const getRelatedProducts = async (categoryName: string, typeProduct: string, que
           ${typeProduct}Collection(where: { 
             AND: [
               { category: { name: $categoryName } },
-              { urlPath_not: $urlPath }
+              { urlPaths_contains_none: [$urlPath] },
+              { contentfulMetadata: { tags: { id_contains_none: [ "testPage" ] } } }
             ]
           }, limit: 2, preview: $preview, order: sys_publishedAt_DESC) {
             items {
