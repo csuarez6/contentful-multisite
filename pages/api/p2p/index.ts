@@ -73,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         id: authorization?.id,
         metadata: response
       });
-      sendEmails(order.id, true, null, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
+      await sendEmails(order.id, true, null, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
     });
 
     res.json({
