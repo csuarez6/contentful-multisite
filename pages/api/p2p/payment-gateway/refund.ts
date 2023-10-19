@@ -37,7 +37,7 @@ const handler = async (
     }
 
     if (!paymentInfo.requestId || !paymentInfo.request) {
-      throw new Error('refund error: ' + paymentInfo);
+      throw new Error('refund error: ' + JSON.stringify(paymentInfo));
     }
 
     res.json({

@@ -37,7 +37,7 @@ const handler = async (
     }
 
     if (!paymentInfo.requestId || !paymentInfo.request) {
-      throw new Error('capture/void error: ' + paymentInfo);
+      throw new Error('capture/void error: ' + JSON.stringify(paymentInfo));
     }
 
     res.json({

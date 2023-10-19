@@ -33,7 +33,7 @@ const handler = async (
     }
 
     if (!paymentInfo.requestId || !paymentInfo.request) {
-      throw new Error('authorize error: ' + paymentInfo);
+      throw new Error('authorize error: ' + JSON.stringify(paymentInfo));
     }
 
     res.json({

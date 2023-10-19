@@ -49,6 +49,10 @@ const handler = async (
                 throw new Error(response);
             }
 
+            if (!response.requestId || !response.processUrl) {
+                throw new Error('createP2PRequest error: ' + JSON.stringify(response));
+            }
+
             const token = response.requestId;
 
             await client.external_payments.create({

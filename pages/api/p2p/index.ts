@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     if (typeof response === 'string') throw new Error(response);
     
     if (!response.requestId || !response.processUrl) {
-      throw new Error('createP2PRequest error: ' + response);
+      throw new Error('createP2PRequest error: ' + JSON.stringify(response));
     }
 
     const token = response.requestId;
