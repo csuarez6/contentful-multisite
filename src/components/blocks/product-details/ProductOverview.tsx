@@ -299,8 +299,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   ],
                 }}
               >
-                Ten en cuenta nuestra política de cambios y devoluciones y
-                derecho de retracto
+                Conozca términos y condiciones 
               </CustomLink>
             </div>
             {/* END Section - Carousel */}

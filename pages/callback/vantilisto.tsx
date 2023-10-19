@@ -41,8 +41,6 @@ const getStepContent = (
       return (
         <Verify
           handleNext={handleNext}
-          formData={formData}
-          setFormData={setFormData}
           productData={productData}
           quantity={quantity}
           setQuantity={setQuantity}

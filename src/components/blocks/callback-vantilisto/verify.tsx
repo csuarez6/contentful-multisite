@@ -1,61 +1,13 @@
-import React, { createRef, LegacyRef } from 'react';
+import React from 'react';
 import Image from "next/image";
-
-import SelectAtom, { IListContent } from '@/components/atoms/select-atom/SelectAtom';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { classNames } from "@/utils/functions";
 
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
-interface IForm {
-  amountOfFees: string;
-}
-
-const schema = yup.object({
-  amountOfFees: yup.string().required("Dato requerido"),
-});
-
-const options: IListContent[] = [
-  {
-    text: "12 cuotas",
-    value: "12"
-  },
-  {
-    text: "24 cuotas",
-    value: "24"
-  },
-  {
-    text: "36 cuotas",
-    value: "36"
-  },
-  {
-    text: "48 cuotas",
-    value: "48"
-  }
-];
-
-const Verify = ({ handleNext, formData, setFormData, productData, quantity, setQuantity }) => {
-  const refForm: LegacyRef<HTMLFormElement> = createRef();
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    clearErrors
-  } = useForm<IForm>({
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (data: IForm) => {
-    setFormData({ ...formData, ...data });
-    handleNext();
-  };
-
+const Verify = ({ handleNext, productData, quantity, setQuantity }) => {
   return (
     <HeadingCard title="2. Verificar tu compra" isCheck={true} icon="personal-data" classes='mb-44'>
       <div className="bg-white rounded-lg mb-1">
-        <form ref={refForm} className="w-full flex flex-wrap gap-3" onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-full flex flex-wrap gap-3">
           <div className='w-full flex flex-col divide-y divide-grey-60'>
             <div className="flex flex-nowrap gap-5 pb-[22px]">
               <div className="grow">
@@ -118,32 +70,14 @@ const Verify = ({ handleNext, formData, setFormData, productData, quantity, setQ
                 <p className='title is-4 !font-semibold text-blue-dark text-right'>{productData.price}</p>
               </div>
             </div>
-            <div className="grid gap-5 py-[22px]">
-              <div className="text-size-p1 text-grey-30">
-                <p>Elige el número de cuotas a las cuales quieres pagar</p>
-              </div>
-              <div className="w-full">
-                <SelectAtom
-                  listedContents={options}
-                  placeholder="Selecciona un opción"
-                  name="amountOfFees"
-                  firstOptionSelected={true}
-                  handleChange={(value) => {
-                    setValue("amountOfFees", value);
-                    clearErrors('amountOfFees');
-                  }}
-                  {...register("amountOfFees", { required: true, validate: (value) => value !== "" })}
-                />
-              </div>
-            </div>
           </div>
 
           <div className="w-full flex justify-end">
-            <button type="submit" data-testid="submit" className="w-fit button button-primary">
+            <button onClick={handleNext} data-testid="submit" className="w-fit button button-primary">
               Continuar
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </HeadingCard>
   );
