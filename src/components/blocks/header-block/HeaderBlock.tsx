@@ -424,33 +424,36 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         "flex 2lg:gap-0.5 xl:gap-1 flex-nowrap"
                       )}
                     >
-                      {utilityNavCollection.items.map((item) => (
-                        <li
-                          className="flex w-[68px] 2lg:w-[75px] justify-center"
-                          key={item.sys.id}
-                        >
-                          <CustomLink
-                            content={item}
-                            className={classNames(
-                              "bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
-                              item.promoIcon
-                                ? "justify-start"
-                                : "justify-center"
-                            )}
-                            linkClassName="w-full block"
+                      {utilityNavCollection.items.map((item) => {
+                        delete utilityNavCollection.items[1];
+                        return (
+                          <li
+                            className="flex w-[68px] 2lg:w-[75px] justify-center"
+                            key={item.sys.id}
                           >
-                            {item.promoIcon && (
-                              <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
-                                <Icon
-                                  icon={item?.promoIcon}
-                                  className="w-full h-full mx-auto"
-                                />
-                              </span>
-                            )}
-                            {item.promoTitle ?? item.name}
-                          </CustomLink>
-                        </li>
-                      ))}
+                            <CustomLink
+                              content={item}
+                              className={classNames(
+                                "bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full",
+                                item.promoIcon
+                                  ? "justify-start"
+                                  : "justify-center"
+                              )}
+                              linkClassName="w-full block"
+                            >
+                              {item.promoIcon && (
+                                <span className="flex items-center w-6 h-6 shrink-0 text-neutral-30">
+                                  <Icon
+                                    icon={item?.promoIcon}
+                                    className="w-full h-full mx-auto"
+                                  />
+                                </span>
+                              )}
+                              {item.promoTitle ?? item.name}
+                            </CustomLink>
+                          </li>
+                        );
+                      })}
                       {/* Carrito de compras */}
                       <li
                         className="flex w-[68px] 2lg:w-[75px]"
