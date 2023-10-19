@@ -49,8 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     if (typeof response === 'string') throw new Error(response);
     
     if (!response.requestId || !response.processUrl) {
-      console.error(response);
-      throw new Error(NEXT_STEP_ERROR_MSG);
+      throw new Error('createP2PRequest error: ' + response);
     }
 
     const token = response.requestId;
@@ -67,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       _place: true
     }, DEFAULT_ORDER_PARAMS
     ).then(async (orderUpdated) => {
-      console.info('p2p create_request placed', orderUpdated);
+      console.info('p2p create_request placed orderId: ' + order.id);
       const authorization = orderUpdated.authorizations?.at(0);
       client.authorizations.update({
         id: authorization?.id,
@@ -81,10 +80,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       data: response
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: error.message || NEXT_STEP_ERROR_MSG
-    });
+    console.error(error, req.body);
+    return res.status(500).json(NEXT_STEP_ERROR_MSG);
   }
 };
 

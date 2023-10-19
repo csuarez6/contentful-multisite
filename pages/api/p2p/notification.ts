@@ -41,13 +41,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           id: order.id,
           _approve: true
         }).then(async () => {
-          console.info('p2p notification approved');
+          console.info('p2p notification approved orderId: ' + order.id);
           await client.orders.update({
             id: order.id,
             _capture: true
           }, DEFAULT_ORDER_PARAMS
           ).then(async (orderUpdated) => {
-            console.info('p2p notification captured', orderUpdated);
+            console.info('p2p notification captured orderId: ' + order.id);
             const captures = orderUpdated.captures.at(0);
 
             await client.captures.update({
@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
           _cancel: true,
         }, DEFAULT_ORDER_PARAMS
         ).then(async (orderUpdated) => {
-          console.info('p2p notification voids', orderUpdated);
+          console.info('p2p notification voids orderId: ' + order.id);
           const voids = orderUpdated.voids?.at(0);
 
           await client.voids.update({
@@ -75,7 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }
 
       if (emails) {
-        console.info('p2p notification emails');
+        console.info('p2p notification emails orderId: ' + order.id);
         await sendEmails(order.id, false, p2pNotification.status.status);
       }
     }
@@ -85,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       message: validation
     });
   } catch (error) {
-    console.error(error);
+    console.error(error, req.body);
     return res.status(500).json({
       status: 500,
       message: error.message || 'NOTIFICATION_PAYMENT_ERROR'

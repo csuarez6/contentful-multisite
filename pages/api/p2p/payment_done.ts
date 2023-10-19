@@ -42,15 +42,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         id: order.id,
                         _approve: true
                     }).then(async () => {
-                        console.info('p2p payment_done approved');
+                        console.info('p2p payment_done approved orderId: ' + order.id);
                         await client.orders.update({
                             id: order.id,
                             _capture: true
                         }, DEFAULT_ORDER_PARAMS
                         ).then(async (orderUpdated) => {
-                            console.info('p2p payment_done captured', orderUpdated);
+                            console.info('p2p payment_done captured orderId: ' + order.id);
                             const captures = orderUpdated.captures.at(0);
-                            console.info(captures);
 
                             await client.captures.update({
                                 id: captures.id,
@@ -65,7 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                         _cancel: true,
                     }, DEFAULT_ORDER_PARAMS
                     ).then(async (orderUpdated) => {
-                        console.info('p2p payment_done voids', orderUpdated);
+                        console.info('p2p payment_done voids orderId: ' + order.id);
                         const voids = orderUpdated.voids?.at(0);
                         await client.voids.update({
                             id: voids?.id,
@@ -76,13 +75,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
                 }
 
                 if (emails) {
-                    console.info('p2p payment_done emails');
+                    console.info('p2p payment_done emails orderId: ' + order.id);
                     await sendEmails(order.id, false, infoP2P.status.status);
                 }
             }
         }
     } catch (error) {
-        console.error(error);
+        console.error(error, req.query);
     }
 
     res.redirect(307, `/checkout/pse/purchase-order/?id=${orderId}`);

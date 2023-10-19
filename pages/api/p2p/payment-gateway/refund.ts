@@ -37,7 +37,7 @@ const handler = async (
     }
 
     if (!paymentInfo.requestId || !paymentInfo.request) {
-      throw new Error('Error de comunicación con pasarela de pagos');
+      throw new Error('refund error: ' + paymentInfo);
     }
 
     res.json({
