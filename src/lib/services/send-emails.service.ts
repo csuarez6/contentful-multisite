@@ -44,43 +44,43 @@ const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
   const section = `
     <tr>
       <td style="padding: 24px">
-      <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Nombre del adquiriente:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.name} ${order.metadata?.lastName}</td>
-      </tr>
-      <tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Número de documento:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.documentNumber}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Teléfono:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.cellPhone}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Correo electrónico:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.customer_email}</td>
-      </tr>
-        ${paymentInfoSection}
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_address}</td>
-      </tr>
-        ${addresseeSection}
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de facturación:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${billing_address}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de envío:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${getShippingMethods(order)}</td>
-      </tr>
-      <tr>
-        <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
-        <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.placed_at)}</td>
-      </tr>
-      </table>
+        <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Nombre del adquiriente:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.name} ${order.metadata?.lastName}</td>
+        </tr>
+        <tr>
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Número de documento:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.documentNumber}</td>
+        </tr>
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Teléfono:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.metadata?.cellPhone}</td>
+        </tr>
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Correo electrónico:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${order.customer_email}</td>
+        </tr>
+          ${paymentInfoSection}
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de envío:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${shipping_address}</td>
+        </tr>
+          ${addresseeSection}
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Dirección de facturación:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${billing_address}</td>
+        </tr>
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Método de envío:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${getShippingMethods(order)}</td>
+        </tr>
+        <tr>
+          <td class="sm-inline-block sm-w-full" style="width: 50%; padding-top: 8px; padding-bottom: 8px">Fecha de compra:</td>
+          <td class="sm-inline-block sm-w-full sm-mb-2 sm-pt-0" style="width: 50%; padding-top: 8px; padding-bottom: 8px; font-weight: 500">${formatDate(order.placed_at)}</td>
+        </tr>
+        </table>
       </td>
     </tr>`;
   return section;
@@ -153,15 +153,17 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
         <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
-        <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="${border} padding: 20px 20px ${padding}px 20px; vertical-align: top; font-weight: 500">
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
-          <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
-          <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
-            <li>* IVA incluido</li>
-            <li>Cantidad: ${lineItem.quantity}</li>
-          </ul>
+        <td class="sm-inline-block sm-w-3-4 sm-border-0" style="${border} width: 160px; vertical-align: top; font-weight: 500">
+          <div style="padding: 20px 20px ${padding}px 20px;">
+            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
+            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
+            <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
+              <li>* IVA incluido</li>
+              <li>Cantidad: ${lineItem.quantity}</li>
+            </ul>
+          </div>
         </td>
-        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
+        <td class="sm-inline-block sm-w-full sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
@@ -266,17 +268,25 @@ const bodySection = (status: string, order: IOrderExtended, line_items: ILineIte
               <table style="width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="sm-p-4" style="background-color: #EDF5FF; padding: 20px 24px">
-                    <div>
-                      <img class="sm-w-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px">
-                      <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
-                        ${orderStatus.text}
-                      </h2>
-                      <img class="sm-w-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;">
-                    </div>
+                    <table style="width: 100%; padding-bottom: 16px;">
+                      <tr>
+                        <td class="sm-w-5 sm-h-5">
+                          <img class="sm-w-5 sm-h-5" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.leftIcon}" alt style="vertical-align: middle; line-height: 1; border: 0; height:32px; width:27px" />
+                        </td>
+                        <td>
+                          <h2 class="sm-text-16px" style="margin: 0 0 0 12px; display: inline-block; vertical-align: middle; font-size: 18px; font-weight: 500; color: #000">
+                            ${orderStatus.text}
+                          </h2>
+                        </td>
+                        <td class="sm-w-6">
+                          <img class="sm-w-6 sm-h-6" src="https://images.ctfassets.net/3brzg7q3bvg1/${orderStatus.rightIcon}" alt style="width: 32px; vertical-align: middle; line-height: 1; border: 0; float: right; height: 32px;" />
+                        </td>
+                      </tr>
+                    </table>
                     ${orderStatus.additionalText ? '<div><small>' + orderStatus.additionalText + '</small></div>' : ''}
                   </td>
                 </tr>
-                 ${customerSection(order, orderStatus.showPaymentInfo)}
+                ${customerSection(order, orderStatus.showPaymentInfo)}
                 <tr>
                   <td style="padding-left: 16px; padding-right: 16px;">
                     <h3 style="margin: 0; font-size: 20px; color: #113455">
@@ -285,7 +295,7 @@ const bodySection = (status: string, order: IOrderExtended, line_items: ILineIte
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding-left: 24px; padding-right: 24px; padding-bottom: 24px">
+                  <td style="padding: 0 24px 24px 24px">
                     <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                       ${productsSection(line_items, shipments)}
                     </table>
@@ -301,7 +311,7 @@ const bodySection = (status: string, order: IOrderExtended, line_items: ILineIte
       </td>
     </tr>`;
 
-    return body;
+  return body;
 };
 
 const header = (title: string) => {
@@ -359,8 +369,14 @@ const header = (title: string) => {
               .sm-w-5 {
                   width: 20px !important
               }
+              .sm-h-5 {
+                  height: 20px !important
+              }
               .sm-w-6 {
                   width: 24px !important
+              }
+              .sm-h-6 {
+                  height: 24px !important
               }
               .sm-w-full {
                   width: 100% !important
