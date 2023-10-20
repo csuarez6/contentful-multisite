@@ -80,7 +80,7 @@ const data: IProductOverviewDetails = {
   },
   footerText: {
     href: '#',
-    name: 'Ten en cuenta nuestra política de cambios y devoluciones y derecho de retracto'
+    name: 'Conozca términos y condiciones'
   },
   promoDescription: RICHTEXT_SHORT_SIMPLE,
   productFeatures: RICHTEXT_SHORT_SIMPLE,

@@ -146,22 +146,12 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     setIsActivedModal(false);
   };
 
-  const getShippingPrice = (product, order = null) => {
-    if (order?.shipping_address) {
-      const cityCheck = citiesFile.filter(
-        (city) =>
-          city.admin_name === order.shipping_address?.state_code &&
-          city.city === order.shipping_address?.city
-      );
-      if (cityCheck?.[0]?.isCovered === "false") {
-        return (
-          shippingMethodGlobal.find(
-            (x) => x?.name === product?.item?.shipping_category?.name
-          )?.price_amount_float ?? 0
-        );
-      }
-    }
-    return 0;
+  const getShippingPrice = (product) => {
+    return (
+      shippingMethodGlobal.find(
+        (x) => x?.name === product?.item?.shipping_category?.name
+      )?.price_amount_float ?? 0
+    );
   };
 
   useEffect(() => {
@@ -475,7 +465,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                     ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
                     : "-"
                   } */}
-                  {formatPrice(getShippingPrice(product, order))}
+                  {formatPrice(getShippingPrice(product))}
                 </div>
               </>
               {/* ********* Services ******** */}
@@ -594,7 +584,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                     product?.total_amount_float,
                     product?.["installlation_service"],
                     product?.["warranty_service"]
-                  ) + getShippingPrice(product, order)
+                  ) + getShippingPrice(product)
                 )}
               </div>
             </div>

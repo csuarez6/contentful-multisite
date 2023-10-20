@@ -408,33 +408,31 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           {/* Ent Product Installation */}
 
                           {/* Start Shipping Cost */}
-                          {hasShipment && (
-                            <div
-                              className="grid grid-cols-3 text-sm"
-                              key={"product-unit-shipcost" + i}
-                            >
-                              <p className="flex col-span-1">
-                                Envío:
-                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (
-                                  <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
-                                    <Icon icon="info" size={18} className="text-gray-500" />
-                                  </span>
-                                )}
-                              </p>
-                              <p className="col-span-2 text-right text-blue-dark">
-                                <span>
-                                  {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
-                                    ? (
-                                      
-                                      (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount.split(',')[0]
-                                      ?? formatPrice(product.item["shipping_category"].name)
-                                    )
-                                    : "$0"
-                                  }
+                          <div
+                            className="grid grid-cols-3 text-sm"
+                            key={"product-unit-shipcost" + i}
+                          >
+                            <p className="flex col-span-1">
+                              Envío:
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && (
+                                <span title={`Envío Marca: ${product.item["shipping_category"].name}`} className="flex items-center ml-1 cursor-help">
+                                  <Icon icon="info" size={18} className="text-gray-500" />
                                 </span>
-                              </p>
-                            </div>
-                          )}
+                              )}
+                            </p>
+                            <p className="col-span-2 text-right text-blue-dark">
+                              <span>
+                                {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
+                                  ? (
+                                    
+                                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount.split(',')[0]
+                                    ?? formatPrice(product.item["shipping_category"].name)
+                                  )
+                                  : "$0"
+                                }
+                              </span>
+                            </p>
+                          </div>
                           {/* End Shipping Cost */}
 
                           {/* Start Product Subtotal Price */}
@@ -444,7 +442,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                           >
                             <p className="col-span-1 font-bold">Subtotal:</p>
                             <span className="col-span-2 font-bold text-right text-blue-dark">
-                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0 && hasShipment
+                              {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
                                 ? formatPrice(
                                   showProductTotal(
                                     product?.total_amount_float,
@@ -470,14 +468,11 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                   <div className="grid grid-cols-2 mt-2 rounded">
                     <p className="font-bold text-left">TOTAL A PAGAR</p>
                     <span className="font-bold text-right">
-                      { hasShipment
-                        ?
+                      { 
                         formatPrice(
                           order?.total_amount_float +
                           shippingCostTotal.current.reduce((acc, current) => acc + current.shippingCost, 0)
                         )
-                        :
-                        (order?.formatted_total_amount)?.split(',')[0]
                       }
                     </span>
                   </div>
