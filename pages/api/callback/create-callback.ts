@@ -56,8 +56,7 @@ const createCallback = async (body) => {
     const raw = {
       "scriptId": GENESYS_CONSTANTS.SCRIPT_ID,
       "routingData": {
-        // "queueId": queueId,
-        "queueId": "714b2e6a-214d-4b65-ba3b-b0e09fe233e9",
+        "queueId": queueId,
         "preferredAgentIds": [
           ""
         ]

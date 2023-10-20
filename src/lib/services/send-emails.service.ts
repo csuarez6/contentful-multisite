@@ -150,24 +150,24 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
     const border = !hasAdjustents ? 'border: solid #e9e9e9; border-width: 0px 0px 1px;' : 'border: dotted #e9e9e9; border-width: 0px 0px 0.5px;';
     section +=
       `<tr>
-        <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
+        <td class="sm-inline-block sm-w-1-4 sm-border-0 sm-pb-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
         <td class="sm-inline-block sm-w-3-4 sm-border-0" style="${border} width: 160px; vertical-align: top; font-weight: 500">
           <div style="padding: 20px 20px ${padding}px 20px;">
-            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
-            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
+            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
+            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
             <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
-              <li>* IVA incluido</li>
-              <li>Cantidad: ${lineItem.quantity}</li>
+              <li class="sm-font-normal sm-text-10px">* IVA incluido</li>
+              <li class="sm-font-normal sm-text-10px">Cantidad: ${lineItem.quantity}</li>
             </ul>
           </div>
         </td>
-        <td class="sm-inline-block sm-w-full sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
+        <td class="sm-inline-block sm-pt-0 sm-w-full sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
+          <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
-          <b style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
+          <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
         </td>
       </tr>
       ${productAdjustments(lineItem, border, padding)}`;
@@ -178,14 +178,13 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
       shippingMethodNames.push(shipment.shipping_method?.name);
       section +=
         `<tr>
-          <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
-          <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
-            <p class="sm-text-12px" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${shipment.shipping_method?.name}</p>
-            <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px"></ul>
+          <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
+          <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
+            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${shipment.shipping_method?.name}</p>
           </td>
-          <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
-          <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
-            <b style="font-weight: 700; color: #113455">${shipment.shipping_method?.formatted_price_amount}</b>
+          <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
+          <td class="sm-inline-block sm-clear-both sm-w-2-4 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
+            <b class="sm-font-normal" style="font-weight: 700; color: #113455">${shipment.shipping_method?.formatted_price_amount}</b>
           </td>
         </tr>`;
     }
@@ -351,6 +350,9 @@ const header = (title: string) => {
               .sm-inline-block {
                   display: inline-block !important
               }
+              .sm-w-0 {
+                  width: 0% !important
+              }
               .sm-w-1-4 {
                   width: 25% !important
               }
@@ -394,6 +396,9 @@ const header = (title: string) => {
               .sm-pb-4 {
                   padding-bottom: 16px !important
               }
+              .sm-pb-0 {
+                  padding-bottom: 0 !important
+              }
               .sm-pt-0 {
                   padding-top: 0 !important
               }
@@ -409,11 +414,17 @@ const header = (title: string) => {
               .sm-text-12px {
                   font-size: 12px !important
               }
+              .sm-text-10px {
+                  font-size: 10px !important
+              }
               .sm-text-16px {
                   font-size: 16px !important
               }
               .sm-text-20px {
                   font-size: 20px !important
+              }
+              .sm-font-normal {
+                  font-weight: 400 !important
               }
             }
         </style>
