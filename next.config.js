@@ -8,6 +8,9 @@ const nextConfig = {
   generateBuildId: async () => {
     return "main";
   },
+  experimental: {
+    allowMiddlewareResponseBody: true,
+  },
   swcMinify: true,
   eslint: {
     dirs: ["pages", "src"], // Only run ESLint on the 'pages' and 'utils' directories during production builds (next build)
@@ -23,6 +26,8 @@ const nextConfig = {
       "tienda.grupovanti.com",
       "static.placetopay.com",
     ],
+    loader: 'custom',
+    loaderFile: './src/utils/image-loader.js',
   },
   async redirects() {
     return [
@@ -38,17 +43,20 @@ const nextConfig = {
       },
       {
         source: "/acceso",
-        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        destination:
+          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
         permanent: true,
       },
       {
         source: "/registro",
-        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        destination:
+          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
         permanent: true,
       },
       {
         source: "/forgotpassword",
-        destination: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+        destination:
+          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
         permanent: true,
       },
       {
@@ -69,10 +77,14 @@ const nextConfig = {
     ];
   },
   publicRuntimeConfig: {
-    NEXT_PUBLIC_COMMERCELAYER_ENDPOINT: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
-    NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-    NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID,
-    NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
+    NEXT_PUBLIC_COMMERCELAYER_ENDPOINT:
+      process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+    NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID:
+      process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+    NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID:
+      process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID,
+    NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID:
+      process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
   },
   staticPageGenerationTimeout: 300,
   experimental: {
