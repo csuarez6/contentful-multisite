@@ -1,10 +1,6 @@
-# Block all Agents to all content
+# Allow all Agents to all content
 User-agent: *
-Disallow: /
-# Disallow: /pruebas-de-contenidos
+Allow: /
+Disallow: /pruebas-de-contenidos
 
-# Allow for Vanti Spider
-User-agent: Screaming Frog SEO Spider
-Disallow:
-
-Sitemap: https://vanti-marketplace.vercel.app/sitemap.xml
+Sitemap: /sitemap.xml
