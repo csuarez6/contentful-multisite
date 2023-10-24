@@ -426,7 +426,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                   ? (
                                     
                                     (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount.split(',')[0]
-                                    ?? formatPrice(product.item["shipping_category"].name)
+                                    ?? "$0"
                                   )
                                   : "$0"
                                 }

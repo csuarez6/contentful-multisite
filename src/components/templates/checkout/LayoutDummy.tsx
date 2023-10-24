@@ -451,7 +451,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                   {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
                                     ? (
                                       (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount
-                                      ?? product.item["shipping_category"].name
+                                      ?? "$0"
                                     )
                                     : "$0"
                                   }
