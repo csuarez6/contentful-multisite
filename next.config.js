@@ -10,6 +10,7 @@ const nextConfig = {
   },
   experimental: {
     allowMiddlewareResponseBody: true,
+    largePageDataBytes: 1024 * 1024,
   },
   swcMinify: true,
   eslint: {
@@ -87,9 +88,6 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
   },
   staticPageGenerationTimeout: 300,
-  experimental: {
-    largePageDataBytes: 1024 * 1024,
-  },
   i18n: {
     locales: ["es"],
     defaultLocale: "es",
