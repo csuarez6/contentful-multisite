@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest, res: NextApiResponse, req
 
   console.log({ IpValidate });
   // Check if the user's IP is not allowed
-  if (!IpValidate) {
+  if (!IpValidate && enviroment === "production") {
     // block access
     const res = new NextResponse(null, { status: 403 })
     res.headers.set("x-middleware-refresh", "1")
