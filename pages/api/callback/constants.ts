@@ -49,11 +49,11 @@ export const CALLBACK_TYPES: object = {
   },
   "producto": {
     typeName: "Producto",
-    queueId: GENESYS_CONSTANTS.QUEUE_ID_GASODOMESTICOS
+    queueId: GENESYS_CONSTANTS.QUEUE_ID_VANTILISTO
   },
   "gasodomesticos": {
     typeName: "Productos Gasodomésticos",
-    queueId: GENESYS_CONSTANTS.QUEUE_ID_GASODOMESTICOS
+    queueId: GENESYS_CONSTANTS.QUEUE_ID_VANTILISTO
   },
   "vantilisto": {
     typeName: "Catálogo Vantilisto",
