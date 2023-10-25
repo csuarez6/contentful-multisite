@@ -47,7 +47,6 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import { IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventBeginCheckout } from "@/utils/ga-events--checkout";
-import citiesFile from "@/utils/static/cities-co.json";
 
 const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   const { copyServices } = props;
