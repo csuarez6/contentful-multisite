@@ -731,28 +731,30 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                               <ul className="flex justify-center gap-1 flex-nowrap ">
                                 {/* icons nav mobile */}
                                 <li className="flex max-w-[75px]">
-                                  <Link
-                                    href="/checkout/pse/verify"
-                                    className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
-                                  >
-                                    <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
-                                      <Icon
-                                        icon="shopping-cart"
-                                        className="absolute w-full h-full mx-auto right-1"
-                                      />
-                                      <span
-                                        className={classNames(
-                                          "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                                          numProducts > 0
-                                            ? "bg-blue-dark text-white"
-                                            : "bg-blue-100"
-                                        )}
-                                      >
-                                        {numProducts}
+                                  <button onClick={() => close()}>
+                                    <Link
+                                      href="/checkout/pse/verify"
+                                      className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
+                                    >
+                                      <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">
+                                        <Icon
+                                          icon="shopping-cart"
+                                          className="absolute w-full h-full mx-auto right-1"
+                                        />
+                                        <span
+                                          className={classNames(
+                                            "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
+                                            numProducts > 0
+                                              ? "bg-blue-dark text-white"
+                                              : "bg-blue-100"
+                                          )}
+                                        >
+                                          {numProducts}
+                                        </span>
                                       </span>
-                                    </span>
-                                    Carrito
-                                  </Link>
+                                      Carrito
+                                    </Link>
+                                  </button>
                                 </li>
                                 {utilityNavCollection?.items
                                   ?.slice(1)
