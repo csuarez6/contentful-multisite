@@ -75,6 +75,11 @@ const nextConfig = {
         destination: "/acceso",
         permanent: true,
       },
+      {
+        source: "/hogar/servicio-al-cliente/servicio-en-linea/solicitud-factura-por-correo-electronico:path*",
+        destination: "/tramites-y-ayuda/factura/conoce-tu-factura/factura-electronica",
+        permanent: true
+      },
     ];
   },
   publicRuntimeConfig: {
