@@ -158,7 +158,7 @@ const nextConfig = {
         ],
       },
     ];
-    if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
+    if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview' || process.env.NEXT_PUBLIC_VERCEL_ENV === 'qualitycontrol') {
       headers.push({
         headers: [
           {

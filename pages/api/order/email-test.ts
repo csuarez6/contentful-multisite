@@ -13,7 +13,7 @@ const handler = async (
   const orderData = response.data;
   let count = 0;
 
-  count += await sendEmails(orderId, true, null, (req.headers['x-forwarded-proto'] || 'http') + '://' + req.headers['host']);
+  count += await sendEmails(orderId, true);
   count += await sendEmails(orderId, false, orderData.status.toUpperCase());
 
   console.info(count + " emails sent");

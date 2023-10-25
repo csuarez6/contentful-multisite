@@ -193,7 +193,8 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
   return section;
 };
 
-const getOrderStatus = (status: string, order: IOrderExtended, host?: string) => {
+const getOrderStatus = (status: string, order: IOrderExtended) => {
+  const host = process.env.DEFAULT_DOMAIN;
   switch (status) {
     case "cancelled":
       return {
@@ -255,8 +256,8 @@ const getOrderStatus = (status: string, order: IOrderExtended, host?: string) =>
   }
 };
 
-const bodySection = (status: string, order: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string, host?: string) => {
-  const orderStatus = getOrderStatus(status, order, host);
+const bodySection = (status: string, order: IOrderExtended, line_items: ILineItemExtended[], shipments: Shipment[], formatted_total_amount: string) => {
+  const orderStatus = getOrderStatus(status, order);
 
   const body = `
     <tr>
@@ -526,9 +527,9 @@ const footer = `
       </body>
     </html>`;
 
-const sendCreateOrderEmail = async (order: IOrderExtended, host: string): Promise<number> => {
+const sendCreateOrderEmail = async (order: IOrderExtended): Promise<number> => {
   try {
-    const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount, host);
+    const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount);
     const email = header('Resumen del pedido') + body + footer;
 
     const clientEmail = {
@@ -671,11 +672,11 @@ const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   }
 };
 
-export const sendEmails = async (orderId: string, createEmail = false, statusP2P?: string, host?: string): Promise<number> => {
+export const sendEmails = async (orderId: string, createEmail = false, statusP2P?: string): Promise<number> => {
   const order = (await getOrderByAlly(orderId)).data;
   let count = 0;
   if (createEmail) {
-    count += await sendCreateOrderEmail(order, host);
+    count += await sendCreateOrderEmail(order);
   } else {
     count += await sendClientEmail(order);
     if (statusP2P && statusP2P === P2PRequestStatus.approved) {

@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { getToken } from "next-auth/jwt";
-// paths that require authentication or authorization
-const [AUTH_USER, AUTH_PASS] = (process.env.HTTP_BASIC_AUTH || ':').split(':');
-const enviroment = process.env.NODE_ENV;
-// const checkAuth: string[] = ["/acceso", "/forgotpassword", "/registro"];
-const checkAuth: string[] = ["/blocked"];
+const enviromentVercel = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const ALLOWED_IPS = [
   '103.21.244.0/22',
   '103.22.200.0/22',
@@ -24,17 +19,8 @@ const ALLOWED_IPS = [
   '197.234.240.0/22',
   '198.41.128.0/17',
 ]; // replace with your IPs
-export async function middleware(request: NextRequest, res: NextApiResponse, req: NextApiRequest) {
-  let response = null;
-  const token = await getToken({
-    req: request,
-    secret: 'secret',
-  });
-  console.info("********** middleware: ", token);
-  console.info("********** enviroment: ", enviroment);
-  const pathname = request.nextUrl.pathname;
-  // Log request
-  console.log({ request });
+
+export async function middleware(request: NextRequest, _res: NextApiResponse, _req: NextApiRequest) {
 
   const userIP = request.ip ?? request.headers.get("x-forwarded-for");
   console.log({ userIP });
@@ -48,39 +34,12 @@ export async function middleware(request: NextRequest, res: NextApiResponse, req
 
   console.log({ IpValidate });
   // Check if the user's IP is not allowed
-  if (!IpValidate && enviroment === "production") {
+  if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
     // block access
     const res = new NextResponse(null, { status: 403 })
     res.headers.set("x-middleware-refresh", "1")
     return res;
   }
-
-  // // Check User Session
-  // if (token) {
-  //   // validate your session here
-  //   console.info("********** Middleware Response: User Session Actived");
-  //   if (checkAuth.some((path) => pathname.startsWith(path))) {
-  //     const urlTmp = request.nextUrl.clone();
-  //     urlTmp.pathname = `/`;
-  //     return NextResponse.redirect(urlTmp);
-  //   } else {
-  //     return NextResponse.next();
-  //   }
-  // } else {
-  //   // the user is not logged in, redirect to the sign-in page
-  //   console.info("********** Middleware Response: No User Session");
-  //   const requestedPage = request.nextUrl.pathname;
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = `/acceso`;
-  //   url.search = `p=${requestedPage}`;
-  //   if (!checkAuth.some((path) => pathname.startsWith(path))) {
-  //     // response = NextResponse.redirect(url);
-  //     return NextResponse.redirect(url);
-  //   }
-  // }
-
-  // return response;
-  // **************************
 }
 
 function ipToInt32(ip: any) {
