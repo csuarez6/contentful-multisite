@@ -39,8 +39,8 @@ const StepsLine: React.FC<IStepList> = ({ items }) => {
             >
               <span className={classNames(
                 "absolute w-full h-[5px] bottom-[2.5px]",
-                "before:absolute before:bottom-0 before:-left-1/2 before:w-full before:h-[5px] group-first:before:hidden before:bg-[#EDF5FF]",
-                "after:absolute after:bottom-0 after:-left-1/2 after:h-[5px] group-first:after:hidden after:bg-lucuma after:transition-[width] after:duration-1000 after:delay-500",
+                "before:absolute before:bottom-0 -left-1 md:before:-left-1/2 before:w-full before:h-[5px] group-first:before:hidden before:bg-[#EDF5FF]",
+                "after:absolute after:bottom-0 -left-1 md:after:-left-1/2 after:h-[5px] group-first:after:hidden after:bg-lucuma after:transition-[width] after:duration-1000 after:delay-500",
                 getIndex >= idx ? "after:w-full" : "after:w-0",
               )}></span>
               <span className='px-3 grow items-center font-semibold text-base text-center text-blue-dark hidden md:flex'>
