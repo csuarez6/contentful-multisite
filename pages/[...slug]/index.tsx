@@ -43,7 +43,7 @@ const CustomPage: NextPageWithLayout = (props: any) => {
         </div>
       )}
       {content?.json && (
-        <div className="main-container">
+        <div className="main-container max-w-full">
           {enableHeaderPrecedence && showHeader && (jsonToReactComponents([{ ...__Breadcrumbs }]))}
           <RichtextPage {...props} key={sys?.id} />
         </div>
