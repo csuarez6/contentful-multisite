@@ -295,9 +295,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               <CustomLink
                 className="text-sm underline text-grey-60 !leading-none"
                 content={{
-                  urlPaths: [
-                    "politica-de-cambios-devoluciones-y-derecho-de-retracto",
-                  ],
+                  externalLink : "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf",
                 }}
               >
                 Conozca términos y condiciones
