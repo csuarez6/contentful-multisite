@@ -6,7 +6,7 @@ import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProduct
 import InfoCardBlock from "../info-card/InfoCard";
 import SearchCardBlock from "../search-card/SearchCard";
 import Icon from "@/components/atoms/icon/Icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IWithLoadingData {
   isLoading?: boolean;
@@ -39,6 +39,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   types,
 }) => {
   const [filterText, setFilterText] = useState<string>("");
+  const [refreshFacets, setrefreshFacets] = useState(0);
   const onFacetsChangeHandle = (key, value) => {
     const { search: uri } = location;
     let newUri = "";
@@ -58,6 +59,14 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
     onFacetsChange(newUri);
   };
+
+  useEffect(() => {
+    const { search: uri } = location;
+    const contUri = uri.split("&");
+    const tempPos = contUri?.[0].split("=");
+    if (contUri?.length <= 1 && tempPos?.[0] === "?categoria") setrefreshFacets(refreshFacets + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [facets]);
 
   const productGrill = () => {
     if (error) return <FailedContent />;
@@ -87,6 +96,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
                 <SelectAtom
                   {...el}
                   handleChange={(value) => onFacetsChangeHandle(el.name, value)}
+                  key={refreshFacets}
                 />
               </div>
             );
