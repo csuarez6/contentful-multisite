@@ -45,7 +45,7 @@ const nextConfig = {
       {
         source: "/acceso",
         destination:
-          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+          "https://mi.grupovanti.com/#/",
         permanent: true,
       },
       {
@@ -57,7 +57,7 @@ const nextConfig = {
       {
         source: "/forgotpassword",
         destination:
-          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+          "https://mi.grupovanti.com/#/recuperacion",
         permanent: true,
       },
       {
