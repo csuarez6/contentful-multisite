@@ -64,7 +64,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
     const { search: uri } = location;
     const contUri = uri.split("&");
     const tempPos = contUri?.[0].split("=");
-    if (contUri?.length <= 1 && tempPos?.[0] === "?categoria") setrefreshFacets(refreshFacets + 1);
+    if (contUri?.length <= 1 && (tempPos?.[0] === "?categoria" || tempPos?.[0] === "?marca")) setrefreshFacets(refreshFacets + 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [facets]);
 

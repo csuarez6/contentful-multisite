@@ -222,14 +222,21 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
               };
             }),
         };
-
-        facetContents.listedContents.unshift({
-          name: "",
-          text: `Todo`,
-          image: null,
-          value: "*",
-          totalItems: 0,
-        });
+        let countFirstFacets = 0;
+        for(let i = 0; i < facetContents?.listedContents.length; i++){
+          if(facetContents.listedContents?.[i]?.text === 'Todo'){
+            countFirstFacets++;
+          }
+        }
+        if(countFirstFacets === 0){
+          facetContents.listedContents.unshift({
+            name: "",
+            text: `Todo`,
+            image: null,
+            value: "*",
+            totalItems: 0,
+          });
+        }
         facetsWithValues.push(facetContents);
       }
     }
