@@ -193,7 +193,8 @@ const NavList = ({
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
               // content={{ urlPaths: ["/registro"] }}
-              content={{ externalLink: "https://mi.grupovanti.com/#/registro" }}
+              //content={{ externalLink: "https://mi.grupovanti.com/#/registro" }}
+              content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
               className="!block text-center button button-primary"
               onClick={() => close()}
             >
@@ -201,7 +202,8 @@ const NavList = ({
             </CustomLink>
             <CustomLink
               // content={{ urlPaths: ["/acceso"] }}
-              content={{ externalLink: "https://mi.grupovanti.com/#/" }}
+              //content={{ externalLink: "https://mi.grupovanti.com/#/" }}
+              content={{ externalLink: "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html" }}
               className="!block text-center button button-outline"
               onClick={() => close()}
             >
