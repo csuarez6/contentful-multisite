@@ -112,10 +112,8 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
             category: "Callback",
             label: "Catálogo VantiListo",
             contractAccount: formData.contractAccount,
-            productsList: [{
-              product: productData.productName,
-              sku: productData.sku
-            }]
+            product: productData.productName,
+            sku: productData.sku
           });
         }
 

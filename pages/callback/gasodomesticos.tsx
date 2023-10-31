@@ -193,10 +193,8 @@ const CallbackPage = () => {
           gaEventForm({
             category: "Callback",
             label: "Gasodomésticos",
-            productsList: [{
-              product: productData.productName,
-              sku: sku,
-            }]
+            product: productData.productName,
+            sku: sku,
           });
         }
 

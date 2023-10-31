@@ -5,15 +5,27 @@ export const gaEventForm = ({
   category = null,
   label = null,
   contractAccount = null,
-  productsList = null
+  productsList = null,
+  product = null,
+  sku = null
 }) => {
   const eventId = uuid();
-  gTagEvent("trackEventForm", {
+  const isGasodomesticos = label === "Gasodomésticos";
+  const isVantilisto = label === "Catálogo VantiListo";
+  const productData = (isGasodomesticos || isVantilisto)
+    ? { product, sku }
+    : { productsList: productsList ?? [] };
+
+  const params = {
     action: "form_submit",
     category: category ?? "",
     label: label ?? "",
     contractAccount: contractAccount ?? "",
-    productsList: productsList ?? [],
     "gtm.uniqueEventId": eventId,
+  };
+
+  gTagEvent("trackEventForm", {
+    ...params,
+    ...productData
   });
 };
