@@ -186,7 +186,7 @@ const FooterBlock: React.FC<INavigation> = ({
               {documentToReactComponents(secondaryText?.json)}
             </div>
             {promoImage && (
-              <div className="w-[248px] md:w-[311px] mt-1 shrink-0 -mr-[7px]">
+              <a className="w-[248px] md:w-[311px] mt-1 shrink-0 -mr-[7px]" href='https://www.sic.gov.co/' target='_blank' title='Superintendencia de Industria y Comercio' rel="noreferrer">
                 <figure className="relative w-full">
                   <Image
                     src={promoImage.url}
@@ -196,7 +196,7 @@ const FooterBlock: React.FC<INavigation> = ({
                     className="w-full h-auto"
                   />
                 </figure>
-              </div>
+              </a>
             )}
           </div>
         </div>
