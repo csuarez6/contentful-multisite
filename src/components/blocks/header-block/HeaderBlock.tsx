@@ -580,18 +580,15 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         // content={{ urlPaths: ["/registro"] }}
                         content={{
                           externalLink:
-                              "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+                            "https://mi.grupovanti.com/#/registro",
                         }}
                         className="flex items-center h-full text-center button button-primary whitespace-nowrap"
                       >
                         Regístrate
                       </CustomLink>
                       <CustomLink
-                        // content={{ urlPaths: ["/acceso" + (asPath !== "/" ? `?p=${asPath}` : "")] }}
-                        content={{
-                          externalLink:
-                              "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
-                        }}
+                        // content={{ urlPaths: ["/acceso"] }}
+                        content={{ urlPaths: ["/tramites-y-ayuda/oficina-virtual"] }}
                         className="flex items-center h-full text-center button button-outline whitespace-nowrap"
                       >
                         Inicia sesión
