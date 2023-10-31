@@ -193,7 +193,7 @@ const NavList = ({
           <div className="flex flex-col gap-3 my-4">
             <CustomLink
               // content={{ urlPaths: ["/registro"] }}
-              content={{ externalLink: "https://mi.grupovanti.com/#/registro" }}
+              content={{ externalLink: "https://mi.grupovanti.com/registro" }}
               className="!block text-center button button-primary"
               onClick={() => close()}
             >

@@ -45,19 +45,19 @@ const nextConfig = {
       {
         source: "/acceso",
         destination:
-          "https://mi.grupovanti.com/#/",
+          "https://mi.grupovanti.com/",
         permanent: true,
       },
       {
         source: "/registro",
         destination:
-          "https://nuevaoficinavirtual.grupovanti.com:8005/sap/bc/ui5_ui5/sap/zovclaunchpad/index.html",
+          "https://mi.grupovanti.com/registro",
         permanent: true,
       },
       {
         source: "/forgotpassword",
         destination:
-          "https://mi.grupovanti.com/#/recuperacion",
+          "https://mi.grupovanti.com/recuperacion",
         permanent: true,
       },
       {

@@ -580,7 +580,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         // content={{ urlPaths: ["/registro"] }}
                         content={{
                           externalLink:
-                            "https://mi.grupovanti.com/#/registro",
+                            "https://mi.grupovanti.com/registro",
                         }}
                         className="flex items-center h-full text-center button button-primary whitespace-nowrap"
                       >
