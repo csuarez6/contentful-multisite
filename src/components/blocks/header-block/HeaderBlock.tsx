@@ -427,7 +427,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                       )}
                     >
                       {utilityNavCollection.items.map((item) => {
-                        delete utilityNavCollection.items[1];
                         return (
                           <li
                             className="flex w-[68px] 2lg:w-[75px] justify-center"
