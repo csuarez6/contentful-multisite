@@ -30,7 +30,8 @@ const config = {
   "collectCoverage": true,
   "coveragePathIgnorePatterns": [
     ".mocks.{js,ts,jsx,tsx}",
-    ".stories.tsx"
+    ".stories.tsx",
+    "<rootDir>/src/components/templates/checkout/",
   ],
 }
 

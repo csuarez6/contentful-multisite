@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen } from '@testing-library/react';
 import ListWithIcons from "./ListWithIcons";
 import { mockListWithIconsProps } from "./ListWithIcons.mocks";
 
@@ -25,5 +25,10 @@ describe("ListWithIcons data", () => {
 describe("ListWithIcons dataLeft", () => {
   test("renders", () => {
     render(<ListWithIcons {...dataLeft} />);
+    const sliderPrev = screen.getByTestId("prevSliderListIcon");
+    const sliderNext = screen.getByTestId("nextSliderListIcon");
+
+    fireEvent.click(sliderPrev);
+    fireEvent.click(sliderNext);
   });
 });

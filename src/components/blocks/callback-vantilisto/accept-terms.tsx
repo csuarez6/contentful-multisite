@@ -169,7 +169,7 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
             <p className='font-medium text-black text-size-p2'>NOTA: Al hacer click en “Enviar datos” serás contactado por un agente de Vanti</p>
           </div>
           <div className="flex justify-end w-full">
-            <button type="submit" className='w-fit button button-primary' disabled={isLoading}>
+            <button type="submit" className='w-fit button button-primary' disabled={isLoading} data-testid="submit">
               Enviar datos
             </button>
           </div>

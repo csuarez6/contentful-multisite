@@ -167,6 +167,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
 
   return (
     <div
+      data-testid={uniqueId}
       onMouseOver={() => handleMouseOver(item)}
       onMouseOut={() => setIsOpenMenu(false)}
       onFocus={() => handleMouseOver(item)}

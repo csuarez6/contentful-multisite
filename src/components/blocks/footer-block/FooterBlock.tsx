@@ -108,12 +108,11 @@ const FooterBlock: React.FC<INavigation> = ({
                             as="div"
                             role="button"
                             className={`flex w-full items-center justify-between pl-4 pr-2 text-left text-gray-400 pt-[8px] mb-[8px]`}
-                            onClick={ () => {                        
-                              if (!open) {
-                                close(); 
-                              }
+                            onClick={() => {
+                              if (!open) close();
                               togglePanels({ ...panel, key: i });
                             }}
+                            data-testid={`accordion-button-${menuItem.name}`}
                           >
                             <div className="flex">
                               <h3 className="text-white text-sm">

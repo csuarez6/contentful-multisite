@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { render } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import MegaMenu from "./MegaMenu";
 import { mockMegaMenuProps } from "./MegaMenu.mocks";
 
@@ -33,5 +33,8 @@ describe("MegaMenu", () => {
   });
   test("renders", async () => {
     render(<MegaMenu {...data} />);
+    const uniqueId = `megamenu_${data.mainNavCollection.items?.[0].sys?.id}`;
+    const megamenu = screen.getByTestId(uniqueId);
+    fireEvent.click(megamenu);
   });
 });

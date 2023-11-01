@@ -5,7 +5,9 @@ const data: IModal = {
     icon: 'check',
     title: '¡Has creado tu cuenta Vanti!',
     subtitle: '¡Bienvenido al universo de Vanti, más formas de avanzar!',
+    close: () => null
 };
+
 export const MocksModalProps = {
     data
 };

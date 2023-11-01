@@ -6,6 +6,6 @@ import { mockTabsProps } from './Tabs.mocks'
 
 describe('Tabs', () => {
     test('renders', async () => {
-        render(<Tabs {...mockTabsProps.data} />);
+        render(<Tabs {...mockTabsProps.dataTab} />);
     });
 })

@@ -64,6 +64,7 @@ const WarrantyModal: React.FC<IModal> = ({
                       <button
                         type="button"
                         className="rounded-md bg-white text-neutral-30 hover:text-gray-500 focus:outline-none focus:ring-offset-2"
+                        data-testid="close-btn"
                         onClick={close}
                       >
                         <span className="sr-only">Close</span>

@@ -27,12 +27,11 @@ const Slider: React.FC<any> = ({ data }) => {
           const className = "slider-bullet";
           let bullets = "";
           for (let i = 0; i < total; i++) {
-            bullets += `<span data-bullet-index="${i}" class="${className}${current === i + 1 ? " is-active" : ""
-              }"></span>`;
+            bullets += `<span data-bullet-index="${i}" class="${className}${current === i + 1 ? " is-active" : ""}"></span>`;
           }
-          return `<button class="sliderPrev carousel-control-prev-icon bg-no-repeat opacity-60 hover:opacity-100 w-[15px] mr-2 hidden lg:inline-block "></button>
-                                ${bullets}
-                            <button class="sliderNext carousel-control-next-icon bg-no-repeat opacity-60 hover:opacity-100 w-[15px] ml-2 hidden lg:inline-block"></button>`;
+          return `<button data-testid="sliderPrev" class="sliderPrev carousel-control-prev-icon bg-no-repeat opacity-60 hover:opacity-100 w-[15px] mr-2 hidden lg:inline-block"></button>
+                    ${bullets}
+                  <button data-testid="sliderNext" class="sliderNext carousel-control-next-icon bg-no-repeat opacity-60 hover:opacity-100 w-[15px] ml-2 hidden lg:inline-block"></button>`;
         },
       }}
       autoplay={{ delay: 7000, disableOnInteraction: stopSliderRotation }}

@@ -3,11 +3,12 @@ import { render } from "@testing-library/react";
 import Layout from "./Layout";
 import LayoutDummy from "./LayoutDummy";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 const useRouterMock = () => ({
   asPath: "/",
   push: jest.fn(),
-  query: ""
+  query: "",
 });
 
 jest.mock("next/router", () => ({
@@ -22,18 +23,26 @@ jest.mock("next/router", () => ({
 //   attachLinksToRichtextContent: jest.fn(),
 // }));
 
-// jest.mock("@/lib/services/render-cards.service", () => jest.fn());
 
 describe("Checkout", () => {
   beforeEach(() => {
     useRouter.mockImplementation(useRouterMock);
   });
-  
+
   test("Layout renders", () => {
-    render(<Layout />);
+    render(
+      <Layout>
+        <h1>this is a test</h1>
+      </Layout>
+    );
   });
 
   test("LayoutDummy renders", () => {
-    render(<LayoutDummy />);
+    render(
+      <LayoutDummy>
+        {" "}
+        <h1>this is a test</h1>
+      </LayoutDummy>
+    );
   });
 });

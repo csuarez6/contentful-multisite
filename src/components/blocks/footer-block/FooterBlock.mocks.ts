@@ -17,7 +17,7 @@ const data: INavigation = {
         sys: {
           id: "6aILlHHNb5BI6yBxb2JMP9",
         },
-        name: "Lorem ipsum",
+        name: "Lorem ipsum1",
         promoTitle: "Lorem ipsum",
         mainNavCollection: {
           items: [
