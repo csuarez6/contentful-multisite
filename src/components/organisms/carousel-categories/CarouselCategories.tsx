@@ -31,8 +31,8 @@ const CarouselCategories: React.FC<
       : fullPath;
 
   link = linkParameters ? link + linkParameters : link;
-
-  const isCurrentItem = filterName?.toLowerCase() === promoTitle?.toLowerCase() || filterName?.toLowerCase() === name?.toLowerCase();
+  const validateFilterName = filterName ?? 'Todo';
+  const isCurrentItem = (validateFilterName?.toLowerCase() === promoTitle?.toLowerCase() || validateFilterName?.toLowerCase() === name?.toLowerCase());
 
   return (
     <article className="flex justify-center h-full">
@@ -62,7 +62,7 @@ const CarouselCategories: React.FC<
               <h3
                 className={classNames(
                   "text-center text-slate-600 !font-semibold underline-animated-1 group-hover:underline-animated-full-1 text-base",
-                  filterName !== null && isCurrentItem && "underline-animated-full-1"
+                  validateFilterName !== null && isCurrentItem && "underline-animated-full-1"
                 )}
               >
                 {promoTitle ?? name}
