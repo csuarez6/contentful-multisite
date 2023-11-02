@@ -371,7 +371,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                   x
                                 </span>
                                 <span>
-                                  {formatPrice(product?.["warranty_service"][0].unit_amount_float)}
+                                  {formatPrice(product?.["warranty_service"]?.[0].unit_amount_float)}
                                 </span>
                               </p>
                             </div>
@@ -399,7 +399,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                   x
                                 </span>
                                 <span>
-                                  {formatPrice(product?.["installlation_service"][0].unit_amount_float)}
+                                  {formatPrice(product?.["installlation_service"]?.[0].unit_amount_float)}
                                 </span>
                               </p>
 
@@ -425,7 +425,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
                                 {product?.item["shipping_category"] && Object.entries(product?.item["shipping_category"]).length > 0
                                   ? (
                                     
-                                    (shippingMethodGlobal.find((x) => x.name === product.item["shipping_category"].name))?.formatted_price_amount.split(',')[0]
+                                    (shippingMethodGlobal.find((x) => x.name === product?.item?.["shipping_category"]?.name))?.formatted_price_amount?.split(',')?.[0]
                                     ?? "$0"
                                   )
                                   : "$0"
