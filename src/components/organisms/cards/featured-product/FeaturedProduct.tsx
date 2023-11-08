@@ -6,6 +6,7 @@ import { IAllyOverviewDetails, IProductOverviewDetails } from "@/lib/interfaces/
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
 import { isAvailableGasAppliance, isAvailableVantilisto, isGasAppliance } from "@/utils/functions";
+import { logoVantiListo } from "@/components/blocks/product-details/ProductConfig";
 
 const iconCellphone: IIcon = {
   icon: "cellphone",
@@ -197,9 +198,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                   {isGasAppliance(marketId) && priceVantiListo && (
                     <p className="group-[.card-mega-menu]:text-xs text-[#545454] text-sm md:text-xl flex items-center gap-2">
                       <span>{hideDecimalPrice ? priceVantiListo.split(",")[0] : priceVantiListo}</span>
-                      <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                        Vanti Listo
-                      </span>
+                      <Icon {...logoVantiListo} />
                     </p>
                   )}
 

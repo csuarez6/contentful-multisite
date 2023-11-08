@@ -36,8 +36,8 @@ import {
 
 import {
   ICON_PLACE_TO_PAY_URL,
-  iconInvoice,
   iconPSE,
+  logoVantiListo,
   options,
 } from "./ProductConfig";
 
@@ -449,7 +449,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         }
                         <div className="flex gap-1">
                           {isGasAppliance(marketId) && <Icon {...iconPSE} />}
-                          <Icon {...iconInvoice} />
+                          {/* <Icon {...iconInvoice} /> */}
+                          <Icon {...logoVantiListo} />
                           {!isVantilisto(marketId) && (
                             <figure>
                               <Image
@@ -476,9 +477,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       {isGasAppliance(marketId) && priceVantiListo && (
                         <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
                           <span>{priceVantiListo.split(",")[0]}</span>
-                          <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                            Vanti Listo
-                          </span>
+                          <Icon {...logoVantiListo} />
                         </p>
                       )}
 
@@ -685,9 +684,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {isGasAppliance(marketId) && priceVantiListo && (
                   <p className="text-[#545454] text-sm md:text-xl flex flex-col-reverse xxs:flex-row items-start xxs:items-center gap-2">
                     <span>{priceVantiListo.split(",")[0]}</span>
-                    <span className="inline-block text-size-small font-bold bg-cyan-300 py-0.5 px-1 rounded border">
-                      Vanti Listo
-                    </span>
+                    <Icon {...logoVantiListo} />
                   </p>
                 )}
                 {/* Product stock */}

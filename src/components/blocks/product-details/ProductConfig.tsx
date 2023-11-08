@@ -27,6 +27,12 @@ export const iconCallback: IIcon = {
   className: "h-5 w-5",
 };
 
+export const logoVantiListo: IIcon = {
+  icon: "logo_vantilisto",
+  size: 28,
+  className: "h-7 w-12",
+};
+
 export const ICON_PLACE_TO_PAY_URL = "https://static.placetopay.com/placetopay-logo.svg";
 export const options = {
   renderNode: {
