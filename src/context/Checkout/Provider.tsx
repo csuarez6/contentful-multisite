@@ -10,7 +10,6 @@ const CheckoutProvider = ({ children }) => {
 
   const {
     order,
-    orderError,
     productUpdates,
     timeToPay,
     hasShipment,
@@ -53,7 +52,6 @@ const CheckoutProvider = ({ children }) => {
   const valuesProvider: IContextCheckout = {
     flow,
     order,
-    orderError,
     productUpdates,
     tokenRecaptcha,
     timeToPay,

@@ -172,7 +172,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
-    if (!order) return;
     if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length) {
       push("/checkout/pse/verify");
     }

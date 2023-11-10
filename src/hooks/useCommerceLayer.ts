@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import CommerceLayer, { AddressCreate, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
+import CommerceLayer, { AddressCreate, CommerceLayerClient, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments, JWTProps } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
@@ -64,31 +64,14 @@ export const useCommerceLayer = () => {
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
   const [isFetchingOrder, setIsFetchingOrder] = useState<boolean>(false);
-  const [orderError, setOrderError] = useState<boolean>(false);
   const [hasShipment, setHasShipment] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
   const [isInitialRender, setIsInitialRender] = useState<boolean>();
-  const [localOrderId, setLocalOrderId] = useState<string>();
   const [isPaymentProcess, setisPaymentProcess] = useState(false);
   const [isPolicyCheck, setIspolicyCheck] = useState(false);
-
-  /**
-   * Set localStorage and State Order ID
-   */
-  useEffect(() => {
-    (async () => {
-      try {
-        setLocalOrderId(localStorage.getItem('orderId'));
-        setOrderError(!orderId || !localOrderId);
-      } catch (error) {
-        console.error("Error at: useCommerceLayer setLocalOrderID", error);
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId, orderError, localOrderId]);
 
   const generateClient = async () => {
     try {
@@ -101,7 +84,7 @@ export const useCommerceLayer = () => {
     }
   };
 
-  const getUpdateOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkUpdates = false) => {
+  const getUpdatedOrderAdmin = async (idOrder?: string, params?: QueryParamsRetrieve, checkUpdates = false) => {
     let data = { status: 400, data: "Error updating order", productUpdates: [] };
     await fetch("/api/order", {
       method: "POST",
@@ -182,36 +165,28 @@ export const useCommerceLayer = () => {
     setIsFetchingOrder(true);
     try {
       const idOrder = localStorage.getItem("orderId");
-
       if (!idOrder) throw new Error(INVALID_ORDER_ID_ERROR);
-
-      const orderResp = await getUpdateOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkUpdates);
-
+      
+      const orderResp = await getUpdatedOrderAdmin(idOrder, DEFAULT_ORDER_PARAMS, checkUpdates);
       if (checkUpdates) setProductUpdates(orderResp.productUpdates);
-
       const order = orderResp.data as unknown as Order;
 
-      if (!["draft", "pending"].includes(order.status)) {
-        throw new Error(INVALID_ORDER_ID_ERROR);
-      }
-
-      setIsFetchingOrder(false);
+      if (!["draft", "pending"].includes(order.status)) throw new Error(INVALID_ORDER_ID_ERROR);
+      
       return order;
     } catch (error) {
-      console.warn(INVALID_ORDER_ID_ERROR, "Creating new draft order");
-      const client = await generateClient();
-      const draftOrder = await client.orders.create({}).catch(err => err.errors);
-      if (draftOrder[0]?.status !== 200) localStorage.setItem("orderId", draftOrder.id);
+      localStorage.removeItem("orderId");
+      console.warn("Doesn't exists an order");
+      return null;
+    } finally {
       setIsFetchingOrder(false);
-      return draftOrder;
     }
   }, []);
 
   const getOrderById = useCallback(async (orderId?: string) => {
     try {
       if (!orderId) throw new Error(INVALID_ORDER_ID_ERROR);
-
-      const orderResp = await getUpdateOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
+      const orderResp = await getUpdatedOrderAdmin(orderId, DEFAULT_ORDER_PARAMS);
       const order = orderResp.data as unknown as Order;
       if (orderResp.status === 200) return { status: 200, data: order };
       return { status: 400, data: 'Error get order by ID' };
@@ -230,20 +205,21 @@ export const useCommerceLayer = () => {
       console.error('error reloadOrder ', error);
       return { status: 400, data: 'error at reload order' };
     }
-
   }, [getOrder]);
 
-  /**
-   * Function to SetUP the Order on the Context
-   */
-  const setUpOrder = useCallback(async (checkUpdates: boolean) => {
+  const createDraftOrder = async (client: CommerceLayerClient) => {
     try {
-      const order = await getOrder(checkUpdates);
-      setOrder(order);
-    } catch (error) {
-      console.error("Error at: useCommerceLayer getOrder, setOrder", error);
+      const draftOrder = await client.orders.create({}).catch(err => err.errors);
+      if (draftOrder?.id) {
+        localStorage.setItem("orderId", draftOrder.id);
+        setOrder(draftOrder);
+      }
+      return draftOrder?.id;
+    } catch (error){
+      console.error('error createDraftOrder');
+      return null;
     }
-  }, [getOrder]);
+  };
 
   /**
    * Set the order only once for performance (in the initial render of the context)
@@ -252,27 +228,29 @@ export const useCommerceLayer = () => {
     (async () => {
       if (typeof isInitialRender == "undefined") setIsInitialRender(true);
       if (isInitialRender) {
-        await setUpOrder(false);
+        await reloadOrder(false);
         setIsInitialRender(false);
       }
     })();
-  }, [isInitialRender, setUpOrder]);
+  }, [isInitialRender, reloadOrder]);
 
   /**
    * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
    */
   useEffect(() => {
     const checkUpdates = asPath.startsWith("/checkout/pse");
-    if (checkUpdates && isInitialRender === false) setUpOrder(true);
-  }, [asPath, isInitialRender, setUpOrder]);
+    if (checkUpdates && isInitialRender === false) reloadOrder(true);
+  }, [asPath, isInitialRender, reloadOrder]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string, category?: object) => {
       try {
         const client = await generateClient();
+        const currentOrderId = orderId ?? await createDraftOrder(client); // Create an order if it doesn't exist
+
         const resCreate: any = await client.line_items.create({
           quantity: 1,
-          name: productName,
+          name: productName, 
           image_url: productImage,
           sku_code: skuCode,
           _update_quantity: true,
@@ -282,7 +260,7 @@ export const useCommerceLayer = () => {
           },
           order: {
             type: "orders",
-            id: orderId,
+            id: currentOrderId,
           }
         }).catch(err => err.errors);
 
@@ -302,7 +280,7 @@ export const useCommerceLayer = () => {
       }
 
     },
-    [orderId, reloadOrder]
+    [reloadOrder, orderId]
     // eslint-disable-next-line react-hooks/exhaustive-deps
   );
 
@@ -417,7 +395,6 @@ export const useCommerceLayer = () => {
         await requestService(newAdjustment, order.id, quantity.toString() ?? "1");
       }
       await reloadOrder();
-
     } catch (err) {
       console.error('error', err);
       return { status: 500, data: 'Error changing item-service' };
@@ -431,7 +408,6 @@ export const useCommerceLayer = () => {
         await client.line_items.delete(idElement).catch(err => err.errors);
       });
       await reloadOrder();
-
     } catch (err) {
       console.error('error', err);
       return { status: 500, data: 'Error Deleting item-service' };
@@ -764,7 +740,6 @@ export const useCommerceLayer = () => {
 
   return {
     order,
-    orderError,
     productUpdates,
     tokenRecaptcha,
     timeToPay,

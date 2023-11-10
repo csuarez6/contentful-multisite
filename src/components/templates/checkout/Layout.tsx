@@ -100,9 +100,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const products = useMemo(() => {
     if (!order?.line_items) return [];
     const items = order.line_items.filter((i) => i.sku_code);
-    if (asPath.startsWith("/checkout/pse/purchase-order")) {
-      setIsFinishProductsLoading(true);
-    }
+    if (asPath.startsWith("/checkout/pse/purchase-order")) setIsFinishProductsLoading(true);
     return items;
   }, [asPath, order]);
 
@@ -117,7 +115,6 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
-    if (!order) return;
     if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length && !asPath.startsWith("/checkout/pse/purchase-order")) push("/checkout/pse/verify");
     setIsComplete(asPath.startsWith('/checkout/pse/summary'));
     shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city);

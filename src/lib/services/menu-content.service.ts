@@ -40,11 +40,7 @@ const getMainHeader = async (navigationId: string = null, preview = false) => {
 
   if (!responseData?.auxNavigation) return null;
 
-  const entryContent = JSON.parse(
-    JSON.stringify(
-      responseData?.auxNavigation
-    )
-  );
+  const entryContent = JSON.parse(JSON.stringify(responseData?.auxNavigation));
 
   return entryContent;
 };
@@ -68,8 +64,8 @@ const getSecondaryHeader = async (mainItemInfo: any, preview: boolean) => {
     }));
   } catch (e) {
     return { responseError: e, responseData };
-  }    
-  
+  }
+
   const blockEntryContent = JSON.parse(
     JSON.stringify(
       responseData?.auxNavigation
@@ -111,19 +107,19 @@ export const getHeader = async (navigationId: string = null, preview = false) =>
 
   const header = await getMainHeader(navigationId, preview);
 
-  for(const navigationField of NAVIGATION_FIELDS){
-    if(header?.[navigationField]?.items?.length > 0) {
+  for (const navigationField of NAVIGATION_FIELDS) {
+    if (header?.[navigationField]?.items?.length > 0) {
       for (let i = 0; i < header[navigationField].items.length; i++) {
         const mainItem = header[navigationField].items[i];
-        if(mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION){
+        if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
           const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
-          if(responseError) {
+          if (responseError) {
             console.error(`Error on get reference item => `, responseError.message, mainItem);
           } else {
             let navigation = responseData;
-            if(navigation?.[navigationField]?.items?.length > 0){ // If its a normal flow
+            if (navigation?.[navigationField]?.items?.length > 0) { // If its a normal flow
               navigation = await applySaltToMegamenu(navigation);
-            } else if(navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
+            } else if (navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
               navigation.secondaryNavCollection.items = await Promise.all(
                 navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
               );
@@ -164,11 +160,7 @@ export const getNavigation = async (navigationId: string = null, preview = false
 
   if (responseError) console.error(`Error on entry query (getNavigation) => `, responseError.message);
 
-  const navigation = JSON.parse(
-    JSON.stringify(
-      responseData?.auxNavigation
-    )
-  );
+  const navigation = JSON.parse(JSON.stringify(responseData?.auxNavigation));
 
   return navigation ?? false;
 };

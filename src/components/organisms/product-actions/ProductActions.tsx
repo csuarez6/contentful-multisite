@@ -1,15 +1,11 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { event as gTagEvent } from "nextjs-google-analytics";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import { iconCallback } from "@/components/blocks/product-details/ProductConfig";
-import {
-  IProductOverviewDetails,
-  PaymentMethodType,
-} from "@/lib/interfaces/product-cf.interface";
+import { IProductOverviewDetails, PaymentMethodType } from "@/lib/interfaces/product-cf.interface";
 import InformationModal from "@/components/organisms/Information-modal/InformationModal";
 import { classNames, isAvailableGasAppliance } from "@/utils/functions";
-import CheckoutContext from "@/context/Checkout";
 import { ADD_CART_422_ERROR_MSG, ADD_CART_GENERAL_ERROR_MSG } from "@/constants/checkout.constants";
 
 const ProductActions: React.FC<IProductOverviewDetails> = ({
@@ -33,7 +29,6 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
     description: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { orderError } = useContext(CheckoutContext);
 
   const gaEvent = () => {
     gTagEvent("add_to_cart", {
@@ -88,7 +83,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
                 "button button-primary justify-center w-1/2 sm:w-full text-[13px] sm:text-size-p2",
                 isLoading ? "disabled flex items-center gap-3" : ""
               )}
-              disabled={(isLoading || orderError)}
+              disabled={(isLoading)}
               type="button"
               onClick={addToCart}
             >

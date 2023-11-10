@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { throttle } from "lodash";
 
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import { documentToReactComponents, Options } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 
@@ -18,7 +19,7 @@ import { classNames } from "@/utils/functions";
 
 const fixId = (value) => {
   const newId = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return newId.replaceAll(' ', '-');
+  return newId.replaceAll(' ', '-').trim();
 };
 
 const pageFormatOptions: Options = {
@@ -39,7 +40,8 @@ const pageFormatOptions: Options = {
       return <h1 className="text-blue-dark !mb-9">{children}</h1>;
     },
     [BLOCKS.HEADING_2]: (_node, children) => {
-      return <h2 id={fixId(children[0])} className="text-blue-dark !mb-9 scroll-m-44 lg:scroll-m-56">{children}</h2>;
+      const nodeText = documentToPlainTextString(_node);
+      return <h2 id={fixId(nodeText)} className="text-blue-dark !mb-9 scroll-m-44 lg:scroll-m-56">{children}</h2>;
     },
     [BLOCKS.HEADING_3]: (_node, children) => {
       return <h3 className="text-blue-dark !mb-5">{children}</h3>;
@@ -66,7 +68,8 @@ const richtextFormatOptions = {
 const filterHeading = (objData) => {
   const _data = objData?.filter((item) => item.nodeType === "heading-2");
   return _data.map(el => {
-    return { value: el.content[0].value };
+      const nodeText = documentToPlainTextString(el);
+      return { value: nodeText.trim() };
   });
 };
 
