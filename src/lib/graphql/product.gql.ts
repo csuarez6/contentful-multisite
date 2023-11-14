@@ -45,6 +45,7 @@ const ProductQuery = `
     image{
       ${AssetImageQuery}
     }
+    sorting
   }
   size
   capacity

@@ -296,7 +296,7 @@ const MegaMenuItem = ({ item, name, currentMenu }) => {
                           key={`card_${block?.sys.id}-megamenu`}
                           style={{
                             gridColumn:
-                              block.__typename == "AuxNavigation"
+                              block?.__typename == "AuxNavigation"
                                 ? `span 2 / span 2`
                                 : null,
                           }}

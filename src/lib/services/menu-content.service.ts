@@ -85,7 +85,7 @@ const applySaltToMegamenu = async (flow: any) => {
         if (secondaryNavCollection?.items?.length > 0) {
           mainItem.secondaryNavCollection.items = await Promise.all(
             secondaryNavCollection.items.map(async (item: any) => {
-              if (item.__typename === CONTENTFUL_TYPENAMES.PRODUCT && item?.sku) {
+              if (item?.__typename === CONTENTFUL_TYPENAMES.PRODUCT && item?.sku) {
                 const commercelayerProduct = await getCommercelayerProduct(item.sku);
                 _.merge(item, commercelayerProduct);
               }
