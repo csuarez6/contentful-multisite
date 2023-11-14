@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import CommerceLayer, { AddressCreate, CommerceLayerClient, LineItem, Order, QueryParamsRetrieve } from "@commercelayer/sdk";
 import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments, JWTProps } from "@/lib/services/commerce-layer.service";
@@ -69,7 +69,7 @@ export const useCommerceLayer = () => {
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
   const orderId = useMemo(() => order?.id, [order]);
-  const [isInitialRender, setIsInitialRender] = useState<boolean>();
+  const isFirstRender = useRef(true);
   const [isPaymentProcess, setisPaymentProcess] = useState(false);
   const [isPolicyCheck, setIspolicyCheck] = useState(false);
 
@@ -223,24 +223,17 @@ export const useCommerceLayer = () => {
 
   /**
    * Set the order only once for performance (in the initial render of the context)
-   */
-  useEffect(() => {
-    (async () => {
-      if (typeof isInitialRender == "undefined") setIsInitialRender(true);
-      if (isInitialRender) {
-        await reloadOrder(false);
-        setIsInitialRender(false);
-      }
-    })();
-  }, [isInitialRender, reloadOrder]);
-
-  /**
    * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
    */
   useEffect(() => {
     const checkUpdates = asPath.startsWith("/checkout/pse");
-    if (checkUpdates && isInitialRender === false) reloadOrder(true);
-  }, [asPath, isInitialRender, reloadOrder]);
+
+      if(checkUpdates) reloadOrder(true);
+      else if(!checkUpdates && isFirstRender.current) reloadOrder(false);
+
+      if (isFirstRender.current) isFirstRender.current = false;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asPath, isFirstRender]);
 
   const addToCart = useCallback(
     async (skuCode: string, productImage: string, productName: string, category?: object) => {

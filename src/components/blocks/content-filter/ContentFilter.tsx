@@ -24,9 +24,39 @@ const ContentFilter: React.FC<IContentFilter> = ({
   const { push, pathname, asPath } = useRouter();
   const [page, setPage] = useState<number>(1);
 
-  const updatePage = (value) => {
-    setPage(value);
+  useEffect(() => {
+    const { search: uri } = location;
+    const res = uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[0] ?? "1";
+    setPage(parseInt(res));
+  }, []);
 
+  const updatePage = (value) => {
+    const { pathname: realPathname, search: uri } = location;
+    const hasP = uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[0];
+    if (hasP) {
+      let finalPath = uri;
+      const firstPart = uri?.split("p")?.[0];
+      if (firstPart) {
+        finalPath = firstPart + `p=${value}`;
+        const secondPart =
+          uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[1] ?? null;
+        if (secondPart !== null) {
+          finalPath = finalPath + '&'+secondPart;
+          const thirtPart = uri?.split(secondPart)?.[1] ?? null;
+          if (thirtPart) {
+            finalPath = finalPath + thirtPart;
+          }
+        }
+      }
+      // push(pathname, realPathname + uri + firstPart + `p=${value}`+ secondPart + thirtPart);
+      window.location.search = finalPath;
+    } else {
+      push(
+        pathname,
+        realPathname + uri + (uri !== "" ? `&p=${value}` : `?p=${value}`)
+      );
+    }
+    setPage(value);
     const $header = document?.querySelector("header#header");
     const $anchor = document?.querySelector(`[data-anchor="${blockId}"]`);
     const $coord = $anchor?.getBoundingClientRect();
@@ -49,10 +79,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
   );
   const urlParams = new URLSearchParams(queryString);
   const fetcher = (url) => fetch(url).then((r) => r.json());
-  const { data: contentData, error, isLoading } = useSWR(
-    `/api/content-filter?${queryString}&page=${page}`,
-    fetcher
-  );
+  const {
+    data: contentData,
+    error,
+    isLoading,
+  } = useSWR(`/api/content-filter?${queryString}&page=${page}`, fetcher);
 
   const facetsChangeHandle = (newQueryParams: string) => {
     const { pathname: realPathname } = location;
@@ -89,7 +120,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
     // Delete the filter Vantilisto in the gasodomestico searching
     if (preloadContent?.facets) {
       preloadContent.facets = preloadContent.facets.filter((facet: any) => {
-        return !(facet?.name === "precio_vantilisto" && parentsCollection.items?.[0]?.sys?.id === DEFAULT_GASODOMESTICOS_PARENT_ID);
+        return !(
+          facet?.name === "precio_vantilisto" &&
+          parentsCollection.items?.[0]?.sys?.id ===
+            DEFAULT_GASODOMESTICOS_PARENT_ID
+        );
       });
     }
 
@@ -122,8 +157,13 @@ const ContentFilter: React.FC<IContentFilter> = ({
     <div className="relative w-full flex flex-col">
       {principalSearch && contentData?.totalItems > 0 && (
         <div className="flex flex-col gap-5 mb-7 md:mb-9">
-          <h1 className="text-4xl text-center text-blue-dark">Resultados de búsqueda</h1>
-          <p className="text-2xl text-center text-grey-30">Hemos encontrado ({contentData.totalItems}) resultados asociados a tu búsqueda</p>
+          <h1 className="text-4xl text-center text-blue-dark">
+            Resultados de búsqueda
+          </h1>
+          <p className="text-2xl text-center text-grey-30">
+            Hemos encontrado ({contentData.totalItems}) resultados asociados a
+            tu búsqueda
+          </p>
         </div>
       )}
       {(title || mainFacetContent?.listedContents?.length > 0) && (

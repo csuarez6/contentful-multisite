@@ -82,6 +82,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   const router = useRouter();
   const orderId = router.query.id?.toString();
   const [order, setOrder] = useState<Order>();
+  const isFirstRender = useRef(true);
 
   // UseEffect for check order data if by Id or not
   useEffect(() => {
@@ -115,11 +116,13 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
-    if (asPath.startsWith("/checkout/pse") && !order?.line_items?.length && !asPath.startsWith("/checkout/pse/purchase-order")) push("/checkout/pse/verify");
+    if (!(isFirstRender.current) && !(order?.line_items?.length) && !asPath.startsWith("/checkout/pse/purchase-order")) push("/checkout/pse/verify");
     setIsComplete(asPath.startsWith('/checkout/pse/summary'));
     shippmentdash(order?.shipping_address?.state_code, order?.shipping_address?.city);
+    
+    if (isFirstRender.current) isFirstRender.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [asPath, order]);
+  }, [asPath, order, isFirstRender]);
 
   useEffect(() => {
     (async () => {
