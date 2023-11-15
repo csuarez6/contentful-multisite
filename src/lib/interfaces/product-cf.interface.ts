@@ -52,6 +52,7 @@ export interface IProductFilterBlock {
   onFacetsChange?: (newQueryString: string) => void;
   type?: string;
   types?: any;
+  initialValue?: any;
 };
 
 export interface IProductOverviewDetails {

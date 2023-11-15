@@ -74,6 +74,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
   const [mainFacetContent, setMainFacetContent] = useState<ISelect>(null);
+  const [initialValue, setInitialValue] = useState(null);
   const [queryString, setQueryString] = useState<string>(
     new URLSearchParams(fixedFilters).toString()
   );
@@ -84,38 +85,40 @@ const ContentFilter: React.FC<IContentFilter> = ({
     error,
     isLoading,
   } = useSWR(`/api/content-filter?${queryString}&page=${page}`, fetcher);
-
   const facetsChangeHandle = (newQueryParams: string) => {
     const { pathname: realPathname } = location;
     push(pathname, realPathname + newQueryParams, { shallow: true });
+    try {
+      const searchQuery =
+        newQueryParams.indexOf("?") >= 0
+          ? newQueryParams.substring(1)
+          : newQueryParams;
+      if (searchQuery) {
+        const newQueryParamsArr = JSON.parse(
+          '{"' + searchQuery.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+          function (key, value) {
+            return key === "" ? value : decodeURIComponent(value);
+          }
+        );
+        setInitialValue(newQueryParamsArr);
+        const queryParams = [];
 
-    const searchQuery =
-      newQueryParams.indexOf("?") >= 0
-        ? newQueryParams.substring(1)
-        : newQueryParams;
-    if (searchQuery) {
-      const newQueryParamsArr = JSON.parse(
-        '{"' + searchQuery.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-        function (key, value) {
-          return key === "" ? value : decodeURIComponent(value);
+        if (newQueryParamsArr && Object.keys(newQueryParamsArr)) {
+          for (const k in newQueryParamsArr) {
+            if (k === "slug") continue;
+
+            queryParams.push([k, newQueryParamsArr[k]]);
+          }
         }
-      );
-      const queryParams = [];
 
-      if (newQueryParamsArr && Object.keys(newQueryParamsArr)) {
-        for (const k in newQueryParamsArr) {
-          if (k === "slug") continue;
-
-          queryParams.push([k, newQueryParamsArr[k]]);
-        }
+        setQueryString(
+          new URLSearchParams([...fixedFilters, ...queryParams]).toString()
+        );
       }
-
-      setQueryString(
-        new URLSearchParams([...fixedFilters, ...queryParams]).toString()
-      );
+    } catch (error) {
+      console.error({ error });
     }
   };
-
   useEffect(() => {
     // Delete the filter Vantilisto in the gasodomestico searching
     if (preloadContent?.facets) {
@@ -192,6 +195,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
           error={error}
           type={contentTypesFilter[0]}
           types={contentTypesFilter}
+          initialValue={initialValue}
         />
       )}
       {contentData?.totalPages > 1 && (

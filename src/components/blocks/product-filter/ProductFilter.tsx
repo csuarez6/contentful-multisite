@@ -37,7 +37,8 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   error = false,
   type,
   types,
-}) => {
+  initialValue = null,
+}) => { 
   const [filterText, setFilterText] = useState<string>("");
   const [refreshFacets, setrefreshFacets] = useState(0);
   const onFacetsChangeHandle = (key, value) => {
@@ -97,6 +98,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
                   {...el}
                   handleChange={(value) => onFacetsChangeHandle(el.name, value)}
                   key={refreshFacets}
+                  currentValue={initialValue?.[el.name]}
                 />
               </div>
             );
