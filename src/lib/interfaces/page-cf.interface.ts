@@ -11,6 +11,7 @@ export interface ILayout {
     menuNavkey?: string;
     helpButton?: INavigation;
     preview?: boolean;
+    cookieInfo?: IPromoContent;
 }
 
 export interface IPage {

@@ -27,8 +27,8 @@ const nextConfig = {
       "tienda.grupovanti.com",
       "static.placetopay.com",
     ],
-    loader: 'custom',
-    loaderFile: './src/utils/image-loader.js',
+    // loader: 'custom',
+    // loaderFile: './src/components/atoms/spinner/Spinner.tsx',
   },
   async redirects() {
     return [

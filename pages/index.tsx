@@ -6,7 +6,7 @@ import { NextPageWithLayout } from "./_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 // import PageLayout from "@/components/layouts/page-layout/PageLayout";
 
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID, COOKIES_ID  } from "@/constants/contentful-ids.constants";
 
 import getPageContent from "@/lib/services/page-content.service";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
@@ -35,7 +35,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
   const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
-
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
+  
   return {
     props: {
       ...pageContent,
@@ -44,6 +45,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         footerInfo,
         headerInfo,
         helpButton,
+        cookieInfo
       },
     },
     revalidate,

@@ -10,6 +10,7 @@ import { IPage } from "@/lib/interfaces/page-cf.interface";
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import {
+  COOKIES_ID,
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
@@ -87,6 +88,7 @@ export const getStaticProps: GetStaticProps = async (
   const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
   const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
@@ -129,6 +131,7 @@ export const getStaticProps: GetStaticProps = async (
         menuNavkey: context.params.slug[0],
         helpButton,
         preview: context.preview ?? false,
+        cookieInfo
       },
       copyServices,
     },

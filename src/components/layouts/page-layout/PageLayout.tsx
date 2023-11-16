@@ -136,7 +136,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
           {children}
         </main>
 
-        <FooterBlock {...layout.footerInfo} />
+        <FooterBlock {...layout.footerInfo} cookieInfo={layout.cookieInfo} />
       </div>
     </>
   );

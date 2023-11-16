@@ -6,6 +6,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
+import CookieModal from '@/components/organisms/cookie-modal/CookieModal';
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
@@ -14,6 +15,7 @@ const FooterBlock: React.FC<INavigation> = ({
   promoImage,
   mainNavCollection,
   secondaryNavCollection,
+  cookieInfo
 }) => {
   const [activeDisclosurePanel, setActiveDisclosurePanel] = React.useState(null);
 
@@ -200,6 +202,7 @@ const FooterBlock: React.FC<INavigation> = ({
           </div>
         </div>
       </div>
+      <CookieModal {...cookieInfo} />
     </footer>
   );
 };

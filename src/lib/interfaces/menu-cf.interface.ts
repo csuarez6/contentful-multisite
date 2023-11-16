@@ -38,4 +38,5 @@ export interface INavigation {
   };
   backgroundColor?: string;
   currentMenu?: string;
+  cookieInfo?: IPromoContent;
 };
