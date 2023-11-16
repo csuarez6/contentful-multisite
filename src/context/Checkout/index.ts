@@ -10,7 +10,6 @@ export interface IContextCheckout {
   flow: Flow;
   tokenRecaptcha: string;
   timeToPay: number;
-  hasShipment: boolean;
   isFetchingOrder: boolean;
   isPaymentProcess: boolean;
   isPolicyCheck: boolean;
@@ -38,11 +37,9 @@ export interface IContextCheckout {
   getPaymentMethods: () => Promise<ListResponse<PaymentMethod>>;
   setPaymentMethod: (paymentMethodId?: string) => Promise<void>;
   addPaymentMethodSource: (token: string) => Promise<void>;
-  setDefaultShippingMethod: (e: boolean) => Promise<void>;
   updateIspolicyCheck: (isPolicyCheck: boolean) => Promise<void>;
   getShippingMethods: () => Promise<ListResponse<ShippingMethod>>;
   onRecaptcha: (e: any) => void;
-  onHasShipment: (e: any) => void;
   validateExternal: (e: any) => Promise<void>;
   upgradeTimePay: (e: number) => Promise<void>;
   updateIsPaymentProcess: (e: boolean) => Promise<void>;
@@ -56,7 +53,6 @@ const CheckoutContext = createContext<IContextCheckout>({
   flow: undefined,
   tokenRecaptcha: "",
   timeToPay: undefined,
-  hasShipment: undefined,
   isFetchingOrder: undefined,
   isPaymentProcess: undefined,
   isPolicyCheck: undefined,
@@ -78,10 +74,8 @@ const CheckoutContext = createContext<IContextCheckout>({
   updateCustomerAddress: () => undefined,
   setPaymentMethod: () => undefined,
   addPaymentMethodSource: () => undefined,
-  setDefaultShippingMethod: () => undefined,
   getShippingMethods: () => undefined,
   onRecaptcha: () => undefined,
-  onHasShipment: () => undefined,
   validateExternal: () => undefined,
   upgradeTimePay: () => undefined,
   updateIspolicyCheck: () => undefined,

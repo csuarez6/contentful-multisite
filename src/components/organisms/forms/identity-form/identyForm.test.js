@@ -26,7 +26,6 @@ describe('IdentyForm', () => {
         const { getByLabelText, getByText } = await waitFor(() => render(<IdentyForm />));
 
         const identity = getByLabelText('Ingresa el documento de identidad del técnico sin puntos.')
-        console.log(identity.attributes)
         const qrCode = getByLabelText("Ingresa el número de 5 dígitos ubicado debajo del código QR del carné del técnico.");
         const button = getByText("Verificar identidad");
 
@@ -48,7 +47,6 @@ describe('IdentyForm', () => {
         const { getByLabelText, getByText } = await waitFor(() => render(<IdentyForm />));
 
         const identity = getByLabelText('Ingresa el documento de identidad del técnico sin puntos.')
-        console.log(identity.attributes)
         const qrCode = getByLabelText("Ingresa el número de 5 dígitos ubicado debajo del código QR del carné del técnico.");
         const button = getByText("Verificar identidad");
 

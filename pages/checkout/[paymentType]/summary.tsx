@@ -54,6 +54,7 @@ const CheckoutSummary = () => {
     updateMetadata,
     updateIspolicyCheck,
     isPolicyCheck,
+    isFetchingOrder,
   } = useContext(CheckoutContext);
   const [billingAddress, setBillingAddress] = useState<Address>();
   const [shippingAddress, setShippingAddress] = useState<Address>();
@@ -155,13 +156,16 @@ const CheckoutSummary = () => {
   useEffect(() => {
     setDataModal(modalDefault);
     setRefreshTokenReCaptcha(refreshTokenReCaptcha + 1);
-    // subscribe to routeChangeStart event
+    
     const onRouteChangeStart = () => setIsLoading(true);
-    router.events.on("routeChangeStart", onRouteChangeStart);
+    const routeChangeComplete = () => setIsLoading(false);
 
-    // unsubscribe on component destroy in useEffect return function
+    router.events.on("routeChangeStart", onRouteChangeStart);
+    router.events.on("routeChangeComplete", routeChangeComplete);
+
     return () => {
       router.events.off("routeChangeStart", onRouteChangeStart);
+      router.events.off("routeChangeComplete", routeChangeComplete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -211,7 +215,7 @@ const CheckoutSummary = () => {
             <dd className="flex-1 font-bold text-grey-30">{clientEmail}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
+            <dt className="flex-1 text-grey-30">Dirección de envío:</dt>
             <dd className="flex-1 font-bold text-grey-30">
               {shippingAddress ? formatAddress(shippingAddress) : "*****"}
             </dd>
@@ -232,12 +236,6 @@ const CheckoutSummary = () => {
           </div>
           <div className="flex justify-between">
             <dt className="text-blue-dark">
-              {/* Sabemos que eres un humano, pero debemos confirmarlo. */}
-              {/* <ReCaptchaBox
-                version={2}
-                handleChange={(e) => onRecaptcha(e)}
-                classNames="mt-6"
-              /> */}
               <ReCaptchaBox
                 key={refreshTokenReCaptcha}
                 handleChange={setTokenReCaptchaRender}
@@ -268,7 +266,7 @@ const CheckoutSummary = () => {
             Volver
           </button>
         </div>
-        {isLoading && <Spinner position="absolute" size="large" />}
+        {(isLoading || isFetchingOrder) && <Spinner position="absolute" size="large" />}
       </div>
       {showModal && <ModalSuccess {...dataModal} isActive={true} />}
     </HeadingCard>

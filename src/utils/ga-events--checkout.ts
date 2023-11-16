@@ -1,3 +1,4 @@
+import { Order } from "@commercelayer/sdk";
 import { event as gTagEvent } from "nextjs-google-analytics";
 
 const getElements = (products) => {
@@ -21,15 +22,9 @@ const getElements = (products) => {
   });
 };
 
-const getTotalAmount = (elements) => {
-  return elements.reduce((acc, curr) => {
-    return acc + curr.price;
-  }, 0);
-};
-
-export const gaEventBeginCheckout = (products) => {
-  const elements = getElements(products);
-  const totalAmount = getTotalAmount(elements);
+export const gaEventBeginCheckout = (order: Order) => {
+  const elements = getElements(order?.line_items);
+  const totalAmount = order?.total_amount_float ?? 0;
 
   gTagEvent("begin_checkout", {
     coupon: '',
@@ -39,9 +34,9 @@ export const gaEventBeginCheckout = (products) => {
   });
 };
 
-export const gaEventPaymentInfo = (products) => {
-  const elements = getElements(products);
-  const totalAmount = getTotalAmount(elements);
+export const gaEventPaymentInfo = (order: Order) => {
+  const elements = getElements(order?.line_items);
+  const totalAmount = order?.total_amount_float ?? 0;
 
   gTagEvent("add_payment_info", {
     coupon: '',
@@ -52,21 +47,17 @@ export const gaEventPaymentInfo = (products) => {
   });
 };
 
-export const gaEventPurchase = (order, shippingMethodGlobal) => {
-  const { id, line_items } = order;
-  const elements = getElements(line_items);
-  const totalAmount = getTotalAmount(elements);
-  const totalShipping = line_items?.reduce((acc, curr) => {
-    const shippingCrr = shippingMethodGlobal.find((x) => x.name === curr?.item["shipping_category"]?.name);
-    return acc + (shippingCrr?.price_amount_float ?? 0);
-  }, 0);
+export const gaEventPurchase = (order: Order) => {
+  const elements = getElements(order?.line_items);
+  const totalAmount = order?.total_amount_float ?? 0;
+  const totalShipping = order?.shipping_amount_float ?? 0;
 
   gTagEvent("purchase", {
     affiliation: 'Marketplace Gasodomésticos',
     coupon: '',
     currency: 'COP',
     items: elements,
-    transaction_id: `T_${id}`,
+    transaction_id: `T_${order?.id}`,
     shipping: totalShipping,
     value: totalAmount,
     tax: 0

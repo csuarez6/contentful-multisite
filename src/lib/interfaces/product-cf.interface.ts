@@ -107,6 +107,10 @@ export interface IProductOverviewDetails {
     __typename?: string;
     id?: string;
   }
+  showInstallation?: boolean;
+  showWarranty?: boolean;
+  installList?: any;
+  warrantyList?: any;
 }
 
 export interface IAllyOverviewDetails {

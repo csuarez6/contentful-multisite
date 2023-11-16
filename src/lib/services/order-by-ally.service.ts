@@ -1,11 +1,11 @@
-import { getCommercelayerProductPrice, updateOrderAdminService } from '@/lib/services/commerce-layer.service';
+import { getCommercelayerProductPrice, getUpdatedOrderAdminService } from '@/lib/services/commerce-layer.service';
 import { formatPrice, generateAmountCents } from '@/utils/functions';
 import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
 import { DEFAULT_ORDER_PARAMS } from '../graphql/order.gql';
 
 export const getOrderByAlly = async (orderId: string): Promise<IAllyResponse> => {
   try {
-    const resp: IAllyResponse = await updateOrderAdminService(orderId, DEFAULT_ORDER_PARAMS, false);
+    const resp: IAllyResponse = await getUpdatedOrderAdminService(orderId, DEFAULT_ORDER_PARAMS, false);
     const allies = [];
     const promises = [];
     resp?.data?.line_items?.forEach(async (line_item: ILineItemExtended) => {

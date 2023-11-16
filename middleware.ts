@@ -21,18 +21,13 @@ const ALLOWED_IPS = [
 ]; // replace with your IPs
 
 export async function middleware(request: NextRequest, _res: NextApiResponse, _req: NextApiRequest) {
-
   const userIP = request.ip ?? request.headers.get("x-forwarded-for");
-  console.log({ userIP });
-
   const IpValidate = ALLOWED_IPS.some(function (item) {
     const rangeIp = getIpRangeFromAddressAndNetmask(item);
     const validate = verifyIp(rangeIp[0], rangeIp[1], userIP);
-    if (validate) console.log({ rangeIp });
     return validate === true;
   });
 
-  console.log({ IpValidate });
   // Check if the user's IP is not allowed
   if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
     // block access

@@ -68,14 +68,41 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   copyServices,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { addToCart, order, reloadOrder, deleteItemService } =
-    useContext(CheckoutContext);
+  const { 
+    addToCart,
+    order,
+    reloadOrder,
+    deleteItemService,
+    getSkuList
+  } = useContext(CheckoutContext);
   const baseCallback = isVantilisto(marketId) ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
   const closeModal = () => setIsOpen(false);
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
+
+  const defaultInstallList = {
+    id: "defInstall1",
+    name: "Sin servicio de instalación",
+    formatted_price_amount: "$0",
+  };
+  const defaultWarrantyList = {
+    id: "defWarranty1",
+    name: "Sin garantía extendida",
+    formatted_price_amount: "$0",
+  };
+
+  const [installList, setInstallList] = useState<any>([
+    { ...defaultInstallList },
+  ]);
+  const [warrantyList, setWarrantyList] = useState<any>([
+    { ...defaultWarrantyList },
+  ]);
+
+  const [showWarranty, setShowWarranty] = useState<boolean>();
+  const [showInstallation, setShowInstallation] = useState<boolean>();
+
   const orderLocalRef = useRef<LineItem[]>();
   const nextSlideId = `nextSlide_${marketId}`;
   const prevSlideId = `prevSlide_${marketId}`;
@@ -172,12 +199,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             await deleteItemService(idTmp);
           }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
-          // if (itemProduct.length > 0) {
-          //   updateItemQuantity(
-          //     sku,
-          //     res.data["quantity"]
-          //   );
-          // }
         } else {
           if (
             itemProduct.length > 0 &&
@@ -215,12 +236,6 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             await deleteItemService(idTmp);
           }
           requestService(dataAdjustment, order.id, res.data["quantity"] ?? "1");
-          // if (itemProduct.length > 0) {
-          //   updateItemQuantity(
-          //     sku,
-          //     res.data["quantity"]
-          //   );
-          // }
         } else {
           if (
             itemProduct.length > 0 &&
@@ -239,6 +254,34 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       return { status: 402, data: "error on buy handler" };
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const warrantyIsActived = !!(copyServices.find(i => i.key === 'show.warranty')?.active);
+        const installationIsActived = !!(copyServices.find(i => i.key === 'show.installation')?.active);
+    
+        if (warrantyIsActived && category.clInstallationReference) {
+          const infoSkuInstall = await getSkuList(category.clInstallationReference);
+          if (infoSkuInstall && infoSkuInstall.status == 200) setInstallList([defaultInstallList, ...infoSkuInstall.data]);
+        }
+          
+        if (installationIsActived && category.clWarrantyReference) {
+          const infoSkuWarra = await getSkuList(category.clWarrantyReference);
+          if (infoSkuWarra && infoSkuWarra.status == 200) setWarrantyList([defaultWarrantyList, ...infoSkuWarra.data]);
+        }
+
+        setShowWarranty(warrantyIsActived);
+        setShowInstallation(installationIsActived);
+
+      } catch (error) {
+        console.error("Error at: ProductService", error);
+      }
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, []);
+
   return (
     <section className="bg-white section">
       <div className="flex flex-col gap-10 lg:gap-[72px]">
@@ -422,10 +465,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       <ProductServices
                         key={marketId}
                         warranty={warranty}
-                        category={category}
                         onEventHandler={servicesHandler}
                         _priceGasodomestico={_priceGasodomestico}
-                        copyServices={copyServices}
+                        showInstallation={showInstallation}
+                        showWarranty={showWarranty}
+                        installList={installList}
+                        warrantyList={warrantyList}
                       />
                     )}
                   </ul>
@@ -515,10 +560,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         {isGasAppliance(marketId) && (
                           <ProductServices
                             warranty={warranty}
-                            category={category}
                             onEventHandler={servicesHandler}
                             _priceGasodomestico={_priceGasodomestico}
-                            copyServices={copyServices}
+                            showInstallation={showInstallation}
+                            showWarranty={showWarranty}
+                            installList={installList}
+                            warrantyList={warrantyList}
                           />
                         )}
                       </form>

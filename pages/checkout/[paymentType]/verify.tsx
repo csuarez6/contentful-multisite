@@ -74,7 +74,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     formatted_price_amount: "$0",
   };
   const [skuOptionsGlobal, setSkuOptionsGlobal] = useState<any>([]);
-  const [shippingMethodGlobal, setShippingMethodGlobal] = useState<any>([]);
   const productSelected = useRef(null);
   const fechRequestStatus = useRef(false);
   const [showWarranty, setShowWarranty] = useState<boolean>(true);
@@ -89,7 +88,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     addLoggedCustomer,
     getSkuList,
     changeItemService,
-    getShippingMethods,
+    isFetchingOrder,
   } = useContext(CheckoutContext);
 
   const products = useMemo(() => {
@@ -145,33 +144,24 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
     setIsActivedModal(false);
   };
 
-  const getShippingPrice = (product) => {
-    return (
-      shippingMethodGlobal.find(
-        (x) => x?.name === product?.item?.shipping_category?.name
-      )?.price_amount_float ?? 0
-    );
-  };
-
   useEffect(() => {
     (async () => {
       try {
-        const infoSkus = await getSkuList();
-        const shippingMethod = await getShippingMethods();
-        if (shippingMethod) setShippingMethodGlobal(shippingMethod);
-        if (infoSkus) {
-          setSkuOptionsGlobal(infoSkus.data);
+        const warrantyIsActived = !!(copyServices.find(i => i.key === 'show.warranty')?.active);
+        const installationIsActived = !!(copyServices.find(i => i.key === 'show.installation')?.active);
+
+        if(warrantyIsActived || installationIsActived){
+          const infoSkus = await getSkuList();
+          if (infoSkus?.data) setSkuOptionsGlobal(infoSkus.data);
         }
+
+        setShowWarranty(warrantyIsActived);
+        setShowInstallation(installationIsActived);
+
       } catch (error) {
         console.error("Error at: ProductService", error);
       }
-    })();
-    setShowWarranty(
-      !!copyServices.find((i) => i.key === "show.warranty")?.active
-    );
-    setShowInstallation(
-      !!copyServices.find((i) => i.key === "show.installation")?.active
-    );
+    })();    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -237,7 +227,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
 
   const handleNext = async () => {
     setIsLoading(true);
-    gaEventBeginCheckout(products);
+    gaEventBeginCheckout(order);
 
     try {
       if (!products.length) {
@@ -318,15 +308,15 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   };
 
   useEffect(() => {
-    // subscribe to routeChangeStart event
-    const onRouteChangeStart = () => {
-      if (products.length > 0) setIsLoading(true);
-    };
-    router.events.on("routeChangeStart", onRouteChangeStart);
+    const onRouteChangeStart = () => setIsLoading(true);
+    const routeChangeComplete = () => setIsLoading(false);
 
-    // unsubscribe on component destroy in useEffect return function
+    router.events.on("routeChangeStart", onRouteChangeStart);
+    router.events.on("routeChangeComplete", routeChangeComplete);
+
     return () => {
       router.events.off("routeChangeStart", onRouteChangeStart);
+      router.events.off("routeChangeComplete", routeChangeComplete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
@@ -446,27 +436,6 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
               <div className="inline-block py-3.5 text-right ml-auto font-bold sm:m-0 text-blue-dark text-md pr-1">
                 {product.formatted_unit_amount.split(",")[0]}
               </div>
-              {/* Shipping */}
-              <div className="w-full sm:hidden"></div>
-              <>
-                <div className="flex flex-col items-start py-1 text-sm text-left sm:block sm:pl-4 text-grey-30">
-                  Envío
-                </div>
-                <div className="px-3 text-right">
-                  {" "}
-                  {/* <span className="inline-block p-1 mx-auto rounded-lg bg-blue-50 text-size-span">
-                    {Object.entries(product.item.shipping_category).length > 0 && hasShipment ? "1x" : "-"}
-                  </span> */}
-                </div>
-                <div className="flex-grow inline-block py-1 pr-1 text-sm text-right ms:flex-grow-0 text-blue-dark">
-                  {" "}
-                  {/* {(Object.entries(product.item.shipping_category).length > 0 && hasShipment)
-                    ? (shippingMethodGlobal.find((x) => x.name === product.item.shipping_category.name))?.formatted_price_amount
-                    : "-"
-                  } */}
-                  {formatPrice(getShippingPrice(product))}
-                </div>
-              </>
               {/* ********* Services ******** */}
               <div className="w-full mt-3 sm:hidden"></div>
               {showWarranty ? (
@@ -583,7 +552,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
                     product?.total_amount_float,
                     product?.["installlation_service"],
                     product?.["warranty_service"]
-                  ) + getShippingPrice(product)
+                  )
                 )}
               </div>
             </div>
@@ -624,7 +593,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
           close={() => setError(false)}
         />
       )}
-      {isLoading && <Spinner position="absolute" size="large" />}
+      {(isLoading || isFetchingOrder) && <Spinner position="absolute" size="large" />}
       {isActivedModal && (
         <ModalSuccess {...paramModal} isActive={isActivedModal}>
           {modalChild}

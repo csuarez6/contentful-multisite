@@ -53,7 +53,12 @@ const CheckoutPersonalInfo = () => {
   const router = useRouter();
   const lastPath = useLastPath();
 
-  const { order, flow, addCustomer } = useContext(CheckoutContext);
+  const { 
+    order,
+    flow,
+    addCustomer,
+    isFetchingOrder,
+  } = useContext(CheckoutContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -101,7 +106,7 @@ const CheckoutPersonalInfo = () => {
   }, [order]);
 
   const onSubmit = async (data: ICustomer) => {
-    gaEventPaymentInfo(order?.line_items);
+    gaEventPaymentInfo(order);
 
     try {
       setIsLoading(true);
@@ -128,13 +133,15 @@ const CheckoutPersonalInfo = () => {
   };
 
   useEffect(() => {
-    // subscribe to routeChangeStart event
     const onRouteChangeStart = () => setIsLoading(true);
-    router.events.on('routeChangeStart', onRouteChangeStart);
+    const routeChangeComplete = () => setIsLoading(false);
 
-    // unsubscribe on component destroy in useEffect return function
+    router.events.on("routeChangeStart", onRouteChangeStart);
+    router.events.on("routeChangeComplete", routeChangeComplete);
+
     return () => {
-      router.events.off('routeChangeStart', onRouteChangeStart);
+      router.events.off("routeChangeStart", onRouteChangeStart);
+      router.events.off("routeChangeComplete", routeChangeComplete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -263,7 +270,7 @@ const CheckoutPersonalInfo = () => {
             </button>
           </div>
         </form>
-        {isLoading && <Spinner position="absolute" size="large" />}
+        {(isLoading || isFetchingOrder) && <Spinner position="absolute" size="large" />}
       </div>
     </HeadingCard>
   );

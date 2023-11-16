@@ -32,6 +32,7 @@ export interface ISelect extends DetailedHTMLProps<
   isError?: boolean;
   errorMessage?: string;
   isRequired?: boolean;
+  helpText?: string;
   currentValue?: string;
 }
 
@@ -48,6 +49,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
       isError,
       errorMessage,
       isRequired,
+      helpText,
       currentValue = undefined,
       ...rest
     }, ref
@@ -170,7 +172,13 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                     isError ? 'text-states-error-txt' : 'text-grey-30'
                   )}
                 >
-                  {labelSelect}{isRequired && <span className='text-states-error-txt'>*</span>}
+                  {labelSelect}
+                  {isRequired && <span className='text-states-error-txt'>*</span>}
+                  {helpText && (
+                    <span title={helpText} className="ml-1 cursor-help">
+                      <Icon icon="info" size={18} className="text-gray-500" />
+                    </span>
+                  )} 
                 </Listbox.Label>
               )}
               <div className="grid gap-2 relative">

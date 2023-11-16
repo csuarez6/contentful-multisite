@@ -23,7 +23,7 @@ import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import citiesFile from "@/utils/static/cities-co.json";
 import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
-import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
+import { CITY_HELP_TEXT, PSE_STEPS_TO_VERIFY, STATE_HELP_TEXT } from "@/constants/checkout.constants";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import SelectAtom, {
@@ -32,7 +32,6 @@ import SelectAtom, {
 import { useSession } from "next-auth/react";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import { getDataContent } from "@/lib/services/richtext-references.service";
-import Link from "next/link";
 
 export interface IAddress {
   id?: string;
@@ -142,25 +141,18 @@ const ModalCities: React.FC<any> = ({ onActivedModal }) => {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-center">
-        Estimado usuario, su compra no puede continuar porque Vanti no cuenta con cobertura en su ciudad  
+        Recuerda que el municipio que has seleccionado no cuenta con cobertura directa, por lo que se agregará un recargo de envío a tu pedido  
       </p>
       <div className="flex justify-end gap-2">
-        <Link href="/gasodomesticos/productos" prefetch>
-          <div
-            className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
-          >
-            Volver
-          </div>
-        </Link>
         <button
           onClick={() => {
             onActivedModal(false);
           }}
         >
           <div
-            className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
+            className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-outline`}
           >
-            Validar dirección
+            Entiendo
           </div>
         </button>
       </div>
@@ -195,8 +187,8 @@ const CheckoutAddress = (props: any) => {
     addAddresses,
     getAddresses,
     deleteItemService,
-    onHasShipment,
     getCustomerAddresses,
+    isFetchingOrder,
   } = useContext(CheckoutContext);
 
   const {
@@ -278,7 +270,6 @@ const CheckoutAddress = (props: any) => {
         city.admin_name === shippingStateWatched &&
         city.city === shippingCityWatched
     );
-    onHasShipment(cityCheck[0]?.isCovered == "false");
     setShowAlert(cityCheck[0]?.isCovered == "false");
     if (cityCheck[0]?.isCovered == "false") {
       setParamModal({ promoTitle: "Advertencia", promoIcon: "info" });
@@ -500,7 +491,7 @@ const CheckoutAddress = (props: any) => {
 
   const onSubmit = async (data: IAddresses) => {
     setIsLoading(true);
-    gaEventPaymentInfo(order?.line_items);
+    gaEventPaymentInfo(order);
 
     try {
       const checkCovered = checkCityCovered();
@@ -546,13 +537,15 @@ const CheckoutAddress = (props: any) => {
   };
 
   useEffect(() => {
-    // subscribe to routeChangeStart event
     const onRouteChangeStart = () => setIsLoading(true);
-    router.events.on("routeChangeStart", onRouteChangeStart);
+    const routeChangeComplete = () => setIsLoading(false);
 
-    // unsubscribe on component destroy in useEffect return function
+    router.events.on("routeChangeStart", onRouteChangeStart);
+    router.events.on("routeChangeComplete", routeChangeComplete);
+
     return () => {
       router.events.off("routeChangeStart", onRouteChangeStart);
+      router.events.off("routeChangeComplete", routeChangeComplete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -591,6 +584,7 @@ const CheckoutAddress = (props: any) => {
               labelSelect="Escoge tu departamento"
               listedContents={states}
               isRequired={true}
+              helpText={STATE_HELP_TEXT}
               currentValue={getValues("shippingAddress.stateCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.stateCode", value);
@@ -612,6 +606,7 @@ const CheckoutAddress = (props: any) => {
               labelSelect="Escoge tu municipio"
               listedContents={shippingCities}
               isRequired={true}
+              helpText={CITY_HELP_TEXT}
               currentValue={getValues("shippingAddress.cityCode")}
               handleChange={(value) => {
                 setValue("shippingAddress.cityCode", value);
@@ -685,7 +680,7 @@ const CheckoutAddress = (props: any) => {
             <CheckBox
               {...register("shippingAddress.isSameAsBillingAddress")}
               id="shippingAddress.isSameAsBillingAddress"
-              label="Acepto usar la dirección de envio para el proceso de facturación"
+              label="Acepto usar la dirección de envío para el proceso de facturación"
               checked={isSameAsBillingAddress}
             />
           </div>
@@ -700,6 +695,7 @@ const CheckoutAddress = (props: any) => {
                   labelSelect="Escoge tu departamento"
                   listedContents={states}
                   isRequired={true}
+                  helpText={STATE_HELP_TEXT}
                   currentValue={getValues("billingAddress.stateCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.stateCode", value);
@@ -720,6 +716,7 @@ const CheckoutAddress = (props: any) => {
                   labelSelect="Escoge tu municipio"
                   listedContents={billingCities}
                   isRequired={true}
+                  helpText={CITY_HELP_TEXT}
                   currentValue={getValues("billingAddress.cityCode")}
                   handleChange={(value) => {
                     setValue("billingAddress.cityCode", value);
@@ -796,7 +793,7 @@ const CheckoutAddress = (props: any) => {
             </button>
           </div>
         </form>
-        {isLoading && <Spinner position="absolute" size="large" />}
+        {(isLoading || isFetchingOrder) && <Spinner position="absolute" size="large" />}
       </div>
       {isActivedModal && (
         <ModalSuccess {...paramModal} isActive={isActivedModal}>

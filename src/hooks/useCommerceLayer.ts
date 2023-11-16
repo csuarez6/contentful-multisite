@@ -4,7 +4,6 @@ import { CL_ORGANIZATION } from "@/constants/commerceLayer.constants";
 import { getMerchantToken, IAdjustments, JWTProps } from "@/lib/services/commerce-layer.service";
 import AuthContext from "@/context/Auth";
 import { useRouter } from "next/router";
-import { IAlly, ILineItemExtended } from "@/lib/interfaces/ally-collection.interface";
 import { ILoggedErrorCollection } from "@/lib/interfaces/commercelayer-extend.interface";
 import jwtDecode from "jwt-decode";
 const INVALID_ORDER_ID_ERROR = "INVALID_ORDER_ID";
@@ -18,6 +17,7 @@ const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
       "formatted_subtotal_amount",
       "formatted_discount_amount",
       "formatted_shipping_amount",
+      "shipping_amount_float",
       "formatted_total_tax_amount",
       "formatted_gift_card_amount",
       "formatted_total_amount",
@@ -64,7 +64,6 @@ export const useCommerceLayer = () => {
   const [tokenRecaptcha, setTokenRecaptcha] = useState<any>();
   const [order, setOrder] = useState<Order>();
   const [isFetchingOrder, setIsFetchingOrder] = useState<boolean>(false);
-  const [hasShipment, setHasShipment] = useState<boolean>(false);
   const [productUpdates, setProductUpdates] = useState([]);
   const { asPath } = useRouter();
   const [timeToPay, setTimeToPay] = useState<number>();
@@ -226,11 +225,11 @@ export const useCommerceLayer = () => {
    * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
    */
   useEffect(() => {
-    const checkUpdates = asPath.startsWith("/checkout/pse");
-
+      const checkUpdates = asPath.startsWith("/checkout/pse");
+      
       if(checkUpdates) reloadOrder(true);
       else if(!checkUpdates && isFirstRender.current) reloadOrder(false);
-
+      
       if (isFirstRender.current) isFirstRender.current = false;
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, isFirstRender]);
@@ -514,7 +513,6 @@ export const useCommerceLayer = () => {
 
   const addAddresses = useCallback(
     async (shippingAddress: AddressCreate, billingAddress?: AddressCreate) => {
-
       const client = await generateClient();
       const [shippingAddrResult, billingAddrResult] = await Promise.all([
         client.addresses.create(shippingAddress),
@@ -608,42 +606,9 @@ export const useCommerceLayer = () => {
 
   const getShippingMethods = useCallback(async () => {
     const client = await generateClient();
-    // return client.orders.available_payment_methods(orderId);
     return client.shipping_methods.list();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
-
-  const setDefaultShippingMethod = useCallback(async (hasShipment) => {
-    const client = await generateClient();
-    const shipments = order.shipments;
-    const allies = [];
-    order?.line_items?.forEach((line_item: ILineItemExtended) => {
-      try {
-        let targetIndex = allies.findIndex((value: IAlly) => value.id === line_item.item.shipping_category.id);
-        if (targetIndex === -1) {
-          allies.push({ ...line_item.item.shipping_category });
-          targetIndex = allies.length - 1;
-        }
-        if (!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
-        delete line_item?.item?.shipping_category;
-        allies[targetIndex].line_items.push({ ...line_item });
-      } catch (iteration_error) {
-        console.error("ShippingMethod: An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
-      }
-    });
-    shipments.forEach(async (el, index) => {
-      const availableMethods = el.available_shipping_methods;
-      const methodID = availableMethods.find((item) => item.name === allies[index].name);
-      const methodIdCheck = (methodID) ? methodID.id : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID;
-      await client.shipments.update({
-        id: el.id,
-        shipping_method: {
-          id: (hasShipment) ? methodIdCheck : process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID,
-          type: "shipping_methods",
-        },
-      }).catch(err => console.error('error set default shipping method', err.errors));
-    });
-  }, [order]);
 
   const placeOrder = useCallback(async () => {
     try {
@@ -701,18 +666,6 @@ export const useCommerceLayer = () => {
     }
   };
 
-  const onHasShipment = async (e) => {
-    try {
-      if (!e || e === "not authorized") {
-        setHasShipment(false);
-        return;
-      }
-      setHasShipment(e);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const upgradeTimePay = useCallback(
     async (time: number) => {
       setTimeToPay(time);
@@ -738,8 +691,6 @@ export const useCommerceLayer = () => {
     timeToPay,
     isPolicyCheck,
     onRecaptcha,
-    onHasShipment,
-    hasShipment,
     isFetchingOrder,
     getOrder,
     reloadOrder,
@@ -758,7 +709,6 @@ export const useCommerceLayer = () => {
     getPaymentMethods,
     setPaymentMethod,
     addPaymentMethodSource,
-    setDefaultShippingMethod,
     getShippingMethods,
     validateExternal,
     getSkuList,

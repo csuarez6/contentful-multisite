@@ -158,7 +158,7 @@ const CheckoutPurchase = () => {
                             </div>
                         }
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Dirección de envio:</dt>
+                            <dt className="flex-1 text-grey-30">Dirección de envío:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {shippingAddress ? formatAddress(shippingAddress) : "*****"}
                             </dd>
@@ -172,7 +172,7 @@ const CheckoutPurchase = () => {
                             </div>
                         }
                         <div className="flex justify-between">
-                            <dt className="flex-1 text-grey-30">Método de envio:</dt>
+                            <dt className="flex-1 text-grey-30">Método de envío:</dt>
                             <dd className="flex-1 font-bold text-grey-30">
                                 {getShippingMethods(orderInfoById) ?? "*****"}
                             </dd>

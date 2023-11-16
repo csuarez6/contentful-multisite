@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm, useWatch } from "react-hook-form";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
-import citiesFile from "@/utils/static/cities-co.json";
 import {
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
@@ -113,7 +112,6 @@ const DashboardAddresses = () => {
 
   const {
     order,
-    onHasShipment,
     getCustomerAddresses,
     addCustomerAddress,
     updateCustomerAddress,
@@ -167,11 +165,6 @@ const DashboardAddresses = () => {
     name: "shippingAddress.stateCode",
   });
 
-  const shippingCityWatched = useWatch({
-    control,
-    name: "shippingAddress.cityCode",
-  });
-
   useEffect(() => {
     (async () => {
       const states = await (await fetch(`/api/static/states`)).json();
@@ -218,17 +211,6 @@ const DashboardAddresses = () => {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shippingStateWatched]);
-
-  useEffect(() => {
-    if (!shippingCityWatched) return;
-    const cityCheck = citiesFile.filter(
-      (city) =>
-        city.admin_name === shippingStateWatched &&
-        city.city === shippingCityWatched
-    );
-    onHasShipment(cityCheck[0]?.isCovered == "false");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shippingCityWatched]);
 
   const ModalContent = ({ modalMsg = "" }) => {
     return (
@@ -277,7 +259,7 @@ const DashboardAddresses = () => {
 
   const onSubmit = async (data: IAddresses) => {
     setIsLoading(true);
-    gaEventPaymentInfo(order?.line_items);
+    gaEventPaymentInfo(order);
     try {
       await sendData(data);
       gaEventForm({

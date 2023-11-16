@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { updateOrderAdminService } from '@/lib/services/commerce-layer.service';
+import { getUpdatedOrderAdminService } from '@/lib/services/commerce-layer.service';
 import { QueryParamsRetrieve } from '@commercelayer/sdk';
 import { formatPrice, generateAmountCents } from '@/utils/functions';
 import { IAlly, IAllyResponse, ILineItemExtended } from '@/lib/interfaces/ally-collection.interface';
@@ -38,7 +38,7 @@ const handler = async (
 
     try {
         const { idOrder } = req.body;
-        const resp : IAllyResponse = await updateOrderAdminService(idOrder, DEFAULT_ORDER_PARAMS_ALLY, false);
+        const resp : IAllyResponse = await getUpdatedOrderAdminService(idOrder, DEFAULT_ORDER_PARAMS_ALLY, false);
         const allies = [];
         resp?.data?.line_items?.forEach((line_item: ILineItemExtended) => {
             try {

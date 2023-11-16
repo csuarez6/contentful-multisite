@@ -8,6 +8,8 @@ import {
 import { PRICE_VALIDATION_ID, STOCK_VALIDATION_ID } from "@/constants/checkout.constants";
 import { ExternalPayments } from "@commercelayer/sdk/lib/cjs/api";
 import { sleep } from "@/utils/functions";
+import { IAlly, ILineItemExtended } from "../interfaces/ally-collection.interface";
+import citiesFile from "@/utils/static/cities-co.json";
 
 export interface ICustomer {
   name: string;
@@ -468,71 +470,131 @@ export const getReformatedOrder = (order: Order) => {
   return order;
 };
 
-/** updateOrderAdminService */
-export const updateOrderAdminService = async (
+const isShipmentFree = (stateCode: string, cityCode: string) => {
+  const cityCheck = citiesFile.filter((city) => city.admin_name === stateCode && city.city === cityCode);
+  return cityCheck?.[0]?.isCovered == "true";
+};
+
+const setShippingMethod = async (client: any, order: Order) => {
+  try {
+    const hasFreeShipment = isShipmentFree(order?.shipping_address?.state_code, order?.shipping_address?.city);
+    const shipments = order.shipments;
+    const allies = [];
+
+    // List all allis have the order on its line_items
+    await Promise.all(
+      order?.line_items?.map((line_item: ILineItemExtended) => {
+        try {
+          let targetIndex = allies.findIndex((value: IAlly) => value.id === line_item.item.shipping_category.id);
+          if (targetIndex === -1) {
+            allies.push({ ...line_item.item.shipping_category });
+            targetIndex = allies.length - 1;
+          }
+          if (!(allies[targetIndex]?.line_items)) allies[targetIndex].line_items = [];
+          delete line_item?.item?.shipping_category;
+          allies[targetIndex].line_items.push({ ...line_item });
+        } catch (iteration_error) {
+          console.error("ShippingMethod: An error has ocurred when the iteration line_item by ally was executed with the object:", line_item, "the error:", iteration_error);
+        }
+      })
+    );
+    
+    // Select the shipment-methods from the available ones
+    await Promise.all(
+      shipments.map(async (shipment, index) => {
+        try {
+          const availableMethods = shipment.available_shipping_methods;
+          const methodID = availableMethods.find((item) => item.name === allies[index].name)?.id;
+          const shipping_method_id = (hasFreeShipment || !methodID) ? process.env.NEXT_PUBLIC_COMMERCELAYER_DEFAULT_SHIPPING_METHOD_ID : methodID;
+          await client.shipments.update({
+            id: shipment.id,
+            shipping_method: {
+              id: shipping_method_id,
+              type: "shipping_methods",
+            },
+          });
+        } catch(err) {
+          console.error('error set default shipping method', err.errors);
+        } 
+      })
+    );
+  } catch (e) {
+    console.error("Error in setShippingMethod:", e); 
+  }
+};
+
+const checkLineItems = async (client: any, order: Order) => {
+  const productUpdates = []; 
+  await Promise.all(
+    order.line_items.map(async (line_item: LineItem) => {
+      try {
+        const productCL = await getCommercelayerProduct(line_item.sku_code);
+        if (
+          productCL?.priceGasodomestico !== line_item.formatted_unit_amount
+        ) {
+          await deleteLineItem(client, line_item);
+          productUpdates.push({
+            id: line_item.id,
+            sku_code: line_item.sku_code,
+            name: line_item.name,
+            type: PRICE_VALIDATION_ID,
+          });
+        } else if (
+          productCL.productsQuantityGasodomestico < line_item.quantity
+        ) {
+          await deleteLineItem(client, line_item);
+          productUpdates.push({
+            id: line_item.id,
+            sku_code: line_item.sku_code,
+            name: line_item.name,
+            type: STOCK_VALIDATION_ID,
+          });
+        }
+      } catch (err) {
+        console.error(
+          "General error in the checkUpdates section:",
+          err,
+          "line-item:",
+          line_item
+        );
+      }
+    })
+  );
+  return productUpdates;
+};
+
+/** getUpdatedOrderAdminService */
+export const getUpdatedOrderAdminService = async (
   idOrder?: string,
   defaultOrderParams?: QueryParamsRetrieve,
   checkUpdates?: boolean
 ) => {
   try {
-    const productUpdates = [];
+    let productUpdates = [];
     const response = { status: 200 };
 
     const client = await getCLAdminCLient();
-    const formatedOrder = getReformatedOrder(
-      await client.orders.retrieve(idOrder, defaultOrderParams)
-    );
+    let formatedOrder = getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams));
+    
+    // Check if the prices or inventory were changed
+    if (checkUpdates) productUpdates = await checkLineItems(client, formatedOrder);
 
-    if (checkUpdates) {
-      await Promise.all(
-        formatedOrder.line_items.map(async (line_item: LineItem) => {
-          try {
-            const productCL = await getCommercelayerProduct(line_item.sku_code);
-            if (
-              productCL?.priceGasodomestico !== line_item.formatted_unit_amount
-            ) {
-              await deleteLineItem(client, line_item);
-              productUpdates.push({
-                id: line_item.id,
-                sku_code: line_item.sku_code,
-                name: line_item.name,
-                type: PRICE_VALIDATION_ID,
-              });
-            } else if (
-              productCL.productsQuantityGasodomestico < line_item.quantity
-            ) {
-              await deleteLineItem(client, line_item);
-              productUpdates.push({
-                id: line_item.id,
-                sku_code: line_item.sku_code,
-                name: line_item.name,
-                type: STOCK_VALIDATION_ID,
-              });
-            }
-          } catch (err) {
-            console.error(
-              "General error in the checkUpdates section:",
-              err,
-              "line-item:",
-              line_item
-            );
-          }
-        })
-      );
-    }
+    // Reload order if there are any product updates
+    formatedOrder = (productUpdates.length > 0) ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
 
+    // Set the payment methods if there are shipments
+    if(formatedOrder?.shipments?.length > 0) await setShippingMethod(client, formatedOrder);
+
+    // Reload order if there are any shipments to update
+    formatedOrder = (formatedOrder?.shipments?.length > 0) ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
+    
     response["productUpdates"] = productUpdates;
-    response["data"] =
-      productUpdates.length > 0
-        ? getReformatedOrder(
-          await client.orders.retrieve(idOrder, defaultOrderParams)
-        )
-        : formatedOrder;
+    response["data"] = formatedOrder;
 
     return response;
   } catch (error) {
-    console.error("Error updateOrderAdminService: ", error);
-    return { status: 401, error: error };
+    console.error("Error getUpdatedOrderAdminService: ", error);
+    throw new Error(error.message);
   }
 };
 
@@ -542,7 +604,7 @@ export const deleteLineItem = async (
 ) => {
   await client.line_items.delete(line_item.id).catch((err) => {
     console.error(
-      "Error deleting the main line item in updateOrderAdminService:",
+      "Error deleting the main line item in getUpdatedOrderAdminService:",
       err.errors
     );
   });
@@ -555,7 +617,7 @@ export const deleteLineItem = async (
       .delete(line_item["installlation_service"][0].id)
       .catch((err) => {
         console.error(
-          "Error deleting the instalation service in updateOrderAdminService:",
+          "Error deleting the instalation service in getUpdatedOrderAdminService:",
           err.errors
         );
       });
@@ -569,7 +631,7 @@ export const deleteLineItem = async (
       .delete(line_item["warranty_service"][0].id)
       .catch((err) => {
         console.error(
-          "Error deleting the warranty service in updateOrderAdminService:",
+          "Error deleting the warranty service in getUpdatedOrderAdminService:",
           err.errors
         );
       });
@@ -772,7 +834,7 @@ export const formatAddress = (address: Address): string => {
   );
 };
 
-// Función para obtener los métodos de envio de una orden
+// Función para obtener los métodos de envío de una orden
 export const getShippingMethods = (order: Order): string => {
   const shippingMethods = [];
   order.shipments?.forEach((shipment) => {

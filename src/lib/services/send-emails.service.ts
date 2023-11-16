@@ -173,14 +173,14 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
       ${productAdjustments(lineItem, border, padding)}`;
   });
 
-  shipments.forEach((shipment) => {
+  shipments.forEach((shipment, idx) => {
     if (!shippingMethodNames.includes(shipment.shipping_method?.name)) {
       shippingMethodNames.push(shipment.shipping_method?.name);
       section +=
         `<tr>
           <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
           <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
-            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${shipment.shipping_method?.name}</p>
+            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${idx+1} - ${shipment?.shipping_method?.name}</p>
           </td>
           <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
           <td class="sm-inline-block sm-clear-both sm-w-2-4 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">

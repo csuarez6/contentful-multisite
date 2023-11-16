@@ -29,3 +29,6 @@ export const ADD_CART_GENERAL_ERROR_MSG = "Parece que hubo un problema al intent
 export const REMOVE_CART_GENERAL_ERROR_MSG = "Parece que hubo un problema al intentar remover unidades del artículo. Intenta eliminar el producto de tu carrito y agrégalo nuevamente. Si el problema persiste, no dudes en ponerte en contacto con nuestro equipo de soporte para obtener ayuda adicional.";
 export const NEXT_STEP_ERROR_MSG = "Parece que hubo un problema al continuar con la compra. Por favor, refresca la página e inténtalo de nuevo. Si el problema persiste, no dudes en ponerte en contacto con nuestro equipo de soporte para obtener ayuda adicional.";
 export const CHANGED_PRODUCTS_ERROR_MSG = "Parece que algunos productos de tu orden han tenido algunos cambios de especificaciones, por favor compruebalos y evalua si deseas continuar con ellos.";
+
+export const STATE_HELP_TEXT = "Unicamente se muestran los departamentos con cobertura, si tu departamento no se encuentra en la lista ponte en contacto con el administrador y consulta las posibilidades que tienen para tí";
+export const CITY_HELP_TEXT = "Unicamente se muestran los municipios con cobertura, si tu municipio no se encuentra en la lista ponte en contacto con el administrador y consulta las posibilidades que tienen para tí";

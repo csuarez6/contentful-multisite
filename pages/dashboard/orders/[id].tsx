@@ -415,7 +415,7 @@ const DashboardOrder = () => {
                       {/* Shipments */}
                       <div className="flex flex-col gap-9">
                         <div className="relative flex items-center justify-between text-black transition duration-500 cursor-pointer ease focus:bg-gray-400">
-                          <span>ENVIOS</span>
+                          <span>Envíos</span>
                         </div>
                         <ShipmentsContainer>
                           <Shipment>

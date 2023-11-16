@@ -4,7 +4,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const isProduction = false;
 
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   generateBuildId: async () => {
     return "main";
   },
