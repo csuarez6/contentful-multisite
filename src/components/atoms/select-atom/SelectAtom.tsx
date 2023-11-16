@@ -98,7 +98,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
 
     useEffect(() => {
       if (currentValue !== selectedOption?.value) {
-        const currentOption = listedContents?.find(el => el.value.toLowerCase() === currentValue?.toLowerCase());
+        const currentOption = listedContents?.find(el => el?.value?.toLowerCase() === currentValue?.toLowerCase());
         if (currentOption) setSelectedOption(currentOption);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
