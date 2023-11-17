@@ -81,7 +81,7 @@ const nextConfig = {
         permanent: true
       },      
       {
-        source: "/wp-content/uploads/2022/08/CLÁUSULAS-CORPORATIVAS-PARA-LA-WEB.pdf",
+        source: "/wp-content/uploads/2022/08/:path*",
         destination: "https://assets.ctfassets.net/3brzg7q3bvg1/xZ50lHtTYcNcfJGNylmSW/0e0592c5468f64506254613c8dede1c5/CL_USULAS_CORPORATIVAS_PARA_LA_WEB.pdf",
         permanent: true
       },
