@@ -79,6 +79,16 @@ const nextConfig = {
         source: "/hogar/servicio-al-cliente/servicio-en-linea/solicitud-factura-por-correo-electronico:path*",
         destination: "/tramites-y-ayuda/factura/conoce-tu-factura/factura-electronica",
         permanent: true
+      },      
+      {
+        source: "/wp-content/uploads/2022/08/CLÁUSULAS-CORPORATIVAS-PARA-LA-WEB.pdf",
+        destination: "https://assets.ctfassets.net/3brzg7q3bvg1/xZ50lHtTYcNcfJGNylmSW/0e0592c5468f64506254613c8dede1c5/CL_USULAS_CORPORATIVAS_PARA_LA_WEB.pdf",
+        permanent: true
+      },
+      {
+        source: "/wp-content/uploads/2023/07/VERSION-4.-300623-CONDICIONES-GENERALES-Y-ANEXOS-VANTI-LISTO-CONVENIO-DE-FINANCIACION-NO-BANCARIZADA-_compressed.pdf",
+        destination: "https://downloads.ctfassets.net/3brzg7q3bvg1/7K87w4KRjZRJb6XWPzwpCF/7a9032f77ad779f5f4eea72e97b1b2ca/VERSION_4._300623_CONDICIONES_GENERALES_Y_ANEXOS_VANTI_LISTO_CONVENIO_DE_FINANCIACION_NO_BANCARIZADA___1_.pdf",
+        permanent: true
       },
     ];
   },

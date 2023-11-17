@@ -28,7 +28,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
     const { search: uri } = location;
     const res = uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[0] ?? "1";
     setPage(parseInt(res));
-  }, []);
+  }, [asPath]);
 
   const updatePage = (value) => {
     const { pathname: realPathname, search: uri } = location;
