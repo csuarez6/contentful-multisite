@@ -26,20 +26,20 @@ const ContentFilter: React.FC<IContentFilter> = ({
 
   useEffect(() => {
     const { search: uri } = location;
-    const res = uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[0] ?? "1";
+    const res = uri?.split("page")?.[1]?.split("=")?.[1]?.split("&")?.[0] ?? "1";
     setPage(parseInt(res));
   }, [asPath]);
 
   const updatePage = (value) => {
     const { pathname: realPathname, search: uri } = location;
-    const hasP = uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[0];
+    const hasP = uri?.split("page")?.[1]?.split("=")?.[1]?.split("&")?.[0];
     if (hasP) {
       let finalPath = uri;
-      const firstPart = uri?.split("p")?.[0];
+      const firstPart = uri?.split("page")?.[0];
       if (firstPart) {
-        finalPath = firstPart + `p=${value}`;
+        finalPath = firstPart + `page=${value}`;
         const secondPart =
-          uri?.split("p")?.[1]?.split("=")?.[1]?.split("&")?.[1] ?? null;
+          uri?.split("page")?.[1]?.split("=")?.[1]?.split("&")?.[1] ?? null;
         if (secondPart !== null) {
           finalPath = finalPath + '&'+secondPart;
           const thirtPart = uri?.split(secondPart)?.[1] ?? null;
@@ -48,12 +48,11 @@ const ContentFilter: React.FC<IContentFilter> = ({
           }
         }
       }
-      // push(pathname, realPathname + uri + firstPart + `p=${value}`+ secondPart + thirtPart);
       window.location.search = finalPath;
     } else {
       push(
         pathname,
-        realPathname + uri + (uri !== "" ? `&p=${value}` : `?p=${value}`)
+        realPathname + uri + (uri !== "" ? `&page=${value}` : `?page=${value}`)
       );
     }
     setPage(value);
