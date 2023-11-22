@@ -2,7 +2,7 @@ import _ from "lodash";
 import getEntryContent from "./entry-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
-import contentfulClient from "./contentful-client.service";
+import contentfulClient, { removeUnresolved } from "./contentful-client.service";
 import { gql } from "@apollo/client";
 import { getCommercelayerProduct } from "./commerce-layer.service";
 import getFilteredContent from "./content-filter.service";
@@ -79,9 +79,9 @@ const getReferencesContent = async ({ content, preview = false, actualDepth = 1,
 
 const getBlockEntry = async (blockInfo: any, preview: boolean) => {
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
-  let responseData = null;
+  let responseData = null, errorsData = null;
   try {
-    ({ data: responseData } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: errorsData } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
         query getBlock($id: String!, $preview: Boolean!) {
@@ -96,8 +96,10 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, errorsData);
   } catch (e) {
-    return { responseError: e, responseData };
+    console.error("An error has ocurred in getBlockEntry fetching", e.message);
+    return null;
   }    
   
   const blockEntryContent = JSON.parse(
@@ -106,7 +108,7 @@ const getBlockEntry = async (blockInfo: any, preview: boolean) => {
     )
   );
 
-  return { responseData: blockEntryContent, type };
+  return { responseData: blockEntryContent };
 };
 
 export const getPageBlocks = async ({ content, preview = false }) => {
@@ -145,15 +147,10 @@ export const viewIsSupported = ({actualView, ref}) => {
 };
 
 export const getBlockInfo = async (blockInfo: any, preview: boolean, levelBlock = 1) => {
-  const { responseData: blockEntryContent, responseError: responseError = "", type: type = "" } = await getBlockEntry(blockInfo, preview);
-
-    if (responseError) {
-      console.error(`Error on entry query 3 (${type}) => `, responseError.message, blockInfo);
-      return blockInfo;
-    }
+  try {
+    const { responseData: blockEntryContent } = await getBlockEntry(blockInfo, preview);
 
     if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_PROMO_CONTENT) {
-      
       // Recorrer todas las relaciones del bloque ContenidosPromo
       for (const ref of REFERENCES[blockEntryContent.__typename]) {
         if (blockEntryContent?.[ref]?.items?.length) {
@@ -203,6 +200,10 @@ export const getBlockInfo = async (blockInfo: any, preview: boolean, levelBlock 
     }
 
     return blockEntryContent;
+  } catch (e){
+    console.error("An error has ocurred in getBlockInfo", e.message);
+    return null;
+  }
 };
 
 export default getReferencesContent;

@@ -458,7 +458,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                         key={`cart_${uuid()}`}
                       >
                         <Link
-                          href="/checkout/pse/verify"
+                          href="/tienda-virtual/checkout/pse/verify"
                           className="bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
                         >
                           <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
@@ -729,7 +729,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                 <li className="flex max-w-[75px]">
                                   <button onClick={() => close()}>
                                     <Link
-                                      href="/checkout/pse/verify"
+                                      href="/tienda-virtual/checkout/pse/verify"
                                       className="text-blue-dark hover:bg-category-blue-light-90 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start"
                                     >
                                       <span className="relative flex items-center h-8 w-9 shrink-0 text-neutral-30">

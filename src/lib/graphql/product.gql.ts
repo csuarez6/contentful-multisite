@@ -57,6 +57,7 @@ const ProductQuery = `
   }
   isNew
   discount
+  campaign
 `;
 
 export default ProductQuery;

@@ -22,6 +22,7 @@ const ProductMinimalQuery = `
   capacity
   isNew
   discount
+  campaign
 `;
 
 export default ProductMinimalQuery;

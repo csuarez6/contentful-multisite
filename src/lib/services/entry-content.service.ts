@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import _ from 'lodash';
 
-import contentfulClient from './contentful-client.service';
+import contentfulClient, { removeUnresolved } from './contentful-client.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
@@ -35,7 +35,7 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
 
   try {
     await sleep(30);
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
         query getEntry($id: String!, $preview: Boolean!) {
@@ -50,18 +50,13 @@ const getEntryContent = async (blockInfo: DefaultBlockInfo, preview = false, rec
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e;
-    responseData = {};
-  }
-
-  if (responseError) {
-    console.error(`Error on entry query 1 (${type}) => `, responseError.message, blockInfo);
-  }
-
-  if (!responseData?.[type]) {
+    console.error(`Error on getEntryContent query:`, e.message);
     return null;
   }
+
+  if (!responseData?.[type]) return null;
 
   const entryContent = JSON.parse(
     JSON.stringify(

@@ -119,7 +119,9 @@ const CallbackPage = () => {
               productsQuantityVantiListo,
               priceGasodomestico,
               urlPaths,
+              campaign,
             } = res;
+
             const _product = {
               productName: promoTitle ?? name,
               price: priceVantiListo,
@@ -130,6 +132,7 @@ const CallbackPage = () => {
               productsQuantity: productsQuantityVantiListo,
               priceVantiListo,
               priceGasodomestico,
+              campaign,
             };
             setProductData(_product);
             updateFormData(_product);

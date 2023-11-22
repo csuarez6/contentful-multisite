@@ -139,6 +139,7 @@ const CallbackPage = () => {
               productsQuantityGasodomestico,
               urlPaths,
               priceVantiListo,
+              campaign,
             } = res;
 
             setProductData({
@@ -150,7 +151,8 @@ const CallbackPage = () => {
               urlProduct: urlPaths.length > 0 ? `${location.origin}${urlPaths[0]}` : "",
               productsQuantity: productsQuantityGasodomestico,
               priceVantiListo,
-              priceGasodomestico
+              priceGasodomestico,
+              campaign,
             });
           }
         })
@@ -189,11 +191,15 @@ const CallbackPage = () => {
         const { result } = json;
         setIsSuccess(result.success);
 
+        const { campaign, productName } = productData;
+        const campaignName = campaign ? ` - ${campaign}` : "";
+        const prodName = `${productName}${campaignName}`;
+
         if (result.success) {
           gaEventForm({
             category: "Callback",
             label: "Gasodomésticos",
-            product: productData.productName,
+            product: prodName,
             sku: sku,
           });
         }

@@ -107,13 +107,17 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
         const { result } = json;
         setIsSuccess(result.success);
 
+        const { campaign, productName, sku } = productData;
+        const campaignName = campaign ? ` - ${campaign}` : "";
+        const prodName = `${productName}${campaignName}`;
+
         if (result.success) {
           gaEventForm({
             category: "Callback",
             label: "Catálogo VantiListo",
             contractAccount: formData.contractAccount,
-            product: productData.productName,
-            sku: productData.sku
+            product: prodName,
+            sku: sku
           });
         }
 

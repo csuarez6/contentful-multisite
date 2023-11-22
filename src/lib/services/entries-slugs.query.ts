@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
-import contentfulClient from './contentful-client.service';
+import contentfulClient, { removeUnresolved } from './contentful-client.service';
 
 const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
   let responseData = null;
   let responseError = null;
 
   try {
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
           pageCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } }, order: name_ASC, limit: $limit, preview: false) {
@@ -35,11 +35,11 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e, responseData = {};
+    console.error('Error on getEntriesSlugs query => ', e.message);
+    return null;
   }
-
-  if (responseError) console.error('Error on entry-slug query => ', responseError.message);
 
   const resultEntries = responseData?.pageCollection?.items ?? [];
   if (responseData?.productCollection?.items) {

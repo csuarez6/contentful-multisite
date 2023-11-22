@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import contentfulClient from './contentful-client.service';
+import contentfulClient, { removeUnresolved } from './contentful-client.service';
 
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
@@ -17,7 +17,7 @@ const getMainHeader = async (navigationId: string = null, preview = false) => {
   let responseData = null, responseError = null;
 
   try {
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${HeaderMainFragments}
         query getMainHeader($id: String!, $preview: Boolean!) {
@@ -32,11 +32,11 @@ const getMainHeader = async (navigationId: string = null, preview = false) => {
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e, responseData = {};
+    console.error(`Error on getMainHeader query => `, e.message);
+    return null;
   }
-
-  if (responseError) console.error(`Error on entry query (getMainHeader) => `, responseError.message);
 
   if (!responseData?.auxNavigation) return null;
 
@@ -46,9 +46,9 @@ const getMainHeader = async (navigationId: string = null, preview = false) => {
 };
 
 const getSecondaryHeader = async (mainItemInfo: any, preview: boolean) => {
-  let responseData = null;
+  let responseData = null, errorsData = null;
   try {
-    ({ data: responseData } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: errorsData } = await contentfulClient(preview).query({
       query: gql`
       ${HeaderSecondaryFragments}
       query getSecondaryHeader($id: String!, $preview: Boolean!) {
@@ -62,8 +62,10 @@ const getSecondaryHeader = async (mainItemInfo: any, preview: boolean) => {
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, errorsData);
   } catch (e) {
-    return { responseError: e, responseData };
+    console.error(`Error on getSecondaryHeader query => `, e.message);
+    return null;
   }
 
   const blockEntryContent = JSON.parse(
@@ -112,10 +114,8 @@ export const getHeader = async (navigationId: string = null, preview = false) =>
       for (let i = 0; i < header[navigationField].items.length; i++) {
         const mainItem = header[navigationField].items[i];
         if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
-          const { responseData, responseError = "" } = await getSecondaryHeader(mainItem, preview);
-          if (responseError) {
-            console.error(`Error on get reference item => `, responseError.message, mainItem);
-          } else {
+          const { responseData } = await getSecondaryHeader(mainItem, preview);
+          if (responseData) {
             let navigation = responseData;
             if (navigation?.[navigationField]?.items?.length > 0) { // If its a normal flow
               navigation = await applySaltToMegamenu(navigation);
@@ -139,7 +139,7 @@ export const getNavigation = async (navigationId: string = null, preview = false
 
   let responseData = null, responseError = null;
   try {
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${NavigationFragments}
         query getNavigation($id: String!, $preview: Boolean!) {
@@ -154,13 +154,13 @@ export const getNavigation = async (navigationId: string = null, preview = false
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e, responseData = {};
+    console.error(`Error on getNavigation query => `, e.message);
+    return null;
   }
-
-  if (responseError) console.error(`Error on entry query (getNavigation) => `, responseError.message);
 
   const navigation = JSON.parse(JSON.stringify(responseData?.auxNavigation));
 
-  return navigation ?? false;
+  return navigation ?? null;
 };

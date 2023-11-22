@@ -84,7 +84,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         console.error(error, req.query);
     }
 
-    res.redirect(307, `/checkout/pse/purchase-order/?id=${orderId}`);
+    res.redirect(307, `/tienda-virtual/checkout/pse/purchase-order/?id=${orderId}`);
 };
 
 export default handler;

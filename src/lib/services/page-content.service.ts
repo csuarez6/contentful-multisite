@@ -4,7 +4,7 @@ import _ from 'lodash';
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
-import contentfulClient from './contentful-client.service';
+import contentfulClient, { removeUnresolved } from './contentful-client.service';
 import { getPageBlocks } from './references-content.service';
 import { getCommercelayerProduct } from './commerce-layer.service';
 import { IProductOverviewDetails } from '../interfaces/product-cf.interface';
@@ -20,7 +20,7 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
   const { queryName: typeProduct, query: queryProduct } = CONTENTFUL_QUERY_MAPS[CONTENTFUL_TYPENAMES.PRODUCT];
 
   try {
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
         query getPage($urlPath: String!, $preview: Boolean!) {
@@ -39,11 +39,11 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
       variables: { urlPath, preview },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e, responseData = {};
+    console.error('Error on getPageContent query => ', e.message);
+    return null;
   }
-
-  if (responseError) console.error('Error on page content service, query => ', responseError.message);
 
   if (!hasItems(responseData[`${typePage}Collection`]) && !hasItems(responseData[`${typeProduct}Collection`])) return null;
 
@@ -77,9 +77,9 @@ const getPageContent = async (urlPath, preview = false, fullContent = true) => {
 };
 
 const getRelatedProducts = async (categoryName: string, typeProduct: string, queryProduct: string, urlPath: string, preview: boolean) => {
-  let dataRelatedProducts = null;  
+  let dataRelatedProducts = null, errorsRelatedProducts = null;  
   try {
-    ({ data: dataRelatedProducts } = await contentfulClient(preview).query({
+    ({ data: dataRelatedProducts, errors: errorsRelatedProducts } = await contentfulClient(preview).query({
       query: gql`
         query getRelatedProducts($urlPath: String!, $categoryName: String!, $preview: Boolean!) {
           ${typeProduct}Collection(where: { 
@@ -103,14 +103,16 @@ const getRelatedProducts = async (categoryName: string, typeProduct: string, que
       errorPolicy: 'all'
     }));
 
+    dataRelatedProducts = removeUnresolved(dataRelatedProducts, errorsRelatedProducts);
+
     const relatedProducts = await Promise.all(dataRelatedProducts[`${typeProduct}Collection`]?.items.map(async (relatedProduct: IProductOverviewDetails) => {
       return { ...relatedProduct, ...(await getCommercelayerProduct(relatedProduct.sku)) };
     }));
 
     return relatedProducts;
   } catch (e) {
-    console.error("An error has ocurred at related content fetching", e);
-    return [];
+    console.error("An error has ocurred at getRelatedProducts fetching", e.message);
+    return null;
   }
 };
 

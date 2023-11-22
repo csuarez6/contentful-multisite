@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import _ from "lodash";
 import algoliasearch, { SearchIndex } from "algoliasearch";
 
-import contentfulClient from "./contentful-client.service";
+import contentfulClient, { removeUnresolved } from "./contentful-client.service";
 
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { FACET_QUERY_MAP } from "@/constants/search.constants";
@@ -150,7 +150,8 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
       if (query) {
         try {
           await sleep(30);
-          const { data: responseData } = await contentfulClient(preview).query({
+          let responseData = null, errorsData = null;
+          ({ data: responseData, errors: errorsData } = await contentfulClient(preview).query({
             query: gql`
             query getEntriesCollection($preview: Boolean!, $limit: Int!) {
               ${queryName}Collection(where: { name_in: ["${facetContentNames.join(
@@ -167,7 +168,9 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
               limit: facetContentNames.length,
             },
             errorPolicy: "all",
-          });
+          }));
+
+          responseData = removeUnresolved(responseData, errorsData);
 
           if (responseData?.[`${queryName}Collection`]?.items) {
             const facetContents = {
@@ -204,6 +207,7 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
           }
         } catch (e) {
           console.error(`Error on getFacetsValues => `, e.message);
+          return [];
         }
       } else {
         const facetContents = {

@@ -5,12 +5,8 @@ const isProduction = false;
 
 const nextConfig = {
   reactStrictMode: false,
-  generateBuildId: async () => {
-    return "main";
-  },
   experimental: {
     allowMiddlewareResponseBody: true,
-    largePageDataBytes: 1024 * 1024,
   },
   swcMinify: true,
   eslint: {
@@ -35,6 +31,11 @@ const nextConfig = {
       {
         source: "/home",
         destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/checkout/pse/:slug*",
+        destination: "/tienda-virtual/checkout/pse/:slug*",
         permanent: true,
       },
       {
@@ -93,14 +94,10 @@ const nextConfig = {
     ];
   },
   publicRuntimeConfig: {
-    NEXT_PUBLIC_COMMERCELAYER_ENDPOINT:
-      process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
-    NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID:
-      process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
-    NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID:
-      process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID,
-    NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID:
-      process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
+    NEXT_PUBLIC_COMMERCELAYER_ENDPOINT: process.env.NEXT_PUBLIC_COMMERCELAYER_ENDPOINT,
+    NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_CLIENT_ID,
+    NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_GASODOMESTICOS_MARKET_ID,
+    NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID: process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
   },
   staticPageGenerationTimeout: 300,
   i18n: {

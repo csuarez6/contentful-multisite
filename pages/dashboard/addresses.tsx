@@ -20,7 +20,7 @@ import { classNames } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
-import { IAddress, IAddresses } from "../checkout/[paymentType]/addresses";
+import { IAddress, IAddresses } from "../tienda-virtual/checkout/[paymentType]/addresses";
 import CheckoutContext from "@/context/Checkout";
 import { Address, AddressCreate } from "@commercelayer/sdk";
 import SelectAtom, {

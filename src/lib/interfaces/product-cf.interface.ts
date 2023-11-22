@@ -42,6 +42,7 @@ export interface IProductDetails {
   carouselData?: ICarousel;
   dataSelect?: ISelect[];
   rating?: number;
+  campaign?: string
 }
 
 export interface IProductFilterBlock {
@@ -111,6 +112,7 @@ export interface IProductOverviewDetails {
   showWarranty?: boolean;
   installList?: any;
   warrantyList?: any;
+  campaign?: string;
 }
 
 export interface IAllyOverviewDetails {

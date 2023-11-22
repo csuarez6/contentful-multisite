@@ -43,16 +43,36 @@ const contentfulClient = (preview = false) => {
     ]),
     cache: new InMemoryCache({}),
     defaultOptions: {
-      watchQuery: {
-        fetchPolicy: 'no-cache',
-        errorPolicy: 'ignore'
-      },
       query: {
         fetchPolicy: 'no-cache',
         errorPolicy: 'all'
       }
+    },
+  });
+};
+
+export const removeUnresolved = (response: any, errors: any) => {
+  errors?.map((error: any) => {
+    let parentStatement = "response", deleteStatement = "";
+
+    if(error?.extensions?.contentful?.code === "UNRESOLVABLE_LINK" && error?.path) {
+      for (let i = 0; i < (error.path.length)-1; i++) {
+        const currentpath = error.path[i];
+        if(typeof currentpath === "string") parentStatement += `["${currentpath}"]`;
+        else parentStatement += `[${currentpath}]`;
+      }
+
+      const parentValue = eval(parentStatement);
+      const lastErrorPath = error.path[(error.path.length)-1];
+
+      if(Array.isArray(parentValue)) deleteStatement = `${parentStatement}?.splice(${lastErrorPath},1)`;
+      else deleteStatement = `delete ${parentStatement}["${lastErrorPath}"]`;
+      
+      eval(deleteStatement);
     }
   });
+
+  return response;
 };
 
 export default contentfulClient;

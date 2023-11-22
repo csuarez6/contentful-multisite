@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { defaultLayout } from "../../_app";
+import { defaultLayout } from "../../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import AuthContext from "@/context/Auth";
@@ -525,14 +525,14 @@ const CheckoutAddress = (props: any) => {
   const handleNext = async () => {
     setIsLoading(true);
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
+      `/tienda-virtual/checkout/${router.query.paymentType}/${flow.getNextStep(lastPath)}`
     );
   };
 
   const handlePrev = async () => {
     setIsLoading(true);
     router.push(
-      `/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
+      `/tienda-virtual/checkout/${router.query.paymentType}/${flow.getPrevStep(lastPath)}`
     );
   };
 

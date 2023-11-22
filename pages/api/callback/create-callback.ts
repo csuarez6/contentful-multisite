@@ -36,7 +36,7 @@ const getToken = async () => {
 };
 
 const createCallback = async (body) => {
-  const { type, contractAccount, email, fullName, cellPhone, productName, priceVantiListo, priceGasodomestico } = body;
+  const { type, contractAccount, email, fullName, cellPhone, productName, priceVantiListo, priceGasodomestico, campaign } = body;
   const { typeName, queueId } = getType(type);
   const response = await getToken();
   const { access_token, error } = response;
@@ -52,6 +52,9 @@ const createCallback = async (body) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${access_token}`);
+
+    const campaignName = campaign ? ` - ${campaign}` : "";
+    const _productName = `${productName}${campaignName}`;
 
     const raw = {
       "scriptId": GENESYS_CONSTANTS.SCRIPT_ID,
@@ -73,7 +76,7 @@ const createCallback = async (body) => {
         "apellido_cliente": "",
         "mail": email ?? "",
         "tratamiento_datos": "Acepto",
-        "url_del_producto": productName ?? "",
+        "url_del_producto": _productName ?? "",
         "precio_del_producto": priceVantiListo ?? priceGasodomestico ?? "",
         "origen": typeName ?? "",
         "cuenta_contrato": contractAccount ?? "",

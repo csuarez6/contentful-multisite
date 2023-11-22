@@ -225,7 +225,7 @@ export const useCommerceLayer = () => {
    * If the user is going to use the cart, in each window the order will be refreshed. (for check the prices and inventory)
    */
   useEffect(() => {
-      const checkUpdates = asPath.startsWith("/checkout/pse");
+      const checkUpdates = asPath.startsWith("/tienda-virtual/checkout/pse");
       
       if(checkUpdates) reloadOrder(true);
       else if(!checkUpdates && isFirstRender.current) reloadOrder(false);

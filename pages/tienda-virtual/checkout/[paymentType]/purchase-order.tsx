@@ -1,6 +1,6 @@
 import { ReactElement, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { defaultLayout } from "../../_app";
+import { defaultLayout } from "../../../_app";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import CheckoutContext from "@/context/Checkout";
 import { Address, Order } from '@commercelayer/sdk';

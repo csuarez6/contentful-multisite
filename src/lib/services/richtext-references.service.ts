@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import contentfulClient from "./contentful-client.service";
+import contentfulClient, { removeUnresolved } from "./contentful-client.service";
 
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
@@ -60,7 +60,7 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
   let responseData = null, responseError = null;  
   try {
     await sleep(30);
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${RichTextLinksFragments}
         query getReferencesRichText($id: String!, $preview: Boolean!) {
@@ -75,12 +75,9 @@ const getReferencesRichtextContent = async ({ content, preview }) => {
       },
       errorPolicy: "all",
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e, responseData = {};
-  }
-
-  if (responseError) {
-    console.error(`Error on richtext query (${type}) => `, responseError.message);
+    console.error(`Error on getReferencesRichtextContent query => `, e.message);
     return null;
   }
 
@@ -115,7 +112,7 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
   
   try {
     await sleep(30);
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
         query getEntry($id: String!, $preview: Boolean!) {
@@ -130,18 +127,13 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e;
-    responseData = {};
-  }
- 
-  if (responseError) {
-    console.error(`Error on entry query 5 (${type}) => `, responseError.message, blockInfo);
-  }
-
-  if (!responseData?.[type]) {
+    console.error(`Error on getDataContent query => `, e.message);
     return null;
   }
+
+  if (!responseData?.[type]) return null;
 
   const entryContent = JSON.parse(
     JSON.stringify(
@@ -150,7 +142,6 @@ export const getDataContent = async (blockInfo: any, preview = false) => {
   );
 
   return entryContent;
-  
 };
 
 export default getReferencesRichtextContent;

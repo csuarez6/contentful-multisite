@@ -89,7 +89,7 @@ const CartModal: React.FC<IModal> = ({
                         Ver más Productos
                       </div>
                     </Link>
-                    <Link href="/checkout/pse/verify" prefetch>
+                    <Link href="/tienda-virtual/checkout/pse/verify" prefetch>
                       <div
                         className={`cursor-pointer flex gap-1 items-center flex-nowrap w-fit button button-primary`}
                       >

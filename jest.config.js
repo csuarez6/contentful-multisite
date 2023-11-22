@@ -31,7 +31,7 @@ const config = {
   "coveragePathIgnorePatterns": [
     ".mocks.{js,ts,jsx,tsx}",
     ".stories.tsx",
-    "<rootDir>/src/components/templates/checkout/",
+    "<rootDir>/src/components/templates/tienda-virtual/checkout/",
   ],
 }
 

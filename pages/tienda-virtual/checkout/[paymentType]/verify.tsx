@@ -21,7 +21,7 @@ import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
-import { defaultLayout } from "../../_app";
+import { defaultLayout } from "../../../_app";
 import {
   ADD_CART_422_ERROR_MSG,
   ADD_CART_GENERAL_ERROR_MSG,
@@ -175,7 +175,7 @@ const CheckoutVerify = (props: IPage & IProductOverviewDetails) => {
   );
 
   const PATH_BASE = useMemo(
-    () => `/checkout/${router.query.paymentType}`,
+    () => `/tienda-virtual/checkout/${router.query.paymentType}`,
     [router.query]
   );
 

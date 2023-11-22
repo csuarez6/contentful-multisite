@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import contentfulClient from './contentful-client.service';
+import contentfulClient, { removeUnresolved } from './contentful-client.service';
 
 import CONTENTFUL_QUERY_MAPS from '@/constants/contentful-query-maps.constants';
 import { sleep } from '@/utils/functions';
@@ -24,18 +24,13 @@ const getCollectionContent = async (
     return null;
   }
 
-  let responseData = null;
-  let responseError = null;
-
+  let responseData = null, responseError = null;
   const { queryName: type, query, fragments = "" } = CONTENTFUL_QUERY_MAPS[blockInfo.__typename];
-
-  if (where) {
-    where = `where: ${where}, `;
-  }
+  if (where) where = `where: ${where}, `;
 
   try {
     await sleep(30);
-    ({ data: responseData, error: responseError } = await contentfulClient(preview).query({
+    ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${fragments}
         query getEntry($preview: Boolean!) {
@@ -51,13 +46,10 @@ const getCollectionContent = async (
       },
       errorPolicy: 'all'
     }));
+    responseData = removeUnresolved(responseData, responseError);
   } catch (e) {
-    responseError = e;
-    responseData = {};
-  }
-
-  if (responseError) {
-    console.error(`Error on collection query (${type}) => `, responseError.message, blockInfo);
+    console.error(`Error on getCollectionContent query => `, e.message);
+    return null;
   }
 
   if (!responseData[`${type}Collection`]?.items?.length) {

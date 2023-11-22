@@ -24,19 +24,19 @@ const getStepsLine = (paymentType) => {
   return [
     {
       title: "Verificar tu compra",
-      path: `/checkout/${paymentType}/verify`
+      path: `/tienda-virtual/checkout/${paymentType}/verify`
     },
     {
       title: "Datos personales",
-      path: `/checkout/${paymentType}/personal-info`
+      path: `/tienda-virtual/checkout/${paymentType}/personal-info`
     },
     {
       title: "Ingresar dirección",
-      path: `/checkout/${paymentType}/addresses`
+      path: `/tienda-virtual/checkout/${paymentType}/addresses`
     },
     {
       title: "Resumen",
-      path: `/checkout/${paymentType}/summary`
+      path: `/tienda-virtual/checkout/${paymentType}/summary`
     },
   ];
 };
@@ -78,7 +78,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
   // UseEffect for check order data if by Id or not
   useEffect(() => {
     (async () => {
-      if (asPath.startsWith("/checkout/pse/purchase-order")) {
+      if (asPath.startsWith("/tienda-virtual/checkout/pse/purchase-order")) {
         const orderData = await getOrderById(orderId);
         setOrder(orderData.data);
       } else {
@@ -105,9 +105,8 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   // This hook redirect to first checkout screen if there  isn't produtcs
   useEffect(() => {
-    if (!(isFirstRender.current) && !(order?.line_items?.length) && !asPath.startsWith("/checkout/pse/purchase-order")) push("/checkout/pse/verify");
-    setIsComplete(asPath.startsWith('/checkout/pse/summary'));
-
+    if (!(isFirstRender.current) && !(order?.line_items?.length) && !asPath.startsWith("/tienda-virtual/checkout/pse/purchase-order")) push("/tienda-virtual/checkout/pse/verify");
+    setIsComplete(asPath.startsWith('/tienda-virtual/checkout/pse/summary'));
     if (isFirstRender.current) isFirstRender.current = false;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,7 +225,7 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
         {
           promoTitle: "Estado de Orden",
           internalLink: {
-            urlPaths: ["/checkout/pse/purchase-order"]
+            urlPaths: ["/tienda-virtual/checkout/pse/purchase-order"]
           }
         },
       ]
