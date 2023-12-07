@@ -67,7 +67,7 @@ const LeftFeatured: React.FC<IPromoContent & IPromoBlock> = (props) => {
             className="sr-only"
             viewBox="0 0 620 429"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
           >
             <clipPath id={`path-img-${name}`} clipPathUnits="objectBoundingBox">
               <path

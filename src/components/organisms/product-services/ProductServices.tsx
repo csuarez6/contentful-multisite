@@ -59,9 +59,8 @@ const ProductServices: React.FC<IProductOverviewDetails> = ({
       setIsActivedModal(true);
     }, 200);
   };
- 
   return (
-    <ul className="flex flex-col gap-y-[11px]">
+    <ul className="flex flex-col gap-y-[11px] max-w-[311px]">
       {/* Start shipping section */}
       {showInstallation && (
         <li className="flex flex-col gap-3">

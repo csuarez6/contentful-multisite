@@ -88,7 +88,7 @@ const getRelatedProducts = async (categoryName: string, typeProduct: string, que
               { urlPaths_contains_none: [$urlPath] },
               { contentfulMetadata: { tags: { id_contains_none: [ "testPage" ] } } }
             ]
-          }, limit: 2, preview: $preview, order: sys_publishedAt_DESC) {
+          }, limit: 8, preview: $preview, order: sys_publishedAt_DESC) {
             items {
               ${queryProduct}
             }

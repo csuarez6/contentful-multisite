@@ -97,7 +97,7 @@ const LeftFeaturedBlock: React.FC<IPromoBlock> = ({
                 <svg
                   className="sr-only"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                 >
                   <clipPath
                     id={`path-img-${sysId}`}

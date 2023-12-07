@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
+import { useWindowScroll, useWindowSize } from "react-use";
 
 import {
   IProductOverviewDetails,
@@ -68,19 +69,15 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   copyServices,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { 
-    addToCart,
-    order,
-    reloadOrder,
-    deleteItemService,
-    getSkuList
-  } = useContext(CheckoutContext);
+  const { addToCart, order, reloadOrder, deleteItemService, getSkuList } =
+    useContext(CheckoutContext);
   const baseCallback = isVantilisto(marketId) ? "vantilisto" : "gasodomesticos";
   const callbackURL = `/callback/${baseCallback}?sku=${sku}`;
   const closeModal = () => setIsOpen(false);
   const imagesCollectionLocal = [promoImage, ...imagesCollection.items];
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
+  const [isFixed, setIsFixed] = useState(false);
 
   const defaultInstallList = {
     id: "defInstall1",
@@ -92,7 +89,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     name: "Sin garantía extendida",
     formatted_price_amount: "$0",
   };
-
+  const { y } = useWindowScroll();
+  const { width } = useWindowSize();
   const [installList, setInstallList] = useState<any>([
     { ...defaultInstallList },
   ]);
@@ -171,8 +169,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (res.status === 200) {
         const itemProduct = orderLocalRef.current
           ? orderLocalRef.current.filter(
-            (item) => item.item_type === "skus" && item.id === res.data["id"]
-          )
+              (item) => item.item_type === "skus" && item.id === res.data["id"]
+            )
           : [];
         // validate and add to cart a service (Installation)
         if (
@@ -258,33 +256,64 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   useEffect(() => {
     (async () => {
       try {
-        const warrantyIsActived = !!(copyServices.find(i => i.key === 'show.warranty')?.active);
-        const installationIsActived = !!(copyServices.find(i => i.key === 'show.installation')?.active);
-    
+        const warrantyIsActived = !!copyServices.find(
+          (i) => i.key === "show.warranty"
+        )?.active;
+        const installationIsActived = !!copyServices.find(
+          (i) => i.key === "show.installation"
+        )?.active;
+
         if (warrantyIsActived && category.clInstallationReference) {
-          const infoSkuInstall = await getSkuList(category.clInstallationReference);
-          if (infoSkuInstall && infoSkuInstall.status == 200) setInstallList([defaultInstallList, ...infoSkuInstall.data]);
+          const infoSkuInstall = await getSkuList(
+            category.clInstallationReference
+          );
+          if (infoSkuInstall && infoSkuInstall.status == 200)
+            setInstallList([defaultInstallList, ...infoSkuInstall.data]);
         }
-          
+
         if (installationIsActived && category.clWarrantyReference) {
           const infoSkuWarra = await getSkuList(category.clWarrantyReference);
-          if (infoSkuWarra && infoSkuWarra.status == 200) setWarrantyList([defaultWarrantyList, ...infoSkuWarra.data]);
+          if (infoSkuWarra && infoSkuWarra.status == 200)
+            setWarrantyList([defaultWarrantyList, ...infoSkuWarra.data]);
         }
 
         setShowWarranty(warrantyIsActived);
         setShowInstallation(installationIsActived);
-
       } catch (error) {
         console.error("Error at: ProductService", error);
       }
     })();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const footerHeight: any = document?.querySelector("#footer");
+    const widgetItemHeight: any = document?.querySelector("#widgetItem");
+    const bodyHeight: any = document?.body;
+    const footerTextHeight: any = document?.querySelector("#footerText");
+    //122 = 90px de top + 32 paddingBottom
+    const totaltHeight =
+      footerHeight?.offsetHeight +
+      widgetItemHeight?.offsetHeight +
+      (footerTextHeight?.offsetHeight ?? 0) +
+      122;
+    const elem = bodyHeight?.offsetHeight - totaltHeight;
+    setIsFixed(y > elem);
+  }, [y]);
+
+  const itemInfoFixed = (x: number, y: number) => {
+    if (!x || !y) return;
+    if (isFixed) {
+      return "lg:absolute lg:bottom-0";
+    } else {
+      if (x > 1023 && y > 484) return "fixed top-[90px] mr-8";
+      if (x > 1253 && y > 472) return "fixed top-[90px] mr-8";
+    }
+  };
   return (
     <section className="bg-white section">
-      <div className="flex flex-col gap-10 lg:gap-[72px]">
+      <div className="flex flex-col gap-10 lg:gap-[72px] relative">
         <section className="flex flex-col gap-5 sm:gap-4 lg:flex-row xl:gap-9">
           <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6">
             {/* Section - Info product */}
@@ -338,7 +367,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               <CustomLink
                 className="text-sm underline text-grey-60 !leading-none"
                 content={{
-                  externalLink : "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf",
+                  externalLink:
+                    "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf",
                 }}
               >
                 Conozca términos y condiciones
@@ -449,7 +479,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </div>
                       <CustomLink
                         content={{
-                          urlPaths: ["tramites-y-ayuda/preguntas-frecuentes-sobre-pagos-electronicos"],
+                          urlPaths: [
+                            "tramites-y-ayuda/preguntas-frecuentes-sobre-pagos-electronicos",
+                          ],
                         }}
                         className="text-sm underline text-blue-dark"
                       >
@@ -475,12 +507,19 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     )}
                   </ul>
                 </div>
-                <div className="hidden sm:flex flex-col gap-[10px] sm:flex-grow">
-                  {isAvailableGasodomestico || isAvailableVantilisto ? (
-                    <>
-                      <div className="flex items-center justify-between gap-2">
-                        {(priceBeforeGasodomestico !== priceGasodomestico ||
-                          priceBeforeVantiListo !== priceVantiListo) && (
+                <div className="hidden sm:flex transition-all">
+                  <div
+                    className={classNames(
+                      "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit",
+                      itemInfoFixed(width, y)
+                    )}
+                    id="widgetItem"
+                  >
+                    {isAvailableGasodomestico || isAvailableVantilisto ? (
+                      <>
+                        <div className="flex items-center justify-between gap-2">
+                          {(priceBeforeGasodomestico !== priceGasodomestico ||
+                            priceBeforeVantiListo !== priceVantiListo) && (
                             <p className="line-through text-[#035177] text-sm md:text-xl">
                               {
                                 (isGasAppliance(marketId)
@@ -488,100 +527,100 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                                   : priceBeforeVantiListo
                                 ).split(",")[0]
                               }{" "}
-                              Antes
+                              <span className="lg:block">Antes</span>
                             </p>
-                          )
-                        }
-                        <div className="flex gap-1">
-                          {isGasAppliance(marketId) && <Icon {...iconPSE} />}
-                          {/* <Icon {...iconInvoice} /> */}
-                          <Icon {...logoVantiListo} />
-                          {!isVantilisto(marketId) && (
-                            <figure>
-                              <Image
-                                alt="placetopay"
-                                src={ICON_PLACE_TO_PAY_URL}
-                                width={80}
-                                height={28}
-                                className="w-20 h-7"
-                              />
-                            </figure>
                           )}
+                          <div className="flex gap-1">
+                            {isGasAppliance(marketId) && <Icon {...iconPSE} />}
+                            {/* <Icon {...iconInvoice} /> */}
+                            <Icon {...logoVantiListo} />
+                            {!isVantilisto(marketId) && (
+                              <figure>
+                                <Image
+                                  alt="placetopay"
+                                  src={ICON_PLACE_TO_PAY_URL}
+                                  width={80}
+                                  height={28}
+                                  className="w-20 h-7"
+                                />
+                              </figure>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      {/* Main price */}
-                      <p className="text-[#035177] max-md:text-2xl title is-3">
-                        {
-                          (isGasAppliance(marketId)
-                            ? priceGasodomestico
-                            : priceVantiListo
-                          ).split(",")[0]
-                        }
-                      </p>
-                      {/* Secondary price */}
-                      {isGasAppliance(marketId) && priceVantiListo && (
-                        <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                          <span>{priceVantiListo.split(",")[0]}</span>
-                          <Icon {...logoVantiListo} />
-                        </p>
-                      )}
-
-                      {/* IVA Price */}
-                      <div className="text-xs text-grey-30">
-                        <p>* IVA incluido</p>
-                        <p>** Debes tener cupo Vanti Listo disponible</p>
-                      </div>
-
-                      {/* Product stock */}
-                      <div className="text-sm text-grey-30">
-                        <p>
-                          {isGasAppliance(marketId)
-                            ? productsQuantityGasodomestico
-                            : productsQuantityVantiListo}{" "}
-                          unidades disponibles
-                        </p>
-                      </div>
-
-                      <form
-                        onSubmit={(e) => e.preventDefault()}
-                        className="hidden sm:flex flex-col gap-[15px]"
-                      >
-                        <ProductActions
-                          sku={sku}
-                          _priceGasodomestico={_priceGasodomestico}
-                          priceGasodomestico={priceGasodomestico}
-                          productsQuantityGasodomestico={
-                            productsQuantityGasodomestico
+                        {/* Main price */}
+                        <p className="text-[#035177] max-md:text-2xl title is-3">
+                          {
+                            (isGasAppliance(marketId)
+                              ? priceGasodomestico
+                              : priceVantiListo
+                            ).split(",")[0]
                           }
-                          marketId={marketId}
-                          callbackURL={callbackURL}
-                          onBuyHandler={onBuyHandler}
-                        />
-                        {isGasAppliance(marketId) && (
-                          <ProductServices
-                            warranty={warranty}
-                            onEventHandler={servicesHandler}
-                            _priceGasodomestico={_priceGasodomestico}
-                            showInstallation={showInstallation}
-                            showWarranty={showWarranty}
-                            installList={installList}
-                            warrantyList={warrantyList}
-                          />
+                        </p>
+                        {/* Secondary price */}
+                        {isGasAppliance(marketId) && priceVantiListo && (
+                          <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
+                            <span>{priceVantiListo.split(",")[0]}</span>
+                            <Icon {...logoVantiListo} />
+                          </p>
                         )}
-                      </form>
-                    </>
-                  ) : (
-                    <div
-                      className="relative w-full 2xl:min-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
-                      role="alert"
-                    >
-                      <strong className="font-bold">¡Lo sentimos! </strong>
-                      <span className="block sm:inline">
-                        Este producto no se encuentra disponible en este
-                        momento.
-                      </span>
-                    </div>
-                  )}
+
+                        {/* IVA Price */}
+                        <div className="text-xs text-grey-30">
+                          <p>* IVA incluido</p>
+                          <p>** Debes tener cupo Vanti Listo disponible</p>
+                        </div>
+
+                        {/* Product stock */}
+                        <div className="text-sm text-grey-30">
+                          <p>
+                            {isGasAppliance(marketId)
+                              ? productsQuantityGasodomestico
+                              : productsQuantityVantiListo}{" "}
+                            unidades disponibles
+                          </p>
+                        </div>
+
+                        <form
+                          onSubmit={(e) => e.preventDefault()}
+                          className="hidden sm:flex flex-col"
+                        >
+                          <ProductActions
+                            sku={sku}
+                            _priceGasodomestico={_priceGasodomestico}
+                            priceGasodomestico={priceGasodomestico}
+                            productsQuantityGasodomestico={
+                              productsQuantityGasodomestico
+                            }
+                            marketId={marketId}
+                            callbackURL={callbackURL}
+                            onBuyHandler={onBuyHandler}
+                          />
+                          {isGasAppliance(marketId) && (
+                            <ProductServices
+                              warranty={warranty}
+                              onEventHandler={servicesHandler}
+                              _priceGasodomestico={_priceGasodomestico}
+                              showInstallation={showInstallation}
+                              showWarranty={showWarranty}
+                              installList={installList}
+                              warrantyList={warrantyList}
+                            />
+                          )}
+                        </form>
+                      </>
+                    ) : (
+                      <div
+                        className="relative w-full 2xl:min-w-[348px] 2xl:max-w-[348px] px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+                        role="alert"
+                      >
+                        <strong className="font-bold">¡Lo sentimos! </strong>
+                        <span className="block sm:inline">
+                          Este producto no se encuentra disponible en este
+                          momento.
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -594,57 +633,57 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             <div className="grid text-left gap-9">
               <h2 className="text-blue-dark">Te puede interesar</h2>
             </div>
-            <div className="hidden md:grid md:gap-6 md:grid-cols-2 2lg:grid-cols-3">
-              {relatedProducts.map((el) => (
-                <FeaturedProduct {...el} key={el.name} />
-              ))}
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:hidden">
-              <div className="flex -mx-1.5">
-                <Swiper
-                  slidesPerView={1}
-                  spaceBetween={20}
-                  breakpoints={{
-                    480: {
-                      slidesPerView: 1.2,
-                    },
-                    600: {
-                      slidesPerView: 1.35,
-                    },
-                  }}
-                  modules={[Navigation]}
-                  navigation={{
-                    nextEl: `#${nextSlideId}`,
-                    prevEl: `#${prevSlideId}`,
-                    disabledClass:
-                      "swiper-button-disabled opacity-50 !cursor-default",
-                  }}
-                  className="relative w-full p-1.5"
-                >
-                  {relatedProducts.map((el) => (
-                    <SwiperSlide
-                      key={el?.name + "_" + el?.sys?.id}
-                      className="w-full h-full shrink-0"
+            <div className="grid md:gap-6 md:grid-cols-3">
+              <div className="col-span-3 lg:col-span-2 grid grid-cols-2  md:gap-6">
+                <div className="grid grid-cols-1 gap-4 col-span-2 h-fit">
+                  <div className="flex -mx-1.5">
+                    <Swiper
+                      slidesPerView={1}
+                      spaceBetween={20}
+                      breakpoints={{
+                        480: {
+                          slidesPerView: 1,
+                        },
+                        600: {
+                          slidesPerView: 2,
+                        },
+                      }}
+                      modules={[Navigation]}
+                      navigation={{
+                        nextEl: `#${nextSlideId}`,
+                        prevEl: `#${prevSlideId}`,
+                        disabledClass:
+                          "swiper-button-disabled opacity-50 !cursor-default",
+                      }}
+                      className="relative w-full p-1.5"
                     >
-                      <FeaturedProduct {...el} key={el.name} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-              <div className="flex justify-center gap-6">
-                <div
-                  id={prevSlideId}
-                  className="w-6 h-6 text-neutral-20 cursor-pointer"
-                >
-                  <Icon icon="arrow-left" className="w-full h-full" />
+                      {relatedProducts.map((el) => (
+                        <SwiperSlide
+                          key={el?.name + "_" + el?.sys?.id}
+                          className="w-full h-full shrink-0"
+                        >
+                          <FeaturedProduct {...el} key={el.name} />
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  </div>
+                  <div className="flex justify-center gap-6">
+                    <div
+                      id={prevSlideId}
+                      className="w-6 h-6 text-neutral-20 cursor-pointer"
+                    >
+                      <Icon icon="arrow-left" className="w-full h-full" />
+                    </div>
+                    <div
+                      id={nextSlideId}
+                      className="w-6 h-6 text-neutral-20 cursor-pointer"
+                    >
+                      <Icon icon="arrow-right" className="w-full h-full" />
+                    </div>
+                  </div>
                 </div>
-                <div
-                  id={nextSlideId}
-                  className="w-6 h-6 text-neutral-20 cursor-pointer"
-                >
-                  <Icon icon="arrow-right" className="w-full h-full" />
-                </div>
               </div>
+              <div className="hidden lg:block"></div>
             </div>
           </section>
         )}
@@ -695,10 +734,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       </div>
       {/* ********* Buttons - Flow payment (mobile) ************ */}
 
-      <div className={classNames(
-        "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px]",
-        isAvailableGasodomestico || isAvailableVantilisto ? "bg-white" : "bg-red-100 border border-red-400"
-        )}>
+      <div
+        className={classNames(
+          "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px]",
+          isAvailableGasodomestico || isAvailableVantilisto
+            ? "bg-white"
+            : "bg-red-100 border border-red-400"
+        )}
+      >
         {isAvailableGasodomestico || isAvailableVantilisto ? (
           <>
             <div className="flex gap-[10px] items-start xxs:items-center justify-between">
@@ -715,16 +758,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {/* Before price */}
                 {(priceBeforeGasodomestico !== priceGasodomestico ||
                   priceBeforeVantiListo !== priceVantiListo) && (
-                    <p className="line-through text-[#035177] text-size-small flex items-center">
-                      {
-                        (isGasAppliance(marketId)
-                          ? priceBeforeGasodomestico
-                          : priceBeforeVantiListo
-                        ).split(",")[0]
-                      }{" "}
-                      Antes
-                    </p>
-                  )}
+                  <p className="line-through text-[#035177] text-size-small flex items-center">
+                    {
+                      (isGasAppliance(marketId)
+                        ? priceBeforeGasodomestico
+                        : priceBeforeVantiListo
+                      ).split(",")[0]
+                    }{" "}
+                    Antes
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
                 {/* Secondary price */}
@@ -761,8 +804,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
           <div className="relative w-full text-red-700" role="alert">
             <strong className="font-bold">¡Lo sentimos! </strong>
             <span className="block">
-              Este producto no se encuentra disponible en este
-              momento.
+              Este producto no se encuentra disponible en este momento.
             </span>
           </div>
         )}

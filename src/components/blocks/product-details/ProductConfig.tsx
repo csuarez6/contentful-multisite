@@ -8,6 +8,7 @@ import ButtonAtom from "@/components/atoms/button/ButtonAtom";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import defaultFormatOptions from "@/lib/richtext/default.formatter";
 import { attachLinksToRichtextContent } from "@/lib/services/render-blocks.service";
+import CustomTable from "@/components/organisms/custom-table/CustomTable";
 
 export const iconInvoice: IIcon = {
   icon: "invoice",
@@ -52,15 +53,20 @@ export const options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <table className="w-full table-auto">
-        <tbody>{children}</tbody>
-      </table>
+      <CustomTable hasBorder={false} hasSeeMore={true} >{children}</CustomTable>
+    ),
+    [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => (
+      <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell">
+        {children}
+      </th>
     ),
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr className="odd:bg-neutral-90">{children}</tr>
+      <tr className="overflow-hidden pointer-events-none scroll-smooth group-[.touchOn]:scroll-auto flex md:table-row w-full  odd:bg-neutral-90 ">{children}</tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
-      <td className="px-3 py-4 text-grey-30 text-size-subtitle1">{children}</td>
+      <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell first:lg:w-1/3 px-3 py-4 text-size-subtitle1  text-grey-30">
+        {children}
+      </td>
     ),
     [INLINES.EMBEDDED_ENTRY]: (node: any) => {
       const cta = node?.data?.target;

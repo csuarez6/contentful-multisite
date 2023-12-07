@@ -35,12 +35,12 @@ const buildSitemapXml = (fields): string => {
   return (
     `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>\n` +
     `<urlset\n` +
-    ` xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n` +
-    ` xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n` +
-    ` xmlns:xhtml="http://www.w3.org/1999/xhtml"\n` +
-    ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"\n` +
-    ` xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"\n` +
-    ` xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n${content}\n` +
+    ` xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"\n` +
+    ` xmlns:news="https://www.google.com/schemas/sitemap-news/0.9"\n` +
+    ` xmlns:xhtml="https://www.w3.org/1999/xhtml"\n` +
+    ` xmlns:mobile="https://www.google.com/schemas/sitemap-mobile/1.0"\n` +
+    ` xmlns:image="https://www.google.com/schemas/sitemap-image/1.1"\n` +
+    ` xmlns:video="https://www.google.com/schemas/sitemap-video/1.1">\n${content}\n` +
     `</urlset>`
   );
 };

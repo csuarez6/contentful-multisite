@@ -112,7 +112,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
               {(imagesCollection?.items || cta || promoImage) && (
                 <div className={`relative mt-5 h-fit`}>
                   {promoImage ? (
-                    <figure className="relative h-full md:max-h-[350px]">
+                    <figure className="relative h-full max-h-[350px] min-h-[350px]">
                       <Image
                         alt={promoImage.title}
                         src={promoImage.url}
@@ -140,7 +140,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
             </div>
           )}
           {promoTitle && (
-            <div className="flex flex-col gap-[25px] h-full justify-between">
+            <div className="flex flex-col gap-[25px] h-full justify-center">
               <div className="flex flex-col gap-[7px] w-full">
                 <div className="flex flex-wrap items-center  gap-1">
                   <h3 className="group-[.card-mega-menu]:text-lg text-blue-dark title is-4  group-hover:text-category-blue-dark group-hover:-translate-y-1 transition-[color,transform] duration-500">{promoTitle}</h3>

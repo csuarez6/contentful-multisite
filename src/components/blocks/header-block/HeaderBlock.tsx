@@ -325,7 +325,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   <span className="w-8 h-8 shrink-0">
                     <Icon icon="emergency" className="w-full h-full mx-auto" />
                   </span>
-                  Emergencias: 164
+                  Emergencias: Llamar al 164
                 </p>
               </div>
               {openModal && (

@@ -162,7 +162,7 @@ const data: INavigation = {
               },
               name: "Contrato de condiciones uniformes",
               internalLink: null,
-              externalLink: "http://www.google.com",
+              externalLink: "https://www.google.com",
               linkParameters: null,
               ctaLabel: null,
 

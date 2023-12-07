@@ -12,7 +12,7 @@ const Rating: React.FC<IRatings> = ({ numberStar }) => {
             <ul className="flex h-fit gap-1">
                 {[1, 2, 3, 4, 5].map((_, i) => (
                     <li key={i}>
-                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" className="w-4 h-4 text-lucuma mr-1" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" className="w-4 h-4 text-lucuma mr-1" role="img" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 576 512">
                             <path fill="currentColor" d={Math.floor(numberStar) >= i + 1 ? STAR_ACTIVE : STAR_INACTIVE}></path>
                         </svg>
                     </li>
