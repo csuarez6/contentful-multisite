@@ -33,8 +33,19 @@ export const logoVantiListo: IIcon = {
   size: 28,
   className: "h-7 w-12",
 };
+export const iconMastercard: IIcon = {
+  icon: "mastercard",
+  size: 28,
+  className: "h-7 w-7",
+};
+export const iconVisa: IIcon = {
+  icon: "visa",
+  size: 28,
+  className: "h-7 w-7",
+};
 
-export const ICON_PLACE_TO_PAY_URL = "https://static.placetopay.com/placetopay-logo.svg";
+export const ICON_PLACE_TO_PAY_URL =
+  "https://static.placetopay.com/placetopay-logo.svg";
 export const options = {
   renderNode: {
     [BLOCKS.UL_LIST]: (_node: any, children: any) => {
@@ -53,7 +64,9 @@ export const options = {
       );
     },
     [BLOCKS.TABLE]: (_node: any, children: any) => (
-      <CustomTable hasBorder={false} hasSeeMore={true} >{children}</CustomTable>
+      <CustomTable hasBorder={false} hasSeeMore={true}>
+        {children}
+      </CustomTable>
     ),
     [BLOCKS.TABLE_HEADER_CELL]: (_node, children) => (
       <th className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell">
@@ -61,7 +74,9 @@ export const options = {
       </th>
     ),
     [BLOCKS.TABLE_ROW]: (_node: any, children: any) => (
-      <tr className="overflow-hidden pointer-events-none scroll-smooth group-[.touchOn]:scroll-auto flex md:table-row w-full  odd:bg-neutral-90 ">{children}</tr>
+      <tr className="overflow-hidden pointer-events-none scroll-smooth group-[.touchOn]:scroll-auto flex md:table-row w-full  odd:bg-neutral-90 ">
+        {children}
+      </tr>
     ),
     [BLOCKS.TABLE_CELL]: (_node: any, children: any) => (
       <td className="pointer-events-auto first:sticky left-0 block w-1/2 flex-shrink-0 md:table-cell first:lg:w-1/3 px-3 py-4 text-size-subtitle1  text-grey-30">
@@ -72,15 +87,16 @@ export const options = {
       const cta = node?.data?.target;
       return (
         <span className="flex my-3">
-          {cta.linkView !== "Modal" && (cta.externalLink || cta.internalLink) && (
-            <CustomLink
-              content={cta}
-              key={cta.name}
-              className="button button-outline"
-            >
-              {cta.promoTitle ?? cta.name}
-            </CustomLink>
-          )}
+          {cta.linkView !== "Modal" &&
+            (cta.externalLink || cta.internalLink) && (
+              <CustomLink
+                content={cta}
+                key={cta.name}
+                className="button button-outline"
+              >
+                {cta.promoTitle ?? cta.name}
+              </CustomLink>
+            )}
 
           {cta.linkView === "Modal" && (
             <ButtonAtom
@@ -93,7 +109,10 @@ export const options = {
               {cta?.content?.json && (
                 <span>
                   {documentToReactComponents(
-                    attachLinksToRichtextContent(cta?.content?.json, cta?.content?.links ?? []),
+                    attachLinksToRichtextContent(
+                      cta?.content?.json,
+                      cta?.content?.links ?? []
+                    ),
                     defaultFormatOptions
                   )}
                 </span>
@@ -102,10 +121,7 @@ export const options = {
           )}
 
           {cta?.mediaInternalLink && (
-            <CustomLink
-              content={cta}
-              className="button button-outline"
-            >
+            <CustomLink content={cta} className="button button-outline">
               {cta?.ctaLabel ?? cta?.promoTitle ?? cta?.name}
             </CustomLink>
           )}
@@ -127,13 +143,22 @@ export const ModalIntall: React.FC<any> = ({
     <>
       <div className="flex flex-col gap-6">
         <div className="text-left">
-          <p className="mb-4">Seleccione el servicio de instalación que desee para su producto.</p>
+          <p className="mb-4">
+            Seleccione el servicio de instalación que desee para su producto.
+          </p>
           <div
             className="px-2 py-1 text-orange-700 bg-orange-100 border-l-4 border-orange-500"
             role="alert"
           >
-            El servicio de instalación está sujeto a una ubicación, si desea más información puede
-            hacer {" "} <CustomLink className="!inline-block font-bold underline" content={{ urlPaths: ["/otros-servicios/instalacion"] }}>clic aquí</CustomLink>.
+            El servicio de instalación está sujeto a una ubicación, si desea más
+            información puede hacer{" "}
+            <CustomLink
+              className="!inline-block font-bold underline"
+              content={{ urlPaths: ["/otros-servicios/instalacion"] }}
+            >
+              clic aquí
+            </CustomLink>
+            .
           </div>
         </div>
         <div>
@@ -204,14 +229,16 @@ export const ModalWarranty: React.FC<any> = ({
   onEventHandler,
   installCurrent,
   upInstallCurrent,
-  productPrice
+  productPrice,
 }) => {
   const [checked, setChecked] = useState(installCurrent ?? 0);
   const [isLoadingNext, setIsLoadingNext] = useState(false);
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="text-left">Seleccione el tipo de garantía extendida que desee para su producto.</div>
+        <div className="text-left">
+          Seleccione el tipo de garantía extendida que desee para su producto.
+        </div>
         <div>
           <ul
             className={classNames(
@@ -249,9 +276,13 @@ export const ModalWarranty: React.FC<any> = ({
                         </span>
                         <span className="text-size-small">
                           {/* {item.formatted_price_amount} */}
-                          {(index === 0)
+                          {index === 0
                             ? item.formatted_price_amount
-                            : formatPrice((Number(item.price_amount_float) * Number(productPrice)) / 100)}
+                            : formatPrice(
+                                (Number(item.price_amount_float) *
+                                  Number(productPrice)) /
+                                  100
+                              )}
                         </span>
                       </div>
                     </label>

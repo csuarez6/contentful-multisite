@@ -118,7 +118,7 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                         src={promoImage.url}
                         width={imageSize.w}
                         height={imageSize.h}
-                        className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="h-full w-full object-contain group-hover:scale-110 transition-transform duration-500"
                       />
                     </figure>
                   ) : (

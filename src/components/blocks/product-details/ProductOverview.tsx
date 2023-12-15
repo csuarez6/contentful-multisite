@@ -40,6 +40,8 @@ import {
   iconPSE,
   logoVantiListo,
   options,
+  iconMastercard,
+  iconVisa,
 } from "./ProductConfig";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
@@ -100,6 +102,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
   const [showWarranty, setShowWarranty] = useState<boolean>();
   const [showInstallation, setShowInstallation] = useState<boolean>();
+  const [widthWidget, setWidthWidget] = useState(null);
 
   const orderLocalRef = useRef<LineItem[]>();
   const nextSlideId = `nextSlide_${marketId}`;
@@ -290,6 +293,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   useEffect(() => {
     const footerHeight: any = document?.querySelector("#footer");
     const widgetItemHeight: any = document?.querySelector("#widgetItem");
+    const widget: any = document?.querySelector("#widget");
     const bodyHeight: any = document?.body;
     const footerTextHeight: any = document?.querySelector("#footerText");
     //122 = 90px de top + 32 paddingBottom
@@ -300,6 +304,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       122;
     const elem = bodyHeight?.offsetHeight - totaltHeight;
     setIsFixed(y > elem);
+    setWidthWidget(widget?.offsetWidth);
   }, [y]);
 
   const itemInfoFixed = (x: number, y: number) => {
@@ -307,8 +312,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     if (isFixed) {
       return "lg:absolute lg:bottom-0";
     } else {
-      if (x > 1023 && y > 484) return "fixed top-[90px] mr-8";
-      if (x > 1253 && y > 472) return "fixed top-[90px] mr-8";
+      if (x > 1023 && y > 484) return "fixed top-[90px]";
+      if (x > 1065 && y > 486) return "fixed top-[90px]";
+      if (x > 1096 && y > 403) return "fixed top-[90px]";
+      if (x > 1300 && y > 420) return "fixed top-[90px]";
     }
   };
   return (
@@ -507,17 +514,18 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                     )}
                   </ul>
                 </div>
-                <div className="hidden sm:flex transition-all">
+                <div className="hidden sm:flex transition-all grow" id="widget">
                   <div
                     className={classNames(
                       "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit",
                       itemInfoFixed(width, y)
                     )}
                     id="widgetItem"
+                    style={{ width: width > 1023 ? widthWidget : "auto" }}
                   >
                     {isAvailableGasodomestico || isAvailableVantilisto ? (
                       <>
-                        <div className="flex items-center justify-between gap-2">
+                        <div className="flex justify-between gap-2 flex-col-reverse">
                           {(priceBeforeGasodomestico !== priceGasodomestico ||
                             priceBeforeVantiListo !== priceVantiListo) && (
                             <p className="line-through text-[#035177] text-sm md:text-xl">
@@ -527,14 +535,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                                   : priceBeforeVantiListo
                                 ).split(",")[0]
                               }{" "}
-                              <span className="lg:block">Antes</span>
+                              <span>Antes</span>
                             </p>
                           )}
-                          <div className="flex gap-1">
-                            {isGasAppliance(marketId) && <Icon {...iconPSE} />}
-                            {/* <Icon {...iconInvoice} /> */}
-                            <Icon {...logoVantiListo} />
-                            {!isVantilisto(marketId) && (
+                          {!isVantilisto(marketId) && (
+                            <div className="flex gap-1">
                               <figure>
                                 <Image
                                   alt="placetopay"
@@ -544,18 +549,31 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                                   className="w-20 h-7"
                                 />
                               </figure>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                         {/* Main price */}
-                        <p className="text-[#035177] max-md:text-2xl title is-3">
+                        <p className="text-[#035177] max-md:text-2xl title is-3 gap-1 flex">
                           {
                             (isGasAppliance(marketId)
                               ? priceGasodomestico
                               : priceVantiListo
                             ).split(",")[0]
                           }
+
+                          <div className="flex gap-1">
+                            {isAvailableGasodomestico && <Icon {...iconPSE} />}
+                            {isAvailableGasodomestico && (
+                              <Icon {...iconMastercard} />
+                            )}
+                            {/* <Icon {...iconInvoice} /> */}
+                            {isAvailableGasodomestico && <Icon {...iconVisa} />}
+                            {isAvailableVantilisto && (
+                              <Icon {...logoVantiListo} />
+                            )}
+                          </div>
                         </p>
+
                         {/* Secondary price */}
                         {isGasAppliance(marketId) && priceVantiListo && (
                           <p className="text-[#545454] text-sm md:text-xl flex items-center gap-2">
@@ -744,17 +762,36 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       >
         {isAvailableGasodomestico || isAvailableVantilisto ? (
           <>
-            <div className="flex gap-[10px] items-start xxs:items-center justify-between">
-              <div className="flex flex-col-reverse gap-x-[10px]">
+            <div className="grid grid-cols-2 gap-[10px]">
+              <div
+                className={classNames(
+                  "flex flex-col-reverse gap-x-[10px] justify-start",
+                  !isAvailableGasodomestico && "!justify-center"
+                )}
+              >
                 {/* Main price */}
-                <p className="text-[#035177] title is-4">
-                  {
-                    (isGasAppliance(marketId)
-                      ? priceGasodomestico
-                      : priceVantiListo
-                    ).split(",")[0]
-                  }
-                </p>
+                <div className="flex gap-1 flex-wrap">
+                  <p className="text-[#035177] title is-4">
+                    {
+                      (isGasAppliance(marketId)
+                        ? priceGasodomestico
+                        : priceVantiListo
+                      ).split(",")[0]
+                    }
+                  </p>
+                  <div className="flex gap-1">
+                    {isAvailableGasodomestico && (
+                      <Icon {...iconPSE} className="w-6 h-6" />
+                    )}
+                    {isAvailableGasodomestico && (
+                      <Icon {...iconMastercard} className="w-6 h-6" />
+                    )}
+                    {isAvailableGasodomestico && (
+                      <Icon {...iconVisa} className="w-6 h-6" />
+                    )}
+                    {isAvailableVantilisto && <Icon {...logoVantiListo} />}
+                  </div>
+                </div>
                 {/* Before price */}
                 {(priceBeforeGasodomestico !== priceGasodomestico ||
                   priceBeforeVantiListo !== priceVantiListo) && (

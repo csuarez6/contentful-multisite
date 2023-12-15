@@ -154,7 +154,6 @@ const ContentFilter: React.FC<IContentFilter> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath]);
-
   return (
     <div className="relative w-full flex flex-col">
       {principalSearch && contentData?.totalItems > 0 && (
