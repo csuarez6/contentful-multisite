@@ -19,6 +19,8 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
   const backgroundColor = getBackgroundColorClass(view?.backgroundColor);
   const textAlignHeading = getTextAlignClass(view?.headerAlignment);
   const _blockId = blockId ?? sysId;
+  const clonedView = JSON.parse(JSON.stringify(view));
+  delete clonedView.sys;
   const [isRichtext, setIsRichtext] = useState(false);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const ListWithIconBlock: React.FC<IPromoBlock> = ({ title, description, featured
           <div className='hidden px-3 md:block'>
             <div className={classNames("max-w-sm sm:max-w-none mx-auto grid gap-y-10 gap-x-8", classColumnsFlex[view.columnsSize])}>
               {featuredContentsCollection.items.map((item) => (
-                <ListWithIcon key={`${item.sys.id}`} {...{ ...item, ...view }} />
+                <ListWithIcon key={`${item.sys.id}`} {...{ ...item, ...clonedView }} />
               ))}
             </div>
           </div>

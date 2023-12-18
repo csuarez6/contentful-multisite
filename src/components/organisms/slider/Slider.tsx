@@ -76,7 +76,7 @@ const Slider: React.FC<any> = ({ data }) => {
                 </h2>
               )}
               {!slide?.link?.isExternal ? (
-                <Link href={slide?.link?.href} prefetch>
+                <Link href={slide?.link?.href} data-tagid={slide?.sys?.id} prefetch>
                   <a
                     className={`self-start ${slide?.link?.classes ?? ""
                       } font-semibold py-[9px] px-4 button text-xs md:text-base`}

@@ -30,6 +30,7 @@ const CustomLink: React.FC<ICustomLink> = ({
       onClick={onClick}
       className={linkClassName}
       prefetch
+      data-tagid={content?.sys?.id}
     >
       <div className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
         {children ?? textLink}

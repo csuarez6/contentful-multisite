@@ -37,7 +37,7 @@ const CarouselCategories: React.FC<
   return (
     <article className="flex justify-center h-full">
       {(link && !!isLink) ? (
-        <Link href={link} className="h-full group">
+        <Link href={link} data-tagid={props?.sys?.id} className="h-full group">
           <div
             className={classNames(
               "flex flex-col gap-2 items-center h-full",
