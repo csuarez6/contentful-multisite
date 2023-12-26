@@ -216,7 +216,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute z-20 min-w-full top-full mt-2">
+                  <div className="absolute z-20 min-w-full -top-1 lg:top-full transform -translate-y-full lg:translate-y-0">
                     <Listbox.Options
                       className="flex flex-col border bg-white border-grey-80 rounded-md pt-1 pb-4 overflow-auto focus:outline-none"
                       style={{

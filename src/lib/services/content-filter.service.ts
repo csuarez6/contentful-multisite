@@ -41,6 +41,7 @@ const getAlgoliaResults = async ({
   availableFacets = [],
   pageResults,
   filters = {},
+  sortingBy = null,
   page = 1,
 }) => {
   const resultObject: {
@@ -114,7 +115,7 @@ const getAlgoliaResults = async ({
   const indexSearch = getAlgoliaSearchIndex(
     process.env.ALGOLIASEARCH_APP_ID,
     process.env.ALGOLIASEARCH_READ_API_KEY,
-    process.env.ALGOLIASEARCH_INDEX
+    process.env.ALGOLIASEARCH_INDEX + (sortingBy !== null ? '_' + sortingBy : '')
   );
   const resultAlgolia = await indexSearch.search((fullTextSearch), {
     filters: algoliaFilter.join(' AND '),
@@ -176,14 +177,13 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
             const facetContents = {
               name: FACET_QUERY_MAP[facetId].inputName,
               labelSelect: FACET_QUERY_MAP[facetId].title,
-              placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
               listedContents:
                 FACET_QUERY_MAP[facetId].rawOptions ??
                 responseData[`${queryName}Collection`].items.map(
                   (facetContent: any) => {
                     return {
                       ...facetContent,
-                      text: facetContent.promoTitle ?? facetContent.name,
+                      text: facetContent.promoTitle ?? facetContent.name[0].toUpperCase() + facetContent.name.slice(1).toLowerCase(),
                       value: facetContent.name,
                       totalItems: facets[facetId][facetContent.name],
                     };
@@ -213,13 +213,12 @@ const getFacetsValues = async (facets: any): Promise<Array<any>> => {
         const facetContents = {
           name: FACET_QUERY_MAP[facetId].inputName,
           labelSelect: FACET_QUERY_MAP[facetId].title,
-          placeholder: `Seleccionar ${FACET_QUERY_MAP[facetId].title}`,
           listedContents:
             FACET_QUERY_MAP[facetId].rawOptions ??
             facetContentNames.map((facetValue: any) => {
               return {
                 name: "",
-                text: facetValue,
+                text: facetValue[0].toUpperCase() + facetValue.slice(1).toLowerCase(),
                 value: facetValue,
                 image: null,
                 totalItems: facets[facetId][facetValue],
@@ -256,6 +255,7 @@ const getFilteredContent = async ({
   pageResults,
   availableFacets = [],
   filters = {},
+  sortingBy = null,
   page = 1,
 }) => {
   if (!contentTypesFilter) {
@@ -272,6 +272,7 @@ const getFilteredContent = async ({
     availableFacets,
     pageResults,
     filters,
+    sortingBy,
     page,
   });
 

@@ -1,12 +1,14 @@
 import { IProductFilterBlock } from "@/lib/interfaces/product-cf.interface";
 import SelectAtom, { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import FeaturedProductBlock from "../product-featured/FeaturedProductBlock";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 
 import FeaturedProductBlockSkeleton from "@/components/skeletons/FeaturedProductBlockSkeleton/FeaturedProductBlockSkeleton";
 import InfoCardBlock from "../info-card/InfoCard";
 import SearchCardBlock from "../search-card/SearchCard";
 import Icon from "@/components/atoms/icon/Icon";
 import { useEffect, useState } from "react";
+import { SORTING_OPTIONS } from "@/constants/search.constants";
 
 interface IWithLoadingData {
   isLoading?: boolean;
@@ -37,15 +39,17 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
   error = false,
   type,
   types,
+  orderingOptions = null,
   initialValue = null,
-}) => { 
+}) => {
   const [filterText, setFilterText] = useState<string>("");
   const [refreshFacets, setrefreshFacets] = useState(0);
+  const [showFiltersBlock, setShowFiltersBlock] = useState(false);
   const onFacetsChangeHandle = (key, value) => {
     const { search: uri } = location;
     let newUri = "";
 
-    value = (value === "") ? "*" : value;
+    value = value === "" ? "*" : value;
     const re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
     const separator = uri.indexOf("?") !== -1 ? "&" : "?";
 
@@ -58,6 +62,7 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
       newUri = value !== "*" ? uri + separator + key + "=" + value : uri;
     }
 
+    setShowFiltersBlock(false);
     onFacetsChange(newUri);
   };
 
@@ -65,7 +70,14 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
     const { search: uri } = location;
     const contUri = uri.split("&");
     const tempPos = contUri?.[0].split("=");
-    if ((contUri?.length <= 1 && ((tempPos?.[0] === "?categoria" && !anchor) || (tempPos?.[0] === "?marca" && anchor === "BusquedaCatalogoVantiListo")))|| contUri?.[0] === '') setrefreshFacets(refreshFacets + 1);
+    if (
+      (contUri?.length <= 1 &&
+        ((tempPos?.[0] === "?categoria" && !anchor) ||
+          (tempPos?.[0] === "?marca" &&
+            anchor === "BusquedaCatalogoVantiListo"))) ||
+      contUri?.[0] === ""
+    )
+      setrefreshFacets(refreshFacets + 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [facets]);
 
@@ -89,11 +101,38 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
 
   return (
     <section className="w-full">
-      <div className="flex items-end gap-6 mb-5 md:justify-between">
-        <div className="grid flex-grow grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="flex justify-between items-end gap-2 sm:gap-6 mb-5 md:justify-between">
+        <div className="flex justify-start items-center sm:w-full lg:!hidden">
+          <button
+            className="inline-flex gap-2 h-[50px] text-blue-dark justify-center items-center px-3 border border-blue-dark rounded"
+            onClick={() => setShowFiltersBlock(!showFiltersBlock)}
+          >
+            <FunnelIcon color="#113455" className="w-3 h-3" /> Filtros
+          </button>
+        </div>
+        {showFiltersBlock && (
+          <div
+            className="z-30 bg-black fixed w-screen h-screen top-0 left-0 opacity-60 lg:!hidden"
+            onClick={() => setShowFiltersBlock(false)}
+          ></div>
+        )}
+        <div
+          className={`${
+            showFiltersBlock ? "grid" : "hidden"
+          } fixed lg:relative z-50 lg:z-auto bg-white lg:bg-transparent px-8 lg:px-0 py-7 lg:py-0 shadow-lg shadow-black lg:shadow-none w-full lg:w-auto bottom-0 lg:bottom-auto left-0 lg:left-auto rounded-tl-3xl lg:rounded-tl-none rounded-tr-3xl lg:rounded-tr-none flex-grow grid-cols-1 gap-6 lg:grid lg:grid-cols-4`}
+        >
+          <button
+            className="absolute top-3 right-5 text-2xl leading-none lg:!hidden"
+            onClick={() => setShowFiltersBlock(false)}
+          >
+            &times;
+          </button>
           {facets?.map((el: ISelect, i: number) => {
             return (
-              <div className="flex flex-col w-full xs:w-auto" key={`${el.name}-${i}`}>
+              <div
+                className="flex flex-col w-full xs:w-auto"
+                key={`${el.name}-${i}`}
+              >
                 <SelectAtom
                   {...el}
                   handleChange={(value) => onFacetsChangeHandle(el.name, value)}
@@ -103,24 +142,47 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
               </div>
             );
           })}
+          {orderingOptions && (
+            <div className="flex flex-col w-full xs:w-auto">
+              <SelectAtom
+                name="sortby"
+                listedContents={orderingOptions.reduce(
+                  (acc, option) => {
+                    return acc.concat(SORTING_OPTIONS[option]);
+                  },
+                  [{ text: `Recomendados`, value: "*" }]
+                )}
+                labelSelect="Ordenar por"
+                placeholder="Recomendados"
+                handleChange={(value) => onFacetsChangeHandle("orden", value)}
+                key={refreshFacets}
+                currentValue={initialValue?.orden}
+              />
+            </div>
+          )}
         </div>
-        {!types?.includes("page") && (type === "AuxAlly" || type === "product") ? (
-          <div className="flex">
-            <div className='relative'>
+        {!types?.includes("page") &&
+        (type === "AuxAlly" || type === "product") ? (
+          <div className="flex justify-end">
+            <div className="relative">
               <input
                 className="h-[50px] w-full md:w-[345px] border border-grey-60 hover:border-grey-30 focus:border-lucuma-60 rounded py-3 px-3 text-[#293842] placeholder:text-grey-60 leading-tight focus:outline-none"
                 type="text"
                 placeholder="Buscar"
                 value={filterText}
-                onChange={e => setFilterText(e.target.value)}
-                onKeyDown={event => (event.key == 'Enter') ? onFacetsChangeHandle("text", filterText) : null}
+                onChange={(e) => setFilterText(e.target.value)}
+                onKeyDown={(event) =>
+                  event.key == "Enter"
+                    ? onFacetsChangeHandle("text", filterText)
+                    : null
+                }
               />
               <button
-                className='absolute right-[11px] top-[27%] flex h-fit text-grey-30'
+                className="absolute right-[11px] top-[27%] flex h-fit text-grey-30"
                 onClick={() => onFacetsChangeHandle("text", filterText)}
-                type='button'
+                type="button"
               >
-                <Icon icon='search' size={20} />
+                <Icon icon="search" size={20} />
               </button>
             </div>
           </div>
@@ -131,12 +193,9 @@ const ProductFilterBlock: React.FC<IProductFilterBlock & IWithLoadingData> = ({
       <div className="w-full" data-anchor={anchor}>
         {principalSearch
           ? generalSearchGrill()
-          : (
-            type === "AuxRate"
-              ? rateGrill()
-              : productGrill()
-          )
-        }
+          : type === "AuxRate"
+          ? rateGrill()
+          : productGrill()}
       </div>
     </section>
   );

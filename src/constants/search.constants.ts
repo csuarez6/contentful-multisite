@@ -1,6 +1,19 @@
 import ProductCategoryQuery from "@/lib/graphql/shared/product-category.gql";
 import TrademarkQuery from "@/lib/graphql/shared/trademark.gql";
 
+export const SORTING_OPTIONS = {
+  Precio: [
+    {
+      value: "price_desc",
+      text: "Precio de mayor a menor",
+    },
+    {
+      value: "price_asc",
+      text: "Precio de menor a mayor",
+    },
+  ],
+};
+
 export const FACET_QUERY_MAP = {
   "fields.trademark.name": {
     title: 'Marca',

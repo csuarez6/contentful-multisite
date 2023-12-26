@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import getFilteredContent from '@/lib/services/content-filter.service';
-import { FACET_QUERY_MAP } from '@/constants/search.constants';
+import { FACET_QUERY_MAP, SORTING_OPTIONS } from '@/constants/search.constants';
 
 const handler = async (
   request: NextApiRequest,
@@ -16,12 +16,16 @@ const handler = async (
     }
   }
 
+  const allowedOrderOptions = Object.keys(SORTING_OPTIONS).reduce((acc, option) => {
+    return acc.concat(SORTING_OPTIONS[option].map(opt => opt.value));
+  }, []);
   const filteredContent = await getFilteredContent({
     fullTextSearch: typeof request.query.text == 'string' ? request.query.text : (request?.query?.text?.[0] ?? ''),
     pageResults: request.query.pageResults,
     contentTypesFilter: typeof request.query.type == 'string' ? [request.query.type] : request.query.type,
     parentIds: typeof request.query.parent == 'string' ? [request.query.parent] : request.query.parent,
     page: typeof request.query.page == 'string' ? parseInt(request.query.page) : parseInt(request.query.page[0]),
+    ...(request?.query?.orden && allowedOrderOptions.indexOf(request.query.orden) >= 0 ? { sortingBy: request.query.orden } : {}),
     filters
   });
 

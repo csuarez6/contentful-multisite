@@ -50,6 +50,7 @@ export interface IProductFilterBlock {
   anchor?: string;
   products?: IPromoBlock;
   facets?: ISelect[];
+  orderingOptions?: string[];
   onFacetsChange?: (newQueryString: string) => void;
   type?: string;
   types?: any;

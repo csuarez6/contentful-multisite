@@ -19,6 +19,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
   description = null,
   blockId = null,
   mainFacet = null,
+  orderingOptions = null,
   preloadContent = null,
 }) => {
   const { push, pathname, asPath } = useRouter();
@@ -113,6 +114,8 @@ const ContentFilter: React.FC<IContentFilter> = ({
         setQueryString(
           new URLSearchParams([...fixedFilters, ...queryParams]).toString()
         );
+      } else {
+        setInitialValue(null);
       }
     } catch (error) {
       console.error({ error });
@@ -194,6 +197,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
           type={contentTypesFilter[0]}
           types={contentTypesFilter}
           initialValue={initialValue}
+          orderingOptions={orderingOptions}
         />
       )}
       {contentData?.totalPages > 1 && (
