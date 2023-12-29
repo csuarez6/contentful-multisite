@@ -31,14 +31,17 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
   // Check if the user's IP is not allowed
   if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
     // block access
-    const res = new NextResponse(null, { status: 403 })
-    res.headers.set("x-middleware-refresh", "1")
+    const res = new NextResponse(null, { status: 403 });
+    res.headers.set("x-middleware-refresh", "1");
     return res;
   }
 
   const domain = request.headers.get("host");
   console.info("El domain es:", domain);
   
+  // if (request.nextUrl.pathname.startsWith('/about')) {
+  //   return NextResponse.rewrite(new URL('/vantilisto', request.url))
+  // }
 }
 
 function ipToInt32(ip: any) {
@@ -59,7 +62,7 @@ function getIpRangeFromAddressAndNetmask(str) {
     netmaskblocks = netmaskblocks?.map(function (el) { return parseInt(el, 2); });
   } else {
     // xxx.xxx.xxx.xxx
-    netmaskblocks = part[1]?.split('.').map(function (el) { return parseInt(el, 10) });
+    netmaskblocks = part[1]?.split('.').map(function (el) { return parseInt(el, 10); });
   }
   // invert for creating broadcast address (highest address)
   const invertedNetmaskblocks = netmaskblocks?.map(function (el) { return el ^ 255; });
