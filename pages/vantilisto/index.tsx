@@ -9,7 +9,7 @@ import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID, COOKIES_I
 import getPageContent from "@/lib/services/page-content.service";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 
-const Home: NextPageWithLayout = ({ name, promoTitle, blocksCollection }: IPage) => {
+const Home: NextPageWithLayout = ({ name, promoTitle }: IPage) => {
   return (
     <>
       <h1 className="sr-only">{promoTitle ?? name}</h1>

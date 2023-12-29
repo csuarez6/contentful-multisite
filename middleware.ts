@@ -37,11 +37,18 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
   }
 
   const domain = request.headers.get("host");
+
   console.info("El domain es:", domain);
-  
-  // if (request.nextUrl.pathname.startsWith('/about')) {
-  //   return NextResponse.rewrite(new URL('/vantilisto', request.url))
-  // }
+
+  const newUrl = new URL('/vantilisto', request.url);
+  console.info("El newUrl es:", newUrl);
+
+  switch (domain) {
+    case "www.grupovanti.com":
+      return NextResponse.rewrite(new URL('/vantilisto', request.url));
+    case "www.vantilisto.com":
+      return NextResponse.rewrite(new URL('/grupovanti', request.url));
+  }
 }
 
 function ipToInt32(ip: any) {

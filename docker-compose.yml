@@ -58,6 +58,7 @@ services:
         DEFAULT_DOMAIN: ${DEFAULT_DOMAIN:-}
     ports:
       - "80:3000"
+      - "443:9001"
       - "${APP_PORT_PREFIX:-39}229:9229"
     volumes:
       - ./src:/app/src:rw
