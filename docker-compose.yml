@@ -57,7 +57,7 @@ services:
         NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
         DEFAULT_DOMAIN: ${DEFAULT_DOMAIN:-}
     ports:
-      - "${APP_PORT_PREFIX:-39}080:3000"
+      - "80:3000"
       - "${APP_PORT_PREFIX:-39}229:9229"
     volumes:
       - ./src:/app/src:rw

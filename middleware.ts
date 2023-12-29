@@ -35,6 +35,10 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
     res.headers.set("x-middleware-refresh", "1")
     return res;
   }
+
+  const domain = request.headers.get("host");
+  console.info("El domain es:", domain);
+  
 }
 
 function ipToInt32(ip: any) {

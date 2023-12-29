@@ -5,7 +5,7 @@ import {
   GetStaticPropsResult,
 } from "next";
 
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "../../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 import getPageContent from "@/lib/services/page-content.service";
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
