@@ -1,3 +1,5 @@
+import { HOME_SLUG } from "@/constants/url-paths.constants";
+import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import { LineItem } from "@commercelayer/sdk";
 
 export const classNames = (...classes: string[]) => {
@@ -252,6 +254,84 @@ export const getElementOffset = (el) => {
 
 export const hasItems = (object: any) => {
   return !!(object?.items?.[0]);
+};
+
+export const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
+  const { mainNavCollection, secondaryNavCollection } = props;
+  let { name } = props;
+  let menuKey = firstPath;
+  const ProductName = asPath.split("=")[1];
+  let firstLevelMenu: any, folder: string, currentMenu: any;
+
+  // To find the Navegation Content for Hogares (Default)
+  let secondLevelMenu = mainNavCollection?.items.find(
+    (el) => el.internalLink?.slug === HOME_SLUG
+  );
+
+  // To find the Navigation Content for the current path
+  if (mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
+    secondLevelMenu = mainNavCollection?.items.find(
+      (el) => el.internalLink?.slug === firstPath
+    );
+  }
+
+  // To find the Navigation Content if it's a Secondary Content (Like "Conocenos" or "Contactanos") 
+  if (secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)) {
+    secondLevelMenu = secondaryNavCollection?.items.find(
+      (el) => el.internalLink?.slug === firstPath
+    );
+  }
+
+  // To find the items of a folder, like the "Empresas" case
+  if (mainNavCollection?.items.some((el) => el.secondaryNavCollection?.items.length > 0)) {
+    menuKey = firstPath;
+    firstLevelMenu = mainNavCollection?.items.find(
+      (el) => el.secondaryNavCollection?.items.length > 0
+    )?.secondaryNavCollection;
+  }
+
+  // To find the Navigation Content for a subitem like "Comercio", "Instituciones" or "Industria"
+  if (firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)) {
+    secondLevelMenu = firstLevelMenu?.items?.find(
+      (el) => el.internalLink?.slug === firstPath
+    );
+    folder = "Empresas";
+  }
+
+  // If there aren't items in the secondLevel set the default menu (Hogares) this happens with Contáctanos for example  
+  if (!(secondLevelMenu?.mainNavCollection?.items?.length)) {
+    menuKey = HOME_SLUG;
+    folder = "";
+    secondLevelMenu = mainNavCollection?.items.find(
+      (el) => el.internalLink?.slug === HOME_SLUG
+    );
+  }
+
+  // To get the current Menu, this is for the MegaMenu
+  secondLevelMenu?.mainNavCollection?.items?.map((item) => {
+    item?.mainNavCollection?.items?.map((subItem) => {
+      if (ProductName) name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
+      if (subItem.mainNavCollection?.items.some((el) => el?.name === name)) {
+        if (item.mainNavCollection.items.some((itemEl) => itemEl.name === subItem.name)) {
+          currentMenu = item.name;
+        }
+      }
+    });
+    if (item?.mainNavCollection?.items.length === 0 && item?.name === name) {
+      currentMenu = item?.name;
+    }
+  });
+
+  // Set by default the manuKey with Hogares
+  if (
+    !mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath) &&
+    !secondaryNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath) &&
+    !firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)
+  ) {
+    menuKey = HOME_SLUG;
+  }
+
+  return { firstLevelMenu, secondLevelMenu, menuKey, folder, currentMenu };
 };
 
 export const GtmId = process.env.NEXT_PUBLIC_GTM_ID;

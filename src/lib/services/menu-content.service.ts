@@ -5,7 +5,7 @@ import contentfulClient, { removeUnresolved } from './contentful-client.service'
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID } from '@/constants/contentful-ids.constants';
 import { CONTENTFUL_TYPENAMES } from '@/constants/contentful-typenames.constants';
 
-import HeaderMainQuery, { HeaderMainFragments } from '../graphql/aux/header-main.gql';
+import HeaderMainQuery from '../graphql/aux/header-main.gql';
 import { HeaderSecondaryFragments, HeaderSecondaryQuery } from '../graphql/aux/header-secondary.gql';
 import NavigationQuery, { NavigationFragments } from '../graphql/aux/navigation.gql';
 import { getCommercelayerProduct } from './commerce-layer.service';
@@ -19,7 +19,6 @@ const getMainHeader = async (navigationId: string = null, preview = false) => {
   try {
     ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
-        ${HeaderMainFragments}
         query getMainHeader($id: String!, $preview: Boolean!) {
           auxNavigation(id: $id, preview: $preview) {
             ${HeaderMainQuery}

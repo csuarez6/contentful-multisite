@@ -1,152 +1,40 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import { Popover, Transition, Menu } from "@headlessui/react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Popover, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   XMarkIcon,
-  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import ModalWarnning from "@/components/organisms/modal-warnning/ModalWarnning";
-import { classNames, getBackgroundColorClass } from "@/utils/functions";
+import { classNames, findMenu, getBackgroundColorClass } from "@/utils/functions";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import Icon from "@/components/atoms/icon/Icon";
 import MegaMenu from "@/components/organisms/mega-menu/MegaMenu";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import { HOME_SLUG } from "@/constants/url-paths.constants";
-import { signOut, useSession } from "next-auth/react";
 import MegaMenuMobile from "@/components/organisms/mega-menu-mobile/MegaMenuMobile";
 import TopMenu from "@/components/organisms/top-menu/TopMenu";
 import uuid from "react-uuid";
 import Link from "next/link";
 import CheckoutContext from "@/context/Checkout";
 import "react-circular-progressbar/dist/styles.css";
-// import { throttle } from "lodash";
-
-const findMenu = (props: INavigation, firstPath: string, asPath: string) => {
-  const { mainNavCollection, secondaryNavCollection } = props;
-  let { name } = props;
-  let menuKey = firstPath;
-  const ProductName = asPath.split("=")[1];
-  let firstLevelMenu, isFolder, currentMenu;
-
-  let secondLevelMenu = mainNavCollection?.items.find(
-    (el) => el.internalLink?.slug === HOME_SLUG
-  )?.mainNavCollection;
-
-  if (
-    mainNavCollection?.items?.some((el) => el.internalLink?.slug === firstPath)
-  ) {
-    secondLevelMenu = mainNavCollection?.items.find(
-      (el) => el.internalLink?.slug === firstPath
-    )?.mainNavCollection;
-  }
-
-  if (
-    secondaryNavCollection?.items?.some(
-      (el) => el.internalLink?.slug === firstPath
-    )
-  ) {
-    secondLevelMenu = secondaryNavCollection?.items.find(
-      (el) => el.internalLink?.slug === firstPath
-    )?.mainNavCollection;
-  }
-
-  if (
-    mainNavCollection?.items.some(
-      (el) => el.secondaryNavCollection?.items.length > 0
-    )
-  ) {
-    menuKey = firstPath;
-    firstLevelMenu = mainNavCollection?.items.find(
-      (el) => el.secondaryNavCollection?.items.length > 0
-    )?.secondaryNavCollection;
-  }
-
-  if (firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)) {
-    secondLevelMenu = firstLevelMenu?.items?.find(
-      (el) => el.internalLink?.slug === firstPath
-    )?.mainNavCollection;
-    isFolder = "Empresas";
-  }
-
-  if (!secondLevelMenu?.items?.length) {
-    menuKey = HOME_SLUG;
-    isFolder = "";
-    secondLevelMenu = mainNavCollection?.items.find(
-      (el) => el.internalLink?.slug === HOME_SLUG
-    )?.mainNavCollection;
-  }
-
-  secondLevelMenu?.items?.map((item) => {
-    item?.mainNavCollection?.items?.map((subItem) => {
-      if (ProductName) {
-        name = ProductName.charAt(0).toUpperCase() + ProductName.slice(1);
-      }
-      if (subItem.mainNavCollection?.items.some((el) => el?.name === name)) {
-        if (
-          item.mainNavCollection.items.some(
-            (itemEl) => itemEl.name === subItem.name
-          )
-        ) {
-          currentMenu = item.name;
-        }
-      }
-    });
-    if (item?.mainNavCollection?.items.length === 0 && item?.name === name) {
-      currentMenu = item?.name;
-    }
-  });
-
-  if (
-    !mainNavCollection?.items?.some(
-      (el) => el.internalLink?.slug === firstPath
-    ) &&
-    !secondaryNavCollection?.items?.some(
-      (el) => el.internalLink?.slug === firstPath
-    ) &&
-    !firstLevelMenu?.items.some((el) => el.internalLink?.slug === firstPath)
-  ) {
-    menuKey = HOME_SLUG;
-  }
-  return { firstLevelMenu, secondLevelMenu, menuKey, isFolder, currentMenu };
-};
 
 const HeaderBlock: React.FC<INavigation> = (props) => {
   const {
     promoImage,
     mainNavCollection,
     secondaryNavCollection,
-    utilityNavCollection,
     name,
   } = props;
   let { menuNavkey = null } = props;
   const headerRef = useRef(null);
-  // const prevScrollPosition = useRef(0);
   const isOpenTopMenu = useRef(false);
-  // const [isHidden, setIsHidden] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const { status: sessionStatus, data: session } = useSession();
   const router = useRouter();
   const { order } = useContext(CheckoutContext);
-
   const [numProducts, setNumProducts] = useState(0);
   const [openModal, setOpenModal] = useState(false);
-
-  // TODO: Work on this Hook for the evolutionary on the header when doing Scroll
-  /* useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPosition = window.scrollY;
-      setIsHidden(currentScrollPosition > prevScrollPosition.current && currentScrollPosition > headerRef?.current?.offsetHeight);
-      prevScrollPosition.current = currentScrollPosition;
-    };
-    const throttledScroll = throttle(handleScroll, 120);
-    window.addEventListener('scroll', throttledScroll);
-
-    return () => {
-      window.removeEventListener('scroll', throttledScroll);
-    };
-  }, []); */
 
   useEffect(() => {
     setNumProducts(
@@ -162,15 +50,6 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
         : 0
     );
   }, [order]);
-
-  useEffect(() => {
-    if (sessionStatus == "unauthenticated") {
-      console.warn("not authorized");
-      // router.push('/acceso');
-    }
-    console.warn("session", session);
-    console.warn("sessionStatus", sessionStatus);
-  }, [session, sessionStatus]);
 
   const [searchText, setSearchText] = useState("");
   const [timer, setTimer] = useState(null);
@@ -196,14 +75,15 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     firstPath = "home";
   }
 
-  // Assign menu
   const menu = findMenu(props, firstPath, asPath);
-  const mainNavCollectionMenu = menu.secondLevelMenu;
+  const mainNavCollectionMenu = menu?.secondLevelMenu?.mainNavCollection;
+  const utilityNavCollectionMenu = menu?.secondLevelMenu?.utilityNavCollection?.items?.filter(item => item?.linkView !== "Botón");  
+  const utilityNavButtons = menu?.secondLevelMenu?.utilityNavCollection?.items?.filter(item => item?.linkView === "Botón");
   const secondaryNavCollectionMenu = menu.firstLevelMenu;
-  const isFolder = menu.isFolder;
+  const folder = menu.folder;
   const currentMenu = menu.currentMenu;
   firstPath = menu.menuKey;
-
+ 
   const secondaryNavCollectionColor = mainNavCollection?.items.find(
     (el) => el.secondaryNavCollection?.items.length > 0
   )?.backgroundColor;
@@ -226,13 +106,13 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
     color = secondaryNavCollectionColor;
   }
   const backgroundColor = getBackgroundColorClass(color ?? "Azul Oscuro");
+
   return (
     <header
       ref={headerRef}
       id="header"
       className={classNames(
         "z-50 bg-white shadow transition-transform duration-500"
-        // isHidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
       {/* Top */}
@@ -263,7 +143,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           onMouseOver={() => setIsOpenMenu(true)}
                           onMouseOut={() => setIsOpenMenu(false)}
                           className={classNames(
-                            item.promoTitle === isFolder
+                            item.promoTitle === folder
                               ? "text-lucuma border-lucuma"
                               : "text-white border-transparent",
                             "cursor-pointer inline-block relative hover:text-lucuma transition-colors duration-500 pt-2 pb-3 pr-6 text-xl font-semibold leading-none border-b-2"
@@ -416,185 +296,86 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                     />
                   </div>
                 </form>
-                {utilityNavCollection?.items?.length > 0 && (
-                  <nav
-                    aria-label="Utility"
-                    className="relative hidden px-4 2lg:px-5 xl:px-6 lg:block border-x border-neutral-70"
+                <nav
+                  aria-label="Utility"
+                  className="relative hidden px-4 2lg:px-5 xl:px-6 lg:block border-x border-neutral-70"
+                >
+                  <ul
+                    className={classNames(
+                      "flex 2lg:gap-0.5 xl:gap-1 flex-nowrap"
+                    )}
                   >
-                    <ul
-                      className={classNames(
-                        "flex 2lg:gap-0.5 xl:gap-1 flex-nowrap"
-                      )}
-                    >
-                      {utilityNavCollection.items.map((item) => {
-                        return (
-                          <li
-                            className="flex w-[68px] 2lg:w-[75px] justify-center"
-                            key={item.sys.id}
+                    {utilityNavCollectionMenu.map((item) => {
+                      return (
+                        <li
+                          className="flex w-[68px] 2lg:w-[75px] justify-center"
+                          key={item.sys.id}
+                        >
+                          <CustomLink
+                            content={item}
+                            className={classNames(
+                              "bg-white text-blue-dark justify-center hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full"
+                            )}
+                            linkClassName="w-full block"
                           >
-                            <CustomLink
-                              content={item}
-                              className={classNames(
-                                "bg-white text-blue-dark justify-center hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 w-full h-full"
-                              )}
-                              linkClassName="w-full block"
-                            >
-                              {item.promoIcon && (
-                                <span className="flex items-center w-[25px] h-[25px] shrink-0 text-neutral-30 flex-grow">
-                                  <Icon
-                                    icon={item?.promoIcon}
-                                    className="w-full h-full mx-auto"
-                                  />
-                                </span>
-                              )}
-                              {item.promoTitle ?? item.name}
-                            </CustomLink>
-                          </li>
-                        );
-                      })}
-                      {/* Carrito de compras */}
-                      <li
-                        className="flex w-[68px] 2lg:w-[75px]"
-                        key={`cart_${uuid()}`}
+                            {item.promoIcon && (
+                              <span className="flex items-center w-[25px] h-[25px] shrink-0 text-neutral-30 flex-grow">
+                                <Icon
+                                  icon={item?.promoIcon}
+                                  className="w-full h-full mx-auto"
+                                />
+                              </span>
+                            )}
+                            {item.promoTitle ?? item.name}
+                          </CustomLink>
+                        </li>
+                      );
+                    })}
+                    {/* Carrito de compras */}
+                    <li
+                      className="flex w-[68px] 2lg:w-[75px]"
+                      key={`cart_${uuid()}`}
+                    >
+                      <Link
+                        href="/tienda-virtual/checkout/pse/verify"
+                        className="bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
                       >
-                        <Link
-                          href="/tienda-virtual/checkout/pse/verify"
-                          className="bg-white text-blue-dark hover:bg-category-blue-light-90 transition-colors duration-700 rounded-[10px] flex flex-col items-center text-xs leading-none text-center font-light !gap-0.5 px-2 py-1 justify-start w-full"
-                        >
-                          <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
-                            <Icon
-                              icon="shopping-cart"
-                              className="absolute w-full h-full mx-auto right-1"
-                            />
-                            <span
-                              className={classNames(
-                                "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
-                                numProducts > 0
-                                  ? "bg-blue-dark text-white"
-                                  : "bg-blue-100"
-                              )}
-                            >
-                              {numProducts}
-                            </span>
+                        <span className="relative flex items-center mb-2 w-9 h-7 shrink-0 text-neutral-30">
+                          <Icon
+                            icon="shopping-cart"
+                            className="absolute w-full h-full mx-auto right-1"
+                          />
+                          <span
+                            className={classNames(
+                              "absolute p-1 rounded text-size-span top-3 right-0 shadow border text-bolder",
+                              numProducts > 0
+                                ? "bg-blue-dark text-white"
+                                : "bg-blue-100"
+                            )}
+                          >
+                            {numProducts}
                           </span>
-                          Carrito
-                        </Link>
-                      </li>
-                    </ul>
-                  </nav>
-                )}
-                <div className="hidden z-20 gap-4 2lg:gap-5 xl:gap-6 pl-4 2lg:pl-5 xl:pl-6 lg:flex lg:h-full">
-                  {session?.user ? (
-                    <>
-                      <Menu
-                        as="div"
-                        className="relative inline-block text-left min-w-[180px]"
-                      >
-                        <div>
-                          <Menu.Button className="inline-flex justify-end w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-500">
-                            <span className="flex w-5 h-5 mr-2 text-neutral-30 shrink-0">
-                              <Icon
-                                icon="personal-data"
-                                className="w-full h-full"
-                                aria-hidden="true"
-                              />
-                            </span>
-                            {session.user["name"] ?? session.user["email"]}
-                            <ChevronDownIcon
-                              className="w-5 h-5 ml-2 text-neutral-30"
-                              aria-hidden="true"
-                            />
-                          </Menu.Button>
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
+                        </span>
+                        Carrito
+                      </Link>
+                    </li>
+                  </ul>
+                </nav>
+                {utilityNavButtons?.length > 0 && (
+                  <div className="hidden z-20 gap-4 2lg:gap-5 xl:gap-6 pl-4 2lg:pl-5 xl:pl-6 lg:flex lg:h-full">
+                    {utilityNavButtons.map((item, idx) => {
+                      return (
+                        <CustomLink
+                          key={item.sys.id}
+                          content={item}
+                          className={"flex items-center h-full text-center button whitespace-nowrap " + (idx == 0 ? "button-primary" : "button-outline")}
                         >
-                          <Menu.Items className="absolute flex justify-center right-0 z-10 w-[169px] mt-1 bg-white rounded-bl-[10px] rounded-br-[10px] shadow-[-2px_-2px_0_rgb(0,0,0,0.04),2px_2px_4px_rgb(0,0,0,0.08)] focus:outline-none">
-                            <div className="flex flex-col">
-                              <div className="flex flex-col pt-[19px]">
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <CustomLink
-                                      content={{ urlPaths: ["/dashboard"] }}
-                                      className={classNames(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-blue-dark",
-                                        "block w-full underline py-2"
-                                      )}
-                                    >
-                                      Mi Perfil
-                                    </CustomLink>
-                                  )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <CustomLink
-                                      content={{
-                                        urlPaths: ["/dashboard/orders"],
-                                      }}
-                                      className={classNames(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-blue-dark",
-                                        "block w-full underline py-2"
-                                      )}
-                                    >
-                                      Mis compras
-                                    </CustomLink>
-                                  )}
-                                </Menu.Item>
-                              </div>
-                              <hr className="w-full my-3" />
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <button
-                                    className={classNames(
-                                      active
-                                        ? "text-blue-dark-8"
-                                        : "text-blue-dark",
-                                      "block w-full underline py-2 mb-9 text-left"
-                                    )}
-                                    onClick={() => signOut()}
-                                  >
-                                    Salir
-                                  </button>
-                                )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </>
-                  ) : (
-                    <>
-                      <CustomLink
-                        // content={{ urlPaths: ["/registro"] }}
-                        content={{
-                          externalLink:
-                            "https://mi.grupovanti.com/registro",
-                        }}
-                        className="flex items-center h-full text-center button button-primary whitespace-nowrap"
-                      >
-                        Regístrate
-                      </CustomLink>
-                      <CustomLink
-                        // content={{ urlPaths: ["/acceso"] }}
-                        content={{ urlPaths: ["/tramites-y-ayuda/oficina-virtual"] }}
-                        className="flex items-center h-full text-center button button-outline whitespace-nowrap"
-                      >
-                        Inicia sesión
-                      </CustomLink>
-                    </>
-                  )}
-                </div>
+                          {item.ctaLabel ?? (item.promoTitle ?? item.name)}
+                        </CustomLink>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div
                 className="relative z-10 flex items-center lg:hidden cursor-pointer"
@@ -604,7 +385,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                   <Icon icon="emergency" className="w-full h-full mx-auto" />
                 </span>
               </div>
-              {utilityNavCollection?.items?.slice(0, 1)?.map((item) => (
+              {utilityNavCollectionMenu?.slice(0, 1)?.map((item) => (
                 <li
                   className="relative z-10 flex items-center lg:hidden"
                   key={item?.sys?.id}
@@ -681,7 +462,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                           <MegaMenuMobile
                             items={mainNavCollection?.items}
                             secondaryNavCollection={secondaryNavCollection}
-                            utilityNavCollection={utilityNavCollection}
+                            utilityNavCollection={utilityNavCollectionMenu}
                             close={close}
                           />
                         </>
@@ -691,7 +472,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 </Popover>
               </div>
             </div>
-            {utilityNavCollection?.items?.length > 0 && (
+            {utilityNavCollectionMenu?.length > 0 && (
               <Popover className="relative -mx-2 lg:hidden">
                 {({ open }) => (
                   <>
@@ -752,7 +533,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                     </Link>
                                   </button>
                                 </li>
-                                {utilityNavCollection?.items
+                                {utilityNavCollectionMenu
                                   ?.slice(1)
                                   ?.map((item) => (
                                     <li
@@ -782,6 +563,21 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                                     </li>
                                   ))}
                               </ul>
+                              {utilityNavButtons?.length > 0 && (
+                                <div className="flex flex-col gap-3 mt-8 mb-4">
+                                  {utilityNavButtons.map((item, idx) => {
+                                    return (
+                                      <CustomLink
+                                        key={item.sys.id}
+                                        content={item}
+                                        className={"flex items-center justify-center h-full text-center button whitespace-nowrap " + (idx == 0 ? "button-primary" : "button-outline")}
+                                      >
+                                        {item.ctaLabel ?? (item.promoTitle ?? item.name)}
+                                      </CustomLink>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </nav>
                           </>
                         )}
