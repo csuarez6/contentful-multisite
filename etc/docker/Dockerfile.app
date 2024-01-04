@@ -34,7 +34,7 @@ FROM base as dev
 ## Install contenful cli
 RUN npm install -g contentful-cli
 
-CMD [ "yarn", "dev" ]
+CMD ["sh", "-c", "yarn dev & npx local-ssl-proxy --source 9001 --target 3000"]
 
 FROM base as prod
 

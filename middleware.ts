@@ -30,24 +30,27 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
 
   // Check if the user's IP is not allowed
   if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
-    // block access
     const res = new NextResponse(null, { status: 403 });
     res.headers.set("x-middleware-refresh", "1");
     return res;
   }
 
   const domain = request.headers.get("host");
+  const path = request.nextUrl.pathname;
 
-  console.info("El domain es:", domain);
+  console.info("(B5) domain es:", domain);
+  console.info("(B5) path es:", path);
 
-  const newUrl = new URL('/vantilisto', request.url);
-  console.info("El newUrl es:", newUrl);
-
-  switch (domain) {
-    case "www.grupovanti.com":
-      return NextResponse.rewrite(new URL('/vantilisto', request.url));
-    case "www.vantilisto.com":
-      return NextResponse.rewrite(new URL('/grupovanti', request.url));
+  if(domain == "www.vantilisto.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null){
+    const rootSite = "/vantilisto";
+    const newUrl = `${rootSite}${path}`;
+    console.info("(B5) The newUrl es:", newUrl);
+    return NextResponse.rewrite(new URL(newUrl, request.url));
+  } else if(domain == "www.grupovanti.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null) {
+    const rootSite = "/grupovanti";
+    const newUrl = `${rootSite}${path}`;
+    console.info("(B5) The newUrl es:", newUrl);
+    return NextResponse.rewrite(new URL(newUrl, request.url));
   }
 }
 

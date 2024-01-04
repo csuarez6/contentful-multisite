@@ -9,8 +9,8 @@ import {
 } from '@apollo/client';
 
 const errorLink  = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) console.error(graphQLErrors);
-  if (networkError) console.warn(networkError);
+  // if (graphQLErrors) console.error(graphQLErrors);
+  // if (networkError) console.warn(networkError);
 });
 
 const generalLink = new ApolloLink((operation, forward) => {
