@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+type Site = {
+  domain: string
+  root_path: string,
+  site_paths: string
+  is_default_site?: boolean
+};
+
+type SiteList = Site[];
+
 const enviromentVercel = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const ALLOWED_IPS = [
   '103.21.244.0/22',
@@ -28,7 +37,6 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
     return validate === true;
   });
 
-  // Check if the user's IP is not allowed
   if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
     const res = new NextResponse(null, { status: 403 });
     res.headers.set("x-middleware-refresh", "1");
@@ -38,20 +46,48 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
   const domain = request.headers.get("host");
   const path = request.nextUrl.pathname;
 
-  console.info("(B5) domain es:", domain);
-  console.info("(B5) path es:", path);
+  const siteList : SiteList = [
+    {
+      domain: "www.vantilisto.com",
+      root_path: "/vantilisto",
+      site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)"
+    },
+    {
+      domain: "www.grupovanti.com",
+      root_path: "/grupovanti",
+      site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)",
+      is_default_site: true
+    }
+  ];
 
-  if(domain == "www.vantilisto.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null){
-    const rootSite = "/vantilisto";
-    const newUrl = `${rootSite}${path}`;
-    console.info("(B5) The newUrl es:", newUrl);
-    return NextResponse.rewrite(new URL(newUrl, request.url));
-  } else if(domain == "www.grupovanti.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null) {
-    const rootSite = "/grupovanti";
-    const newUrl = `${rootSite}${path}`;
-    console.info("(B5) The newUrl es:", newUrl);
-    return NextResponse.rewrite(new URL(newUrl, request.url));
-  }
+  // try {
+    for (const site of siteList) {
+      if((domain.match(site.domain) !== null) || site?.is_default_site === true){
+        console.info("B9. Entro al primer condicional y se tomará como referencia el site:", site);
+        if(path.match(site.site_paths)){
+          console.info("B9. Entro al segundo condicional de path");
+          const newUrl = `${site.root_path}${path}`;
+          console.info("(B8) The newUrl is:", newUrl);
+          return NextResponse.rewrite(new URL(newUrl, request.url));
+        }
+        break;
+      }    
+    }
+  // } catch (error) {
+  //   console.error("An error has ocurred in the middleware rewriter, more details:", error);
+  // }
+
+  // if(domain ==  && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null){
+  //   const rootSite = "/vantilisto";
+  //   const newUrl = `${rootSite}${path}`;
+  //   console.info("(B5) The newUrl es:", newUrl);
+  //   return NextResponse.rewrite(new URL(newUrl, request.url));
+  // } else if(domain == "www.grupovanti.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null) {
+  //   const rootSite = "/grupovanti";
+  //   const newUrl = `${rootSite}${path}`;
+  //   console.info("(B5) The newUrl es:", newUrl);
+  //   return NextResponse.rewrite(new URL(newUrl, request.url));
+  // }
 }
 
 function ipToInt32(ip: any) {
@@ -81,9 +117,6 @@ function getIpRangeFromAddressAndNetmask(str) {
   return [baseAddress?.join('.'), broadcastaddress?.join('.')];
 }
 
-// // See "Matching Paths" below to learn more
 export const config = {
   matcher: ['/:path*']
 };
-// matcher: ['/dashboard/:path*', '/acceso', '/forgotpassword', '/registro', '/']
-// ***********
