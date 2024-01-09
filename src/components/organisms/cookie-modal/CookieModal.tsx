@@ -13,9 +13,8 @@ const CookieModal: React.FC<ICookieModal> = ({
   onClose = () => null,
   mainText,
 }) => {
-  const [testCookie, setTestCookie] = useState("noCookie");
+  const [testCookie, setTestCookie] = useState(null);
   const setCookies = () => {
-    setTestCookie("");
     const cookie = Cookies.get("cookie_policy");
     setTestCookie(cookie);
     if (cookie) return;
@@ -25,7 +24,9 @@ const CookieModal: React.FC<ICookieModal> = ({
   }, [testCookie]);
 
   const handleClose = () => {
-    const cookie = Cookies.set("cookie_policy", "yes");
+    const cookie = Cookies.set("cookie_policy", "yes", {
+      expires: Infinity,
+    });
     setTestCookie(cookie);
     onClose();
   };
@@ -61,7 +62,7 @@ const CookieModal: React.FC<ICookieModal> = ({
                   className="button button-outline shadow-xl"
                   onClick={handleClose}
                 >
-                  Aceptar
+                  Aceptar 
                 </button>
               </div>
             </div>
