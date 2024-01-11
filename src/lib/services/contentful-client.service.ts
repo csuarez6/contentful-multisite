@@ -51,10 +51,9 @@ const contentfulClient = (preview = false) => {
   });
 };
 
-export const removeUnresolved = (response: any, errors: any) => {
-  errors?.map((error: any) => {
+export const removeUnresolved = (response: any, errors: any) => {  
+  errors?.reverse()?.map((error: any) => {
     let parentStatement = "response", deleteStatement = "";
-
     if(error?.extensions?.contentful?.code === "UNRESOLVABLE_LINK" && error?.path) {
       for (let i = 0; i < (error.path.length)-1; i++) {
         const currentpath = error.path[i];
