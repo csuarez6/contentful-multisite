@@ -300,7 +300,6 @@ export const findMenu = (props: INavigation, firstPath: string, asPath: string) 
 
   // If there aren't items in the secondLevel set the default menu (Hogares) this happens with Contáctanos for example  
   if (!(secondLevelMenu?.mainNavCollection?.items?.length)) {
-    menuKey = HOME_SLUG;
     folder = "";
     secondLevelMenu = mainNavCollection?.items.find(
       (el) => el.internalLink?.slug === HOME_SLUG
