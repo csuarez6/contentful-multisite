@@ -69,7 +69,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
   };
 
   const { asPath } = useRouter();
-  let firstPath = asPath.split("/")[1];
+  let firstPath = asPath.split("/")?.[1];
   if (menuNavkey === null) {
     menuNavkey = HOME_SLUG;
     firstPath = "home";
