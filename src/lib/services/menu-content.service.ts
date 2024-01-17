@@ -104,40 +104,44 @@ const applySaltToMegamenu = async (flow: any) => {
 const NAVIGATION_FIELDS = ["mainNavCollection", "secondaryNavCollection"];
 
 export const getHeader = async (navigationId: string = null, preview = false) => {
-  if (!navigationId) navigationId = DEFAULT_HEADER_ID;
+  try {
+    if (!navigationId) navigationId = DEFAULT_HEADER_ID;
 
-  const header = await getMainHeader(navigationId, preview);
+    const header = await getMainHeader(navigationId, preview);
 
-  for (const navigationField of NAVIGATION_FIELDS) {
-    if (header?.[navigationField]?.items?.length > 0) {
-      for (let i = 0; i < header[navigationField].items.length; i++) {
-        const mainItem = header[navigationField].items[i];
-        if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
-          const { responseData } = await getSecondaryHeader(mainItem, preview);
-          if (responseData) {
-            let navigation = responseData;
-            if (navigation?.[navigationField]?.items?.length > 0) { // If its a normal flow
-              navigation = await applySaltToMegamenu(navigation);
-            } else if (navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
-              navigation.secondaryNavCollection.items = await Promise.all(
-                navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
-              );
+    for (const navigationField of NAVIGATION_FIELDS) {
+      if (header?.[navigationField]?.items?.length > 0) {
+        for (let i = 0; i < header[navigationField].items.length; i++) {
+          const mainItem = header[navigationField].items[i];
+          if (mainItem.__typename === CONTENTFUL_TYPENAMES.AUX_NAVIGATION) {
+            const { responseData } = await getSecondaryHeader(mainItem, preview);
+            if (responseData) {
+              let navigation = responseData;
+              if (navigation?.[navigationField]?.items?.length > 0) { // If its a normal flow
+                navigation = await applySaltToMegamenu(navigation);
+              } else if (navigation?.secondaryNavCollection?.items?.length > 0) { // If its a folder of flows
+                navigation.secondaryNavCollection.items = await Promise.all(
+                  navigation.secondaryNavCollection.items.map(async (item: any) => await applySaltToMegamenu(item))
+                );
+              }
+              header[navigationField].items[i] = navigation;
             }
-            header[navigationField].items[i] = navigation;
           }
         }
       }
     }
+    return header ?? false;
+  } catch (error){
+    console.error("An error has throw in the header block:", error);
+    return false;
   }
-
-  return header ?? false;
 };
 
 export const getNavigation = async (navigationId: string = null, preview = false) => {
-  if (!navigationId) navigationId = DEFAULT_FOOTER_ID;
-
-  let responseData = null, responseError = null;
   try {
+    if (!navigationId) navigationId = DEFAULT_FOOTER_ID;
+    let responseData = null, responseError = null;
+
     ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         ${NavigationFragments}
@@ -154,12 +158,11 @@ export const getNavigation = async (navigationId: string = null, preview = false
       errorPolicy: 'all'
     }));
     responseData = removeUnresolved(responseData, responseError);
+    const navigation = JSON.parse(JSON.stringify(responseData?.auxNavigation));
+  
+    return navigation ?? null;
   } catch (e) {
     console.error(`Error on getNavigation query => `, e.message);
     return null;
   }
-
-  const navigation = JSON.parse(JSON.stringify(responseData?.auxNavigation));
-
-  return navigation ?? null;
 };

@@ -19,7 +19,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   const description = promoDescription?.json ? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención. Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
   const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
   const canonicalUrl = domain + asPath.split("?")?.[0];
-
+  
   const addProductJsonLd = () => {
     let sdType = __typename;
     if (sdType === 'Page') {
@@ -130,7 +130,9 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
       )}
 
       <div className="flex flex-col min-h-screen">
-        <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name} />
+        {layout?.headerInfo && (
+          <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name} />
+        )}
         <HelpButton {...layout.helpButton} />
         <main className="flex-grow">
           {children}
