@@ -24,7 +24,7 @@ const consolideEntriesWithLocales = async (entries: Array<any>) => {
             'g:title': productInfo.name,
             'g:description': productInfo.description,
             'g:link': domain + entry.urlPaths[0],
-            'g:image_link': productInfo.image_url,
+            'g:image_link': encodeURIComponent(productInfo.image_url),
             'g:availability': availability ? 'in_stock' : 'out_of_stock',
             'g:price': price + ' ' + productInfo.currency_code,
             'g:brand': productInfo.brand
