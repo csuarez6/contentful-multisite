@@ -328,22 +328,24 @@ export const deleteCustomerResetPwd = async (tokenID: string) => {
   }
 };
 
-export const getCommercelayerProduct = async (skuCode: string) => {
+export const getCommercelayerProduct = async (skuCode: string, productInfo = false) => {
   let product = null;
   try {
     const clientGasodomesticos = await getCLAdminCLient();
     await sleep(30);
+    const fields = ["id", "prices", "stock_items"];
+    const include = ["prices", "stock_items", "prices.price_list", "stock_items.stock_location", "stock_items.stock_reservations"];
+
+    if (productInfo) {
+      fields.push("name", "description", "image_url", "shipping_category");
+      include.push("shipping_category");
+    };
+
     const sku = (
       await clientGasodomesticos.skus.list({
         filters: { code_eq: decodeURI(skuCode) },
-        include: [
-          "prices",
-          "stock_items",
-          "prices.price_list",
-          "stock_items.stock_location",
-          "stock_items.stock_reservations"
-        ],
-        fields: ["id", "prices", "stock_items"],
+        include: include,
+        fields: fields,
       })
     ).first();
 
@@ -389,7 +391,16 @@ export const getCommercelayerProduct = async (skuCode: string) => {
             (p) => p.stock_location.reference === "vantiListo"
           )?.quantity ?? 0,
       };
+
+      if (productInfo) {
+        product['name'] = sku.name;
+        product['description'] = sku.description;
+        product['image_url'] = sku.image_url;
+        product['brand'] = sku.shipping_category?.name;
+        product['currency_code'] = sku.prices[0]?.currency_code;
+      }
     }
+
   } catch (error) {
     console.error("Error retrieving SKU: ", error);
     throw new Error(error);
@@ -498,7 +509,7 @@ const setShippingMethod = async (client: any, order: Order) => {
         }
       })
     );
-    
+
     // Select the shipment-methods from the available ones
     await Promise.all(
       shipments.map(async (shipment, index) => {
@@ -513,18 +524,18 @@ const setShippingMethod = async (client: any, order: Order) => {
               type: "shipping_methods",
             },
           });
-        } catch(err) {
+        } catch (err) {
           console.error('error set default shipping method', err.errors);
-        } 
+        }
       })
     );
   } catch (e) {
-    console.error("Error in setShippingMethod:", e); 
+    console.error("Error in setShippingMethod:", e);
   }
 };
 
 const checkLineItems = async (client: any, order: Order) => {
-  const productUpdates = []; 
+  const productUpdates = [];
   await Promise.all(
     order.line_items.map(async (line_item: LineItem) => {
       try {
@@ -575,7 +586,7 @@ export const getUpdatedOrderAdminService = async (
 
     const client = await getCLAdminCLient();
     let formatedOrder = getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams));
-    
+
     // Check if the prices or inventory were changed
     if (checkUpdates) productUpdates = await checkLineItems(client, formatedOrder);
 
@@ -583,11 +594,11 @@ export const getUpdatedOrderAdminService = async (
     formatedOrder = (productUpdates.length > 0) ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
 
     // Set the payment methods if there are shipments
-    if(formatedOrder?.shipments?.length > 0) await setShippingMethod(client, formatedOrder);
+    if (formatedOrder?.shipments?.length > 0) await setShippingMethod(client, formatedOrder);
 
     // Reload order if there are any shipments to update
     formatedOrder = (formatedOrder?.shipments?.length > 0) ? getReformatedOrder(await client.orders.retrieve(idOrder, defaultOrderParams)) : formatedOrder;
-    
+
     response["productUpdates"] = productUpdates;
     response["data"] = formatedOrder;
 

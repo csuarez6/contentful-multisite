@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import contentfulClient, { removeUnresolved } from './contentful-client.service';
 
-const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
+const getProductsSlugs = async ({ limit = 100 }, preview = false) => {
   let responseData = null;
   let responseError = null;
 
@@ -9,22 +9,13 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
     ({ data: responseData, errors: responseError } = await contentfulClient(preview).query({
       query: gql`
         query getEntriesSlugs($limit: Int!, $preview: Boolean!) {
-          pageCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } }, order: name_ASC, limit: $limit, preview: false) {
-            items {
-              sys {
-                id
-                publishedAt
-              }
-              urlPaths
-            }
-          }
           productCollection(where: { AND: { urlPaths_exists: true, contentfulMetadata: { tags: { id_contains_none: ["testPage"] } } } }, order: name_ASC, limit: $limit, preview: $preview) {
             items {
               sys {
                 id
-                publishedAt
               }
               sku
+              marketId
               urlPaths
             }
           }
@@ -50,4 +41,4 @@ const getEntriesSlugs = async ({ limit = 100 }, preview = false) => {
   return resultEntries;
 };
 
-export default getEntriesSlugs;
+export default getProductsSlugs;

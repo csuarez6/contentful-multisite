@@ -226,7 +226,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                     >
                       {listedContents?.map((content) => (
                         <Listbox.Option
-                          key={content?.value + "-list"}
+                          key={content.value + "-list"}
                           value={content}
                           className={({ active }) => (
                             classNames(
@@ -238,7 +238,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                             )
                           )}
                         >
-                          {content?.text}
+                          {content.text}
                         </Listbox.Option>
                       ))}
                     </Listbox.Options>
