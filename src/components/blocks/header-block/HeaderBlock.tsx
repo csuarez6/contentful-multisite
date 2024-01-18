@@ -275,6 +275,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
                 <form
                   onSubmit={handleSubmit}
                   className="w-full h-11 lg:max-w-xs pr-4 2lg:pr-5 xl:pr-6"
+                  autoComplete="off"
                 >
                   <div className="bg-category-blue-light-90 text-[#868DA5] rounded-lg flex flex-nowrap relative h-full">
                     <label

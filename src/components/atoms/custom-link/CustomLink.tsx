@@ -32,10 +32,10 @@ const CustomLink: React.FC<ICustomLink> = ({
       prefetch
       data-tagid={content?.sys?.id}
     >
-      <div className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
+      <span className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
         {children ?? textLink}
         {icon && <Icon icon={icon} className="w-6 h-6 shrink-0" />}
-      </div>
+      </span>
     </Link>
   );
 };
