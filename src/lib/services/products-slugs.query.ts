@@ -16,6 +16,10 @@ const getProductsSlugs = async ({ limit = 100 }, preview = false) => {
               }
               sku
               marketId
+              promoImage 
+                {  
+                  url
+                }
               urlPaths
             }
           }

@@ -17,17 +17,17 @@ const consolideEntriesWithLocales = async (entries: Array<any>) => {
       const entry = entries[index];
       const productInfo = await getCommercelayerProduct(entry.sku, true);
       const price = isGasAppliance(entry.marketId) ? productInfo?._priceGasodomestico : productInfo?._priceVantiListo;
-      if (productInfo && productInfo.name && price) {
+      if (productInfo && productInfo.name && price && entry.urlPaths && entry.promoImage) {
         const availability = isAvailableGasAppliance(entry?.marketId, productInfo?._priceGasodomestico, productInfo?.productsQuantityGasodomestico) ? true : isAvailableVantilisto(entry?.marketId, productInfo?._priceVantiListo, productInfo?.productsQuantityVantiListo) ? true : false;
           consolidatedEntries.push({
             'g:id': entry.sku,
-            'g:title': productInfo.name,
-            'g:description': productInfo.description,
-            'g:link': domain + entry.urlPaths[0],
-            'g:image_link': encodeURIComponent(productInfo.image_url),
+            'g:title': escapeXml(productInfo.name),
+            'g:description': escapeXml(productInfo.description),
+            'g:link': escapeXml(domain + entry.urlPaths[0]),
+            'g:image_link': escapeXml(entry.promoImage.url),
             'g:availability': availability ? 'in_stock' : 'out_of_stock',
             'g:price': price + ' ' + productInfo.currency_code,
-            'g:brand': productInfo.brand
+            'g:brand': escapeXml(productInfo.brand)
           });
       }
     } catch (error) {
@@ -75,6 +75,22 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   return {
     props: {},
   };
+};
+
+const escapeXml = (str: string): string => {
+  if (str) {
+    return str.replace(/[<>&'"]/g, (char) => {
+      switch (char) {
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '&': return '&amp;';
+        case "'": return '&apos;';
+        case '"': return '&quot;';
+        default: return char;
+      }
+    });
+  }
+  return str;
 };
 
 export default ProductListXML;
