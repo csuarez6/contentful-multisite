@@ -24,6 +24,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }
     };
 
+    if (order.total_tax_amount_float > 0) {
+      payment.amount.taxes = [{
+        'kind': 'valueAddedTax',
+        'amount': order.total_tax_amount_float,
+        'base': order.total_taxable_amount_float
+      }];
+    }
+
     const extraFields: IP2PFields[] = [
       {
         'keyword': 'Número de orden',
@@ -31,6 +39,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         'displayOn': P2PDisplayOnFields.both
       }
     ];
+
+    if (order.tax_rate) {
+      extraFields.push(
+        {
+          'keyword': 'Tax Percent',
+          'value': (order.tax_rate * 100) + '%',
+          'displayOn': P2PDisplayOnFields.none
+        }
+      );
+    }
 
     const documentType = getP2PIdentificationType(order.metadata?.documentType);
 
@@ -45,9 +63,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const ipAddress = req.socket.remoteAddress;
     const userAgent = req.headers['user-agent'];
     const response: IP2PRequest | string = await createP2PRequest(order.id, payment, ipAddress, userAgent, extraFields, buyer);
-    
+
     if (typeof response === 'string') throw new Error(response);
-    
+
     if (!response.requestId || !response.processUrl) {
       throw new Error('createP2PRequest error: ' + JSON.stringify(response));
     }

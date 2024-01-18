@@ -124,7 +124,7 @@ const productAdjustments = (item: ILineItemExtended, border: string, padding: nu
       </tr>`;
   }
 
-  if (item.warranty_service?.length > 0) {
+  if (item?.warranty_service?.length > 0) {
     section +=
       `<tr>
         <td class="sm-inline-block sm-w-1-4 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: ${padding}px; padding-bottom: 20px; vertical-align: top"></td>
@@ -149,7 +149,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
     const padding = hasAdjustents ? 5 : 20;
     const border = !hasAdjustents ? 'border: solid #e9e9e9; border-width: 0px 0px 1px;' : 'border: dotted #e9e9e9; border-width: 0px 0px 0.5px;';
     section +=
-      `<tr>
+      `<tr class="display-none display-table-row">
         <td class="sm-inline-block sm-w-1-4 sm-border-0 sm-pb-0" style="width: 54px; ${border} padding-top: 20px; padding-bottom: ${padding}px; vertical-align: top">
           <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;">
         </td>
@@ -157,19 +157,58 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
           <div style="padding: 20px 20px ${padding}px 20px;">
             <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
             <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
-            <ul class="sm-text-12px" style="margin-bottom: 0; margin-top: 4px; list-style-type: none; padding: 0; font-size: 13px">
-              <li class="sm-font-normal sm-text-10px">* IVA incluido</li>
-              <li class="sm-font-normal sm-text-10px">Cantidad: ${lineItem.quantity}</li>
-            </ul>
+            <p class="sm-text-12px" style="margin: 0; font-size: 12px; font-weight: 300; color: #000">Cantidad: ${lineItem.quantity}</p>
           </div>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-w-full sm-border-0" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
+          <br><small>${(lineItem.tax_rate * 100) + '%'} IVA incluido</small>
         </td>
         <td class="sm-inline-block sm-pt-0 sm-clear-both sm-w-full" style="width: 160px; ${border} padding-top: 20px; padding-bottom: ${padding}px; text-align: right; vertical-align: top">
           <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
+          <br><small>${(lineItem.tax_rate * 100) + '%'} IVA incluido</small>
         </td>
       </tr>
+      <thead class="mobile-table-invisible mobile-table-visible" style="width:100%">
+        <tr>
+            <th colspan="2" style="width:54px;border:solid #e9e9e9;border-width:0px 0px 1px;padding-top:20px;padding-bottom:5px;vertical-align:top;text-align:left">
+              Concepto
+            </th>
+        </tr>
+        <tr>
+            <td style="font-family:sans-serif;font-size:14px;width:54px;border-width:0px 0px 1px;padding-top:20px;padding-bottom:20px;vertical-align:top" width="54" valign="top">
+              <img src="` + lineItem.image_url + `" alt style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;"> 
+            </td>
+            <td style="font-family:sans-serif;font-size:14px;border-width:0px 0px 1px;width:160px;vertical-align:top;font-weight:500" width="160" valign="top">
+                <div style="padding:20px 20px 20px 20px">
+                  <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">${lineItem.name} ( ${lineItem.sku_code})</p>
+                  <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Marca: ${lineItem.item?.shipping_category?.name}</p>
+                  <p class="sm-text-12px" style="margin: 0; font-size: 12px; font-weight: 300; color: #000">Cantidad: ${lineItem.quantity}</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2" style="width:54px;border:solid #e9e9e9;border-width:0px 0px 1px 0px;padding-top:20px;padding-bottom:5px;vertical-align:top;text-align:left">
+                Valor unitario</th>
+        </tr>
+        <tr>
+            <td colspan="2" style="font-family:sans-serif;font-size:14px;width:160px;border-width:0px 0px 1px;padding-top:20px;padding-bottom:20px;text-align:right;vertical-align:top;text-align:left" width="160" align="left" valign="top">
+            <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_unit_amount}</b>
+            <br><small>${(lineItem.tax_rate * 100) + '%'} IVA incluido</small>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2" style="width:54px;border:solid #e9e9e9;border-width:0px 0px 1px;padding-top:20px;padding-bottom:5px;vertical-align:top;text-align:left">
+                Valor total
+            </th>
+        </tr>     
+        <tr>
+            <td colspan="2" style="font-family:sans-serif;font-size:14px;width:160px;border-width:0px 0px 1px;padding-top:20px;padding-bottom:20px;text-align:right;vertical-align:top;text-align:left" width="160" align="left" valign="top">
+              <b class="sm-font-normal" style="font-weight: 700; color: #113455">${lineItem.formatted_total_amount}</b>
+              <br><small>${(lineItem.tax_rate * 100) + '%'} IVA incluido</small>
+            </td>
+        </tr>                                            
+      </thead>
       ${productAdjustments(lineItem, border, padding)}`;
   });
 
@@ -180,7 +219,7 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
         `<tr>
           <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; vertical-align: top"></td>
           <td class="sm-inline-block sm-w-2-4 sm-px-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding: 20px; vertical-align: top; font-weight: 500">
-            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${idx+1} - ${shipment?.shipping_method?.name}</p>
+            <p class="sm-text-12px sm-font-normal" style="margin: 0; font-size: 16px; font-weight: 500; color: #000">Envío ${idx + 1} - ${shipment?.shipping_method?.name}</p>
           </td>
           <td class="sm-inline-block sm-w-0 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top"></td>
           <td class="sm-inline-block sm-clear-both sm-w-2-4 sm-border-0" style="width: 160px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 20px; text-align: right; vertical-align: top">
@@ -283,21 +322,33 @@ const bodySection = (status: string, order: IOrderExtended, line_items: ILineIte
                         </td>
                       </tr>
                     </table>
-                    ${orderStatus.additionalText ? '<div><small>' + orderStatus.additionalText + '</small></div>' : ''}
+                    ${orderStatus.additionalText ? '<div style="text-align: justify;"><small>' + orderStatus.additionalText + '</small></div>' : ''}
                   </td>
                 </tr>
                 ${customerSection(order, orderStatus.showPaymentInfo)}
                 <tr>
-                  <td style="padding-left: 16px; padding-right: 16px;">
-                    <h3 style="margin: 0; font-size: 20px; color: #113455">
+                  <td style="padding-left: 24px; padding-right: 24px;">
+                    <h3 style="margin: 0; font-size: 20px; color: #113455;">
                       Detalle de tu pedido
                     </h3>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 0 24px 24px 24px">
-                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
-                      ${productsSection(line_items, shipments)}
+                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation" class="display-table display-none">
+                      <thead>
+                        <tr>
+                          <th colspan="2" class="sm-inline-block sm-w-1-4 sm-border-0 sm-pb-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 5px; vertical-align: top; text-align: left;">Concepto</th>
+                          <th class="sm-inline-block sm-w-1-4 sm-border-0 sm-pb-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 5px; vertical-align: top; text-align: right;">Valor unitario</th>
+                          <th class="sm-inline-block sm-w-1-4 sm-border-0 sm-pb-0" style="width: 54px; border: solid #e9e9e9; border-width: 0px 0px 1px; padding-top: 20px; padding-bottom: 5px; vertical-align: top; text-align: right;">Valor total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${productsSection(line_items, shipments)}
+                      </tbody>
+                    </table>
+                    <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation" class="mobile-table-invisible mobile-table-visible">
+                        ${productsSection(line_items, shipments)}
                     </table>
                     <div style="margin-top: 20px; border-radius: 8px; background-color: #EDF5FF; padding: 10px 16px; text-align: center; font-weight: 700; color: #113455">
                       TOTAL <span style="margin-left: 12px;">${formatted_total_amount}</span>
@@ -429,6 +480,27 @@ const header = (title: string) => {
               }
             }
         </style>
+        <style media="screen and (min-width:900px)">
+        .display-table {
+          display: table !important;
+        }
+        .mobile-table-invisible {
+          display: none !important;
+        }
+        .display-table-row { 
+          display: table-row !important;
+        }
+      </style>
+      <style type="text/css">
+          @media only screen and (max-width:900px) {
+              .display-none {
+                  display: none !important;
+              }
+              .mobile-table-visible {
+                  display: table !important;
+              }
+          }
+      </style>
         </head>
         <body style="margin: 0; width: 100%; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word">
             <div role="article" aria-roledescription="email" aria-label lang="en">
