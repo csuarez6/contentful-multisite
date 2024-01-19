@@ -13,7 +13,7 @@ const CookieModal: React.FC<ICookieModal> = ({
   onClose = () => null,
   mainText,
 }) => {
-  const [testCookie, setTestCookie] = useState(null);
+  const [testCookie, setTestCookie] = useState("noCookie");
   const setCookies = () => {
     const cookie = Cookies.get("cookie_policy");
     setTestCookie(cookie);
