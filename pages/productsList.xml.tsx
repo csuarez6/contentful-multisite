@@ -27,7 +27,8 @@ const consolideEntriesWithLocales = async (entries: Array<any>) => {
             'g:image_link': escapeXml(entry.promoImage.url),
             'g:availability': availability ? 'in_stock' : 'out_of_stock',
             'g:price': price + ' ' + productInfo.currency_code,
-            'g:brand': escapeXml(productInfo.brand)
+            'g:brand': escapeXml(productInfo.brand),
+            'g:identifier_exists': false
           });
       }
     } catch (error) {
