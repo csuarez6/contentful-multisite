@@ -28,11 +28,9 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
     return validate === true;
   });
 
-  // Check if the user's IP is not allowed
   if (!IpValidate && (enviromentVercel === "production" || enviromentVercel === "qualitycontrol")) {
-    // block access
-    const res = new NextResponse(null, { status: 403 })
-    res.headers.set("x-middleware-refresh", "1")
+    const res = new NextResponse(null, { status: 403 });
+    res.headers.set("x-middleware-refresh", "1");
     return res;
   }
 }
@@ -52,21 +50,18 @@ function getIpRangeFromAddressAndNetmask(str) {
   if (!/\d+\.\d+\.\d+\.\d+/.test(part[1])) {
     // part[1] has to be between 0 and 32
     netmaskblocks = ("1".repeat(parseInt(part[1], 10)) + "0".repeat(32 - parseInt(part[1], 10))).match(/.{1,8}/g);
-    netmaskblocks = netmaskblocks?.map(function (el) { return parseInt(el, 2); });
+    netmaskblocks = netmaskblocks?.map(function (el: any) { return parseInt(el, 2); });
   } else {
     // xxx.xxx.xxx.xxx
-    netmaskblocks = part[1]?.split('.').map(function (el) { return parseInt(el, 10) });
+    netmaskblocks = part[1]?.split('.').map(function (el: any) { return parseInt(el, 10); });
   }
   // invert for creating broadcast address (highest address)
-  const invertedNetmaskblocks = netmaskblocks?.map(function (el) { return el ^ 255; });
-  const baseAddress = ipaddress?.map(function (block, idx) { return block & netmaskblocks[idx]; });
-  const broadcastaddress = baseAddress?.map(function (block, idx) { return block | invertedNetmaskblocks[idx]; });
+  const invertedNetmaskblocks = netmaskblocks?.map(function (el: any) { return el ^ 255; });
+  const baseAddress = ipaddress?.map(function (block: any, idx: any) { return block & netmaskblocks[idx]; });
+  const broadcastaddress = baseAddress?.map(function (block: any, idx: any) { return block | invertedNetmaskblocks[idx]; });
   return [baseAddress?.join('.'), broadcastaddress?.join('.')];
 }
 
-// // See "Matching Paths" below to learn more
 export const config = {
   matcher: ['/:path*']
 };
-// matcher: ['/dashboard/:path*', '/acceso', '/forgotpassword', '/registro', '/']
-// ***********

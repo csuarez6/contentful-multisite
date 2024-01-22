@@ -14,6 +14,8 @@ const CookieModal: React.FC<ICookieModal> = ({
   mainText,
 }) => {
   const [testCookie, setTestCookie] = useState("noCookie");
+  const expireDate = new Date();
+  expireDate.setFullYear(expireDate.getFullYear() + 10);
   const setCookies = () => {
     const cookie = Cookies.get("cookie_policy");
     setTestCookie(cookie);
@@ -25,7 +27,7 @@ const CookieModal: React.FC<ICookieModal> = ({
 
   const handleClose = () => {
     const cookie = Cookies.set("cookie_policy", "yes", {
-      expires: Infinity,
+      expires: expireDate
     });
     setTestCookie(cookie);
     onClose();
