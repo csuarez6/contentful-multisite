@@ -5,7 +5,6 @@ import { GetServerSideProps } from "next";
 
 const domain = process.env.DEFAULT_DOMAIN;
 
-// Default export to prevent next.js errors
 const ProductListXML: React.FC = () => {
   return null;
 };
@@ -19,17 +18,17 @@ const consolideEntriesWithLocales = async (entries: Array<any>) => {
       const price = isGasAppliance(entry.marketId) ? productInfo?._priceGasodomestico : productInfo?._priceVantiListo;
       if (productInfo && productInfo.name && price && entry.urlPaths && entry.promoImage) {
         const availability = isAvailableGasAppliance(entry?.marketId, productInfo?._priceGasodomestico, productInfo?.productsQuantityGasodomestico) ? true : isAvailableVantilisto(entry?.marketId, productInfo?._priceVantiListo, productInfo?.productsQuantityVantiListo) ? true : false;
-          consolidatedEntries.push({
-            'g:id': entry.sku,
-            'g:title': escapeXml(productInfo.name),
-            'g:description': escapeXml(productInfo.description),
-            'g:link': escapeXml(domain + entry.urlPaths[0]),
-            'g:image_link': escapeXml(entry.promoImage.url),
-            'g:availability': availability ? 'in_stock' : 'out_of_stock',
-            'g:price': price + ' ' + productInfo.currency_code,
-            'g:brand': escapeXml(productInfo.brand),
-            'g:identifier_exists': false
-          });
+        consolidatedEntries.push({
+          'g:id': entry.sku,
+          'g:title': escapeXml(productInfo.name),
+          'g:description': escapeXml(productInfo.description),
+          'g:link': escapeXml(domain + entry.urlPaths[0]),
+          'g:image_link': escapeXml(entry.promoImage.url),
+          'g:availability': availability ? 'in_stock' : 'out_of_stock',
+          'g:price': price + ' ' + productInfo.currency_code,
+          'g:brand': escapeXml(productInfo.brand),
+          'g:identifier_exists': 'false'
+        });
       }
     } catch (error) {
       console.error("Error consolideEntriesWithLocales: ", error);
@@ -63,21 +62,6 @@ const buildProductListXML = (fields: Array<any>): string => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const pageEntries = await getProductsSlugs({ limit: 5000 }, false);
-  const pageEntriesArr = await consolideEntriesWithLocales(pageEntries);
-  const consolidatedEntries = [...pageEntriesArr];
-
-  res.setHeader("Cache-Control", "s-maxage=84600, stale-while-revalidate");
-  res.setHeader("Content-Type", "text/xml");
-  res.write(buildProductListXML(consolidatedEntries));
-  res.end();
-
-  return {
-    props: {},
-  };
-};
-
 const escapeXml = (str: string): string => {
   if (str) {
     return str.replace(/[<>&'"]/g, (char) => {
@@ -92,6 +76,21 @@ const escapeXml = (str: string): string => {
     });
   }
   return str;
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+  const pageEntries = await getProductsSlugs({ limit: 5000 }, false);
+  const pageEntriesArr = await consolideEntriesWithLocales(pageEntries);
+  const consolidatedEntries = [...pageEntriesArr];
+
+  res.setHeader("Cache-Control", "s-maxage=84600, stale-while-revalidate");
+  res.setHeader("Content-Type", "text/xml");
+  res.write(buildProductListXML(consolidatedEntries));
+  res.end();
+
+  return {
+    props: {},
+  };
 };
 
 export default ProductListXML;
