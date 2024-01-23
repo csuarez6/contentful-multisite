@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { serverRuntimeConfig } from 'next.config.js';
 
 type Site = {
   domain: string
@@ -45,49 +46,31 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
 
   const domain = request.headers.get("host");
   const path = request.nextUrl.pathname;
-
-  const siteList : SiteList = [
+  const defaultSiteList = [
     {
-      domain: "www.vantilisto.com",
-      root_path: "/vantilisto",
+      is_default_site: true,
+      domain: "localhost",
+      root_path: "/",
       site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)"
-    },
-    {
-      domain: "www.grupovanti.com",
-      root_path: "/grupovanti",
-      site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)",
-      is_default_site: true
     }
   ];
 
-  // try {
+  const siteList : SiteList = serverRuntimeConfig?.siteList ?? defaultSiteList;
+
+  try {
     for (const site of siteList) {
       if((domain.match(site.domain) !== null) || site?.is_default_site === true){
-        console.info("B9. Entro al primer condicional y se tomará como referencia el site:", site);
         if(path.match(site.site_paths)){
-          console.info("B9. Entro al segundo condicional de path");
           const newUrl = `${site.root_path}${path}`;
-          console.info("(B8) The newUrl is:", newUrl);
           return NextResponse.rewrite(new URL(newUrl, request.url));
         }
         break;
       }    
     }
-  // } catch (error) {
-  //   console.error("An error has ocurred in the middleware rewriter, more details:", error);
-  // }
+  } catch (error) {
+    console.error("An error has ocurred in the middleware rewriter, more details:", error);
+  }
 
-  // if(domain ==  && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null){
-  //   const rootSite = "/vantilisto";
-  //   const newUrl = `${rootSite}${path}`;
-  //   console.info("(B5) The newUrl es:", newUrl);
-  //   return NextResponse.rewrite(new URL(newUrl, request.url));
-  // } else if(domain == "www.grupovanti.com" && path.match("^/((?!api|_next/static|_next/image|favicon.ico).*)") !== null) {
-  //   const rootSite = "/grupovanti";
-  //   const newUrl = `${rootSite}${path}`;
-  //   console.info("(B5) The newUrl es:", newUrl);
-  //   return NextResponse.rewrite(new URL(newUrl, request.url));
-  // }
 }
 
 function ipToInt32(ip: any) {

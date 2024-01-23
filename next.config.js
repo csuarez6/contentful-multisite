@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { withSentryConfig } = require("@sentry/nextjs");
-const isProduction = false;
-
-const nextConfig = {
+module.exports = {
   reactStrictMode: false,
   experimental: {
     allowMiddlewareResponseBody: true,
@@ -105,6 +102,21 @@ const nextConfig = {
     NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID:
       process.env.NEXT_PUBLIC_COMMERCELAYER_VANTILISTO_MARKET_ID,
   },
+  serverRuntimeConfig: {
+    siteList: [
+      {
+        domain: "www.vantilisto.com",
+        root_path: "/vantilisto",
+        site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)"
+      },
+      {
+        domain: "www.grupovanti.com",
+        root_path: "/grupovanti",
+        site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)",
+        is_default_site: true
+      }
+    ]
+  },
   staticPageGenerationTimeout: 300,
   i18n: {
     locales: ["es"],
@@ -189,17 +201,3 @@ const nextConfig = {
     return headers;
   },
 };
-
-if (isProduction) {
-  nextConfig["sentry"] = {
-    hideSourceMaps: true,
-  };
-}
-
-const sentryWebpackPluginOptions = {
-  silent: true,
-};
-
-module.exports = isProduction
-  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
-  : nextConfig;
