@@ -1,7 +1,7 @@
 import { QueryParamsRetrieve } from "@commercelayer/sdk";
 
 export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
-    include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_method", "payment_source", "transactions", "captures" ,"voids"],
+    include: ["line_items", "market", "market.price_list", "line_items.item", "line_items.item.shipping_category", "available_payment_methods", "authorizations", "customer", "shipments", "shipments.shipping_method", "billing_address", "shipping_address", "payment_method", "payment_source", "transactions", "captures", "voids"],
     fields: {
         orders: [
             "number",
@@ -17,12 +17,15 @@ export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
             "shipping_address",
             "formatted_total_amount",
             "total_amount_float",
+            "total_tax_amount_float",
+            "total_taxable_amount_float",
             "approved_at",
             "market",
             "available_payment_methods",
             "payment_source",
             "payment_method",
             "payment_status",
+            "tax_rate",
             "transactions",
             "captures",
             "voids",
@@ -44,12 +47,14 @@ export const DEFAULT_ORDER_PARAMS: QueryParamsRetrieve = {
             "name",
             "sku_code",
             "quantity",
+            "formatted_tax_amount",
             "formatted_unit_amount",
             "formatted_total_amount",
             "unit_amount_cents",
             "total_amount_cents",
             "total_amount_float",
-            "item"
+            "item",
+            "tax_rate"
         ],
         markets: [
             "name",

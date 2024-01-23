@@ -1,15 +1,23 @@
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
+import { MARKETPLACE_SLUG } from "@/constants/url-paths.constants";
 import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import { classNames } from "@/utils/functions";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const HelpButton: React.FC<INavigation> = (props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<boolean>(true);
-  const { promoTitle, mainText, secondaryText, mainNavCollection } = props;
+  const { promoTitle, mainText, secondaryText, mainNavCollection, secondaryNavCollection } = props;
+  
+  const { asPath } = useRouter();
+  const firstPath = asPath.split("/")?.[1];
+  
   if (!props) return;
+
+  const navColletion = firstPath == MARKETPLACE_SLUG ? secondaryNavCollection : mainNavCollection;
 
   return (
     <div className="hidden md:block fixed bottom-[60px] right-[60px] z-50">
@@ -50,9 +58,9 @@ const HelpButton: React.FC<INavigation> = (props) => {
           </div>
           {open && (
             <div className="w-60">
-              {mainNavCollection?.items?.length > 0 && (
+              {navColletion?.items?.length > 0 && (
                 <div className="grid grid-cols-2 gap-4">
-                  {mainNavCollection.items.map((item) => (
+                  {navColletion.items.map((item) => (
                     (item?.internalLink || item?.externalLink) && (
                       <CustomLink
                         linkClassName="transition bg-neutral-90 text-blue-dark hover:bg-blue-dark hover:text-white rounded-lg p-4"

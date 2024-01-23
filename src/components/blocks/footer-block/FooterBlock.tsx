@@ -7,10 +7,13 @@ import { INavigation } from "@/lib/interfaces/menu-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon from "@/components/atoms/icon/Icon";
 import CookieModal from '@/components/organisms/cookie-modal/CookieModal';
+import { useRouter } from 'next/router';
+import { MARKETPLACE_SLUG } from '@/constants/url-paths.constants';
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
   promoTitle,
+  mainText,
   secondaryText,
   promoImage,
   mainNavCollection,
@@ -30,6 +33,10 @@ const FooterBlock: React.FC<INavigation> = ({
       open: !newPanel.open
     });
   };
+
+  const { asPath } = useRouter();
+  const firstPath = asPath.split("/")?.[1];
+  
   return (
     <footer
       id="footer"
@@ -182,12 +189,12 @@ const FooterBlock: React.FC<INavigation> = ({
             ))}
           </ul>
           <hr className="min-w-[100vw] -mx-[50vw] border-t-[0.5px] border-neutral-70 hidden md:block" />
-          <div className="pt-[17px] md:pt-10 flex flex-col sm:flex-row justify-between gap-[30px] items-center">
+          <div className="pt-[17px] md:pt-10 flex flex-col sm:flex-row justify-between gap-[30px] items-center md:items-start">
             <div className="text-sm md:text-size-p2 text-white text-center md:text-start leading-none">
-              {documentToReactComponents(secondaryText?.json)}
+              {documentToReactComponents(firstPath == MARKETPLACE_SLUG ? secondaryText?.json : mainText?.json)}
             </div>
-            {promoImage && (
-              <a className="w-[248px] md:w-[311px] mt-1 shrink-0 -mr-[7px]" href='https://www.sic.gov.co/' target='_blank' title='Superintendencia de Industria y Comercio' rel="noreferrer">
+            {(promoImage && firstPath == MARKETPLACE_SLUG) && (
+              <a className="w-[248px] md:mb-24 md:w-[311px] shrink-0 -mr-[7px]" href='https://www.sic.gov.co/' target='_blank' title='Superintendencia de Industria y Comercio' rel="noreferrer">
                 <figure className="relative w-full">
                   <Image
                     src={promoImage.url}

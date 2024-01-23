@@ -1,7 +1,7 @@
 import { PaymentStatus } from '@/lib/enum/EPaymentStatus.enum';
 import { DEFAULT_ORDER_PARAMS } from '@/lib/graphql/order.gql';
 import { IP2PFields, IP2PPayment, IP2PPerson, IP2PRequest, IP2PRequestInformation, P2PDisplayOnFields, P2PRequestStatus } from '@/lib/interfaces/p2p-cf-interface';
-import { getCLAdminCLient, getNameQuantityOrderItems,  isExternalPayment } from '@/lib/services/commerce-layer.service';
+import { getCLAdminCLient, getNameQuantityOrderItems, isExternalPayment } from '@/lib/services/commerce-layer.service';
 import { createP2PRequest, getP2PRequestInformation } from '@/lib/services/place-to-pay.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -28,6 +28,14 @@ const handler = async (
                 }
             };
 
+            if (order.total_tax_amount_float > 0) {
+                payment.amount.taxes = [{
+                    'kind': 'valueAddedTax',
+                    'amount': order.total_tax_amount_float,
+                    'base': order.total_taxable_amount_float
+                }];
+            }
+
             const extraFields: IP2PFields[] = [
                 {
                     'keyword': 'Número de orden',
@@ -35,6 +43,16 @@ const handler = async (
                     'displayOn': P2PDisplayOnFields.both
                 }
             ];
+
+            if (order.tax_rate) {
+                extraFields.push(
+                    {
+                        'keyword': 'Tax Percent',
+                        'value': (order.tax_rate * 100) + '%',
+                        'displayOn': P2PDisplayOnFields.none
+                    }
+                );
+            }
 
             const buyer: IP2PPerson = {
                 'email': order.customer_email
@@ -93,13 +111,13 @@ const handler = async (
 
             if (order.payment_status !== PaymentStatus.paid && order.payment_status !== PaymentStatus.voided) {
                 const metadata = authorization.metadata.p2pNotificationResponse = response;
-    
+
                 if (response.status.status === P2PRequestStatus.approved) {
                     await client.orders.update({
                         id: order.id,
                         _approve: true,
                     });
-    
+
                     await client.authorizations.update({
                         id: authorization.id,
                         _capture: true,
@@ -110,7 +128,7 @@ const handler = async (
                         id: order.id,
                         _approve: true,
                     });
-    
+
                     await client.authorizations.update({
                         id: authorization.id,
                         _void: true,

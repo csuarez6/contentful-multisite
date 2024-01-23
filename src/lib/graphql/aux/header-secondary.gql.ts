@@ -1,8 +1,12 @@
 import AuxNavigationMainFragment from "../fragments/aux-navigation-main.fragment";
 import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
+import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-minimal.fragment";
+import PageMinimalFragment from "../fragments/page-minimal.fragment";
 
 export const HeaderSecondaryFragments = `
   ${AuxNavigationMainFragment}
+  ${AuxCustomContentMinimalFragment}
+  ${PageMinimalFragment}
 `;
 
 export const HeaderSecondaryQuery = `
@@ -25,6 +29,12 @@ export const HeaderSecondaryQuery = `
             ...AuxNavigationMainFragment
           }
         }
+        utilityNavCollection(limit: 5) {
+          items {
+            ...PageMinimalFragment
+            ...AuxCustomContentMinimalFragment
+          }
+        }
         mainText {
           ${RichtextQuery}
         }
@@ -33,6 +43,12 @@ export const HeaderSecondaryQuery = `
         }
         ${internalLink}
       }
+    }
+  }
+  utilityNavCollection(limit: 5) {
+    items {
+      ...PageMinimalFragment
+      ...AuxCustomContentMinimalFragment
     }
   }
   backgroundColor

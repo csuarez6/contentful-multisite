@@ -1,12 +1,5 @@
-import AuxCustomContentMinimalFragment from "../fragments/aux-custom-content-minimal.fragment";
-import PageMinimalFragment from "../fragments/page-minimal.fragment";
 import { AssetImageQuery } from "../shared/asset.gql";
 import DefaultQuery, { RichtextQuery, internalLink } from "../shared/default.gql";
-
-export const HeaderMainFragments = `
-  ${PageMinimalFragment}
-  ${AuxCustomContentMinimalFragment}
-`;
 
 const HeaderMainQuery = `
   ${DefaultQuery}
@@ -31,12 +24,6 @@ const HeaderMainQuery = `
       ... on AuxNavigation {
         ${DefaultQuery}
       }
-    }
-  }
-  utilityNavCollection(limit: 10) {
-    items {
-      ...PageMinimalFragment
-      ...AuxCustomContentMinimalFragment
     }
   }
   mainText {

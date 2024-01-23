@@ -27,6 +27,7 @@ import { classNames } from "@/utils/functions";
 const CustomPage: NextPageWithLayout = (props: any) => {
   const { name, promoTitle, blocksCollection, content, enableHeaderPrecedence, showHeader, __typename, sys } = props;
   const __Breadcrumbs = getBreadcrumbs(props);
+
   return (
     <div className={classNames(
       "flex",

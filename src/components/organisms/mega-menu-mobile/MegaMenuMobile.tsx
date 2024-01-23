@@ -189,26 +189,6 @@ const NavList = ({
               : null,
         }}
       >
-        {level == 1 && (
-          <div className="flex flex-col gap-3 my-4">
-            <CustomLink
-              // content={{ urlPaths: ["/registro"] }}
-              content={{ externalLink: "https://mi.grupovanti.com/registro" }}
-              className="!block text-center button button-primary"
-              onClick={() => close()}
-            >
-              Regístrate
-            </CustomLink>
-            <CustomLink
-              // content={{ urlPaths: ["/acceso"] }}
-              content={{ urlPaths: ["/tramites-y-ayuda/oficina-virtual"] }}
-              className="!block text-center button button-outline"
-              onClick={() => close()}
-            >
-              Inicia sesión
-            </CustomLink>
-          </div>
-        )}
         {items?.map((item) => (
           <NavItem
             key={`${item?.sys?.id}-lv${lv}`}

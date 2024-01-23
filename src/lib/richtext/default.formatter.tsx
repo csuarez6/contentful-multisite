@@ -70,17 +70,15 @@ const defaultFormatOptions: Options = {
     [BLOCKS.EMBEDDED_ASSET]: (node) => {
       const { url, title, description, width, height } = node.data.target;
       return url ? (
-        <>
-          <figure className="w-full mt-10 mb-4 block text-center">
-            <Image
-              src={url}
-              className="w-auto h-auto max-w-full inline-block"
-              alt={title ?? description}
-              width={width}
-              height={height}
-            />
-          </figure>
-        </>
+        <figure className="w-full mt-10 mb-4 block text-center">
+          <Image
+            src={url}
+            className="w-auto h-auto max-w-full inline-block"
+            alt={title ?? description}
+            width={width}
+            height={height}
+          />
+        </figure>
       ) : null;
     },
     [INLINES.HYPERLINK]: (node, children) => {
@@ -109,7 +107,7 @@ const defaultFormatOptions: Options = {
       );
     },
     [BLOCKS.EMBEDDED_ENTRY]: (node) => {
-      return <div className="mb-4" key={node?.data.target.sys.id}>{jsonToReactComponent(node.data.target)}</div>;
+      return <div className="mb-4" key={`${node?.data.target.sys.id}-EMBEDDED_ENTRY`}>{jsonToReactComponent(node.data.target)}</div>;
     },
     [INLINES.EMBEDDED_ENTRY]: (node) => {
       return (

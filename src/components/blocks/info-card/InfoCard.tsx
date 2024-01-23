@@ -42,9 +42,9 @@ const InfoCardBlock: React.FC<IPromoBlock & IContentFilter> = (props) => {
       {featuredContentsCollection?.items?.length > 0 && (
         <div
           className={classNames(
-            "grid grid-cols-1 gap-5 md:grid-cols-2",
+            "grid grid-cols-1 gap-5 md:grid-cols-"+ (view?.columnsSize ?? "2"),
             view?.alignTitle !== "Centrado" && "lg:col-span-2 lg:grid-cols-2",
-            view?.alignTitle === "Centrado" && "lg:grid-cols-3",
+            view?.alignTitle === "Centrado" && "lg:grid-cols-" + (view?.columnsSize ?? "3"),
             view?.alignTitle === "Centrado" &&
               view?.columnsSize === 4 &&
               "xl:grid-cols-4"
