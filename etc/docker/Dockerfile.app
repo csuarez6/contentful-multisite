@@ -1,5 +1,5 @@
 ##### Building Base image #####
-FROM node:16-alpine as base
+FROM node:18-alpine as base
 
 # Set timezone
 RUN apk add --no-cache tzdata
@@ -204,3 +204,4 @@ ENV NEXT_PUBLIC_ID_COOKIE=$NEXT_PUBLIC_ID_COOKIE
 
 RUN yarn build
 CMD [ "yarn", "start" ]
+
