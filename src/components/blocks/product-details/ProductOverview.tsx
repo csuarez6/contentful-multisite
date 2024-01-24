@@ -103,6 +103,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [showWarranty, setShowWarranty] = useState<boolean>();
   const [showInstallation, setShowInstallation] = useState<boolean>();
   const [widthWidget, setWidthWidget] = useState(null);
+  
+  const [seeMore, setSeeMore] = useState(true);
 
   const orderLocalRef = useRef<LineItem[]>();
   const nextSlideId = `nextSlide_${marketId}`;
@@ -322,7 +324,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     <section className="bg-white section">
       <div className="flex flex-col gap-10 lg:gap-[72px] relative">
         <section className="flex flex-col gap-5 sm:gap-4 lg:flex-row xl:gap-9">
-          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6">
+          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6 lg:gap-9">
             {/* Section - Info product */}
             <div className="flex flex-col lg:hidden">
               {sku && (
@@ -370,7 +372,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             {imagesCollectionLocal?.length > 0 && (
               <Carousel content={imagesCollectionLocal} enableLoop={false} />
             )}
-            <div className="md:w-1/2 lg:mt-[30px] lg:ml-[70px] leading-none">
+            <div className="md:w-1/2 lg:ml-[72px] leading-none">
               <CustomLink
                 className="text-sm underline text-grey-60 !leading-none"
                 content={{
@@ -384,7 +386,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             {/* END Section - Carousel */}
           </div>
           <div className="flex xl:flex-grow">
-            <div className="flex flex-col w-full gap-9">
+            <div className="flex flex-col w-full gap-8">
               <div className="hidden lg:flex flex-col gap-[10.5px]">
                 {sku && (
                   <div className="text-sm text-grey-30">
@@ -427,39 +429,48 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </div>
               {/* Caracteristicas */}
               <div className="w-full flex flex-col-reverse sm:flex-row gap-[22px]">
-                <div className="py-[2px] flex flex-col gap-[32px] lg:w-[43%] shrink-0 sm:w-1/2">
-                  <div className="flex flex-col gap-[14px] bg-slate-50 p-3 rounded-xl">
+                <div className="py-[2px] flex flex-col gap-5 lg:w-[43%] shrink-0 sm:w-1/2">
+                  <div className="flex flex-col gap-[10px] bg-slate-50 p-3 rounded-xl">
                     <h4 className="text-blue-dark">
                       Información a tener en cuenta
                     </h4>
-                    {productFeatures && (
-                      <div className="flex flex-col gap-[5px] text-blue-dark">
-                        {documentToReactComponents(
-                          productFeatures.json,
-                          options
+                    <div>
+                      <div className={seeMore ? "lg:overflow-hidden lg:max-h-[3rem] xl:max-h-[10.5rem]" : ""}>                        {productFeatures && (
+                          <div className="flex flex-col gap-[1.5rem] text-blue-dark">
+                            {documentToReactComponents(
+                              productFeatures.json,
+                              options
+                            )}
+                          </div>
+                        )}
+                        {features && (
+                          <CustomLink
+                            className="underline text-[#035177] text-sm mt-[7px]"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              scrollContent("content-features");
+                            }}
+                            content={{ externalLink: "#" }}
+                          >
+                            Revisa todas las carateristicas
+                          </CustomLink>
                         )}
                       </div>
-                    )}
-                    {features && (
-                      <>
-                        <CustomLink
-                          className="underline text-[#035177] text-sm mt-[7px]"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            scrollContent("content-features");
-                          }}
-                          content={{ externalLink: "#" }}
-                        >
-                          Revisa todas las carateristicas
-                        </CustomLink>
-                      </>
-                    )}
+                      {seeMore && (
+                        <button
+                          className="flex text-blue-dark"
+                          onClick={() => setSeeMore(!seeMore)}
+                          >
+                          ... leer más
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl w-full xl:w-full 2xl:w-full">
                     <p className="text-base md:text-size-subtitle1">
                       Consulta tu Cupo de Financiación Vanti Listo
                     </p>
-                    <div className="flex justify-between pl-[6px]">
+                    <div className="flex justify-between">
                       <CustomLink
                         className="underline text-[#035177] text-sm mt-[7px]"
                         content={{
@@ -479,11 +490,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </figure>
                     </div>
                   </div>
-                  <div className="pl-[11px] pt-1">
-                    <div className="font-medium leading-4 text-blue-dark">
-                      <div>
-                        <p>¿Tienes dudas?</p>
-                      </div>
+                  <div className="pl-[11px]">
+                    <div className="font-medium leading-4 text-blue-dark flex flex-col gap-[10px]">
+                      <p>¿Tienes dudas?</p>
                       <CustomLink
                         content={{
                           urlPaths: [
@@ -495,9 +504,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         Revisa las dudas frecuentes
                       </CustomLink>
                     </div>
-                    <div className="text-sm text-[#424242] font-medium mt-[37px] ml-[-11px]">
-                      <p>*Aclaracion</p>
-                    </div>
+                  </div>
+                  <div className="pl-[11px] text-sm text-[#424242] font-medium">
+                    <p>* Aclaracion</p>
                   </div>
                   <ul className="sm:hidden flex flex-col gap-y-[11px]">
                     {isGasAppliance(marketId) && (

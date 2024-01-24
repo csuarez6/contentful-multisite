@@ -71,7 +71,7 @@ const ProductActions: React.FC<IProductOverviewDetails> = ({
 
   return (
     <>
-      <div className="flex flex-row sm:flex-col gap-4 sm:gap-[22px] sm:pt-[5px] my-5">
+      <div className="flex flex-row sm:flex-col gap-4 sm:gap-5 my-5">
         {
           isAvailableGasAppliance(
             marketId,
