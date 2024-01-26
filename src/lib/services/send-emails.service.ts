@@ -249,7 +249,7 @@ const getOrderStatus = (status: string, order: IOrderExtended) => {
         text: `¡Tu orden ${order.number} ha sido aprobada!`,
         additionalText: `Hemos recibido tu orden de compra y ha sido aprobada.
           Ten en cuenta que nuestra marca aliada realizará posterior a este correo un proceso para contactarte informándote el estado final de tu orden y proceso de entrega.
-          Para hacer seguimiento puedes hacer clic <a href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.
+          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.
           Gracias por comprar con nosotros.
           Disfruta tu compra.`,
         leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
@@ -261,7 +261,7 @@ const getOrderStatus = (status: string, order: IOrderExtended) => {
         text: `¡Tu orden ${order.number} ha sido creada!`,
         additionalText: `Hemos recibido tu orden de compra y estará pendiente de aprobación hasta que se confirme el pago.
           Ten en cuenta que te llegará un correo posterior a este informándote el estado final de tu orden.
-          Para hacer seguimiento puedes hacer clic <a href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
+          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
         leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
         rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`,
         showPaymentInfo: false
