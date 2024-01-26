@@ -36,7 +36,7 @@ const getToken = async () => {
 };
 
 const createCallback = async (body) => {
-  const { type, contractAccount, email, fullName, cellPhone, productName, priceVantiListo, priceGasodomestico, campaign } = body;
+  const { type, contractAccount, email, fullName, cellPhone, productName, priceVantiListo, priceGasodomestico, campaign, callbackId } = body;
   const { typeName, queueId } = getType(type);
   const response = await getToken();
   const { access_token, error } = response;
@@ -82,7 +82,7 @@ const createCallback = async (body) => {
         "cuenta_contrato": contractAccount ?? "",
         "sociedad": "",
         "ticket": "",
-        "oportunidad": "",
+        "oportunidad": callbackId ?? "",
         "mercado": "",
         "servicio": "",
       }

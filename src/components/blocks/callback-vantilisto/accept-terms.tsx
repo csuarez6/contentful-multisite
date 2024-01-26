@@ -11,6 +11,7 @@ import CustomModal from "@/components/organisms/custom-modal/CustomModal";
 
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import { gaEventForm } from "@/utils/ga-events--forms";
+import uuid from 'react-uuid';
 
 const modalBody = (isSuccess, errorMessage, isSuccessEvent, isFailedEvent) => {
   return (
@@ -90,12 +91,14 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
   const onSubmit = () => {
     setErrorMessage('');
     setIsLoading(true);
+    const callbackId = uuid();
 
     fetch('/api/callback', {
       method: 'POST',
       body: JSON.stringify({
         ...{ type: lastPath.split("?")[0] },
         ...formData,
+        callbackId,
         tokenReCaptcha
       }),
       headers: {
@@ -117,7 +120,8 @@ const AcceptTerms = ({ formData, productData, setCurrentStep }) => {
             label: "Catálogo VantiListo",
             contractAccount: formData.contractAccount,
             product: prodName,
-            sku: sku
+            sku: sku,
+            callbackId
           });
         }
 
