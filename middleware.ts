@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { serverRuntimeConfig } from 'next.config.js';
-
-type Site = {
-  domain: string
-  root_path: string,
-  site_paths: string
-  is_default_site?: boolean
-};
-
-type SiteList = Site[];
+import { setUpMultisite } from '@/lib/services/multisite.service';
 
 const enviromentVercel = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const ALLOWED_IPS = [
@@ -44,33 +35,7 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
     return res;
   }
 
-  const domain = request.headers.get("host");
-  const path = request.nextUrl.pathname;
-  const defaultSiteList = [
-    {
-      is_default_site: true,
-      domain: "localhost",
-      root_path: "/",
-      site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)"
-    }
-  ];
-
-  const siteList : SiteList = serverRuntimeConfig?.siteList ?? defaultSiteList;
-
-  try {
-    for (const site of siteList) {
-      if((domain.match(site.domain) !== null) || site?.is_default_site === true){
-        if(path.match(site.site_paths)){
-          const newUrl = `${site.root_path}${path}`;
-          return NextResponse.rewrite(new URL(newUrl, request.url));
-        }
-        break;
-      }    
-    }
-  } catch (error) {
-    console.error("An error has ocurred in the middleware rewriter, more details:", error);
-  }
-
+  return setUpMultisite(request);
 }
 
 function ipToInt32(ip: any) {

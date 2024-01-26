@@ -107,13 +107,11 @@ module.exports = {
       {
         domain: "www.vantilisto.com",
         root_path: "/vantilisto",
-        site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)"
       },
       {
         domain: "www.grupovanti.com",
         root_path: "/grupovanti",
-        site_paths: "^/((?!api|_next/static|_next/image|favicon.ico).*)",
-        is_default_site: true
+        is_default_site: true,
       }
     ]
   },

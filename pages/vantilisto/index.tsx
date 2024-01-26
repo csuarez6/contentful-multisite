@@ -1,5 +1,7 @@
 // import type { ReactElement } from "react";
 import { GetStaticProps } from "next";
+
+import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
 // import PageLayout from "@/components/layouts/page-layout/PageLayout";
@@ -9,13 +11,13 @@ import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID, COOKIES_I
 import getPageContent from "@/lib/services/page-content.service";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 
-const Home: NextPageWithLayout = ({ name, promoTitle }: IPage) => {
+const Home: NextPageWithLayout = ({ name, promoTitle, blocksCollection }: IPage) => {
   return (
     <>
       <h1 className="sr-only">{promoTitle ?? name}</h1>
       <div className="overflow-hidden">
         <div className="main-container">
-          <h1>Esta es la página de Vantilisto</h1>
+          {jsonToReactComponents(blocksCollection.items)}
         </div>
       </div>
     </>
@@ -26,7 +28,7 @@ export const revalidate = 60;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const pageContent = await getPageContent(
-    '/',
+    '/financiacion/inicio',
     context.preview ?? false
   );
 
