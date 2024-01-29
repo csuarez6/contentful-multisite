@@ -588,11 +588,10 @@ const footer = async () => {
                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5; color: #fff;" cellpadding="0" cellspacing="0" role="presentation">
                   <tr>
                     <td class="sm-text-justify sm-inline-block sm-w-full" style="width: 50%; padding-top: 20px; padding-bottom: 20px">
-                      <p>
-                        Todos los derechos reservados Vanti S.A. ESP. - Calle 71A No. 5-38 Bogotá -
-                        Emergencias: 164 - Líneas de Atención al Cliente: Hogar – Comercial 601 – 3078121, Institucionales, Industria y GNV: 601 - 7053256
-                        NIT: 800.007.813-5
-                      </p>
+                      <p>Todos los derechos reservados Vanti Plus S.A.S., sociedad identificada con Nit. 830.062.040-1</p>
+                      <p>Dirección de notificaciones calle 72 # 5-38 de la ciudad de Bogotá D.C</p>
+                      <p>Línea de atención 018000942794 en todo el país</p>
+                      <p>En Bogotá al 6013078121 y en Santander 6076854755</p>
                     </td>
                     <td class="sm-inline-block sm-text-center sm-pt-0 sm-w-full" style="width: 50%; padding-top: 20px; padding-bottom: 20px; text-align: right">
                       <img class="sm-w-48" src="images/logo-industria-comercio.png" alt style="vertical-align: middle; line-height: 1; border: 0; max-width: 100%">
