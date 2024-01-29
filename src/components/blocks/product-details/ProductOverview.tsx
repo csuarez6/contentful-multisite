@@ -322,9 +322,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   };
   return (
     <section className="bg-white section">
-      <div className="flex flex-col gap-10 lg:gap-[72px] relative">
-        <section className="flex flex-col gap-5 sm:gap-4 lg:flex-row xl:gap-9">
-          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6 lg:gap-9">
+      <div className="flex flex-col relative">
+        <section className="flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6 lg:gap-9 pr-9 pb-5 lg:pb-0">
             {/* Section - Info product */}
             <div className="flex flex-col lg:hidden">
               {sku && (
@@ -526,7 +526,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 <div className="hidden sm:flex transition-all grow" id="widget">
                   <div
                     className={classNames(
-                      "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit",
+                      "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit bg-white",
                       itemInfoFixed(width, y)
                     )}
                     id="widgetItem"
@@ -656,12 +656,12 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
         {/* Section - Related products */}
         {relatedProducts?.length > 0 && (
-          <section className="grid section gap-9">
+          <section className="flex flex-col lg:w-[71%] gap-4 border-t border-gray-300 mt-3 sm:mt-8 pt-8">
             <div className="grid text-left gap-9">
-              <h2 className="text-blue-dark">Te puede interesar</h2>
+              <h2 className="text-blue-dark text-3xl">Te puede interesar</h2>
             </div>
-            <div className="grid md:gap-6 md:grid-cols-3">
-              <div className="col-span-3 lg:col-span-2 grid grid-cols-2  md:gap-6">
+            <div className="grid md:gap-6">
+              <div className="col-span-3 lg:col-span-2 grid grid-cols-2 md:gap-6">
                 <div className="grid grid-cols-1 gap-4 col-span-2 h-fit">
                   <div className="flex -mx-1.5">
                     <Swiper
@@ -694,33 +694,34 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       ))}
                     </Swiper>
                   </div>
-                  <div className="flex justify-center gap-6">
-                    <div
-                      id={prevSlideId}
-                      className="w-6 h-6 text-neutral-20 cursor-pointer"
-                    >
-                      <Icon icon="arrow-left" className="w-full h-full" />
+                  {relatedProducts?.length > 1 && (
+                    <div className="flex justify-center gap-6">
+                      <div
+                        id={prevSlideId}
+                        className="w-6 h-6 text-neutral-20 cursor-pointer"
+                      >
+                        <Icon icon="arrow-left" className="w-full h-full" />
+                      </div>
+                      <div
+                        id={nextSlideId}
+                        className="w-6 h-6 text-neutral-20 cursor-pointer"
+                      >
+                        <Icon icon="arrow-right" className="w-full h-full" />
+                      </div>
                     </div>
-                    <div
-                      id={nextSlideId}
-                      className="w-6 h-6 text-neutral-20 cursor-pointer"
-                    >
-                      <Icon icon="arrow-right" className="w-full h-full" />
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
-              <div className="hidden lg:block"></div>
             </div>
           </section>
         )}
         {/* END Section - Related products */}
 
         {/* Section - Main features */}
-        <div className="flex flex-col 2md:w-3/5 gap-y-12">
+        <div className="flex flex-col lg:w-[71%]">
           {features && (
-            <div id="content-features" className="grid col-span-2 gap-9">
-              <h2 className="text-blue-dark">Características principales</h2>
+            <div id="content-features" className="grid col-span-2 gap-4 border-t border-gray-300 mt-8 pt-8">
+              <h2 className="text-blue-dark text-3xl">Características principales</h2>
               <div className="">
                 {documentToReactComponents(
                   attachLinksToRichtextContent(
@@ -736,18 +737,21 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
           {/* Section - promoDescription and  warranty */}
           {(promoDescription || warranty) && (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-gray-300 mt-8 pt-8">
               {promoDescription && (
-                <div className="w-full gap-8">
-                  <h2 className="text-blue-dark">Descripción</h2>
+                <div className="flex flex-col w-full gap-4">
+                  <h2 className="text-blue-dark text-3xl">Descripción</h2>
                   <div className="">
                     {documentToReactComponents(promoDescription.json, options)}
                   </div>
                 </div>
               )}
               {warranty && (
-                <div id="content-warranty" className="w-full gap-8">
-                  <h2 className="text-blue-dark">Garantía</h2>
+                <div id="content-warranty" className={classNames(
+                  "flex flex-col w-full gap-4",
+                  (promoDescription && warranty) ? "pt-8 mt-8 border-t sm:pt-0 sm:mt-0 sm:border-t-0 sm:pl-8 sm:ml-8 sm:border-l border-gray-300" : ""
+                )}>
+                  <h2 className="text-blue-dark text-3xl">Garantía</h2>
                   {documentToReactComponents(
                     warranty.description.json,
                     options
