@@ -5,6 +5,10 @@ import { IP2PRequestInformation, P2PRequestStatus } from "../interfaces/p2p-cf-i
 import { formatDate, getShippingMethods } from "./commerce-layer.service";
 import { OrderStatus } from "../enum/EOrderStatus.enum";
 import { getOrderByAlly } from "./order-by-ally.service";
+import { getNavigation } from "./menu-content.service";
+import { DEFAULT_FOOTER_ID } from "@/constants/contentful-ids.constants";
+
+const HOST = process.env.DEFAULT_DOMAIN;
 
 const customerSection = (order: IOrderExtended, showPaymentInfo: boolean) => {
   const billing_address = order.billing_address?.line_1 + (order.billing_address?.line_2 ? ', ' + order.billing_address?.line_2 : '') + ', ' + order.billing_address?.city + ', ' + order.billing_address?.state_code;
@@ -233,7 +237,6 @@ const productsSection = (items: ILineItemExtended[], shipments: Shipment[]) => {
 };
 
 const getOrderStatus = (status: string, order: IOrderExtended) => {
-  const host = process.env.DEFAULT_DOMAIN;
   switch (status) {
     case "cancelled":
       return {
@@ -249,7 +252,7 @@ const getOrderStatus = (status: string, order: IOrderExtended) => {
         text: `¡Tu orden ${order.number} ha sido aprobada!`,
         additionalText: `Hemos recibido tu orden de compra y ha sido aprobada.
           Ten en cuenta que nuestra marca aliada realizará posterior a este correo un proceso para contactarte informándote el estado final de tu orden y proceso de entrega.
-          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.
+          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${HOST}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.
           Gracias por comprar con nosotros.
           Disfruta tu compra.`,
         leftIcon: `2CMm6DK1EEC1UMlI1gwtid/1c647474524c725ce67fa40e45eceb52/icon-cart.png`,
@@ -261,7 +264,7 @@ const getOrderStatus = (status: string, order: IOrderExtended) => {
         text: `¡Tu orden ${order.number} ha sido creada!`,
         additionalText: `Hemos recibido tu orden de compra y estará pendiente de aprobación hasta que se confirme el pago.
           Ten en cuenta que te llegará un correo posterior a este informándote el estado final de tu orden.
-          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${host}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
+          Para hacer seguimiento puedes hacer clic <a clicktracking="off" href="${HOST}/tienda-virtual/checkout/pse/purchase-order?id=${order.id}">aquí</a>.`,
         leftIcon: `2fKw1I7QFskoK36udjphsC/1b96eade00165bb661d7825f172249cc/icon-cart-pending.png`,
         rightIcon: `3cqEZ5d23rviVAf7UP0Ppc/ea1392943f3f06188e42c03b9cea7117/icon-pending.png`,
         showPaymentInfo: false
@@ -370,137 +373,137 @@ const header = (title: string) => {
     <!DOCTYPE html>
     <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
         <head>
-        <meta charset="utf-8">
-        <meta name="x-apple-disable-message-reformatting">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
-        <meta name="color-scheme" content="light dark">
-        <meta name="supported-color-schemes" content="light dark">
-        <!--[if mso]>
-        <noscript>
-            <xml>
-            <o:OfficeDocumentSettings xmlns:o="urn:schemas-microsoft-com:office:office">
-                <o:PixelsPerInch>96</o:PixelsPerInch>
-            </o:OfficeDocumentSettings>
-            </xml>
-        </noscript>
-        <style>
-            td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
-        </style>
-        <![endif]-->
-        <style>
-            @media (max-width: 600px) {
-              .sm-clear-both {
-                  clear: both !important
+          <meta charset="utf-8">
+          <meta name="x-apple-disable-message-reformatting">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+          <meta name="color-scheme" content="light dark">
+          <meta name="supported-color-schemes" content="light dark">
+          <!--[if mso]>
+          <noscript>
+              <xml>
+              <o:OfficeDocumentSettings xmlns:o="urn:schemas-microsoft-com:office:office">
+                  <o:PixelsPerInch>96</o:PixelsPerInch>
+              </o:OfficeDocumentSettings>
+              </xml>
+          </noscript>
+          <style>
+              td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
+          </style>
+          <![endif]-->
+          <style>
+              @media (max-width: 600px) {
+                .sm-clear-both {
+                    clear: both !important
+                }
+                .sm-mb-2 {
+                    margin-bottom: 8px !important
+                }
+                .sm-mt-4 {
+                    margin-top: 16px !important
+                }
+                .sm-inline-block {
+                    display: inline-block !important
+                }
+                .sm-w-0 {
+                    width: 0% !important
+                }
+                .sm-w-1-4 {
+                    width: 25% !important
+                }
+                .sm-w-2-4 {
+                    width: 50% !important
+                }
+                .sm-w-3-4 {
+                    width: 75% !important
+                }
+                .sm-w-36 {
+                    width: 144px !important
+                }
+                .sm-w-48 {
+                    width: 192px !important
+                }
+                .sm-w-5 {
+                    width: 20px !important
+                }
+                .sm-h-5 {
+                    height: 20px !important
+                }
+                .sm-w-6 {
+                    width: 24px !important
+                }
+                .sm-h-6 {
+                    height: 24px !important
+                }
+                .sm-w-full {
+                    width: 100% !important
+                }
+                .sm-border-0 {
+                    border-width: 0px !important
+                }
+                .sm-p-4 {
+                    padding: 16px !important
+                }
+                .sm-px-0 {
+                    padding-left: 0 !important;
+                    padding-right: 0 !important
+                }
+                .sm-pb-4 {
+                    padding-bottom: 16px !important
+                }
+                .sm-pb-0 {
+                    padding-bottom: 0 !important
+                }
+                .sm-pt-0 {
+                    padding-top: 0 !important
+                }
+                .sm-pt-4 {
+                    padding-top: 16px !important
+                }
+                .sm-text-center {
+                    text-align: center !important
+                }
+                .sm-text-justify {
+                    text-align: justify !important
+                }
+                .sm-text-12px {
+                    font-size: 12px !important
+                }
+                .sm-text-10px {
+                    font-size: 10px !important
+                }
+                .sm-text-16px {
+                    font-size: 16px !important
+                }
+                .sm-text-20px {
+                    font-size: 20px !important
+                }
+                .sm-font-normal {
+                    font-weight: 400 !important
+                }
               }
-              .sm-mb-2 {
-                  margin-bottom: 8px !important
-              }
-              .sm-mt-4 {
-                  margin-top: 16px !important
-              }
-              .sm-inline-block {
-                  display: inline-block !important
-              }
-              .sm-w-0 {
-                  width: 0% !important
-              }
-              .sm-w-1-4 {
-                  width: 25% !important
-              }
-              .sm-w-2-4 {
-                  width: 50% !important
-              }
-              .sm-w-3-4 {
-                  width: 75% !important
-              }
-              .sm-w-36 {
-                  width: 144px !important
-              }
-              .sm-w-48 {
-                  width: 192px !important
-              }
-              .sm-w-5 {
-                  width: 20px !important
-              }
-              .sm-h-5 {
-                  height: 20px !important
-              }
-              .sm-w-6 {
-                  width: 24px !important
-              }
-              .sm-h-6 {
-                  height: 24px !important
-              }
-              .sm-w-full {
-                  width: 100% !important
-              }
-              .sm-border-0 {
-                  border-width: 0px !important
-              }
-              .sm-p-4 {
-                  padding: 16px !important
-              }
-              .sm-px-0 {
-                  padding-left: 0 !important;
-                  padding-right: 0 !important
-              }
-              .sm-pb-4 {
-                  padding-bottom: 16px !important
-              }
-              .sm-pb-0 {
-                  padding-bottom: 0 !important
-              }
-              .sm-pt-0 {
-                  padding-top: 0 !important
-              }
-              .sm-pt-4 {
-                  padding-top: 16px !important
-              }
-              .sm-text-center {
-                  text-align: center !important
-              }
-              .sm-text-justify {
-                  text-align: justify !important
-              }
-              .sm-text-12px {
-                  font-size: 12px !important
-              }
-              .sm-text-10px {
-                  font-size: 10px !important
-              }
-              .sm-text-16px {
-                  font-size: 16px !important
-              }
-              .sm-text-20px {
-                  font-size: 20px !important
-              }
-              .sm-font-normal {
-                  font-weight: 400 !important
-              }
+            </style>
+            <style media="screen and (min-width:900px)">
+            .display-table {
+              display: table !important;
             }
-        </style>
-        <style media="screen and (min-width:900px)">
-        .display-table {
-          display: table !important;
-        }
-        .mobile-table-invisible {
-          display: none !important;
-        }
-        .display-table-row { 
-          display: table-row !important;
-        }
-      </style>
-      <style type="text/css">
-          @media only screen and (max-width:900px) {
-              .display-none {
-                  display: none !important;
+            .mobile-table-invisible {
+              display: none !important;
+            }
+            .display-table-row { 
+              display: table-row !important;
+            }
+          </style>
+          <style type="text/css">
+              @media only screen and (max-width:900px) {
+                  .display-none {
+                      display: none !important;
+                  }
+                  .mobile-table-visible {
+                      display: table !important;
+                  }
               }
-              .mobile-table-visible {
-                  display: table !important;
-              }
-          }
-      </style>
+          </style>
         </head>
         <body style="margin: 0; width: 100%; padding: 0; -webkit-font-smoothing: antialiased; word-break: break-word">
             <div role="article" aria-roledescription="email" aria-label lang="en">
@@ -514,8 +517,8 @@ const header = (title: string) => {
                         <table style="width: 100%;" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
                             <td class="sm-text-center sm-w-full sm-inline-block" style="width: 50%; vertical-align: middle">
-                                <a href="#">
-                                <img class="sm-w-36" src="https://images.ctfassets.net/3brzg7q3bvg1/4Yucd7ptLlvZx6WAEwdwIt/2e2e7b9505f63c9c1ca6bcf79c4de353/logo-vanti.png" alt="Vanti" style="vertical-align: middle; line-height: 1; border: 0; max-width: 100%">
+                                <a clicktracking="off" href="${HOST}">
+                                  <img class="sm-w-36" src="https://images.ctfassets.net/3brzg7q3bvg1/4Yucd7ptLlvZx6WAEwdwIt/2e2e7b9505f63c9c1ca6bcf79c4de353/logo-vanti.png" alt="Vanti" style="vertical-align: middle; line-height: 1; border: 0; max-width: 100%">
                                 </a>
                             </td>
                             <td class="sm-text-center sm-w-full sm-inline-block" style="width: 50%; text-align: right; vertical-align: middle">
@@ -535,8 +538,16 @@ const header = (title: string) => {
                 </tr>`;
 };
 
-const footer = `
-    <tr>
+const footer = async () => {
+  const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, false);
+
+  const socialMediaIcons = [];
+  footerInfo.secondaryNavCollection?.items?.map((secondaryNav: { externalLink: string, promoIcon: string }) => {
+    socialMediaIcons[secondaryNav.promoIcon] = secondaryNav.externalLink;
+  });
+
+  return `
+      <tr>
         <td style="width: 760px; max-width: 100%; background: url(https://images.ctfassets.net/3brzg7q3bvg1/3VlVtKTosyC8SeUuXLriJq/6320c94f66058eb3a84f26f529e6811e/bg.png) left top / cover #0e337b;">
           <table style="margin: auto;" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
@@ -544,24 +555,24 @@ const footer = `
                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5; color: #fff" cellpadding="0" cellspacing="0" role="presentation">
                   <tr>
                     <td class="sm-inline-block sm-w-full sm-text-center sm-px-0 sm-pb-4" style="width: 50%; border-width: 0px; padding-top: 48px; padding-bottom: 48px">
-                      <a href="#" style="margin: 8px; display: inline-block; text-decoration-line: none">
+                      <a clicktracking="off" href="${socialMediaIcons['facebook'] ?? '#'}" style="margin: 8px; display: inline-block; text-decoration-line: none">
                         <img src="https://images.ctfassets.net/3brzg7q3bvg1/2f2DQeLCzYKKhf06Q4oF0Q/624bec280fd1d2611b0bacdfbcbd42e9/icono-facebook.png" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;" alt="">
                       </a>
-                      <a href="#" style="margin: 8px; display: inline-block; text-decoration-line: none;">
+                      <a clicktracking="off" href="${socialMediaIcons['instagram'] ?? '#'}" style="margin: 8px; display: inline-block; text-decoration-line: none;">
                         <img src="https://images.ctfassets.net/3brzg7q3bvg1/1jOxrI1mdPfOhrzYxZTYLZ/222196b3bc2d7cabea69d66642f0195f/icono-instagram.png" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;" alt="">
                       </a>
-                      <a href="#" style="margin: 8px; display: inline-block; text-decoration-line: none;">
+                      <a clicktracking="off" href="${socialMediaIcons['linkedin'] ?? '#'}" style="margin: 8px; display: inline-block; text-decoration-line: none;">
                         <img src="https://images.ctfassets.net/3brzg7q3bvg1/20OWOpGqZu9GjLi2VSuwf1/05d7437a0677f2df9cebb046fc43c180/icono-linkedin.png" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;" alt="">
                       </a>
-                      <a href="#" style="margin: 8px; display: inline-block; text-decoration-line: none;">
+                      <a clicktracking="off" href="${socialMediaIcons['youtube'] ?? '#'}" style="margin: 8px; display: inline-block; text-decoration-line: none;">
                         <img src="https://images.ctfassets.net/3brzg7q3bvg1/3vqWQwN9MtUdblVZ990UDc/73419d83f7f405509a43885bc460e2a6/icono-youtube.png" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;" alt="">
                       </a>
-                      <a href="#" style="margin: 8px; display: inline-block; text-decoration-line: none;">
+                      <a clicktracking="off" href="${socialMediaIcons['twitter'] ?? '#'}" style="margin: 8px; display: inline-block; text-decoration-line: none;">
                         <img src="https://images.ctfassets.net/3brzg7q3bvg1/2xAfqJ21g4AISI1192gk5f/df8a234dc89d4ffb954834b387a6bc7f/icono-twitter.png" style="max-width: 100%; vertical-align: middle; line-height: 1; border: 0;" alt="">
                       </a>
                     </td>
                     <td class="sm-inline-block sm-w-full sm-text-center sm-px-0 sm-pt-4" style="width: 50%; border-width: 0px; padding-top: 48px; padding-bottom: 48px; text-align: right">
-                      <a href="#" style="color: inherit">
+                      <a clicktracking="off" href="${HOST}/tramites-y-ayuda" style="color: inherit">
                         ¿Necesitas ayuda?
                       </a>
                     </td>
@@ -597,12 +608,13 @@ const footer = `
       </div>
       </div>
       </body>
-    </html>`;
+  </html>`;
+};
 
 const sendCreateOrderEmail = async (order: IOrderExtended): Promise<number> => {
   try {
     const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount);
-    const email = header('Resumen del pedido') + body + footer;
+    const email = header('Resumen del pedido') + body + await footer();
 
     const clientEmail = {
       to: order.customer_email,
