@@ -594,7 +594,7 @@ const footer = async () => {
                       <p>En Bogotá al 6013078121 y en Santander 6076854755</p>
                     </td>
                     <td class="sm-inline-block sm-text-center sm-pt-0 sm-w-full" style="width: 50%; padding-top: 20px; padding-bottom: 20px; text-align: right">
-                      <img class="sm-w-48" src="images/logo-industria-comercio.png" alt style="vertical-align: middle; line-height: 1; border: 0; max-width: 100%">
+                      <img class="sm-w-48" src="${HOST}/images/industria-y-comercio.png" alt style="vertical-align: middle; line-height: 1; border: 0; max-width: 100%">
                     </td>
                   </tr>
                 </table>
@@ -612,8 +612,10 @@ const footer = async () => {
 
 const sendCreateOrderEmail = async (order: IOrderExtended): Promise<number> => {
   try {
-    const body = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount);
-    const email = header('Resumen del pedido') + body + await footer();
+    const headerContent = header('Resumen del pedido');
+    const bodyContent = bodySection('create', order, order.line_items, order.shipments, order.formatted_total_amount);
+    const footerContent = await footer();
+    const email = headerContent + bodyContent + footerContent;
 
     const clientEmail = {
       to: order.customer_email,
@@ -641,8 +643,10 @@ const sendCreateOrderEmail = async (order: IOrderExtended): Promise<number> => {
 
 const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   try {
-    const body = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
-    const email = header('Resumen de compra') + body + footer;
+    const headerContent = header('Resumen de compra');
+    const bodyContent = bodySection(orderByAlly.status, orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+    const footerContent = await footer();
+    const email = headerContent + bodyContent + footerContent;
 
     const clientEmail = {
       to: orderByAlly.customer_email,
@@ -670,8 +674,10 @@ const sendClientEmail = async (orderByAlly: IOrderExtended): Promise<number> => 
 
 const sendVantiEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
   try {
-    const body = bodySection('vanti', orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
-    const email = header('Resumen de compra') + body + footer;
+    const headerContent = header('Resumen de compra');
+    const bodyContent = bodySection('vanti', orderByAlly, orderByAlly.line_items, orderByAlly.shipments, orderByAlly.formatted_total_amount);
+    const footerContent = await footer();
+    const email = headerContent + bodyContent + footerContent;
 
     const vantiEmailAddress = process.env.VANTI_EMAIL_ADDRESS;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -710,10 +716,12 @@ const sendAllyEmail = async (orderByAlly: IOrderExtended): Promise<number> => {
     const allyItems = orderByAlly.line_items_by_ally;
     const emailPromises: Promise<boolean>[] = [];
 
-    allyItems.forEach((allyItem) => {
+    allyItems.forEach(async (allyItem) => {
       const productsData = allyItem;
-      const body = bodySection('ally', orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
-      const email = header('Resumen de compra') + body + footer;
+      const headerContent = header('Resumen de compra');
+      const bodyContent = bodySection('ally', orderByAlly, productsData.line_items, productsData.shipments, productsData.formatted_ally_shipping_total_amount);
+      const footerContent = await footer();
+      const email = headerContent + bodyContent + footerContent;
 
       const emailAddresses = String(allyItem.metadata?.email).split(',');
 
