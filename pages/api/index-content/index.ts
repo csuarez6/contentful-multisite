@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getAlgoliaSearchIndex } from "@/lib/services/content-filter.service";
 import getEntryContent from "@/lib/services/entry-content.service";
-import { getCommercelayerProduct } from "@/lib/services/commerce-layer.service";
 import _ from "lodash";
-import {
-  isAvailableGasAppliance,
-  isAvailableVantilisto,
-} from "@/utils/functions";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   if (req.method !== "PUT")
@@ -34,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       ""
     );
 
-    let entryFields = await getEntryContent(
+    const entryFields = await getEntryContent(
       {
         __typename: indexType,
         sys: {
@@ -50,29 +45,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       return res
         .status(404)
         .json({ status: "error", message: "Content not found" });
-
-    if (indexType === "Product") {
-      const productPrices = await getCommercelayerProduct(entryFields.sku);
-      if (productPrices) {
-        entryFields = {
-          ...entryFields,
-          ...productPrices,
-          isAvailable: isAvailableGasAppliance(
-            entryFields?.marketId,
-            productPrices?._priceGasodomestico,
-            productPrices?.productsQuantityGasodomestico
-          )
-            ? true
-            : isAvailableVantilisto(
-                entryFields?.marketId,
-                productPrices?._priceVantiListo,
-                productPrices?.productsQuantityVantiListo
-              )
-            ? true
-            : false,
-        };
-      }
-    }
 
     entryData = {
       ...entryData,

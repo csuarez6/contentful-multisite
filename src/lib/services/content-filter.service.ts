@@ -1,9 +1,7 @@
 import { gql } from "@apollo/client";
 import _ from "lodash";
 import algoliasearch, { SearchIndex } from "algoliasearch";
-
 import contentfulClient, { removeUnresolved } from "./contentful-client.service";
-
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { FACET_QUERY_MAP } from "@/constants/search.constants";
 import { sleep } from "@/utils/functions";
@@ -74,8 +72,12 @@ const getAlgoliaResults = async ({
   }
 
   const contentTypeFilterSearchQuery = types.map(
-    (ct) => `sys.contentType.sys.id:${ct}`
+    (ct) => {
+      const ctfinal = _.upperFirst(ct).replaceAll("_", "");
+      return `fields.__typename:${ctfinal}`;
+    }
   );
+
   algoliaFilter.push(
     `(${contentTypeFilterSearchQuery.join(" OR ")})`
   );

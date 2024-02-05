@@ -19,14 +19,16 @@ const handler = async (
   const allowedOrderOptions = Object.keys(SORTING_OPTIONS).reduce((acc, option) => {
     return acc.concat(SORTING_OPTIONS[option].map(opt => opt.value));
   }, []);
+
   const filteredContent = await getFilteredContent({
     fullTextSearch: typeof request.query.text == 'string' ? request.query.text : (request?.query?.text?.[0] ?? ''),
     pageResults: request.query.pageResults,
     contentTypesFilter: typeof request.query.type == 'string' ? [request.query.type] : request.query.type,
     parentIds: typeof request.query.parent == 'string' ? [request.query.parent] : request.query.parent,
     page: typeof request.query.page == 'string' ? parseInt(request.query.page) : parseInt(request.query.page[0]),
+    availableFacets: typeof request.query.facets == 'string' ? request.query.facets.split(",") : request.query.facets,
     ...(request?.query?.orden && allowedOrderOptions.indexOf(request.query.orden) >= 0 ? { sortingBy: request.query.orden } : {}),
-    filters
+    filters,
   });
 
   response.setHeader('Vercel-CDN-Cache-Control', 'public, max-age=600');
