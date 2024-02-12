@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const pageEntriesArr = await consolideEntriesWithLocales(pageEntries);
   const consolidatedEntries = [...pageEntriesArr];
 
-  res.setHeader("Cache-Control", "s-maxage=84600, max-age=84600, stale-while-revalidate");
+  res.setHeader("Cache-Control", "s-maxage=600, max-age=600, stale-while-revalidate");
   res.setHeader("Content-Type", "text/xml");
   res.write(buildProductListXML(consolidatedEntries));
   res.end();
