@@ -69,6 +69,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
     ["pageResults", pageResults.toString() ?? "9"],
     ["facets", availableFacets?.join(",") ?? ""],
+    ["mainFacet", mainFacet ?? ""]
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);

@@ -25,7 +25,7 @@ const getPriceRange = (_price: number) => {
   else if(_price > 2000000 && _price <= 3000000) { return "2'000.001 - 3'000.000"; }
   else if(_price > 3000000 && _price <= 4000000) { return "3'000.001 - 4'000.000"; }
   else if(_price > 4000000 && _price <= 5000000) { return "4'000.001 - 5'000.000"; }
-  else if(_price > 5000000) { return "+5'000.001"; }
+  else if(_price > 5000000) { return "5'000.001 o más"; }
   return null;
 };
 

@@ -27,6 +27,7 @@ const handler = async (
     parentIds: typeof request.query.parent == 'string' ? [request.query.parent] : request.query.parent,
     page: typeof request.query.page == 'string' ? parseInt(request.query.page) : parseInt(request.query.page[0]),
     availableFacets: typeof request.query.facets == 'string' ? request.query.facets.split(",") : request.query.facets,
+    mainFacet: request.query.mainFacet.toString(),
     ...(request?.query?.orden && allowedOrderOptions.indexOf(request.query.orden) >= 0 ? { sortingBy: request.query.orden } : {}),
     filters,
   });
