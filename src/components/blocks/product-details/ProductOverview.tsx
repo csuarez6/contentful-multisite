@@ -43,6 +43,8 @@ import {
   iconMastercard,
   iconVisa,
 } from "./ProductConfig";
+import { MARKETPLACE_SLUG } from "@/constants/url-paths.constants";
+import { useRouter } from "next/router";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -120,6 +122,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     priceVantiListo,
     productsQuantityVantiListo
   );
+  const tiendaVirtualPdfPath = "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf";
+  const vantilistoPdfPath = "https://assets.ctfassets.net/3brzg7q3bvg1/6ay3iapxXoEmyJOj8PkFbj/47b963e74d998d957f4092fbf345a250/T_RMINOS-Y-CONDICIONES-DE-USO-PORTAL-VANTI-LISTO-20-11-2023_-_Merpes.pdf";
 
   useEffect(() => {
     orderLocalRef.current = order?.line_items;
@@ -320,6 +324,10 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (x > 1300 && y > 420) return "fixed top-[90px]";
     }
   };
+
+  const { asPath } = useRouter();
+  const firstPath = asPath.split("/")?.[1];
+
   return (
     <section className="bg-white section">
       <div className="flex flex-col relative">
@@ -376,8 +384,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               <CustomLink
                 className="text-sm underline text-grey-60 !leading-none"
                 content={{
-                  externalLink:
-                    "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf",
+                  externalLink: firstPath == MARKETPLACE_SLUG ? tiendaVirtualPdfPath : vantilistoPdfPath
                 }}
               >
                 Conozca términos y condiciones
