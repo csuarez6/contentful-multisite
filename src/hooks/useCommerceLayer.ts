@@ -635,7 +635,7 @@ export const useCommerceLayer = () => {
   }, [orderId]);
 
   const validateExternal = useCallback(
-    async (recapchaResponse: string) => {
+    async (tokenReCaptcha: string) => {
       const client = await generateClient();
       await client.orders.update(
         {
@@ -644,7 +644,7 @@ export const useCommerceLayer = () => {
             ...(order?.metadata && {
               ...order.metadata,
             }),
-            recapchaResponse,
+            recapchaResponse: tokenReCaptcha,
           },
         },
         DEFAULT_ORDER_PARAMS
@@ -659,7 +659,6 @@ export const useCommerceLayer = () => {
         setTokenRecaptcha("");
         return;
       }
-
       setTokenRecaptcha(e);
     } catch (error) {
       console.error(error);

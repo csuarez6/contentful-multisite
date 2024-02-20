@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import CheckoutContext from "../../../context/Checkout";
-import { CHANGED_PRODUCTS_ERROR_MSG, FINAL_422_ERROR_MSG, NEXT_STEP_ERROR_MSG, PRICE_VALIDATION_ID } from "@/constants/checkout.constants";
+import { CHANGED_PRODUCTS_ERROR_MSG, FINAL_422_ERROR_MSG, NEXT_STEP_ERROR_MSG, PRICE_VALIDATION_ID, RECAPTCHA_ERROR_MSG } from "@/constants/checkout.constants";
 import StepsLine from "@/components/organisms/line-step/StepsLine";
 import { classNames, formatPrice, showProductTotal } from "@/utils/functions";
 import Breadcrumbs from "@/components/blocks/breadcrumbs-block/Breadcrumbs";
@@ -96,11 +96,48 @@ const CheckoutLayout: React.FC<IChekoutLayoutProps> = ({ children }) => {
 
   const validateOrder = async () => {
     setIsLoading(true);
-    gaEventPurchase(order);
-    setOnPayment(true);
-    updateIsPaymentProcess(true);
-    await reloadOrder(true);
-    setIsLoading(false);
+    fetch("/api/validate-captcha", {
+      method: "POST",
+      body: JSON.stringify({
+        tokenReCaptcha: tokenRecaptcha
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+    .then((response) => response.json())
+    .then(async (json) => {
+      const { result } = json;
+
+      if (result?.errors > 0 || !(result?.success)) {
+        setError(true);
+        setErrorMessage({
+          icon: "alert",
+          type: "warning",
+          title: "¡Ups!",
+          description: RECAPTCHA_ERROR_MSG
+        });
+      }
+
+      if (result?.success) {
+        setOnPayment(true);
+        gaEventPurchase(order);
+        updateIsPaymentProcess(true);
+        await reloadOrder(true);
+      }
+    }).catch((err) => {
+      setError(true);
+      setErrorMessage({
+        icon: "alert",
+        type: "warning",
+        title: "¡Ups!",
+        description: (!navigator.onLine) ? "Comprueba tu conexión a internet e intenta de nuevo por favor." : RECAPTCHA_ERROR_MSG
+      });
+      console.warn(err);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
   };
 
   // This hook redirect to first checkout screen if there  isn't produtcs
