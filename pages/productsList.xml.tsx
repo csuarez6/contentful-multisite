@@ -11,10 +11,11 @@ const ProductListXML: React.FC = () => {
 
 const consolideEntriesWithLocales = async (entries: Array<any>) => {
   const consolidatedEntries = [];
+  const commerceLayerInfo = await getCommercelayerProduct(entries.map(entry => entry.sku), true);
 
   await Promise.all(entries.map(async (entry) => {
     try {
-      const productInfo = await getCommercelayerProduct(entry.sku, true);
+      const productInfo = commerceLayerInfo.find(item => item.code == entry.sku);
       const price = isGasAppliance(entry.marketId) ? productInfo?._priceGasodomestico : productInfo?._priceVantiListo;
       if (productInfo && productInfo.name && price && entry.urlPaths && entry.promoImage) {
         const availability = isAvailableGasAppliance(entry?.marketId, productInfo?._priceGasodomestico, productInfo?.productsQuantityGasodomestico) ? true : isAvailableVantilisto(entry?.marketId, productInfo?._priceVantiListo, productInfo?.productsQuantityVantiListo) ? true : false;
