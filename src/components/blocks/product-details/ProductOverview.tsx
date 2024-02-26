@@ -82,6 +82,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
   const [isFixed, setIsFixed] = useState(false);
+  const [isMobileWidgetFixed, setIsMobileWidgetFixed] = useState(true);
+  const [isCookieModalOpen, setIsCookieModalOpen] = useState(false);
+  const [mobileWidgetBottom, setMobileWidgetBottom] = useState('0px');
 
   const defaultInstallList = {
     id: "defInstall1",
@@ -105,7 +108,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [showWarranty, setShowWarranty] = useState<boolean>();
   const [showInstallation, setShowInstallation] = useState<boolean>();
   const [widthWidget, setWidthWidget] = useState(null);
-  
+
   const [seeMore, setSeeMore] = useState(true);
 
   const orderLocalRef = useRef<LineItem[]>();
@@ -178,8 +181,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (res.status === 200) {
         const itemProduct = orderLocalRef.current
           ? orderLocalRef.current.filter(
-              (item) => item.item_type === "skus" && item.id === res.data["id"]
-            )
+            (item) => item.item_type === "skus" && item.id === res.data["id"]
+          )
           : [];
         // validate and add to cart a service (Installation)
         if (
@@ -296,21 +299,39 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  const calcWidgetPosition = () => {
     const footerHeight: any = document?.querySelector("#footer");
     const widgetItemHeight: any = document?.querySelector("#widgetItem");
     const widget: any = document?.querySelector("#widget");
     const bodyHeight: any = document?.body;
     const footerTextHeight: any = document?.querySelector("#footerText");
+
     //122 = 90px de top + 32 paddingBottom
-    const totaltHeight =
+    const totalHeight =
       footerHeight?.offsetHeight +
       widgetItemHeight?.offsetHeight +
       (footerTextHeight?.offsetHeight ?? 0) +
       122;
-    const elem = bodyHeight?.offsetHeight - totaltHeight;
+    const elem = bodyHeight?.offsetHeight - totalHeight;
     setIsFixed(y > elem);
     setWidthWidget(widget?.offsetWidth);
+  };
+
+  const addPaddingToFooter = (_isFixed) => {
+    const footerElement: any = document?.querySelector("#footer");
+    const widgetElement: any = document?.querySelector("#mobile-price-widget");
+    const widgetRect = widgetElement?.getBoundingClientRect();
+    footerElement.style.cssText = `padding-bottom:${widgetRect.height}px`;
+  };
+
+  useEffect(() => {
+    calcWidgetPosition();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [y]);
+
+  useEffect(() => {
+    addPaddingToFooter(isMobileWidgetFixed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [y]);
 
   const itemInfoFixed = (x: number, y: number) => {
@@ -442,7 +463,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       Información a tener en cuenta
                     </h4>
                     <div>
-                      <div className={seeMore ? "lg:overflow-hidden lg:max-h-[3rem] xl:max-h-[10.5rem]" : ""}>                        {productFeatures && (
+                      <div className={seeMore ? "lg:overflow-hidden lg:max-h-[3rem] xl:max-h-[10.5rem]" : ""}>
+                        {productFeatures && (
                           <div className="flex flex-col gap-[1.5rem] text-blue-dark">
                             {documentToReactComponents(
                               productFeatures.json,
@@ -467,7 +489,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <button
                           className="flex text-blue-dark"
                           onClick={() => setSeeMore(!seeMore)}
-                          >
+                        >
                           ... leer más
                         </button>
                       )}
@@ -544,16 +566,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <div className="flex justify-between gap-2 flex-col-reverse">
                           {(priceBeforeGasodomestico !== priceGasodomestico ||
                             priceBeforeVantiListo !== priceVantiListo) && (
-                            <p className="line-through text-[#035177] text-sm md:text-xl">
-                              {
-                                (isGasAppliance(marketId)
-                                  ? priceBeforeGasodomestico
-                                  : priceBeforeVantiListo
-                                ).split(",")[0]
-                              }{" "}
-                              <span>Antes</span>
-                            </p>
-                          )}
+                              <p className="line-through text-[#035177] text-sm md:text-xl">
+                                {
+                                  (isGasAppliance(marketId)
+                                    ? priceBeforeGasodomestico
+                                    : priceBeforeVantiListo
+                                  ).split(",")[0]
+                                }{" "}
+                                <span>Antes</span>
+                              </p>
+                            )}
                           {!isVantilisto(marketId) && (
                             <div className="flex gap-1">
                               <figure>
@@ -773,8 +795,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       {/* ********* Buttons - Flow payment (mobile) ************ */}
 
       <div
+        id="mobile-price-widget"
         className={classNames(
-          "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px]",
+          "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-10 border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px] transition-[bottom] duration-300",
           isAvailableGasodomestico || isAvailableVantilisto
             ? "bg-white"
             : "bg-red-100 border border-red-400"
@@ -815,16 +838,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {/* Before price */}
                 {(priceBeforeGasodomestico !== priceGasodomestico ||
                   priceBeforeVantiListo !== priceVantiListo) && (
-                  <p className="line-through text-[#035177] text-size-small flex items-center">
-                    {
-                      (isGasAppliance(marketId)
-                        ? priceBeforeGasodomestico
-                        : priceBeforeVantiListo
-                      ).split(",")[0]
-                    }{" "}
-                    Antes
-                  </p>
-                )}
+                    <p className="line-through text-[#035177] text-size-small flex items-center">
+                      {
+                        (isGasAppliance(marketId)
+                          ? priceBeforeGasodomestico
+                          : priceBeforeVantiListo
+                        ).split(",")[0]
+                      }{" "}
+                      Antes
+                    </p>
+                  )}
               </div>
               <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
                 {/* Secondary price */}

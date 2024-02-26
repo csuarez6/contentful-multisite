@@ -12,6 +12,7 @@ export interface ILayout {
     helpButton?: INavigation;
     preview?: boolean;
     cookieInfo?: IPromoContent;
+    termsOfServicesInfo?: IPromoContent;
 }
 
 export interface IPage {

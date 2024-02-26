@@ -12,10 +12,12 @@ import Image from "next/image";
 import CheckoutContext from "@/context/Checkout";
 import { useLastPath } from "@/hooks/utils/useLastPath";
 import {
+  COOKIES_ID,
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
   DEFAULT_WARRANTY_COPY,
+  TERMS_OF_SERVICE_ID,
 } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import CheckoutLayout from "@/components/templates/checkout/Layout";
@@ -623,6 +625,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     DEFAULT_HELP_BUTTON_ID,
     context.preview ?? false
   );
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
@@ -633,6 +636,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const copyRes = await getDataContent(info);
   const copyServices = copyRes?.copiesCollection?.items;
 
+  const TermsOfServices = {
+    __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+    sys: {
+      id: TERMS_OF_SERVICE_ID,
+    }
+  };
+  const termsOfServicesInfo = await getDataContent(TermsOfServices);
+
   return {
     props: {
       layout: {
@@ -640,6 +651,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
         footerInfo,
         headerInfo,
         helpButton,
+        cookieInfo,
+        termsOfServicesInfo
       },
       copyServices,
     },
