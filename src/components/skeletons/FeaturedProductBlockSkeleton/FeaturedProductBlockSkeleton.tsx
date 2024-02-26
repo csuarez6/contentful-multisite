@@ -1,7 +1,7 @@
 import FeaturedProductSkeleton from "../FeaturedProductSkeleton/FeaturedProductSkeleton";
 
 const FeaturedProductBlockSkeleton = () => {
-  const arrItems = [1, 2, 3];
+  const arrItems = [1, 2, 3,4];
 
   return (
     <section className="section grid gap-9">
@@ -15,7 +15,7 @@ const FeaturedProductBlockSkeleton = () => {
         </div>
       </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 2lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xxs:grid-cols-2 2lg:grid-cols-4 2xl:grid-cols-4 gap-2 md:gap-6">
         {arrItems.map((el) => (
           <FeaturedProductSkeleton key={el} />
         ))}

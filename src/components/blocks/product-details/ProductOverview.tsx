@@ -673,14 +673,14 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                   <div className="flex -mx-1.5">
                     <Swiper
                       slidesPerView={1}
-                      spaceBetween={20}
+                      spaceBetween={16}
                       breakpoints={{
-                        480: {
+                        0: {
                           slidesPerView: 1,
                         },
-                        600: {
+                        375: {
                           slidesPerView: 2,
-                        },
+                        }
                       }}
                       modules={[Navigation]}
                       navigation={{
