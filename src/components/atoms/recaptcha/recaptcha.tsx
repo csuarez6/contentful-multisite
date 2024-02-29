@@ -1,6 +1,5 @@
 import { ReCaptcha, ReCaptchaProvider } from "next-recaptcha-v3";
 import { useEffect, useState } from "react";
-// import ReCAPTCHA from "react-google-recaptcha";
 
 export interface IReCaptcha {
   version?: string | number;
@@ -27,11 +26,6 @@ const ReCaptchaBox: React.FC<IReCaptcha> = ({
     return () => {
       // Component Unmounted
       showCaptcha("none");
-
-      // window.grecaptcha = null;
-      // if (window.grecaptcha) {
-      //   showCaptcha("none");
-      // }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
