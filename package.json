@@ -1,6 +1,6 @@
 {
-    "name": "@aplyca/nextjs-contentful-multisite",
-    "version": "1.0.5",
+    "name": "nextjs-contentful-multi-site",
+    "version": "1.0.6",
     "description": "This module help you setting up a multisite in Contentful with Next.JS.",
     "main": "src/index.js",
     "keywords": [],
