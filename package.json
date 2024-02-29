@@ -1,28 +1,20 @@
 {
-    "name": "@aplyca/nextjs-contentful-multisite",
+    "name": "contentful-multisite",
     "version": "1.0.0",
     "description": "This module help you setting up a multisite in Contentful.",
-    "main": "src/index.ts",
+    "main": "src/index.js",
     "keywords": [],
-    "author": "aplyca",
+    "author": "csuarez7",
     "license": "ISC",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Aplyca/nextjs-contentful-multisite.git"
+        "url": "git+https://github.com/csuarez6/contentful-multisite.git"
     },
     "bugs": {
-        "url": "https://github.com/Aplyca/nextjs-contentful-multisite/issues"
+        "url": "https://github.com/csuarez6/contentful-multisite/issues"
     },
-    "homepage": "https://github.com/Aplyca/nextjs-contentful-multisite#readme",
-    "devDependencies": {
-        "@types/next": "^9.0.0",
-        "@types/node": "^20.11.24",
-        "typescript": "^5.3.3"
-    },
-    "dependencies": {
-        "next": "^14.1.0"
-    }
+    "homepage": "https://github.com/csuarez6/contentful-multisite#readme"
 }
