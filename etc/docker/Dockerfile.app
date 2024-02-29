@@ -206,5 +206,4 @@ ARG NEXT_PUBLIC_TERMS_OF_SERVICE_ID
 ENV NEXT_PUBLIC_TERMS_OF_SERVICE_ID=$NEXT_PUBLIC_TERMS_OF_SERVICE_ID
 
 RUN yarn build
-CMD [ "yarn", "start" ]
-
+CMD ["sh", "-c", "yarn start & npx local-ssl-proxy --source 9001 --target 3000"]
