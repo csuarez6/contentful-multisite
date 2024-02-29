@@ -9,9 +9,11 @@ import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import {
+  COOKIES_ID,
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
+  TERMS_OF_SERVICE_ID,
 } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
@@ -23,6 +25,8 @@ import ModalSuccess from "@/components/organisms/modal-success/ModalSuccess";
 import { IPromoContent } from "@/lib/interfaces/promo-content-cf.interface";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import { DataPolicyText } from "@/components/atoms/terms-n-conditions-text/terms-n-conditions-text";
+import { getDataContent } from "@/lib/services/richtext-references.service";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
 
 const ModalContent = ({ modalMsg }) => {
   return (
@@ -293,6 +297,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     DEFAULT_HELP_BUTTON_ID,
     context.preview ?? false
   );
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
+
+  const TermsOfServices = {
+    __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+    sys: {
+      id: TERMS_OF_SERVICE_ID,
+    }
+  };
+  const termsOfServicesInfo = await getDataContent(TermsOfServices);
 
   return {
     props: {
@@ -301,6 +314,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
         footerInfo,
         headerInfo,
         helpButton,
+        cookieInfo,
+        termsOfServicesInfo
       },
     },
     revalidate,

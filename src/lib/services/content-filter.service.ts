@@ -1,9 +1,7 @@
 import { gql } from "@apollo/client";
 import _ from "lodash";
 import algoliasearch, { SearchIndex } from "algoliasearch";
-
 import contentfulClient, { removeUnresolved } from "./contentful-client.service";
-
 import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import { FACET_QUERY_MAP } from "@/constants/search.constants";
 import { sleep } from "@/utils/functions";
@@ -39,6 +37,7 @@ const getAlgoliaResults = async ({
   contentTypesFilter,
   parentIds = [],
   availableFacets = [],
+  mainFacet = '',
   pageResults,
   filters = {},
   sortingBy = null,
@@ -62,6 +61,7 @@ const getAlgoliaResults = async ({
 
   const types = [];
   const algoliaFilter = [];
+  const mainFacetacetConverted = {};
   const algoliaFacets = Object.keys(FACET_QUERY_MAP).filter(
     (fk) => availableFacets.indexOf(FACET_QUERY_MAP[fk].title) >= 0
   );
@@ -74,8 +74,12 @@ const getAlgoliaResults = async ({
   }
 
   const contentTypeFilterSearchQuery = types.map(
-    (ct) => `sys.contentType.sys.id:${ct}`
+    (ct) => {
+      const ctfinal = _.upperFirst(ct).replaceAll("_", "");
+      return `fields.__typename:${ctfinal}`;
+    }
   );
+
   algoliaFilter.push(
     `(${contentTypeFilterSearchQuery.join(" OR ")})`
   );
@@ -88,6 +92,30 @@ const getAlgoliaResults = async ({
       `(${parentIdsSearchQuery.join(" OR ")})`
     );
   }
+
+  algoliaFilter.push(`NOT metadata.tags.sys.id:testPage`);
+
+  const indexSearch = getAlgoliaSearchIndex(
+    process.env.ALGOLIASEARCH_APP_ID,
+    process.env.ALGOLIASEARCH_READ_API_KEY,
+    process.env.ALGOLIASEARCH_INDEX + (sortingBy !== null ? '_' + sortingBy : '')
+  );
+  
+  const mainFacetDef = Object.keys(FACET_QUERY_MAP).find(
+    (fk) => mainFacet === FACET_QUERY_MAP[fk].title
+  );
+
+  if(mainFacet && mainFacetDef){
+    const resultFacetsAlgolia = await indexSearch.searchForFacetValues(mainFacetDef, '', {
+      filters: algoliaFilter.join(' AND '),
+    });
+  
+    mainFacetacetConverted[mainFacetDef] = {};
+    resultFacetsAlgolia.facetHits.forEach(facet => {
+      mainFacetacetConverted[mainFacetDef][facet.value] = facet.count;
+    });
+  }
+
   for (const filterName in filters) {
     const filterDef = Object.keys(FACET_QUERY_MAP).find(
       (fk) => filterName === FACET_QUERY_MAP[fk].inputName
@@ -109,14 +137,6 @@ const getAlgoliaResults = async ({
     }
   }
 
-  // Filter to skip 'testPage'
-  algoliaFilter.push(`NOT metadata.tags.sys.id:testPage`);
-
-  const indexSearch = getAlgoliaSearchIndex(
-    process.env.ALGOLIASEARCH_APP_ID,
-    process.env.ALGOLIASEARCH_READ_API_KEY,
-    process.env.ALGOLIASEARCH_INDEX + (sortingBy !== null ? '_' + sortingBy : '')
-  );
   const resultAlgolia = await indexSearch.search((fullTextSearch), {
     filters: algoliaFilter.join(' AND '),
     facets: algoliaFacets,
@@ -124,7 +144,7 @@ const getAlgoliaResults = async ({
     attributesToRetrieve: ["fields", "metadata"],
     page: --page,
   });
-
+  
   ({
     hits: resultObject.items,
     nbHits: resultObject.totalItems,
@@ -133,6 +153,8 @@ const getAlgoliaResults = async ({
     facets: resultObject.facets,
   } = resultAlgolia);
 
+  resultObject.facets = { ...resultObject.facets, ...mainFacetacetConverted };
+  
   resultObject.pageResults = pageResults;
 
   return resultObject;
@@ -254,6 +276,7 @@ const getFilteredContent = async ({
   parentIds = [],
   pageResults,
   availableFacets = [],
+  mainFacet = '',
   filters = {},
   sortingBy = null,
   page = 1,
@@ -270,6 +293,7 @@ const getFilteredContent = async ({
     contentTypesFilter,
     parentIds,
     availableFacets,
+    mainFacet,
     pageResults,
     filters,
     sortingBy,
@@ -288,7 +312,7 @@ const getFilteredContent = async ({
       };
     }
   );
-
+  
   if (
     filteredContentResults?.facets &&
     Object.keys(filteredContentResults?.facets).length > 0

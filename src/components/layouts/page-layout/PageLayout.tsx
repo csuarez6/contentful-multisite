@@ -15,11 +15,11 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
   const { preview } = layout;
   const { asPath } = useRouter() ?? { asPath: "/" };
   const domain = process.env.DEFAULT_DOMAIN ?? "https://www.grupovanti.com/";
-  const title = `${promoTitle ??layout?.name ?? ''} - Grupo Vanti`;
+  const title = `${promoTitle ?? layout?.name ?? ''} - Grupo Vanti`;
   const description = promoDescription?.json ? documentToPlainTextString(promoDescription.json) : "Conoce cómo agendar, modificar o cancelar tu cita en los puntos de atención. Gestiona los consumos de tus productos Vanti desde la comodidad de tu casa.";
   const image = promoImage?.url ? promoImage.url : "https://images.ctfassets.net/3brzg7q3bvg1/5qkqIbzB1VpZ1DapXhIMho/30e84d821498ebe49b89e1f32597e7c1/vanti-logo-og.png";
   const canonicalUrl = domain + asPath.split("?")?.[0];
-  
+
   const addProductJsonLd = () => {
     let sdType = __typename;
     if (sdType === 'Page') {
@@ -64,7 +64,7 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
-
+        <meta name="google-site-verification" content="Cdi1AIMuzSedtDCQDbtpl3z-M3tGmP3mCevHR9hDtls" />
         <meta property="og:type" content="Pagina" />
         <meta name="title" content={title} />
         <meta name="twitter:title" content={title} />
@@ -133,12 +133,14 @@ const PageLayout: React.FC<IPage> = ({ layout, promoTitle, promoDescription, pro
         {layout?.headerInfo && (
           <HeaderBlock {...layout.headerInfo} menuNavkey={layout.menuNavkey} overrideNavCollection={mainNavCollection} name={layout.name} />
         )}
+
         <HelpButton {...layout.helpButton} />
+
         <main className="flex-grow">
           {children}
         </main>
 
-        <FooterBlock {...layout.footerInfo} cookieInfo={layout.cookieInfo} />
+        <FooterBlock {...layout.footerInfo} cookieInfo={layout.cookieInfo} termsOfServicesInfo={layout.termsOfServicesInfo} />
       </div>
     </>
   );

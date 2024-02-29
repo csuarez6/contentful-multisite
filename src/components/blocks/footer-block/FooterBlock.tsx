@@ -9,6 +9,7 @@ import Icon from "@/components/atoms/icon/Icon";
 import CookieModal from '@/components/organisms/cookie-modal/CookieModal';
 import { useRouter } from 'next/router';
 import { MARKETPLACE_SLUG } from '@/constants/url-paths.constants';
+import TermsOfServices from '@/components/organisms/terms-of-services/TermsOfServices';
 
 const FooterBlock: React.FC<INavigation> = ({
   name,
@@ -18,8 +19,10 @@ const FooterBlock: React.FC<INavigation> = ({
   promoImage,
   mainNavCollection,
   secondaryNavCollection,
-  cookieInfo
+  cookieInfo,
+  termsOfServicesInfo
 }) => {
+
   const [activeDisclosurePanel, setActiveDisclosurePanel] = React.useState(null);
 
   const togglePanels = (newPanel) => {
@@ -209,7 +212,9 @@ const FooterBlock: React.FC<INavigation> = ({
           </div>
         </div>
       </div>
+
       <CookieModal {...cookieInfo} />
+      { termsOfServicesInfo && <TermsOfServices {...termsOfServicesInfo} /> }
     </footer>
   );
 };

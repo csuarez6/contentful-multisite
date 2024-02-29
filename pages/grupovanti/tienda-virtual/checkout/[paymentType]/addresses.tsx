@@ -14,10 +14,12 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import CheckBox from "@/components/atoms/input/checkbox/CheckBox";
 import { GetStaticPaths, GetStaticProps } from "next";
 import {
+  COOKIES_ID,
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
   DEFAULT_WARRANTY_COPY,
+  TERMS_OF_SERVICE_ID,
 } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import citiesFile from "@/utils/static/cities-co.json";
@@ -141,7 +143,7 @@ const ModalCities: React.FC<any> = ({ onActivedModal }) => {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-center">
-        Recuerda que el municipio que has seleccionado no cuenta con cobertura directa, por lo que se agregará un recargo de envío a tu pedido  
+        Recuerda que el municipio que has seleccionado no cuenta con cobertura directa, por lo que se agregará un recargo de envío a tu pedido
       </p>
       <div className="flex justify-end gap-2">
         <button
@@ -273,7 +275,7 @@ const CheckoutAddress = (props: any) => {
     setShowAlert(cityCheck[0]?.isCovered == "false");
     if (cityCheck[0]?.isCovered == "false") {
       setParamModal({ promoTitle: "Advertencia", promoIcon: "info" });
-      setmodalChild(<ModalCities  onActivedModal={setIsActivedModal}/>);
+      setmodalChild(<ModalCities onActivedModal={setIsActivedModal} />);
       setIsActivedModal(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -409,7 +411,7 @@ const CheckoutAddress = (props: any) => {
               (shippingAddressFormatted?.address == "" &&
                 billingAddressFormatted?.address == "") ||
               shippingAddressFormatted?.address ==
-                billingAddressFormatted?.address,
+              billingAddressFormatted?.address,
           },
         });
       })();
@@ -824,6 +826,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     DEFAULT_HELP_BUTTON_ID,
     context.preview ?? false
   );
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
 
   const info = {
     __typename: CONTENTFUL_TYPENAMES.COPY_SET,
@@ -834,6 +837,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const copyRes = await getDataContent(info);
   const copyServices = copyRes?.copiesCollection?.items;
 
+  const TermsOfServices = {
+    __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+    sys: {
+      id: TERMS_OF_SERVICE_ID,
+    }
+  };
+  const termsOfServicesInfo = await getDataContent(TermsOfServices);
+
   return {
     props: {
       layout: {
@@ -841,6 +852,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
         footerInfo,
         headerInfo,
         helpButton,
+        cookieInfo,
+        termsOfServicesInfo
       },
       copyServices,
     },

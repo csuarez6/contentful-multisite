@@ -1,7 +1,8 @@
 import { AssetImageQuery  } from "./shared/asset.gql";
-import { RichtextQuery } from "./shared/default.gql";
+import DefaultQuery, { RichtextQuery } from "./shared/default.gql";
 
 const AllyQuery = `
+    ${DefaultQuery}
     name
     phone
     address

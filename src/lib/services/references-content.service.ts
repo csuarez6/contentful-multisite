@@ -5,7 +5,6 @@ import CONTENTFUL_QUERY_MAPS from "@/constants/contentful-query-maps.constants";
 import contentfulClient, { removeUnresolved } from "./contentful-client.service";
 import { gql } from "@apollo/client";
 import { getCommercelayerProduct } from "./commerce-layer.service";
-import getFilteredContent from "./content-filter.service";
 import getReferencesRichtextContent from "./richtext-references.service";
 
 const REFERENCES = {
@@ -188,17 +187,7 @@ export const getBlockInfo = async (blockInfo: any, preview: boolean, levelBlock 
         _.merge(blockEntryContent, richtextReferences);
       }
 
-    } else if (blockEntryContent.__typename === CONTENTFUL_TYPENAMES.BLOCK_CONTENT_FILTER) {
-      const preloadContent = await getFilteredContent({
-        contentTypesFilter: blockEntryContent.contentTypesFilter ?? [],
-        parentIds: blockEntryContent.parentsCollection?.items?.map((p) => p.sys.id) ?? [],
-        availableFacets: blockEntryContent.availableFacets ?? [],
-        fullTextSearch: blockEntryContent.fullTextSearch ?? '',
-        pageResults: blockEntryContent.pageResults ?? 9,
-      });
-      _.merge(blockEntryContent, { preloadContent });
     }
-
     return blockEntryContent;
   } catch (e){
     console.error("An error has ocurred in getBlockInfo", e.message);

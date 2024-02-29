@@ -328,12 +328,11 @@ export const deleteCustomerResetPwd = async (tokenID: string) => {
   }
 };
 
-export const getCommercelayerProduct = async (skuCode: string, productInfo = false) => {
-  let product = null;
+export const getCommercelayerProduct = async (skuCodes: string | string[], productInfo = false) => {
+  const products = [];
   try {
     const clientGasodomesticos = await getCLAdminCLient();
-    await sleep(30);
-    const fields = ["id", "prices", "stock_items"];
+    const fields = ["id", "code", "prices", "stock_items"];
     const include = ["prices", "stock_items", "prices.price_list", "stock_items.stock_location", "stock_items.stock_reservations"];
 
     if (productInfo) {
@@ -341,64 +340,80 @@ export const getCommercelayerProduct = async (skuCode: string, productInfo = fal
       include.push("shipping_category");
     };
 
-    const sku = (
-      await clientGasodomesticos.skus.list({
-        filters: { code_eq: decodeURI(skuCode) },
+    const skuCodeArray = Array.isArray(skuCodes) ? skuCodes.map(decodeURI) : [decodeURI(skuCodes)];
+
+    const batches = [];
+    for (let i = 0; i < skuCodeArray.length; i += 25) {
+      batches.push(skuCodeArray.slice(i, i + 25));
+    }
+
+    for (const batch of batches) {
+      const skuCodeString = batch.join(',');
+      await sleep(30);
+      const skuBatch =  await clientGasodomesticos.skus.list({
+        filters: { code_in: skuCodeString },
         include: include,
         fields: fields,
-      })
-    ).first();
+        pageSize: 25
+      });
 
-    let reservation = 0;
-    reservation = sku?.stock_items?.find(
-      (p) => p.stock_location.reference === "gasodomesticos"
-    )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
+      skuBatch.map((sku) => {
+        let reservation = 0;
+        reservation = sku?.stock_items?.find(
+          (p) => p.stock_location.reference === "gasodomesticos"
+        )?.['stock_reservations']?.reduce((sum, obj) => sum + obj.quantity, 0) ?? 0;
 
-    if (sku) {
-      product = {
-        priceGasodomestico:
-          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
-            ?.formatted_amount ?? null,
-        priceBeforeGasodomestico:
-          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
-            ?.formatted_compare_at_amount ?? null,
-        priceVantiListo:
-          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
-            ?.formatted_amount ?? null,
-        priceBeforeVantiListo:
-          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
-            ?.formatted_compare_at_amount ?? null,
+        if (sku) {
+          const info = {
+            id: sku?.id,
+            code: sku?.code,
+            priceGasodomestico:
+              sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+                ?.formatted_amount ?? null,
+            priceBeforeGasodomestico:
+              sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+                ?.formatted_compare_at_amount ?? null,
+            priceVantiListo:
+              sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+                ?.formatted_amount ?? null,
+            priceBeforeVantiListo:
+              sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+                ?.formatted_compare_at_amount ?? null,
 
-        _priceGasodomestico:
-          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
-            ?.amount_float ?? null,
-        _priceBeforeGasodomestico:
-          sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
-            ?.compare_at_amount_float ?? null,
-        _priceVantiListo:
-          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
-            ?.amount_float ?? null,
-        _priceBeforeVantiListo:
-          sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
-            ?.compare_at_amount_float ?? null,
+            _priceGasodomestico:
+              sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+                ?.amount_float ?? null,
+            _priceBeforeGasodomestico:
+              sku?.prices?.find((p) => p.price_list.reference === "gasodomesticos")
+                ?.compare_at_amount_float ?? null,
+            _priceVantiListo:
+              sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+                ?.amount_float ?? null,
+            _priceBeforeVantiListo:
+              sku?.prices?.find((p) => p.price_list.reference === "vantiListo")
+                ?.compare_at_amount_float ?? null,
 
-        productsQuantityGasodomestico:
-          Number(sku?.stock_items?.find(
-            (p) => p.stock_location.reference === "gasodomesticos"
-          )?.quantity) - reservation ?? 0,
-        productsQuantityVantiListo:
-          sku?.stock_items?.find(
-            (p) => p.stock_location.reference === "vantiListo"
-          )?.quantity ?? 0,
-      };
+            productsQuantityGasodomestico:
+              Number(sku?.stock_items?.find(
+                (p) => p.stock_location.reference === "gasodomesticos"
+              )?.quantity) - reservation ?? 0,
+            productsQuantityVantiListo:
+              sku?.stock_items?.find(
+                (p) => p.stock_location.reference === "vantiListo"
+              )?.quantity ?? 0,
+          };
 
-      if (productInfo) {
-        product['name'] = sku.name;
-        product['description'] = sku.description;
-        product['image_url'] = sku.image_url;
-        product['brand'] = sku.shipping_category?.name;
-        product['currency_code'] = sku.prices[0]?.currency_code;
-      }
+          if (productInfo) {
+            info['name'] = sku.name;
+            info['description'] = sku.description;
+            info['image_url'] = sku.image_url;
+            info['brand'] = sku.shipping_category?.name;
+            info['currency_code'] = sku.prices[0]?.currency_code;
+          }
+
+          products.push(info);
+        }
+      });
     }
 
   } catch (error) {
@@ -406,7 +421,7 @@ export const getCommercelayerProduct = async (skuCode: string, productInfo = fal
     throw new Error(error);
   }
 
-  return product;
+  return Array.isArray(skuCodes) ? products : products[0];
 };
 
 export const getCommercelayerProductPrice = async (skuCode: string, market: Market) => {

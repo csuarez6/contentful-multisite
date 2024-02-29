@@ -21,10 +21,11 @@ const CustomLink: React.FC<ICustomLink> = ({
   linkClassName = "",
   onClick = null,
 }) => {
-  const { href, target, isExternalLink, textLink, icon } = getLinkProps(content);
-  return (
+  const { href, target, isExternalLink, textLink, icon } =
+    getLinkProps(content);
+  return href ? (
     <Link
-      href={href ?? '#'}
+      href={href}
       target={target}
       {...(isExternalLink ? { rel: "noreferrer" } : null)}
       onClick={onClick}
@@ -32,11 +33,22 @@ const CustomLink: React.FC<ICustomLink> = ({
       prefetch
       data-tagid={content?.sys?.id}
     >
-      <span className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}>
+      <span
+        className={`cursor-pointer flex gap-1 items-center flex-nowrap ${className}`}
+      >
         {children ?? textLink}
         {icon && <Icon icon={icon} className="w-6 h-6 shrink-0" />}
       </span>
     </Link>
+  ) : (
+    <div>
+      <span
+        className={`cursor-default flex gap-1 items-center flex-nowrap ${className}`}
+      >
+        {children ?? textLink}
+        {icon && <Icon icon={icon} className="w-6 h-6 shrink-0" />}
+      </span>
+    </div>
   );
 };
 

@@ -43,6 +43,8 @@ import {
   iconMastercard,
   iconVisa,
 } from "./ProductConfig";
+import { MARKETPLACE_SLUG } from "@/constants/url-paths.constants";
+import { useRouter } from "next/router";
 
 const ProductOverview: React.FC<IProductOverviewDetails> = ({
   name,
@@ -80,6 +82,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
   const [isFixed, setIsFixed] = useState(false);
+  //eslint-disable-next-line
+  const [isMobileWidgetFixed, setIsMobileWidgetFixed] = useState(true);
 
   const defaultInstallList = {
     id: "defInstall1",
@@ -104,6 +108,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [showInstallation, setShowInstallation] = useState<boolean>();
   const [widthWidget, setWidthWidget] = useState(null);
 
+  const [seeMore, setSeeMore] = useState(true);
+
   const orderLocalRef = useRef<LineItem[]>();
   const nextSlideId = `nextSlide_${marketId}`;
   const prevSlideId = `prevSlide_${marketId}`;
@@ -118,6 +124,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     priceVantiListo,
     productsQuantityVantiListo
   );
+  const tiendaVirtualPdfPath = "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf";
+  const vantilistoPdfPath = "https://assets.ctfassets.net/3brzg7q3bvg1/6ay3iapxXoEmyJOj8PkFbj/47b963e74d998d957f4092fbf345a250/T_RMINOS-Y-CONDICIONES-DE-USO-PORTAL-VANTI-LISTO-20-11-2023_-_Merpes.pdf";
 
   useEffect(() => {
     orderLocalRef.current = order?.line_items;
@@ -172,8 +180,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (res.status === 200) {
         const itemProduct = orderLocalRef.current
           ? orderLocalRef.current.filter(
-              (item) => item.item_type === "skus" && item.id === res.data["id"]
-            )
+            (item) => item.item_type === "skus" && item.id === res.data["id"]
+          )
           : [];
         // validate and add to cart a service (Installation)
         if (
@@ -290,21 +298,39 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  const calcWidgetPosition = () => {
     const footerHeight: any = document?.querySelector("#footer");
     const widgetItemHeight: any = document?.querySelector("#widgetItem");
     const widget: any = document?.querySelector("#widget");
     const bodyHeight: any = document?.body;
     const footerTextHeight: any = document?.querySelector("#footerText");
+
     //122 = 90px de top + 32 paddingBottom
-    const totaltHeight =
+    const totalHeight =
       footerHeight?.offsetHeight +
       widgetItemHeight?.offsetHeight +
       (footerTextHeight?.offsetHeight ?? 0) +
       122;
-    const elem = bodyHeight?.offsetHeight - totaltHeight;
+    const elem = bodyHeight?.offsetHeight - totalHeight;
     setIsFixed(y > elem);
     setWidthWidget(widget?.offsetWidth);
+  };
+
+  const addPaddingToFooter = (_isFixed) => {
+    const footerElement: any = document?.querySelector("#footer");
+    const widgetElement: any = document?.querySelector("#mobile-price-widget");
+    const widgetRect = widgetElement?.getBoundingClientRect();
+    footerElement.style.cssText = `padding-bottom:${widgetRect.height}px`;
+  };
+
+  useEffect(() => {
+    calcWidgetPosition();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [y]);
+
+  useEffect(() => {
+    addPaddingToFooter(isMobileWidgetFixed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [y]);
 
   const itemInfoFixed = (x: number, y: number) => {
@@ -318,11 +344,15 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       if (x > 1300 && y > 420) return "fixed top-[90px]";
     }
   };
+
+  const { asPath } = useRouter();
+  const firstPath = asPath.split("/")?.[1];
+
   return (
     <section className="bg-white section">
-      <div className="flex flex-col gap-10 lg:gap-[72px] relative">
-        <section className="flex flex-col gap-5 sm:gap-4 lg:flex-row xl:gap-9">
-          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6">
+      <div className="flex flex-col relative">
+        <section className="flex flex-col lg:flex-row">
+          <div className="w-full lg:w-1/2 xl:max-w-[595px] flex flex-col gap-6 lg:gap-9 pr-9 pb-5 lg:pb-0">
             {/* Section - Info product */}
             <div className="flex flex-col lg:hidden">
               {sku && (
@@ -370,12 +400,11 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             {imagesCollectionLocal?.length > 0 && (
               <Carousel content={imagesCollectionLocal} enableLoop={false} />
             )}
-            <div className="md:w-1/2 lg:mt-[30px] lg:ml-[70px] leading-none">
+            <div className="md:w-1/2 lg:ml-[72px] leading-none">
               <CustomLink
                 className="text-sm underline text-grey-60 !leading-none"
                 content={{
-                  externalLink:
-                    "https://assets.ctfassets.net/3brzg7q3bvg1/17lnwGgK0Hkgmn3kf1vsa0/0e453b7b5333111774c70cd5abf1b451/T_rminos_y_Condiciones_de_Uso_del_Sitio.pdf",
+                  externalLink: firstPath == MARKETPLACE_SLUG ? tiendaVirtualPdfPath : vantilistoPdfPath
                 }}
               >
                 Conozca términos y condiciones
@@ -384,7 +413,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
             {/* END Section - Carousel */}
           </div>
           <div className="flex xl:flex-grow">
-            <div className="flex flex-col w-full gap-9">
+            <div className="flex flex-col w-full gap-8">
               <div className="hidden lg:flex flex-col gap-[10.5px]">
                 {sku && (
                   <div className="text-sm text-grey-30">
@@ -427,39 +456,49 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
               </div>
               {/* Caracteristicas */}
               <div className="w-full flex flex-col-reverse sm:flex-row gap-[22px]">
-                <div className="py-[2px] flex flex-col gap-[32px] lg:w-[43%] shrink-0 sm:w-1/2">
-                  <div className="flex flex-col gap-[14px] bg-slate-50 p-3 rounded-xl">
+                <div className="py-[2px] flex flex-col gap-5 lg:w-[43%] shrink-0 sm:w-1/2">
+                  <div className="flex flex-col gap-[10px] bg-slate-50 p-3 rounded-xl">
                     <h4 className="text-blue-dark">
                       Información a tener en cuenta
                     </h4>
-                    {productFeatures && (
-                      <div className="flex flex-col gap-[5px] text-blue-dark">
-                        {documentToReactComponents(
-                          productFeatures.json,
-                          options
+                    <div>
+                      <div className={seeMore ? "lg:overflow-hidden lg:max-h-[3rem] xl:max-h-[10.5rem]" : ""}>
+                        {productFeatures && (
+                          <div className="flex flex-col gap-[1.5rem] text-blue-dark">
+                            {documentToReactComponents(
+                              productFeatures.json,
+                              options
+                            )}
+                          </div>
+                        )}
+                        {features && (
+                          <CustomLink
+                            className="underline text-[#035177] text-sm mt-[7px]"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              scrollContent("content-features");
+                            }}
+                            content={{ externalLink: "#" }}
+                          >
+                            Revisa todas las carateristicas
+                          </CustomLink>
                         )}
                       </div>
-                    )}
-                    {features && (
-                      <>
-                        <CustomLink
-                          className="underline text-[#035177] text-sm mt-[7px]"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            scrollContent("content-features");
-                          }}
-                          content={{ externalLink: "#" }}
+                      {seeMore && (
+                        <button
+                          className="flex text-blue-dark"
+                          onClick={() => setSeeMore(!seeMore)}
                         >
-                          Revisa todas las carateristicas
-                        </CustomLink>
-                      </>
-                    )}
+                          ... leer más
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div className="bg-category-sky-blue-90 p-3 gap-[10px] flex flex-col rounded-xl w-full xl:w-full 2xl:w-full">
                     <p className="text-base md:text-size-subtitle1">
                       Consulta tu Cupo de Financiación Vanti Listo
                     </p>
-                    <div className="flex justify-between pl-[6px]">
+                    <div className="flex justify-between">
                       <CustomLink
                         className="underline text-[#035177] text-sm mt-[7px]"
                         content={{
@@ -479,11 +518,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       </figure>
                     </div>
                   </div>
-                  <div className="pl-[11px] pt-1">
-                    <div className="font-medium leading-4 text-blue-dark">
-                      <div>
-                        <p>¿Tienes dudas?</p>
-                      </div>
+                  <div className="pl-[11px]">
+                    <div className="font-medium leading-4 text-blue-dark flex flex-col gap-[10px]">
+                      <p>¿Tienes dudas?</p>
                       <CustomLink
                         content={{
                           urlPaths: [
@@ -495,9 +532,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         Revisa las dudas frecuentes
                       </CustomLink>
                     </div>
-                    <div className="text-sm text-[#424242] font-medium mt-[37px] ml-[-11px]">
-                      <p>*Aclaracion</p>
-                    </div>
+                  </div>
+                  <div className="pl-[11px] text-sm text-[#424242] font-medium">
+                    <p>* Aclaracion</p>
                   </div>
                   <ul className="sm:hidden flex flex-col gap-y-[11px]">
                     {isGasAppliance(marketId) && (
@@ -517,7 +554,7 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 <div className="hidden sm:flex transition-all grow" id="widget">
                   <div
                     className={classNames(
-                      "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit",
+                      "flex flex-col gap-[10px] sm:flex-grow z-20 h-fit bg-white",
                       itemInfoFixed(width, y)
                     )}
                     id="widgetItem"
@@ -528,16 +565,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                         <div className="flex justify-between gap-2 flex-col-reverse">
                           {(priceBeforeGasodomestico !== priceGasodomestico ||
                             priceBeforeVantiListo !== priceVantiListo) && (
-                            <p className="line-through text-[#035177] text-sm md:text-xl">
-                              {
-                                (isGasAppliance(marketId)
-                                  ? priceBeforeGasodomestico
-                                  : priceBeforeVantiListo
-                                ).split(",")[0]
-                              }{" "}
-                              <span>Antes</span>
-                            </p>
-                          )}
+                              <p className="line-through text-[#035177] text-sm md:text-xl">
+                                {
+                                  (isGasAppliance(marketId)
+                                    ? priceBeforeGasodomestico
+                                    : priceBeforeVantiListo
+                                  ).split(",")[0]
+                                }{" "}
+                                <span>Antes</span>
+                              </p>
+                            )}
                           {!isVantilisto(marketId) && (
                             <div className="flex gap-1">
                               <figure>
@@ -647,24 +684,24 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
         {/* Section - Related products */}
         {relatedProducts?.length > 0 && (
-          <section className="grid section gap-9">
+          <section className="flex flex-col lg:w-[71%] gap-4 border-t border-gray-300 mt-3 sm:mt-8 pt-8">
             <div className="grid text-left gap-9">
-              <h2 className="text-blue-dark">Te puede interesar</h2>
+              <h2 className="text-blue-dark text-3xl">Te puede interesar</h2>
             </div>
-            <div className="grid md:gap-6 md:grid-cols-3">
-              <div className="col-span-3 lg:col-span-2 grid grid-cols-2  md:gap-6">
+            <div className="grid md:gap-6">
+              <div className="col-span-3 lg:col-span-2 grid grid-cols-2 md:gap-6">
                 <div className="grid grid-cols-1 gap-4 col-span-2 h-fit">
                   <div className="flex -mx-1.5">
                     <Swiper
                       slidesPerView={1}
-                      spaceBetween={20}
+                      spaceBetween={16}
                       breakpoints={{
-                        480: {
+                        0: {
                           slidesPerView: 1,
                         },
-                        600: {
+                        375: {
                           slidesPerView: 2,
-                        },
+                        }
                       }}
                       modules={[Navigation]}
                       navigation={{
@@ -685,33 +722,34 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                       ))}
                     </Swiper>
                   </div>
-                  <div className="flex justify-center gap-6">
-                    <div
-                      id={prevSlideId}
-                      className="w-6 h-6 text-neutral-20 cursor-pointer"
-                    >
-                      <Icon icon="arrow-left" className="w-full h-full" />
+                  {relatedProducts?.length > 1 && (
+                    <div className="flex justify-center gap-6">
+                      <div
+                        id={prevSlideId}
+                        className="w-6 h-6 text-neutral-20 cursor-pointer"
+                      >
+                        <Icon icon="arrow-left" className="w-full h-full" />
+                      </div>
+                      <div
+                        id={nextSlideId}
+                        className="w-6 h-6 text-neutral-20 cursor-pointer"
+                      >
+                        <Icon icon="arrow-right" className="w-full h-full" />
+                      </div>
                     </div>
-                    <div
-                      id={nextSlideId}
-                      className="w-6 h-6 text-neutral-20 cursor-pointer"
-                    >
-                      <Icon icon="arrow-right" className="w-full h-full" />
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
-              <div className="hidden lg:block"></div>
             </div>
           </section>
         )}
         {/* END Section - Related products */}
 
         {/* Section - Main features */}
-        <div className="flex flex-col 2md:w-3/5 gap-y-12">
+        <div className="flex flex-col lg:w-[71%]">
           {features && (
-            <div id="content-features" className="grid col-span-2 gap-9">
-              <h2 className="text-blue-dark">Características principales</h2>
+            <div id="content-features" className="grid col-span-2 gap-4 border-t border-gray-300 mt-8 pt-8">
+              <h2 className="text-blue-dark text-3xl">Características principales</h2>
               <div className="">
                 {documentToReactComponents(
                   attachLinksToRichtextContent(
@@ -727,18 +765,21 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
 
           {/* Section - promoDescription and  warranty */}
           {(promoDescription || warranty) && (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-gray-300 mt-8 pt-8">
               {promoDescription && (
-                <div className="w-full gap-8">
-                  <h2 className="text-blue-dark">Descripción</h2>
+                <div className="flex flex-col w-full gap-4">
+                  <h2 className="text-blue-dark text-3xl">Descripción</h2>
                   <div className="">
                     {documentToReactComponents(promoDescription.json, options)}
                   </div>
                 </div>
               )}
               {warranty && (
-                <div id="content-warranty" className="w-full gap-8">
-                  <h2 className="text-blue-dark">Garantía</h2>
+                <div id="content-warranty" className={classNames(
+                  "flex flex-col w-full gap-4",
+                  (promoDescription && warranty) ? "pt-8 mt-8 border-t sm:pt-0 sm:mt-0 sm:border-t-0 sm:pl-8 sm:ml-8 sm:border-l border-gray-300" : ""
+                )}>
+                  <h2 className="text-blue-dark text-3xl">Garantía</h2>
                   {documentToReactComponents(
                     warranty.description.json,
                     options
@@ -753,8 +794,9 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
       {/* ********* Buttons - Flow payment (mobile) ************ */}
 
       <div
+        id="mobile-price-widget"
         className={classNames(
-          "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-[160px] border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px]",
+          "flex flex-col sm:hidden fixed inset-x-0 bottom-0 z-50 mt-10 border rounded-t-[20px] px-4 pb-5 pt-[14px] gap-[13px] transition-[bottom] duration-300",
           isAvailableGasodomestico || isAvailableVantilisto
             ? "bg-white"
             : "bg-red-100 border border-red-400"
@@ -795,16 +837,16 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
                 {/* Before price */}
                 {(priceBeforeGasodomestico !== priceGasodomestico ||
                   priceBeforeVantiListo !== priceVantiListo) && (
-                  <p className="line-through text-[#035177] text-size-small flex items-center">
-                    {
-                      (isGasAppliance(marketId)
-                        ? priceBeforeGasodomestico
-                        : priceBeforeVantiListo
-                      ).split(",")[0]
-                    }{" "}
-                    Antes
-                  </p>
-                )}
+                    <p className="line-through text-[#035177] text-size-small flex items-center">
+                      {
+                        (isGasAppliance(marketId)
+                          ? priceBeforeGasodomestico
+                          : priceBeforeVantiListo
+                        ).split(",")[0]
+                      }{" "}
+                      Antes
+                    </p>
+                  )}
               </div>
               <div className="flex flex-col gap-x-[10px] gap-y-2 xxs:gap-y-0">
                 {/* Secondary price */}

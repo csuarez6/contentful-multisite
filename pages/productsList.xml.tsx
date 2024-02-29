@@ -11,10 +11,11 @@ const ProductListXML: React.FC = () => {
 
 const consolideEntriesWithLocales = async (entries: Array<any>) => {
   const consolidatedEntries = [];
-  for (const index in entries) {
+  const commerceLayerInfo = await getCommercelayerProduct(entries.map(entry => entry.sku), true);
+
+  await Promise.all(entries.map(async (entry) => {
     try {
-      const entry = entries[index];
-      const productInfo = await getCommercelayerProduct(entry.sku, true);
+      const productInfo = commerceLayerInfo.find(item => item.code == entry.sku);
       const price = isGasAppliance(entry.marketId) ? productInfo?._priceGasodomestico : productInfo?._priceVantiListo;
       if (productInfo && productInfo.name && price && entry.urlPaths && entry.promoImage) {
         const availability = isAvailableGasAppliance(entry?.marketId, productInfo?._priceGasodomestico, productInfo?.productsQuantityGasodomestico) ? true : isAvailableVantilisto(entry?.marketId, productInfo?._priceVantiListo, productInfo?.productsQuantityVantiListo) ? true : false;
@@ -33,21 +34,20 @@ const consolideEntriesWithLocales = async (entries: Array<any>) => {
     } catch (error) {
       console.error("Error consolideEntriesWithLocales: ", error);
     }
-  }
+  }));
   return consolidatedEntries;
 };
 
 const buildProductListXML = (fields: Array<any>): string => {
-  const content = fields
-    .map((fieldData) => {
-      const field = Object.entries(fieldData).map(([key, value]) => {
-        if (!value) return "";
-        return `<${key}>${value}</${key}>`;
-      });
-
-      return `<item>${field.join("")}</item>\n`;
-    })
-    .join("");
+  const content = fields.map((fieldData) => {
+    let field = '';
+    for (const [key, value] of Object.entries(fieldData)) {
+      if (value) {
+        field += `<${key}>${value}</${key}>`;
+      }
+    }
+    return `<item>${field}</item>\n`;
+  }).join('');
 
   return (
     `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl"?>\n` +
@@ -83,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const pageEntriesArr = await consolideEntriesWithLocales(pageEntries);
   const consolidatedEntries = [...pageEntriesArr];
 
-  res.setHeader("Cache-Control", "s-maxage=84600, stale-while-revalidate");
+  //res.setHeader("Cache-Control", "s-maxage=600, max-age=600, stale-while-revalidate");
   res.setHeader("Content-Type", "text/xml");
   res.write(buildProductListXML(consolidatedEntries));
   res.end();

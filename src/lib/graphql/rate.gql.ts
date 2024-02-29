@@ -1,7 +1,8 @@
 import { AssetImageQuery, AssetQuery  } from "./shared/asset.gql";
-import { RichtextQuery, internalLink } from "./shared/default.gql";
+import DefaultQuery, { RichtextQuery, internalLink } from "./shared/default.gql";
 
 const RateQuery = `
+    ${DefaultQuery}
     name
     zone
     company

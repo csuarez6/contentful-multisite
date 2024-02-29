@@ -7,7 +7,7 @@ import { Address, Order } from '@commercelayer/sdk';
 import { VantiOrderMetadata } from '@/constants/checkout.constants';
 import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID } from "@/constants/contentful-ids.constants";
+import { COOKIES_ID, DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID, TERMS_OF_SERVICE_ID } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import AuthContext from "@/context/Auth";
 import Icon from "@/components/atoms/icon/Icon";
@@ -16,6 +16,8 @@ import Spinner from "@/components/atoms/spinner/Spinner";
 import { IP2PRequestInformation } from "@/lib/interfaces/p2p-cf-interface";
 import { OrderStatus } from "@/lib/enum/EOrderStatus.enum";
 import { formatAddress, formatDate, getShippingMethods } from "@/lib/services/commerce-layer.service";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import { getDataContent } from "@/lib/services/richtext-references.service";
 
 const orderStatus = (value: string) => {
     switch (value) {
@@ -229,6 +231,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
     const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
     const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+    const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
+
+    const TermsOfServices = {
+      __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+      sys: {
+        id: TERMS_OF_SERVICE_ID,
+      }
+    };
+    const termsOfServicesInfo = await getDataContent(TermsOfServices);
 
     return {
         props: {
@@ -237,6 +248,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
                 footerInfo,
                 headerInfo,
                 helpButton,
+                cookieInfo,
+                termsOfServicesInfo
             },
         },
         revalidate,

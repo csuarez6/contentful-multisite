@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { event as gTagEvent } from "nextjs-google-analytics";
 
-import { IAllyOverviewDetails, IProductOverviewDetails } from "@/lib/interfaces/product-cf.interface";
+import {
+  IAllyOverviewDetails,
+  IProductOverviewDetails,
+} from "@/lib/interfaces/product-cf.interface";
 import CustomLink from "@/components/atoms/custom-link/CustomLink";
 import Icon, { IIcon } from "@/components/atoms/icon/Icon";
-import { isAvailableGasAppliance, isAvailableVantilisto, isGasAppliance } from "@/utils/functions";
+import {
+  classNames,
+  isAvailableGasAppliance,
+  isAvailableVantilisto,
+  isGasAppliance,
+} from "@/utils/functions";
 import { logoVantiListo } from "@/components/blocks/product-details/ProductConfig";
+import { useWindowSize } from "react-use";
 
 const iconCellphone: IIcon = {
   icon: "cellphone",
@@ -21,11 +30,13 @@ const iconLocation: IIcon = {
 };
 
 interface IAFeaturedProduct {
-  hideBeforePrice?: boolean,
-  hideDecimalPrice?: boolean
+  hideBeforePrice?: boolean;
+  hideDecimalPrice?: boolean;
 }
 
-const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails & IAFeaturedProduct> = (props) => {
+const FeaturedProduct: React.FC<
+  IProductOverviewDetails & IAllyOverviewDetails & IAFeaturedProduct
+> = (props) => {
   const {
     __typename,
     name,
@@ -51,68 +62,87 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
     marketId,
     isNew,
     discount,
-    sku
+    sku,
   } = props;
+  const { width } = useWindowSize();
   const onClick = () => {
     const isGasodomestico = isGasAppliance(marketId);
 
     gTagEvent("select_item", {
-      items: [{
-        item_id: `SKU_${sku}`,
-        item_name: promoTitle ?? name,
-        coupon: '',
-        discount: discount,
-        index: 0,
-        item_list_name: isGasodomestico ? "Gasodoméstico" : "Catálogo VantiListo",
-        item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo",
-        affiliation: isGasodomestico ? 'Marketplace Gasodoméstico' : 'Marketplace VantiListo',
-        item_brand: trademark?.name ?? '',
-        item_category: category?.name ?? "",
-        item_variant: '',
-        price: isGasodomestico ? priceGasodomestico : priceVantiListo,
-        currency: 'COP',
-        quantity: 1
-      }],
+      items: [
+        {
+          item_id: `SKU_${sku}`,
+          item_name: promoTitle ?? name,
+          coupon: "",
+          discount: discount,
+          index: 0,
+          item_list_name: isGasodomestico
+            ? "Gasodoméstico"
+            : "Catálogo VantiListo",
+          item_list_id: isGasodomestico
+            ? "Lista_Gasodomésticos"
+            : "Catálogo_VantiListo",
+          affiliation: isGasodomestico
+            ? "Marketplace Gasodoméstico"
+            : "Marketplace VantiListo",
+          item_brand: trademark?.name ?? "",
+          item_category: category?.name ?? "",
+          item_variant: "",
+          price: isGasodomestico ? priceGasodomestico : priceVantiListo,
+          currency: "COP",
+          quantity: 1,
+        },
+      ],
       item_list_name: isGasodomestico ? "Gasodoméstico" : "Catálogo VantiListo",
-      item_list_id: isGasodomestico ? "Lista_Gasodomésticos" : "Catálogo_VantiListo"
+      item_list_id: isGasodomestico
+        ? "Lista_Gasodomésticos"
+        : "Catálogo_VantiListo",
     });
 
     gTagEvent("ProductInfo", {
-      'product': {
-        'id': `SKU_${sku}`,
-        'name': promoTitle ?? name,
-        'category': category?.name ?? "",
-        'brand': trademark?.name ?? ''
-      }
+      product: {
+        id: `SKU_${sku}`,
+        name: promoTitle ?? name,
+        category: category?.name ?? "",
+        brand: trademark?.name ?? "",
+      },
     });
   };
+  const isMobile = useMemo(() => {
+    return width < 641;
+  }, [width]);
 
-  const imageSize = __typename == 'AuxAlly' ? { 'w': 384, 'h': 180 } : { 'w': 336, 'h': 291 };
-
+  const imageSize =
+    __typename == "AuxAlly" ? { w: 384, h: 180 } : { w: 336, h: 291 };
   return (
     <CustomLink
       onClick={onClick}
       linkClassName="w-full h-full"
       className="w-full h-full"
-      content={cta
-        ? { externalLink: cta.href }
-        : { ...props }
-      }
+      content={cta ? { externalLink: cta.href } : { ...props }}
     >
       <article className="relative w-full h-full group">
         {(isNew || discount) && (
           <div className="flex text-sm leading-none flex-wrap gap-2 absolute top-6 left-6 z-10 group-[.card-mega-menu]:left-0 group-[.card-mega-menu]:top-0">
-            {isNew && <span className="p-2 uppercase rounded-md bg-yellow-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">nuevo</span>}
-            {discount && <span className="p-2 uppercase rounded-md bg-blue-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">{discount} de descuento</span>}
+            {isNew && (
+              <span className="p-2 uppercase rounded-md bg-yellow-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">
+                nuevo
+              </span>
+            )}
+            {discount && (
+              <span className="p-2 uppercase rounded-md bg-blue-100 leading-none group-[.card-mega-menu]:p-1.5 group-[.card-mega-menu]:text-[10px]">
+                {discount} de descuento
+              </span>
+            )}
           </div>
         )}
-        <div className="featured-product bg-white p-6 rounded-[10px] shadow-card-overview flex flex-col gap-[45px] w-full h-full justify-between">
+        <div className="featured-product bg-white p-2 md:p-6 rounded-[10px] shadow-card-overview flex flex-col gap-2 md:gap-[45px] w-full h-full justify-between">
           {(imagesCollection?.items || promoImage) && (
             <div className="flex flex-col gap-2 h-full">
               {(imagesCollection?.items || cta || promoImage) && (
                 <div className={`relative mt-5 h-fit`}>
                   {promoImage ? (
-                    <figure className="relative h-full max-h-[350px] min-h-[350px]">
+                    <figure className="relative h-full md:max-h-[350px] md:min-h-[350px] max-wh-[250px] min-wh-[250px]">
                       <Image
                         alt={promoImage.title}
                         src={promoImage.url}
@@ -132,7 +162,12 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                       />
                     </figure>
                   )}
-                  <span className="absolute bottom-0 left-0 button button-primary w-fit z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]">
+                  <span
+                    className={classNames(
+                      "absolute bottom-6 md:bottom-0 left-0 button button-primary w-fit z-10 group-[.card-mega-menu]:leading-none group-[.card-mega-menu]:text-[13px]",
+                      !isMobile ? "" : "text-sm !py-2"
+                    )}
+                  >
                     {cta ? cta.name : "Conoce más"}
                   </span>
                 </div>
@@ -140,10 +175,17 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
             </div>
           )}
           {promoTitle && (
-            <div className="flex flex-col gap-[25px] h-full justify-center">
+            <div className="flex flex-col gap-1 md:gap-[25px] h-full justify-center">
               <div className="flex flex-col gap-[7px] w-full">
                 <div className="flex flex-wrap items-center  gap-1">
-                  <h3 className="group-[.card-mega-menu]:text-lg text-blue-dark title is-4  group-hover:text-category-blue-dark group-hover:-translate-y-1 transition-[color,transform] duration-500">{promoTitle}</h3>
+                  <h3
+                    className={classNames(
+                      "group-[.card-mega-menu]:text-lg text-blue-dark  group-hover:text-category-blue-dark group-hover:-translate-y-1 transition-[color,transform] duration-500",
+                      !isMobile ? "title is-4" : "text-base leading-[1.3] pt-2"
+                    )}
+                  >
+                    {promoTitle}
+                  </h3>
                   {!!rating && (
                     <div className="flex items-center gap-[13px] mr-1">
                       <figure className="w-[15px]">
@@ -180,24 +222,57 @@ const FeaturedProduct: React.FC<IProductOverviewDetails & IAllyOverviewDetails &
                   </div>
                 )}
               </div>
-              {(isAvailableGasAppliance(marketId, priceGasodomestico, productsQuantityGasodomestico) || isAvailableVantilisto(marketId, priceVantiListo, productsQuantityVantiListo)) && (
-                <div className="flex flex-col gap-[6px]">
+              {(isAvailableGasAppliance(
+                marketId,
+                priceGasodomestico,
+                productsQuantityGasodomestico
+              ) ||
+                isAvailableVantilisto(
+                  marketId,
+                  priceVantiListo,
+                  productsQuantityVantiListo
+                )) && (
+                <div className="flex flex-col md:gap-[6px]">
                   {/* Price before */}
-                  {(priceBeforeGasodomestico !== priceGasodomestico || priceBeforeVantiListo !== priceBeforeVantiListo) && !hideBeforePrice && (
-                    <p className="line-through title is-4 text-blue-dark before-price">
-                      {isGasAppliance(marketId) ? priceBeforeGasodomestico : priceBeforeVantiListo}
-                    </p>
-                  )}
-
+                  {(priceBeforeGasodomestico !== priceGasodomestico ||
+                    priceBeforeVantiListo !== priceBeforeVantiListo) &&
+                    !hideBeforePrice && (
+                      <p
+                        className={classNames(
+                          "line-through text-blue-dark before-price",
+                          !isMobile ? "title is-4 " :"text-xs font-bold"
+                        )}
+                      >
+                        {isGasAppliance(marketId)
+                          ? priceBeforeGasodomestico
+                          : priceBeforeVantiListo}
+                      </p>
+                    )}
                   {/* Main price */}
-                  <p className="group-[.card-mega-menu]:text-xl title is-2 text-blue-dark current-price">
-                    {hideDecimalPrice ? (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo).split(",")[0] : (isGasAppliance(marketId) ? priceGasodomestico : priceVantiListo)}
+                  <p
+                    className={classNames(
+                      "group-[.card-mega-menu]:text-xl text-blue-dark current-price ",
+                      !isMobile ? "title is-2 " : "text-base font-bold"
+                    )}
+                  >
+                    {hideDecimalPrice
+                      ? (isGasAppliance(marketId)
+                          ? priceGasodomestico
+                          : priceVantiListo
+                        ).split(",")[0]
+                      : isGasAppliance(marketId)
+                      ? priceGasodomestico
+                      : priceVantiListo}
                   </p>
 
                   {/* Secondary price */}
                   {isGasAppliance(marketId) && priceVantiListo && (
                     <p className="group-[.card-mega-menu]:text-xs text-[#545454] text-sm md:text-xl flex items-center gap-2">
-                      <span>{hideDecimalPrice ? priceVantiListo.split(",")[0] : priceVantiListo}</span>
+                      <span>
+                        {hideDecimalPrice
+                          ? priceVantiListo.split(",")[0]
+                          : priceVantiListo}
+                      </span>
                       <Icon {...logoVantiListo} />
                     </p>
                   )}

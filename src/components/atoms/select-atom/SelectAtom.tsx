@@ -181,10 +181,10 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                   )} 
                 </Listbox.Label>
               )}
-              <div className="grid gap-2 relative">
+              <div className="flex gap-2 relative">
                 <Listbox.Button
                   className={classNames(
-                    "flex gap-[10px] flex-nowrap px-3 py-[6px] rounded bg-white border group transition-colors duration-500 focus:outline-none focus:border-lucuma-60",
+                    "flex gap-[10px] w-full flex-nowrap px-3 py-[6px] rounded bg-white border group transition-colors duration-500 focus:outline-none focus:border-lucuma-60",
                     isError
                       ? "border-states-error" :
                       open
@@ -194,7 +194,7 @@ const SelectAtom: React.FC<ISelect> = forwardRef(
                 >
                   <span
                     className={classNames(
-                      "grow text-left font-medium transition-colors duration-500",
+                      "truncate grow text-left font-medium transition-colors duration-500",
                       selectedOption?.text ? "text-grey-30" : "text-grey-60"
                     )}
                   >

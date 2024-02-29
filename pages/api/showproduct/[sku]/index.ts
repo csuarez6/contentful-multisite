@@ -17,7 +17,7 @@ const handler = async (
     );
 
     const resultAlgolia: any = await indexSearch.search('', {
-      filters: `sys.contentType.sys.id:"product" AND fields.sku:"${skuString}"`,
+      filters: `fields.__typename:"Product" AND fields.sku:"${skuString}"`,
       hitsPerPage: 1,
       attributesToRetrieve: ['fields'],
     });

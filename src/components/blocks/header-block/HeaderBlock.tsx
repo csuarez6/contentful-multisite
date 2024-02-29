@@ -112,7 +112,7 @@ const HeaderBlock: React.FC<INavigation> = (props) => {
       ref={headerRef}
       id="header"
       className={classNames(
-        "z-50 bg-white shadow transition-transform duration-500"
+        "z-[60] bg-white shadow transition-transform duration-500"
       )}
     >
       {/* Top */}

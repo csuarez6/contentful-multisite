@@ -12,15 +12,19 @@ import HeadingCard from "@/components/organisms/cards/heading-card/HeadingCard";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import {
+  COOKIES_ID,
   DEFAULT_FOOTER_ID,
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
+  TERMS_OF_SERVICE_ID,
 } from "@/constants/contentful-ids.constants";
 import { PSE_STEPS_TO_VERIFY } from "@/constants/checkout.constants";
 import Spinner from "@/components/atoms/spinner/Spinner";
 import { gaEventPaymentInfo } from "@/utils/ga-events--checkout";
 import SelectAtom from "@/components/atoms/select-atom/SelectAtom";
 import { IdentificationTypes } from "@/lib/enum/EIdentificationTypes.enum";
+import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
+import { getDataContent } from "@/lib/services/richtext-references.service";
 
 interface ICustomer {
   name: string;
@@ -287,6 +291,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const headerInfo = await getHeader(DEFAULT_HEADER_ID, context.preview ?? false);
   const footerInfo = await getNavigation(DEFAULT_FOOTER_ID, context.preview ?? false);
   const helpButton = await getNavigation(DEFAULT_HELP_BUTTON_ID, context.preview ?? false);
+  const cookieInfo = await getNavigation(COOKIES_ID, context.preview ?? false);
+
+  const TermsOfServices = {
+    __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+    sys: {
+      id: TERMS_OF_SERVICE_ID,
+    }
+  };
+  const termsOfServicesInfo = await getDataContent(TermsOfServices);
 
   return {
     props: {
@@ -295,6 +308,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
         footerInfo,
         headerInfo,
         helpButton,
+        cookieInfo,
+        termsOfServicesInfo
       },
     },
     revalidate,

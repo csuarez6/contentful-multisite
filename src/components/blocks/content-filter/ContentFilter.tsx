@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import useSWR from "swr";
-
 import { IContentFilter } from "@/lib/interfaces/content-filter-cf.interface";
-
 import { ISelect } from "@/components/atoms/select-atom/SelectAtom";
 import Pagination from "@/components/organisms/pagination/Pagination";
 import ProductFilterBlock from "../product-filter/ProductFilter";
@@ -20,7 +17,8 @@ const ContentFilter: React.FC<IContentFilter> = ({
   blockId = null,
   mainFacet = null,
   orderingOptions = null,
-  preloadContent = null,
+  pageResults = null,
+  availableFacets = null,
 }) => {
   const { push, pathname, asPath } = useRouter();
   const [page, setPage] = useState<number>(1);
@@ -42,7 +40,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
         const secondPart =
           uri?.split("page")?.[1]?.split("=")?.[1]?.split("&")?.[1] ?? null;
         if (secondPart !== null) {
-          finalPath = finalPath + '&'+secondPart;
+          finalPath = finalPath + "&" + secondPart;
           const thirtPart = uri?.split(secondPart)?.[1] ?? null;
           if (thirtPart) {
             finalPath = finalPath + thirtPart;
@@ -69,22 +67,20 @@ const ContentFilter: React.FC<IContentFilter> = ({
   const fixedFilters = [
     ...contentTypesFilter.map((s) => ["type", s]),
     ...parentsCollection.items.map((p) => ["parent", p.sys.id]),
-    ["pageResults", preloadContent?.pageResults ?? 9],
+    ["pageResults", pageResults.toString() ?? "9"],
+    ["facets", availableFacets?.join(",") ?? ""],
+    ["mainFacet", mainFacet ?? ""]
   ];
 
   const [facetsContent, setFacetsContent] = useState<ISelect[]>([]);
   const [mainFacetContent, setMainFacetContent] = useState<ISelect>(null);
   const [initialValue, setInitialValue] = useState(null);
-  const [queryString, setQueryString] = useState<string>(
-    new URLSearchParams(fixedFilters).toString()
-  );
+  const [queryString, setQueryString] = useState<string>();
+  const [contentData, setContentData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const urlParams = new URLSearchParams(queryString);
-  const fetcher = (url) => fetch(url).then((r) => r.json());
-  const {
-    data: contentData,
-    error,
-    isLoading,
-  } = useSWR(`/api/content-filter?${queryString}&page=${page}`, fetcher);
   const facetsChangeHandle = (newQueryParams: string) => {
     const { pathname: realPathname } = location;
     push(pathname, realPathname + newQueryParams, { shallow: true });
@@ -121,34 +117,64 @@ const ContentFilter: React.FC<IContentFilter> = ({
       console.error({ error });
     }
   };
+
   useEffect(() => {
-    // Delete the filter Vantilisto in the gasodomestico searching
-    if (preloadContent?.facets) {
-      preloadContent.facets = preloadContent.facets.filter((facet: any) => {
-        return !(
-          facet?.name === "precio_vantilisto" &&
-          parentsCollection.items?.[0]?.sys?.id ===
-            DEFAULT_GASODOMESTICOS_PARENT_ID
-        );
-      });
-    }
+    (async () => {
+      if (queryString) {
+        try {
+          const response = await fetch(`/api/content-filter?${queryString}&page=${page}`);
+          const result = await response.json();
 
-    if (mainFacet && preloadContent?.facets?.length) {
-      const tmpMainFacetContent = preloadContent.facets.find(
-        (f: ISelect) => f.labelSelect === mainFacet
-      );
-      setMainFacetContent(tmpMainFacetContent);
+          if (result) {
+            if (result?.facets?.length) {
+              // Delete the select filter Vantilisto in the "gasodomesticos" searching and vice versa
+              result.facets = result.facets.filter((facet: any) => {
+                return !(
+                  facet?.name === "precio_vantilisto" &&
+                  parentsCollection.items?.[0]?.sys?.id ===
+                    DEFAULT_GASODOMESTICOS_PARENT_ID
+                );
+              });
 
-      if (tmpMainFacetContent) {
-        const tmpFacetsContent = preloadContent.facets.filter(
-          (f: ISelect) => f.name !== tmpMainFacetContent.name
-        );
-        setFacetsContent(tmpFacetsContent);
+              if (mainFacet) {
+                const tmpMainFacetContent = result.facets.find(
+                  (f: ISelect) => f.labelSelect === mainFacet
+                );
+                setMainFacetContent(tmpMainFacetContent);
+                setFacetsContent(
+                  tmpMainFacetContent
+                    ? result.facets.filter(
+                        (f: ISelect) => f.name !== tmpMainFacetContent.name
+                      )
+                    : null
+                );
+              } else {
+                setFacetsContent([...result.facets]);
+                setMainFacetContent(null);
+              }
+            }
+            setContentData(result);
+            setError(null);
+          } else {
+            setContentData(null);
+            setMainFacetContent(null);
+            setError(null);
+            setFacetsContent(null);
+          }
+        } catch (error) {
+          setError(error);
+          setContentData(null);
+          setMainFacetContent(null);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    } else if (preloadContent?.facets?.length) {
-      setFacetsContent([...preloadContent.facets]);
-    }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryString]);
 
+  useEffect(() => {
+    setIsLoading(true);
     const { search } = document.location;
     if (search) {
       facetsChangeHandle(search);
@@ -157,6 +183,7 @@ const ContentFilter: React.FC<IContentFilter> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath]);
+
   return (
     <div className="relative w-full flex flex-col">
       {principalSearch && contentData?.totalItems > 0 && (

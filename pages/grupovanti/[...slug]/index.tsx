@@ -15,6 +15,7 @@ import {
   DEFAULT_HEADER_ID,
   DEFAULT_HELP_BUTTON_ID,
   DEFAULT_WARRANTY_COPY,
+  TERMS_OF_SERVICE_ID,
 } from "@/constants/contentful-ids.constants";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 import { CONTENTFUL_TYPENAMES } from "@/constants/contentful-typenames.constants";
@@ -23,6 +24,7 @@ import getBreadcrumbs from "@/utils/breadcrumbs";
 import RichtextPage from "@/components/blocks/richtext-page/RichtextPage";
 import { getDataContent } from "@/lib/services/richtext-references.service";
 import { classNames } from "@/utils/functions";
+import { MARKETPLACE_SLUG } from "@/constants/url-paths.constants";
 
 const CustomPage: NextPageWithLayout = (props: any) => {
   const { name, promoTitle, blocksCollection, content, enableHeaderPrecedence, showHeader, __typename, sys } = props;
@@ -100,6 +102,23 @@ export const getStaticProps: GetStaticProps = async (
   const copyRes = await getDataContent(info);
   const copyServices = copyRes?.copiesCollection?.items;
 
+  const pathArray =
+    typeof context.params.slug === "string"
+      ? [context.params.slug]
+      : [...context.params.slug];
+
+  let termsOfServicesInfo = null;
+  
+  if (pathArray[0] === MARKETPLACE_SLUG) {
+    const TermsOfServices = {
+      __typename: CONTENTFUL_TYPENAMES.AUX_CUSTOM_CONTENT,
+      sys: {
+        id: TERMS_OF_SERVICE_ID,
+      }
+    };
+    termsOfServicesInfo = await getDataContent(TermsOfServices);
+  }
+
   const { content, enableHeaderPrecedence, showHeader, } = pageContent;
   const isInfoPageHeader = content?.json && enableHeaderPrecedence && showHeader;
   if (!isInfoPageHeader) {
@@ -132,7 +151,8 @@ export const getStaticProps: GetStaticProps = async (
         menuNavkey: context.params.slug[0],
         helpButton,
         preview: context.preview ?? false,
-        cookieInfo
+        cookieInfo,
+        termsOfServicesInfo
       },
       copyServices,
     },
