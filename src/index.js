@@ -1,16 +1,5 @@
-export const setUpMultisite = async (request) => {
+export const setUpMultisite = async (request, config) => {
   try {
-    let serverRuntimeConfig = null;
-
-    try {
-      const configModule = require("next.config.js");
-      serverRuntimeConfig = configModule?.serverRuntimeConfig;
-    } catch (importError) {
-      console.warn(
-        "next.config.js Not found, Default settings will be used for multisite"
-      );
-    }
-
     const domain = request?.headers?.get("host");
     const path = request?.nextUrl?.pathname;
 
@@ -22,7 +11,7 @@ export const setUpMultisite = async (request) => {
     };
 
     const defaultSiteList = [defaultSite];
-    const siteList = serverRuntimeConfig?.siteList ?? defaultSiteList;
+    const siteList = config?.siteList ?? defaultSiteList;
 
     for (const site of siteList) {
       if (

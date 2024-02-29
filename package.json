@@ -1,6 +1,6 @@
 {
     "name": "contentful-multisite",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "This module help you setting up a multisite in Contentful.",
     "main": "src/index.js",
     "keywords": [],
