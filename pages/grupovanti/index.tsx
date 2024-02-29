@@ -1,13 +1,8 @@
-// import type { ReactElement } from "react";
 import { GetStaticProps } from "next";
-
 import jsonToReactComponents from "@/lib/services/render-blocks.service";
 import { NextPageWithLayout } from "../_app";
 import { IPage } from "@/lib/interfaces/page-cf.interface";
-// import PageLayout from "@/components/layouts/page-layout/PageLayout";
-
 import { DEFAULT_FOOTER_ID, DEFAULT_HEADER_ID, DEFAULT_HELP_BUTTON_ID, COOKIES_ID  } from "@/constants/contentful-ids.constants";
-
 import getPageContent from "@/lib/services/page-content.service";
 import { getHeader, getNavigation } from "@/lib/services/menu-content.service";
 
