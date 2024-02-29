@@ -1,10 +1,10 @@
 {
-    "name": "nextjs-contentful-multisite",
-    "version": "1.0.4",
-    "description": "This module help you setting up a multisite in Contentful.",
+    "name": "@aplyca/nextjs-contentful-multisite",
+    "version": "1.0.5",
+    "description": "This module help you setting up a multisite in Contentful with Next.JS.",
     "main": "src/index.js",
     "keywords": [],
-    "author": "csuarez7",
+    "author": "aplyca",
     "license": "ISC",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
