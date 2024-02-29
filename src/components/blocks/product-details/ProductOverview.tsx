@@ -82,9 +82,8 @@ const ProductOverview: React.FC<IProductOverviewDetails> = ({
   const [warrantyCheck, setWarrantyCheck] = useState({});
   const [installCheck, setInstallCheck] = useState({});
   const [isFixed, setIsFixed] = useState(false);
+  //eslint-disable-next-line
   const [isMobileWidgetFixed, setIsMobileWidgetFixed] = useState(true);
-  const [isCookieModalOpen, setIsCookieModalOpen] = useState(false);
-  const [mobileWidgetBottom, setMobileWidgetBottom] = useState('0px');
 
   const defaultInstallList = {
     id: "defInstall1",
