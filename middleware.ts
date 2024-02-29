@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { setUpMultisite } from '@/lib/services/multisite.service';
+import { serverRuntimeConfig } from "next.config.js";
+import { setUpMultisite } from "contentful-multisite";
 
 const enviromentVercel = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const ALLOWED_IPS = [
@@ -35,7 +36,8 @@ export async function middleware(request: NextRequest, _res: NextApiResponse, _r
     return res;
   }
 
-  return setUpMultisite(request);
+  const url = setUpMultisite(request, serverRuntimeConfig);
+  return NextResponse.rewrite(url);
 }
 
 function ipToInt32(ip: any) {
