@@ -1,4 +1,5 @@
 import { serverRuntimeConfig } from "next.config.js";
+import { NextResponse } from 'next/server';
 
 export const setUpMultisite = (request) => {
   try {
@@ -8,6 +9,7 @@ export const setUpMultisite = (request) => {
 
     console.log("The domain is:", domain);
     console.log("The path is:", path);
+    console.log("The config is:", config);
     
     const defaultSite = {
       is_default_site: true,

@@ -16,5 +16,8 @@
     "bugs": {
         "url": "https://github.com/csuarez6/contentful-multisite/issues"
     },
-    "homepage": "https://github.com/csuarez6/contentful-multisite#readme"
+    "homepage": "https://github.com/csuarez6/contentful-multisite#readme",
+    "dependencies": {
+        "next": "13.0.3"
+    }
 }
