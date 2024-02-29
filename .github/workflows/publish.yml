@@ -1,0 +1,16 @@
+name: Publish to npm
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Publish package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          npm config set '//registry.npmjs.org/:_authToken' $NODE_AUTH_TOKEN
+          npm publish
