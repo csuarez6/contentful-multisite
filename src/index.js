@@ -1,4 +1,4 @@
-export const setUpMultisite = async (request, config) => {
+export const setUpMultisite = (request, config) => {
   try {
     const domain = request?.headers?.get("host");
     const path = request?.nextUrl?.pathname;
