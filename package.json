@@ -1,5 +1,5 @@
 {
-    "name": "contentful-multisite",
+    "name": "nextjs-contentful-multisite",
     "version": "1.0.4",
     "description": "This module help you setting up a multisite in Contentful.",
     "main": "src/index.js",
